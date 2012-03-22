@@ -88,8 +88,6 @@ class SvnNotification {
      * @param Array   $selectedPaths Contains list of paths to remove.
      * @param Integer $projectId     Project id
      *
-     * @TODO i18n, removed path details on feedback...
-     *
      * @return void
      */
     function removeSVNNotification($selectedPaths, $projectId) {
@@ -104,7 +102,7 @@ class SvnNotification {
                 }
             }
             if (!empty($paths)) {
-                $GLOBALS['Response']->addFeedback('info',  $GLOBALS['Language']->getText('svn_admin_notification','delete_path_success'));
+                $GLOBALS['Response']->addFeedback('info',  $GLOBALS['Language']->getText('svn_admin_notification','delete_path_success', array(implode(',', $paths))));
             }
         } else {
             $GLOBALS['Response']->addFeedback('error',  $GLOBALS['Language']->getText('svn_admin_notification','retrieve_paths_fail'));

@@ -61,7 +61,7 @@ svn_admin_notification	mailing_list_header	SVN notification list
 svn_admin_notification	path_header	SVN monitored path
 svn_admin_notification	path_delete_ask	Delete?
 svn_admin_notification	existent_notifications	Available notifications
-svn_admin_notification	delete_path_success	Email notification removed
+svn_admin_notification	delete_path_success	Email notification removed for $1
 svn_admin_notification	delete_path_fail	Email notification not removed
 svn_admin_notification	retrieve_paths_fail	No path selected
 #
