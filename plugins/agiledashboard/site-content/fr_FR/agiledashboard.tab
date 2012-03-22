@@ -7,6 +7,8 @@ plugin_agiledashboard	service_desc_key	Dashboard agile
 plugin_agiledashboard	planning_destination_help	Déplacer les résultats de la recherche à gauche dans cette zone pour associer les artifacts entre eux.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Créer un nouveau planning
+plugin_agiledashboard	planning_name	Nom
+plugin_agiledashboard	planning-allows-assignment	Ce planning permet l'association de $1 à $2
 
 
 

@@ -1,25 +1,13 @@
-<h2>Create a new planning</h2>
+<h2>{{createPlanning}}</h2>
 <form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
     <p>
-        <label for="planning_name">Name</label>
+        <label for="planning_name">{{planningName}}</label>
         <input type="text" name="planning_name"/>
     </p>
     <p>
-        This planning allows assignment of
-        <select multiple="multiple" name="planning_backlog_ids[]" style="vertical-align: top;">
-            {{#getAvailableTrackers}}
-                <option value="{{getId}}">{{getName}}</option>
-            {{/getAvailableTrackers}}
-        </select>
-        to
-        <select name="planning_release_id">
-            <option value=""/>
-            {{#getAvailableTrackers}}
-                <option value="{{getId}}">{{getName}}</option>
-            {{/getAvailableTrackers}}
-        </select>
+        {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-release}}{{/__}}
     </p>
     <p>
-        <input type="submit" value="Create"/>
+        <input type="submit" value="{{btnSubmit}}"/>
     </p>
 </form>

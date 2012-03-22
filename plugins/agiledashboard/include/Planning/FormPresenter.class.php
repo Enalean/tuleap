@@ -22,6 +22,9 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TrackerFactory
 require_once 'TrackerPresenter.class.php';
 
 class Planning_FormPresenter {
+    // Manage translation
+    public $__ = array(__CLASS__, '__trans');
+    
     /**
      * @var int
      */
@@ -66,6 +69,24 @@ class Planning_FormPresenter {
     
     public function getPlanningTrackerPresenter(Tracker $tracker) {
         return new Planning_TrackerPresenter($this->planning, $tracker);
+    }
+    
+    public function createPlanning() {
+        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
+    }
+    
+    public function planningName() {
+        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_name');
+    }
+    
+    public function btnSubmit() {
+        return $GLOBALS['Language']->getText('global', 'btn_submit');
+    }
+    
+    public function __trans($text) {
+        $args = explode('|', $text);
+        $secondary_key = array_shift($args);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', $secondary_key, $args);
     }
 }
 
