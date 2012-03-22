@@ -47,9 +47,10 @@ svn_admin_index	email_comment	Define who is going to receive email notification 
 #-----------------------------------------------
 # Script: SF/www/svn/admin/notification.php
 #
-svn_admin_notification	upd_success	Email Notification updated successfully
-svn_admin_notification	upd_fail	Email Notification update failed
+svn_admin_notification	upd_email_success	Email Notification updated successfully
 svn_admin_notification	upd_email_fail	"Mail to" contains an invalid email address.
+svn_admin_notification	upd_header_success	Header updated successfully
+svn_admin_notification	upd_header_fail	Header update failed.
 svn_admin_notification	email	Subversion Administration - Email Notification
 svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits</H3><p><I>Each commit event can also be notified via email to specific recipients or mailing lists (comma separated). A specific subject header for the email message can also be specified.</I></p>
 svn_admin_notification	mail_to	Mail to

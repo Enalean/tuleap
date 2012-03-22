@@ -40,9 +40,10 @@ svn_admin_index	email_comment	Définition des destinataires des notification e-m
 #-----------------------------------------------
 # Script: SF/www/svn/admin/notification.php
 #
-svn_admin_notification	upd_success	Notification e-mail mise à jour avec succès
-svn_admin_notification	upd_fail	La mise à jour de la notification e-mail a échoué&nbsp;
+svn_admin_notification	upd_email_success	Notification e-mail mise à jour avec succès
 svn_admin_notification	upd_email_fail	Le champ "Envoyer à" contient une adresse invalide.
+svn_admin_notification	upd_header_success	Entête mise à jour avec succès
+svn_admin_notification	upd_header_fail	L'entête n'a pas été mise � jour.
 svn_admin_notification	email	Administration de Subversion  - Notification e-mail 
 svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée.</I></p>
 svn_admin_notification	mail_to	Envoyer à

@@ -57,7 +57,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             if($request->valid($vHeader)) {
                 $mailingHeader = $request->get('form_mailing_header');
                 if ($pm->setSVNHeader($group_id, $mailingHeader)) {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_header_success'));
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_header_fail'));
                 }
             }
             break;
@@ -67,11 +69,10 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $mailingList = cleanupMailsList($request->get('form_mailing_list'));
             if(!empty($mailingList) && !empty($formPath) && $request->valid($vPath)) {
                 if ($svnNotification->setSVNMailingList($group_id, $mailingList, $formPath)) {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_email_success'));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_email_fail'));
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_eemail_fail'));
             }
             break;
         default :
