@@ -120,10 +120,6 @@ class GitPHP_Resource
 	{
 		$localeName = __('English');		// for xgettext extraction
 
-		if (self::$currentLocale == $locale) {
-			return $localeName;
-		}
-
 		$localeReader = GitPHP_Resource::CreateLocale($locale);
 		if (!$localeReader) {
 			return '';
