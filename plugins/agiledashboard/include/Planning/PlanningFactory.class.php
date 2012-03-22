@@ -47,10 +47,13 @@ class PlanningFactory {
     
     public function getPlanning($planning_id) {
         $planning =  $this->dao->searchById($planning_id)->getRow();
-        foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
-            $backlog_tracker_ids[] = $row['tracker_id'];
+        if ($planning) {
+            foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
+                $backlog_tracker_ids[] = $row['tracker_id'];
+            }
+            return new Planning($planning_id, $planning['name'], $planning['group_id'], $backlog_tracker_ids, $planning['release_tracker_id']);
         }
-        return new Planning($planning_id, $planning['name'], $planning['group_id'], $backlog_tracker_ids, $planning['release_tracker_id']);
+        return null;
     }
     
     public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {

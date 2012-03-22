@@ -95,9 +95,8 @@ class Planning_Controller extends Controller {
         if ($this->request->valid($valid_criteria)) {
             $request_criteria = $this->request->get('criteria');
         }
-        $planning_id         = $this->request->get('planning_id');
-        $planning            = $this->planning_factory->getPlanning($planning_id);
-        $project             = $manager->getProject($this->request->get('group_id'));
+        $planning = $this->getPlanning();
+        $project  = $manager->getProject($this->request->get('group_id'));
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
         
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
@@ -116,8 +115,7 @@ class Planning_Controller extends Controller {
     
     public function edit() {
         try {
-            $planning_id = $this->request->get('planning_id');
-            $planning    = $this->planning_factory->getPlanning($planning_id);
+            $planning = $this->getPlanning();
             //$presenter   = array();
             $presenter = new Planning_FormPresenter($this->group_id, $this->tracker_factory, $planning);
             $this->render('edit', $presenter);
@@ -138,6 +136,41 @@ class Planning_Controller extends Controller {
     public function delete() {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));
+    }
+    
+    private function getPlanning() {
+        $planning_id = $this->request->get('planning_id');
+        return $this->planning_factory->getPlanning($planning_id);
+    }
+    
+    public function getBreadcrumbs($plugin_path) {
+        $hp             = Codendi_HTMLPurifier::instance();
+        $breadcrumbs    = array();
+        $url_parameters = array(
+            'group_id' => (int) $this->request->get('group_id'),
+        );
+        
+        $breadcrumbs[] = array(
+            'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
+            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
+        );
+        $planning = $this->getPlanning();
+        if ($planning) {
+            $url_parameters['planning_id'] = (int) $planning->getId();
+            $url_parameters['action']      = 'show';
+            $breadcrumbs[] = array(
+                'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
+                'title' => $hp->purify($planning->getName()),
+            );
+            if ($this->artifact) {
+                $url_parameters['aid'] = (int) $this->artifact->getId();
+                $breadcrumbs[] = array(
+                    'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
+                    'title' => $hp->purify($this->artifact->getTitle()),
+                );
+            }
+        }
+        return $breadcrumbs;
     }
 }
 ?>

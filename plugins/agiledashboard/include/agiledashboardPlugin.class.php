@@ -78,31 +78,32 @@ class AgileDashboardPlugin extends Plugin {
         require_once dirname(__FILE__) .'/../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
         require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
         require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        $controller = $this->buildController($request);
         switch($request->get('action')) {
             case 'show':
                 $object_god = new TrackerManager();
                 $search = $object_god->getCrossSearch();
                 $view_builder = new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), TrackerFactory::instance());
-                $this->renderAction('show', $request, array($view_builder, ProjectManager::instance(), $search));
+                $this->renderAction($controller, 'show', $request, array($view_builder, ProjectManager::instance(), $search));
                 break;
             case 'new':
-                $this->renderAction('new_', $request);
+                $this->renderAction($controller, 'new_', $request);
                 break;
             case 'create':
-                $this->executeAction('create', $request);
+                $this->executeAction($controller, 'create', $request);
                 break;
             case 'edit':
-                $this->renderAction('edit', $request);
+                $this->renderAction($controller, 'edit', $request);
                 break;
             case 'update':
-                $this->executeAction('update', $request);
+                $this->executeAction($controller, 'update', $request);
                 break;
             case 'delete':
-                $this->executeAction('delete', $request);
+                $this->executeAction($controller, 'delete', $request);
                 break;
             case 'index':
             default:
-                $this->renderAction('index', $request);
+                $this->renderAction($controller, 'index', $request);
         }
     }
     
@@ -113,7 +114,7 @@ class AgileDashboardPlugin extends Plugin {
         'show'  => 'Release planning'
     );
     
-    private function getService($request) {
+    private function getService(Codendi_Request $request) {
         if ($this->service == null) {
             $project = ProjectManager::instance()->getProject($request->get('group_id'));
             $this->service = $project->getService('plugin_agiledashboard');
@@ -121,16 +122,11 @@ class AgileDashboardPlugin extends Plugin {
         return $this->service;
     }
     
-    private function displayHeader($request, $title) {
-        $breadcrumbs = array(
-            array('url'   => 'bla',
-                  'title' => "Product A"),
-            array('url'   => 'bla',
-                  'title' => "Release 4.0.27"),
-        );
-        
+    private function displayHeader(Planning_Controller $controller, Codendi_Request $request, $title) {
+        $breadcrumbs = $controller->getBreadcrumbs($this->getPluginPath());
         $this->getService($request)->displayHeader($title, $breadcrumbs, array());
     }
+    
     
     private function displayFooter($request) {
         $this->getService($request)->displayFooter();
@@ -146,14 +142,13 @@ class AgileDashboardPlugin extends Plugin {
                                        TrackerFactory::instance());
     }
     
-    private function renderAction($action_name, Codendi_Request $request, array $args = array()) {
-        $this->displayHeader($request, $this->header_title[$action_name]);
-        call_user_func_array(array($this, 'executeAction'), array($action_name, $request, $args));
+    private function renderAction(Planning_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
+        $this->displayHeader($controller, $request, $this->header_title[$action_name]);
+        call_user_func_array(array($this, 'executeAction'), array($controller, $action_name, $request, $args));
         $this->displayFooter($request);
     }
     
-    private function executeAction($action_name, Codendi_Request $request, array $args = array()) {
-        $controller = $this->buildController($request);
+    private function executeAction(Planning_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
         call_user_func_array(array($controller, $action_name), $args);
     }
     
