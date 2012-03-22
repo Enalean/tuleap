@@ -32,6 +32,7 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Service');
 Mock::generate('Tracker_CrossSearch_SearchView');
+Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_ViewBuilder');
 Mock::generate('Tracker_FormElementFactory');
@@ -49,7 +50,8 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->project            = new MockProject();
         $this->manager            = new MockProjectManager();
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
-        $this->request            = new Codendi_Request(array('group_id' => '66', 'criteria' => array()));
+        $this->request_criteria   = array('stuff');
+        $this->request            = new Codendi_Request(array('group_id' => '66', 'criteria' => $this->request_criteria));
         
         $view_builder             = new MockTracker_CrossSearch_ViewBuilder();
         $this->view_builder       = $view_builder;
@@ -85,19 +87,24 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $controller->search();
     }
         
-    public function itRendersViewForServiceWithCriteria() {
+    public function itRendersViewUsingTheGivenProjectAndCriteria() {
+        $contentView = new MockTracker_CrossSearch_SearchContentView();
         $view = new MockTracker_CrossSearch_SearchView();
-        $view->expectOnce('render');
+        $view->expectOnce('render', array($contentView));
                 
         $controller = $this->getController();        
+        $this->view_builder->setReturnValue('buildContentView', $contentView);
+        $this->view_builder->expectOnce('buildContentView', array($this->project, $this->request_criteria));
         $this->view_builder->setReturnValue('buildView', $view);
+        $this->view_builder->expectOnce('buildView', array($this->project, $this->request_criteria));
         
         $controller->search();
     }
     
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
+        $no_criteria = array();
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $this->view_builder->expectOnce('buildView', array('*', array()));
+        $this->view_builder->expectOnce('buildView', array('*', $no_criteria));
         $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
         $this->request = new Codendi_Request(array(
             'group_id' => '66', 
