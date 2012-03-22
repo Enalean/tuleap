@@ -56,9 +56,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_email_fail'));
             }
             if (!empty($badList)) {
-                $GLOBALS['Response']->addFeedback('warning', $Language->getText('svn_admin_notification','upd_email_fail'));
-                // TODO: i18n
-                $GLOBALS['Response']->addFeedback('warning', 'Bad addresses "'.$badList.'"');
+                $GLOBALS['Response']->addFeedback('warning', $Language->getText('svn_admin_notification','upd_email_bad_adr', $badList));
             }
             break;
         default :

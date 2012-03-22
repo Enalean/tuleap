@@ -42,6 +42,7 @@ svn_admin_index	email_comment	Définition des destinataires des notification e-m
 #
 svn_admin_notification	upd_email_success	Notification e-mail mise à jour avec succès
 svn_admin_notification	upd_email_fail	Le champ "Envoyer à" contient une adresse invalide.
+svn_admin_notification	upd_email_bad_adr	Adresses invalides "$1"
 svn_admin_notification	upd_header_success	Entête mise à jour avec succès
 svn_admin_notification	upd_header_fail	L'entête n'a pas été mise � jour.
 svn_admin_notification	email	Administration de Subversion  - Notification e-mail 
