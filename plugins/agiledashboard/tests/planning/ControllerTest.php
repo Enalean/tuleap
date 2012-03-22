@@ -166,6 +166,12 @@ class Planning_ControllerTest extends TuleapTestCase {
         return $artifact;
     }
     
+    private function GivenAnArtifactWithNoLinkedItem($id, $title) {
+        $artifact = $this->GivenAnArtifact($id, $title);
+        $artifact->setReturnValue('getLinkedArtifacts', array());
+        return $artifact;
+    }
+    
     private function GivenAnArtifactFactory(array $artifacts = array()) {
         $factory  = new MockTracker_ArtifactFactory();
         foreach ($artifacts as $artifact) {
@@ -174,8 +180,8 @@ class Planning_ControllerTest extends TuleapTestCase {
         $factory->setReturnValue(
             'getOpenArtifactsByTrackerId', 
             array(
-                $this->GivenAnArtifact(1001, 'An open artifact'),
-                $this->GivenAnArtifact(1002, 'Another open artifact'),
+                $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
+                $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
             ), 
             array($this->planning->getReleaseTrackerId()));
         return $factory;
@@ -183,8 +189,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
-        $artifact = $this->GivenAnArtifact($id, $title);
-        $artifact->setReturnValue('getLinkedArtifacts', array());
+        $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }

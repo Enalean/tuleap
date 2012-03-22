@@ -100,12 +100,13 @@ class Planning_Controller extends Controller {
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
         
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
+        
         $content_view        = $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $search, $excludedArtifactIds);
         $presenter           = new Planning_Presenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
     }
     
-    public function getTrackerLinkedItems($artifacts_to_select) {
+    private function getTrackerLinkedItems($artifacts_to_select) {
         $linked_items = array();
         foreach ($artifacts_to_select as $artifact) {
             $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts());
