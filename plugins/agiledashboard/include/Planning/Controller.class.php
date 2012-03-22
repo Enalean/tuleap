@@ -88,7 +88,7 @@ class Planning_Controller extends Controller {
         return $artifact->getId();
     }
 
-    function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
+    public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning = $this->getPlanning();
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
 
@@ -97,7 +97,7 @@ class Planning_Controller extends Controller {
         $this->render('show', $presenter);
     }
 
-    public function buildContentView($view_builder, $manager, $planning, $artifacts_to_select) {
+    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Planning $planning, $artifacts_to_select) {
         $project  = $manager->getProject($this->request->get('group_id'));
         $request_criteria = $this->getCriteriaFromRequest();
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
