@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-dirname(__FILE__).'/../include/TestsPluginFilterIterator.class.php';
+require_once dirname(__FILE__).'/../include/TestsPluginFilterIterator.class.php';
 
 class PluginFilterIteratorTest extends TuleapTestCase {
 
