@@ -34,7 +34,7 @@ class Planning_TrackerPresenter {
      */
     private $tracker;
     
-    public function __construct(/*Planning*/ $planning, Tracker $tracker) {
+    public function __construct(Planning $planning, Tracker $tracker) {
         $this->planning = $planning;
         $this->tracker  = $tracker;
     }
