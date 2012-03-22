@@ -87,12 +87,11 @@ class Planning_ControllerTest extends TuleapTestCase {
     public function itListsAllLinkedItems() {
         $id = 987;
         $linked_items = array(
-            $this->GivenAnArtifact(123, 'Tutu'),
-            $this->GivenAnArtifact(123, 'Tata')
+            $this->GivenAnArtifactWithNoLinkedItem(123, 'Tutu'),
+            $this->GivenAnArtifactWithNoLinkedItem(123, 'Tata')
         );
         
-        $artifact = $this->GivenAnArtifact($id, 'Toto');
-        $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
+        $artifact = $this->GivenAnArtifact($id, 'Toto', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $request = new Codendi_Request(
             array(
@@ -139,11 +138,8 @@ class Planning_ControllerTest extends TuleapTestCase {
         $a_list_of_draggable_items = 'A list of draggable items';
         $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
         
-        $search = new MockTracker_CrossSearch_Search();
-        
         $project = new MockProject();
-        $project_manager = new MockProjectManager();
-        $project_manager->setReturnValue('getProject', $project, array($project_id));
+        $project_manager = $this->GivenAProjectManagerThatReturns($project, $project_id);
         
         $already_linked_items = array();
         $tracker_ids  = array();
@@ -152,26 +148,24 @@ class Planning_ControllerTest extends TuleapTestCase {
         $view_builder->expectOnce('buildPlanningContentView', array($project, $expected_criteria, $already_linked_items, $tracker_ids));
         $view_builder->setReturnValue('buildPlanningContentView', $content_view);
         
-        $artifact = $this->GivenAnArtifact($id, "screen hangs with macos and some escapable characters #<");
-        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
+        $artifact = $this->GivenAnArtifact($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search);
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, new MockTracker_CrossSearch_Search());
         
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
     
-    private function GivenAnArtifact($id, $title) {
+    private function GivenAnArtifact($id, $title, $already_linked_items) {
         $artifact = new MockTracker_Artifact();
         $artifact->setReturnValue('getTitle', $title);
         $artifact->setReturnValue('fetchTitle', "#$id $title");
         $artifact->setReturnValue('getId', $id);
+        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
         return $artifact;
     }
     
     private function GivenAnArtifactWithNoLinkedItem($id, $title) {
-        $artifact = $this->GivenAnArtifact($id, $title);
-        $artifact->setReturnValue('getLinkedArtifacts', array());
-        return $artifact;
+        return $this->GivenAnArtifact($id, $title, array());
     }
     
     private function GivenAnArtifactFactory(array $artifacts = array()) {
@@ -219,6 +213,12 @@ class Planning_ControllerTest extends TuleapTestCase {
         $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();
         return $content;
+    }
+
+    public function GivenAProjectManagerThatReturns($project, $project_id) {
+        $project_manager = new MockProjectManager();
+        $project_manager->setReturnValue('getProject', $project, array($project_id));
+        return $project_manager;
     }
 }
 
