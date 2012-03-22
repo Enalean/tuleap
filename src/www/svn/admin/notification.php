@@ -24,10 +24,10 @@ $pm              = ProjectManager::instance();
  */
 function cleanupMailsList($mailingList) {
     $cleanedMailingList = '';
-    $list = split(',', $mailingList);
+    $list               = split(',', $mailingList);
+    $vMail              = new Valid_Email();
     foreach ($list as $mail) {
-        // TODO: Verify mail validity
-        if (true) {
+        if ($vMail->validate($mail)) {
             $cleanedMailingList[] = trim($mail);
         }
     }
@@ -42,8 +42,8 @@ function cleanupMailsList($mailingList) {
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 
-// TODO: validate path
-if ($request->exist('path')) {
+$vPath = new Valid_String('path');
+if ($request->exist('path') && $request->valid($vPath)) {
     $path             = $request->get('path');
     $svn_mailing_list = $svnNotification->getSVNMailingList($group_id, $path);
 } else {
