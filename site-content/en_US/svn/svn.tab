@@ -57,6 +57,9 @@ svn_admin_notification	mail_comment	<H3>E-Mail notification on Commits</H3><p><I
 svn_admin_notification	mail_to	Mail to
 svn_admin_notification	notification_path	Path
 svn_admin_notification	header	Subject header
+svn_admin_notification	mailing_list_header	SVN notification list
+svn_admin_notification	path_header	SVN monitored path
+svn_admin_notification	path_delete_ask	Delete?
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php

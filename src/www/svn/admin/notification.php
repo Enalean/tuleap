@@ -105,7 +105,7 @@ $svn_notifications_details = $svnNotification->getSVNEventNotificationDetails($g
 $content = '<table>';
 $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
 $content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
-$content .= html_build_list_table_top(array('SVN notification list', 'SVN monitored path' , 'Delete?'), false, false , false);
+$content .= html_build_list_table_top(array($GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')), false, false , false);
 $rowBgColor  = 0;
 
 foreach ($svn_notifications_details as $item) {
