@@ -22,10 +22,10 @@ require_once 'ShowPresenter.class.php';
 require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
-require_once 'SearchContentView.class.php';
 require_once 'NotFoundException.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'common/mvc2/Controller.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Planning/SearchContentView.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
