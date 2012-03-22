@@ -98,17 +98,20 @@ class Planning_Controller extends Controller {
         $planning_id         = $this->request->get('planning_id');
         $planning            = $this->planning_factory->getPlanning($planning_id);
         $project             = $manager->getProject($this->request->get('group_id'));
-        
-        $excludedArtifactIds = array();
-        if ($this->artifact) {
-            $excludedArtifacts = $this->artifact->getLinkedArtifacts();
-            $excludedArtifactIds = array_map(array($this, 'getArtifactId'), $excludedArtifacts);
-        }
-        
-        $content_view        = $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $search, $excludedArtifactIds);
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
+        
+        $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
+        $content_view        = $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $search, $excludedArtifactIds);
         $presenter           = new Planning_Presenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
+    }
+    
+    public function getTrackerLinkedItems($artifacts_to_select) {
+        $linked_items = array();
+        foreach ($artifacts_to_select as $artifact) {
+            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts());
+        }
+        return $linked_items;
     }
     
     public function edit() {
