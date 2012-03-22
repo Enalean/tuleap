@@ -27,11 +27,30 @@ Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
 
+class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_SearchContentView {
+}
+
 class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
         $this->formElementFactory = new MockTracker_FormElementFactory();
+    }
+
+    public function itBuildCustomContentView() {
+        $formElementFactory = new MockTracker_FormElementFactory();
+        $formElementFactory->setReturnValue('getProjectSharedFields', array());
+        $tracker_factory    = new MockTrackerFactory();
+        $tracker_factory->setReturnValue('getTrackersByGroupId', array());
+        $project            = new MockProject();
+        $request_criteria   = array();
+        $search             = new MockTracker_CrossSearch_Search();
+        $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
+
+        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory);
+        $classname = 'Fake_Tracker_CrossSearch_SearchContentView';
+        $view      = $builder->buildCustomContentView($classname, $project, $request_criteria, $search, array());
+        $this->assertIsA($view, $classname);
     }
     
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {

@@ -146,8 +146,8 @@ class Planning_ControllerTest extends TuleapTestCase {
         $project_manager->setReturnValue('getProject', $project, array($project_id));
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $linked_items = array();
-        $view_builder->expectOnce('buildContentView', array($project, $expected_criteria, $search, $linked_items));
-        $view_builder->setReturnValue('buildContentView', $content_view);
+        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, $expected_criteria, $search, $linked_items));
+        $view_builder->setReturnValue('buildCustomContentView', $content_view);
         
         $title    = "screen hangs with macos and some escapable characters #<";
         $artifact = $this->GivenAnArtifact($id, $title);
@@ -199,7 +199,7 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->setReturnValue('buildContentView', $content_view);
+        $view_builder->setReturnValue('buildCustomContentView', $content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager(), new MockTracker_CrossSearch_Search());
     }
     

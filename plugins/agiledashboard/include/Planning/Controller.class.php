@@ -22,6 +22,7 @@ require_once 'Presenter.class.php';
 require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
+require_once 'SearchContentView.class.php';
 require_once 'NotFoundException.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'common/mvc2/Controller.class.php';
@@ -105,7 +106,7 @@ class Planning_Controller extends Controller {
             $excludedArtifactIds = array_map(array($this, 'getArtifactId'), $excludedArtifacts);
         }
         
-        $content_view        = $view_builder->buildContentView($project, $request_criteria, $search, $excludedArtifactIds);
+        $content_view        = $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $search, $excludedArtifactIds);
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
         $presenter           = new Planning_Presenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);

@@ -33,12 +33,12 @@ class Tracker_CrossSearch_SearchContentView {
     /**
      * @var TreeNode of artifacts rows
      */
-    private $tree_of_artifacts;
+    protected $tree_of_artifacts;
     
     /**
      * @var Tracker_ArtifactFactory
      */
-    private $artifact_factory;
+    protected $artifact_factory;
     
     /**
      * @var Tracker_SharedFormElementFactory
@@ -82,7 +82,7 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchTable() {
+    protected function fetchTable() {
         $html  = '';
         $html .= '<table cellspacing="1">';
         $html .= $this->fetchTHead();

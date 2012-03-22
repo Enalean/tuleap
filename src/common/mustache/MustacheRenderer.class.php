@@ -52,8 +52,13 @@ class MustacheRenderer extends TemplateRenderer {
         $this->mustache_loader = new MustacheLoader($this->plugin_templates_dir);
     }
     
-    public function render($template_name, $presenter) {
-        echo $this->mustache->render($this->mustache_loader[$template_name], $presenter, $this->mustache_loader);
+    public function render($template_name, $presenter, $return = false) {
+       $result = $this->mustache->render($this->mustache_loader[$template_name], $presenter, $this->mustache_loader);
+       if ($return) {
+           return $result;
+       } else {
+           echo $result;
+       }
     }
 }
 

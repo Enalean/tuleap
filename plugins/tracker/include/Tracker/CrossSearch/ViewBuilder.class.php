@@ -41,12 +41,16 @@ class Tracker_CrossSearch_ViewBuilder {
    
     }
     public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, array $excludedArtifactIds = array()) {
+        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $request_criteria, $search, $excludedArtifactIds);
+    }
+    
+    public function buildCustomContentView($classname, Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, array $excludedArtifactIds = array()) {
         $report             = $this->getReport();
         $criteria           = $this->getCriteria($project, $report, $request_criteria);
         $tracker_ids        = $this->getTrackersIds($project, $this->tracker_factory);
         $artifacts          = $search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
         
-        return $this->getContentView($report, $criteria, $artifacts);
+        return $this->getContentView($classname, $report, $criteria, $artifacts);
     }
     
     
@@ -82,11 +86,11 @@ class Tracker_CrossSearch_ViewBuilder {
             throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);
         }
     }
-    protected function getContentView(Tracker_Report $report, $criteria, $artifacts) {
+    protected function getContentView($classname, Tracker_Report $report, $criteria, $artifacts) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($this->formElementFactory, $bindFactory);
-        return new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
+        return new $classname($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
     }
     
     private function getReport() {

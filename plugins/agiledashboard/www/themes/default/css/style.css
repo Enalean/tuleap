@@ -13,13 +13,6 @@
     padding: 0 0.5em;
 }
 
-.planning-droppable-hover {
-    background: #fcfcfc;
-    -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
-    -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
-    box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
-}
-
 .planning-draggable {
     cursor: move;
 }
@@ -33,7 +26,46 @@
     margin-top: 0;
 }
 
-    
-    
-    
+.cards {
+    list-style-type: none;
+    padding-left: 0;
+}
+.card {
+    padding: 0.5em 1em;
+    margin-bottom: 1em;
+    border: 1px solid gray;
+    box-shadow: 1px 1px 2px 1px lightgray;
+    background: #ffe;
+    min-width: 200px;
+}
+.card > .cards > .card {
+    background: #ffd;
+}
+
+.card > .cards > .card > .cards > .card {
+    background: #ffc;
+}
+
+.card > .cards > .card > .cards > .card > .cards > .card {
+    background: #ffb;
+}
+
+.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card {
+    background: #ffa;
+}
+
+.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card  > .cards > .card {
+    background: #ff9;
+}
+
+.card-link {
+    text-align:right;
+}
+
+.planning-droppable-hover {
+    background: #fcfcfc;
+    -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
+    -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+    box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+}
 
