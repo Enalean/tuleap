@@ -45,3 +45,4 @@ class TestsPluginOrdenedSuite extends TestSuite {
         return $reporter->getStatus();
     }
 }
+?>
