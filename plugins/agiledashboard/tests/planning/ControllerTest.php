@@ -30,7 +30,6 @@ if (!defined('TRACKER_BASE_URL')) {
 }
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
-Mock::generate('TrackerFactory');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
@@ -210,7 +209,7 @@ class Planning_ControllerShowTest extends TuleapTestCase {
         $planning_factory->setReturnValue('getPlanning', $this->planning, array($this->planning->getId()));
         
         ob_start();
-        $controller = new Planning_Controller($request, $factory, $planning_factory, new MockTrackerFactory());
+        $controller = new Planning_Controller($request, $factory, $planning_factory);
         $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();
         return $content;
@@ -231,8 +230,7 @@ abstract class Planning_ControllerIndexTest extends TuleapTestCase {
         $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
         $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = new MockPlanningFactory();
-        $this->tracker_factory  = new MockTrackerFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
+        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory);
     }
     
     protected function renderIndex() {
@@ -298,8 +296,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
         $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = aPlanningFactory()->build();
-        $this->tracker_factory  = new MockTrackerFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
+        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory);
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
         
         $this->trackers = array(
@@ -311,8 +308,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
     
     protected function renderNew() {
-        $this->tracker_factory->expectOnce('getTrackersByGroupId', array($this->group_id));
-        $this->tracker_factory->setReturnValue('getTrackersByGroupId', $this->trackers);
+        $this->planning_factory->getTrackerFactory()->expectOnce('getTrackersByGroupId', array($this->group_id));
+        $this->planning_factory->getTrackerFactory()->setReturnValue('getTrackersByGroupId', $this->trackers);
         
         ob_start();
         $this->controller->new_();
@@ -346,13 +343,12 @@ abstract class Planning_ControllerCreateTest extends TuleapTestCase {
         $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
         $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = new MockPlanningFactory();
-        $this->tracker_factory  = new MockTrackerFactory();
         
-        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
+        $this->planning_factory->setReturnValue('getTrackersByGroupId', array());
     }
     
     protected function create() {
-        $this->controller = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
+        $this->controller = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory);
         
         ob_start();
         $this->controller->create();
@@ -413,17 +409,14 @@ class Planning_ControllerEditWithValidPlanningIdTest extends TuleapTestCase {
     public function itRendersAnEditForm() {
         $planning         = aPlanning()->build();
         $request          = new Codendi_Request(array('planning_id' => $planning->getId()));
-        $tracker_factory  = new MockTrackerFactory();
         $planning_factory = new MockPlanningFactory();
         $controller       = aPlanningController()->with('request', $request)
                                                  ->with('planning_factory', $planning_factory)
-                                                 ->with('tracker_factory', $tracker_factory)
                                                  ->build();
         
         $planning_factory->expectOnce('getPlanning', array($planning->getId()));
         $planning_factory->setReturnValue('getPlanning', $planning);
-        
-        $tracker_factory->setReturnValue('getTrackersByGroupId', array());
+        $planning_factory->setReturnValue('getTrackersByGroupId', array());
         
         ob_start();
         $controller->edit();

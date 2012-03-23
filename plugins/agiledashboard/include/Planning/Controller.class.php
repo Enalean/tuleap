@@ -36,25 +36,24 @@ class Planning_Controller extends Controller {
      */
     private $artifact;
     
-    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, TrackerFactory $tracker_factory) {
+    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
-        $aid = $request->get('aid');
-        $this->group_id = $request->get('group_id');
-        $this->artifact = $artifact_factory->getArtifactById($aid);
+        $aid                    = $request->get('aid');
+        $this->group_id         = $request->get('group_id');
+        $this->artifact         = $artifact_factory->getArtifactById($aid);
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
-        $this->tracker_factory  = $tracker_factory;
     }
     
     public function index() {
-        $presenter = new Planning_IndexPresenter ($this->planning_factory, $this->group_id);
+        $presenter = new Planning_IndexPresenter($this->planning_factory, $this->group_id);
         $this->render('index', $presenter);
     }
     
     public function new_() {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
-        $presenter = new Planning_FormPresenter($planning, $this->tracker_factory);
+        $presenter = $this->getFormPresenter($planning);
         
         $this->render('new', $presenter);
     }
@@ -127,8 +126,8 @@ class Planning_Controller extends Controller {
     
     public function edit() {
         try {
-            $planning = $this->getPlanning();
-            $presenter = new Planning_FormPresenter($planning, $this->tracker_factory);
+            $planning  = $this->getPlanning();
+            $presenter = $this->getFormPresenter($planning);
             $this->render('edit', $presenter);
             
         } catch(Planning_NotFoundException $exception) {
@@ -147,6 +146,10 @@ class Planning_Controller extends Controller {
     public function delete() {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));
+    }
+    
+    private function getFormPresenter(Planning $planning) {
+        return new Planning_FormPresenter($planning, $this->planning_factory);
     }
     
     private function getPlanning() {

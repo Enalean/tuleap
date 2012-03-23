@@ -134,11 +134,12 @@ class AgileDashboardPlugin extends Plugin {
     private function buildController($request) {
         require_once 'Planning/Controller.class.php';
         require_once 'Planning/PlanningFactory.class.php';
+        require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
         
-        return new Planning_Controller($request,
-                                       Tracker_ArtifactFactory::instance(),
-                                       new PlanningFactory(new PlanningDao()),
-                                       TrackerFactory::instance());
+        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        
+        return new Planning_Controller($request, $artifact_factory, $planning_factory);
     }
     
     private function renderAction(Planning_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {

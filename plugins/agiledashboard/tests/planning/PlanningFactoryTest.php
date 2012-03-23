@@ -19,6 +19,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php');
+require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 
 Mock::generate('Planning');
 Mock::generate('PlanningDao');
@@ -27,7 +28,7 @@ class PlanningFactoryTest extends TuleapTestCase {
     
     function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $dao          = new MockPlanningDao();
-        $factory      = new PlanningFactory($dao);
+        $factory      = aPlanningFactory()->withDao($dao)->build();
         $empty_result = TestHelper::arrayToDar();
         $dao->setReturnValue('searchPlannings', $empty_result);
         
@@ -36,7 +37,7 @@ class PlanningFactoryTest extends TuleapTestCase {
     
     function itReturnAllDefinedPlanningsForAProject() {
         $dao          = new MockPlanningDao();
-        $factory      = new PlanningFactory($dao);
+        $factory      = aPlanningFactory()->withDao($dao)->build();
         $empty_result = TestHelper::arrayToDar(
             array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102),
             array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102)

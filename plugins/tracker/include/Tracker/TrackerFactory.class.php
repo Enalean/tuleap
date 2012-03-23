@@ -69,7 +69,7 @@ class TrackerFactory {
     }
 
     /**
-     * @param int $id the id of the tracker to retrieve
+     * @param int $group_id the project id the trackers to retrieve belong to
      * 
      * @return Array of Tracker
      */

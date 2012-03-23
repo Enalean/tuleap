@@ -23,18 +23,34 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once(dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php');
-require_once(dirname(__FILE__).'/../../include/Planning/PlanningDao.class.php');
+require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/PlanningDao.class.php';
+require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
 
 Mock::generate('PlanningDao');
+Mock::generate('TrackerFactory');
 
 function aPlanningFactory() {
     return new TestPlanningFactoryBuilder();
 }
 
 class TestPlanningFactoryBuilder {
+    
+    private $dao;
+    private $tracker_factory;
+    
+    public function __construct() {
+        $this->dao             = new MockPlanningDao();
+        $this->tracker_factory = new MockTrackerFactory();
+    }
+    
+    public function withDao(DataAccessObject $dao) {
+        $this->dao = $dao;
+        return $this;
+    }
+    
     public function build() {
-        return new PlanningFactory(new MockPlanningDao());
+        return new PlanningFactory($this->dao, $this->tracker_factory);
     }
 }
 

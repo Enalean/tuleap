@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once('PlanningDao.class.php');
 require_once('Planning.class.php');
 
@@ -28,8 +29,14 @@ class PlanningFactory {
      */
     private $dao;
     
-    public function __construct(PlanningDao $dao) {
-        $this->dao = $dao;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    
+    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory) {
+        $this->dao             = $dao;
+        $this->tracker_factory = $tracker_factory;
     }
     
     /**
@@ -76,6 +83,22 @@ class PlanningFactory {
     
     public function deletePlanning($planning_id) {
         return $this->dao->delete($planning_id);
+    }
+    
+    /**
+     * @param int $group_id the project id the trackers to retrieve belong to
+     * 
+     * @return Array of Tracker
+     */
+    public function getTrackersByGroupId($group_id) {
+        return $this->tracker_factory->getTrackersByGroupId($group_id);
+    }
+    
+    /**
+     * @return TrackerFactory
+     */
+    public function getTrackerFactory() {
+        return $this->tracker_factory;
     }
 }
 

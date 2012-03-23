@@ -27,7 +27,6 @@ require_once dirname(__FILE__).'/../../include/Planning/Controller.class.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('PlanningFactory');
-Mock::generate('TrackerFactory');
 
 class Builder {
     public function with($key, $value) {
@@ -41,14 +40,12 @@ class TestPlanningControllerBuilder extends Builder {
         $this->request          = new Codendi_Request(array());
         $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = new MockPlanningFactory();
-        $this->tracker_factory  = new MockTrackerFactory();
     }
     
     public function build() {
         return new Planning_Controller($this->request,
                                        $this->artifact_factory,
-                                       $this->planning_factory,
-                                       $this->tracker_factory);
+                                       $this->planning_factory);
     }
 }
 

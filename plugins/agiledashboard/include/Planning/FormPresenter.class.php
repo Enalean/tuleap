@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TrackerFactory.class.php';
+require_once 'PlanningFactory.class.php';
 require_once 'TrackerPresenter.class.php';
 
 class Planning_FormPresenter {
@@ -31,9 +31,9 @@ class Planning_FormPresenter {
     public $group_id;
     
     /**
-     * @var TrackerFactory
+     * @var PlanningFactory
      */
-    public $tracker_factory;
+    public $planning_factory;
     
     /**
      * @var Planning
@@ -45,10 +45,10 @@ class Planning_FormPresenter {
      */
     private $available_trackers;
     
-    public function __construct(Planning $planning, TrackerFactory $tracker_factory) {
-        $this->group_id        = $planning->getGroupId();
-        $this->tracker_factory = $tracker_factory;
-        $this->planning        = $planning;
+    public function __construct(Planning $planning, PlanningFactory $planning_factory) {
+        $this->group_id         = $planning->getGroupId();
+        $this->planning         = $planning;
+        $this->planning_factory = $planning_factory;
     }
     
     public function getPlanningName() {
@@ -61,7 +61,7 @@ class Planning_FormPresenter {
     
     public function getAvailableTrackers() {
         if ($this->available_trackers == null) {
-            $available_trackers = array_values($this->tracker_factory->getTrackersByGroupId($this->group_id));
+            $available_trackers = array_values($this->planning_factory->getTrackersByGroupId($this->group_id));
             $this->available_trackers = array_map(array($this, 'getPlanningTrackerPresenter'), $available_trackers);
         }
         return $this->available_trackers;
