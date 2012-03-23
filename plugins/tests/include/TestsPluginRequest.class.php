@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class testsPluginRequest {
+class TestsPluginRequest {
     
     protected $cover_code   = false;
     protected $show_pass    = false;
