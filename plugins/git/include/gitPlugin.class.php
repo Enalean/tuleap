@@ -408,6 +408,10 @@ class GitPlugin extends Plugin {
                 require_once('Git_Widget_UserPushes.class.php');
                 $params['instance'] = new Git_Widget_UserPushes();
                 break;
+            case 'plugin_git_project_pushes':
+                require_once('Git_Widget_ProjectPushes.class.php');
+                $params['instance'] = new Git_Widget_ProjectPushes();
+                break;
             default:
                 break;
         }
@@ -419,6 +423,7 @@ class GitPlugin extends Plugin {
             $params['codendi_widgets'][] = 'plugin_git_user_pushes';
         }
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            $params['codendi_widgets'][] = 'plugin_git_project_pushes';
         }
     }
 

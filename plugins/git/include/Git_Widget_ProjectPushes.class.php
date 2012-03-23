@@ -28,7 +28,7 @@ class Git_Widget_ProjectPushes extends Widget {
      * Constructor of the widget.
      */
     public function __construct() {
-        parent::__construct('projectpushes');
+        parent::__construct('plugin_git_project_pushes');
     }
 
     public function canBeUsedByProject($project) {
