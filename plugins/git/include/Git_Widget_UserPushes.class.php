@@ -94,8 +94,8 @@ class Git_Widget_UserPushes extends Widget {
                 user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
             }
             if ($request->valid($vOffset)) {
-                $this->repositoryId = $request->get('plugin_git_user_pushes_offset');
-                user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
+                $this->offset = $request->get('plugin_git_user_pushes_offset');
+                user_set_preference('plugin_git_user_pushes_offset', $this->offset);
             }
         }
         return true;
@@ -108,10 +108,10 @@ class Git_Widget_UserPushes extends Widget {
     function getPreferences() {
         return "<table>
                 <tr>
-                <td>Repository id</td><td><input name='plugin_git_user_pushes_repo_id'value='".$this->repositoryId."'/></td>
+                <td>Repository id</td><td><input name='plugin_git_user_pushes_repo_id' value='".$this->repositoryId."'/></td>
                 </tr>
                 <tr>
-                <td>Offset</td><td><input name='plugin_git_user_pushes_offset'value='".$this->offset."'/></td>
+                <td>Offset</td><td><input name='plugin_git_user_pushes_offset' value='".$this->offset."'/></td>
                 </tr>
                 </table>";
         
