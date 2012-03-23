@@ -37,7 +37,7 @@ class TestsPluginSuitePresenter {
         $this->name     = $name;
         $this->value    = $value;
         $this->selected = $selected;
-        $this->prefix = $prefix;
+        $this->prefix   = $prefix;
     }
     public function prefix() {
         return $this->prefix;
@@ -129,7 +129,9 @@ class TestsPluginSuitePresenter {
     }
     
     public function children() {
-        return array_values($this->children);
+        $return = array_values($this->children);
+        sort($return);
+        return $return;
     }
     
     public function hasChildren() {
