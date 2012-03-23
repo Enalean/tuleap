@@ -180,7 +180,7 @@ class Planning_ControllerShowTest extends TuleapTestCase {
                 $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
                 $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
             ), 
-            array($this->planning->getReleaseTrackerId()));
+            array($this->planning->getPlanningTrackerId()));
         return $factory;
     }
     
@@ -325,14 +325,14 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     
     public function itHasAMultiSelectBoxListingTrackers() {
         
-        $this->assertPattern('/\<select multiple="multiple" name="planning_backlog_ids\[\]"/', $this->output);
+        $this->assertPattern('/\<select multiple="multiple" name="backlog_tracker_ids\[\]"/', $this->output);
         foreach ($this->trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
         }
     }
     
     public function itHasASelectBoxListingTrackers() {
-        $this->assertPattern('/\<select name="planning_release_id"/', $this->output);
+        $this->assertPattern('/\<select name="planning_tracker_id"/', $this->output);
         foreach ($this->trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
         }
@@ -365,8 +365,8 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
         parent::setUp();
         
         $this->request->set('planning_name', '');
-        $this->request->set('planning_backlog_ids', array());
-        $this->request->set('planning_release_id', '');
+        $this->request->set('backlog_tracker_ids', array());
+        $this->request->set('planning_tracker_id', '');
     }
     
     public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
@@ -381,8 +381,8 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
         parent::setUp();
         
         $this->request->set('planning_name', 'Release Planning');
-        $this->request->set('planning_backlog_ids', array('1', '2'));
-        $this->request->set('planning_release_id', '3');
+        $this->request->set('backlog_tracker_ids', array('1', '2'));
+        $this->request->set('planning_tracker_id', '3');
     }
     
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
@@ -458,8 +458,8 @@ class Planning_ControllerUpdateTest extends TuleapTestCase {
         
         $request->set('planning_id', $planning_id);
         $request->set('planning_name', 'Release Planning');
-        $request->set('planning_backlog_ids', array('1', '2'));
-        $request->set('planning_release_id', '3');
+        $request->set('backlog_tracker_ids', array('1', '2'));
+        $request->set('planning_tracker_id', '3');
         
         $planning_factory = new MockPlanningFactory();
         $controller       = aPlanningController()->with('request', $request)

@@ -6,16 +6,16 @@
     </p>
     <p>
         This planning allows assignment of
-        <select multiple="multiple" name="planning_backlog_ids[]" style="vertical-align: top;">
+        <select multiple="multiple" name="backlog_tracker_ids[]" style="vertical-align: top;">
             {{#getAvailableTrackers}}                
                 <option value="{{getId}}" {{selectedIfBacklogTracker}}>{{getName}}</option>
             {{/getAvailableTrackers}}
         </select>
         to
-        <select name="planning_release_id">
+        <select name="planning_tracker_id">
             <option value=""/>
             {{#getAvailableTrackers}}
-                <option value="{{getId}}" {{selectedIfReleaseTracker}}>{{getName}}</option>
+                <option value="{{getId}}" {{selectedIfPlanningTracker}}>{{getName}}</option>
             {{/getAvailableTrackers}}
         </select>
     </p>

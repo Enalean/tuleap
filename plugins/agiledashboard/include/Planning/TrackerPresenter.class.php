@@ -53,8 +53,8 @@ class Planning_TrackerPresenter {
         }
     }
     
-    public function selectedIfReleaseTracker() {
-        if ($this->tracker->getId() == $this->planning->getReleaseTrackerId()) {
+    public function selectedIfPlanningTracker() {
+        if ($this->tracker->getId() == $this->planning->getPlanningTrackerId()) {
             return 'selected';
         }
     }

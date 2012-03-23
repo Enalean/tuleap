@@ -20,16 +20,43 @@
 
 class Planning {
     
-    function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $release_tracker_id = null) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->group_id = $group_id;
+    /**
+     * @var int
+     */
+    private $id;
+    
+    /**
+     * @var string
+     */
+    private $name;
+    
+    /**
+     * @var int
+     */
+    private $group_id;
+    
+    /**
+     * @var Array of int
+     */
+    private $backlog_tracker_ids;
+    
+    /**
+     * @var int
+     */
+    private $planning_tracker_id;
+    
+    function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
+        $this->id                  = $id;
+        $this->name                = $name;
+        $this->group_id            = $group_id;
         $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->release_tracker_id  = $release_tracker_id;
+        $this->planning_tracker_id  = $planning_tracker_id;
     }
+    
     public function getId () {
         return $this->id;
     }
+    
     public function getName() {
         return $this->name;
     }
@@ -42,8 +69,8 @@ class Planning {
         return $this->backlog_tracker_ids;
     }
     
-    public function getReleaseTrackerId() {
-        return $this->release_tracker_id;
+    public function getPlanningTrackerId() {
+        return $this->planning_tracker_id;
     }
 }
 

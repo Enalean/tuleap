@@ -63,20 +63,20 @@ class Planning_Controller extends Controller {
         $planning_name = new Valid_String('planning_name');
         $planning_name->required();
         
-        $planning_backlog_ids = new Valid_UInt('planning_backlog_ids');
-        $planning_backlog_ids->required();
+        $backlog_tracker_ids = new Valid_UInt('backlog_tracker_ids');
+        $backlog_tracker_ids->required();
         
-        $planning_release_id = new Valid_UInt('planning_release_id');
-        $planning_release_id->required();
+        $planning_tracker_id = new Valid_UInt('planning_tracker_id');
+        $planning_tracker_id->required();
         
-        if ($this->request->validArray($planning_backlog_ids) && 
-            $this->request->valid($planning_release_id) &&
+        if ($this->request->validArray($backlog_tracker_ids) && 
+            $this->request->valid($planning_tracker_id) &&
             $this->request->valid($planning_name)) {
             
             $this->planning_factory->create($this->request->get('planning_name'),
                                             $this->group_id,
-                                            $this->request->get('planning_backlog_ids'),
-                                            $this->request->get('planning_release_id'));
+                                            $this->request->get('backlog_tracker_ids'),
+                                            $this->request->get('planning_tracker_id'));
             
             $this->redirect(array('group_id' => $this->group_id));
         } else {
@@ -92,7 +92,7 @@ class Planning_Controller extends Controller {
 
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning = $this->getPlanning();
-        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
+        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
 
         $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
         $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
@@ -139,8 +139,8 @@ class Planning_Controller extends Controller {
     public function update() {
         $this->planning_factory->updatePlanning($this->request->get('planning_id'),
                                                 $this->request->get('planning_name'),
-                                                $this->request->get('planning_backlog_ids'),
-                                                $this->request->get('planning_release_id'));
+                                                $this->request->get('backlog_tracker_ids'),
+                                                $this->request->get('planning_tracker_id'));
         $this->redirect(array('group_id' => $this->group_id));
     }
     

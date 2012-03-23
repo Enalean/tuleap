@@ -49,7 +49,7 @@ class PlanningFactory {
         $planning =  $this->dao->searchById($planning_id)->getRow();
         if ($planning) {
             $backlog_tracker_ids = $this->getAllBacklogTrackerIds($planning_id);
-            return new Planning($planning_id, $planning['name'], $planning['group_id'], $backlog_tracker_ids, $planning['release_tracker_id']);
+            return new Planning($planning_id, $planning['name'], $planning['group_id'], $backlog_tracker_ids, $planning['planning_tracker_id']);
         }
         return null;
     }
@@ -66,12 +66,12 @@ class PlanningFactory {
         return $backlog_tracker_ids;
     }
     
-    public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {
-        return $this->dao->create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id);
+    public function create($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id) {
+        return $this->dao->create($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id);
     }
     
-    public function updatePlanning($planning_id, $planning_name, $planning_backlog_ids, $planning_release_id) {
-        return $this->dao->updatePlanning($planning_id, $planning_name, $planning_backlog_ids, $planning_release_id);
+    public function updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id) {
+        return $this->dao->updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id);
     }
     
     public function deletePlanning($planning_id) {

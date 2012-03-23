@@ -23,7 +23,7 @@ class Planning_ShowPresenter {
     
     public $planning_id;
     public $planning_name;
-    public $release_tracker_id;
+    public $planning_tracker_id; // Is it used somewhere ?
     public $group_id;
     public $destination_id;
     public $destination_title;
