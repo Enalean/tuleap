@@ -35,7 +35,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $vHeader = new Valid_String('form_mailing_header');
             if($request->valid($vHeader)) {
                 $mailingHeader = $request->get('form_mailing_header');
-                if ($pm->setSVNHeader($group_id, $mailingHeader)) {
+                if ($pm->setSvnHeader($group_id, $mailingHeader)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_header_success'));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_header_fail'));
@@ -47,7 +47,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
                 $vPathToDelete = new Valid_Array('paths_to_delete');
                 if($request->valid($vPathToDelete)) {
                     $PathsToDelete    = $request->get('paths_to_delete');
-                    $svnNotification->removeSVNNotification($PathsToDelete, $group_id);
+                    $svnNotification->removeSvnNotification($PathsToDelete, $group_id);
                 }
             }
             break;
@@ -58,7 +58,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $mailingList = join(', ', $result['clean']);
             $badList     = join(', ', $result['bad']);
             if(!empty($mailingList) && !empty($formPath) && $request->valid($vPath)) {
-                if ($svnNotification->setSVNMailingList($group_id, $mailingList, $formPath)) {
+                if ($svnNotification->setSvnMailingList($group_id, $mailingList, $formPath)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_email_success'));
                 }
             } else {
@@ -81,7 +81,7 @@ svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings'
 $pm->clear($group_id);
 $project = $pm->getProject($group_id);
 $svn_mailing_header = $project->getSVNMailingHeader();
-$svn_mailing_list = $svnNotification->getSVNMailingList($group_id, $path);
+$svn_mailing_list = $svnNotification->getSvnMailingList($group_id, $path);
 
 // Mail header
 echo '
@@ -100,7 +100,7 @@ echo '
        </form>';
 
 // List of paths & mail addresses (+delete)
-$svn_notifications_details = $svnNotification->getSVNEventNotificationDetails($group_id);
+$svn_notifications_details = $svnNotification->getSvnEventNotificationDetails($group_id);
 $content = '<table>';
 $content .= '<th align="left">'.$Language->getText('svn_admin_notification','existent_notifications').'</th>';
 $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';

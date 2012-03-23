@@ -45,7 +45,7 @@ class SvnNotificationDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function setSVNMailingList($groupId, $mailingList, $path) {
+    function setSvnMailingList($groupId, $mailingList, $path) {
         $sql = ' INSERT INTO svn_notification
                  VALUES (
                  '.$this->da->escapeInt($groupId).',
@@ -65,7 +65,7 @@ class SvnNotificationDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function getSVNMailingList($groupId, $path = null) {
+    function getSvnMailingList($groupId, $path = null) {
         $condition = '';
         if (!empty($path)) {
             $condition = 'AND path = '.$this->da->quoteSmart($path);

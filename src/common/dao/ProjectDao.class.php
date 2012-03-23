@@ -287,7 +287,7 @@ class ProjectDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function setSVNHeader($groupId, $mailingHeader) {
+    function setSvnHeader($groupId, $mailingHeader) {
         $sql = ' UPDATE groups
                  SET svn_events_mailing_header = '.$this->da->quoteSmart($mailingHeader).'
                  WHERE group_id = '.$this->da->escapeInt($groupId);

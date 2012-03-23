@@ -43,9 +43,9 @@ class SvnNotification {
      *
      * @return Boolean
      */
-    function setSVNMailingList($projectId, $mailingList, $path) {
+    function setSvnMailingList($projectId, $mailingList, $path) {
         $dao = $this->_getDao();
-        return $dao->setSVNMailingList($projectId, $mailingList, $path);
+        return $dao->setSvnMailingList($projectId, $mailingList, $path);
     }
 
     /**
@@ -56,9 +56,9 @@ class SvnNotification {
      *
      * @return String
      */
-    function getSVNMailingList($projectId, $path) {
+    function getSvnMailingList($projectId, $path) {
         $dao = $this->_getDao();
-        if ($dar = $dao->getSVNMailingList($projectId, $path)) {
+        if ($dar = $dao->getSvnMailingList($projectId, $path)) {
             $row = $dar->current();
             return $row['svn_events_mailing_list'];
         } else {
@@ -73,9 +73,9 @@ class SvnNotification {
      *
      * @return DataAccessResult
      */
-    function getSVNEventNotificationDetails($projectId) {
+    function getSvnEventNotificationDetails($projectId) {
         $dao = $this->_getDao();
-        if ($dar = $dao->getSVNMailingList($projectId)) {
+        if ($dar = $dao->getSvnMailingList($projectId)) {
             return $dar;
         } else {
             return null;
@@ -90,12 +90,12 @@ class SvnNotification {
      *
      * @return void
      */
-    function removeSVNNotification($selectedPaths, $projectId) {
+    function removeSvnNotification($selectedPaths, $projectId) {
         if (is_array($selectedPaths) && !empty($selectedPaths)) {
             $dao = $this->_getDao();
             $paths = array();
             foreach ($selectedPaths as $pathToDelete) {
-                if ($dao->deleteSVNMailingList($pathToDelete, $projectId)) {
+                if ($dao->deleteSvnMailingList($pathToDelete, $projectId)) {
                     $paths[] = $pathToDelete;
                 } else {
                     $GLOBALS['Response']->addFeedback('error',  $GLOBALS['Language']->getText('svn_admin_notification','delete_path_fail'));
