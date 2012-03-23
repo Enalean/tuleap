@@ -125,7 +125,7 @@ class GitPHP_Resource
 			$localeReader = self::$instance;
 		}
 		if (!$localeReader) {
-			$localeReader = GitPHP_Resource::CreateLocale($locale);
+			$localeReader = GitPHP_Resource::CreateLocale($locale, false);
 		}
 		if (!$localeReader) {
 			return '';
@@ -269,9 +269,10 @@ class GitPHP_Resource
 	 * @access private
 	 * @static
 	 * @param string $locale locale to create
+	 * @param boolean $cache false to disable caching
 	 * @return mixed locale reader object or null on failure
 	 */
-	private static function CreateLocale($locale)
+	private static function CreateLocale($locale, $cache = true)
 	{
 		$reader = null;
 		if (!(($locale == 'en_US') || ($locale == 'en'))) {
@@ -281,7 +282,7 @@ class GitPHP_Resource
 			}
 		}
 
-		return new gettext_reader($reader);
+		return new gettext_reader($reader, $cache);
 	}
 
 }
