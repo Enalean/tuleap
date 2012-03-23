@@ -2694,7 +2694,6 @@ CREATE TABLE `groups` (
   `cvs_is_private` tinyint(1) NOT NULL default '0',
   `svn_tracker` int(11) NOT NULL default '1',
   `svn_mandatory_ref` tinyint(4) NOT NULL default '0',
-  `svn_events_mailing_list` text NOT NULL,
   `svn_events_mailing_header` varchar(64) character set utf8 collate utf8_bin default NULL,
   `svn_preamble` text NOT NULL,
   `svn_accessfile` text,
