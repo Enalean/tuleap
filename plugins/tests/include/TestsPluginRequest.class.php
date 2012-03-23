@@ -33,11 +33,16 @@ class TestsPluginRequest {
     
     public function parse($request) {
         foreach($request as $property => $value) {
-            $setProperty = 'set' . ucfirst(preg_replace_callback('@[_](.)@', array($this, 'replaceUnderscore'), $property));
+            $setProperty = $this->getSetterFor($property);
             if (method_exists($this, $setProperty)) {
                 $this->$setProperty($value);
             }
         }
+    }
+    
+    protected function getSetterFor($property) {
+        $property = preg_replace_callback('@[_](.)@', array($this, 'replaceUnderscore'), $property);
+        return 'set' . ucfirst($property);
     }
     
     protected function replaceUnderscore($match) {
