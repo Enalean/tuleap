@@ -28,6 +28,15 @@ class MockBuilderTest extends TuleapTestCase {
                 ->with('Rasmus Lerdorf')
                 ->returns("Hello, Rasmus Lerdorf");
         
+//        given($mockToto)
+//                ->greet('Rasmus Lerdorf')
+//                ->returns("Hello, Rasmus Lerdorf");
+//        
+//        $mockToto = when('Toto')
+//                ->recieves('greet')
+//                ->with('Rasmus Lerdorf')
+//                ->returns("Hello, Rasmus Lerdorf");
+        
         $this->assertEqual($mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
         $this->assertNotEqual($mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
     }
