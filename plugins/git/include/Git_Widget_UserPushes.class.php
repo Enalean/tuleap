@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Git_LogDao.class.php';
+
 /**
  * Widget displaying last git pushes for the user
  */
@@ -47,7 +49,15 @@ class Git_Widget_UserPushes extends Widget {
      * @return string html
      */
     public function getContent() {
-        return 'blah';
+        $content = '';
+        $dao     = new Git_LogDAO();
+        $um      = UserManager::instance();
+        $user    = $um->getCurrentUser();
+        $dar     = $dao->getLastPushesByUser($user->getId());
+        foreach($dar as $row) {
+            $content .= $row['group_name'].' '.$row['repository_name']."<br />";
+        }
+        return $content;
     }
 
     /**

@@ -41,10 +41,12 @@ class Git_LogDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function getLastPushesByUser($userId, $offset = 10) {
-        $sql = "SELECT *
-                FROM plugin_git_log
-                WHERE user_id = ".$this->da->escapeInt($userId)."
-                ORDER BY push_date DESC
+        $sql = "SELECT g.group_name, r.repository_name, l.push_date
+                FROM plugin_git_log l
+                JOIN plugin_git r ON l.repository_id = r.repository_id
+                JOIN groups g ON g.group_id = r.project_id
+                WHERE l.user_id = ".$this->da->escapeInt($userId)."
+                ORDER BY l.push_date DESC
                 LIMIT ".$this->da->escapeInt($offset);
         return $this->retrieve($sql);
     }
