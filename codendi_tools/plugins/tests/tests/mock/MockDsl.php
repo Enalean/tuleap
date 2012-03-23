@@ -2,7 +2,6 @@
 
 function givenThat($mock, $method) {
     return new OngoingStub($mock, $method);
-
 }
 
 class OngoingStub {
@@ -25,4 +24,6 @@ class OngoingStub {
         return $this;
     }
 }
+
+
 ?>

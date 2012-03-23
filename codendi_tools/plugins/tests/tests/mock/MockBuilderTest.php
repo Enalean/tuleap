@@ -28,10 +28,7 @@ class MockBuilderTest extends TuleapTestCase {
                 ->with('Rasmus Lerdorf')
                 ->returns("Hello, Rasmus Lerdorf");
         
-//        given($mockToto)
-//                ->greet('Rasmus Lerdorf')
-//                ->returns("Hello, Rasmus Lerdorf");
-//        
+
 //        $mockToto = when('Toto')
 //                ->recieves('greet')
 //                ->with('Rasmus Lerdorf')
@@ -53,12 +50,38 @@ class MockBuilderTest extends TuleapTestCase {
         $this->assertNotEqual($mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
     }
     
-    /**
-     *  $mockToto = mock('Toto', 'greet')
-     *                  ->toReturn("Hello Rasmus Lerdorf")
-     *                  ->for("Rasmus", "Lerdorf"); 
-     */
+    public function itWorksWithoutArgumentsV2() {
+        $mockToto = new MockToto();
+        
+        givenThat($mockToto, 'greet')
+                ->returns("Hello");
+        
+        $this->assertEqual($mockToto->greet(), "Hello");
+    }
+    
+    public function testVersion2() {
+        $mockToto = new MockToto();
 
+        given($mockToto)
+            ->greet('Rasmus Lerdorf')
+            ->returns("Hello, Rasmus Lerdorf");
+        
+        $this->assertEqual($mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
+
+    }
+    public function itIsPossibleToSpecifySeveralArgumentsV2() {
+        $mockToto = new MockToto();
+        
+        given($mockToto)
+            ->greet('Rasmus', 'Lerdorf')
+            ->returns("Hello, Rasmus Lerdorf");
+        
+        $this->assertEqual($mockToto->greet('Rasmus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($mockToto->greet('Linus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
+    }
+    
 
 }
 ?>
