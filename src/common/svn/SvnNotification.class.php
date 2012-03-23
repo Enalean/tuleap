@@ -58,7 +58,8 @@ class SvnNotification {
      */
     function getSvnMailingList($projectId, $path) {
         $dao = $this->_getDao();
-        if ($dar = $dao->getSvnMailingList($projectId, $path)) {
+        $dar = $dao->getSvnMailingList($projectId, $path);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             return $row['svn_events_mailing_list'];
         } else {
@@ -75,7 +76,8 @@ class SvnNotification {
      */
     function getSvnEventNotificationDetails($projectId) {
         $dao = $this->_getDao();
-        if ($dar = $dao->getSvnMailingList($projectId)) {
+        $dar = $dao->getSvnMailingList($projectId);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return $dar;
         } else {
             return null;
