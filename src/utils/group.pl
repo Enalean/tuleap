@@ -153,20 +153,16 @@ sub get_emails_by_path {
         }
     }
 
-# Escape sql variables
-    my $retfieldname = $dbh->quote_identifier($retfieldname);
-    my $table = $dbh->quote_identifier($table);
-    my $fieldname = $dbh->quote_identifier($fieldname);
     my $groupid = $dbh->quote($groupid);
 
     if ($patternMatcher ne '') {
         $patternMatcher .= '*';
         my $patternMatcher = $dbh->quote($patternMatcher);
-        $subPathsExpression = "or $fieldname RLIKE $patternMatcher";
+        $subPathsExpression = "or path RLIKE $patternMatcher";
     } else {
         $subPathsExpression = "and 1";
     }
-    $query = "SELECT $retfieldname FROM $table WHERE group_id = $groupid and $fieldname = '/' ".$subPathsExpression;
+    $query = "SELECT svn_events_mailing_list FROM svn_notification WHERE group_id = $groupid and path = '/' ".$subPathsExpression;
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     my @emails = ();
