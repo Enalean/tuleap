@@ -50,7 +50,7 @@ class Git_Widget_UserPushes extends Widget {
      */
     public function getContent() {
         $content = '';
-        $dao     = new Git_LogDAO();
+        $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
         $dar     = $dao->getLastPushesByUser($user->getId());
