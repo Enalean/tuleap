@@ -85,17 +85,21 @@ class Git_Widget_UserPushes extends Widget {
 
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
-        $vRepo = new Valid_UInt('plugin_git_user_pushes_repo_id');
+        $vRepo   = new Valid_UInt('plugin_git_user_pushes_repo_id');
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
         $vRepo->required();
         if (!$request->exist('cancel')) {
             if ($request->valid($vRepo)) {
                 $this->repositoryId = $request->get('plugin_git_user_pushes_repo_id');
                 user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
+            } else {
+                user_set_preference('plugin_git_user_pushes_repo_id', '');
             }
             if ($request->valid($vOffset)) {
                 $this->offset = $request->get('plugin_git_user_pushes_offset');
                 user_set_preference('plugin_git_user_pushes_offset', $this->offset);
+            } else {
+                user_set_preference('plugin_git_user_pushes_offset', '');
             }
         }
         return true;
