@@ -79,4 +79,5 @@ class Git_Widget_UserPushes extends Widget {
     }
 
 }
+
 ?>

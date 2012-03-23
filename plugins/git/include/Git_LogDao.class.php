@@ -36,16 +36,23 @@ class Git_LogDao extends DataAccessObject {
      * Obtain last git pushes performed by the given user
      *
      * @param Integer $userId Id of the user
+     * @param Integer $repoId Id of the git repository
      * @param Integer $offset Offset of the search
      *
      * @return DataAccessResult
      */
-    function getLastPushesByUser($userId, $offset = 10) {
+    function getLastPushesByUser($userId, $repoId = 0, $offset = 10) {
+        if ($repoId) {
+            $condition = "AND l.repository_id = ".$this->da->escapeInt($repoId);
+        } else {
+            $condition = "";
+        }
         $sql = "SELECT g.group_name, r.repository_name, l.push_date
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
                 WHERE l.user_id = ".$this->da->escapeInt($userId)."
+                ".$condition."
                 ORDER BY l.push_date DESC
                 LIMIT ".$this->da->escapeInt($offset);
         return $this->retrieve($sql);
