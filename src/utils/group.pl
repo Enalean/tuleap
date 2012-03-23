@@ -153,7 +153,7 @@ sub get_emails_by_path {
         }
     }
 
-# @TODO add comment
+# Escape sql variables
     my $retfieldname = $dbh->quote_identifier($retfieldname);
     my $table = $dbh->quote_identifier($table);
     my $fieldname = $dbh->quote_identifier($fieldname);
@@ -175,6 +175,7 @@ sub get_emails_by_path {
             my $email = shift @row;
             my @notifEmails = split(',', $email);
             foreach my $emailVal (@notifEmails) {
+                # Remove whitespace from the start and end of the email string
                 $emailVal =~ s/^\s+//;
                 push @emails, $emailVal;
             }
@@ -185,6 +186,10 @@ sub get_emails_by_path {
     return @emails;
 }
 
+#
+# input: an array with redundant elements
+# output: an array without redundant elements
+#
 sub redundancy_grep {
     my ($ref_array) = @_;
     my %hash_without_redundancy;
