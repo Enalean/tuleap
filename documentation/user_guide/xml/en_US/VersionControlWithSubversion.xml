@@ -822,32 +822,35 @@ members = member1,member2,...,memberN
 	settings for email notification:</para>
 
 	<itemizedlist mark="bullet">
-	  <listitem>
-	    <para><emphasis role="bold">Email addresses</emphasis>: a
-	    comma separated list of email addresses of people to whom
-	    the email notification must be sent can be given. If you
-	    want to notify a large group of people then we strongly
-	    advise you to create a mailing list first (see
-	    below).</para>
-	  </listitem>
-
-	  <listitem>
-	    <para><emphasis role="bold">Subject Header</emphasis>: is
-	    a piece of text that will appear as a trailer in the
-	    Subject of all the email notifications sent to the
-	    addressees. This trailer is supposed to help the addressee
-	    to quickly spot the messages in their Inbox or to put
-	    filters in place to route the email notification to a
-	    given folder.</para>
-	  </listitem>
+     <listitem>
+        <para><emphasis role="bold">Subject Header</emphasis>: is
+        a piece of text that will appear as a trailer in the
+        Subject of all the email notifications sent to the
+        addressees. This trailer is supposed to help the addressee
+        to quickly spot the messages in their Inbox or to put
+        filters in place to route the email notification to a
+        given folder.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">Path</emphasis>: subversion path
+        on which notification will be sent.</para>
+      </listitem>
+      <listitem>
+        <para><emphasis role="bold">Email addresses</emphasis>: a
+        comma separated list of email addresses of people to whom
+        the email notification must be sent can be given. If you
+        want to notify a large group of people then we strongly
+        advise you to create a mailing list first (see
+        below).</para>
+      </listitem>
 
 	</itemizedlist>
 
 	<para><tip><title>Tip: create a specific mailing list for
 	Subversion events notification</title><para>If you intend to
 	generate email notification for the changes made in your
-	Subversion repository, it is a good practice to create a
-	specific mailing list called
+	Subversion repository or a specific path, it is a good practice
+	to create a specific mailing list called
 	<literal>projectname-svnevents</literal>. By doing so, &SYS_PRODUCT_NAME;
 	users and project members interested in receiving the email
 	notification just need to subscribe to the mailing list. In

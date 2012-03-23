@@ -167,7 +167,16 @@
         <authorinitials>Equipe Enalean</authorinitials>
         <revremark>Git: suppression des références à Gitshell, ajout sur gitolite et les forks personnels.
         Tracker: les tracker v5 ne sont plus en beta.
-	</revremark>
+        </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.28</revnumber>
+        <date>23-Mars-2012</date>
+        <authorinitials>Equipe Codex</authorinitials>
+        <revremark>
+            Notification Subversion par chemin.
+        </revremark>
       </revision>
 
     </revhistory>
