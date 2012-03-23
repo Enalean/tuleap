@@ -25,5 +25,34 @@ class OngoingStub {
     }
 }
 
+/**
+ * @param a simpletest mock
+ * @return \OngoingIntelligentStub 
+ */
+function given($mock) {
+    return new OngoingIntelligentStub($mock);
+}
 
+class OngoingIntelligentStub {
+
+    function __construct($mock) {
+        $this->mock = $mock;
+    }
+
+    public function __call($name, $arguments) {
+        $this->method = $name;
+        $this->arguments = $arguments;
+        return $this;
+    }
+
+    public function returns($value) {
+        if (empty($this->arguments)) {
+            $this->mock->setReturnValue($this->method, $value);
+        } else {
+            $this->mock->setReturnValue($this->method, $value, $this->arguments);
+        }
+    }
+    
+
+}
 ?>
