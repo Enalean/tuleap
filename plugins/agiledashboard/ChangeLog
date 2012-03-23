@@ -1,3 +1,9 @@
+Version 0.6 - Tuleap 4.0.28
+    * Introduce a plannification view. 
+      It enables agile teams to organise their release or sprint backlogs.
+      The user search for items (say user stories) and drag 'n drop them 
+      in a specific release.
+
 Version 0.5 - Tuleap 4.0.28
     * Transfer cross tracker search into tracker plugin
 

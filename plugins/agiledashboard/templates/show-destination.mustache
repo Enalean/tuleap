@@ -1,0 +1,17 @@
+<div id="art-{{destination_id}}" class="release_planner planning-droppable">
+    {{{destination_title}}}
+    <p class="help">{{destinationHelp}}</p>
+    <div>
+        {{^getLinkedItems}}
+        No items yet
+        {{/getLinkedItems}}
+        <ul>
+            {{#getLinkedItems}}
+            <li>
+                {{getTitle}}
+            </li>
+            {{/getLinkedItems}}
+        </ul>
+    </div>
+</div>
+<div style="clear: both"></div>

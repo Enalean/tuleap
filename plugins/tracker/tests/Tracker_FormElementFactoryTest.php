@@ -40,6 +40,8 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 Mock::generate('Tracker_FormElement_Field_Date');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
+require_once(dirname(__FILE__).'/Test_Tracker_Builder.php');
+
 Mock::generate('Tracker');
 Mock::generate('TrackerManager');
 Mock::generate('User');
@@ -273,6 +275,24 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
                      'notifications' => null,
                      'rank' => null,
                      'original_field_id' => null);
+    }
+    
+    public function testGetFieldFromTrackerAndSharedField() {
+        $original_field_dar = TestHelper::arrayToDar(
+                $this->createDar(999, 'text')
+        );
+        $dao = new MockTracker_FormElement_FieldDao();
+        $dao->setReturnValue('searchFieldFromTrackerIdAndSharedFieldId', $original_field_dar, array(66, 123));
+
+        $factory = $this->GivenAFormElementFactory();
+        $factory->setReturnValue('getDao', $dao);
+
+        $originalField = aTextField()->withId(999)->build();
+
+                
+        $tracker = aTracker()->withId(66)->build();
+        $exportedField = aTextField()->withId(123)->build();
+        $this->assertEqual($factory->getFieldFromTrackerAndSharedField($tracker, $exportedField), $originalField);
     }
 }
 

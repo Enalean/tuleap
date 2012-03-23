@@ -23,10 +23,5 @@ require_once 'common/include/Codendi_Request.class.php';
 
 class AgileDashboardPluginTest extends UnitTestCase {
     
-    public function testProcessDoesNothing() {
-        $plugin = new AgileDashboardPlugin(null);
-        $request = new Codendi_Request(array());
-        $plugin->process($request);
-    }
 }
 ?>

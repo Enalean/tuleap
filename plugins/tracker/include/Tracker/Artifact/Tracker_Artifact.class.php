@@ -42,6 +42,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected $changesets;
     
     /**
+     * @var Tracker 
+     */
+    private $tracker;
+    
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formElementFactory;
+    
+    /**
      * Constructor
      *
      * @param int     $id                       The Id of the artifact
@@ -638,6 +648,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->display($tracker_manager, $request, $current_user);
                 }
                 break;
+            case 'associate-artifact-to':
+                $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+                $linked_artifact_id = $request->get('linked-artifact-id');
+                if (count($artlink_fields)) {
+                    $this->createArtifactLink($artlink_fields, $linked_artifact_id, $current_user);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+                    $GLOBALS['Response']->sendStatusCode(400);
+                }
+                break;    
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -674,7 +694,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_FormElementFactory
      */
     protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
+        if (empty($this->formElementFactory)) {
+            $this->formElementFactory = Tracker_FormElementFactory::instance();
+        }
+        return $this->formElementFactory;
+    }
+    
+    public function setFormElementFactory(Tracker_FormElementFactory $factory) {
+        $this->formElementFactory = $factory;
     }
     
     /**
@@ -880,9 +907,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker The tracker this artifact belongs to
      */
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        if (!isset($this->tracker)) {
+            $this->tracker = TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        }
+        return $this->tracker;
     }
-    
+
+    public function setTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
+        $this->tracker_id = $tracker->getId();
+    }
+
     /**
      * Returns the latest changeset of this artifact
      *
@@ -932,6 +967,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         }
         return $this->changesets;
+    }
+    
+    /**
+     * @param array $changesets array of Tracker_Artifact_Changeset
+     */
+    public function setChangesets(array $changesets) {
+        $this->changesets = $changesets;
     }
     
     /**
@@ -1104,6 +1146,31 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getUserManager() {
         return UserManager::instance();
+    }
+
+    private function createArtifactLink($artlink_fields, $linked_artifact_id, User $current_user) {
+        $comment       = '';
+        $email         = '';
+        $artlink_field = $artlink_fields[0];
+        $fields_data   = array();
+        $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
+        $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+    }
+    
+    /**
+     * Get the latest artifacts linked to the current artifact
+     * 
+     * @return array of Linked Artifacts
+     */
+    public function getLinkedArtifacts() {
+        $artifact_links       = array();
+        $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+        if ($artifact_link_fields) {
+            $field          = $artifact_link_fields[0];
+            $changeset      = $this->getLastChangeset();
+            $artifact_links = $field->getLinkedArtifacts($changeset);
+        }
+        return $artifact_links;
     }
 }
 

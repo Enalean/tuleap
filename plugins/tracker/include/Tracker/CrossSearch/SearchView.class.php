@@ -19,6 +19,7 @@
  */
 
 require_once 'common/project/Service.class.php';
+require_once 'SearchContentView.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
@@ -38,63 +39,26 @@ class Tracker_CrossSearch_SearchView {
     private $service;
     
     /**
-     * @var Tracker_Report
-     */
-    private $report;
-    
-    /**
      * @var Array of Tracker_Report_Criteria
      */
     private $criteria;
     
     /**
-     * @var TreeNode of artifacts rows
-     */
-    private $tree_of_artifacts;
-    
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    
-    /**
-     * @var Tracker_SharedFormElementFactory
-     */
-    private $shared_factory;
-    
-    /**
      * @var Array of Tracker
      */
     private $trackers;
-    
-    private static $state_classes = array(
-        TreeNode_GetStateVisitor::STATE_BLANK => 'tree-blank',
-        TreeNode_GetStateVisitor::STATE_NODE  => 'tree-node',
-        TreeNode_GetStateVisitor::STATE_PIPE  => 'tree-pipe',
-        TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
-    );
-    
+
     public function __construct(Project                          $project,
                                 Service                          $service,
-                                Tracker_Report                   $report, 
                                 array                            $criteria, 
-                                TreeNode                         $tree_of_artifacts, 
-                                Tracker_ArtifactFactory          $artifact_factory, 
-                                Tracker_SharedFormElementFactory $shared_factory, 
                                                                  $trackers) {
         $this->project           = $project;
         $this->service           = $service;
-        $this->report            = $report;
         $this->criteria          = $criteria;
-        $this->tree_of_artifacts = $tree_of_artifacts;
-        $this->artifact_factory  = $artifact_factory;
-        $this->shared_factory    = $shared_factory;
         $this->trackers          = $trackers;
-        $this->treeVisistor      = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->tree_of_artifacts->accept($this->treeVisistor);
     }
     
-    public function render() {
+    public function render(Tracker_CrossSearch_SearchContentView $content_view) {
         $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
@@ -111,7 +75,7 @@ class Tracker_CrossSearch_SearchView {
         $html .= '<div class="tracker_homenav_cross_search">';
         $html .= '<h1>'. $title .'</h1>';
         if ($this->criteria) {
-            $html .= $this->fetchContent();
+            $html .= $content_view->fetch();
             $html .= $this->fetchTrackerList();
         } else {
             $html .= '<em>'. 'There is no shared field to query across your trackers' .'</em>';
@@ -129,97 +93,7 @@ class Tracker_CrossSearch_SearchView {
         
         return $renderer->render('tracker-home-nav', $presenter);
     }
-    
-    private function fetchContent() {
-        $html  = '';
-        $html .= '<table><tr valign="top"><td>';
-        $report_can_be_modified = false;
-        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
-        $html .= $this->fetchResults();
-        $html .= '</td></tr></table>';
-        return $html;
-    }
-    
-    private function fetchResults() {
-        $html  = '';
-        $html .= '<div class="tracker_report_renderer">';
-        if ($this->tree_of_artifacts->hasChildren()) {
-            $html .= $this->fetchTable();
-        } else {
-            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
-        }
-        $html .= '</div>';
-        return $html;
-    }
-    
-    private function fetchTable() {
-        $html  = '';
-        $html .= '<table cellspacing="1">';
-        $html .= $this->fetchTHead();
-        $html .= $this->fetchTBody();
-        $html .= '</table>';
-        return $html;
-    }
-    
-    public function visit(TreeNode $node) {
-        $html = '';
-        $row = $node->getData();
-        $artifact = $this->artifact_factory->getArtifactById($row['id']);
-        if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
-            $html .= '<td nowrap>';
-            $html .= $row['tree-padding'];
-            $html .= $artifact->fetchDirectLinkToArtifact();
-            $html .= '</td>';
-            $html .= '<td>';
-            $html .= $row['title'];
-            $html .= '</td>';
-            $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
-            $html .= '</tr>';
-            foreach ($node->getChildren() as $child) {
-                $html .= $child->accept($this);
-            }
-        }
-        return $html;
-    }
-    
-    private function fetchTBody() {
-        $html  = '';
-        $html .= '<tbody>';
-        $this->current_index = 0;
-        foreach ($this->tree_of_artifacts->getChildren() as $child) {
-            $html.= $child->accept($this);
-        }
-        $html .= '</tbody>';
-        return $html;
-    }
-    
-    private function fetchTHead() {
-        $html = '';
-        $html .= '<thead>';
-        $html .= '  <tr class="boxtable">';
-        $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
-        foreach ($this->criteria as $header) {
-            $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
-        }
-        $html .= '  </tr>';
-        $html .= '</thead>';
-        return $html;
-    }
-    
-    private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
-        $html = '';
-        foreach ($this->criteria as $criterion) {
-            $value = '';
-            $field = $this->shared_factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
-            if ($field) {
-                $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
-            }
-            $html .= '<td>'. $value .'</td>';
-        }
-        return $html;
-    }
+
     
     private function fetchTrackerList() {
         $html  = '';
@@ -239,5 +113,6 @@ class Tracker_CrossSearch_SearchView {
         $html .= '</div>';
         return $html;
     }
+
 }
 ?>

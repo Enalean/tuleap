@@ -106,11 +106,14 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
      *    @access public
      */
     function paintFail($message) {
+        $output_buffering_is_active = ob_get_level() > 1;
+        if ($output_buffering_is_active) ob_end_clean();
         $this->_fails++;
         print "<span class=\"fail\">Fail</span>: ";
         $breadcrumb = $this->getTestListAsTreeNode();
         $breadcrumb->accept($this);
         print '<pre style="clear:both; margin-left:6em;">' . $this->_htmlEntities($message) . '</pre>';
+        if ($output_buffering_is_active) ob_start();
     }
     
     function visit(TreeNode $node) {

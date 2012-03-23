@@ -81,6 +81,14 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
+    public function getOpenArtifactsByTrackerId($tracker_id) {
+        $artifacts = array();
+        foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {
+            $artifacts[$row['id']] = $this->getInstanceFromRow($row);
+        }
+        return $artifacts;
+    }
+    
     /**
      * Returns the "open" artifacts 
      *  - assigned to user $user_id OR

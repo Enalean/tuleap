@@ -1,0 +1,41 @@
+<div class="agiledashboard">
+    <h2>{{planning_name}}</h2>
+
+    <table>
+        <tbody>
+            <tr valign="top">
+                <td>
+
+                    <div class="product_backlog">
+                        {{{fetchSearchContent}}}
+                    </div>
+
+                </td><td>
+                    <div>
+                        <form action="?" method="GET">
+                            <input type="hidden" name="group_id" value="{{group_id}}" />
+                            <input type="hidden" name="action" value="show" />
+                            <input type="hidden" name="planning_id" value="{{planning_id}}" />
+                            <select class="planning-artifact-chooser" name="aid">
+                                <option value="">{{pleaseChoose}}</option>
+                                {{#artifactsToSelect}}
+                                <option value="{{id}}" {{selected}}>{{{title}}}</option>
+                                {{/artifactsToSelect}}
+                            </select>
+                            <noscript>
+                                <input type="submit" />
+                            </noscript>
+                        </form>
+                    </div>
+                    {{#hasArtifact}}
+                    {{> show-destination}}
+                    {{/hasArtifact}}
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+

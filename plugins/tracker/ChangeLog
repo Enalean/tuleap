@@ -1,3 +1,8 @@
+Version 5.4.2 - Tuleap 4.0.28
+  * Refactoring of CrossSearch
+  * Enhance tracker internal api to ease the the link between 
+    artifacts (used by the agiledashboard plugin)
+
 Version 5.4.1 - Tuleap 4.0.28
   * Fix upgrade script for tracker_hierarchy table.
 

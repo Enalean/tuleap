@@ -400,7 +400,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         $tracker_id      = $this->da->escapeInt($tracker_id);
         $shared_field_id = $this->da->escapeInt($shared_field_id);
         
-        $sql = "SELECT f1.id
+        $sql = "SELECT f1.*
                 FROM tracker_field AS f1
                 INNER JOIN tracker_field AS f2 ON (
                         f2.id = $shared_field_id

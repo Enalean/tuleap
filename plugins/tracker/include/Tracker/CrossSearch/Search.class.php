@@ -36,21 +36,36 @@ class Tracker_CrossSearch_Search {
      */
     private $dao;
     
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+    
     public function __construct(Tracker_CrossSearch_SharedFieldFactory $sharedFieldFactory,
-                                Tracker_CrossSearch_SearchDao          $dao) {
+                                Tracker_CrossSearch_SearchDao          $dao,
+                                Tracker_HierarchyFactory               $hierarchy_factory) {
+        $this->hierarchy_factory  = $hierarchy_factory;
         $this->sharedFieldFactory = $sharedFieldFactory;
         $this->dao                = $dao;
     }
 
-    public function getMatchingArtifacts(array $trackers, Tracker_Hierarchy $hierarchy, $criteria = null) {
+    
+    public function getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds = array()) {
+        $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
+        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $request_criteria, $excludedArtifactIds);
+    }
+    
+    /**
+     * @deprecated
+     */
+    public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, $criteria = null, $excludedArtifactIds = array()) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
-        $trackerIds           = array_map(array($this, 'getTrackerId'), $trackers);
         $artifacts            = array();
         
         if (count($searchedSharedFields) > 0) { 
-            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
+            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $excludedArtifactIds);
         } elseif (count($trackerIds) > 0) {
-            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds);
+            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds, $excludedArtifactIds);
         }
         return $this->sortResults($artifacts, $trackerIds, $hierarchy);
     }
@@ -132,8 +147,5 @@ class Tracker_CrossSearch_Search {
         return strcmp($level1, $level2);
     }
     
-    private function getTrackerId(Tracker $tracker) {
-        return $tracker->getId();
-    }
 }
 ?>

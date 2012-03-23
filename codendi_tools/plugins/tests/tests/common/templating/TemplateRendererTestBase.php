@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/MustacheRenderer.class.php');
-
 class TestPresenter {
     public function title() {
         return 'Tuleap';
@@ -45,10 +43,7 @@ class TestPresenter {
     }
 }
 
-/**
- * extend this class for any new template engines
- */
-abstract class TemplateRendererTest extends TuleapTestCase {
+abstract class TemplateRendererTestBase extends TuleapTestCase {
     function setUp() {
         parent::setUp();
         
@@ -93,15 +88,4 @@ abstract class TemplateRendererTest extends TuleapTestCase {
         $this->assertOutputDoesntContain('i18n_text');
     }
 }
-
-/**
- * Replace this class or add a class for every template engine 
- */
-class MustacheRendererTest extends TemplateRendererTest {
-    function setUp() {
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
-        parent::setUp();
-    }
-}
-
 ?>

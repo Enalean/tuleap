@@ -352,6 +352,15 @@ class Tracker_FormElementFactory {
     
     /**
      * @param Tracker $tracker
+     * @return array of Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getUsedArtifactLinkFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('art_link'));
+    }
+    
+    
+    /**
+     * @param Tracker $tracker
      * @return array All lists formElements bind to users used by the tracker
      */
     public function getUsedUserListFields($tracker) {
@@ -682,16 +691,6 @@ class Tracker_FormElementFactory {
         return $this->getInstancesFromRows($dar);
     }
 
-    /**
-     * Return all shared fields used in all tracker of the project
-     * 
-     * @return Array of Tracker_FormElement_Field
-     */
-    public function getAllProjectSharedFields(Project $project) {
-        $dar = $this->getDao()->searchAllSharedFieldsOfProject($project->getId());
-        return $this->getInstancesFromRows($dar);
-    }
-    
     public function updateFormElement($formElement, $formElement_data) {
         
         //check that the new name is not already used
@@ -1165,5 +1164,25 @@ class Tracker_FormElementFactory {
         }
         return $sibling;
     }
+    
+    /**
+     * @return Tracker_FormElement
+     */
+    public function getFieldFromTrackerAndSharedField(Tracker $tracker, Tracker_FormElement $shared) {
+        $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
+        return $this->getInstanceFromDar($dar);
+        
+    }
+
+    public function getInstanceFromDar($dar) {
+        if ($dar) {
+            $row = $dar->getRow();
+            if ($row) {
+                return $this->getInstanceFromRow($row);
+            }
+        }
+        return null;        
+    }
+
 }
 ?>

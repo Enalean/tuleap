@@ -37,6 +37,10 @@ function aDateField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Date');
 }
 
+function anArtifactLinkField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_ArtifactLink');
+}
+
 class Test_Tracker_FormElement_Builder {
     private $name;
     
@@ -63,6 +67,9 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
     
+    /**
+     * @return Tracker_FormElement
+     */
     public function build() {
         $klass  = $this->name;
         $object = new $klass($this->id, $this->trackerId, null, null, null, null, null, null, null, null, null, null);

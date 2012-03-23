@@ -1,0 +1,6 @@
+<select name="planning_tracker_id">
+    <option value=""/>
+    {{#available_trackers}}
+        <option value="{{getId}}">{{getName}}</option>
+    {{/available_trackers}}
+</select>

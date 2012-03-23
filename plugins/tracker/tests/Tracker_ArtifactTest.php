@@ -132,6 +132,18 @@ Mock::generate('Tracker_RulesManager');
     )
 );*/
 
+require_once('Test_Tracker_FormElement_Builder.php');
+require_once('Test_Tracker_Builder.php');
+
+
+require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
+require_once 'Test_Artifact_Builder.php';
+
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+Mock::generate('TrackerManager');
+
+
 Mock::generate('Workflow');
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
     function before(&$fields_data, $submitter) {
@@ -1436,6 +1448,115 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->assertFalse($artifact_subass->userCanView($other));
         $this->assertFalse($artifact_subass->userCanView($u));
     }
+}
+
+class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        $this->user = new MockUser();
+        $this->request = new Codendi_Request(array(
+            'func'               => 'associate-artifact-to', 
+            'linked-artifact-id' => 987));
+    }
+
+    public function itCreatesANewChangesetWithANewAssociation() {
+        $tracker = aTracker()->withId(456)->build();
+        
+        $artifact = $this->GivenAnArtifact($tracker);
+        
+        $field = anArtifactLinkField()->withId(1002)->build();
+        $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
+        $artifact->setFormElementFactory($factory);
+
+        $expected_field_data = array($field->getId() => array('new_values' => 987));
+        $no_comment = $no_email = '';
+        
+        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user, $no_email));
+        
+        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+    }
+    
+    public function itReturnsAnErrorCodeWhenItHasNoArtifactLinkField() {
+        $tracker = aTracker()->withId(456)->build();
+        
+        $artifact = $this->GivenAnArtifact($tracker);
+        
+        $factory = $this->GivenAFactoryThatReturns(array())->whenCalledWith($tracker);
+        $artifact->setFormElementFactory($factory);
+        
+        $artifact->expectNever('createNewChangeset');
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(400));
+        $GLOBALS['Language']->setReturnValue('getText', 'The destination artifact must have a artifact link field.', array('plugin_tracker', 'must_have_artifact_link_field'));
+        $this->expectFeedback('error', 'The destination artifact must have a artifact link field.');
+        
+        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+    }
+
+    private function GivenAFactoryThatReturns($artifactLinkFields) {
+        return new FormElementFactory_PendingMock($artifactLinkFields);
+    }
+
+    private function GivenAnArtifact($tracker) {
+        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
+        $artifact->setTracker($tracker);
+        return $artifact;
+    }
+}
+
+class FormElementFactory_PendingMock {
+    public function __construct($returnVal) {
+        $this->returnVal = $returnVal;
+    }
+    
+    public function whenCalledWith($argument) {
+        $factory = new MockTracker_FormElementFactory();
+        $factory->setReturnValue('getUsedArtifactLinkFields', $this->returnVal, array($argument));
+        return $factory;
+    }
+}
+
+
+class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
+
+    public function itReturnsAnEmptyListWhenThereIsNoArtifactLinkField() {
+        $tracker = aTracker()->withId('101')->build();
+
+        $factory = $this->GivenAFactoryThatReturns(array())->whenCalledWith($tracker);
+        $artifact = anArtifact()
+                    ->withTracker($tracker)
+                    ->withFormElementFactory($factory)
+                    ->build();
+
+        $links = $artifact->getLinkedArtifacts();
+        $this->assertEqual(array(), $links);
+    }
+    
+    public function itReturnsAlistOfTheLinkedArtifacts() {
+        $expected_list = array(
+            new Tracker_Artifact(111, null, null, null, null),
+            new Tracker_Artifact(222, null, null, null, null)
+        );
+        
+        $changesets = array(new MockTracker_Artifact_Changeset());
+        
+        $field = new MockTracker_FormElement_Field_ArtifactLink();
+        $field->setReturnValue('getLinkedArtifacts', $expected_list, $changesets);
+        
+        $tracker = aTracker()->build();
+        $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
+        
+        $artifact = anArtifact()
+                    ->withTracker($tracker)
+                    ->withFormElementFactory($factory)
+                    ->withChangesets($changesets)
+                    ->build();
+        
+        $this->assertEqual($expected_list, $artifact->getLinkedArtifacts());
+    }
+
+    private function GivenAFactoryThatReturns($artifactLinkFields) {
+        return new FormElementFactory_PendingMock($artifactLinkFields);
+    }
 }
 ?>

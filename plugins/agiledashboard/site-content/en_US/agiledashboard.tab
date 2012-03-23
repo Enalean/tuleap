@@ -3,3 +3,17 @@ plugin_agiledashboard	descriptor_name	Agile Dashboard
 
 plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
+
+plugin_agiledashboard	planning_destination_help	Drag'n drop content from backlog on the left on this area to add new items to current release.
+plugin_agiledashboard	planning_title	Plannings
+plugin_agiledashboard	planning_create	Create a new planning
+plugin_agiledashboard	planning_name	Name
+plugin_agiledashboard	planning-allows-assignment	This planning allows assignment of $1 to $2
+plugin_agiledashboard	planning_all_fields_mandatory	Please select a value for each field
+plugin_agiledashboard	planning_index	Plannings
+plugin_agiledashboard	planning_new	New Planning
+plugin_agiledashboard	planning_edit	Edit Planning
+plugin_agiledashboard	planning_show	View Planning
+
+
+

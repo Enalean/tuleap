@@ -63,6 +63,27 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function searchOpenByTrackerId($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = "SELECT A.*
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id) 
+                    INNER JOIN tracker_changeset AS C ON (A.last_changeset_id = C.id)          -- Last changeset is needed (no need of history)
+                    LEFT JOIN (                                                                -- Look if there is any status /open/ semantic defined
+                        tracker_semantic_status as SS 
+                        INNER JOIN tracker_changeset_value AS CV3 ON (SS.field_id = CV3.field_id)
+                        INNER JOIN tracker_changeset_value_list AS CVL2 ON (CV3.id = CVL2.changeset_value_id)
+                    ) ON (T.id = SS.tracker_id AND C.id = CV3.changeset_id)
+                WHERE (
+                        SS.field_id IS NULL -- Use the status semantic only if it is defined
+                        OR 
+                        CVL2.bindvalue_id = SS.open_value_id
+                     )
+                ORDER BY A.id DESC";
+        //TODO: Scalability
+        return $this->retrieve($sql);
+    }
+    
     /**
      * Search open artifact (see tracker semantic for a definition of open)
      * submitted by user $user_id in all projects and trackers.

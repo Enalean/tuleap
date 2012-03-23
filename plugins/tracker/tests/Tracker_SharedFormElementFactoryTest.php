@@ -220,28 +220,6 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         return $field;
     }
     
-    public function testGetFieldFromTrackerAndSharedFieldToRetrieveFieldValueFromSearchCriterion() {
-        $field1 = $this->GivenAUserSelectbox();
-        $field1->setReturnValue('getId', 123);
-        
-        $field2 = $this->GivenAUserSelectbox();
-        $field2->setReturnValue('getId', 456);
-        
-        list($sharedFormElementFactory, $factory, $tracker, $user) = $this->GivenASharedFormElementFactory($field1, 'sb');
-        
-        $tracker->setReturnValue('getId', 66);
-        
-        $factory->setReturnValue('getFormElementById', $field2, array($field2->getId()));
-        
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('getRow', array('id' => 456));
-        $dao = new MockTracker_FormElement_FieldDao();
-        $dao->setReturnValue('searchFieldFromTrackerIdAndSharedFieldId', $dar, array(66, 123));
-        $dao->expectOnce('searchFieldFromTrackerIdAndSharedFieldId', array(66, 123));
-        
-        $sharedFormElementFactory->setReturnValue('getDao', $dao);
-        
-        $this->assertEqual($sharedFormElementFactory->getFieldFromTrackerAndSharedField($tracker, $field1), $field2);
-    }
+    
 }
 ?>
