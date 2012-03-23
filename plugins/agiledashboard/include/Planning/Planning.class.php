@@ -18,6 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This allows to define a planning
+ * A planning is composed of a list of tracker ids (eg: Sprints, Tasks...) that represent what is in the backlog
+ * It is also composed of a tracker id (eg: Releases tracker), the artifacts (eg: Release 1, Release 2...)of which will be planified
+ */
 class Planning {
     
     /**
