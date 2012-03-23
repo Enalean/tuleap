@@ -27,13 +27,13 @@ class TestsPluginRequest {
     protected $tests_to_run = array();
     protected $test_map     = array();
     
-    public function __construct($parameters=array()) {
+    public function __construct($parameters = array()) {
         $this->parse($parameters);
     }
     
     public function parse($request) {
-        foreach($request as $property=> $value) {
-            $setProperty = 'set'.ucfirst(preg_replace_callback('@[_](.)@', array($this, 'replaceUnderscore'), $property));
+        foreach($request as $property => $value) {
+            $setProperty = 'set' . ucfirst(preg_replace_callback('@[_](.)@', array($this, 'replaceUnderscore'), $property));
             if (method_exists($this, $setProperty)) {
                 $this->$setProperty($value);
             }
