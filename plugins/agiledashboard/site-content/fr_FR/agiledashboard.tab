@@ -9,6 +9,10 @@ plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Créer un nouveau planning
 plugin_agiledashboard	planning_name	Nom
 plugin_agiledashboard	planning-allows-assignment	Ce planning permet l'association de $1 à $2
-
+plugin_agiledashboard	planning_all_fields_mandatory	Veuillez sélectionner une valeur pour chaque champ.
+plugin_agiledashboard	planning_index	Plannings
+plugin_agiledashboard	planning_new	Nouveau Planning
+plugin_agiledashboard	planning_edit	Edition Planning
+plugin_agiledashboard	planning_show	Vue du Planning
 
 

@@ -106,12 +106,17 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
     
-    private $header_title = array(
-        'index' => 'Plannings',
-        'new_'  => 'New Planning',
-        'edit'  => 'Edit Planning',
-        'show'  => 'Release planning'
-    );
+    
+    private function getHeaderTitle($action_name) {
+        $header_title = array(
+            'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_index'),
+            'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
+            'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
+        );
+        
+        return $header_title[$action_name];
+    }
     
     private function getService(Codendi_Request $request) {
         if ($this->service == null) {
@@ -143,7 +148,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     private function renderAction(Planning_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
-        $this->displayHeader($controller, $request, $this->header_title[$action_name]);
+        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
         $this->executeAction($controller, $action_name, $args);
         $this->displayFooter($request);
     }

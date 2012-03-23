@@ -80,7 +80,7 @@ class Planning_Controller extends MVC2_Controller {
             
             $this->redirect(array('group_id' => $this->group_id));
         } else {
-            $this->addFeedback('error', 'All fields are mandatory');
+            $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
             $this->redirect(array('group_id' => $this->group_id,
                                   'action'   => 'new'));
         }
