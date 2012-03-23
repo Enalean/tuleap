@@ -387,7 +387,7 @@ $GLOBALS['server']->register(
      if the artifart_id is not a valid one, or if the update failed.'
 );
 
-$GLOBALS['server']->register(
+/*$GLOBALS['server']->register(
     'getArtifactAttachedFiles',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -402,9 +402,9 @@ $GLOBALS['server']->register(
     'Returns the array of attached files (ArtifactFile) attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one. NOTE : for performance reasons, the result does not contain the content of the file. Please use getArtifactAttachedFile to get the content of a single file'
-);
+);*/
 
-$GLOBALS['server']->register(
+/*$GLOBALS['server']->register(
     'getArtifactAttachedFile',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -420,7 +420,7 @@ $GLOBALS['server']->register(
     'Returns the attached file (ArtifactFile) with the id file_id attached to the artifact artifact_id in the tracker group_artifact_id of the project group_id. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, or if the file_id doesnt match with the given artifact_id.'
-);
+);*/
 
 
 $GLOBALS['server']->register(
@@ -440,7 +440,7 @@ $GLOBALS['server']->register(
      or if the artifact_id is not a valid one.'
 );
 
-$GLOBALS['server']->register(
+/*$GLOBALS['server']->register(
     'addArtifactAttachedFile',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
@@ -462,9 +462,9 @@ $GLOBALS['server']->register(
      Returns the ID of the attached file if the attachment succeed.
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      or if the artifact_id is not a valid one, or if the attachment failed.'
-);
+);*/
 
-$GLOBALS['server']->register(
+/*$GLOBALS['server']->register(
     'deleteArtifactAttachedFile',
     array('sessionKey'=>'xsd:string',
         'group_id'=>'xsd:int',
@@ -481,9 +481,9 @@ $GLOBALS['server']->register(
      Returns the ID of the deleted file if the deletion succeed. 
      Returns a soap fault if the group_id is not a valid one, if the group_artifact_id is not a valid one, 
      if the artifact_id is not a valid one, if the file_id is not a valid one or if the deletion failed.'
-);
+);*/
 
-$GLOBALS['server']->register(
+/*$GLOBALS['server']->register(
     'getArtifactHistory',
     array('sessionKey' => 'xsd:string',
         'group_id' => 'xsd:int',
@@ -496,7 +496,7 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Get the history of the artifact (the history of the fields values)'
-);
+);*/
     
 } else {
     
@@ -1403,8 +1403,6 @@ function history_to_soap($changesets, $group_id) {
     return $return;
 }
 
-
-
 $GLOBALS['server']->addFunction(
         array(
             'getTrackerList',
@@ -1420,6 +1418,5 @@ $GLOBALS['server']->addFunction(
             //'getArtifactHistory',
         )
     );
-
 }
 ?>
