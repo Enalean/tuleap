@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashBoard.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/PlanningAndArtifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Pipe.class.php';
 

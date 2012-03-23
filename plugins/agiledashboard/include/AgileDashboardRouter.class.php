@@ -22,6 +22,7 @@ require_once 'common/plugin/Plugin.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
 
 class AgileDashboardRouter {
     /**
