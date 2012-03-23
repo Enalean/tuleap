@@ -90,8 +90,8 @@ class PlanningFactory {
      * 
      * @return Array of Tracker
      */
-    public function getTrackersByGroupId($group_id) {
-        return $this->tracker_factory->getTrackersByGroupId($group_id);
+    public function getAvailableTrackers($group_id) {
+        return array_values($this->tracker_factory->getTrackersByGroupId($group_id));
     }
     
     /**

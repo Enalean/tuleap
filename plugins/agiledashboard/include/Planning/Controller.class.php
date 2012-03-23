@@ -159,7 +159,8 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     private function getFormPresenter(Planning $planning) {
-        return new Planning_FormPresenter($planning, $this->planning_factory);
+        $available_trackers = $this->planning_factory->getAvailableTrackers($planning->getGroupId());
+        return new Planning_FormPresenter($planning, $available_trackers);
     }
     
     private function getPlanning() {

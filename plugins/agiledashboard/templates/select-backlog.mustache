@@ -1,5 +1,5 @@
 <select multiple="multiple" name="backlog_tracker_ids[]" style="vertical-align: top;">
-    {{#getAvailableTrackers}}
+    {{#available_trackers}}
         <option value="{{getId}}">{{getName}}</option>
-    {{/getAvailableTrackers}}
+    {{/available_trackers}}
 </select>

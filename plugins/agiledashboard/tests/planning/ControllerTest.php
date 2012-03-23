@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../include/Planning/Controller.class.php');
-require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
+ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TrackerManager.class.php';
+ require_once(dirname(__FILE__).'/../../include/Planning/Controller.class.php');
+ require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
@@ -344,7 +345,7 @@ abstract class Planning_ControllerCreateTest extends TuleapTestCase {
         $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = new MockPlanningFactory();
         
-        $this->planning_factory->setReturnValue('getTrackersByGroupId', array());
+        $this->planning_factory->setReturnValue('getAvailableTrackers', array());
     }
     
     protected function create() {
@@ -416,7 +417,7 @@ class Planning_ControllerEditWithValidPlanningIdTest extends TuleapTestCase {
         
         $planning_factory->expectOnce('getPlanning', array($planning->getId()));
         $planning_factory->setReturnValue('getPlanning', $planning);
-        $planning_factory->setReturnValue('getTrackersByGroupId', array());
+        $planning_factory->setReturnValue('getAvailableTrackers', array());
         
         ob_start();
         $controller->edit();
