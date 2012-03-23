@@ -129,7 +129,7 @@ class AgileDashboardPlugin extends Plugin {
     
     private function displayHeader($controller, Codendi_Request $request, $title) {
         $breadcrumbs = $controller->getBreadcrumbs($this->getPluginPath());
-        $this->getService($request)->displayHeader($title, $breadcrumbs, array());
+        $this->getService($request)->displayHeader($title, $breadcrumbs->getCrumbs(), array());
     }
     
     

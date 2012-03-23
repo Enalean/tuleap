@@ -115,9 +115,11 @@ class Planning_Controller extends MVC2_Controller {
         return $this->planning_factory->getPlanning($planning_id);
     }
     
+    /**
+     * @return BreadCrumb_BreadCrumbGenerator
+     */
     public function getBreadcrumbs($plugin_path) {
-        $breadcrumb = new BreadCrumb_AgileDashboard((int) $this->request->get('group_id'), $plugin_path);
-        return $breadcrumb->getCrumbs();
+        return new BreadCrumb_AgileDashboard((int) $this->request->get('group_id'), $plugin_path);
     }
 }
 
