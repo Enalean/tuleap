@@ -394,8 +394,11 @@ class ProjectManager {
 
     /**
      * Set SVN header
+     *
      * @param Integer $projectId
      * @param String  $mailingHeader
+     *
+     * @return Boolean
      */
     function setSvnHeader($projectId, $mailingHeader) {
         $dao = $this->_getDao();

@@ -895,7 +895,7 @@ members = membre1,membre2,...,membreN
       diffusion pour l'envoi de vos notifications Subversion</title><para>Si
       vous avez l'intention d'envoyer des emails pour notifier
       certains utilisateurs de changements intervenus dans le dépôt
-      Subversion, nous vous recommandons de créer une liste de diffusion
+      Subversion ou un chemin spécifique, nous vous recommandons de créer une liste de diffusion
       spécifique appelée
       <literal>nom_projet-cvsevents</literal>. Ainsi, les utilisateurs
       &SYS_PRODUCT_NAME; et les membres du projet intéressés par les notifications
