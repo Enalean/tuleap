@@ -1,4 +1,22 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 require_once(dirname(__FILE__).'/../include/simpletest/reporter.php');
 require_once(dirname(__FILE__).'/../include/simpletest/extensions/junit_xml_reporter.php');
@@ -61,7 +79,7 @@ interface iCodeCoverageReporter {
 }
 
 
-class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter {
+class TestsPluginHtmlReporter extends HtmlReporter implements iCodeCoverageReporter {
     protected $_timer;
     protected $coverage;
 
@@ -173,7 +191,7 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
 
 }
  
-class CodendiJUnitXMLReporter extends JUnitXMLReporter implements iCodeCoverageReporter {
+class TestsPluginJUnitXMLReporter extends JUnitXMLReporter implements iCodeCoverageReporter {
     protected $coverage;
 
     function __construct($coverage) {
@@ -334,7 +352,7 @@ class ColorTextReporter extends SimpleReporter {
     }
 }
 
-class CodendiReporterFactory {
+class TestsPluginReporterFactory {
 
     public static function getCodeCoverage($enableCoverage = false) {
         if ($enableCoverage && class_exists('PHP_CodeCoverage')) {
@@ -358,10 +376,10 @@ class CodendiReporterFactory {
                 return new ColorTextReporter();
                 break;
             case "junit_xml":
-                return new CodendiJUnitXMLReporter($coverage);
+                return new TestsPluginJUnitXMLReporter($coverage);
                 break;
             default:
-                return new CodendiHtmlReporter($coverage);
+                return new TestsPluginHtmlReporter($coverage);
         }
     }
 }

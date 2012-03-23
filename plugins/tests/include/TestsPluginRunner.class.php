@@ -26,7 +26,7 @@ require_once dirname(__FILE__) . '/../../tracker/include/MustacheRenderer.class.
 
 require_once dirname(__FILE__) . '/TestsPluginOrderedSuite.php';
 
-require_once dirname(__FILE__) . '/../www/CodendiReporter.class.php';
+require_once dirname(__FILE__) . '/../include/TestsPluginReporter.class.php';
 
 class TestsPluginRunner {
     protected $request;
@@ -159,7 +159,7 @@ class TestsPluginRunner {
     public function getResults() {
         ob_start();
         $format   = strtolower($this->request->getDisplay());
-        $reporter = CodendiReporterFactory::reporter($format, $this->request->getCoverCode());
+        $reporter = TestsPluginReporterFactory::reporter($format, $this->request->getCoverCode());
         $this->mainSuite->runByOrder($reporter, $this->request->getOrder());
         return ob_get_clean();
     }
