@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__) . '/simpletest/test_case.php';
 
-class TestsPluginOrdenedSuite extends TestSuite {
+class TestsPluginOrderedSuite extends TestSuite {
     
     public function runByOrder(&$reporter, $order) {
         if ($order === 'invert') {

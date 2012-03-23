@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRequest.class.php';
 require_once dirname(__FILE__) . '/../../tracker/include/MustacheRenderer.class.php';
 
-require_once dirname(__FILE__) . '/TestsPluginOrdenedSuite.php';
+require_once dirname(__FILE__) . '/TestsPluginOrderedSuite.php';
 
 require_once dirname(__FILE__) . '/../www/CodendiReporter.class.php';
 
@@ -121,7 +121,7 @@ class TestsPluginRunner {
     }
 
     public function buildSuite($title) {
-        return new TestsPluginOrdenedSuite($title);
+        return new TestsPluginOrderedSuite($title);
     }
 
     public function isSuite($test, $append = '') {
