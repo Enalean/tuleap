@@ -52,7 +52,7 @@ class Git_LogDao extends DataAccessObject {
         } else {
             $limit = "LIMIT 10";
         }
-        $sql = "SELECT g.group_name, r.repository_name, l.push_date
+        $sql = "SELECT g.group_name, r.repository_name, l.push_date, l.commits_number
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id

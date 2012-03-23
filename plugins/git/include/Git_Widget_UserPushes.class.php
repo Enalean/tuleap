@@ -25,8 +25,8 @@ require_once 'Git_LogDao.class.php';
  */
 class Git_Widget_UserPushes extends Widget {
 
-    var $repositoryId;
-    var $offset;
+    var $repositoryId = '';
+    var $offset       = '';
 
     /**
      * Constructor of the class
@@ -60,7 +60,7 @@ class Git_Widget_UserPushes extends Widget {
         $user    = $um->getCurrentUser();
         $dar     = $dao->getLastPushesByUser($user->getId(), $this->repositoryId, $this->offset);
         foreach($dar as $row) {
-            $content .= $row['group_name'].' '.$row['repository_name']."<br />";
+            $content .= $row['group_name'].' '.$row['repository_name'].' '.$row['commits_number']."<br />";
         }
         return $content;
     }
@@ -91,16 +91,18 @@ class Git_Widget_UserPushes extends Widget {
         if (!$request->exist('cancel')) {
             if ($request->valid($vRepo)) {
                 $this->repositoryId = $request->get('plugin_git_user_pushes_repo_id');
-                user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
+                
             } else {
-                user_set_preference('plugin_git_user_pushes_repo_id', '');
+                $this->repositoryId = '';
             }
             if ($request->valid($vOffset)) {
                 $this->offset = $request->get('plugin_git_user_pushes_offset');
-                user_set_preference('plugin_git_user_pushes_offset', $this->offset);
+                
             } else {
-                user_set_preference('plugin_git_user_pushes_offset', '');
+                $this->offset = '';
             }
+            user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
+            user_set_preference('plugin_git_user_pushes_offset', $this->offset);
         }
         return true;
     }
