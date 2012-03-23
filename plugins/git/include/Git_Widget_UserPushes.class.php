@@ -54,14 +54,22 @@ class Git_Widget_UserPushes extends Widget {
      * @return string html
      */
     public function getContent() {
-        $content = '';
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
         $dar     = $dao->getLastPushesByUser($user->getId(), $this->repositoryId, $this->offset);
+        $content = html_build_list_table_top(array('Project', 'Repository', 'Date', 'Commits'));
+        $i       = 0;
+        $hp      = Codendi_HTMLPurifier::instance();
         foreach($dar as $row) {
-            $content .= $row['group_name'].' '.$row['repository_name'].' '.$row['commits_number']."<br />";
+            $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
+                             <td>'.$hp->purify($row['group_name']).'</td>
+                             <td>'.$hp->purify($row['repository_name']).'</td>
+                             <td>'.html_time_ago($hp->purify($row['push_date'])).'</td>
+                             <td>'.$hp->purify($row['commits_number']).'</td>
+                         </tr>';
         }
+        $content .= "</table>";
         return $content;
     }
 
@@ -113,12 +121,14 @@ class Git_Widget_UserPushes extends Widget {
 
     function getPreferences() {
         return "<table>
-                <tr>
-                <td>Repository id</td><td><input name='plugin_git_user_pushes_repo_id' value='".$this->repositoryId."'/></td>
-                </tr>
-                <tr>
-                <td>Offset</td><td><input name='plugin_git_user_pushes_offset' value='".$this->offset."'/></td>
-                </tr>
+                    <tr>
+                        <td>Repository id</td>
+                        <td><input name='plugin_git_user_pushes_repo_id' value='".$this->repositoryId."'/></td>
+                    </tr>
+                    <tr>
+                        <td>Offset</td>
+                        <td><input name='plugin_git_user_pushes_offset' value='".$this->offset."'/></td>
+                    </tr>
                 </table>";
         
     }
