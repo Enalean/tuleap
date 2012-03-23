@@ -40,6 +40,8 @@ class PlanningFactory {
     }
     
     /**
+     * Get a list of planning defined in a group_id
+     * 
      * @param int $group_id
      *
      * @return array of Planning
@@ -52,6 +54,13 @@ class PlanningFactory {
         return $plannings;
     }
     
+    /**
+     * Get a planning
+     * 
+     * @param int $group_id
+     *
+     * @return Planning
+     */
     public function getPlanning($planning_id) {
         $planning =  $this->dao->searchById($planning_id)->getRow();
         if ($planning) {
@@ -61,10 +70,24 @@ class PlanningFactory {
         return null;
     }
     
+    /**
+     * Build a new planning in a project
+     * 
+     * @param int $group_id
+     *
+     * @return Planning
+     */
     public function buildNewPlanning($group_id) {
         return new Planning(null, null, $group_id);
     }
-
+    
+    /**
+     * Get a list of tracker ids defined as backlog for a planning
+     * 
+     * @param int $planning_id
+     *
+     * @return array of tracker id
+     */
     public function getAllBacklogTrackerIds($planning_id) {
         $backlog_tracker_ids = array();
         foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
@@ -73,6 +96,16 @@ class PlanningFactory {
         return $backlog_tracker_ids;
     }
     
+    /**
+     * Create a new planning
+     * 
+     * @param $planning_name the planning name
+     * @param int $group_id
+     * @param array $backlog_tracker_ids the list of tracker ids defined as backlog
+     * @param int $planning_tracker_id
+     *
+     * @return array of Planning
+     */
     public function create($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id) {
         return $this->dao->create($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id);
     }
@@ -81,6 +114,13 @@ class PlanningFactory {
         return $this->dao->updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id);
     }
     
+    /**
+     * Delete planning
+     * 
+     * @param $planning_id the id of the planning
+     *
+     * @return bool
+     */
     public function deletePlanning($planning_id) {
         return $this->dao->delete($planning_id);
     }
