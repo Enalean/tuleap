@@ -1,9 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 require_once 'MockDsl.php';
 
 class Toto {
@@ -47,6 +43,12 @@ class MockBuilderTest extends TuleapTestCase {
         $this->assertNotEqual($mockToto->greet('Linus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
         $this->assertNotEqual($mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
     }
+    
+    /**
+     *  $mockToto = mock('Toto', 'greet')
+     *                  ->toReturn("Hello Rasmus Lerdorf")
+     *                  ->for("Rasmus", "Lerdorf"); 
+     */
 
 
 }
