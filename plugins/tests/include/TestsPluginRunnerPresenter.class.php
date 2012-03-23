@@ -20,14 +20,22 @@
  */
 
 class TestsPluginRunnerPresenter {
-    public $show_pass_checked='';
-    public $cover_code_checked='';
-    public $order_normal_checked='';
-    public $order_random_checked='';
-    public $order_invert_checked='';
+    public $show_pass_checked    = '';
+    public $cover_code_checked   = '';
+    public $order_normal_checked = '';
+    public $order_random_checked = '';
+    public $order_invert_checked = '';
     protected $results;
     protected $navigator;
-    public function __construct($request, $navigator, $results) {
+    /**
+     * Constructor of plugin runner presenter.
+     * It aim at given required datas to mustache :
+     *  
+     * @param TestsPluginRequest $request   parameters given by the user
+     * @param Object             $navigator it's a presenter that provide the navigation panel
+     * @param String             $results   actually a string of (HTML) tests results, but hope we'll have a presenter a day 
+     */
+    public function __construct(TestsPluginRequest $request, $navigator, $results) {
         $this->request   = $request;
         $this->navigator = $navigator;
         $this->results   = $results;
