@@ -73,10 +73,10 @@ class Planning_Controller extends MVC2_Controller {
         
         if ($validator->isValid($this->request)) {
             
-            $this->planning_factory->create($this->request->get('planning_name'),
-                                            $this->group_id,
-                                            $this->request->get('backlog_tracker_ids'),
-                                            $this->request->get('planning_tracker_id'));
+            $this->planning_factory->createPlanning($this->request->get('planning_name'),
+                                                    $this->group_id,
+                                                    $this->request->get('backlog_tracker_ids'),
+                                                    $this->request->get('planning_tracker_id'));
             
             $this->redirect(array('group_id' => $this->group_id));
         } else {

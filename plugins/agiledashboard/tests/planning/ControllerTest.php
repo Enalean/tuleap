@@ -383,7 +383,7 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     }
     
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
-        $this->planning_factory->expectOnce('create', array('Release Planning', $this->group_id, array('1', '2'), '3'));
+        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, array('1', '2'), '3'));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
         $this->create();
     }

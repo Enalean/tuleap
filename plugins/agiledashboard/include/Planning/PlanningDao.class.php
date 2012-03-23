@@ -23,7 +23,7 @@ require_once('common/dao/include/DataAccessObject.class.php');
 
 class PlanningDao extends DataAccessObject {
     
-    function create($planning_name, $group_id, $planning_backlog_ids, $planning_tracker_id){
+    function createPlanning($planning_name, $group_id, $planning_backlog_ids, $planning_tracker_id){
         $planning_name       = $this->da->quoteSmart($planning_name);
         $group_id            = $this->da->escapeInt($group_id);
         $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
@@ -87,7 +87,7 @@ class PlanningDao extends DataAccessObject {
         $this->createBacklogTrackers($planning_id, $backlog_tracker_ids);
     }
     
-    function delete($planning_id) {
+    function deletePlanning($planning_id) {
         $planning_id = $this->da->escapeInt($planning_id);
         $sql = "DELETE FROM plugin_agiledashboard_planning
                 WHERE id=$planning_id";

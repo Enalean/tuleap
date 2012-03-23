@@ -106,8 +106,8 @@ class PlanningFactory {
      *
      * @return array of Planning
      */
-    public function create($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id) {
-        return $this->dao->create($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id);
+    public function createPlanning($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id) {
+        return $this->dao->createPlanning($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id);
     }
     
     public function updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id) {
@@ -122,7 +122,7 @@ class PlanningFactory {
      * @return bool
      */
     public function deletePlanning($planning_id) {
-        return $this->dao->delete($planning_id);
+        return $this->dao->deletePlanning($planning_id);
     }
     
     /**
