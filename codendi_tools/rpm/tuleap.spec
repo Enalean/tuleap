@@ -188,34 +188,6 @@ Provides: tuleap-plugin-git = %{version}
 Integration of git distributed software configuration management tool together
 with Tuleap
 
-%package plugin-svntodimensions
-Summary: Tuleap plugin for svntodimensions
-Group: Development/Tools
-Version: @@PLUGIN_SVNTODIMENSIONS_VERSION@@
-Release: 1%{?dist}
-Requires: %{PKG_NAME}
-%if %{PKG_NAME} == codendi_st
-Provides: codendi-plugin-svntodimensions = %{version}
-%else
-Provides: tuleap-plugin-svntodimensions = %{version}
-%endif
-%description plugin-svntodimensions
-Tuleap plugin for svntodimensions
-
-%package plugin-cvstodimensions
-Summary: Tuleap plugin for cvstodimensions
-Group: Development/Tools
-Version: @@PLUGIN_CVSTODIMENSIONS_VERSION@@
-Release: 1%{?dist}
-Requires: %{PKG_NAME}
-%if %{PKG_NAME} == codendi_st
-Provides: codendi-plugin-cvstodimensions = %{version}
-%else
-Provides: tuleap-plugin-cvstodimensions = %{version}
-%endif
-%description plugin-cvstodimensions
-Tuleap plugin for cvstodimensions
-
 %package plugin-docmanwatermark
 Summary: Tuleap plugin for PDF watermarking
 Group: Development/Tools
@@ -259,34 +231,6 @@ Provides: tuleap-plugin-im = %{version}
 %endif
 %description plugin-im
 Provides instant messaging capabilities, based on a Jabber/XMPP server.
-
-%package plugin-jri
-Summary: Tuleap Java Remote Interface plugin
-Group: Development/Tools
-Version: @@PLUGIN_JRI_VERSION@@
-Release: 1%{?dist}
-Requires: %{PKG_NAME}
-%if %{PKG_NAME} == codendi_st
-Provides: codendi-plugin-jri = %{version}
-%else
-Provides: tuleap-plugin-jri = %{version}
-%endif
-%description plugin-jri
-Tuleap Java Remote Interface: the java API for Tuleap
-
-%package plugin-eclipse
-Summary: Eclipse plugin for Tuleap
-Group: Development/Tools
-Version: @@PLUGIN_ECLIPSE_VERSION@@
-Release: 1%{?dist}
-Requires: %{PKG_NAME}
-%if %{PKG_NAME} == codendi_st
-Provides: codendi-plugin-eclipse = %{version}
-%else
-Provides: tuleap-plugin-eclipse = %{version}
-%endif
-%description plugin-eclipse
-Plugin to install the Tuleap Eclipse plugin and access the documentation
 
 %package plugin-hudson
 Summary: Hudson plugin for Tuleap
@@ -751,7 +695,6 @@ fi
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
 %{APP_DIR}/src/www/api
-%{APP_DIR}/src/www/bugs
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/docman
@@ -767,9 +710,7 @@ fi
 %{APP_DIR}/src/www/my
 %{APP_DIR}/src/www/new
 %{APP_DIR}/src/www/news
-%{APP_DIR}/src/www/patch
 %{APP_DIR}/src/www/people
-%{APP_DIR}/src/www/pm
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
@@ -782,7 +723,6 @@ fi
 %{APP_DIR}/src/www/soap
 %{APP_DIR}/src/www/softwaremap
 %{APP_DIR}/src/www/stats
-%{APP_DIR}/src/www/support
 %{APP_DIR}/src/www/survey
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package
@@ -803,7 +743,6 @@ fi
 %{APP_DIR}/plugins/graphontrackers
 %{APP_DIR}/plugins/pluginsadministration
 %{APP_DIR}/plugins/projectlinks
-%{APP_DIR}/plugins/serverupdate
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
@@ -870,14 +809,6 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-log.pl
 
-%files plugin-svntodimensions
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/svntodimensions
-
-%files plugin-cvstodimensions
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/cvstodimensions
-
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/docmanwatermark
@@ -889,14 +820,6 @@ fi
 %files plugin-im
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/IM
-
-%files plugin-jri
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/codendijri
-
-%files plugin-eclipse
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/eclipse
 
 %files plugin-hudson
 %defattr(-,%{APP_USER},%{APP_USER},-)

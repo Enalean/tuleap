@@ -81,8 +81,8 @@ $validated_users = $row['count'];
 $wDoc = new Widget_Static($Language->getText('admin_main', 'documentation'));
 $wDoc->setContent('
 <ul>
-  <li><a href="/documentation/installation_guide/html/Codendi_Installation_Guide.html">'.$Language->getText('admin_main', 'install_guide').'</a></li>
-  <li><a href="/documentation/administration_guide/html/Codendi_Administration_Guide.html">'.$Language->getText('admin_main', 'admin_guide').'</a></li>
+  <li><a href="/documentation/installation_guide/html/Installation_Guide.html">'.$Language->getText('admin_main', 'install_guide').'</a></li>
+  <li><a href="/documentation/administration_guide/html/Administration_Guide.html">'.$Language->getText('admin_main', 'admin_guide').'</a></li>
 </ul>');
 
 // Site Statistics

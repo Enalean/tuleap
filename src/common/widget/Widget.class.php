@@ -27,9 +27,6 @@ require_once('common/widget/Widget_MyMonitoredForums.class.php');
 require_once('common/widget/Widget_MyMonitoredFp.class.php');
 require_once('common/widget/Widget_MyLatestSvnCommits.class.php');
 require_once('common/widget/Widget_MyArtifacts.class.php');
-require_once('common/widget/Widget_MyBugs.class.php');
-require_once('common/widget/Widget_MySrs.class.php');
-require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
 require_once('common/widget/Widget_MyTwitterFollow.class.php');
@@ -179,15 +176,6 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
                 break;  
             case 'myartifacts':
                 $o =& new Widget_MyArtifacts();
-                break;
-            case 'mybugs':
-                $o =& new Widget_MyBugs();
-                break;
-            case 'mytasks':
-                $o =& new Widget_MyTasks();
-                break;
-            case 'mysrs':
-                $o =& new Widget_MySrs();
                 break;
             case 'myrss':
                 $o =& new Widget_MyRss();

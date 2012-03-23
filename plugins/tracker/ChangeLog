@@ -1,9 +1,12 @@
+Version 5.4.4 - Tuleap 4.0.28
+  * Fix gotoid after removal of legacy trackers (aka tracker v1).
+
 Version 5.4.3 - Tuleap 4.0.28
   * Update soap functions in wsdl
-  
+
 Version 5.4.2 - Tuleap 4.0.28
   * Refactoring of CrossSearch
-  * Enhance tracker internal api to ease the the link between 
+  * Enhance tracker internal api to ease the the link between
     artifacts (used by the agiledashboard plugin)
 
 Version 5.4.1 - Tuleap 4.0.28

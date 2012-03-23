@@ -34,8 +34,6 @@ Also note that we are re-using parameters from the User Guide to
 avoid duplications -->
 
 <!ENTITY % ParametersDefault SYSTEM "../../../user_guide/xml/ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd">
-%ParametersLocal;
 %ParametersDefault;
 ]>
 

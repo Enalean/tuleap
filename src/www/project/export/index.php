@@ -21,20 +21,6 @@ $em =& EventManager::instance();
 
 if (!isset($export)) $export="";
 
-// Conditionally include the appropriate modules
-if (ereg('^bug',$export) || ($export == 'project_db') ) {
-    require_once('www/bugs/bug_data.php');
-    require_once('www/bugs/bug_utils.php');
-}
-if (ereg('^task',$export) || ($export == 'project_db')){
-    require_once('www/pm/pm_data.php');
-    require_once('www/pm/pm_utils.php');
-}
-if (ereg('^support',$export) || ($export == 'project_db') ) {
-    require_once('www/support/support_data.php');
-    require_once('www/support/support_utils.php');
-}
-
 // Group ID must be defined and must be a project admin
 if ( !$group_id ) {
     exit_error($Language->getText('project_admin_userperms','invalid_g'),$Language->getText('project_admin_userperms','group_not_exist')); }
@@ -93,87 +79,7 @@ switch ($export) {
      require('./artifact_deps_export.php');
      site_project_footer( array() );
      break;
-
- case 'bug':
-     require('./bug_export.php');
-     break;
-
- case 'bug_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./bug_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'bug_history':
-     require('./bug_history_export.php');
-     break;
-
- case 'bug_history_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./bug_history_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'bug_bug_deps':
-     require('./bug_bug_deps_export.php');
-     break;
-
- case 'bug_bug_deps_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./bug_bug_deps_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'bug_task_deps':
-     require('./bug_task_deps_export.php');
-     break;
-
- case 'bug_task_deps_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./bug_task_deps_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'task':
-     require('./task_export.php');
-     break;
-
- case 'task_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./task_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'task_history':
-     require('./task_history_export.php');
-     break;
-
- case 'task_history_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./task_history_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'task_task_deps':
-     require('./task_task_deps_export.php');
-     break;
-
- case 'task_task_deps_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./task_task_deps_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'task_assigned_to':
-     require('./task_assigned_to_export.php');
-     break;
-
- case 'task_assigned_to_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./task_assigned_to_export.php');
-     site_project_footer( array() );
-     break;
-
+ 
  case 'survey_responses':
      require('./survey_responses_export.php');
      break;
@@ -181,16 +87,6 @@ switch ($export) {
  case 'survey_responses_format':
      project_admin_header(array('title'=>$pg_title));
      require('./survey_responses_export.php');
-     site_project_footer( array() );
-     break;
-
- case 'support_request':
-     require('./support_request_export.php');
-     break;
-
- case 'support_request_format':
-     project_admin_header(array('title'=>$pg_title));
-     require('./support_request_export.php');
      site_project_footer( array() );
      break;
 
@@ -216,24 +112,8 @@ switch ($export) {
      
  case 'project_db':
      project_admin_header(array('title'=>$pg_title));
-     if ($project->usesBugs()) {
-         require('./bug_export.php');
-         require('./bug_history_export.php');
-         require('./bug_bug_deps_export.php');
-         require('./bug_task_deps_export.php');
-     }
-     if ($project->usesPm()) {
-         require('./task_export.php');
-         require('./task_history_export.php');
-         require('./task_task_deps_export.php');
-         require('./task_assigned_to_export.php');
-     }
      if ($project->usesSurvey()) {     
          require('./survey_responses_export.php');
-     }
-
-     if ($project->usesSupport()) {     
-         require('./support_request_export.php');
      }
      if ($project->usesTracker()) {     
          require('./artifact_export.php');
@@ -276,50 +156,6 @@ echo '
                      $Language->getText('project_export_index','history'),
                      $Language->getText('project_export_index','dependencies'));
      echo html_build_list_table_top($titles);
-
-     $legacy = ( ($project->usesTracker()) ? $Language->getText('project_export_index','legacy'):"");
-
-     if ($project->usesBugs()) {
-         echo '
-  <tr class="'.util_get_alt_row_color($iu).'"> 
-    <td><b>'.$legacy.' '.$Language->getText('project_export_index','bug_tracker').'</b></td>
-    <td align="center"> 
-      <a href="?group_id='.$group_id.'&export=bug">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="?group_id='.$group_id.'&export=bug_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center"> 
-      <a href="?group_id='.$group_id.'&export=bug_history">'.$Language->getText('project_export_index','export').'</a>
-      <br><a href="?group_id='.$group_id.'&export=bug_history_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-    <td align="center"> 
-      <a href="?group_id='.$group_id.'&export=bug_bug_deps">'.$Language->getText('project_export_index','export_x','Bug-Bug Deps').'</a>
-      - <a href="?group_id='.$group_id.'&export=bug_bug_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
-      <br><a href="?group_id='.$group_id.'&export=bug_task_deps">'.$Language->getText('project_export_index','export_x','Bug-Task Deps').'</a>
-      - <a href="?group_id='.$group_id.'&export=bug_task_deps_format">'.$Language->getText('project_export_index','show_format').'</a>
-    </td>
-  </tr>';
-         $iu ++;
-     }
-
-    if ($project->usesPm()) {
-        $entry_label['legacy_pm']                           = $legacy.' '.$Language->getText('project_admin_userperms','task_man');
-        $entry_data_export_links['legacy_pm']               = '?group_id='.$group_id.'&export=task';
-        $entry_data_export_format_links['legacy_pm']        = '?group_id='.$group_id.'&export=task_format';
-        $history_data_export_links['legacy_pm']             = '?group_id='.$group_id.'&export=task_history';
-        $history_data_export_format_links['legacy_pm']      = '?group_id='.$group_id.'&export=task_history_format';
-        $dependencies_data_export_links['legacy_pm']        = '?group_id='.$group_id.'&export=task_task_deps';
-        $dependencies_data_export_format_links['legacy_pm'] = '?group_id='.$group_id.'&export=task_task_deps_format';
-    }
-
-    if ($project->usesSupport()) {
-        $entry_label['legacy_support']                           = $legacy.' '.$Language->getText('project_export_index','support_request');
-        $entry_data_export_links['legacy_support']               = '?group_id='.$group_id.'&export=support_request';
-        $entry_data_export_format_links['legacy_support']        = '?group_id='.$group_id.'&export=support_request_format';
-        $history_data_export_links['legacy_support']             = null;
-        $history_data_export_format_links['legacy_support']      = null;
-        $dependencies_data_export_links['legacy_support']        = null;
-        $dependencies_data_export_format_links['legacy_support'] = null;
-    }
 
     if ($project->usesSurvey()) {
         $entry_label['survey']                           = $Language->getText('project_export_index','survey_responses');

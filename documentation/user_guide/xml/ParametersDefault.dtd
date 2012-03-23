@@ -27,6 +27,3 @@ instead and redefine your entities there. If this file doesn't exist create it.-
 <!ENTITY FTPFILES_DIR "/var/lib/codendi/ftp/codendi">
 <!ENTITY SYS_ORG_NAME "Example Company">
 <!ENTITY SYS_LONG_ORG_NAME "Example Corporation">
-<!ENTITY SYS_EMAIL_ADMIN  "admin@tuleap.net">
-<!ENTITY SYS_EMAIL_CONTACT "contact@tuleap.net">
-<!ENTITY SYS_UPDATE_SITE "http://codendi.example.com/downloads/eclipse">

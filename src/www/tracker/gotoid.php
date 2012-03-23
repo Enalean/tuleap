@@ -20,31 +20,6 @@
  
 require_once('../svn/svn_data.php');
 
-// Redirect function for legacy trackers (bug, task and SR)
-function legacy_redirect($location,$aid, $group_id, $atn) {
-    if ($atn == 'bug') {
-        $location .= "/bugs/?func=detailbug&bug_id=". (int)$aid ."&group_id=". (int)$group_id;
-        header($location);
-        exit;
-    }
-    if ($atn == 'task') {
-        $location .= "/pm/task.php?func=detailtask&project_task_id=". (int)$aid ."&group_id=". (int)$group_id;
-        header($location);
-        exit;
-    }
-    if ($atn == 'sr') {
-        $location .= "/support/index.php?func=detailsupport&support_id=". (int)$aid ."&group_id=". (int)$group_id;
-        header($location);
-        exit;
-    }
-    if ($atn == 'patch') {
-      $location .= "/patch/?func=detailpatch&patch_id=". (int)$aid ."&group_id=". (int)$group_id;
-      header($location);
-      exit;
-    }
-    
-}
-
 /**
  * Redirect function for generic trackers.
  * This function checks the artifact short name and project.
@@ -134,66 +109,10 @@ if (!$group_id) {
     generic_redirect($location,$aid,$art_group_id,$art_group_id,$atid,$atn,$art_name);
 }
 
-
-// Now check ambiguous cases...
-if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
-    // Ambiguous: legacy or generic tracker?
-    $art_group_id = $request->get('art_group_id');
-    $art_name     = $request->get('art_name');
-
-    // Get artifact group_id and tracker id (atid)
-    $artifact_exists=util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name);
-
-    // Are the legacy trackers activated for this project? 
-    $pm = ProjectManager::instance();
-    $grp=$pm->getProject($group_id);
-    if ((($atn == 'bug')&&(!$grp->usesBugs()))
-        ||(($atn == 'sr')&&(!$grp->usesSupport()))
-        ||(($atn == 'task')&&(!$grp->usesPm()))
-        ||(($atn == 'patch')&&(!$grp->usesPatch()))) {
-        // Legacy tracker is not activated -> this is a generic one
-        if (!$artifact_exists) {
-            exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
-        } else generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
-    }
-
-    if (!$artifact_exists) {
-        // The artifact does not exist -> legacy
-        legacy_redirect($location,$aid,$group_id,$atn);
-        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
-    }
-
-    // Does the legacy bug/sr/task id exists and does it belong to this project?
-    $legacy_group_id=util_get_group_from_legacy_id($atn,$aid);
-    if ((!$legacy_group_id)||($legacy_group_id!=$group_id)) {
-        // the legacy artifact does not exist or does not belong to the current project
-        // -> this is a generic artifact
-        generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
-    }
-
-    // OK, so both the legacy and the generic artifact exist with this id.
-    // Now check the artifact name. if it is not 'sr', 'bug' or 'task', then
-    // use redirect to legacy. 
-    // If the artifact belongs to another project, then also redirect to legacy.
-    // Otherwise, prefer the generic artifact.
-    // This is the only place where there is still an arbitrary decision made...
-    if (($atn != strtolower($art_name))||($group_id!=$art_group_id)) {
-        // Let's choose the legacy trackers
-        legacy_redirect($location,$aid,$group_id,$atn);
-        exit_error($Language->getText('global', 'error'),$Language->getText('tracker_gotoid', 'invalid_tracker'));
-    } else {
-        // If the artifact belongs to the current project, let's choose the generic trackers
-        generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
-    }   
-
-} else {
-    // not standard atn -> generic tracker.
-    if (!util_get_ids_from_aid($aid,$art_group_id,$atid,$art_name)) {
-        exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
-    }
-    generic_redirect($location,$aid,$group_id,$art_group_id,$atid,$atn,$art_name);
+// not standard atn -> generic tracker.
+if (!util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
+    exit_error($Language->getText('global', 'error'), $Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
 }
-
-
+generic_redirect($location, $aid, $group_id, $art_group_id, $atid, $atn, $art_name);
 
 ?>
