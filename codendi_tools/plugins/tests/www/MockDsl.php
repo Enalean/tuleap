@@ -1,7 +1,21 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+function when($mock, $method) {
+    return new OngoingStub($mock, $method);
+
+}
+
+class OngoingStub {
+
+    public function __construct($mock, $method) {
+        $this->mock = $mock;
+        $this->method = $method;
+    }
+    
+    public function returns($value) {
+        $this->mock->setReturnValue($this->method, $value);
+    }
+    
+
+}
 ?>

@@ -4,6 +4,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+require_once 'MockDsl.php';
+
 class Toto {
 
     function __construct() {
@@ -17,32 +19,11 @@ class Toto {
 Mock::generate('Toto');
 class MockBuilderTest extends TuleapTestCase {
 
-    function __construct() {
-        
-    }
-    
     public function testSomething() {
         $mockToto = new MockToto();
-        $this->when($mockToto, 'greet')->returns("Hello");
+        when($mockToto, 'greet')->returns("Hello");
         $this->assertEqual($mockToto->greet(), "Hello");
     }
-
-    public function when($mock, $method) {
-        return new OngoingStub($mock, $method);
-        
-    }
-}
-class OngoingStub {
-
-    public function __construct($mock, $method) {
-        $this->mock = $mock;
-        $this->method = $method;
-    }
-    
-    public function returns($value) {
-        $this->mock->setReturnValue($this->method, $value);
-    }
-    
 
 }
 ?>
