@@ -21,6 +21,7 @@
 require_once(dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_FormElement_Builder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
@@ -48,6 +49,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         parent::setUp();
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), 66);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
+        $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -55,6 +57,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $title = "screen hangs with macos";
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
         $this->assertPattern('/No items yet/', $content);
+        $this->assertPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
     }
     
     public function itDisplaysTheArtifactTitleAndId() {
@@ -82,6 +85,12 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->assertPattern('/<input type="hidden" name="group_id" value="103"/', $content);
     }
     
+    public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
+        $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
+        $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
+    }
+    
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
         $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
@@ -94,7 +103,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             $this->GivenAnArtifactWithNoLinkedItem(123, 'Tata')
         );
         
-        $artifact = $this->GivenAnArtifact($id, 'Toto', $linked_items);
+        $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $request = new Codendi_Request(
             array(
@@ -151,11 +160,17 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $view_builder->expectOnce('buildPlanningContentView', array($project, $expected_criteria, $already_linked_items, $tracker_ids));
         $view_builder->setReturnValue('buildPlanningContentView', $content_view);
         
-        $artifact = $this->GivenAnArtifact($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
+        $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, new MockTracker_CrossSearch_Search());
         
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
+    }
+    
+    private function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
+        $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
+        $artifact->setReturnValue('getAnArtifactLinkField', anArtifactLinkField());
+        return $artifact;
     }
     
     private function GivenAnArtifact($id, $title, $already_linked_items) {
@@ -168,7 +183,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     private function GivenAnArtifactWithNoLinkedItem($id, $title) {
-        return $this->GivenAnArtifact($id, $title, array());
+        return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
     }
     
     private function GivenAnArtifactFactory(array $artifacts = array()) {
@@ -181,9 +196,18 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             array(
                 $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
                 $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
-            ), 
+                ), 
             array($this->planning->getPlanningTrackerId()));
         return $factory;
+    }
+    
+    private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
+        $id       = 987;
+        $title    = 'Coin';
+        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $artifact = $this->GivenAnArtifact($id, $title, array());
+        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
