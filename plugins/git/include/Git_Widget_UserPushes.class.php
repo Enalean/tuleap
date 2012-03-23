@@ -25,6 +25,9 @@ require_once 'Git_LogDao.class.php';
  */
 class Git_Widget_UserPushes extends Widget {
 
+    var $repositoryId;
+    var $offset;
+
     /**
      * Constructor of the class
      *
@@ -32,6 +35,8 @@ class Git_Widget_UserPushes extends Widget {
      */
     public function __construct() {
         $this->Widget('plugin_git_user_pushes');
+        $this->repositoryId = user_get_preference('plugin_git_user_pushes_repo_id');
+        $this->offset       = user_get_preference('plugin_git_user_pushes_offset');
     }
 
     /**
@@ -53,7 +58,7 @@ class Git_Widget_UserPushes extends Widget {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
-        $dar     = $dao->getLastPushesByUser($user->getId());
+        $dar     = $dao->getLastPushesByUser($user->getId(), $this->repositoryId, $this->offset);
         foreach($dar as $row) {
             $content .= $row['group_name'].' '.$row['repository_name']."<br />";
         }
@@ -76,6 +81,40 @@ class Git_Widget_UserPushes extends Widget {
      */
     function getDescription() {
         return 'Display last pushes performed by the user';
+    }
+
+    function updatePreferences(&$request) {
+        $request->valid(new Valid_String('cancel'));
+        $vRepo = new Valid_UInt('plugin_git_user_pushes_repo_id');
+        $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
+        $vRepo->required();
+        if (!$request->exist('cancel')) {
+            if ($request->valid($vRepo)) {
+                $this->repositoryId = $request->get('plugin_git_user_pushes_repo_id');
+                user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
+            }
+            if ($request->valid($vOffset)) {
+                $this->repositoryId = $request->get('plugin_git_user_pushes_offset');
+                user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
+            }
+        }
+        return true;
+    }
+
+    function hasPreferences() {
+        return true;
+    }
+
+    function getPreferences() {
+        return "<table>
+                <tr>
+                <td>Repository id</td><td><input name='plugin_git_user_pushes_repo_id'value='".$this->repositoryId."'/></td>
+                </tr>
+                <tr>
+                <td>Offset</td><td><input name='plugin_git_user_pushes_offset'value='".$this->offset."'/></td>
+                </tr>
+                </table>";
+        
     }
 
 }

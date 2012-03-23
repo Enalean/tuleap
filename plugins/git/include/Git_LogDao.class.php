@@ -47,6 +47,11 @@ class Git_LogDao extends DataAccessObject {
         } else {
             $condition = "";
         }
+        if ($offset) {
+            $limit = "LIMIT ".$this->da->escapeInt($offset);
+        } else {
+            $limit = "LIMIT 10";
+        }
         $sql = "SELECT g.group_name, r.repository_name, l.push_date
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
@@ -54,7 +59,7 @@ class Git_LogDao extends DataAccessObject {
                 WHERE l.user_id = ".$this->da->escapeInt($userId)."
                 ".$condition."
                 ORDER BY l.push_date DESC
-                LIMIT ".$this->da->escapeInt($offset);
+                ".$limit;
         return $this->retrieve($sql);
     }
 
