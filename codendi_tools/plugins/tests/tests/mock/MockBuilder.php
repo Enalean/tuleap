@@ -26,11 +26,17 @@ class OngoingStub {
 }
 
 /**
- * @param a simpletest mock
+ * @param a class name or a simpletest mock
  * @return \OngoingIntelligentStub 
  */
 function given($mock) {
-    return new OngoingIntelligentStub($mock);
+    if (is_object($mock)) {
+        return new OngoingIntelligentStub($mock);
+    } else {
+        Mock::generate($mock);
+        $classname = "Mock$mock";
+        return new OngoingIntelligentStub(new $classname());
+    }
 }
 
 class OngoingIntelligentStub {
@@ -45,12 +51,16 @@ class OngoingIntelligentStub {
         return $this;
     }
 
+    /**
+     * @return the conficured mock 
+     */
     public function returns($value) {
         if (empty($this->arguments)) {
             $this->mock->setReturnValue($this->method, $value);
         } else {
             $this->mock->setReturnValue($this->method, $value, $this->arguments);
         }
+        return $this->mock;
     }
     
 

@@ -1,6 +1,6 @@
 <?php
 
-require_once 'MockDsl.php';
+require_once 'MockBuilder.php';
 
 class Toto {
 
@@ -37,6 +37,7 @@ abstract class MockBuilderBaseTest extends TuleapTestCase {
         $this->assertNotEqual($this->mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
     }
     
+    
     public abstract function mockWithoutArguments();
 
 }
@@ -59,7 +60,6 @@ class MockBuilderSimpleTest extends MockBuilderBaseTest {
                 ->returns("Hello");
     }
 }
-
 class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
     public function mockWithoutArguments() {
         given($this->mockToto)
@@ -75,6 +75,20 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         given($this->mockToto)
             ->greet('Rasmus', 'Lerdorf')
             ->returns("Hello, Rasmus Lerdorf");
+    }
+    
+    public function itCanAlsoBuildTheMock() {
+       $mockOfSomeClass = given('SomeClass')
+                            ->someMethod()
+                            ->returns("a precise result");
+       $this->assertEqual("a precise result", $mockOfSomeClass->someMethod());
+    }
+}
+
+class SomeClass {
+
+    function someMethod() {
+        // mocked
     }
 }
 ?>
