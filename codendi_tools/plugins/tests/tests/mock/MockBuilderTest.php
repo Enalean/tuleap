@@ -10,78 +10,71 @@ class Toto {
 
 }
 Mock::generate('Toto');
-class MockBuilderTest extends TuleapTestCase {
+abstract class MockBuilderBaseTest extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+        $this->mockToto = new MockToto();
+    }
     public function itWorksWithoutArguments() {
-        $mockToto = new MockToto();
+        $this->mockWithoutArguments();
         
-        givenThat($mockToto, 'greet')
-                ->returns("Hello");
-        
-        $this->assertEqual($mockToto->greet(), "Hello");
+        $this->assertEqual($this->mockToto->greet(), "Hello");
     }
     
     public function itIsPossibleToSpecifyAnArgument() {
-        $mockToto = new MockToto();
-        
-        givenThat($mockToto, 'greet')
-                ->with('Rasmus Lerdorf')
-                ->returns("Hello, Rasmus Lerdorf");
-        
-
-//        $mockToto = when('Toto')
-//                ->recieves('greet')
-//                ->with('Rasmus Lerdorf')
-//                ->returns("Hello, Rasmus Lerdorf");
-        
-        $this->assertEqual($mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
-        $this->assertNotEqual($mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
+        $this->mockWithOneArgument();
+                
+        $this->assertEqual($this->mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($this->mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
     }
     
     public function itIsPossibleToSpecifySeveralArguments() {
-        $mockToto = new MockToto();
+        $this->mockWith2Arguments();
         
-        givenThat($mockToto, 'greet')
-                ->with('Rasmus', 'Lerdorf')
-                ->returns("Hello, Rasmus Lerdorf");
-        
-        $this->assertEqual($mockToto->greet('Rasmus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
-        $this->assertNotEqual($mockToto->greet('Linus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
-        $this->assertNotEqual($mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
+        $this->assertEqual($this->mockToto->greet('Rasmus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($this->mockToto->greet('Linus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($this->mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
     }
     
-    public function itWorksWithoutArgumentsV2() {
-        $mockToto = new MockToto();
-        
-        givenThat($mockToto, 'greet')
-                ->returns("Hello");
-        
-        $this->assertEqual($mockToto->greet(), "Hello");
-    }
-    
-    public function testVersion2() {
-        $mockToto = new MockToto();
+    public abstract function mockWithoutArguments();
 
-        given($mockToto)
+}
+class MockBuilderSimpleTest extends MockBuilderBaseTest {
+
+    public function mockWith2Arguments() {
+        givenThat($this->mockToto, 'greet')
+            ->with('Rasmus', 'Lerdorf')
+            ->returns("Hello, Rasmus Lerdorf");
+    }
+
+    public function mockWithOneArgument() {
+        givenThat($this->mockToto, 'greet')
+            ->with('Rasmus Lerdorf')
+            ->returns("Hello, Rasmus Lerdorf");
+
+    }
+    public function mockWithoutArguments() {
+        givenThat($this->mockToto, 'greet')
+                ->returns("Hello");
+    }
+}
+
+class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
+    public function mockWithoutArguments() {
+        given($this->mockToto)
+            ->greet()
+            ->returns("Hello");
+    }
+    public function mockWithOneArgument() {
+        given($this->mockToto)
             ->greet('Rasmus Lerdorf')
             ->returns("Hello, Rasmus Lerdorf");
-        
-        $this->assertEqual($mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
-        $this->assertNotEqual($mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
-
     }
-    public function itIsPossibleToSpecifySeveralArgumentsV2() {
-        $mockToto = new MockToto();
-        
-        given($mockToto)
+    public function mockWith2Arguments() {
+        given($this->mockToto)
             ->greet('Rasmus', 'Lerdorf')
             ->returns("Hello, Rasmus Lerdorf");
-        
-        $this->assertEqual($mockToto->greet('Rasmus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
-        $this->assertNotEqual($mockToto->greet('Linus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
-        $this->assertNotEqual($mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
     }
-    
-
 }
 ?>
