@@ -21,7 +21,7 @@
 require_once 'common/dao/include/DataAccessObject.class.php';
 
 class Git_LogDao extends DataAccessObject {
-    
+
     function searchLastPushForRepository($repository_id) {
         $repository_id = $this->da->escapeInt($repository_id);
         $sql = "SELECT log.*
@@ -31,6 +31,24 @@ class Git_LogDao extends DataAccessObject {
                 LIMIT 1";
         return $this->retrieve($sql);
     }
+
+    /**
+     * Obtain last git pushes performed by the given user
+     *
+     * @param Integer $userId Id of the user
+     * @param Integer $offset Offset of the search
+     *
+     * @return DataAccessResult
+     */
+    function getLastPushesByUser($userId, $offset = 10) {
+        $sql = "SELECT *
+                FROM plugin_git_log
+                WHERE user_id = ".$this->da->escapeInt($userId)."
+                ORDER BY push_date DESC
+                LIMIT ".$this->da->escapeInt($offset);
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>
