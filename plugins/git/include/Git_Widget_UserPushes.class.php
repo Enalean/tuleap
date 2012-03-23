@@ -7,6 +7,15 @@
 class Git_Widget_UserPushes extends Widget {
 
     /**
+     * Constructor of the class
+     *
+     * @return Void
+     */
+    public function __construct() {
+        $this->Widget('plugin_git_user_pushes');
+    }
+
+    /**
      * Get the title of the widget.
      *
      * @return string
