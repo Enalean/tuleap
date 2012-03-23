@@ -1,6 +1,6 @@
 <?php
 
-function when($mock, $method) {
+function givenThat($mock, $method) {
     return new OngoingStub($mock, $method);
 
 }
