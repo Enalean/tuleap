@@ -65,7 +65,10 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('statistics_collector',              'statistics_collector',                    false);
+        $this->_addHook('statistics_collector',              'statistics_collector',              false);
+        $this->_addHook('widget_instance',                   'myPageBox',                         false);
+        $this->_addHook('widgets',                           'widgets',                           false);
+
     }
 
     public function getPluginInfo() {
@@ -384,6 +387,26 @@ class GitPlugin extends Plugin {
             $formatter  = $params['formatter'];
             $gitBackend = Backend::instance('Git','GitBackend');
             echo $gitBackend->getBackendStatistics($formatter);
+        }
+    }
+
+    function myPageBox($params) {
+        switch ($params['widget']) {
+            case 'plugin_git_user_pushes':
+                require_once('Git_Widget_UserPushes.class.php');
+                $params['instance'] = new Git_Widget_UserPushes();
+                break;
+            default:
+                break;
+        }
+    }
+
+    function widgets($params) {
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+            $params['codendi_widgets'][] = 'plugin_git_user_pushes';
+        }
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
         }
     }
 
