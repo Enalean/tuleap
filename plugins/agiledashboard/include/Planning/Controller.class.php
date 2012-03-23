@@ -23,7 +23,7 @@ require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
 require_once 'NotFoundException.class.php';
-require_once 'common/valid/ValidFactory.class.php';
+require_once 'RequestValidator.class.php';
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Planning/SearchContentView.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
@@ -69,18 +69,9 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function create() {
-        $planning_name = new Valid_String('planning_name');
-        $planning_name->required();
+        $validator = new Planning_RequestValidator();
         
-        $backlog_tracker_ids = new Valid_UInt('backlog_tracker_ids');
-        $backlog_tracker_ids->required();
-        
-        $planning_tracker_id = new Valid_UInt('planning_tracker_id');
-        $planning_tracker_id->required();
-        
-        if ($this->request->validArray($backlog_tracker_ids) && 
-            $this->request->valid($planning_tracker_id) &&
-            $this->request->valid($planning_name)) {
+        if ($validator->isValid($this->request)) {
             
             $this->planning_factory->create($this->request->get('planning_name'),
                                             $this->group_id,
