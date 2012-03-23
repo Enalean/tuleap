@@ -114,7 +114,7 @@ if ($svnNotificationsDetails) {
         $content .= '<input type="checkbox" value="'. $item['path'] .'" name="paths_to_delete[]" >';
         $content .= '</td></tr>';
     }
-    $content .= '<tr><td colspan="2"><input type="submit" value="'.$Language->getText('global','delete').'"></td></tr></tbody>';
+    $content .= '<tr align="right"><td colspan="3"><input type="submit" value="'.$Language->getText('global','delete').'"></td></tr></tbody>';
 }
 $content .= '</table>';
 echo '
