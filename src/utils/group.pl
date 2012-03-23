@@ -128,11 +128,17 @@ sub get_email_from_login {
         return 0;
     }
 }
-# @TODO add docBlock for subroutine
+
+#
+# input: a string handled as table name, a string handled as path column name, a string handled as changed directory,
+#        a string handled as email notification column name, an integer handled as project ID.
+# output: an array of email addresses corresponding to the given project id, path and subpathes
+#
 sub get_emails_by_path {
     my ($table, $fieldname, $value, $retfieldname, $groupid) = @_;
     my ($query, $res);
-# @TODO add comment
+# Split a given path into subpathes according to depth, then build a regular expression like below:
+# path: '/var/lib/codendi/' => Regex: '^/var|^/var/lib|^/var/lib/codendi*'
     my @dirs = split('/', $value);
     $root = "/";
     $patternMatcher = '';
