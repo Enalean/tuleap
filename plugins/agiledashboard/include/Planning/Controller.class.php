@@ -28,6 +28,7 @@ require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Planning/SearchContentView.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
+require_once dirname(__FILE__).'/../AgileDashBoardPluginBreadCrumb.class.php';
 
 class Planning_Controller extends MVC2_Controller {
     
@@ -115,17 +116,9 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function getBreadcrumbs($plugin_path) {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $breadcrumbs    = array();
-        $url_parameters = array(
-            'group_id' => (int) $this->request->get('group_id'),
-        );
-        
-        $breadcrumbs[] = array(
-            'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
-        );
-        return $breadcrumbs;
+        $breadcrumb = new AgileDashBoardPluginBreadCrumb((int) $this->request->get('group_id'), $plugin_path);
+        return $breadcrumb->getCrumbs();
     }
 }
+
 ?>
