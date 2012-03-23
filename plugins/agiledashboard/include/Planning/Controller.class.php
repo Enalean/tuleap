@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Planning/Searc
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
-class Planning_Controller extends Controller {
+class Planning_Controller extends MVC2_Controller {
     
     /**
      * @var Tracker_Artifact
