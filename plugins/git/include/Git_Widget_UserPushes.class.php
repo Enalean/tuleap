@@ -22,6 +22,8 @@ require_once 'Git_LogDao.class.php';
 
 /**
  * Widget displaying last git pushes for the user
+ * @TODO: i18n
+ * @TODO: Picture for the widget
  */
 class Git_Widget_UserPushes extends Widget {
 
