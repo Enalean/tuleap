@@ -1148,7 +1148,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return UserManager::instance();
     }
 
-    public function createArtifactLink($artlink_fields, $linked_artifact_id, User $current_user) {
+    private function createArtifactLink($artlink_fields, $linked_artifact_id, User $current_user) {
         $comment       = '';
         $email         = '';
         $artlink_field = $artlink_fields[0];
