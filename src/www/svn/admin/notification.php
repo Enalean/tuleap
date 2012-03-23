@@ -47,7 +47,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
                 $vPathToDelete = new Valid_Array('paths_to_delete');
                 if($request->valid($vPathToDelete)) {
                     $PathsToDelete    = $request->get('paths_to_delete');
-                    $svnNotification->removeSvnNotification($PathsToDelete, $group_id);
+                    $svnNotification->removeSvnNotification($group_id, $PathsToDelete);
                 }
             }
             break;

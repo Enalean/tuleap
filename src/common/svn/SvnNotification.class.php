@@ -87,17 +87,17 @@ class SvnNotification {
     /**
      * Remove svn notification details
      *
-     * @param Array   $selectedPaths Contains list of paths to remove.
      * @param Integer $projectId     Project id
+     * @param Array   $selectedPaths Contains list of paths to remove.
      *
      * @return void
      */
-    function removeSvnNotification($selectedPaths, $projectId) {
+    function removeSvnNotification($projectId, $selectedPaths) {
         if (is_array($selectedPaths) && !empty($selectedPaths)) {
             $dao = $this->_getDao();
             $paths = array();
             foreach ($selectedPaths as $pathToDelete) {
-                if ($dao->deleteSvnMailingList($pathToDelete, $projectId)) {
+                if ($dao->deleteSvnMailingList($projectId, $pathToDelete)) {
                     $paths[] = $pathToDelete;
                 } else {
                     $GLOBALS['Response']->addFeedback('error',  $GLOBALS['Language']->getText('svn_admin_notification','delete_path_fail'));
