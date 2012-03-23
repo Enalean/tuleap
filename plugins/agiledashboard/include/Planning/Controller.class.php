@@ -37,22 +37,15 @@ class Planning_Controller extends MVC2_Controller {
     private $artifact;
     
     /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    
-    /**
      * @var PlanningFactory
      */
     private $planning_factory;
 
-    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
+    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
         $aid                    = $request->get('aid');
         $this->group_id         = $request->get('group_id');
-        $this->artifact         = $artifact_factory->getArtifactById($aid);
-        $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
     }
     
@@ -85,46 +78,7 @@ class Planning_Controller extends MVC2_Controller {
                                   'action'   => 'new'));
         }
     }
-    
-    private function getArtifactId(Tracker_Artifact $artifact) {
-        return $artifact->getId();
-    }
 
-    public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
-        $planning = $this->getPlanning();
-        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
-
-        $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
-        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
-        $this->render('show', $presenter);
-    }
-
-    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Planning $planning, $artifacts_to_select) {
-        $project  = $manager->getProject($this->request->get('group_id'));
-        $request_criteria = $this->getCriteriaFromRequest();
-        $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
-        $tracker_ids = $planning->getBacklogTrackerIds();
-        return $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
-    }
-    
-    private function getCriteriaFromRequest() {
-        $request_criteria = array();
-        $valid_criteria = new Valid_Array('criteria');
-        $valid_criteria->required();
-        if ($this->request->valid($valid_criteria)) {
-            $request_criteria = $this->request->get('criteria');
-        }
-        return $request_criteria;
-    }
-    
-    private function getTrackerLinkedItems($artifacts_to_select) {
-        $linked_items = array();
-        foreach ($artifacts_to_select as $artifact) {
-            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts());
-        }
-        return $linked_items;
-    }
-    
     public function edit() {
         try {
             $planning  = $this->getPlanning();
@@ -136,6 +90,7 @@ class Planning_Controller extends MVC2_Controller {
         }
     }
     
+
     public function update() {
         $this->planning_factory->updatePlanning($this->request->get('planning_id'),
                                                 $this->request->get('planning_name'),
@@ -170,22 +125,6 @@ class Planning_Controller extends MVC2_Controller {
             'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
             'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
         );
-        $planning = $this->getPlanning();
-        if ($planning) {
-            $url_parameters['planning_id'] = (int) $planning->getId();
-            $url_parameters['action']      = 'show';
-            $breadcrumbs[] = array(
-                'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-                'title' => $hp->purify($planning->getName()),
-            );
-            if ($this->artifact) {
-                $url_parameters['aid'] = (int) $this->artifact->getId();
-                $breadcrumbs[] = array(
-                    'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-                    'title' => $hp->purify($this->artifact->getTitle()),
-                );
-            }
-        }
         return $breadcrumbs;
     }
 }

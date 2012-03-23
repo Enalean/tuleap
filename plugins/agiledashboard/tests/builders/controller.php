@@ -38,13 +38,11 @@ class Builder {
 class TestPlanningControllerBuilder extends Builder {
     public function __construct() {
         $this->request          = new Codendi_Request(array());
-        $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = new MockPlanningFactory();
     }
     
     public function build() {
         return new Planning_Controller($this->request,
-                                       $this->artifact_factory,
                                        $this->planning_factory);
     }
 }

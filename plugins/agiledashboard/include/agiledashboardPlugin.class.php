@@ -79,11 +79,12 @@ class AgileDashboardPlugin extends Plugin {
         require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
         require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
         $controller = $this->buildController($request);
+        $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
         switch($request->get('action')) {
             case 'show':
                 $object_god = new TrackerManager();
                 $view_builder = $object_god->getCrossSearchViewBuilder();
-                $this->renderAction($controller, 'show', $request, array($view_builder, ProjectManager::instance()));
+                $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
                 break;
             case 'new':
                 $this->renderAction($controller, 'new_', $request);
@@ -126,7 +127,7 @@ class AgileDashboardPlugin extends Plugin {
         return $this->service;
     }
     
-    private function displayHeader(Planning_Controller $controller, Codendi_Request $request, $title) {
+    private function displayHeader($controller, Codendi_Request $request, $title) {
         $breadcrumbs = $controller->getBreadcrumbs($this->getPluginPath());
         $this->getService($request)->displayHeader($title, $breadcrumbs, array());
     }
@@ -142,18 +143,26 @@ class AgileDashboardPlugin extends Plugin {
         require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
         
         $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
-        $artifact_factory = Tracker_ArtifactFactory::instance();
         
-        return new Planning_Controller($request, $artifact_factory, $planning_factory);
+        return new Planning_Controller($request, $planning_factory);
+    }
+
+    private function buildArtifactPlannificationController($request) {
+        require_once 'Planning/ArtifactPlannificationController.class.php';
+        require_once 'Planning/PlanningFactory.class.php';
+        
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        return new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory);
     }
     
-    private function renderAction(Planning_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
+    private function renderAction(MVC2_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
         $this->executeAction($controller, $action_name, $args);
         $this->displayFooter($request);
     }
     
-    private function executeAction(Planning_Controller $controller, $action_name, array $args = array()) {
+    private function executeAction(MVC2_Controller $controller, $action_name, array $args = array()) {
         call_user_func_array(array($controller, $action_name), $args);
     }
     
