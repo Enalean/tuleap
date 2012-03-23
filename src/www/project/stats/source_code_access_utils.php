@@ -474,7 +474,7 @@ function wiki_attachments_logs_daily($project, $span = 7, $who="allusers") {
 
 function plugins_log_extract($project, $span, $who) {
 
-    $event_manager =& EventManager::instance();
+    $event_manager = EventManager::instance();
     $logs = array();
     $event_manager->processEvent('logs_daily', array(
         'group_id'  => $project->getGroupId(),

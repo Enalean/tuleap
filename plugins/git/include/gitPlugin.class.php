@@ -66,6 +66,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->_addHook('statistics_collector',              'statistics_collector',              false);
+        $this->_addHook('logs_daily',                        'logsDaily',                         false);
         $this->_addHook('widget_instance',                   'myPageBox',                         false);
         $this->_addHook('widgets',                           'widgets',                           false);
 
@@ -388,6 +389,17 @@ class GitPlugin extends Plugin {
             $gitBackend = Backend::instance('Git','GitBackend');
             echo $gitBackend->getBackendStatistics($formatter);
         }
+    }
+
+    /**
+     * Add log access for git pushs
+     * 
+     * @param Array $params parameters of the event
+     */
+    function logsDaily($params) {
+        require_once('Git.class.php');
+        $controler = new Git($this);
+        $controler->logsDaily($params);
     }
 
     function myPageBox($params) {

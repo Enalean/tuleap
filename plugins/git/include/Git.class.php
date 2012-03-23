@@ -525,6 +525,16 @@ class Git extends PluginController {
         }
         return $repos;
     }
+
+    /**
+     * Add access logs for git pushs
+     * 
+     * @param Array $params
+     * 
+     */
+    public function logsDaily($params) {
+        //TODO
+    }
 }
 
 ?>
