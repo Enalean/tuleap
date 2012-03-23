@@ -80,15 +80,15 @@ class SvnNotificationDao extends DataAccessObject {
     /**
      * Removes mailing list set on a given path identified by $path.
      *
-     * @param String  $path      svn path
-     * @param Integer $projectId Project id
+     * @param String  $path    svn path
+     * @param Integer $groupId Project id
      *
      * @return Boolean
      */
-    function deleteSVNMailingList($path, $projectId) {
+    function deleteSVNMailingList($path, $groupId) {
         $sql = 'DELETE FROM svn_notification
                 WHERE path='.$this->da->quoteSmart($path).'
-                AND group_id='.$this->da->escapeInt($projectId);
+                AND group_id='.$this->da->escapeInt($groupId);
         return $this->update($sql);
     }
 }
