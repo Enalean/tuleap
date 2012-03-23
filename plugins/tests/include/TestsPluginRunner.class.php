@@ -41,8 +41,8 @@ class TestsPluginRunner {
     public $rootCategory = 'tests_to_run';
 
     public function __construct(TestsPluginRequest $request) {
-        $this->request = $request;
-        $title = $this->getTitleByOrder($request->getOrder());
+        $this->request   = $request;
+        $title           = $this->getTitleByOrder($request->getOrder());
         $this->mainSuite = $this->buildSuite($title);
         $this->navigator = $this->getPresenter($this->rootCategory, 'Main', '_all_tests');
         $this->navigator->setTitle($title);
@@ -54,7 +54,7 @@ class TestsPluginRunner {
     public function addCoreSuite() {
         $corePresenter = $this->getPresenter($this->rootCategory, 'core', '_all_core');
         $coreSuite     = $this->buildSuite($corePresenter->title());
-        $corePath      =  realpath(dirname(__FILE__).'/../../../tests/simpletest');
+        $corePath      =  realpath(dirname(__FILE__) . '/../../../tests/simpletest');
         
         $this->addSuite($coreSuite, $corePresenter, $this->rootCategory.'[core]', $corePath);
         
@@ -65,7 +65,7 @@ class TestsPluginRunner {
     private function addAllPluginsSuite() {
         $allPluginsPresenter = $this->getPresenter($this->rootCategory, 'plugins', '_all_plugins');
         $allPluginsSuite     = $this->buildSuite("Plugins");
-        $allPluginsPath      = realpath(dirname(__FILE__).'/../..');
+        $allPluginsPath      = realpath(dirname(__FILE__) . '/../..');
 
         foreach ($this->getTestsIterator($allPluginsPath) as $file) {
             if ($this->isSuite($file, '/tests')) {
@@ -78,12 +78,11 @@ class TestsPluginRunner {
     }
 
     private function addPluginSuite($file, $allPluginsPresenter, $allPluginsSuite) {
-        $pluginName = basename($file->getPathname());
-        $testsPath = $file->getPathname() . '/tests';
-        $prefix = $allPluginsPresenter->prefix() . '[' . $allPluginsPresenter->name() . ']';
-
+        $pluginName      = basename($file->getPathname());
+        $testsPath       = $file->getPathname() . '/tests';
+        $prefix          = $allPluginsPresenter->prefix() . '[' . $allPluginsPresenter->name() . ']';
         $pluginPresenter = $this->getPresenter($prefix, $pluginName, $testsPath);
-        $pluginSuite = $this->buildSuite($pluginPresenter->title());
+        $pluginSuite     = $this->buildSuite($pluginPresenter->title());
 
         $this->addSuite($pluginSuite, $pluginPresenter, $prefix, $testsPath);
         if ($pluginPresenter->hasChildren()) {
@@ -153,7 +152,7 @@ class TestsPluginRunner {
         $results   = $this->getResults();
         $renderer  = new MustacheRenderer(dirname(__FILE__) . '/../templates');
         $presenter = new TestsPluginRunnerPresenter($this->request, $navigator, $results);
-        $template  =  'testsPluginRunner'.strtoupper($this->request->getDisplay());
+        $template  =  'testsPluginRunner' . strtoupper($this->request->getDisplay());
         $renderer->render($template, $presenter);
     }
 
