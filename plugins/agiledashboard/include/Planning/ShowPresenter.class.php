@@ -67,15 +67,15 @@ class Planning_ShowPresenter {
     }
     
     public function artifactsToSelect() {
-        $stuffToPassToMustache = array();
+        $artifacts_data = array();
         foreach ($this->artifacts_to_select as $artifact) {
-            $stuffToPassToMustache[] = array(
+            $artifacts_data[] = array(
                 'id'       => $artifact->getId(),
                 'title'    => $artifact->getTitle(),
                 'selected' => ($artifact->getId() == $this->destination_id) ? 'selected="selected"' : '',
             );
         }
-        return $stuffToPassToMustache;
+        return $artifacts_data;
     }
     
     public function destinationHelp() {
