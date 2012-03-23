@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../AgileDashBoardPluginBreadCrumb.class.php';
-require_once dirname(__FILE__).'/../AgileDashBoardPluginArtifactBreadCrumb.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashBoard.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/PlanningAndArtifact.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Pipe.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     /**
@@ -84,11 +85,10 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
 
     
     public function getBreadcrumbs($plugin_path) {
-        $breadcrumb = new AgileDashBoardPluginBreadCrumb((int) $this->request->get('group_id'), $plugin_path);
-        $breadcrumbs = $breadcrumb->getCrumbs();
-        $artifactsBc   = new AgileDashBoardPluginArtifactBreadCrumb($plugin_path, $this->artifact, $this->getPlanning());
-        $artifacts    = $artifactsBc->getCrumbs();
-        return array_merge($breadcrumbs, $artifacts);
+        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard((int) $this->request->get('group_id'), $plugin_path);
+        $artifactsBreadCrumbGenerator = new BreadCrumb_PlanningAndArtifact($plugin_path, $this->artifact, $this->getPlanning());
+        $breadCrumbGenerator          = new BreadCrumb_Pipe($baseBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
+        return $breadCrumbGenerator->getCrumbs();
     }
     
 }

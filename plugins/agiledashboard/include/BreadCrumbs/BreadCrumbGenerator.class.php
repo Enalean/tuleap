@@ -19,24 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashBoardPluginBreadCrumb {
-
-    function __construct($project_id, $plugin_path) {
-        $this->project_id = $project_id;
-        $this->plugin_path = $plugin_path;
-    }
-    function getCrumbs() {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $breadcrumbs    = array();
-        $url_parameters = array(
-            'group_id' => (int) $this->project_id,
-        );
-        
-        $breadcrumbs[] = array(
-            'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
-            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
-        );
-        return $breadcrumbs;
-    }
+interface BreadCrumb_BreadCrumbGenerator {
+    /**
+     * @return array of strings 
+     */
+    function getCrumbs();
 }
+
 ?>

@@ -19,30 +19,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashBoardPluginArtifactBreadCrumb {
+class BreadCrumb_PlanningAndArtifact implements BreadCrumb_BreadCrumbGenerator {
 
-    function __construct($plugin_path, $artifact, $planning) {
+    public function __construct($plugin_path, $artifact, $planning) {
         $this->artifact    = $artifact;
         $this->plugin_path = $plugin_path;
         $this->planning    = $planning;
     }
-    function getCrumbs() {
+    public function getCrumbs() {
         $hp             = Codendi_HTMLPurifier::instance();
         $planning = $this->planning;
-        if ($planning) {
-            $url_parameters['planning_id'] = (int) $planning->getId();
-            $url_parameters['action']      = 'show';
+        $url_parameters['planning_id'] = (int) $planning->getId();
+        $url_parameters['action']      = 'show';
+        $breadcrumbs[] = array(
+            'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
+            'title' => $hp->purify($planning->getName()),
+        );
+        if ($this->artifact) {
+            $url_parameters['aid'] = (int) $this->artifact->getId();
             $breadcrumbs[] = array(
                 'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
-                'title' => $hp->purify($planning->getName()),
+                'title' => $hp->purify($this->artifact->getTitle()),
             );
-            if ($this->artifact) {
-                $url_parameters['aid'] = (int) $this->artifact->getId();
-                $breadcrumbs[] = array(
-                    'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
-                    'title' => $hp->purify($this->artifact->getTitle()),
-                );
-            }
         }
         return $breadcrumbs;
     }
