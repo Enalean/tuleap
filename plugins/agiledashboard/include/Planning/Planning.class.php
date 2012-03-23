@@ -53,22 +53,37 @@ class Planning {
         $this->planning_tracker_id  = $planning_tracker_id;
     }
     
+    /**
+     * @return int the planning id
+     */
     public function getId () {
         return $this->id;
     }
     
+    /**
+     * @return String the planning name
+     */
     public function getName() {
         return $this->name;
     }
     
+    /**
+     * @return int the group_id the planning belongs to
+     */
     public function getGroupId() {
         return $this->group_id;
     }
     
+    /**
+     * @return array A list of tracker ids defined as backlog trackers
+     */
     public function getBacklogTrackerIds() {
         return $this->backlog_tracker_ids;
     }
     
+    /**
+     * @return int The tracker id, the artifacts of which are supposed to be planned
+     */
     public function getPlanningTrackerId() {
         return $this->planning_tracker_id;
     }

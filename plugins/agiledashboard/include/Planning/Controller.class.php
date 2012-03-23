@@ -36,6 +36,16 @@ class Planning_Controller extends Controller {
      */
     private $artifact;
     
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
     public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
