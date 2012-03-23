@@ -19,11 +19,19 @@ class Toto {
 Mock::generate('Toto');
 class MockBuilderTest extends TuleapTestCase {
 
-    public function testSomething() {
+    public function itWorksWithoutArguments() {
         $mockToto = new MockToto();
         when($mockToto, 'greet')->returns("Hello");
         $this->assertEqual($mockToto->greet(), "Hello");
     }
+    
+    public function itWorksWithOneArgument() {
+        $mockToto = new MockToto();
+        when($mockToto, 'greet')->with('Rasmus Lerdorf')->returns("Hello, Rasmus Lerdorf");
+        $this->assertEqual($mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
+        $this->assertNotEqual($mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
+    }
+
 
 }
 ?>

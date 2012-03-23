@@ -13,9 +13,16 @@ class OngoingStub {
     }
     
     public function returns($value) {
-        $this->mock->setReturnValue($this->method, $value);
+        if (empty($this->arg)) {
+            $this->mock->setReturnValue($this->method, $value);
+        } else {
+            $this->mock->setReturnValue($this->method, $value, array($this->arg));
+        }
     }
     
-
+    function with($arg) {
+        $this->arg = $arg;
+        return $this;
+    }
 }
 ?>
