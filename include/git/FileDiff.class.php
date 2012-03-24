@@ -11,8 +11,9 @@
  */
 
 require_once(GITPHP_GITOBJECTDIR . 'Blob.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'TmpDir.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'DiffExe.class.php');
+
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff.php');
+require_once(GITPHP_BASEDIR . 'lib/php-diff/lib/Diff/Renderer/Text/Unified.php');
 
 /**
  * Commit class
@@ -573,65 +574,13 @@ class GitPHP_FileDiff
 			return;
 		}
 
-		if (function_exists('xdiff_string_diff')) {
+		if (function_exists('xdiff_string_diff') && false) {
 
 			$this->diffData = $this->GetXDiff(3, true, $file);
 
 		} else {
 
-			$tmpdir = GitPHP_TmpDir::GetInstance();
-
-			$pid = 0;
-			if (function_exists('posix_getpid'))
-				$pid = posix_getpid();
-			else
-				$pid = rand();
-
-			$fromTmpFile = null;
-			$toTmpFile = null;
-
-			$fromName = null;
-			$toName = null;
-
-			if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
-				$fromBlob = $this->GetFromBlob();
-				$fromTmpFile = 'gitphp_' . $pid . '_from';
-				$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
-
-				$fromName = 'a/';
-				if (!empty($file)) {
-					$fromName .= $file;
-				} else if (!empty($this->fromFile)) {
-					$fromName .= $this->fromFile;
-				} else {
-					$fromName .= $this->fromHash;
-				}
-			}
-
-			if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
-				$toBlob = $this->GetToBlob();
-				$toTmpFile = 'gitphp_' . $pid . '_to';
-				$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
-
-				$toName = 'b/';
-				if (!empty($file)) {
-					$toName .= $file;
-				} else if (!empty($this->toFile)) {
-					$toName .= $this->toFile;
-				} else {
-					$toName .= $this->toHash;
-				}
-			}
-
-			$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
-
-			if (!empty($fromTmpFile)) {
-				$tmpdir->RemoveFile($fromTmpFile);
-			}
-
-			if (!empty($toTmpFile)) {
-				$tmpdir->RemoveFile($toTmpFile);
-			}
+			$this->diffData = $this->GetPhpDiff(3, true, $file);
 
 		}
 
@@ -671,9 +620,7 @@ class GitPHP_FileDiff
 		if (function_exists('xdiff_string_diff')) {
 			$diffLines = explode("\n", $this->GetXDiff(0, false));
 		} else {
-			$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
-				array("-U0", $this->fromHash,
-					$this->toHash)));
+			$diffLines = explode("\n", $this->GetPhpDiff(0, false));
 		}
 
 		unset($exe);
@@ -755,6 +702,66 @@ class GitPHP_FileDiff
 		}
 
 		$this->diffDataSplit = $output;
+		return $output;
+	}
+
+	/**
+	 * GetPhpDiff
+	 *
+	 * Get diff using php-diff
+	 *
+	 * @access private
+	 * @param boolean $header true to include standard diff header
+	 * @param string $file override the file name
+	 * @return string diff content
+	 */
+	private function GetPhpDiff($context = 3, $header = true, $file = null)
+	{
+		$fromData = '';
+		$toData = '';
+		$isBinary = false;
+		$fromName = '/dev/null';
+		$toName = '/dev/null';
+		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
+			$fromBlob = $this->GetFromBlob();
+			$isBinary = $isBinary || $fromBlob->IsBinary();
+			$fromData = $fromBlob->GetData(false);
+			$fromName = 'a/';
+			if (!empty($file)) {
+				$fromName .= $file;
+			} else if (!empty($this->fromFile)) {
+				$fromName .= $this->fromFile;
+			} else {
+				$fromName .= $this->fromHash;
+			}
+		}
+		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
+			$toBlob = $this->GetToBlob();
+			$isBinary = $isBinary || $toBlob->IsBinary();
+			$toData = $toBlob->GetData(false);
+			$toName = 'b/';
+			if (!empty($file)) {
+				$toName .= $file;
+			} else if (!empty($this->toFile)) {
+				$toName .= $this->toFile;
+			} else {
+				$toName .= $this->toHash;
+			}
+		}
+		$output = '';
+		if ($isBinary) {
+			$output = sprintf(__('Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
+		} else {
+			if ($header) {
+				$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
+			}
+
+			$options = array('context' => $context);
+
+			$diffObj = new Diff(explode("\n", $fromData), explode("\n", $toData), $options);
+			$renderer = new Diff_Renderer_Text_Unified;
+			$output .= $diffObj->render($renderer);;
+		}
 		return $output;
 	}
 
