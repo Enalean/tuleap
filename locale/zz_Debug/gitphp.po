@@ -472,32 +472,6 @@ msgstr "{*%1$s* ıs āttěmptĭng dīrėctöry trãvêrsál•••••}"
 msgid "%1$s is outside of the projectroot"
 msgstr "{*%1$s* ìs ōūtsıde ōf thĕ prōjēctrōŏt•••••}"
 
-# Error message when a temporary directory isn't specified in the config
-#: include/git/FileDiff.class.php:616
-msgid "No tmpdir defined"
-msgstr "{Nō tmpdĩr dēfĩněd••••••}"
-
-# Error message when the system can't write to the temporary directory
-# %1$s: the temp dir specified
-#: include/git/FileDiff.class.php:622
-#, php-format
-msgid "Specified tmpdir %1$s is not writable"
-msgstr "{Spĕcĭfīęd tmpdır %1$s īs nōt wrĩtáblé•••••}"
-
-# Error message when the temporary directory specified isn't a directory
-# %1$s: the temp dir specified
-#: include/git/FileDiff.class.php:625
-#, php-format
-msgid "Specified tmpdir %1$s is not a directory"
-msgstr "{Spĕcĩfīėd tmpdır *%1$s* ĭs nōt ã dīréctōry•••••}"
-
-# Error message when the system attempts to create the temporary directory but can't
-# %1$s: the temp dir it's trying to create
-#: include/git/FileDiff.class.php:628
-#, php-format
-msgid "Could not create tmpdir %1$s"
-msgstr "{Cōūld nōt crĕatę tmpdĭr *%1$s*••••}"
-
 # Error message when user tries to specify a file with a list of the projects, but it isn't a file
 # %1$s: the path the user specified
 #: include/git/ProjectListFile.class.php:38
@@ -690,16 +664,6 @@ msgstr ""
 msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
 "config value."
-msgstr ""
-
-# Error message displayed when the diff executable isn't found or doesn't work
-# %1$s: the diff executable the system is trying to run
-# %2$s: the config value the user needs to set to specify the correct path
-#: index.php:145
-#, php-format
-msgid ""
-"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
-"\" config value."
 msgstr ""
 
 # Link displayed in commitdiff view, when the user has filtered

@@ -777,18 +777,6 @@ msgstr ""
 "No se pudo correr el ejecutable de git \"%1$s\".  Podrías necesitar configurar "
 "el valor de  \"%2$s\" "
 
-# Error message displayed when the diff executable isn't found or doesn't work
-# %1$s: the diff executable the system is trying to run
-# %2$s: the config value the user needs to set to specify the correct path
-#: index.php:145
-#, php-format
-msgid ""
-"Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
-"\" config value."
-msgstr ""
-"No se pudo correr el ejecutable de diff \"%1$s\".  Podrías necesitar configurar "
-"el valor de  \"%2$s\" "
-
 # Link displayed in commitdiff view, when the user has filtered
 # the display to a single file using the list of changed files.
 # This will go back to showing all files in the commitdiff
