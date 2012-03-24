@@ -269,22 +269,6 @@ $gitphp_conf['gitbin'] = 'git';
 $gitphp_conf['gitbin'] = 'C:\\Progra~1\\Git\\bin\\git.exe';
 
 /*
- * diffbin
- * Path to diff binary
- * Same rules as gitbin
- */
-// Linux:
-$gitphp_conf['diffbin'] = 'diff';
-// Windows (msysgit):
-$gitphp_conf['diffbin'] = 'C:\\Progra~1\\Git\\bin\\diff.exe';
-
-/*
- * gittmp
- * Location for temporary files for diffs
- */
-$gitphp_conf['gittmp'] = '/tmp/gitphp/';
-
-/*
  * magicdb
  * Path to the libmagic db used to read mimetype
  * Only applies if filemimetype = true
