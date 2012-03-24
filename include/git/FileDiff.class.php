@@ -574,7 +574,7 @@ class GitPHP_FileDiff
 			return;
 		}
 
-		if (function_exists('xdiff_string_diff') && false) {
+		if (function_exists('xdiff_string_diff')) {
 
 			$this->diffData = $this->GetXDiff(3, true, $file);
 
@@ -630,6 +630,7 @@ class GitPHP_FileDiff
 		$diffs = array();
 		$currentDiff = FALSE;
 		foreach($diffLines as $d) {
+			$d = trim($d);
 			if(strlen($d) == 0)
 				continue;
 			switch($d[0]) {
@@ -760,7 +761,7 @@ class GitPHP_FileDiff
 
 			$diffObj = new Diff(explode("\n", $fromData), explode("\n", $toData), $options);
 			$renderer = new Diff_Renderer_Text_Unified;
-			$output .= $diffObj->render($renderer);;
+			$output .= $diffObj->render($renderer);
 		}
 		return $output;
 	}
