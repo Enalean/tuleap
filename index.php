@@ -58,7 +58,6 @@ require_once(GITPHP_GITOBJECTDIR . 'Archive.class.php');
 
 // Test these executables early
 require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
-require_once(GITPHP_GITOBJECTDIR . 'DiffExe.class.php');
 
 date_default_timezone_set('UTC');
 
@@ -138,12 +137,6 @@ try {
 	$exe = new GitPHP_GitExe(null);
 	if (!$exe->Valid()) {
 		throw new GitPHP_MessageException(sprintf(__('Could not run the git executable "%1$s".  You may need to set the "%2$s" config value.'), $exe->GetBinary(), 'gitbin'), true, 500);
-	}
-	if (!function_exists('xdiff_string_diff')) {
-		$exe = new GitPHP_DiffExe();
-		if (!$exe->Valid()) {
-			throw new GitPHP_MessageException(sprintf(__('Could not run the diff executable "%1$s".  You may need to set the "%2$s" config value.'), $exe->GetBinary(), 'diffbin'), true, 500);
-		}
 	}
 	unset($exe);
 
