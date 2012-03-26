@@ -38,10 +38,11 @@ class Git_LogDao extends DataAccessObject {
      * @param Integer $userId Id of the user
      * @param Integer $repoId Id of the git repository
      * @param Integer $offset Offset of the search
+     * @param Integer $date   Date from which we start collecting logs
      *
      * @return DataAccessResult
      */
-    function getLastPushesByUser($userId, $repoId = 0, $offset = 10) {
+    function getLastPushesByUser($userId, $repoId, $offset, $date) {
         if ($repoId) {
             $condition = "AND l.repository_id = ".$this->da->escapeInt($repoId);
         } else {
@@ -59,9 +60,31 @@ class Git_LogDao extends DataAccessObject {
                 WHERE l.user_id = ".$this->da->escapeInt($userId)."
                 AND r.repository_deletion_date  = '0000-00-00 00:00:00'
                 AND g.status = 'A'
+                AND l.push_date > ".$this->da->escapeInt($date)."
                 ".$condition."
-                ORDER BY l.push_date DESC
+                ORDER BY g.group_name, r.repository_name, l.push_date DESC
                 ".$limit;
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Obtain repositories containing git pushes by a user in the last given period
+     *
+     * @param Integer $userId Id of the user
+     * @param Integer $date   Date from which we start collecting repostories with pushes
+     *
+     * @return DataAccessResult
+     */
+    function getLastPushesRepositories($userId, $date) {
+        $sql = "SELECT DISTINCT(r.repository_id), g.group_name, r.repository_name
+                FROM plugin_git_log l
+                JOIN plugin_git r ON l.repository_id = r.repository_id
+                JOIN groups g ON g.group_id = r.project_id
+                WHERE l.user_id = ".$this->da->escapeInt($userId)."
+                AND r.repository_deletion_date  = '0000-00-00 00:00:00'
+                AND g.status = 'A'
+                AND l.push_date > ".$this->da->escapeInt($date)."
+                ORDER BY g.group_id, r.repository_id, l.push_date DESC";
         return $this->retrieve($sql);
     }
 

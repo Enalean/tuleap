@@ -25,8 +25,7 @@ require_once 'Git_LogDao.class.php';
  */
 class Git_Widget_UserPushes extends Widget {
 
-    var $repositoryId = '';
-    var $offset       = '';
+    var $offset = '';
 
     /**
      * Constructor of the class
@@ -35,8 +34,7 @@ class Git_Widget_UserPushes extends Widget {
      */
     public function __construct() {
         $this->Widget('plugin_git_user_pushes');
-        $this->repositoryId = user_get_preference('plugin_git_user_pushes_repo_id');
-        $this->offset       = user_get_preference('plugin_git_user_pushes_offset');
+        $this->offset = user_get_preference('plugin_git_user_pushes_offset');
     }
 
     /**
@@ -57,22 +55,32 @@ class Git_Widget_UserPushes extends Widget {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
-        $dar     = $dao->getLastPushesByUser($user->getId(), $this->repositoryId, $this->offset);
-        $content = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git','tree_view_project'),
-                                                   $GLOBALS['Language']->getText('plugin_git','tree_view_repository'),
-                                                   $GLOBALS['Language']->getText('plugin_git','tree_view_date'),
-                                                   $GLOBALS['Language']->getText('plugin_git','tree_view_commits')));
-        $i       = 0;
-        $hp      = Codendi_HTMLPurifier::instance();
-        foreach($dar as $row) {
-            $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
-                             <td>'.$hp->purify($row['group_name']).'</td>
-                             <td>'.$hp->purify($row['repository_name']).'</td>
-                             <td>'.html_time_ago($hp->purify($row['push_date'])).'</td>
-                             <td>'.$hp->purify($row['commits_number']).'</td>
-                         </tr>';
+        // Last 10 days
+        $date    = time() - (12 * 24 * 60 * 60);
+        $result  = $dao->getLastPushesRepositories($user->getId(), $date);
+        $content = '';
+        $project = '';
+        foreach($result as $entry) {
+            $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
+            if ($project != $entry['group_name']) {
+                if (!empty($project)) {
+                    $content .= '</div>';
+                }
+                $project = $entry['group_name'];
+                $content .= '<span id="plugin_git_user_pushes_widget_project_'.$project.'" class="toggler-hide"><b>'.$project.'</b></span><div class="plugin_git_user_pushes_widget_project_'.$project.'">';
+            }
+            $content .= '<span class="toggler-hide" id="plugin_git_user_pushes_widget_repo'.$entry['repository_name'].'">'.$entry['repository_name'].'</span><div class="plugin_git_user_pushes_widget_repo'.$entry['repository_name'].'" >'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git','tree_view_date'),
+                                                        $GLOBALS['Language']->getText('plugin_git','tree_view_commits')));
+            $i       = 0;
+            $hp      = Codendi_HTMLPurifier::instance();
+            foreach($dar as $row) {
+                $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
+                                 <td>'.html_time_ago($hp->purify($row['push_date'])).'</td>
+                                 <td>'.$hp->purify($row['commits_number']).'</td>
+                             </tr>';
+            }
+            $content .= "</table></div>";
         }
-        $content .= "</table>";
         return $content;
     }
 
@@ -96,23 +104,14 @@ class Git_Widget_UserPushes extends Widget {
 
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
-        $vRepo   = new Valid_UInt('plugin_git_user_pushes_repo_id');
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
-        $vRepo->required();
         if (!$request->exist('cancel')) {
-            if ($request->valid($vRepo)) {
-                $this->repositoryId = $request->get('plugin_git_user_pushes_repo_id');
-                
-            } else {
-                $this->repositoryId = '';
-            }
             if ($request->valid($vOffset)) {
                 $this->offset = $request->get('plugin_git_user_pushes_offset');
                 
             } else {
                 $this->offset = '';
             }
-            user_set_preference('plugin_git_user_pushes_repo_id', $this->repositoryId);
             user_set_preference('plugin_git_user_pushes_offset', $this->offset);
         }
         return true;
@@ -124,10 +123,6 @@ class Git_Widget_UserPushes extends Widget {
 
     function getPreferences() {
         return "<table>
-                    <tr>
-                        <td>Repository id</td>
-                        <td><input name='plugin_git_user_pushes_repo_id' value='".$this->repositoryId."'/></td>
-                    </tr>
                     <tr>
                         <td>Offset</td>
                         <td><input name='plugin_git_user_pushes_offset' value='".$this->offset."'/></td>
