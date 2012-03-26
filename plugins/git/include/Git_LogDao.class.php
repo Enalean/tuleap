@@ -88,6 +88,25 @@ class Git_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     *  Return the SQL Statement for logs daily pushs
+     *  
+     * @param Integer $groupId
+     * @param String $logsCond
+     * 
+     * @return String
+     */
+    function getSqlStatementForLogsDaily($groupId, $logsCond) {
+        return 'SELECT log.push_date AS time, user.user_name AS user_name, '.
+                       'user.realname AS realname, user.email AS email,'.
+                       ' r.repository_name '
+               .' FROM plugin_git_log AS log, user, plugin_git AS r' 
+               .' WHERE '. $logsCond
+               .' AND r.project_id = '. $this->da->quoteSmart($groupId)
+               .' AND log.repository_id = r.repository_id'
+               .' ORDER BY time DESC ';
+    }
+
 }
 
 ?>

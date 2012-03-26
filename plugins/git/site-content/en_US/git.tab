@@ -173,4 +173,7 @@ plugin_git	missing_parameter_repos	No repository selected for thr fork
 plugin_git	widget_user_pushes_title	My last Git pushes
 plugin_git	widget_project_pushes_title	Last Git pushes
 plugin_git	widget_user_pushes_description	Display last Git pushes performed by the user
-plugin_git	widget_project_pushes_description	Display last Git pushes of the project.
+plugin_git	widget_project_pushes_description	Display last Git pushes of the project.>>>>>>> .r21481
+
+plugin_git	logsdaily_field	Repository name
+plugin_git	logsdaily_title	Git pushes
