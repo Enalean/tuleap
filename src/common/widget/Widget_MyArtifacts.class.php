@@ -30,6 +30,7 @@ require_once('common/tracker/ArtifactReportFactory.class.php');
 require_once('common/tracker/ArtifactReport.class.php');
 require_once('common/tracker/ArtifactReportField.class.php');
 require_once('common/tracker/ArtifactFactory.class.php');
+require_once('www/my/my_utils.php');
 
 /**
 * Widget_MyArtifacts
