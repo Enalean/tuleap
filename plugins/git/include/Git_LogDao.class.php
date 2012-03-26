@@ -57,6 +57,8 @@ class Git_LogDao extends DataAccessObject {
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
                 WHERE l.user_id = ".$this->da->escapeInt($userId)."
+                AND r.repository_deletion_date  = '0000-00-00 00:00:00'
+                AND g.status = 'A'
                 ".$condition."
                 ORDER BY l.push_date DESC
                 ".$limit;
