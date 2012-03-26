@@ -45,10 +45,13 @@ document.observe('dom:loaded', function () {
                     return;
                 }
                 var tplVars = {
-                    path: $F('fork_repositories_path').strip() ? $F('fork_repositories_path').strip() + '/' : '',
+                    path: '',
                     repo: '...', 
                     dest: getForkDestination()
                 };
+                if (fork_destination.disabled && $F('fork_repositories_path').strip()) {
+                    tplVars['path'] = $F('fork_repositories_path').strip() + '/';
+                }
                 var reposList = $('fork_repositories_repo');
                 if (reposList.selectedIndex >= 0) {
                     submit.enable();

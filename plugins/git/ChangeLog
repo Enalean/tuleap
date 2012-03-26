@@ -1,3 +1,6 @@
+Version 2.1.5 (Tuleap 4.0.28)
+    * Fix display bug on fork while changing from cross project to personal fork.
+
 Version 2.1.4 (Tuleap 4.0.27.3)
     * Fix various bugs on git repository clone/delete/recreate senario.
     * Fix git push logging (log for repositories outside project root works).
