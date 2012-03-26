@@ -26,19 +26,27 @@ class GitLog {
      */
     private $dao;
 
+    /**
+     * Constructor of the class
+     *
+     * @return Void
+     */
     public function __construct() {
          $this->dao = new Git_LogDao(CodendiDataAccess::instance());
     }
 
     /**
-     *  Returns the SQL request & form field for the Git pushes
-     * @param $params
+     * Returns the SQL request & form field for the Git pushes
+     *
+     * @param Array $params Log parameters
+     *
+     * @return Void
      */
     function logsDaily($params) {
             $params['logs'][] = array(
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
-            'field' => $GLOBALS['Language']->getText('plugin_git','logsdaily_field'),
-            'title' => $GLOBALS['Language']->getText('plugin_git','logsdaily_title')
+            'field' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_field'),
+            'title' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_title')
         );
     }
 }

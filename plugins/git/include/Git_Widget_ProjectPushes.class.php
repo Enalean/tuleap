@@ -41,7 +41,7 @@ class Git_Widget_ProjectPushes extends Widget {
      * @return string
      */
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_git','widget_project_pushes_title');
+        return $GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title');
     }
 
     /**
@@ -69,11 +69,11 @@ class Git_Widget_ProjectPushes extends Widget {
      * @return String
      */
     function getDescription() {
-        return $GLOBALS['Language']->getText('plugin_git','widget_project_pushes_description');
+        return $GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_description');
     }
 
-     function isAjax() {
-          //TODO
-     }
+    function isAjax() {
+        //TODO
+    }
 }
 ?>
