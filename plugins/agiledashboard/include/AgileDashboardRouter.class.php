@@ -54,12 +54,6 @@ class AgileDashboardRouter {
             case 'create':
                 $this->executeAction($controller, 'create');
                 break;
-            case 'edit':
-                $this->renderAction($controller, 'edit', $request);
-                break;
-            case 'update':
-                $this->executeAction($controller, 'update');
-                break;
             case 'delete':
                 $this->executeAction($controller, 'delete');
                 break;
@@ -73,7 +67,6 @@ class AgileDashboardRouter {
         $header_title = array(
             'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_index'),
             'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
             'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
         );
         

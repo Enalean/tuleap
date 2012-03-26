@@ -79,26 +79,6 @@ class Planning_Controller extends MVC2_Controller {
                                   'action'   => 'new'));
         }
     }
-
-    public function edit() {
-        try {
-            $planning  = $this->getPlanning();
-            $presenter = $this->getFormPresenter($planning);
-            $this->render('edit', $presenter);
-            
-        } catch(Planning_NotFoundException $exception) {
-            $GLOBALS['Response']->sendStatusCode(404);
-        }
-    }
-    
-
-    public function update() {
-        $this->planning_factory->updatePlanning($this->request->get('planning_id'),
-                                                $this->request->get('planning_name'),
-                                                $this->request->get('backlog_tracker_ids'),
-                                                $this->request->get('planning_tracker_id'));
-        $this->redirect(array('group_id' => $this->group_id));
-    }
     
     public function delete() {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
