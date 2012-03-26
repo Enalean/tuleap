@@ -76,7 +76,7 @@ class Git_LogDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function getLastPushesRepositories($userId, $date) {
-        $sql = "SELECT DISTINCT(r.repository_id), g.group_name, r.repository_name
+        $sql = "SELECT DISTINCT(r.repository_id), g.group_name, r.repository_name, g.group_id
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id

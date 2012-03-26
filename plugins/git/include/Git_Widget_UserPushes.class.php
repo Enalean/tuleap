@@ -25,15 +25,17 @@ require_once 'Git_LogDao.class.php';
  */
 class Git_Widget_UserPushes extends Widget {
 
-    var $offset   = 5;
-    var $pastDays = 30;
+    public $offset     = 5;
+    public $pastDays   = 30;
+    public $pluginPath;
 
     /**
      * Constructor of the class
      *
      * @return Void
      */
-    public function __construct() {
+    public function __construct($pluginPath) {
+        $this->pluginPath = $pluginPath;
         $this->Widget('plugin_git_user_pushes');
         $this->offset   = user_get_preference('plugin_git_user_pushes_offset');
         if (empty($this->offset)) {
@@ -48,7 +50,7 @@ class Git_Widget_UserPushes extends Widget {
     /**
      * Get the title of the widget.
      *
-     * @return string
+     * @return String
      */
     public function getTitle() {
         return $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_title');
@@ -57,7 +59,7 @@ class Git_Widget_UserPushes extends Widget {
     /**
      * Compute the content of the widget
      *
-     * @return string html
+     * @return String
      */
     public function getContent() {
         $dao     = new Git_LogDao();
@@ -81,7 +83,8 @@ class Git_Widget_UserPushes extends Widget {
                                      <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_project').'">
                                      <b>'.$project.'</b>
                                      </span>
-                                     </legend>';
+                                     </legend>
+                                     <a href="'.$this->pluginPath.'/index.php?group_id='.$entry['group_id'].'">[ More ]</a>';
                     }
                     $content .= '<fieldset>
                                  <legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
@@ -89,6 +92,7 @@ class Git_Widget_UserPushes extends Widget {
                                  '.$entry['repository_name'].'
                                  </span>
                                  </legend>
+                                 <a href="'.$this->pluginPath.'/index.php/'.$entry['group_id'].'/view/'.$entry['repository_id'].'/">
                                  '.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
                     $i       = 0;
                     $hp      = Codendi_HTMLPurifier::instance();
@@ -99,6 +103,7 @@ class Git_Widget_UserPushes extends Widget {
                                      </tr>';
                     }
                     $content .= "</table>
+                                 </a>
                                  </fieldset>";
                 } else {
                     $content .= $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
@@ -113,7 +118,7 @@ class Git_Widget_UserPushes extends Widget {
     /**
      * The category of the widget is scm
      *
-     * @return string
+     * @return String
      */
     function getCategory() {
         return 'scm';
