@@ -43,7 +43,7 @@ class Git_Widget_UserPushes extends Widget {
      * @return string
      */
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_git','widget_user_pushes_title');
+        return $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_title');
     }
 
     /**
@@ -60,7 +60,7 @@ class Git_Widget_UserPushes extends Widget {
         $result  = $dao->getLastPushesRepositories($user->getId(), $date);
         $content = '';
         $project = '';
-        foreach($result as $entry) {
+        foreach ($result as $entry) {
             $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
             if ($project != $entry['group_name']) {
                 if (!empty($project)) {
@@ -69,11 +69,10 @@ class Git_Widget_UserPushes extends Widget {
                 $project = $entry['group_name'];
                 $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'"><b>'.$project.'</b></legend>';
             }
-            $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">'.$entry['repository_name'].'</legend>'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git','tree_view_date'),
-                                                        $GLOBALS['Language']->getText('plugin_git','tree_view_commits')));
+            $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">'.$entry['repository_name'].'</legend>'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
             $i       = 0;
             $hp      = Codendi_HTMLPurifier::instance();
-            foreach($dar as $row) {
+            foreach ($dar as $row) {
                 $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
                                  <td>'.html_time_ago($hp->purify($row['push_date'])).'</td>
                                  <td>'.$hp->purify($row['commits_number']).'</td>
@@ -99,9 +98,16 @@ class Git_Widget_UserPushes extends Widget {
      * @return String
      */
     function getDescription() {
-        return $GLOBALS['Language']->getText('plugin_git','widget_user_pushes_description');
+        return $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_description');
     }
 
+    /**
+     * Update preferences
+     *
+     * @param Array $request HTTP request
+     *
+     * @return Boolean
+     */
     function updatePreferences(&$request) {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
@@ -117,10 +123,20 @@ class Git_Widget_UserPushes extends Widget {
         return true;
     }
 
+    /**
+     * Widget has preferences
+     *
+     * @return Boolean
+     */
     function hasPreferences() {
         return true;
     }
 
+    /**
+     * Display preferences form
+     *
+     * @return String
+     */
     function getPreferences() {
         return "<table>
                     <tr>
