@@ -60,25 +60,33 @@ class Git_Widget_UserPushes extends Widget {
         $result  = $dao->getLastPushesRepositories($user->getId(), $date);
         $content = '';
         $project = '';
-        foreach ($result as $entry) {
-            $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
-            if ($project != $entry['group_name']) {
-                if (!empty($project)) {
-                    $content .= '</fieldset>';
+        if ($result && !$result->isError() && $result->rowCount() > 0) {
+            foreach ($result as $entry) {
+                $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
+                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                    if ($project != $entry['group_name']) {
+                        if (!empty($project)) {
+                            $content .= '</fieldset>';
+                        }
+                        $project = $entry['group_name'];
+                        $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'"><b>'.$project.'</b></legend>';
+                    }
+                    $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">'.$entry['repository_name'].'</legend>'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
+                    $i       = 0;
+                    $hp      = Codendi_HTMLPurifier::instance();
+                    foreach ($dar as $row) {
+                        $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
+                                         <td>'.html_time_ago($hp->purify($row['push_date'])).'</td>
+                                         <td>'.$hp->purify($row['commits_number']).'</td>
+                                     </tr>';
+                    }
+                    $content .= "</table></fieldset>";
+                } else {
+                    $content .= $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
                 }
-                $project = $entry['group_name'];
-                $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'"><b>'.$project.'</b></legend>';
             }
-            $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">'.$entry['repository_name'].'</legend>'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
-            $i       = 0;
-            $hp      = Codendi_HTMLPurifier::instance();
-            foreach ($dar as $row) {
-                $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
-                                 <td>'.html_time_ago($hp->purify($row['push_date'])).'</td>
-                                 <td>'.$hp->purify($row['commits_number']).'</td>
-                             </tr>';
-            }
-            $content .= "</table></fieldset>";
+        } else {
+            $content = $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
         }
         return $content;
     }
@@ -108,7 +116,7 @@ class Git_Widget_UserPushes extends Widget {
      *
      * @return Boolean
      */
-    function updatePreferences(&$request) {
+    function updatePreferences($request) {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
         if (!$request->exist('cancel')) {
