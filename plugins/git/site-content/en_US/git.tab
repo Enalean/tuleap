@@ -171,4 +171,6 @@ plugin_git	missing_parameter_to_project	No project selected for the fork
 plugin_git	missing_parameter_repos	No repository selected for thr fork
 
 plugin_git	widget_user_pushes_title	My last Git pushes
+plugin_git	widget_project_pushes_title	Last Git pushes
 plugin_git	widget_user_pushes_description	Display last Git pushes performed by the user
+plugin_git	widget_project_pushes_description	Display last Git pushes of the project.
