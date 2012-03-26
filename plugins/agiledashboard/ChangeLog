@@ -1,3 +1,6 @@
+Version 0.7 - Tuleap 4.0.28
+    * Add install and uninstall db scripts
+    
 Version 0.6 - Tuleap 4.0.28
     * Introduce a plannification view. 
       It enables agile teams to organise their release or sprint backlogs.
