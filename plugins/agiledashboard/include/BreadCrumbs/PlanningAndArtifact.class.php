@@ -31,6 +31,7 @@ class BreadCrumb_PlanningAndArtifact implements BreadCrumb_BreadCrumbGenerator {
         $planning = $this->planning;
         $url_parameters['planning_id'] = (int) $planning->getId();
         $url_parameters['action']      = 'show';
+        $url_parameters['group_id']    = $planning->getGroupId();
         $breadcrumbs[] = array(
             'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
             'title' => $hp->purify($planning->getName()),
