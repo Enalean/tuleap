@@ -25,7 +25,8 @@ require_once 'Git_LogDao.class.php';
  */
 class Git_Widget_UserPushes extends Widget {
 
-    var $offset = '';
+    var $offset   = 5;
+    var $pastDays = 30;
 
     /**
      * Constructor of the class
@@ -34,7 +35,14 @@ class Git_Widget_UserPushes extends Widget {
      */
     public function __construct() {
         $this->Widget('plugin_git_user_pushes');
-        $this->offset = user_get_preference('plugin_git_user_pushes_offset');
+        $this->offset   = user_get_preference('plugin_git_user_pushes_offset');
+        if (empty($this->offset)) {
+            $this->offset = 5;
+        }
+        $this->pastDays = user_get_preference('plugin_git_user_pushes_past_days');
+        if (empty($this->pastDays)) {
+            $this->pastDays = 30;
+        }
     }
 
     /**
@@ -55,8 +63,7 @@ class Git_Widget_UserPushes extends Widget {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
-        // TODO: replace offset by a dedicated var
-        $date    = time() - ($this->offset * 24 * 60 * 60);
+        $date    = time() - ($this->pastDays * 24 * 60 * 60);
         $result  = $dao->getLastPushesRepositories($user->getId(), $date);
         $content = '';
         $project = '';
@@ -119,14 +126,22 @@ class Git_Widget_UserPushes extends Widget {
     function updatePreferences($request) {
         $request->valid(new Valid_String('cancel'));
         $vOffset = new Valid_UInt('plugin_git_user_pushes_offset');
+        $vOffset->required();
+        $vDays   = new Valid_UInt('plugin_git_user_pushes_past_days');
+        $vDays->required();
         if (!$request->exist('cancel')) {
             if ($request->valid($vOffset)) {
                 $this->offset = $request->get('plugin_git_user_pushes_offset');
-                
             } else {
-                $this->offset = '';
+                $this->offset = 5;
+            }
+            if ($request->valid($vDays)) {
+                $this->pastDays = $request->get('plugin_git_user_pushes_past_days');
+            } else {
+                $this->pastDays = 30;
             }
             user_set_preference('plugin_git_user_pushes_offset', $this->offset);
+            user_set_preference('plugin_git_user_pushes_past_days', $this->pastDays);
         }
         return true;
     }
@@ -148,8 +163,12 @@ class Git_Widget_UserPushes extends Widget {
     function getPreferences() {
         return "<table>
                     <tr>
-                        <td>Offset</td>
+                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_offset')."</td>
                         <td><input name='plugin_git_user_pushes_offset' value='".$this->offset."'/></td>
+                    </tr>
+                    <tr>
+                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_past_days')."</td>
+                        <td><input name='plugin_git_user_pushes_past_days' value='".$this->pastDays."'/></td>
                     </tr>
                 </table>";
         

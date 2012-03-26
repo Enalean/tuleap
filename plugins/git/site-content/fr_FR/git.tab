@@ -172,6 +172,8 @@ plugin_git	widget_project_pushes_title	Derniers push Git
 plugin_git	widget_user_pushes_description	Affiche les derniers push Git faits par l'utilisateur
 plugin_git	widget_project_pushes_description	Affiche les derniers push Git du projet.
 plugin_git	widget_user_pushes_no_content	Pas de push a afficher
+plugin_git	widget_user_pushes_offset	Nombre maximum de push par dépot
+plugin_git	widget_user_pushes_past_days	Nombre maximum de jours dans le passé
 
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git pushes
