@@ -76,9 +76,20 @@ class Git_Widget_UserPushes extends Widget {
                             $content .= '</fieldset>';
                         }
                         $project = $entry['group_name'];
-                        $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'"><b>'.$project.'</b></legend>';
+                        $content .= '<fieldset>
+                                     <legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
+                                     <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_project').'">
+                                     <b>'.$project.'</b>
+                                     </span>
+                                     </legend>';
                     }
-                    $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">'.$entry['repository_name'].'</legend>'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
+                    $content .= '<fieldset>
+                                 <legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
+                                 <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_repository').'">
+                                 '.$entry['repository_name'].'
+                                 </span>
+                                 </legend>
+                                 '.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
                     $i       = 0;
                     $hp      = Codendi_HTMLPurifier::instance();
                     foreach ($dar as $row) {
@@ -87,7 +98,8 @@ class Git_Widget_UserPushes extends Widget {
                                          <td>'.$hp->purify($row['commits_number']).'</td>
                                      </tr>';
                     }
-                    $content .= "</table></fieldset>";
+                    $content .= "</table>
+                                 </fieldset>";
                 } else {
                     $content .= $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
                 }
