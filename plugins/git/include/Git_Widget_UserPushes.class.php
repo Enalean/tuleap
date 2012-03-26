@@ -22,7 +22,6 @@ require_once 'Git_LogDao.class.php';
 
 /**
  * Widget displaying last git pushes for the user
- * @TODO: i18n
  * @TODO: Picture for the widget
  */
 class Git_Widget_UserPushes extends Widget {
@@ -47,7 +46,7 @@ class Git_Widget_UserPushes extends Widget {
      * @return string
      */
     public function getTitle() {
-        return 'My last Git pushes';
+        return $GLOBALS['Language']->getText('plugin_git','widget_user_pushes_title');
     }
 
     /**
@@ -60,7 +59,10 @@ class Git_Widget_UserPushes extends Widget {
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
         $dar     = $dao->getLastPushesByUser($user->getId(), $this->repositoryId, $this->offset);
-        $content = html_build_list_table_top(array('Project', 'Repository', 'Date', 'Commits'));
+        $content = html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git','tree_view_project'),
+                                                   $GLOBALS['Language']->getText('plugin_git','tree_view_repository'),
+                                                   $GLOBALS['Language']->getText('plugin_git','tree_view_date'),
+                                                   $GLOBALS['Language']->getText('plugin_git','tree_view_commits')));
         $i       = 0;
         $hp      = Codendi_HTMLPurifier::instance();
         foreach($dar as $row) {
@@ -90,7 +92,7 @@ class Git_Widget_UserPushes extends Widget {
      * @return String
      */
     function getDescription() {
-        return 'Display last pushes performed by the user';
+        return $GLOBALS['Language']->getText('plugin_git','widget_user_pushes_description');
     }
 
     function updatePreferences(&$request) {

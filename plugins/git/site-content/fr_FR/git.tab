@@ -152,9 +152,12 @@ plugin_git	fork_choose_destination_project	Copier vers un autre projet
 plugin_git	fork_choose_destination_personal	Créer les dépôts personnels dans ce projet
 plugin_git	successfully_forked	Fork créé avec succès
 
+plugin_git	tree_view_project	Projet
 plugin_git	tree_view_repository	Dépôt
 plugin_git	tree_view_description	Description
 plugin_git	tree_view_last_push	Dernier push
+plugin_git	tree_view_date	Date
+plugin_git	tree_view_commits	Commits
 plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
@@ -163,3 +166,6 @@ project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissi
 plugin_git	fork_repository_exists	Le dépot $1 existe déjà sur la cible. Dépot ignoré.
 plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
 plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
+
+plugin_git	widget_user_pushes_title	Mes derniers push Git
+plugin_git	widget_user_pushes_description	Affiche les derniers push Git faits par l'utilisateur
