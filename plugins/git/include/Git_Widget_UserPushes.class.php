@@ -55,8 +55,8 @@ class Git_Widget_UserPushes extends Widget {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
-        // Last 10 days
-        $date    = time() - (12 * 24 * 60 * 60);
+        // TODO: replace offset by a dedicated var
+        $date    = time() - ($this->offset * 24 * 60 * 60);
         $result  = $dao->getLastPushesRepositories($user->getId(), $date);
         $content = '';
         $project = '';
@@ -64,12 +64,12 @@ class Git_Widget_UserPushes extends Widget {
             $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
             if ($project != $entry['group_name']) {
                 if (!empty($project)) {
-                    $content .= '</div>';
+                    $content .= '</fieldset>';
                 }
                 $project = $entry['group_name'];
-                $content .= '<span id="plugin_git_user_pushes_widget_project_'.$project.'" class="toggler-hide"><b>'.$project.'</b></span><div class="plugin_git_user_pushes_widget_project_'.$project.'">';
+                $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_project_'.$project.'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'"><b>'.$project.'</b></legend>';
             }
-            $content .= '<span class="toggler-hide" id="plugin_git_user_pushes_widget_repo'.$entry['repository_name'].'">'.$entry['repository_name'].'</span><div class="plugin_git_user_pushes_widget_repo'.$entry['repository_name'].'" >'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git','tree_view_date'),
+            $content .= '<fieldset><legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">'.$entry['repository_name'].'</legend>'.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git','tree_view_date'),
                                                         $GLOBALS['Language']->getText('plugin_git','tree_view_commits')));
             $i       = 0;
             $hp      = Codendi_HTMLPurifier::instance();
@@ -79,7 +79,7 @@ class Git_Widget_UserPushes extends Widget {
                                  <td>'.$hp->purify($row['commits_number']).'</td>
                              </tr>';
             }
-            $content .= "</table></div>";
+            $content .= "</table></fieldset>";
         }
         return $content;
     }
