@@ -4,15 +4,16 @@
 #
 # Christopher Han <xiphux@gmail.com>, 2010.
 # Zaran Krleza <zaran.krleza@gmail.com>, 2010.
+# Tanguy Pruvot <tpruvot@github>, 2011
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.0\n"
+"Project-Id-Version: GitPHP 0.2.6\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
 "POT-Creation-Date: 2010-10-02 23:01-0500\n"
-"PO-Revision-Date: 2010-10-04 23:05+0200\n"
-"Last-Translator: Zaran Krleza <zaran.krleza@gmail.com>\n"
+"PO-Revision-Date: 2012-03-25 07:05+0100\n"
+"Last-Translator: Tanguy Pruvot <tpruvot@github>\n"
 "Language-Team: French <zaran.krleza@gmail.com>\n"
-"Language: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +25,7 @@ msgstr ""
 #: templates/searchfiles.tpl templates/history.tpl
 #: include/controller/Controller_Blob.class.php:78
 msgid "blob"
-msgstr "blob"
+msgstr "source"
 
 # Used as link to and title for the file history, which displays all commits that have modified a certain file
 #: templates/tree.tpl templates/commit.tpl templates/searchfiles.tpl
@@ -38,14 +39,14 @@ msgstr "historique"
 #: templates/log.tpl templates/projectlist.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Tree.class.php:76
 msgid "tree"
-msgstr "arbre"
+msgstr "source"
 
 # Used as link to download a copy of the files in a given commit
 #: templates/tree.tpl templates/search.tpl templates/commit.tpl
 #: templates/taglist.tpl templates/projectlist.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Snapshot.class.php:76
 msgid "snapshot"
-msgstr "aperçu"
+msgstr "archive"
 
 # Used to label something stored in a git repository where the type of item - tag, blob, etc - isn't known
 #: templates/tag.tpl
@@ -58,13 +59,13 @@ msgstr "objet"
 #: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Commit.class.php:79
 msgid "commit"
-msgstr "révision"
+msgstr "commit"
 
 # Used as link to and title for page displaying detailed info about a tag
 #: templates/tag.tpl templates/tagtip.tpl templates/taglist.tpl
 #: include/controller/Controller_Tag.class.php:79
 msgid "tag"
-msgstr "étiquette"
+msgstr "tag"
 
 # Used to label the author of the commit, and as a field to search
 # The author is the person who wrote the changes in the commit
@@ -78,6 +79,14 @@ msgstr "auteur"
 #: templates/commitdiff.tpl templates/blob.tpl
 msgid "plain"
 msgstr "brut"
+
+# Used as a link to a side-by-side version of a diff
+msgid "side by side"
+msgstr "face à face"
+
+# Used as a link to a unified version of a diff
+msgid "unified"
+msgstr "unifié"
 
 # Used as a link to the first page in a list of results
 #: templates/search.tpl templates/searchfiles.tpl
@@ -101,13 +110,13 @@ msgstr "suiv"
 #: templates/log.tpl templates/history.tpl templates/shortloglist.tpl
 #: include/controller/Controller_Commitdiff.class.php:79
 msgid "commitdiff"
-msgstr "diff révision"
+msgstr "diff"
 
 # Used to label the committer of the commit, and as a field to search
 # The committer is the person who put the commit into this project
 #: templates/commit.tpl templates/committip.tpl templates/header.tpl
 msgid "committer"
-msgstr "réviseur"
+msgstr "utilisateur"
 
 # Used to label the parent of this commit
 # The parent is the commit preceding this one in the project history
@@ -129,7 +138,7 @@ msgstr[1] "%1 fichiers modifiés :"
 # %2: the mode
 #: templates/commit.tpl
 msgid "new %1 with mode %2"
-msgstr "%1 ajouté avec le mode %2"
+msgstr "%1 ajouté mode : %2"
 
 # Used to indicate a new object was added
 # %1: the type of object
@@ -200,7 +209,7 @@ msgstr "diff"
 # %3: the new file mode
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity, mode: %3"
-msgstr "déplacé depuis %1 avec %2%% de ressemblance, mode : %3"
+msgstr "déplacé depuis %1- %2% de concordance, mode : %3"
 
 # Used to indicate a file was moved
 # This string should be HTML safe
@@ -208,14 +217,14 @@ msgstr "déplacé depuis %1 avec %2%% de ressemblance, mode : %3"
 # %2: the similarity as a percent number
 #: templates/commit.tpl
 msgid "moved from %1 with %2%% similarity"
-msgstr "déplacé depuis %1 avec %2%% de ressemblance"
+msgstr "déplacé depuis %1- %2% de concordance"
 
 # Used as title for and link to the compact log view with one line abbreviated commits
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
 #: templates/title.tpl templates/projectlist.tpl
 #: include/controller/Controller_Log.class.php:80
 msgid "shortlog"
-msgstr "abrégé"
+msgstr "log"
 
 # Used as title for and link to log view with full commit messages
 #: templates/headlist.tpl templates/nav.tpl templates/taglist.tpl
@@ -243,7 +252,7 @@ msgstr "fichier"
 # Used as title for search page, and also is the label for the search box
 #: templates/header.tpl include/controller/Controller_Search.class.php:90
 msgid "search"
-msgstr "rechercher"
+msgstr "recherche "
 
 # Used as a link to the HEAD of a project for a log or file
 # (note: HEAD is standard git terminology)
@@ -256,12 +265,12 @@ msgstr "HEAD"
 # %1: the timestamp of the latest change
 #: templates/log.tpl
 msgid "Last change %1"
-msgstr "Dernière modification %1"
+msgstr "Date modification %1"
 
 # Message displayed when there are no commits in the project to display
 #: templates/log.tpl templates/shortloglist.tpl
 msgid "No commits"
-msgstr "Pas de révisions"
+msgstr "Aucun commit"
 
 # Used as link to diff this file version with the current file
 #: templates/history.tpl
@@ -271,12 +280,12 @@ msgstr "diff avec l'actuel"
 # Used as link to and title for page showing all tags in a project
 #: templates/title.tpl include/controller/Controller_Tags.class.php:76
 msgid "tags"
-msgstr "étiquettes"
+msgstr "tags"
 
 # Used as link to and title for page showing all heads in a project
 #: templates/title.tpl include/controller/Controller_Heads.class.php:76
 msgid "heads"
-msgstr "heads"
+msgstr "branches"
 
 # Used when diffing a file, to indicate that it's been deleted
 #: templates/commitdiff.tpl
@@ -302,17 +311,17 @@ msgstr "propriétaire"
 # (the time of the most recent commit)
 #: templates/project.tpl
 msgid "last change"
-msgstr "dernière modification"
+msgstr "date modification"
 
 # Used to label the url that users can use to clone the project
 #: templates/project.tpl
 msgid "clone url"
-msgstr "url de clone"
+msgstr "git en lecture seule"
 
 # Used to label the url that users can use to push commits to the project
 #: templates/project.tpl
 msgid "push url"
-msgstr "url de push"
+msgstr "git en accès complet"
 
 # Used as the header for the project name column
 #: templates/projectlist.tpl
@@ -333,7 +342,7 @@ msgstr "Propriétaire"
 # (how long ago was the last commit)
 #: templates/projectlist.tpl
 msgid "Last Change"
-msgstr "Dernière Modification"
+msgstr "Date Modification"
 
 # Used as the header for the actions column, which is a list of links users can use to jump to various parts of this project
 #: templates/projectlist.tpl
@@ -348,7 +357,7 @@ msgstr "Aucun projet trouvé"
 # Used as link to and title for page displaying blame info (who last touched what line) in a file
 #: templates/blob.tpl include/controller/Controller_Blame.class.php:79
 msgid "blame"
-msgstr "annoter"
+msgstr ""
 
 # Error message when user tries to do an action that requires a project but a project isn't specified
 #: include/controller/Controller_Rss.class.php:35
@@ -526,8 +535,8 @@ msgstr "Hash non valide %1$s"
 #, php-format
 msgid "%1$d year ago"
 msgid_plural "%1$d years ago"
-msgstr[0] "il y a %1$d an"
-msgstr[1] "il y a %1$d ans"
+msgstr[0] "%1$d an"
+msgstr[1] "%1$d ans"
 
 # Used to represent an age in months
 # %1$d: the number of months
@@ -535,8 +544,8 @@ msgstr[1] "il y a %1$d ans"
 #, php-format
 msgid "%1$d month ago"
 msgid_plural "%1$d months ago"
-msgstr[0] "il y a %1$d mois"
-msgstr[1] "il y a %1$d mois"
+msgstr[0] "%1$d mois"
+msgstr[1] "%1$d mois"
 
 # Used to represent an age in weeks
 # %1$d: the number of weeks
@@ -544,8 +553,8 @@ msgstr[1] "il y a %1$d mois"
 #, php-format
 msgid "%1$d week ago"
 msgid_plural "%1$d weeks ago"
-msgstr[0] "il y a %1$d semaine"
-msgstr[1] "il y a %1$d semaines"
+msgstr[0] "%1$d semaine"
+msgstr[1] "%1$d semaines"
 
 # Used to represent an age in days
 # %1$d: the number of days
@@ -553,8 +562,8 @@ msgstr[1] "il y a %1$d semaines"
 #, php-format
 msgid "%1$d day ago"
 msgid_plural "%1$d days ago"
-msgstr[0] "il y a %1$d jour"
-msgstr[1] "il y a %1$d jours"
+msgstr[0] "%1$d jour"
+msgstr[1] "%1$d jours"
 
 # Used to represent an age in hours
 # %1$d: the number of hours
@@ -562,8 +571,8 @@ msgstr[1] "il y a %1$d jours"
 #, php-format
 msgid "%1$d hour ago"
 msgid_plural "%1$d hours ago"
-msgstr[0] "il y a %1$d heure"
-msgstr[1] "il y a %1$d heures"
+msgstr[0] "%1$d heure"
+msgstr[1] "%1$d heures"
 
 # Used to represent an age in minutes
 # %1$d: the number of minutes
@@ -571,8 +580,8 @@ msgstr[1] "il y a %1$d heures"
 #, php-format
 msgid "%1$d min ago"
 msgid_plural "%1$d min ago"
-msgstr[0] "il y a %1$d minute"
-msgstr[1] "il y a %1$d minutes"
+msgstr[0] "%1$d minute"
+msgstr[1] "%1$d minutes"
 
 # Used to represent an age in seconds
 # %1$d: the number of seconds
@@ -580,8 +589,8 @@ msgstr[1] "il y a %1$d minutes"
 #, php-format
 msgid "%1$d sec ago"
 msgid_plural "%1$d sec ago"
-msgstr[0] "il y a %1$d seconde "
-msgstr[1] "il y a %1$d secondes"
+msgstr[0] "%1$d seconde "
+msgstr[1] "%1$d secondes"
 
 # Used to represent a modification time of right now
 #: include/smartyplugins/modifier.agestring.php:51
@@ -644,44 +653,43 @@ msgstr "Chargement des données pour l'annotation…"
 # Used as a label by the language selector drop-down box
 #: templates/header.tpl
 msgid "language:"
-msgstr "langage :"
+msgstr "langue :"
 
 # Used as a button by the language selector drop-down box to set the
 # language to the user's choice
 #: templates/header.tpl
 msgid "set"
-msgstr "choisir"
+msgstr "Ok"
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
 #: templates/projectbase.tpl
 msgid "Atom"
-msgstr ""
+msgstr "Atom"
 
 # Used as the title of the Atom controller
 # Atom is a standard web feed format
 #: include/controller/Controller_Feed.class.php:97
 msgid "atom"
-msgstr ""
+msgstr "atom"
 
 # Used as an error message when memcache is turned
 # on without the appropriate PHP extension installed
 #: include/smartyplugins/cacheresource.memcache.php:85
-msgid ""
-"The Memcached or Memcache PHP extension is required for Memcache support"
-msgstr ""
+#msgid "The Memcached or Memcache PHP extension is required for Memcache support"
+#msgstr ""
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
 #: templates/jsconst.tpl
 #: templates/projectlist.tpl
 msgid "No matches found for \"%1\""
-msgstr ""
+msgstr "Aucun résultat trouvé pour \"%1\""
 
 # Label for the field to search the project list
 #: templates/projectlist.tpl
 msgid "Search projects"
-msgstr ""
+msgstr "Recherche de projets "
 
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
@@ -691,7 +699,7 @@ msgstr ""
 msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
 "config value."
-msgstr ""
+msgstr "Impossible de lancer l'exécutable git \"%1$s\". Vous devez définir le paramètre \"%2$s\"."
 
 # Error message displayed when the diff executable isn't found or doesn't work
 # %1$s: the diff executable the system is trying to run
@@ -701,14 +709,14 @@ msgstr ""
 msgid ""
 "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
 "\" config value."
-msgstr ""
+msgstr "Impossible de lancer l'exécutable diff \"%1$s\". Vous devez définir le paramètre \"%2$s\"."
 
 # Link displayed in commitdiff view, when the user has filtered
 # the display to a single file using the list of changed files.
 # This will go back to showing all files in the commitdiff
 #: templates/commitdiff.tpl
 msgid "(show all)"
-msgstr ""
+msgstr "(tous)"
 
 # Message displayed when diffing two binary files.
 # %1$s: the filename of the first file
@@ -716,12 +724,12 @@ msgstr ""
 #: include/git/FileDiff.class.php:810
 #, php-format
 msgid "Binary files %1$s and %2$s differ"
-msgstr ""
+msgstr "Fichiers %1$s et %2$s différents"
 
 # Used to label the url of the website of the project
 #: templates/project.tpl
 msgid "website"
-msgstr ""
+msgstr "site web"
 
 # This is the name of YOUR language, in your language.
 # Don't just translate the word "English".
