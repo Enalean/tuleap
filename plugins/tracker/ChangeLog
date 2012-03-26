@@ -1,3 +1,7 @@
+Version 5.4.5 - Tuleap 4.0.28
+  * Fix sla #580 - Issue in SOAP function "getTrackerFields" in Trackers
+  * Rename tracker in plugin_tracker in soap
+  
 Version 5.4.4 - Tuleap 4.0.28
   * Fix gotoid after removal of legacy trackers (aka tracker v1).
 

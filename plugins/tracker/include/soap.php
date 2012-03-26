@@ -319,7 +319,7 @@ $GLOBALS['server']->register(
           'group_id'=>'xsd:int',
           'tracker_id'=>'xsd:int',
     ),
-    array('return'=>'tns:ArrayOfTrackerFields'), // output parameters
+    array('return'=>'tns:ArrayOfTrackerField'), // output parameters
     $GLOBALS['uri'], // namespace
     $GLOBALS['uri'].'#getTrackerFields', // soapaction
     'rpc', // style
@@ -517,7 +517,7 @@ function getTrackerList($sessionKey, $group_id) {
             return $e;
         }
 
-        if (!$project->usesService('tracker')) {
+        if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerList');
         }
         
@@ -597,7 +597,7 @@ function getTrackerFields($sessionKey, $group_id, $tracker_id) {
             return $e;
         }
 
-        if (!$project->usesService('tracker')) {
+        if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerFields');
         }
         
@@ -682,7 +682,7 @@ function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $ma
             return $e;
         }
 
-        if (!$project->usesService('tracker')) {
+        if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifacts');
         }
         
@@ -733,7 +733,7 @@ function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
             return $e;
         }
 
-        if (!$project->usesService('tracker')) {
+        if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifact');
         }
         
@@ -1341,7 +1341,7 @@ function getArtifactHistory($sessionKey, $group_id, $tracker_id, $artifact_id) {
             return $e;
         }
 
-        if (!$project->usesService('tracker')) {
+        if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifactFollowups');
         }
         
