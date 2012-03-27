@@ -827,11 +827,11 @@ function util_split_emails($addresses) {
 }
 
 /**
- * Cleanup list of mails
+ * Sparate invalid email addresses
  *
  * @param String $addresses List of mail addresses to be cleaned
  *
- * @return Array
+ * @return Array containing two arrays one containing good addresses the other contain bad ones
  */
 function util_cleanup_email_list($addresses) {
     $list             = util_split_emails($addresses);

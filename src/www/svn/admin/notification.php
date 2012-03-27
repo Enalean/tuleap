@@ -23,7 +23,7 @@ $request->valid(new Valid_String('SUBMIT'));
 
 $vPath = new Valid_String('path');
 if ($request->exist('path') && $request->valid($vPath)) {
-    $path             = $request->get('path');
+    $path = $request->get('path');
 } else {
     $path = '/';
 }
