@@ -44,7 +44,7 @@ if (user_isloggedin()) {
     $GLOBALS['HTML']->addStylesheet('/viewvc-static/styles.css');
     svn_header(array(
         'title' => $prefix_title . $Language->getText('svn_utils','browse_tree'),
-        'path'  => '/'.viewvc_utils_getfile("/svn/viewvc.php")
+        'path'  => '/'.urlencode(viewvc_utils_getfile("/svn/viewvc.php"))
     ));
   }
 
