@@ -54,7 +54,7 @@ class TestsPluginRunner {
     }
 
     public function addCoreSuite() {
-        $corePresenter = $this->getPresenter($this->rootCategory, 'core', '_all_core');
+        $corePresenter = $this->getPresenter($this->rootCategory.'[core]', 'Core', '_all_core');
         $coreSuite     = $this->buildSuite($corePresenter->title());
         $corePath      =  realpath(dirname(__FILE__) . '/../../../tests/simpletest');
         
@@ -65,8 +65,8 @@ class TestsPluginRunner {
     }
 
     private function addAllPluginsSuite() {
-        $allPluginsPresenter = $this->getPresenter($this->rootCategory, 'plugins', '_all_plugins');
-        $allPluginsSuite     = $this->buildSuite("Plugins");
+        $allPluginsPresenter = $this->getPresenter($this->rootCategory.'[plugins]', 'Plugins', '_all_plugins');
+        $allPluginsSuite     = $this->buildSuite($allPluginsPresenter->title());
         $allPluginsPath      = realpath(dirname(__FILE__) . '/../..');
 
         foreach ($this->getTestsIterator($allPluginsPath) as $file) {
@@ -82,7 +82,7 @@ class TestsPluginRunner {
     private function addPluginSuite($file, $allPluginsPresenter, $allPluginsSuite) {
         $pluginName      = basename($file->getPathname());
         $testsPath       = $file->getPathname() . '/tests';
-        $prefix          = $allPluginsPresenter->prefix() . '[' . $allPluginsPresenter->name() . ']';
+        $prefix          = $allPluginsPresenter->prefix();
         $pluginPresenter = $this->getPresenter($prefix, $pluginName, $testsPath);
         $pluginSuite     = $this->buildSuite($pluginPresenter->title());
 
