@@ -33,6 +33,7 @@ class SvnNotificationDao extends DataAccessObject {
      */
     function setSvnMailingList($groupId, $mailingList, $path) {
         $sql = ' REPLACE INTO svn_notification
+                         ( group_id, svn_events_mailing_list, path)
                  VALUES (
                  '.$this->da->escapeInt($groupId).',
                  '.$this->da->quoteSmart($mailingList).',
