@@ -46,7 +46,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             if ($request->exist('paths_to_delete')) {
                 $vPathToDelete = new Valid_Array('paths_to_delete');
                 if($request->valid($vPathToDelete)) {
-                    $PathsToDelete    = $request->get('paths_to_delete');
+                    $PathsToDelete = $request->get('paths_to_delete');
                     $svnNotification->removeSvnNotification($group_id, $PathsToDelete);
                 }
             }
@@ -111,7 +111,7 @@ if ($svnNotificationsDetails) {
         $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
         $content .= '<td>'. $hp->purify($item['path']) .'</td>';
         $content .= '<td>'. $hp->purify($item['svn_events_mailing_list']) .'</td><td>';
-        $content .= '<input type="checkbox" value="'. $item['path'] .'" name="paths_to_delete[]" >';
+        $content .= '<input type="checkbox" value="'. $hp->purify($item['path']) .'" name="paths_to_delete[]" >';
         $content .= '</td></tr>';
     }
     $content .= '<tr align="right"><td colspan="3"><input type="submit" value="'.$Language->getText('global','delete').'"></td></tr></tbody>';
