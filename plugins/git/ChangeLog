@@ -1,3 +1,6 @@
+Version 2.1.6 (Tuleap 4.0.28)
+    * Fix display of html code in combobox
+
 Version 2.1.5 (Tuleap 4.0.28)
     * Fix display bug on fork while changing from cross project to personal fork.
 
