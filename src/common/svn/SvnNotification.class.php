@@ -100,14 +100,14 @@ class SvnNotification {
                 if ($dao->deleteSvnMailingList($projectId, $pathToDelete)) {
                     $paths[] = $pathToDelete;
                 } else {
-                    $GLOBALS['Response']->addFeedback('error',  $GLOBALS['Language']->getText('svn_admin_notification','delete_path_fail'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('svn_admin_notification', 'delete_path_fail'));
                 }
             }
             if (!empty($paths)) {
-                $GLOBALS['Response']->addFeedback('info',  $GLOBALS['Language']->getText('svn_admin_notification','delete_path_success', array(implode(',', $paths))));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('svn_admin_notification', 'delete_path_success', array(implode(',', $paths))));
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error',  $GLOBALS['Language']->getText('svn_admin_notification','retrieve_paths_fail'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('svn_admin_notification', 'retrieve_paths_fail'));
         }
     }
 
