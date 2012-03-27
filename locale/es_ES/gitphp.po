@@ -548,32 +548,6 @@ msgstr ""
 msgid "%1$s is outside of the projectroot"
 msgstr "%1$s está fuera del projectroot"
 
-# Error message when a temporary directory isn't specified in the config
-#: include/git/TmpDir.class.php:136
-msgid "No tmpdir defined"
-msgstr "tmpdir no definido"
-
-# Error message when the system can't write to the temporary directory
-# %1$s: the temp dir specified
-#: include/git/TmpDir.class.php:142
-#, php-format
-msgid "Specified tmpdir %1$s is not writable"
-msgstr "No se puede escribir en el tmpdir especificado, %1$s"
-
-# Error message when the temporary directory specified isn't a directory
-# %1$s: the temp dir specified
-#: include/git/TmpDir.class.php:145
-#, php-format
-msgid "Specified tmpdir %1$s is not a directory"
-msgstr "El tmpdir especificado, %1$s, no es un directorio"
-
-# Error message when the system attempts to create the temporary directory but can't
-# %1$s: the temp dir it's trying to create
-#: include/git/TmpDir.class.php:148
-#, php-format
-msgid "Could not create tmpdir %1$s"
-msgstr "No se pudo crear el tmpdir %1$s"
-
 # Error message when user tries to specify a file with a list of the projects, but it isn't a file
 # %1$s: the path the user specified
 #: include/git/ProjectListScmManager.class.php:37
