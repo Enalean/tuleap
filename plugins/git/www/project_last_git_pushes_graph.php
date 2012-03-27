@@ -51,6 +51,11 @@ $graph = new Graph(580,850);
 $graph->SetAngle(90);
 $graph->SetScale("textlin");
 
+// The negative margins are necessary since we
+// have rotated the image 90 degress and shifted the 
+// meaning of width, and height. This means that the 
+// left and right margins now becomes top and bottom
+// calculated with the image width and not the height.
 $graph->img->SetMargin(-10,-10,200,350);
 $graph->SetMarginColor('white');
 $graph->title->Set('Project last git pushes');
@@ -87,9 +92,11 @@ foreach ($repoList as $repository) {
     $bplot[] = $b2plot;
 }
 
+// Create the accumulated bar plot
 $abplot = new AccBarPlot($bplot);
 $abplot->SetShadow();
 
+// We want to display the cumulative commits number of each bar at the top
 $abplot->value->Show();
 $abplot->value->SetFont(FF_FONT1,FS_NORMAL);
 $abplot->value->SetAlign('left','center');
