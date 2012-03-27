@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/chart/Chart.class.php');
 /**
  * TODO: Class comment
  */
@@ -50,7 +49,12 @@ class Git_Widget_ProjectPushes extends Widget {
      * @return string html
      */
     public function getContent() {
-        $content = '';
+        $request  = HTTPRequest::instance();
+        $group_id = $request->get('group_id');
+        $request  = HTTPRequest::instance();
+        $content  = '<div style="text-align:center"><p>';
+        $graph    = '<img src="/plugins/git/project_last_git_pushes_graph.php?func=progress&group_id='.$group_id.'" title="Project last git pushes graph" />';
+        $content .= $graph.'</div>';
         return $content;
     }
 
