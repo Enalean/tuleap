@@ -32,6 +32,8 @@ class Git_Widget_UserPushes extends Widget {
     /**
      * Constructor of the class
      *
+     * @param String $pluginPath Path of plugin git
+     *
      * @return Void
      */
     public function __construct($pluginPath) {
