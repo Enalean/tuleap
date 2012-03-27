@@ -105,12 +105,12 @@ if ($svnNotificationsDetails) {
     $content .= '<th align="left">'.$Language->getText('svn_admin_notification','existent_notifications').'</th><tbody>';
     $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
     $content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
-    $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')), false, false , false);
+    $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('svn_admin_notification', 'path_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'mailing_list_header'), $GLOBALS['Language']->getText('svn_admin_notification', 'path_delete_ask')), false, false , false);
     $rowBgColor  = 0;
     foreach ($svnNotificationsDetails as $item) {
         $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
-        $content .= '<td>'. $hp->purify($item['svn_events_mailing_list']) .'</td>';
-        $content .= '<td>'. $hp->purify($item['path']) .'</td><td>';
+        $content .= '<td>'. $hp->purify($item['path']) .'</td>';
+        $content .= '<td>'. $hp->purify($item['svn_events_mailing_list']) .'</td><td>';
         $content .= '<input type="checkbox" value="'. $item['path'] .'" name="paths_to_delete[]" >';
         $content .= '</td></tr>';
     }
