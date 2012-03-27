@@ -33,11 +33,13 @@ class TestsPluginRunner {
     protected $mainSuite;
     protected $navigator;
     protected $titles = array(
-                'normal' => 'All Tests',
-                'invert' => 'All Tests (revert order)',
-                'random' => 'All Tests (random order)'
-            );
-    
+        'normal' => 'All Tests',
+        'invert' => 'All Tests (revert order)',
+        'random' => 'All Tests (random order)'
+    );
+
+    protected $renderDone = false;
+
     public $rootCategory = 'tests_to_run';
 
     public function __construct(TestsPluginRequest $request) {
@@ -148,12 +150,8 @@ class TestsPluginRunner {
     }
 
     public function runAndDisplay() {
-        $navigator = $this->getNavigator();
-        $results   = $this->getResults();
-        $renderer  = new MustacheRenderer(dirname(__FILE__) . '/../templates');
-        $presenter = new TestsPluginRunnerPresenter($this->request, $navigator, $results);
-        $template  =  'testsPluginRunner' . strtoupper($this->request->getDisplay());
-        $renderer->render($template, $presenter);
+        register_shutdown_function(array($this, 'onRunError'));
+        $this->render($this->getNavigator(), $this->getResults());
     }
 
     public function getResults() {
@@ -172,5 +170,20 @@ class TestsPluginRunner {
         return $this->titles[$order];
     }
 
+    public function onRunError() {
+        if ($this->renderDone === false) {
+            $navigator = $this->getNavigator();
+            $results   = ob_get_clean();
+            $this->render($navigator, $results);
+        }
+    }
+
+    protected function render($navigator, $results) {
+        $presenter = new TestsPluginRunnerPresenter($this->request, $navigator, $results);
+        $template  = 'testsPluginRunner' . strtoupper($this->request->getDisplay());
+        $renderer  = new MustacheRenderer(dirname(__FILE__) . '/../templates');
+        $renderer->render($template, $presenter);
+        $this->renderDone = true;
+    }
 }
 ?>

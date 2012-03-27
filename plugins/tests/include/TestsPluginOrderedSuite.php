@@ -22,7 +22,10 @@ require_once dirname(__FILE__) . '/simpletest/test_case.php';
 
 class TestsPluginOrderedSuite extends TestSuite {
     
+    protected $testPaths = array();
+    
     public function runByOrder(&$reporter, $order) {
+        $this->addTestFiles();
         if ($order === 'invert') {
             $this->_test_cases = array_reverse($this->_test_cases);
         } elseif ($order === 'random') {
@@ -43,6 +46,16 @@ class TestsPluginOrderedSuite extends TestSuite {
         }
         $reporter->paintGroupEnd($this->getLabel());
         return $reporter->getStatus();
+    }
+    
+    protected function addTestFiles() {
+        foreach ($this->testPaths as $testPath) {
+            parent::addFile($testPath);
+        }
+    }
+    
+    public function addFile($testPath) {
+        $this->testPaths[] = $testPath;
     }
 }
 ?>
