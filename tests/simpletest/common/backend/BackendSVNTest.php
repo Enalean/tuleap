@@ -64,6 +64,7 @@ class BackendSVNTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
         $GLOBALS['sys_dbname']                = 'db';
+        $GLOBALS['sys_name']                  = 'MyForge';
         mkdir($GLOBALS['svn_prefix'] . '/' . 'toto');
     }
     
@@ -76,6 +77,7 @@ class BackendSVNTest extends UnitTestCase {
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['svn_root_file']);
         unset($GLOBALS['sys_dbname']);
+        unset($GLOBALS['sys_name']);
     }
     
     function testConstructor() {
