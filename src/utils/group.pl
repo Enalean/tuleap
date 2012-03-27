@@ -145,20 +145,20 @@ sub get_emails_by_path {
     foreach my $dirVal (@dirs) {
         if ($patternMatcher ne '') {
                 $patternBuilder .= $root.$dirVal;
-                $patternMatcher .= '|^'.$patternBuilder;
+                $patternMatcher .= '|^('.$patternBuilder.')$';
         } else {
                 $patternBuilder .= $root.$dirVal;
-                $patternMatcher .= '^'.$patternBuilder;
+                $patternMatcher .= '^('.$patternBuilder.')$';
         }
     }
 
     my $groupid = $dbh->quote($groupid);
     if ($patternMatcher ne '') {
-        $patternMatcher .= '*';
+        #$patternMatcher .= '*';
         my $patternMatcher = $dbh->quote($patternMatcher);
-        $subPathsExpression = "or path RLIKE $patternMatcher";
+        $subPathsExpression = "OR path RLIKE $patternMatcher";
     } else {
-        $subPathsExpression = "and 1";
+        $subPathsExpression = "AND 1";
     }
     $query = "SELECT svn_events_mailing_list FROM svn_notification WHERE group_id = $groupid and path = '/' ".$subPathsExpression;
     $sth = $dbh->prepare($query);
