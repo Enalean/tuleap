@@ -27,10 +27,10 @@ require_once('common/include/Config.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generatePartial('BaseLanguage', 'BaseLanguageTestVersion', array('loadAllTabFiles'));
 
-class BaseLanguageTest extends UnitTestCase {
+class BaseLanguageTest extends TuleapTestCase {
 
     function setUp() {
-        $this->glob = $GLOBALS;
+        parent::setUp();
         $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/codendi/site-content';
         $GLOBALS['sys_pluginsroot']       = dirname(__FILE__) . '/_fixtures/codendi/plugins';
         $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/codendi/themes';
@@ -39,9 +39,9 @@ class BaseLanguageTest extends UnitTestCase {
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
         $GLOBALS['codendi_cache_dir']     = dirname(__FILE__) . '/_fixtures/tmp';
          
-	if (!is_dir($GLOBALS['codendi_cache_dir'].'/lang')) {
-	    mkdir($GLOBALS['codendi_cache_dir'].'/lang', 0777, true);
-	}
+        if (!is_dir($GLOBALS['codendi_cache_dir'].'/lang')) {
+            mkdir($GLOBALS['codendi_cache_dir'].'/lang', 0777, true);
+        }
     }
     
     function tearDown() {
@@ -52,8 +52,7 @@ class BaseLanguageTest extends UnitTestCase {
                 unlink($tmpdir .'/'. $file);
             }
         }
-        
-       $GLOBALS = $this->glob;
+        parent::tearDown();
     }
     
     function testConstructor() {
