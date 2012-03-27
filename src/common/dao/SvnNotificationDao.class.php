@@ -22,20 +22,6 @@ require_once('include/DataAccessObject.class.php');
 
 class SvnNotificationDao extends DataAccessObject {
 
-    const TABLE_NAME = 'svn_notification';
-
-    /**
-     * Constructor of the class
-     *
-     * @param DataAccess $da data access
-     *
-     * @return void
-     */
-    public function __construct($da) {
-        parent::__construct($da);
-        $this->table_name = 'svn_notification';
-    }
-
     /**
      * Set mailing list to be notified on a given path
      *
@@ -46,13 +32,12 @@ class SvnNotificationDao extends DataAccessObject {
      * @return Boolean
      */
     function setSvnMailingList($groupId, $mailingList, $path) {
-        $sql = ' INSERT INTO svn_notification
+        $sql = ' REPLACE INTO svn_notification
                  VALUES (
                  '.$this->da->escapeInt($groupId).',
                  '.$this->da->quoteSmart($mailingList).',
                  '.$this->da->quoteSmart($path).'
-                 )
-                 ON DUPLICATE KEY UPDATE svn_events_mailing_list = '.$this->da->quoteSmart($mailingList);
+                 )';
         return $this->update($sql);
     }
 
