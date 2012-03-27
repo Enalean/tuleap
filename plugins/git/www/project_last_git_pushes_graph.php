@@ -42,12 +42,12 @@ $today           = $_SERVER['REQUEST_TIME'];
 $start_of_period = strtotime("-$nb_weeks weeks");
 
 $dates = array();
-for($i = $start_of_period ; $i <= $today ; $i += $week) {
+for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $dates[] = date('M d', $i);
 }
 $fixture = array(12,2,12,7,14,4,12,9,15,0,14,4);
 
-$graph = new Graph(580,850);
+$graph = new Graph(580, 850);
 $graph->SetAngle(90);
 $graph->SetScale("textlin");
 
@@ -56,27 +56,27 @@ $graph->SetScale("textlin");
 // meaning of width, and height. This means that the 
 // left and right margins now becomes top and bottom
 // calculated with the image width and not the height.
-$graph->img->SetMargin(-10,-10,200,350);
+$graph->img->SetMargin(-10, -10, 200, 350);
 $graph->SetMarginColor('white');
 $graph->title->Set('Project last git pushes');
-$graph->title->SetFont(FF_FONT2,FS_BOLD);
+$graph->title->SetFont(FF_FONT2, FS_BOLD);
 
 $graph->xaxis->SetLabelMargin(15);
-$graph->xaxis->SetLabelAlign('right','center');
+$graph->xaxis->SetLabelAlign('right', 'center');
 $graph->xaxis->SetTickLabels($dates);
 
 $graph->yaxis->SetPos('max');
-$graph->yaxis->SetTitle("Pushes",'center');
+$graph->yaxis->SetTitle("Pushes", 'center');
 $graph->yaxis->SetTitleSide(SIDE_RIGHT);
-$graph->yaxis->title->SetFont(FF_FONT2,FS_BOLD);
+$graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
 $graph->yaxis->title->SetAngle(0);
-$graph->yaxis->title->Align('left','top');
+$graph->yaxis->title->Align('left', 'top');
 $graph->yaxis->SetTitleMargin(30);
 
 $graph->yaxis->SetLabelSide(SIDE_RIGHT);
-$graph->yaxis->SetLabelAlign('center','top');
+$graph->yaxis->SetLabelAlign('center', 'top');
 
-$graph->legend->Pos(0.1,0.95,'left','bottom');
+$graph->legend->Pos(0.1,0.95,'left', 'bottom');
 
 $nb_repo = count($repoList);
 $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
@@ -98,9 +98,9 @@ $abplot->SetShadow();
 
 // We want to display the cumulative commits number of each bar at the top
 $abplot->value->Show();
-$abplot->value->SetFont(FF_FONT1,FS_NORMAL);
-$abplot->value->SetAlign('left','center');
-$abplot->value->SetColor("black","darkred");
+$abplot->value->SetFont(FF_FONT1, FS_NORMAL);
+$abplot->value->SetAlign('left', 'center');
+$abplot->value->SetColor("black", "darkred");
 $abplot->value->SetFormat('%.1d commits');
 
 $graph->Add($abplot);
