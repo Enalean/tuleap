@@ -2,18 +2,11 @@
 
 require_once 'MockBuilder.php';
 
-class Toto {
-
-    function greet() {
-        // this function is mocked out in the tests
-    }
-
-}
-Mock::generate('Toto');
 abstract class MockBuilderBaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Mock::generate('Toto');
         $this->mockToto = new MockToto();
     }
     public function itWorksWithoutArguments() {
@@ -41,50 +34,39 @@ abstract class MockBuilderBaseTest extends TuleapTestCase {
     public abstract function mockWithoutArguments();
 
 }
-class MockBuilderSimpleTest extends MockBuilderBaseTest {
 
-    public function mockWith2Arguments() {
-        givenThat($this->mockToto, 'greet')
-            ->with('Rasmus', 'Lerdorf')
-            ->returns("Hello, Rasmus Lerdorf");
-    }
-
-    public function mockWithOneArgument() {
-        givenThat($this->mockToto, 'greet')
-            ->with('Rasmus Lerdorf')
-            ->returns("Hello, Rasmus Lerdorf");
-
-    }
-    public function mockWithoutArguments() {
-        givenThat($this->mockToto, 'greet')
-                ->returns("Hello");
-    }
-}
 class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
     public function mockWithoutArguments() {
-        given($this->mockToto)
+        stub($this->mockToto)
             ->greet()
             ->returns("Hello");
     }
     public function mockWithOneArgument() {
-        given($this->mockToto)
+        stub($this->mockToto)
             ->greet('Rasmus Lerdorf')
             ->returns("Hello, Rasmus Lerdorf");
     }
     public function mockWith2Arguments() {
-        given($this->mockToto)
+        stub($this->mockToto)
             ->greet('Rasmus', 'Lerdorf')
             ->returns("Hello, Rasmus Lerdorf");
     }
     
     public function itCanAlsoBuildTheMock() {
-       $mockOfSomeClass = given('SomeClass')
+       $mockOfSomeClass = stub('SomeClass')
                             ->someMethod()
                             ->returns("a precise result");
        $this->assertEqual("a precise result", $mockOfSomeClass->someMethod());
     }
 }
 
+class Toto {
+
+    function greet() {
+        // this function is mocked out in the tests
+    }
+
+}
 class SomeClass {
 
     function someMethod() {
