@@ -25,16 +25,24 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
     /**
      * @var boolean
      */
-    private $collapsable;
+    protected $collapsable;
 
     public function __construct($collapsable = false) {
         $this->collapsable = $collapsable;
     }
-
-    protected function setChildState(TreeNode $child, $states) {
-        parent::setChildState($child, $states);
+    
+    /**
+     * Set states of a TreeNodein it's data
+     * 
+     * @var TreeNode $child the TreeNode to set
+     * @var array    $state states of spaces
+     * 
+     * @see TreeNode_GetStateVisitor::setChildState()
+     */
+    protected function setChildState(TreeNode $child, $state) {
+        parent::setChildState($child, $state);
         $data = $child->getData();
-        $data['tree-padding']      = $this->getHtmlPaddingFromStates($child, $states);
+        $data['tree-padding']      = $this->getHtmlPaddingFromStates($child, $state);
         $data['content-template']  = '<div class="node-content">%s';
         $data['content-template'] .= $child->hasChildren() ? '<span class="node-child">&nbsp;</span></div>' : '</div>'; 
         $child->setData($data);
