@@ -22,13 +22,6 @@ require_once 'GetStateVisitor.class.php';
 
 class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
 
-    private static $state_classes = array(
-        TreeNode_GetStateVisitor::STATE_BLANK => 'tree-blank',
-        TreeNode_GetStateVisitor::STATE_NODE  => 'tree-node',
-        TreeNode_GetStateVisitor::STATE_PIPE  => 'tree-pipe',
-        TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
-    );
-
     /**
      * @var boolean
      */
