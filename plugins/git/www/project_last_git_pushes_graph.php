@@ -42,10 +42,11 @@ $today           = $_SERVER['REQUEST_TIME'];
 $start_of_period = strtotime("-$nb_weeks weeks");
 
 $dates = array();
+$weekNum = array();
 for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $dates[] = date('M d', $i);
+    $weekNum[] = intval(date('W', $i));
 }
-$fixture = array(12,2,12,7,14,4,12,9,15,0,14,4);
 
 $graph = new Graph(580, 850);
 $graph->SetAngle(90);
@@ -84,7 +85,20 @@ $nb_colors = count($colors);
 $i = 0;
 $bplot = array();
 foreach ($repoList as $repository) {
-    $b2plot = new BarPlot($fixture);
+    $pushes = array();
+    $pushes = array_pad($pushes, 12, 0);
+    $gitLogDao = new Git_LogDao();
+    foreach($weekNum as $w) {
+        $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], intval($w));
+        if ($res && !$res->isError()) {
+            if ($res->valid()) {
+                $row = $res->current();
+                $pushes[$w] = intval($row['pushes']);
+                $res->next();
+            }
+        }
+    }
+    $b2plot = new BarPlot($pushes);
     $color = $colors[$i++ % $nb_colors];
     $b2plot->SetColor($color.':0.7');
     $b2plot->setFillColor($color);
