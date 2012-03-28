@@ -95,7 +95,7 @@ class Tracker_CrossSearch_SearchContentView {
         $row = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" >';
+            $html .= '<tr id="tree-node-' . $row['id'] . '" class="' . html_get_alt_row_color($this->current_index++) . '" >';
             $html .= '<td class="first-column">';
             $html .= $row['tree-padding'];
             $html .= sprintf($row['content-template'], $artifact->fetchDirectLinkToArtifact());
