@@ -180,6 +180,9 @@ sub get_emails_by_path {
 }
 
 #
+# Keep only one occurrence of each element of a given array.
+# It's used in the "commit-email.pl" script (line#386) to remove redundant notification emails from the array of notification emails
+# retrieved for each changing directory within a given SVN checkins.
 # input: an array with redundant elements
 # output: an array without redundant elements
 #
