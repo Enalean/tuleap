@@ -134,11 +134,11 @@ sub get_email_from_login {
 # output: an array of email addresses corresponding to the given project id, path and subpathes
 #
 sub get_emails_by_path {
-    my ($value, $groupid) = @_;
+    my ($changed_directory, $groupid) = @_;
     my ($query, $res);
-# Split a given path into subpathes according to depth, then build a regular expression like below:
-# path: '/var/lib/codendi/' => Regex: '^(/var)$|^(/var/)$|^(/var/lib)$|^(/var/lib/)$|^(/var/lib/codendi)$|^(/var/lib/codendi/)$'
-    my @dirs = split('/', $value);
+    # Split a given path into subpathes according to depth, then build a regular expression like below:
+    # path: '/var/lib/codendi/' => Regex: '^(/var)$|^(/var/)$|^(/var/lib)$|^(/var/lib/)$|^(/var/lib/codendi)$|^(/var/lib/codendi/)$'
+    my @dirs = split('/', $changed_directory);
     $root = "/";
     $patternMatcher = '';
     $patternBuilder = '';
