@@ -87,21 +87,5 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
             }
         }
     }
-    
-    
-    private function convertStateToDivs(TreeNode $node, $state) {
-        $html = '';
-        $template = '<div class="%s" %s>&nbsp;</div>';
-        foreach ($state as $state_id) {
-            $id    = '';
-            $class = self::$state_classes[$state_id];
-            if ($this->collapsable && $node->hasChildren() && ($state_id == self::STATE_LAST || $state_id == self::STATE_NODE)) {
-                $class .= ' tree-collapsable';
-                $id = 'id="tree-node-'. $node->getId() .'"';
-            }
-            $html .= sprintf($template, $class, $id);
-        }
-        return $html;
-    }
 }
 ?>
