@@ -129,6 +129,82 @@ sub get_email_from_login {
     }
 }
 
+# Retrive an array of emails watching a given changing directory within a given SVN checkins.
+# Here an example of notification map, each entry is defined by (path, notifications):
+# '/'                                                'tuleap-devel@example.com, bob@example.com'
+# '/trunk'                                        'carole@example.com'
+# '/trunk/src/common/'                   'dave@example.com'
+# '/trunk/plugins/'                          'eve@example.com'
+# '/trunk/src/commoncommon'          'oscar@example.com'
+# '/trunk/src'                                 'walter@example.com'
+# '/trunk/src/common&amp;common' 'trudy@example.com'
+# Given an SVN commit  that performed changes in the directory '/trunk/src/common/',
+# this subroutine would return an array with the following notification emails:
+# [tuleap-devel@example.com, bob@example.com, carole@example.com, dave@example.com, walter@example.com]
+#
+# input: a string handled as changed directory, an integer handled as project ID.
+# output: an array of email addresses corresponding to the given project id, path and subpathes
+#
+sub get_emails_by_path {
+    my ($changed_directory, $groupid) = @_;
+    my ($query, $res);
+    # Split a given path into subpathes according to depth, then build a regular expression like below:
+    # Path: '/trunk/src/common/' =>
+    # Regex: '^(/trunk)$|^(/trunk/)$|^(/trunk/src)$|^(/trunk/src/)$|^(/trunk/src/common)$|^(/trunk/src/common/)$'
+    my @dirs = split('/', $changed_directory);
+    $root = "/";
+    $patternMatcher = '';
+    $patternBuilder = '';
+    foreach my $dirVal (@dirs) {
+        if ($patternMatcher ne '') {
+                $patternBuilder .= $root.$dirVal;
+                $patternMatcher .= '|^('.$patternBuilder.')$|^('.$patternBuilder.'/)$';
+        } else {
+                $patternBuilder .= $root.$dirVal;
+                $patternMatcher .= '^('.$patternBuilder.')$|^('.$patternBuilder.'/)$';
+        }
+    }
+
+    my $groupid = $dbh->quote($groupid);
+    if ($patternMatcher ne '') {
+        my $patternMatcher = $dbh->quote($patternMatcher);
+        $subPathsExpression = "OR path RLIKE $patternMatcher";
+    } else {
+        $subPathsExpression = "";
+    }
+    $query = "SELECT svn_events_mailing_list FROM svn_notification WHERE group_id = $groupid and path = '/' ".$subPathsExpression;
+    $sth = $dbh->prepare($query);
+    $res = $sth->execute();
+    my @emails = ();
+    if ($sth->rows >= 1) {
+        while (my @row = $sth->fetchrow_array()) {
+            my $email = shift @row;
+            my @notifEmails = split(',', $email);
+            foreach my $emailVal (@notifEmails) {
+                # Remove whitespace from the start and end of the email string
+                $emailVal =~ s/^\s+//;
+                push @emails, $emailVal;
+            }
+        }
+    } else {
+        print STDERR "$query\nCan't select field: $DBI::errstr\n";
+    }
+    return @emails;
+}
+
+#
+# Keep only one occurrence of each element of a given array.
+# It's used in the "commit-email.pl" script (line#386) to remove redundant notification emails from the array of notification emails
+# retrieved for each changing directory within a given SVN checkins.
+# input: an array with redundant elements
+# output: an array without redundant elements
+#
+sub redundancy_grep {
+    my ($ref_array) = @_;
+    my %hash_without_redundancy;
+    return grep { !$hash_without_redundancy{$_}++ } @{$ref_array};
+}
+
 #
 # input: a string handled as a email address
 # output: 1 if the email address is valid, or 0 if the email address is not known in Codendi, or if all the accounts associated with it are deleted or suspended

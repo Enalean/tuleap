@@ -683,6 +683,15 @@
         </revremark>
       </revision>
 
+      <revision>
+        <revnumber>4.0.28</revnumber>
+        <date>23-March-2012</date>
+        <authorinitials>Codex team</authorinitials>
+        <revremark>
+            Subversion notification by path.
+        </revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

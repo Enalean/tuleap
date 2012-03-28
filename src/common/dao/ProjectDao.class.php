@@ -278,6 +278,21 @@ class ProjectDao extends DataAccessObject {
                 ' ON DUPLICATE KEY UPDATE msg_to_requester='.$this->da->quoteSmart($message);
         return $this->update($sql);
     }
+
+    /**
+     * Set SVN header
+     *
+     * @param Integer $groupId
+     * @param String  $mailingHeader
+     *
+     * @return Boolean
+     */
+    function setSvnHeader($groupId, $mailingHeader) {
+        $sql = ' UPDATE groups
+                 SET svn_events_mailing_header = '.$this->da->quoteSmart($mailingHeader).'
+                 WHERE group_id = '.$this->da->escapeInt($groupId);
+        return $this->update($sql);
+    }
 }
 
 ?>

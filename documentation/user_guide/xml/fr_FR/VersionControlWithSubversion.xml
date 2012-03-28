@@ -866,24 +866,28 @@ members = membre1,membre2,...,membreN
 	e-mail :</para>
 
 	<itemizedlist mark="bullet">
-	  <listitem>
-	    <para><emphasis role="bold">Les adresses
-	    e-mail</emphasis> : une liste d'adresses e-mail (séparées
-	    par des virgules) destinataires des notifications. Si vous
-	    souhaitez informer un nombre important d'utilisateurs nous
-	    vous recommandons vivement de créer un liste de diffusion à
-	    cet effet (voir ci-dessous).</para>
-	  </listitem>
-
-	  <listitem>
-	    <para><emphasis role="bold">Entête du sujet</emphasis> :
-	    une chaîne de caractères qui apparaîtra en tête de la
-	    ligne Sujet des notifications emails envoyées. Cette
-	    entête est supposée aider les destinataires à identifier
-	    rapidement les messages reçus et à pouvoir les rediriger
-	    vers des dossiers spécifiques par le biais de filtres de
-	    réception.</para>
-	  </listitem>
+     <listitem>
+        <para><emphasis role="bold">Entête du sujet</emphasis> :
+        une chaîne de caractères qui apparaîtra en tête de la
+        ligne Sujet des notifications emails envoyées. Cette
+        entête est supposée aider les destinataires à identifier
+        rapidement les messages reçus et à pouvoir les rediriger
+        vers des dossiers spécifiques par le biais de filtres de
+        réception.</para>
+     </listitem>
+     <listitem>
+        <para><emphasis role="bold">Le chemin</emphasis> :
+        Le chemin dans l'arborescence subversion pour lequel
+        la notification va etre employée.</para>
+     </listitem>
+     <listitem>
+        <para><emphasis role="bold">Les adresses
+        e-mail</emphasis> : une liste d'adresses e-mail (séparées
+        par des virgules) destinataires des notifications. Si vous
+        souhaitez informer un nombre important d'utilisateurs nous
+        vous recommandons vivement de créer un liste de diffusion à
+        cet effet (voir ci-dessous).</para>
+     </listitem>
 
 	</itemizedlist>
 
@@ -891,7 +895,7 @@ members = membre1,membre2,...,membreN
       diffusion pour l'envoi de vos notifications Subversion</title><para>Si
       vous avez l'intention d'envoyer des emails pour notifier
       certains utilisateurs de changements intervenus dans le dépôt
-      Subversion, nous vous recommandons de créer une liste de diffusion
+      Subversion ou un chemin spécifique, nous vous recommandons de créer une liste de diffusion
       spécifique appelée
       <literal>nom_projet-cvsevents</literal>. Ainsi, les utilisateurs
       &SYS_PRODUCT_NAME; et les membres du projet intéressés par les notifications
