@@ -13,11 +13,11 @@
  */
 function stub($classname_or_simpletest_mock) {
     if (is_object($classname_or_simpletest_mock)) {
-        return new OngoingIntelligentStub($classname_or_simpletest_mock);
+        $mock = $classname_or_simpletest_mock;
     } else {
         $mock = mock($classname_or_simpletest_mock);
-        return new OngoingIntelligentStub($mock);
     }
+    return new OngoingIntelligentStub($mock);
 }
 
 /**

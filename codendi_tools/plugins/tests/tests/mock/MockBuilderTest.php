@@ -58,6 +58,19 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
                             ->returns("a precise result");
        $this->assertEqual("a precise result", $mockOfSomeClass->someMethod());
     }
+    
+    public function itCanStubMoreThanOneMethod() {
+        $mock = stub('Toto')
+            ->greet('John Doe')
+            ->returns('Hello, John Doe');
+
+        stub($mock)
+            ->greet('Rasmus', 'Lerdorf')
+            ->returns('Hello, Rasmus Lerdorf');
+
+        $this->assertEqual($mock->greet('John Doe'), 'Hello, John Doe');
+        $this->assertEqual($mock->greet('Rasmus', 'Lerdorf'), 'Hello, Rasmus Lerdorf');
+    }    
 }
 
 class Toto {
