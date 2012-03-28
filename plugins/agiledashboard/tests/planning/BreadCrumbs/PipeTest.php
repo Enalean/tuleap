@@ -19,17 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__).'/../../../include/BreadCrumbs/BreadCrumbGenerator.class.php';
+require_once dirname(__FILE__).'/../../../include/BreadCrumbs/Merger.class.php';
 
 Mock::generate("BreadCrumb_BreadCrumbGenerator");
 class BreadCrumb_PipeTest extends TuleapTestCase {
     
-    public function itMeldsAppendsTheResultOfTheFirstToTheSecond() {
+    public function itAppendsTheResultOfTheFirstToTheSecond() {
         $bc1 = new MockBreadCrumb_BreadCrumbGenerator();
         $bc1->setReturnValue('getCrumbs', array('lvl1' => "Toto", 'lvl2' => "Tata"));
         $bc2 = new MockBreadCrumb_BreadCrumbGenerator();
         $bc2->setReturnValue('getCrumbs', array('lvl3' => "Tutu"));
-        $breadCrumb_Pipe = new BreadCrumb_Pipe($bc1, $bc2);
-        $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu"), $breadCrumb_Pipe->getCrumbs());
+        $breadcrumb_merger = new BreadCrumb_Merger($bc1, $bc2);
+        $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu"), $breadcrumb_merger->getCrumbs());
     }
 }
 ?>

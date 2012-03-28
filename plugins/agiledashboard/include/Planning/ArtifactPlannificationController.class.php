@@ -20,7 +20,7 @@
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/PlanningAndArtifact.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Pipe.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     /**
@@ -89,7 +89,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     public function getBreadcrumbs($plugin_path) {
         $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard((int) $this->request->get('group_id'), $plugin_path);
         $artifactsBreadCrumbGenerator = new BreadCrumb_PlanningAndArtifact($plugin_path, $this->artifact, $this->getPlanning());
-        return new BreadCrumb_Pipe($baseBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
+        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
     }
     
 }

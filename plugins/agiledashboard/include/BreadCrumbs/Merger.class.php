@@ -19,7 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BreadCrumb_Pipe implements BreadCrumb_BreadCrumbGenerator {
+/**
+ * Merge two breadcrumbs into a single one, by appending the second to the first 
+ */
+class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
 
     /**
      * @var BreadCrumb_BreadCrumbGenerator 

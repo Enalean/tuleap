@@ -28,7 +28,6 @@ class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator {
     }
     
     public function getCrumbs() {
-        $hp             = Codendi_HTMLPurifier::instance();
         $url_parameters = array(
             'group_id' => (int) $this->project_id,
         );

@@ -21,7 +21,7 @@
 
 interface BreadCrumb_BreadCrumbGenerator {
     /**
-     * @return array of strings 
+     * @return array of Tuples, Tuples being : array('url' => ? , 'title' => ? )
      */
     function getCrumbs();
 }
