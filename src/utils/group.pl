@@ -130,7 +130,7 @@ sub get_email_from_login {
 }
 
 # Retrive an array of emails watching a given changing directory within a given SVN checkins.
-# Here an example of notification map, each entry is defined by (path, email_notification):
+# Here an example of notification map, each entry is defined by (path, notifications):
 # '/'                                                'tuleap-devel@enalean.com, bob@enalean.com'
 # '/trunk'                                        'carole@enalean.com'
 # '/trunk/src/common/'                   'dave@enalean.com'
@@ -138,8 +138,9 @@ sub get_email_from_login {
 # '/trunk/src/commoncommon'          'oscar@enalean.com'
 # '/trunk/src'                                 'walter@enalean.com'
 # '/trunk/src/common&amp;common' 'trudy@enalean.com'
-# Given an SVN commit  that  changeds the directory '/trunk/src/common/', this subroutine would return an array with the following notification emails:
-# tuleap-devel@enalean.com, bob@enalean.com, carole@enalean.com, dave@enalean.com, walter@enalean.com
+# Given an SVN commit  that performed changes in the directory '/trunk/src/common/',
+# this subroutine would return an array with the following notification emails:
+# [tuleap-devel@enalean.com, bob@enalean.com, carole@enalean.com, dave@enalean.com, walter@enalean.com]
 #
 # input: a string handled as changed directory, an integer handled as project ID.
 # output: an array of email addresses corresponding to the given project id, path and subpathes
