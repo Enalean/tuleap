@@ -23,6 +23,9 @@ require_once dirname(__FILE__) .'/../../tracker/include/Tracker/CrossSearch/View
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
+require_once 'Planning/Controller.class.php';
+require_once 'Planning/ArtifactPlannificationController.class.php';
+require_once 'Planning/PlanningFactory.class.php';
 
 class AgileDashboardRouter {
     /**
@@ -39,13 +42,16 @@ class AgileDashboardRouter {
         $this->plugin = $plugin;
     }
     
-    public function route($request) {
+    public function route(Codendi_Request $request) {
         $controller = $this->buildController($request);
-        $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
+        
         switch($request->get('action')) {
             case 'show':
-                $object_god = new TrackerManager();
+                $object_god   = new TrackerManager();
                 $view_builder = $object_god->getCrossSearchViewBuilder();
+                
+                $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
+                
                 $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
                 break;
             case 'new':
@@ -81,32 +87,26 @@ class AgileDashboardRouter {
         return $this->service;
     }
     
-    private function displayHeader($controller, Codendi_Request $request, $title) {
+    private function displayHeader(MVC2_Controller $controller, Codendi_Request $request, $title) {
         $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
         $this->getService($request)->displayHeader($title, $breadcrumbs->getCrumbs(), array());
     }
     
     
-    private function displayFooter($request) {
+    private function displayFooter(Codendi_Request $request) {
         $this->getService($request)->displayFooter();
     }
     
-    private function buildController($request) {
-        require_once 'Planning/Controller.class.php';
-        require_once 'Planning/PlanningFactory.class.php';
-        require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
-        
+    private function buildController(Codendi_Request $request) {
         $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
         
         return new Planning_Controller($request, $planning_factory);
     }
 
-    private function buildArtifactPlannificationController($request) {
-        require_once 'Planning/ArtifactPlannificationController.class.php';
-        require_once 'Planning/PlanningFactory.class.php';
-        
+    private function buildArtifactPlannificationController(Codendi_Request $request) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
         $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        
         return new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory);
     }
     
