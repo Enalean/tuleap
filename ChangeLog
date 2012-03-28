@@ -1,4 +1,9 @@
 Version 4.0.28 (Not released yet)
+   == Enhancement ==
+   * SVN notifications by path: Add the possibility, via post-commit hook, to controls what notification
+   gets sent. An SVN admin would be able to specify an SVN repository pattern
+   that is matched to determine if an email is sent for a given checkin.
+
    == Plugins ==
    * AgileDashoard v0.7
    * Tracker v5.4.5
