@@ -32,6 +32,20 @@ class Git_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function getRepositoryPushesByWeek($repository_id, $week) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $week          = $this->da->escapeInt($week);
+        $sql = "SELECT count(*) as pushes,
+                repository_id as repo,
+                week(FROM_UNIXTIME(push_date)) as week
+                FROM plugin_git_log
+                WHERE repository_id = $repository_id
+                and week(FROM_UNIXTIME(push_date)) = $week
+                group by week, repo;
+               ";
+        return $this->retrieve($sql);
+    }
+
     /**
      * Obtain last git pushes performed by the given user
      *
