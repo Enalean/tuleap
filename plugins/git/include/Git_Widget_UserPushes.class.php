@@ -86,7 +86,7 @@ class Git_Widget_UserPushes extends Widget {
                                      <b>'.$project.'</b>
                                      </span>
                                      </legend>
-                                     <a href="'.$this->pluginPath.'/index.php?group_id='.$entry['group_id'].'">[ More ]</a>';
+                                     <a href="'.$this->pluginPath.'/index.php?group_id='.$entry['group_id'].'">[ '.$GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_details').' ]</a>';
                     }
                     $content .= '<fieldset>
                                  <legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
