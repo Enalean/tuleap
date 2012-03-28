@@ -137,7 +137,7 @@ sub get_emails_by_path {
     my ($value, $groupid) = @_;
     my ($query, $res);
 # Split a given path into subpathes according to depth, then build a regular expression like below:
-# path: '/var/lib/codendi/' => Regex: '^/var|^/var/lib|^/var/lib/codendi*'
+# path: '/var/lib/codendi/' => Regex: '^(/var)$|^(/var/)$|^(/var/lib)$|^(/var/lib/)$|^(/var/lib/codendi)$|^(/var/lib/codendi/)$'
     my @dirs = split('/', $value);
     $root = "/";
     $patternMatcher = '';
@@ -154,7 +154,6 @@ sub get_emails_by_path {
 
     my $groupid = $dbh->quote($groupid);
     if ($patternMatcher ne '') {
-        #$patternMatcher .= '*';
         my $patternMatcher = $dbh->quote($patternMatcher);
         $subPathsExpression = "OR path RLIKE $patternMatcher";
     } else {
