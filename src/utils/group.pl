@@ -157,7 +157,7 @@ sub get_emails_by_path {
         my $patternMatcher = $dbh->quote($patternMatcher);
         $subPathsExpression = "OR path RLIKE $patternMatcher";
     } else {
-        $subPathsExpression = "AND 1";
+        $subPathsExpression = "";
     }
     $query = "SELECT svn_events_mailing_list FROM svn_notification WHERE group_id = $groupid and path = '/' ".$subPathsExpression;
     $sth = $dbh->prepare($query);
