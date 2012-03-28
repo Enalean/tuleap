@@ -18,25 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__).'/BreadCrumbGenerator.class.php';
 
-class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator {
+class BreadCrumb_Artifact implements BreadCrumb_BreadCrumbGenerator {
 
-    public function __construct($plugin_path, $project_id) {
-        $this->project_id = $project_id;
+    public function __construct($plugin_path, $artifact) {
+        $this->artifact    = $artifact;
         $this->plugin_path = $plugin_path;
     }
-    
     public function getCrumbs() {
-        $url_parameters = array(
-            'group_id' => (int) $this->project_id,
-        );
-        $breadcrumbs   = array();
-        $breadcrumbs[] = array(
-            'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
-            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
-        );
-        return $breadcrumbs;
+        if ($this->artifact) {
+            $hp             = Codendi_HTMLPurifier::instance();
+            $url_parameters['aid'] = (int) $this->artifact->getId();
+            return array(array(
+                'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
+                'title' => $hp->purify($this->artifact->getTitle()),
+            ));
+        } else {
+            return array();
+        }
     }
 }
 ?>

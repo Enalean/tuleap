@@ -32,5 +32,16 @@ class BreadCrumb_PipeTest extends TuleapTestCase {
         $breadcrumb_merger = new BreadCrumb_Merger($bc1, $bc2);
         $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu"), $breadcrumb_merger->getCrumbs());
     }
+    
+    public function itAppendsAllTheBreadCrumbsInTheGivenOrder() {
+        $bc1 = new MockBreadCrumb_BreadCrumbGenerator();
+        $bc1->setReturnValue('getCrumbs', array('lvl1' => "Toto", 'lvl2' => "Tata"));
+        $bc2 = new MockBreadCrumb_BreadCrumbGenerator();
+        $bc2->setReturnValue('getCrumbs', array('lvl3' => "Tutu"));
+        $bc3 = new MockBreadCrumb_BreadCrumbGenerator();
+        $bc3->setReturnValue('getCrumbs', array('lvl4' => "Tralala"));
+        $breadcrumb_merger = new BreadCrumb_Merger($bc1, $bc2, $bc3);
+        $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu", "lvl4" => "Tralala"), $breadcrumb_merger->getCrumbs());
+    }
 }
 ?>

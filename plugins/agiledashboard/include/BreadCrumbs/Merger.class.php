@@ -25,17 +25,26 @@
 class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
 
     /**
-     * @var BreadCrumb_BreadCrumbGenerator 
+     * @var array of BreadCrumb_BreadCrumbGenerator
      */
-    private $breadCrumb1, $breadCrumb2;
+    private $generators;
     
-    function __construct(BreadCrumb_BreadCrumbGenerator $breadCrumb1, BreadCrumb_BreadCrumbGenerator $breadCrumb2) {
-        $this->breadCrumb1 = $breadCrumb1;
-        $this->breadCrumb2 = $breadCrumb2;
+    /**
+     * Takes a variable number of generators 
+     * @param BreadCrumb_BreadCrumbGenerator $breadCrumb1
+     * @param BreadCrumb_BreadCrumbGenerator $breadCrumb2
+     * @param BreadCrumb_BreadCrumbGenerator $andMore 
+     */
+    function __construct(BreadCrumb_BreadCrumbGenerator $breadCrumb1, BreadCrumb_BreadCrumbGenerator $breadCrumb2, BreadCrumb_BreadCrumbGenerator $andMore = null) {
+        $this->generators = func_get_args();
     }
 
     public function getCrumbs() {
-        return array_merge($this->breadCrumb1->getCrumbs(), $this->breadCrumb2->getCrumbs());
+        $crumbs = array();
+        foreach ($this->generators as $crumb) {
+            $crumbs = array_merge($crumbs, $crumb->getCrumbs());
+        }
+        return $crumbs;
     }
 }
 

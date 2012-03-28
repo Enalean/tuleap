@@ -19,7 +19,8 @@
  */
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/PlanningAndArtifact.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
@@ -87,9 +88,11 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard((int) $this->request->get('group_id'), $plugin_path);
-        $artifactsBreadCrumbGenerator = new BreadCrumb_PlanningAndArtifact($plugin_path, $this->artifact, $this->getPlanning());
-        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
+        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+        $planningBreadCrumbGenerator = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
+        $artifactsBreadCrumbGenerator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
+        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $planningBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
+        
     }
     
 }

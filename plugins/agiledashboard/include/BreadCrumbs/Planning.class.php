@@ -19,10 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BreadCrumb_PlanningAndArtifact implements BreadCrumb_BreadCrumbGenerator {
+class BreadCrumb_Planning implements BreadCrumb_BreadCrumbGenerator {
 
-    public function __construct($plugin_path, $artifact, $planning) {
-        $this->artifact    = $artifact;
+    public function __construct($plugin_path, $planning) {
         $this->plugin_path = $plugin_path;
         $this->planning    = $planning;
     }
@@ -32,18 +31,10 @@ class BreadCrumb_PlanningAndArtifact implements BreadCrumb_BreadCrumbGenerator {
         $url_parameters['planning_id'] = (int) $planning->getId();
         $url_parameters['action']      = 'show';
         $url_parameters['group_id']    = $planning->getGroupId();
-        $breadcrumbs[] = array(
+        return array(array(
             'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
             'title' => $hp->purify($planning->getName()),
-        );
-        if ($this->artifact) {
-            $url_parameters['aid'] = (int) $this->artifact->getId();
-            $breadcrumbs[] = array(
-                'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
-                'title' => $hp->purify($this->artifact->getTitle()),
-            );
-        }
-        return $breadcrumbs;
+        ));
     }
 }
 ?>
