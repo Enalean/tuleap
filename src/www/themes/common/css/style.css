@@ -2077,7 +2077,7 @@ h3.toggler-hide-noajax {
 }
 /* }}} */
 
-/* {{{ TreeNode */
+/* {{{ TreeNode 
 
 .tree-blank, .tree-node, .tree-pipe, .tree-last {
     width: 16px;
@@ -2086,7 +2086,7 @@ h3.toggler-hide-noajax {
     background-image: url('../images/TreeNodeSprites.png');
     background-repeat: repeat-y;
     
-    /*Dirty IE Hack*/
+    /*Dirty IE Hack
       zoom: 1;
       *display: inline;
 }

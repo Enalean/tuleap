@@ -987,3 +987,108 @@ ul.plugin_tracker_my_artifacts_list {
     font-weight: bold;
     color: #0676B9;
 }
+
+/** Tree Node **/
+
+.tree-view, .tree-view tr, .tree-view td {
+    overflow:auto;
+    vertical-align:top;
+    border-collapse:collapse;
+}
+.tree-view td {
+    height:100%;
+    overflow:hidden;
+}
+
+tbody {
+    overflow:auto;
+}
+
+.first-column {
+    white-space: nowrap;
+}
+
+.node-indent {
+    display:inline-block;
+    /*Dirty IE Hack*/
+      zoom: 1; 
+      *display: inline;
+    height:8px;
+    width:8px;
+    vertical-align:top;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    
+}
+
+.node-last-left {
+    overflow:visible;
+    border-right:1px grey dotted;
+    width:7px;
+    
+}
+.node-last-right {
+    overflow:hidden;
+    border-bottom:1px grey dotted;
+    height:7px;
+    /*margin-left:-4px;*/
+    
+}
+
+.node-blank {
+    overflow:hidden;
+    display:inline-block;
+    width:8px;
+    height:8px;
+}
+
+.node-pipe {
+    width:7px;
+    height:100%;
+    border-right:1px grey dotted;
+}
+
+.node-minus {
+    overflow:hidden;
+    border-bottom:1px grey dotted;
+    height:7px;
+    /*margin-left:-4px;*/
+}
+
+.node-content {
+    overflow:visible;
+    cursor:pointer;
+    display:inline-block;
+    height:100%;
+    padding-right:10px;
+    padding-bottom:10px;
+    margin-left:1px;
+}
+
+.node-child {
+    overflow:hidden;
+    display:block;
+    width:8px;
+    margin-left:3px;
+    height: 100%;
+    border-right:1px grey dotted;
+}
+
+.node-tree {
+    display: inline-block;
+    width:80px;
+    height:80px;
+    
+    margin-top:4px;
+    margin-left:4px;
+    background-image:url(../images/tree.png);/* TODO : Better img with blank background */
+    background-repeat:no-repeat;
+    cursor:pointer;
+}
+
+.node-minus-tree {
+    overflow:hidden;
+    border-bottom:1px grey dotted;
+    width:4px;
+}
