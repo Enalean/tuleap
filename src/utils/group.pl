@@ -129,7 +129,7 @@ sub get_email_from_login {
     }
 }
 
-#
+# Retrive an array of emails watching a given changing directory within a given SVN checkins.
 # input: a string handled as changed directory, an integer handled as project ID.
 # output: an array of email addresses corresponding to the given project id, path and subpathes
 #
@@ -137,7 +137,7 @@ sub get_emails_by_path {
     my ($changed_directory, $groupid) = @_;
     my ($query, $res);
     # Split a given path into subpathes according to depth, then build a regular expression like below:
-    # path: '/var/lib/codendi/' => Regex: '^(/var)$|^(/var/)$|^(/var/lib)$|^(/var/lib/)$|^(/var/lib/codendi)$|^(/var/lib/codendi/)$'
+    # path: '/trunk/src/common/' => Regex: '^(/trunk)$|^(/trunk/)$|^(/trunk/src)$|^(/var/src/)$|^(/trunk/src/common)$|^(/trunk/src/common/)$'
     my @dirs = split('/', $changed_directory);
     $root = "/";
     $patternMatcher = '';
