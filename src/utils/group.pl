@@ -137,7 +137,8 @@ sub get_emails_by_path {
     my ($changed_directory, $groupid) = @_;
     my ($query, $res);
     # Split a given path into subpathes according to depth, then build a regular expression like below:
-    # path: '/trunk/src/common/' => Regex: '^(/trunk)$|^(/trunk/)$|^(/trunk/src)$|^(/var/src/)$|^(/trunk/src/common)$|^(/trunk/src/common/)$'
+    # path: '/trunk/src/common/' =>
+    # Regex: '^(/trunk)$|^(/trunk/)$|^(/trunk/src)$|^(/trunk/src/)$|^(/trunk/src/common)$|^(/trunk/src/common/)$'
     my @dirs = split('/', $changed_directory);
     $root = "/";
     $patternMatcher = '';
