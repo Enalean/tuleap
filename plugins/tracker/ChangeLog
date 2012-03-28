@@ -1,3 +1,6 @@
+Version 5.4.6 - Tuleap 4.0.28
+  * Cross Tracker search as an experimental feature (lab mode)
+  
 Version 5.4.5 - Tuleap 4.0.28
   * Fix sla #580 - Issue in SOAP function "getTrackerFields" in Trackers
   * Rename tracker in plugin_tracker in soap
