@@ -153,9 +153,9 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $view = $this->GivenASearchView($service, $criteria, $artifacts, $root);
         
         $output = $this->renderAndGetContent($view);
-        
-        $this->assertPattern('%div class="tree-last tree-collapsable" id="tree-node-6"%', $output);
-        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $output);
+        $pattern  = '(.*)?(tree-node-6)(.*)?(node-indent)(.*)?(node-last-left)(.*)?(node-tree)(.*)?(node-indent)(.*)?(node-minus-tree)(.*)?(node-child)';
+        $pattern .= '(.*)?(tree-node-8)(.*)?(node-blank)(.*)?';
+        $this->assertPattern("%^$pattern$%ism", $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts, $root) {
