@@ -185,7 +185,7 @@ class TrackerManager { /* extends Engine? */
     /**
      * @return Tracker_CrossSearch_SearchController 
      */
-    protected function getCrossSearchController(Codendi_Request $request) {        
+    protected function getCrossSearchController(Codendi_Request $request) {
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
@@ -482,7 +482,10 @@ class TrackerManager { /* extends Engine? */
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            $this->displayTrackerHomeNav($project);
+            
+            if ($user->useLabFeatures()) {
+                $this->displayTrackerHomeNav($project);
+            }
             
             $html .= '<p>';
             if (count($trackers)) {

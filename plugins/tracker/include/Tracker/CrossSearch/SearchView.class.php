@@ -74,6 +74,10 @@ class Tracker_CrossSearch_SearchView {
         $html .= $this->fetchTrackerHomeNav();
         $html .= '<div class="tracker_homenav_cross_search">';
         $html .= '<h1>'. $title .'</h1>';
+        $html .= '<p class="lab_features" title="'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature') .'">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature');
+        $html .= '</p>';
+        
         if ($this->criteria) {
             $html .= $content_view->fetch();
             $html .= $this->fetchTrackerList();
@@ -81,7 +85,6 @@ class Tracker_CrossSearch_SearchView {
             $html .= '<em>'. 'There is no shared field to query across your trackers' .'</em>';
         }
         $html .= '</div>';
-        
         echo $html;
         
         $this->service->displayFooter();
@@ -90,7 +93,6 @@ class Tracker_CrossSearch_SearchView {
     private function fetchTrackerHomeNav() {
         $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
-        
         return $renderer->render('tracker-home-nav', $presenter);
     }
 

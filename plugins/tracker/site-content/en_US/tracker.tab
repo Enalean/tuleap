@@ -1,3 +1,4 @@
+
 plugin_tracker	descriptor_description	Trackers new generation
 plugin_tracker	descriptor_name	Tracker
 
@@ -17,6 +18,9 @@ plugin_tracker_crosssearch	included_trackers_title	List of trackers included int
 plugin_tracker_crosssearch	included_trackers_not_found	No relevant tracker found
 
 plugin_tracker_crosssearch	no_matching_artifact	No artifact matches the query
+
+plugin_tracker_crosssearch	creation_lab_feature	This is an experimental feature. If any doubts, don't use it!
+
 #/**
 #  *
 #  * Tracker scripts message catalog (English)
