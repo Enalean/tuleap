@@ -71,6 +71,10 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         default :
             break;
     }
+
+    // Redirect to the same page just to refresh it !
+    header("Location: ".$_SERVER['SCRIPT_URI']."?".$_SERVER['QUERY_STRING']);
+    exit();
 }
 
 $hp = Codendi_HTMLPurifier::instance();
@@ -78,7 +82,6 @@ $hp = Codendi_HTMLPurifier::instance();
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		                  'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
-$pm->clear($group_id);
 $project = $pm->getProject($group_id);
 $svn_mailing_header = $project->getSVNMailingHeader();
 
