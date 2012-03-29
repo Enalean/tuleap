@@ -620,7 +620,7 @@ class GitPHP_FileDiff
 				case '@':
 					if($currentDiff) {
 						if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0) {
-							if (function_exists('xdiff_string_diff')) {
+							if ($this->UseXDiff()) {
 								$currentDiff['line']++; 	// HACK to make added blocks align correctly
 							}
 						}
@@ -650,7 +650,7 @@ class GitPHP_FileDiff
 		}
 		if($currentDiff) {
 			if (count($currentDiff['left']) == 0 && count($currentDiff['right']) > 0) {
-				if (function_exists('xdiff_string_diff')) {
+				if ($this->UseXDiff()) {
 					$currentDiff['line']++;		// HACK to make added blocks align correctly
 				}
 			}
@@ -751,7 +751,7 @@ class GitPHP_FileDiff
 			$diffOutput = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 			if ($diffOutput === false) {
 
-				if (function_exists('xdiff_string_diff')) {
+				if ($this->UseXDiff()) {
 					$diffOutput = $this->GetXDiff($fromData, $toData, $context);
 				} else {
 					$diffOutput = $this->GetPhpDiff($fromData, $toData, $context);
@@ -783,6 +783,19 @@ class GitPHP_FileDiff
 		$diffObj = new Diff(explode("\n", $fromData), explode("\n", $toData), $options);
 		$renderer = new Diff_Renderer_Text_Unified;
 		return $diffObj->render($renderer);
+	}
+
+	/**
+	 * UseXDiff
+	 *
+	 * Returns whether xdiff should be used
+	 *
+	 * @access private
+	 * @return boolean true if xdiff should be used
+	 */
+	private function UseXDiff()
+	{
+		return function_exists('xdiff_string_diff');
 	}
 
 	/**
