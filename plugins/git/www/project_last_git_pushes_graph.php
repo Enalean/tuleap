@@ -93,7 +93,7 @@ foreach ($repoList as $repository) {
     }
     $b2plot = new BarPlot($pushes);
     $color = $colors[$i++ % $nb_colors];   
-    $b2plot->SetFillgradient($color, $color.':0.6', GRAD_LEFT_REFLECTION);
+    $b2plot->SetFillgradient($color, $color.':0.6', GRAD_MIDVER);
     $b2plot->SetLegend($repository['repository_name']);
     $bplot[] = $b2plot;
 }
