@@ -84,7 +84,9 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
                     return '<span class="node-indent node-last-left">'.$leftContent.'</span>'.$right;
                     break;
                 case self::STATE_BLANK:
-                    return '<span class="node-blank">&nbsp;</span>';
+                    return '<span class="node-blank">&nbsp;</span><span class="node-blank">&nbsp;</span>'
+                    .'<span class="node-indent node-last-left">&nbsp;</span>'
+                    .'<span class="node-indent node-last-right">&nbsp;</span>';
             }
         }
     }

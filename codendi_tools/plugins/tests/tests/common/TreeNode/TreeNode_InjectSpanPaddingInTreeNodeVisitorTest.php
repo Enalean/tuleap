@@ -24,7 +24,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends TuleapTestCase {
 
     protected $treeNode;
     
-    protected function given_AParentWithOneChildTreeNodes() {
+    protected function given_AParentWithOneChildTreeNode() {
         $artifacts = array(
         array(
                         'id'                => '6',
@@ -50,7 +50,9 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends TuleapTestCase {
         $node0->addChild($node1);
         return $root;
     }
-    
+    /**
+     * When visit
+     */
     protected function when_VisitTreeNodeWith_InjectSpanPadding( TreeNode &$treeNode) {
         $visitor = new TreeNode_InjectSpanPaddingInTreeNodeVisitor(true);
         $treeNode->accept($visitor);
@@ -67,8 +69,8 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends TuleapTestCase {
         $this->assertPattern($pattern, $parentData['content-template']);
     }
     
-    public function itShouldSetDataThatMatchesIndentLast_leftTreeIndentMinus_treeAndChild() {
-        $given = $this->given_AParentWithOneChildTreeNodes();
+    public function itShouldSetDataToFirstChildThatMatches_IndentLast_leftTreeIndentMinus_treeAndChild() {
+        $given = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         $pattern = '%^(.*)'.$this->getPatternSuite("_indent_lastLeft_tree_indent_minusTree").'$%ism';
         
@@ -76,9 +78,18 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends TuleapTestCase {
         $this->then_ParentData_ContentTemplate_AssertPattern($given->getChild(0), '%^(.*)'.$this->getPatternSuite("_child").'$%ism');
     }
     
+    public function itShouldSetDataToSecondChildThatMatches_BlankBlankLast_LeftLast_Right() {
+        $given = $this->given_AParentWithOneChildTreeNode();
+        $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
+        $pattern = '%^(.*)'.$this->getPatternSuite("_blank_blank_lastLeft_lastRight").'$%ism';
+        
+        $this->then_ParentData_TreePadding_AssertPattern($given->getChild(0)->getChild(0), $pattern);
+    }
+    
     protected function getPatternSuite($string) {
         return str_replace(
             array(
+                '_blank',
             	'_indent', 
             	'_pipe',
             	'_tree',
@@ -89,6 +100,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends TuleapTestCase {
             	'_lastRight'
             ),
             array(
+                '(node-blank)(.*)?',
             	'(node-indent)(.*)?',
             	'(node-pipe)(.*)?',
             	'(node-tree)(.*)?',
