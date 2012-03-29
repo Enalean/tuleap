@@ -1,17 +1,14 @@
-<div id="art-{{destination_id}}" class="release_planner planning-droppable">
-    {{{destination_title}}}
+<div id="art-{{destination_id}}" class="release_planner card planning-droppable">
+    <div class="card-link">{{{destination_link}}}</div>
+    {{> select-destination}}
     <p class="help">{{destinationHelp}}</p>
     <div>
         {{^getLinkedItems}}
         No items yet
         {{/getLinkedItems}}
-        <ul>
-            {{#getLinkedItems}}
-            <li>
-                {{getTitle}}
-            </li>
-            {{/getLinkedItems}}
-        </ul>
+        {{#getLinkedItems}}
+            {{> cards}}
+        {{/getLinkedItems}}
     </div>
 </div>
 <div style="clear: both"></div>

@@ -32,12 +32,14 @@ class Planning_ShowPresenter {
     private $content_view;
     
     public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null) {
+        $hp = Codendi_HTMLPurifier::instance();
         $this->planning_id   = $planning->getId();
         $this->planning_name = $planning->getName();
         
         if ($artifact) {
             $this->destination_id    = $artifact->getId();
-            $this->destination_title = $artifact->fetchTitle();
+            $this->destination_title = $hp->purify($artifact->getTitle());
+            $this->destination_link  = $artifact->fetchDirectLinkToArtifact();
         }
         $this->artifact            = $artifact;
         $this->artifacts_to_select = $artifacts_to_select;
@@ -53,8 +55,19 @@ class Planning_ShowPresenter {
         $linked_items = $this->artifact->getLinkedArtifacts();
         if (! $linked_items) {
             $linked_items = array();
+            return false;
         }
-        return $linked_items;
+        $root = new TreeNode();
+        foreach ($linked_items as $item) {
+            $node = new TreeNode(array('id'    => $item->getId(),
+                                       'title' => $item->getTitle(),
+                                       'link'  => $item->fetchDirectLinkToArtifact(),
+                                       'class' => 'planning-draggable-alreadyplanned',
+                                       ));
+            $node->setId($item->getId());
+            $root->addChild($node);
+        }
+        return $root;
 
     }
     
@@ -67,11 +80,12 @@ class Planning_ShowPresenter {
     }
     
     public function artifactsToSelect() {
+        $hp = Codendi_HTMLPurifier::instance();
         $artifacts_data = array();
         foreach ($this->artifacts_to_select as $artifact) {
             $artifacts_data[] = array(
                 'id'       => $artifact->getId(),
-                'title'    => $artifact->getTitle(),
+                'title'    => $hp->purify($artifact->getTitle()),
                 'selected' => ($artifact->getId() == $this->destination_id) ? 'selected="selected"' : '',
             );
         }

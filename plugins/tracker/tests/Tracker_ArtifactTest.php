@@ -1460,6 +1460,28 @@ class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
             'linked-artifact-id' => 987));
     }
 
+    public function itCreatesANewChangesetWithdrawingAnExistingAssociation() {
+        $this->request = new Codendi_Request(array(
+            'func'               => 'unassociate-artifact-to', 
+            'linked-artifact-id' => 987));
+
+        $tracker = aTracker()->withId(456)->build();
+        
+        $artifact = $this->GivenAnArtifact($tracker);
+        
+        $field = anArtifactLinkField()->withId(1002)->build();
+        $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
+        $artifact->setFormElementFactory($factory);
+
+        $expected_field_data = array($field->getId() => array('new_values' => '',
+                                                              'removed_values' => array(987 => 1)));
+        $no_comment = $no_email = '';
+        
+        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user, $no_email));
+        
+        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+    }
+    
     public function itCreatesANewChangesetWithANewAssociation() {
         $tracker = aTracker()->withId(456)->build();
         
