@@ -64,7 +64,7 @@ $graph->title->SetFont(FF_FONT2, FS_BOLD);
 
 $graph->xaxis->SetLabelMargin(15);
 $graph->xaxis->SetLabelAlign('right', 'center');
-$graph->xaxis->SetTickLabels($dates);
+$graph->xaxis->SetTickLabels(array_reverse($dates));
 
 $graph->yaxis->SetPos('max');
 $graph->yaxis->SetTitle("Pushes", 'center');
