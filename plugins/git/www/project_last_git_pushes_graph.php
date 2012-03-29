@@ -110,13 +110,6 @@ foreach ($repoList as $repository) {
 $abplot = new AccBarPlot($bplot);
 $abplot->SetShadow();
 
-// We want to display the cumulative commits number of each bar at the top
-$abplot->value->Show();
-$abplot->value->SetFont(FF_FONT1, FS_NORMAL);
-$abplot->value->SetAlign('left', 'center');
-$abplot->value->SetColor("black", "darkred");
-$abplot->value->SetFormat('%.1d commits');
-
 $graph->Add($abplot);
 $graph->Stroke();
 
