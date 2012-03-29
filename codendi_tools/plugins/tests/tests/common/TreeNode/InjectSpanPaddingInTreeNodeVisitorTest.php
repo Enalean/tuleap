@@ -44,11 +44,11 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
         $given = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         
-        $pattern = '%^(.*)'.$this->getPatternSuite("_indent_lastLeft_tree_indent_minusTree").'$%ism';
+        $pattern = $this->getPatternSuite(" indent last-left tree indent minus-tree");
         $givenChild = $given->getChild(0);
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
-        $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, '%^(.*)'.$this->getPatternSuite("_child").'$%ism');
+        $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content child"));
     }
     
     /**
@@ -58,8 +58,9 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
         $given      = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         
-        $pattern    = '%^(.*)'.$this->getPatternSuite("_blank_blank_lastLeft_lastRight").'$%ism';
+        $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");
         $givenChild = $given->getChild(0)->getChild(0);
+        var_dump($givenChild->getData());
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }

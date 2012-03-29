@@ -63,49 +63,28 @@ abstract class InjectSpanPadding extends TuleapTestCase {
         return $givenTreeNode;
     }
 
-    protected function then_GivenTreeNodeData_TreePadding_AssertPattern(TreeNode $givenTreeNode, $pattern) {
+    protected function assertMatchesEqualDataAtIndex($index, TreeNode $givenTreeNode, $expected) {
         $givenData            = $givenTreeNode->getData();
-        $treePaddingIsDefined = isset($givenData['tree-padding']);
+        $treePaddingIsDefined = isset($givenData[$index]);
         $this->assertTrue($treePaddingIsDefined);
-        $this->assertPattern($pattern, $givenData['tree-padding']);
+        preg_match_all('%node-[a-z\-]+%sm', $givenData[$index], $actual);
+        $this->assertEqual($actual[0], $expected);
+    }
+    
+    protected function then_GivenTreeNodeData_TreePadding_AssertPattern(TreeNode $givenTreeNode, $expected) {
+        $this->assertMatchesEqualDataAtIndex('tree-padding', $givenTreeNode, $expected);
     }
 
-    protected function then_GivenTreeNodeData_ContentTemplate_AssertPattern(TreeNode $givenTreeNode, $pattern) {
-        $givenData                = $givenTreeNode->getData();
-        $contentIsDefined = isset($givenData['content-template']);
-        $this->assertTrue($contentIsDefined);
-        $this->assertPattern($pattern, $givenData['content-template']);
+    protected function then_GivenTreeNodeData_ContentTemplate_AssertPattern(TreeNode $givenTreeNode, $expected) {
+        $this->assertMatchesEqualDataAtIndex('content-template', $givenTreeNode, $expected);
     }
     
     /**
      * Build a regexp pattern from a more suitable user langage
      */    
     protected function getPatternSuite($string) {
-        return str_replace(
-            array(
-                '_blank',
-            	'_indent', 
-            	'_pipe',
-            	'_tree',
-            	'_minusTree',
-            	'_minus',
-            	'_child',
-            	'_lastLeft',
-            	'_lastRight'
-            ),
-            array(
-                '(node-blank)(.*)?',
-            	'(node-indent)(.*)?',
-            	'(node-pipe)(.*)?',
-            	'(node-tree)(.*)?',
-            	'(node-minus-tree)(.*)?',
-            	'(node-minus)(.*)?',
-            	'(node-child)(.*)?',
-            	'(node-last-left)(.*)?',
-            	'(node-last-right)(.*)?'
-            ),
-            $string
-        );
+        $string = str_replace(' ', ' node-', $string);
+        return explode(' ', trim($string));
     }
 }
 ?>

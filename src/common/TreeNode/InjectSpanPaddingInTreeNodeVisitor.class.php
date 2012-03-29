@@ -53,9 +53,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         	<span class="node-indent node-last-right">&nbsp;</span>',
         self::STATE_BLANK=>'
         	<span class="node-blank">&nbsp;</span>
-        	<span class="node-blank">&nbsp;</span>
-        	<span class="node-indent node-last-left">&nbsp;</span>
-        	<span class="node-indent node-last-right">&nbsp;</span>',
+        	<span class="node-blank">&nbsp;</span>',
         self::STATE_PIPE=>'
         	<span class="node-indent node-pipe">&nbsp;</span>
         	<span class="node-blank">&nbsp;</span>'
