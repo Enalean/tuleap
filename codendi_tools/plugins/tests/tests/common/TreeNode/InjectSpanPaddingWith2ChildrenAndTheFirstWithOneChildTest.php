@@ -22,7 +22,7 @@
 require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
 require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
-class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectSpanPadding {
+class InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest extends InjectSpanPadding {
 
     protected $treeNode;
     /**
@@ -32,50 +32,29 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
      * |
      * +-Child 1
      * | |
-     * | |-Child 2
-     * | |
-     * | '-Child 3
+     * | '-Child 2
      * |
-     * '-Child 4
+     * '-Child 3
      */
-    protected function given_TwoChildrenWithTheFirstHaving2Children() {
+    protected function given_TwoChildrenWithTheFirstHavingAChild() {
         $parent  = $this->buildBaseTree();
-        $child1 = $parent->getChild(0);
-        
+                
         $child3Data = array(
-        'id'                => '10',
-        'last_changeset_id' => '101112',
-                	'title'             => 'As a user I want to search on trackers',
-                	'artifactlinks'     => '',
-                );
+        	'id'                => '10',
+        	'last_changeset_id' => '101112',
+        	'title'             => 'As a user I want to search on trackers',
+        	'artifactlinks'     => '',
+        );
         $child3 = new TreeNode($child3Data);
         $child3->setId($child3Data['id']);
         
-        $child1->addChild($child3);
-        /**
-         * Add child 3 artifact link to child 1
-         */
-        $child1Data = $child1->getData();
-        $child1Data['artifactlinks'].=',10';
-        
-        $child1->setData($child1Data);
-        
-        $child4Data = array(
-        	'id'                => '12',
-        	'last_changeset_id' => '131415',
-        	'title'             => 'As a user I want to search on all trackers',
-        	'artifactlinks'     => '',
-        );
-        $child4 = new TreeNode($child4Data);
-        $child4->setId($child4Data['id']);
-        
-        $parent->addChild($child4);
+        $parent->addChild($child3);
         
         return $parent;
     }
     
-    public function itShouldSetDataToFirstChildThatMatches_IndentPipeTreeIndentMinus_treeAndChild() {
-        $given = $this->given_TwoChildrenWithTheFirstHaving2Children();
+    public function itShouldSetDataToChild1ThatMatches_IndentPipeTreeIndentMinus_treeAndChild() {
+        $given = $this->given_TwoChildrenWithTheFirstHavingAChild();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         
         $pattern = '%^(.*)'.$this->getPatternSuite("_indent_pipe_tree_indent_minusTree").'$%ism';
@@ -83,6 +62,26 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
         $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, '%^(.*)'.$this->getPatternSuite("_child").'$%ism');
+    }
+    
+    public function itShouldSetDataToChild2ThatMatches_IndentPipeBlankIndentLastLeftIndentLastRight() {
+        $given      = $this->given_TwoChildrenWithTheFirstHavingAChild();
+        $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
+        
+        $pattern    = '%^(.*)'.$this->getPatternSuite("_indent_pipe_blank_indent_lastLeft_indent_lastRight").'$%ism';
+        $givenChild = $given->getChild(0)->getChild(0);
+        
+        $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
+    }
+    
+    public function itShouldSetDataToChild3ThatMatches_Last_LeftLast_Right() {
+        $given      = $this->given_TwoChildrenWithTheFirstHavingAChild();
+        $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
+        
+        $pattern    = '%^(.*)'.$this->getPatternSuite("_lastLeft_lastRight").'$%ism';
+        $givenChild = $given->getChild(1);
+        
+        $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
 }
 ?>
