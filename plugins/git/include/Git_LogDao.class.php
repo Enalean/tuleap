@@ -37,11 +37,11 @@ class Git_LogDao extends DataAccessObject {
         $week          = $this->da->escapeInt($week);
         $sql = "SELECT COUNT(*) AS pushes,
                 repository_id AS repo,
-                WEEK(FROM_UNIXTIME(push_date)) AS week,
+                WEEK(push_date) AS week,
                 SUM(commits_number) AS commits
                 FROM plugin_git_log
                 WHERE repository_id = $repository_id
-                AND WEEK(FROM_UNIXTIME(push_date)) = $week
+                AND WEEK(push_date) = $week
                 GROUP BY week, repo;
                ";
         return $this->retrieve($sql);
