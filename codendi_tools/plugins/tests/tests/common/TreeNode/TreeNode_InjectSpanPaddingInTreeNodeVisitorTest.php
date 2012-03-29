@@ -19,100 +19,64 @@
  */
 
 require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
+require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
-class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends TuleapTestCase {
+class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
 
     protected $treeNode;
     
     protected function given_AParentWithOneChildTreeNode() {
-        $artifacts = array(
-        array(
-                        'id'                => '6',
-                        'last_changeset_id' => '12345',
-                        'title'             => 'As a user I want to search on shared fields',
-                        'artifactlinks'     => '8',
-        ),
-        array(
-                        'id'                => '8',
-                        'last_changeset_id' => '56789',
-                        'title'             => 'Add the form',
-                        'artifactlinks'     => '',
-        )
+        $parent  = new TreeNode();
+        $child1Data = array(
+        	'id'                => '6',
+        	'last_changeset_id' => '12345',
+        	'title'             => 'As a user I want to search on shared fields',
+        	'artifactlinks'     => '8',
         );
         
-        $root  = new TreeNode();
-        $node0 = new TreeNode($artifacts[0]);
-        $node0->setId($artifacts[0]['id']);
-        $node1 = new TreeNode($artifacts[1]);
-        $node1->setId($artifacts[1]['id']);
+        $child1 = new TreeNode($child1Data);
+        $child1->setId($child1Data['id']);
         
-        $root->addChild($node0);
-        $node0->addChild($node1);
-        return $root;
+        $child2Data = array(
+        	'id'                => '8',
+        	'last_changeset_id' => '56789',
+        	'title'             => 'Add the form',
+        	'artifactlinks'     => '',
+        );
+        $child2 = new TreeNode($child2Data);
+        $child2->setId($child2Data['id']);
+        
+        
+        $parent->addChild($child1);
+        $child1->addChild($child2);
+        return $parent;
     }
+    
     /**
-     * When visit
+     * 
      */
-    protected function when_VisitTreeNodeWith_InjectSpanPadding( TreeNode &$treeNode) {
-        $visitor = new TreeNode_InjectSpanPaddingInTreeNodeVisitor(true);
-        $treeNode->accept($visitor);
-        return $treeNode;
-    }
-    
-    protected function then_ParentData_TreePadding_AssertPattern(TreeNode $parent, $pattern) {
-        $parentData = $parent->getData();
-        $this->assertPattern($pattern, $parentData['tree-padding']);
-    }
-    
-    protected function then_ParentData_ContentTemplate_AssertPattern(TreeNode $parent, $pattern) {
-        $parentData = $parent->getData();
-        $this->assertPattern($pattern, $parentData['content-template']);
-    }
-    
     public function itShouldSetDataToFirstChildThatMatches_IndentLast_leftTreeIndentMinus_treeAndChild() {
         $given = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
+        
         $pattern = '%^(.*)'.$this->getPatternSuite("_indent_lastLeft_tree_indent_minusTree").'$%ism';
+        $givenChild = $given->getChild(0);
         
-        $this->then_ParentData_TreePadding_AssertPattern($given->getChild(0), $pattern);
-        $this->then_ParentData_ContentTemplate_AssertPattern($given->getChild(0), '%^(.*)'.$this->getPatternSuite("_child").'$%ism');
+        $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
+        $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, '%^(.*)'.$this->getPatternSuite("_child").'$%ism');
     }
     
+    /**
+     * 
+     */
     public function itShouldSetDataToSecondChildThatMatches_BlankBlankLast_LeftLast_Right() {
-        $given = $this->given_AParentWithOneChildTreeNode();
+        $given      = $this->given_AParentWithOneChildTreeNode();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
-        $pattern = '%^(.*)'.$this->getPatternSuite("_blank_blank_lastLeft_lastRight").'$%ism';
         
-        $this->then_ParentData_TreePadding_AssertPattern($given->getChild(0)->getChild(0), $pattern);
+        $pattern    = '%^(.*)'.$this->getPatternSuite("_blank_blank_lastLeft_lastRight").'$%ism';
+        $givenChild = $given->getChild(0)->getChild(0);
+        
+        $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
-    
-    protected function getPatternSuite($string) {
-        return str_replace(
-            array(
-                '_blank',
-            	'_indent', 
-            	'_pipe',
-            	'_tree',
-            	'_minusTree',
-            	'_minus',
-            	'_child',
-            	'_lastLeft',
-            	'_lastRight'
-            ),
-            array(
-                '(node-blank)(.*)?',
-            	'(node-indent)(.*)?',
-            	'(node-pipe)(.*)?',
-            	'(node-tree)(.*)?',
-            	'(node-minus-tree)(.*)?',
-            	'(node-minus)(.*)?',
-            	'(node-child)(.*)?',
-            	'(node-last-left)(.*)?',
-            	'(node-last-right)(.*)?'
-            ),
-            $string
-        );
-    }
-    
 }
 ?>
