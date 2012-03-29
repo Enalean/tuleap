@@ -1,4 +1,8 @@
 Version 4.0.28 (Not released yet)
+   == Bug Fix ==
+   * homepage: three feature boxes displayed the same content
+   * svn: Fix double escaping issue in commit message in web ui
+
    == Enhancement ==
    * SVN notifications by path: Add the possibility, via post-commit hook, to controls what notification
    gets sent. An SVN admin would be able to specify an SVN repository pattern
@@ -6,10 +10,10 @@ Version 4.0.28 (Not released yet)
 
    == Plugins ==
    * AgileDashoard v0.7
-   * Tracker v5.4.6
+   * Tracker v5.4.7
    * TrackerDateReminder v1.2.1
    * Git 2.1.6
-   * Docman 2.25.1
+   * Docman 2.25.2
 
    == Development ==
    * Improve output of UnitTest to make them more readable.
