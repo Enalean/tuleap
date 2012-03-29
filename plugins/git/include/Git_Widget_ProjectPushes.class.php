@@ -23,6 +23,9 @@
  */
 class Git_Widget_ProjectPushes extends Widget {
 
+    //The default duration is 3 months back
+    public $duration = 12;
+
     /**
      * Constructor of the widget.
      */
@@ -76,8 +79,29 @@ class Git_Widget_ProjectPushes extends Widget {
         return $GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_description');
     }
 
-    function isAjax() {
-        //TODO
+    /**
+     * Widget has preferences
+     *
+     * @return Boolean
+     */
+    function hasPreferences() {
+        return true;
+    }
+
+    /**
+     * Display preferences form
+     *
+     * @return String
+     */
+    function getPreferences() {
+        return "<table>
+                    <tr>
+                        <td> Retrieve pushes for the last </td>
+                        <td><input name='plugin_git_user_pushes_offset' value='".$this->duration."'/></td>
+			<td> week(s). </td>
+                    </tr>                    
+                </table>";
+        
     }
 }
 ?>
