@@ -21,7 +21,7 @@
 require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
 require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
-class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
+class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
 
     protected $treeNode;
     /**
