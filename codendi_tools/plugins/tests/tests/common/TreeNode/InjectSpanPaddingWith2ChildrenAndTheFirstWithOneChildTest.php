@@ -56,18 +56,18 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest extends InjectSp
         $given = $this->given_TwoChildrenWithTheFirstHavingAChild();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         
-        $pattern = '%^(.*)'.$this->getPatternSuite("_indent_pipe_tree_indent_minusTree").'$%ism';
+        $pattern = $this->getPatternSuite(" indent pipe tree indent minus-tree");
         $givenChild = $given->getChild(0);
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
-        $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, '%^(.*)'.$this->getPatternSuite("_child").'$%ism');
+        $this->then_GivenTreeNodeData_ContentTemplate_AssertPattern($givenChild, $this->getPatternSuite(" content child"));
     }
     
     public function itShouldSetDataToChild2ThatMatches_IndentPipeBlankIndentLastLeftIndentLastRight() {
         $given      = $this->given_TwoChildrenWithTheFirstHavingAChild();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         
-        $pattern    = '%^(.*)'.$this->getPatternSuite("_indent_pipe_blank_indent_lastLeft_indent_lastRight").'$%ism';
+        $pattern    = $this->getPatternSuite(" indent pipe blank indent last-left indent last-right");
         $givenChild = $given->getChild(0)->getChild(0);
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
@@ -77,7 +77,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest extends InjectSp
         $given      = $this->given_TwoChildrenWithTheFirstHavingAChild();
         $this->when_VisitTreeNodeWith_InjectSpanPadding($given);
         
-        $pattern    = '%^(.*)'.$this->getPatternSuite("_lastLeft_lastRight").'$%ism';
+        $pattern    = $this->getPatternSuite(" indent last-left indent last-right");
         $givenChild = $given->getChild(1);
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);

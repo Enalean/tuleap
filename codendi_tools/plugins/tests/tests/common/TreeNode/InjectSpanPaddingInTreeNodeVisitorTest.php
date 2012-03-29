@@ -60,7 +60,6 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
         
         $pattern    = $this->getPatternSuite(" blank blank indent last-left indent last-right");
         $givenChild = $given->getChild(0)->getChild(0);
-        var_dump($givenChild->getData());
         
         $this->then_GivenTreeNodeData_TreePadding_AssertPattern($givenChild, $pattern);
     }
