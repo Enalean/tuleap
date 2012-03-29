@@ -26,6 +26,40 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
      * @var boolean
      */
     protected $collapsable;
+    
+    protected $showTreeTpl = array(
+        self::STATE_NODE=> '
+        	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
+        	<span class="node-indent node-minus-tree">&nbsp;</span>',
+        self::STATE_LAST=>'
+        	<span class="node-indent node-last-left"><a class="node-tree">&nbsp;</a></span>
+        	<span class="node-indent node-minus-tree">&nbsp;</span>',
+        self::STATE_BLANK=>'
+        	<span class="node-blank">&nbsp;</span>
+        	<span class="node-blank">&nbsp;</span>
+        	<span class="node-indent node-last-left">&nbsp;</span>
+        	<span class="node-indent node-last-right">&nbsp;</span>',
+        self::STATE_PIPE=>'
+        	<span class="node-indent node-pipe"><a class="node-tree">&nbsp;</a></span>
+        	<span class="node-indent node-minus-tree">&nbsp;</span>'
+    );
+    
+    protected $showNormalTpl = array(
+        self::STATE_NODE=> '
+        	<span class="node-indent node-pipe">&nbsp;</span>
+        	<span class="node-indent node-minus">&nbsp;</span>',
+        self::STATE_LAST=>'
+        	<span class="node-indent node-last-left">&nbsp;</span>
+        	<span class="node-indent node-last-right">&nbsp;</span>',
+        self::STATE_BLANK=>'
+        	<span class="node-blank">&nbsp;</span>
+        	<span class="node-blank">&nbsp;</span>
+        	<span class="node-indent node-last-left">&nbsp;</span>
+        	<span class="node-indent node-last-right">&nbsp;</span>',
+        self::STATE_PIPE=>'
+        	<span class="node-indent node-pipe">&nbsp;</span>
+        	<span class="node-blank">&nbsp;</span>'
+    );
 
     public function __construct($collapsable = false) {
         $this->collapsable = $collapsable;
@@ -52,45 +86,17 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $showTree = $this->collapsable && $child->hasChildren();
         $html     = '';
         foreach ($states as $state_id) {
-            switch($state_id) {
-                case self::STATE_NODE: //0
-                    if ($showTree) {
-                        $minus = '<span class="node-indent node-minus-tree">&nbsp;</span>';
-                        $content = '<a class="node-tree">&nbsp;</a>';
-                    } else {
-                        $minus = '<span class="node-indent node-minus">&nbsp;</span>';
-                        $content = '&nbsp;';
-                    }
-                    $html.= '<span class="node-indent node-pipe">'.$content.'</span>'.$minus;
-                    break;
-                case self::STATE_LAST: //1
-                    if ($showTree) {
-                        $leftContent = '<a class="node-tree">&nbsp;</a>';
-                        $right       = '<span class="node-indent node-minus-tree">&nbsp;</span>';
-                    } else {
-                        $leftContent = '&nbsp;';
-                        $right       = '<span class="node-indent node-last-right">&nbsp;</span>';
-                    }
-                    $html.= '<span class="node-indent node-last-left">'.$leftContent.'</span>'.$right;
-                    break;
-                case self::STATE_BLANK: //2
-                    $html.= '<span class="node-blank">&nbsp;</span><span class="node-blank">&nbsp;</span>'
-                    .'<span class="node-indent node-last-left">&nbsp;</span>'
-                    .'<span class="node-indent node-last-right">&nbsp;</span>';
-                    break;
-                case self::STATE_PIPE: //3
-                    if ($showTree) {
-                        $content = '<a class="node-tree">&nbsp;</a>';
-                        $right   = '<span class="node-indent node-minus-tree">&nbsp;</span>';
-                    } else {
-                        $content = '&nbsp;';
-                        $right   = '<span class="node-blank">&nbsp;</span>';
-                    }
-                    $html.= '<span class="node-indent node-pipe">'.$content.'</span>'.$right;
-                    break;
-            }
+            $html.= $this->getPaddingForAState($state_id, $showTree);
         }
         return $html;
+    }
+    
+    protected function getPaddingForAState($state, $showTree) {
+        if ($showTree) {
+            return $this->showTreeTpl[$state];
+        } else {
+            return $this->showNormalTpl[$state];
+        }
     }
 }
 ?>
