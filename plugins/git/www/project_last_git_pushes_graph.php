@@ -50,7 +50,7 @@ for ($i = $start_of_period ; $i <= $today ; $i += $week) {
 
 $graph = new Graph(580, 850);
 $graph->SetAngle(90);
-$graph->SetScale("textlin");
+$graph->SetScale("int");
 
 // The negative margins are necessary since we
 // have rotated the image 90 degress and shifted the 
@@ -109,6 +109,7 @@ foreach ($repoList as $repository) {
 // Create the accumulated bar plot
 $abplot = new AccBarPlot($bplot);
 $abplot->SetShadow();
+$abplot->SetAbsWidth(10);
 
 $graph->Add($abplot);
 $graph->Stroke();
