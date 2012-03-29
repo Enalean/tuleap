@@ -24,7 +24,16 @@ require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 class TreeNode_InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
 
     protected $treeNode;
-    
+    /**
+     * Return this Tree
+     * 
+     * ROOT
+     * |
+     * +-Child 1
+     * 	 |
+     * 	 '-Child 2
+     * 
+     */
     protected function given_AParentWithOneChildTreeNode() {
         $parent  = new TreeNode();
         $child1Data = array(
