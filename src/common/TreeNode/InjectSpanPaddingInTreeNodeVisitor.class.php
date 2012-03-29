@@ -53,17 +53,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $html     = '';
         foreach ($states as $state_id) {
             switch($state_id) {
-                case self::STATE_PIPE:
-                    if ($showTree) {
-                        $content = '<a class="node-tree">&nbsp;</a>';
-                        $right   = '<span class="node-indent node-minus-tree">&nbsp;</span>';
-                    } else {
-                        $content = '&nbsp;';
-                        $right   = '<span class="node-blank">&nbsp;</span>';
-                    }
-                    return '<span class="node-indent node-pipe">'.$content.'</span>'.$right;
-                    break;
-                case self::STATE_NODE:
+                case self::STATE_NODE: //0
                     if ($showTree) {
                         $minus = '<span class="node-indent node-minus-tree">&nbsp;</span>';
                         $content = '<a class="node-tree">&nbsp;</a>';
@@ -71,9 +61,9 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
                         $minus = '<span class="node-indent node-minus">&nbsp;</span>';
                         $content = '&nbsp;';
                     }
-                    return '<span class="node-indent node-pipe">'.$content.'</span>'.$minus;
+                    $html.= '<span class="node-indent node-pipe">'.$content.'</span>'.$minus;
                     break;
-                case self::STATE_LAST:
+                case self::STATE_LAST: //1
                     if ($showTree) {
                         $leftContent = '<a class="node-tree">&nbsp;</a>';
                         $right       = '<span class="node-indent node-minus-tree">&nbsp;</span>';
@@ -81,14 +71,26 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
                         $leftContent = '&nbsp;';
                         $right       = '<span class="node-indent node-last-right">&nbsp;</span>';
                     }
-                    return '<span class="node-indent node-last-left">'.$leftContent.'</span>'.$right;
+                    $html.= '<span class="node-indent node-last-left">'.$leftContent.'</span>'.$right;
                     break;
-                case self::STATE_BLANK:
-                    return '<span class="node-blank">&nbsp;</span><span class="node-blank">&nbsp;</span>'
+                case self::STATE_BLANK: //2
+                    $html.= '<span class="node-blank">&nbsp;</span><span class="node-blank">&nbsp;</span>'
                     .'<span class="node-indent node-last-left">&nbsp;</span>'
                     .'<span class="node-indent node-last-right">&nbsp;</span>';
+                    break;
+                case self::STATE_PIPE: //3
+                    if ($showTree) {
+                        $content = '<a class="node-tree">&nbsp;</a>';
+                        $right   = '<span class="node-indent node-minus-tree">&nbsp;</span>';
+                    } else {
+                        $content = '&nbsp;';
+                        $right   = '<span class="node-blank">&nbsp;</span>';
+                    }
+                    $html.= '<span class="node-indent node-pipe">'.$content.'</span>'.$right;
+                    break;
             }
         }
+        return $html;
     }
 }
 ?>
