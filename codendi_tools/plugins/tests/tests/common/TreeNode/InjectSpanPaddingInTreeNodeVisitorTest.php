@@ -23,7 +23,6 @@ require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
 class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
 
-    protected $treeNode;
     /**
      * Return this Tree
      * 
@@ -35,30 +34,7 @@ class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
      * 
      */
     protected function given_AParentWithOneChildTreeNode() {
-        $parent  = new TreeNode();
-        $child1Data = array(
-        	'id'                => '6',
-        	'last_changeset_id' => '12345',
-        	'title'             => 'As a user I want to search on shared fields',
-        	'artifactlinks'     => '8',
-        );
-        
-        $child1 = new TreeNode($child1Data);
-        $child1->setId($child1Data['id']);
-        
-        $child2Data = array(
-        	'id'                => '8',
-        	'last_changeset_id' => '56789',
-        	'title'             => 'Add the form',
-        	'artifactlinks'     => '',
-        );
-        $child2 = new TreeNode($child2Data);
-        $child2->setId($child2Data['id']);
-        
-        
-        $parent->addChild($child1);
-        $child1->addChild($child2);
-        return $parent;
+        return $this->buildBaseTree();
     }
     
     /**

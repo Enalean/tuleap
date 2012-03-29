@@ -37,26 +37,8 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest extends InjectSp
      * '-Child 3
      */
     protected function given_TwoChildrenWithTheFirstHavingAChild() {
-        $parent  = new TreeNode();
-        $child1Data = array(
-        	'id'                => '6',
-        	'last_changeset_id' => '12345',
-        	'title'             => 'As a user I want to search on shared fields',
-        	'artifactlinks'     => '8',
-        );
-
-        $child1 = new TreeNode($child1Data);
-        $child1->setId($child1Data['id']);
-
-        $child2Data = array(
-        	'id'                => '8',
-        	'last_changeset_id' => '56789',
-        	'title'             => 'Add the form',
-        	'artifactlinks'     => '',
-        );
-        $child2 = new TreeNode($child2Data);
-        $child2->setId($child2Data['id']);
-        
+        $parent  = $this->buildBaseTree();
+                
         $child3Data = array(
         	'id'                => '10',
         	'last_changeset_id' => '101112',
@@ -65,10 +47,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest extends InjectSp
         );
         $child3 = new TreeNode($child3Data);
         $child3->setId($child3Data['id']);
-
-
-        $parent->addChild($child1);
-        $child1->addChild($child2);
+        
         $parent->addChild($child3);
         
         return $parent;
