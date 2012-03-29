@@ -24,13 +24,18 @@
 class Git_Widget_ProjectPushes extends Widget {
 
     //The default duration is 3 months back
-    public $duration = 12;
+    public $duration;
 
     /**
      * Constructor of the widget.
      */
     public function __construct() {
         parent::__construct('plugin_git_project_pushes');
+
+        $this->duration = user_get_preference('plugin_git_project_pushes_duration');
+        if (empty($this->duration)) {
+            $this->duration = 12;
+        }
     }
 
     public function canBeUsedByProject($project) {
@@ -80,6 +85,28 @@ class Git_Widget_ProjectPushes extends Widget {
     }
 
     /**
+     * Update preferences
+     *
+     * @param Array $request HTTP request
+     *
+     * @return Boolean
+     */
+    function updatePreferences($request) {
+        $request->valid(new Valid_String('cancel'));
+        $vWeeks   = new Valid_UInt('plugin_git_project_pushes_duration');
+        $vWeeks->required();
+        if (!$request->exist('cancel')) {            
+            if ($request->valid($vWeeks)) {
+                $this->duration = $request->get('plugin_git_project_pushes_duration');
+            } else {
+                $this->duration = 12;
+            }
+            user_set_preference('plugin_git_project_pushes_duration', $this->duration);
+        }
+        return true;
+    }
+
+    /**
      * Widget has preferences
      *
      * @return Boolean
@@ -97,7 +124,7 @@ class Git_Widget_ProjectPushes extends Widget {
         return "<table>
                     <tr>
                         <td> Retrieve pushes for the last </td>
-                        <td><input name='plugin_git_user_pushes_offset' value='".$this->duration."'/></td>
+                        <td><input name='plugin_git_project_pushes_duration' value='".$this->duration."'/></td>
 			<td> week(s). </td>
                     </tr>                    
                 </table>";
