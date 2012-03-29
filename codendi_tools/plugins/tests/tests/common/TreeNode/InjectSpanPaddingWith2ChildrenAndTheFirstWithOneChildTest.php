@@ -26,24 +26,23 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWithOneChildTest extends InjectSp
 
     protected $treeNode;
     /**
-     * Return this Tree
+     * Return the Tree
      *
      * ROOT
      * |
-     * +-Child 1
+     * +-Child 1 (id:6, al:8)
      * | |
-     * | '-Child 2
+     * | '-Child 2 (id:8)
      * |
-     * '-Child 3
+     * '-Child 3 (id:10)
      */
     protected function given_TwoChildrenWithTheFirstHavingAChild() {
         $parent  = $this->buildBaseTree();
                 
         $child3Data = array(
-        	'id'                => '10',
-        	'last_changeset_id' => '101112',
-        	'title'             => 'As a user I want to search on trackers',
-        	'artifactlinks'     => '',
+            'id'            => '10',
+            'title'         => 'Child 3',
+            'artifactlinks' => '',
         );
         $child3 = new TreeNode($child3Data);
         $child3->setId($child3Data['id']);

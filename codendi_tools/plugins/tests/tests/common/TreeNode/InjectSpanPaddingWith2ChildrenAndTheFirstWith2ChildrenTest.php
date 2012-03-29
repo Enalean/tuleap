@@ -30,24 +30,23 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
      *
      * ROOT
      * |
-     * +-Child 1
+     * +-Child 1 (id:6, al:8, 10)
      * | |
-     * | |-Child 2
+     * | |-Child 2 (id:8)
      * | |
-     * | '-Child 3
+     * | '-Child 3 (id:10)
      * |
-     * '-Child 4
+     * '-Child 4 (id:12)
      */
     protected function given_TwoChildrenWithTheFirstHaving2Children() {
         $parent  = $this->buildBaseTree();
         $child1 = $parent->getChild(0);
         
         $child3Data = array(
-        'id'                => '10',
-        'last_changeset_id' => '101112',
-                    'title'             => 'As a user I want to search on trackers',
-                    'artifactlinks'     => '',
-                );
+        	'id'           => '10',
+        	'title'        => 'Child 3',
+            'artifactlinks'=> '',
+        );
         $child3 = new TreeNode($child3Data);
         $child3->setId($child3Data['id']);
         
@@ -57,14 +56,12 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
          */
         $child1Data = $child1->getData();
         $child1Data['artifactlinks'].=',10';
-        
         $child1->setData($child1Data);
         
         $child4Data = array(
-            'id'                => '12',
-            'last_changeset_id' => '131415',
-            'title'             => 'As a user I want to search on all trackers',
-            'artifactlinks'     => '',
+            'id'            => '12',
+            'title'         => 'Child 4',
+            'artifactlinks' => '',
         );
         $child4 = new TreeNode($child4Data);
         $child4->setId($child4Data['id']);

@@ -22,17 +22,17 @@ require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
 require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
 class InjectSpanPaddingInTreeNodeVisitorTest extends InjectSpanPadding {
-
+    
     /**
-     * Return this Tree
-     * 
-     * ROOT
-     * |
-     * +-Child 1
-     * 	 |
-     * 	 '-Child 2
-     * 
-     */
+    * Return the Tree
+     *
+    * ROOT
+    * |
+    * +-Child 1 (id:6, al:8)
+    * 	 |
+    * 	 '-Child 2 (id:8)
+    *
+    */
     protected function given_AParentWithOneChildTreeNode() {
         return $this->buildBaseTree();
     }

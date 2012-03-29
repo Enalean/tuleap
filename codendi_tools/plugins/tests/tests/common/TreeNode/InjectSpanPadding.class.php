@@ -20,21 +20,20 @@
 abstract class InjectSpanPadding extends TuleapTestCase {
 
     /**
-    * Return this Tree
+    * Return the Tree
     *
     * ROOT
     * |
-    * +-Child 1
+    * +-Child 1 (id:6, al:8)
     * 	 |
-    * 	 '-Child 2
+    * 	 '-Child 2 (id:8)
     *
     */
     protected function buildBaseTree() {
         $parent  = new TreeNode();
         $child1Data = array(
             	'id'                => '6',
-            	'last_changeset_id' => '12345',
-            	'title'             => 'As a user I want to search on shared fields',
+            	'title'             => 'Child 1',
             	'artifactlinks'     => '8',
         );
     
@@ -43,8 +42,7 @@ abstract class InjectSpanPadding extends TuleapTestCase {
     
         $child2Data = array(
             	'id'                => '8',
-            	'last_changeset_id' => '56789',
-            	'title'             => 'Add the form',
+            	'title'             => 'Child 2',
             	'artifactlinks'     => '',
         );
         $child2 = new TreeNode($child2Data);
