@@ -49,10 +49,7 @@ for ($i = $start_of_period ; $i <= $today ; $i += $week) {
 }
 
 $nb_repo = count($repoList);
-
 $graph = new Chart(500, 300+16*$nb_repo);
-//$graph->SetAngle(90);
-//$graph->SetScale("int");
 $graph->SetScale('textlin');
 
 $graph->img->SetMargin(40,20,20,80+16*$nb_repo);
@@ -66,15 +63,13 @@ $graph->xaxis->SetTickLabels($dates);
 
 $graph->yaxis->SetPos('min');
 $graph->yaxis->SetTitle("Pushes", 'center');
-//$graph->yaxis->SetTitleSide(SIDE_RIGHT);
+
 $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
 $graph->yaxis->title->SetAngle(90);
 $graph->yaxis->title->Align('center', 'top');
 $graph->yaxis->SetTitleMargin(30);
 
-//$graph->yaxis->SetLabelSide(SIDE_RIGHT);
 $graph->yaxis->SetLabelAlign('center', 'top');
-
 $graph->legend->Pos(0.1,0.98,'right', 'bottom');
 
 $nb_repo = count($repoList);
@@ -97,9 +92,8 @@ foreach ($repoList as $repository) {
         }
     }
     $b2plot = new BarPlot($pushes);
-    $color = $colors[$i++ % $nb_colors];
-    $b2plot->SetColor($color.':0.7');
-    $b2plot->setFillColor($color);
+    $color = $colors[$i++ % $nb_colors];   
+    $b2plot->SetFillgradient($color, $color.':0.6', GRAD_LEFT_REFLECTION);
     $b2plot->SetLegend($repository['repository_name']);
     $bplot[] = $b2plot;
 }
