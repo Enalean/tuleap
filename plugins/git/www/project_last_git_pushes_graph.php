@@ -48,36 +48,34 @@ for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $weekNum[] = intval(date('W', $i));
 }
 
-$graph = new Graph(580, 850);
-$graph->SetAngle(90);
-$graph->SetScale("int");
+$nb_repo = count($repoList);
 
-// The negative margins are necessary since we
-// have rotated the image 90 degress and shifted the 
-// meaning of width, and height. This means that the 
-// left and right margins now becomes top and bottom
-// calculated with the image width and not the height.
-$graph->img->SetMargin(-10, -10, 200, 350);
+$graph = new Chart(500, 300+16*$nb_repo);
+//$graph->SetAngle(90);
+//$graph->SetScale("int");
+$graph->SetScale('textlin');
+
+$graph->img->SetMargin(40,20,20,80+16*$nb_repo);
 $graph->SetMarginColor('white');
 $graph->title->Set('Project last git pushes');
 $graph->title->SetFont(FF_FONT2, FS_BOLD);
 
-$graph->xaxis->SetLabelMargin(15);
+$graph->xaxis->SetLabelMargin(25);
 $graph->xaxis->SetLabelAlign('right', 'center');
-$graph->xaxis->SetTickLabels(array_reverse($dates));
+$graph->xaxis->SetTickLabels($dates);
 
-$graph->yaxis->SetPos('max');
+$graph->yaxis->SetPos('min');
 $graph->yaxis->SetTitle("Pushes", 'center');
-$graph->yaxis->SetTitleSide(SIDE_RIGHT);
+//$graph->yaxis->SetTitleSide(SIDE_RIGHT);
 $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
-$graph->yaxis->title->SetAngle(0);
-$graph->yaxis->title->Align('left', 'top');
+$graph->yaxis->title->SetAngle(90);
+$graph->yaxis->title->Align('center', 'top');
 $graph->yaxis->SetTitleMargin(30);
 
-$graph->yaxis->SetLabelSide(SIDE_RIGHT);
+//$graph->yaxis->SetLabelSide(SIDE_RIGHT);
 $graph->yaxis->SetLabelAlign('center', 'top');
 
-$graph->legend->Pos(0.1,0.95,'left', 'bottom');
+$graph->legend->Pos(0.1,0.98,'right', 'bottom');
 
 $nb_repo = count($repoList);
 $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
@@ -109,7 +107,7 @@ foreach ($repoList as $repository) {
 // Create the accumulated bar plot
 $abplot = new AccBarPlot($bplot);
 $abplot->SetShadow();
-$abplot->SetAbsWidth(10);
+$abplot->SetAbsWidth(15);
 
 $graph->Add($abplot);
 $graph->Stroke();
