@@ -529,14 +529,16 @@ class Git extends PluginController {
 
     /**
      * Add pushes' logs stuff
-     * 
+     *
      * @param Array $params
-     * 
+     *
+     * @return Void
      */
     public function logsDaily($params) {
         $logger  = new GitLog();
         $logger->logsDaily($params);
     }
+
 }
 
 ?>

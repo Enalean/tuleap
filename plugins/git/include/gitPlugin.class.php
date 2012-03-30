@@ -396,6 +396,8 @@ class GitPlugin extends Plugin {
      * Add log access for git pushs
      * 
      * @param Array $params parameters of the event
+     *
+     * @return Void
      */
     function logsDaily($params) {
         $pm      = ProjectManager::instance();
@@ -407,6 +409,9 @@ class GitPlugin extends Plugin {
         }
     }
 
+    /**
+     * TODO: Add function comment
+     */
     function myPageBox($params) {
         switch ($params['widget']) {
             case 'plugin_git_user_pushes':
@@ -422,6 +427,9 @@ class GitPlugin extends Plugin {
         }
     }
 
+    /**
+     * TODO: Add function comment
+     */
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {

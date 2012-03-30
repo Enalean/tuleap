@@ -21,6 +21,7 @@
 require_once('Git_LogDao.class.php');
 
 class GitLog {
+
     /**
      * @var Git_LogDao
      */
@@ -43,11 +44,9 @@ class GitLog {
      * @return Void
      */
     function logsDaily($params) {
-            $params['logs'][] = array(
-            'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
-            'field' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_field'),
-            'title' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_title')
-        );
+        $params['logs'][] = array('sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
+                                  'field' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_field'),
+                                  'title' => $GLOBALS['Language']->getText('plugin_git', 'logsdaily_title'));
     }
 }
 ?>

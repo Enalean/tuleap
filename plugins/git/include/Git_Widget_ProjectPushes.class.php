@@ -28,6 +28,8 @@ class Git_Widget_ProjectPushes extends Widget {
 
     /**
      * Constructor of the widget.
+     *
+     * @return Void
      */
     public function __construct() {
         parent::__construct('plugin_git_project_pushes');
@@ -125,10 +127,11 @@ class Git_Widget_ProjectPushes extends Widget {
                     <tr>
                         <td> Retrieve pushes for the last </td>
                         <td><input name='plugin_git_project_pushes_duration' value='".$this->duration."'/></td>
-			<td> week(s). </td>
-                    </tr>                    
+                        <td> week(s). </td>
+                    </tr>
                 </table>";
         
     }
 }
+
 ?>
