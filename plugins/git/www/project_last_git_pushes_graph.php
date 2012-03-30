@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require 'pre.php';
+require_once 'pre.php';
 require_once 'common/chart/Chart.class.php';
 require_once dirname(__FILE__).'/../include/GitDao.class.php';
 
@@ -54,13 +54,13 @@ $weekNum = array();
 for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $dates[] = date('M d', $i);
     $weekNum[] = intval(date('W', $i));
-    $year[] = intval(date('Y',$i));
+    $year[] = intval(date('Y', $i));
 }
 $nb_repo = count($repoList);
 $graph = new Chart(500, 300+16*$nb_repo);
 $graph->SetScale('textlin');
 
-$graph->img->SetMargin(40,20,20,80+16*$nb_repo);
+$graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
 $graph->SetMarginColor('white');
 $graph->title->Set('Project last git pushes');
 $graph->title->SetFont(FF_FONT2, FS_BOLD);
@@ -78,13 +78,13 @@ $graph->yaxis->title->Align('center', 'top');
 $graph->yaxis->SetTitleMargin(30);
 
 $graph->yaxis->SetLabelAlign('center', 'top');
-$graph->legend->Pos(0.1,0.98,'right', 'bottom');
+$graph->legend->Pos(0.1, 0.98, 'right', 'bottom');
 
-$nb_repo = count($repoList);
-$colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
+$nb_repo   = count($repoList);
+$colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
 $nb_colors = count($colors);
-$i = 0;
-$bplot = array();
+$i         = 0;
+$bplot     = array();
 foreach ($repoList as $repository) {
     $pushes = array();
     $gitLogDao = new Git_LogDao();
@@ -92,15 +92,15 @@ foreach ($repoList as $repository) {
         $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $year[$key]);
         if ($res && !$res->isError()) {
             if ($res->valid()) {
-                $row = $res->current();
+                $row          = $res->current();
                 $pushes[$key] = intval($row['pushes']);
                 $res->next();
             }
         }
-    $pushes = array_pad($pushes, $nb_weeks, 0);
+        $pushes = array_pad($pushes, $nb_weeks, 0);
     }
     $b2plot = new BarPlot($pushes);
-    $color = $colors[$i++ % $nb_colors];   
+    $color  = $colors[$i++ % $nb_colors];   
     $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
     $b2plot->SetLegend($repository['repository_name']);
     $bplot[] = $b2plot;
