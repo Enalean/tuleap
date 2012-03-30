@@ -81,10 +81,14 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
     }
     
     protected function getHtmlPaddingFromStates($child, $states) {
-        $showTree = $this->collapsable && $child->hasChildren();
-        $html     = '';
+        $showTree  = $this->collapsable && $child->hasChildren();
+        $html      = '';
+        $curIndex  = 0;
+        $lastIndex = count($states) - 1;
         foreach ($states as $state_id) {
-            $html.= $this->getPaddingForAState($state_id, $showTree);
+            $isLastState = $curIndex == $lastIndex;
+            $html.= $this->getPaddingForAState($state_id, $showTree && $isLastState);
+            $curIndex++;
         }
         return $html;
     }

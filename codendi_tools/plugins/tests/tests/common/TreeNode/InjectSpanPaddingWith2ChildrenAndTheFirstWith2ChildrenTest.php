@@ -38,7 +38,7 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
      * '-Child 4 (id:12)
      */
     protected function given_TwoChildrenWithTheFirstHaving2Children() {
-        $parent  = $this->buildBaseTree();
+        $parent = $this->buildBaseTree();
         $child1 = $parent->getChild(0);
         $child3 = $this->getTreeNode(10, 'Child 3');
         
