@@ -237,6 +237,7 @@ class hudsonViews extends Views {
                     echo '   <input id="new_hudson_use_cvs_trigger" name="new_hudson_use_cvs_trigger" type="checkbox" '.$checked.' />';
                     echo '  </p>';
                 }
+                // TODO: Check for plugins too
                 if ($project->usesSVN() || $project->usesCVS()) {
                     echo '  <p>';
                     echo '   <label for="new_hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
@@ -285,6 +286,7 @@ class hudsonViews extends Views {
             if ($project->usesCVS()) {
                 echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
             }
+            // TODO: add plugins header
             if ($user->isMember($request->get('group_id'), 'A')) {
                 echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
             }
@@ -328,12 +330,14 @@ class hudsonViews extends Views {
                             echo '  <td>&nbsp;</td>';
                         }
                     }
+                    // TODO: show if a plugin is triggered
                                 
                 } catch (Exception $e) {
                     echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$e->getMessage().'" title="'.$e->getMessage().'" /></td>';
                     $nb_columns = 4;
                     if ($project->usesSVN()) { $nb_columns++; }
                     if ($project->usesCVS()) { $nb_columns++; }
+                    // TODO: $nb_columns can be incremented by plugins
                     echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$e->getMessage().'</span></td>';
                 }
                 
@@ -384,6 +388,7 @@ class hudsonViews extends Views {
         echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
         echo '   <br />';
         //echo '  <p>';
+        // TODO: Check for plugins too
         if ($project->usesSVN() || $project->usesCVS()) {
             echo $GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger');
             if ($project->usesSVN()) {
@@ -394,6 +399,7 @@ class hudsonViews extends Views {
                 echo '   <label for="hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs').'</label>';
                 echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
             }
+            // TODO add checkboxes for plugins too
             //echo '  </p>';
             //echo '  <p>';
             echo '   <label for="hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';

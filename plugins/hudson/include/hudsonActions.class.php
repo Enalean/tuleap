@@ -43,6 +43,7 @@ class hudsonActions extends Actions {
             $job = new HudsonJob($job_url);
             $use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
             $use_cvs_trigger = ($request->get('hudson_use_cvs_trigger') === 'on');
+            // TODO: Store plugins details too
             if ($use_svn_trigger || $use_cvs_trigger) {
                 $token = $request->get('hudson_trigger_token');
             } else {
@@ -71,6 +72,7 @@ class hudsonActions extends Actions {
         }
         $new_use_svn_trigger = ($request->get('new_hudson_use_svn_trigger') === 'on');
         $new_use_cvs_trigger = ($request->get('new_hudson_use_cvs_trigger') === 'on');
+        // TODO: Store plugins details too
         if ($new_use_svn_trigger || $new_use_cvs_trigger) {
             $new_token = $request->get('new_hudson_trigger_token');
         } else {
