@@ -990,49 +990,48 @@ ul.plugin_tracker_my_artifacts_list {
 
 /** Tree Node **/
 
-.tree-view, .tree-view tr, .tree-view td {
+.tree-view, .tree-view tr, .tree-view td, .tree-view tbody {
     overflow:auto;
     vertical-align:top;
     border-collapse:collapse;
+    zoom:1;
 }
-.tree-view td {
+.tree-view tr {
     height:100%;
-    overflow:hidden;
-}
-
-tbody {
-    overflow:auto;
 }
 
 .first-column {
+    height:100%;
     white-space: nowrap;
+}
+.first-column + td {
+    padding-left:10px;
 }
 
 .node-indent {
     display:inline-block;
-    /*Dirty IE Hack*/
-      zoom: 1; 
-      *display: inline;
+    vertical-align:top;
     height:8px;
     width:8px;
-    vertical-align:top;
     border:0px;
     padding:0px;
     margin:0px;
-    
+    zoom: 1; 
 }
 
 .node-last-left {
     overflow:visible;
     border-right:1px grey dotted;
+    /* 8px - 1px of border*/
     width:7px;
     
 }
 .node-last-right {
     overflow:hidden;
     border-bottom:1px grey dotted;
+    /* 8px - 1px of border*/
     height:7px;
-    /*margin-left:-4px;*/
+    margin-left:-4px;
     
 }
 
@@ -1044,42 +1043,46 @@ tbody {
 }
 
 .node-pipe {
+    display:inline-block;
+    /* 8px - 1px of border*/
     width:7px;
     height:100%;
     border-right:1px grey dotted;
+    margin-top:-1px;
 }
 
 .node-minus {
     overflow:hidden;
     border-bottom:1px grey dotted;
+    /* 8px - 1px of border*/
     height:7px;
-    /*margin-left:-4px;*/
+    margin-left:-4px;
 }
 
 .node-content {
-    overflow:visible;
+    overflow:hidden;
     cursor:pointer;
     display:inline-block;
     height:100%;
-    padding-right:10px;
-    padding-bottom:10px;
-    margin-left:1px;
+    width:auto;
+    padding-left:1px;
+    
 }
 
 .node-child {
     overflow:hidden;
     display:block;
     width:8px;
-    margin-left:3px;
+    margin-left:4px;
     height: 100%;
     border-right:1px grey dotted;
 }
 
 .node-tree {
     display: inline-block;
-    width:80px;
-    height:80px;
-    
+    width:8px;
+    height:8px;
+    /* center img size is 2X2 px */
     margin-top:4px;
     margin-left:4px;
     background-image:url(../images/tree.png);/* TODO : Better img with blank background */
@@ -1091,4 +1094,6 @@ tbody {
     overflow:hidden;
     border-bottom:1px grey dotted;
     width:4px;
+    margin-right:1px;
+    margin-left:1px;
 }
