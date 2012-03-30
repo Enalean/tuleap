@@ -30,25 +30,9 @@ abstract class InjectSpanPadding extends TuleapTestCase {
     *
     */
     protected function buildBaseTree() {
-        $parent  = new TreeNode();
-        $child1Data = array(
-            	'id'                => '6',
-            	'title'             => 'Child 1',
-            	'artifactlinks'     => '8',
-        );
-    
-        $child1 = new TreeNode($child1Data);
-        $child1->setId($child1Data['id']);
-    
-        $child2Data = array(
-            	'id'                => '8',
-            	'title'             => 'Child 2',
-            	'artifactlinks'     => '',
-        );
-        $child2 = new TreeNode($child2Data);
-        $child2->setId($child2Data['id']);
-    
-    
+        $parent = new TreeNode();
+        $child1 = $this->getTreeNode(6, 'Child 1', '8');
+        $child2 = $this->getTreeNode(8, 'Child 2');
         $parent->addChild($child1);
         $child1->addChild($child2);
         return $parent;
@@ -85,6 +69,31 @@ abstract class InjectSpanPadding extends TuleapTestCase {
     protected function getPatternSuite($string) {
         $string = str_replace(' ', ' node-', $string);
         return explode(' ', trim($string));
+    }
+    
+    protected function getTreeNode($id, $title, $artifactLinks = '') {
+        if (is_array($artifactLinks)) {
+            $artifactLinks = implode(', ', $artifactLinks);
+        }
+        $nodeData = array(
+        	'id'            => $id,
+            'title'         => $title,
+            'artifactlinks' => $artifactLinks,
+        );
+    
+        $node = new TreeNode($nodeData);
+        $node->setId($id);
+        return $node;
+    }
+    
+    protected function setArtifactLinks( TreeNode $node, $artifactLinks) {
+        if (is_array($artifactLinks)) {
+            $artifactLinks = implode(', ', $artifactLinks);
+        }
+        $nodeData = $node->getData();
+        $nodeData['artifactlinks'] = $artifactLinks;
+        $node->setData($nodeData);
+        return $node;
     }
 }
 ?>
