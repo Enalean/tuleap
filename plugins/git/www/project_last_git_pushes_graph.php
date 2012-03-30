@@ -49,10 +49,12 @@ $today           = $_SERVER['REQUEST_TIME'];
 $start_of_period = strtotime("-$nb_weeks weeks");
 
 $dates = array();
+$year = array();
 $weekNum = array();
 for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $dates[] = date('M d', $i);
     $weekNum[] = intval(date('W', $i));
+    $year[] = intval(date('Y',$i));
 }
 $nb_repo = count($repoList);
 $graph = new Chart(500, 300+16*$nb_repo);
@@ -87,7 +89,7 @@ foreach ($repoList as $repository) {
     $pushes = array();
     $gitLogDao = new Git_LogDao();
     foreach($weekNum as $key => $w) {
-        $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], intval($w));
+        $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $year[$key]);
         if ($res && !$res->isError()) {
             if ($res->valid()) {
                 $row = $res->current();

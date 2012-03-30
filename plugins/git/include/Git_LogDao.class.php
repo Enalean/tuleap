@@ -32,17 +32,20 @@ class Git_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function getRepositoryPushesByWeek($repository_id, $week) {
+    function getRepositoryPushesByWeek($repository_id, $week, $year) {
         $repository_id = $this->da->escapeInt($repository_id);
         $week          = $this->da->escapeInt($week);
+        $year          = $this->da->escapeInt($year);
         $sql = "SELECT COUNT(*) AS pushes,
                 repository_id AS repo,
                 WEEK(FROM_UNIXTIME(push_date)) AS week,
+		YEAR(FROM_UNIXTIME(push_date)) AS year,
                 SUM(commits_number) AS commits
                 FROM plugin_git_log
                 WHERE repository_id = $repository_id
                 AND WEEK(FROM_UNIXTIME(push_date)) = $week
-                GROUP BY week, repo
+                AND YEAR(FROM_UNIXTIME(push_date))= $year
+                GROUP BY year, week, repo
                ";
         return $this->retrieve($sql);
     }
