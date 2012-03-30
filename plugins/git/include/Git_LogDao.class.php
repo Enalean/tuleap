@@ -135,7 +135,7 @@ class Git_LogDao extends DataAccessObject {
                 user.user_name AS user_name,
                 user.realname AS realname, user.email AS email,
                 r.repository_name AS title
-                FROM (SELECT *, push_date AS time from plugin_git_log) AS log, user, plugin_git AS r'
+                FROM (SELECT *, push_date AS time from plugin_git_log) AS log, user, plugin_git AS r
                 WHERE ".$logsCond."
                 AND r.project_id = ".$this->da->quoteSmart($groupId)."
                 AND log.repository_id = r.repository_id
