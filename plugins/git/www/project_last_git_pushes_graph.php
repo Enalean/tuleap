@@ -109,7 +109,7 @@ foreach ($repoList as $repository) {
 // Create the accumulated bar plot
 $abplot = new AccBarPlot($bplot);
 $abplot->SetShadow();
-$abplot->SetAbsWidth(15);
+$abplot->SetAbsWidth(10);
 
 $graph->Add($abplot);
 $graph->Stroke();

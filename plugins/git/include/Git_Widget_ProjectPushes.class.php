@@ -19,7 +19,7 @@
  */
 
 /**
- * TODO: Class comment
+ * Widget displaying last git pushes for the project
  */
 class Git_Widget_ProjectPushes extends Widget {
 
