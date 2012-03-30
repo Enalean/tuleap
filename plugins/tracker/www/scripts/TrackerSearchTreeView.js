@@ -29,13 +29,13 @@ var TreeTable = (function(treeTableId){
 				function _collapse() {
 					var nodeChild = this.getElementsByClassName('node-child');
 					if (nodeChild.length > 0) {
-//						nodeChild[0].hide();
-						new Effect.Fade(nodeChild[0],{'duration': 0.25});
+						nodeChild[0].hide();
+//						new Effect.Fade(nodeChild[0],{'duration': 0.25});
 						var children = this.getChildren();
 						children.each(function(child) {
 							child.collapse();
-//							child.hide();
-							new Effect.Fade(child,{'duration': 0.25});
+							child.hide();
+//							new Effect.Fade(child,{'duration': 0.25});
 						});
 						this.collapsed = true;
 					} else {
@@ -47,12 +47,12 @@ var TreeTable = (function(treeTableId){
 				function _expand() {
 					var nodeChild = this.getElementsByClassName('node-child');
 					if (nodeChild.length > 0) {
-//						nodeChild[0].show();
-						new Effect.Appear(nodeChild[0],{'duration': 0.25});
+						nodeChild[0].show();
+//						new Effect.Appear(nodeChild[0],{'duration': 0.25});
 						var children = this.getChildren();
 						children.each(function(child) {
-//							child.show();
-							new Effect.Appear(child,{'duration': 0.25});
+							child.show();
+//							new Effect.Appear(child,{'duration': 0.25});
 						});
 					}
 					this.collapsed = false;
