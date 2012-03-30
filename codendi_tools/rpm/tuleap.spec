@@ -592,8 +592,14 @@ if [ "$1" -eq "1" ]; then
     fi
 fi
 if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
+    if [ -d '/var/lib/gitolite' ]; then
+	GITOLITE_BASE_DIR=/var/lib/gitolite
+    else
+	GITOLITE_BASE_DIR=/usr/com/gitolite
+    fi
+
     # deploy gitolite.rc
-    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.rc.dist /usr/com/gitolite/.gitolite.rc
+    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.rc.dist $GITOLITE_BASE_DIR/.gitolite.rc
 
     # generate codendiadm ssh key for gitolite
     %{__install} -d "%{APP_HOME_DIR}/.ssh/" -g %{APP_USER} -o %{APP_USER} -m 00700
@@ -605,9 +611,9 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     %{__cp} "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub" /tmp/
     su -c 'git config --global user.name "gitolite"' - gitolite
     su -c 'git config --global user.email gitolite@localhost' - gitolite
-    %{__install} -d -g gitolite -o gitolite -m 00700 /usr/com/gitolite/.gitolite
-    %{__install} -d -g gitolite -o gitolite -m 00700 /usr/com/gitolite/.gitolite/conf
-    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist /usr/com/gitolite/.gitolite/conf/gitolite.conf
+    %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite
+    %{__install} -d -g gitolite -o gitolite -m 00700 $GITOLITE_BASE_DIR/.gitolite/conf
+    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist $GITOLITE_BASE_DIR/.gitolite/conf/gitolite.conf
     %{__install} -g gitolite -o gitolite -m 00755 %{APP_DIR}/plugins/git/hooks/post-receive-gitolite /usr/share/gitolite/hooks/common/post-receive
     su -c 'gl-setup /tmp/id_rsa_gl-adm.pub' - gitolite
 
@@ -622,7 +628,7 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     # uncomment gl-membership
     # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
     # doesn't have DB access .
-    perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM/\$GL_GET_MEMBERSHIPS_PGM/' /usr/com/gitolite/.gitolite.rc
+    perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM/\$GL_GET_MEMBERSHIPS_PGM/' $GITOLITE_BASE_DIR/.gitolite.rc
 
     # add codendiadm to gitolite group
     if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then

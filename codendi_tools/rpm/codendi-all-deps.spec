@@ -28,8 +28,6 @@ Requires: policycoreutils, coreutils, selinux-policy, selinux-policy-targeted, l
 ##
 ## Inherited from old install script, possibly useless of just dependencies...
 ##
-#Requires: enscript
-Requires: openssh-server, openssh, openssh-clients
 Requires: ntp
 Requires: sysstat
 # CLI (build only?)

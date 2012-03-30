@@ -257,7 +257,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $backend->__construct($driver);
         $backend->setDao($dao);
         
-        $this->expectException('GitBackendException');
+        $this->expectException('GitRepositoryAlreadyExistsException');
         
         $backend->expectNever('clonePermissions');
         $dao->expectNever('save');
