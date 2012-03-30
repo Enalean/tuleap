@@ -30,11 +30,17 @@ if ($request->valid($vGroupId)) {
 } else {
     header('Location: '.get_server_url());
 }
+$vDuration = new Valid_UInt();
+if ($request->valid($vDuration)) {
+    $nb_weeks = $request->get('duration');
+} else {
+    header('Location: '.get_server_url());
+}
 
 $dao      = new GitDao();
-$repoList = $dao->getProjectRepositoryList($group_id);
+$repoList = $dao->getProjectRepositoryList($groupId);
 
-$nb_weeks        = 4 * 3;
+//$nb_weeks        = 4 * 3;
 $duration        = 7 * $nb_weeks;
 $day             = 24 * 3600;
 $week            = 7 * $day;
@@ -47,7 +53,6 @@ for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $dates[] = date('M d', $i);
     $weekNum[] = intval(date('W', $i));
 }
-
 $nb_repo = count($repoList);
 $graph = new Chart(500, 300+16*$nb_repo);
 $graph->SetScale('textlin');
@@ -79,7 +84,7 @@ $i = 0;
 $bplot = array();
 foreach ($repoList as $repository) {
     $pushes = array();
-    $pushes = array_pad($pushes, 12, 0);
+    $pushes = array_pad($pushes, $nb_weeks, 0);
     $gitLogDao = new Git_LogDao();
     foreach($weekNum as $w) {
         $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], intval($w));
