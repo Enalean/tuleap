@@ -6,6 +6,9 @@ Version 5.0 (Not released yet)
    == Development ==
    * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:
      stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult);
+   * Move core tests to source root
+   * Rename codendi_tools to tools
+   * "Tests" plugin is now in /plugins but only manage display of tests (no longer embbed core tests
 
 Version 4.0.28 (Friday, March 30th 2012)
    == Bug Fix ==

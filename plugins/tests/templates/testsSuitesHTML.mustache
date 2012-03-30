@@ -1,0 +1,9 @@
+<li{{{classes}}}>
+    <input type="checkbox" name="{{prefix}}[{{name}}]" value="{{value}}" {{{checked}}}/>
+    <label for="{{prefix}}[{{name}}]">{{{title}}}</label>
+    <ul{{{id}}}{{{classes}}}>
+    {{#children}}
+        {{> testsSuitesHTML}}
+    {{/children}}
+    </ul>
+</li>

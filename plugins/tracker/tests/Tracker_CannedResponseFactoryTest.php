@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+
 require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php');
 Mock::generatePartial(
     'Tracker_CannedResponseFactory', 

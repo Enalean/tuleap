@@ -32,7 +32,7 @@
     </listitem>
     <listitem>
       <para>
-        <emphasis role="bold"><literal>codendi_tools</literal></emphasis> contains 
+        <emphasis role="bold"><literal>tools</literal></emphasis> contains 
         several tools and utilities used in &SYS_PRODUCT_NAME; administration: 
         DB backup script, installation scripts, etc.
       </para>

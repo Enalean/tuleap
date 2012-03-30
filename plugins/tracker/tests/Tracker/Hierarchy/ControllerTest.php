@@ -105,8 +105,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $content = $this->WhenICaptureTheOutputOfEditAction();
         
-        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
-        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$stories_id&func=admin-hierarchy%", $content);
     }
     
     private function WhenICaptureTheOutputOfEditAction() {
