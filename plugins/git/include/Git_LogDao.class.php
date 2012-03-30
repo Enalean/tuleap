@@ -30,10 +30,10 @@ class Git_LogDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function searchLastPushForRepository($repositoryId) {
-        $repository_id = $this->da->escapeInt($repositoryId);
+        $repositoryId = $this->da->escapeInt($repositoryId);
         $sql = "SELECT log.*
                 FROM plugin_git_log log 
-                WHERE repository_id = $repository_id
+                WHERE repository_id = $repositoryId
                 ORDER BY push_date DESC
                 LIMIT 1";
         return $this->retrieve($sql);
