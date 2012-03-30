@@ -23,10 +23,14 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 class Git_LogDao extends DataAccessObject {
 
     /**
-     * TODO: Add function comment
+     * Return the last push of a given repository
+     *
+     * @param Integer $repositoryId Id of the repository
+     *
+     * @return DataAccessResult
      */
-    function searchLastPushForRepository($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
+    function searchLastPushForRepository($repositoryId) {
+        $repository_id = $this->da->escapeInt($repositoryId);
         $sql = "SELECT log.*
                 FROM plugin_git_log log 
                 WHERE repository_id = $repository_id
@@ -36,19 +40,25 @@ class Git_LogDao extends DataAccessObject {
     }
 
     /**
-     * TODO: Add function comment
+     * Return the last pushes of a given repository grouped by week
+     *
+     * @param Integer $repositoryId Id of the repository
+     * @param Integer $week         Number of the week
+     * @param Integer $year         Year corresponding to the week
+     *
+     * @return DataAccessResult
      */
-    function getRepositoryPushesByWeek($repository_id, $week, $year) {
-        $repository_id = $this->da->escapeInt($repository_id);
-        $week          = $this->da->escapeInt($week);
-        $year          = $this->da->escapeInt($year);
+    function getRepositoryPushesByWeek($repositoryId, $week, $year) {
+        $repositoryId = $this->da->escapeInt($repositoryId);
+        $week         = $this->da->escapeInt($week);
+        $year         = $this->da->escapeInt($year);
         $sql = "SELECT COUNT(*) AS pushes,
                 repository_id AS repo,
                 WEEK(FROM_UNIXTIME(push_date)) AS week,
                 YEAR(FROM_UNIXTIME(push_date)) AS year,
                 SUM(commits_number) AS commits
                 FROM plugin_git_log
-                WHERE repository_id = $repository_id
+                WHERE repository_id = $repositoryId
                 AND WEEK(FROM_UNIXTIME(push_date)) = $week
                 AND YEAR(FROM_UNIXTIME(push_date))= $year
                 GROUP BY year, week, repo

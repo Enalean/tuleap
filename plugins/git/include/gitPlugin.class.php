@@ -410,7 +410,11 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * TODO: Add function comment
+     * Instanciate the corresponding widget
+     *
+     * @param Array $params Name and instance of the widget
+     *
+     * @return Void
      */
     function myPageBox($params) {
         switch ($params['widget']) {
@@ -428,7 +432,11 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * TODO: Add function comment
+     * List plugin's widgets in customize menu
+     *
+     * @param Array $params List of widgets
+     *
+     * @return Void
      */
     function widgets($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
