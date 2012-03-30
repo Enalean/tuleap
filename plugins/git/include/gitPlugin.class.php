@@ -398,9 +398,13 @@ class GitPlugin extends Plugin {
      * @param Array $params parameters of the event
      */
     function logsDaily($params) {
-        require_once('Git.class.php');
-        $controler = new Git($this);
-        $controler->logsDaily($params);
+        $pm      = ProjectManager::instance();
+        $project = $pm->getProject($params['group_id']);
+        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            require_once('Git.class.php');
+            $controler = new Git($this);
+            $controler->logsDaily($params);
+        }
     }
 
     function myPageBox($params) {
