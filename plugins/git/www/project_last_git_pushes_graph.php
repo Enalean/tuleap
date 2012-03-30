@@ -85,6 +85,7 @@ $colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $n
 $nb_colors = count($colors);
 $i         = 0;
 $bplot     = array();
+$displayChart = false;
 foreach ($repoList as $repository) {
     $pushes = array();
     $gitLogDao = new Git_LogDao();
@@ -95,23 +96,61 @@ foreach ($repoList as $repository) {
                 $row          = $res->current();
                 $pushes[$key] = intval($row['pushes']);
                 $res->next();
+                if ($pushes[$key] > 0) {
+                    $displayChart = true;
+                }
             }
         }
         $pushes = array_pad($pushes, $nb_weeks, 0);
     }
-    $b2plot = new BarPlot($pushes);
-    $color  = $colors[$i++ % $nb_colors];   
-    $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
-    $b2plot->SetLegend($repository['repository_name']);
-    $bplot[] = $b2plot;
+    if ($displayChart) {
+    	$b2plot = new BarPlot($pushes);
+    	$color  = $colors[$i++ % $nb_colors];   
+        $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
+        $b2plot->SetLegend($repository['repository_name']);
+        $bplot[] = $b2plot;
+    }
 }
 
-// Create the accumulated bar plot
-$abplot = new AccBarPlot($bplot);
-$abplot->SetShadow();
-$abplot->SetAbsWidth(10);
-
-$graph->Add($abplot);
-$graph->Stroke();
+if ($displayChart) {
+    // Create the accumulated bar plot
+    $abplot = new AccBarPlot($bplot);
+    $abplot->SetShadow();
+    $abplot->SetAbsWidth(10);
+    $graph->Add($abplot);
+    $graph->Stroke();
+} else {
+    //If there is no git stats yet, generate a message as an image 
+    //(plz remember that we must return some img data)
+            
+    //ttf from jpgraph
+    $ttf = new TTF();
+    $ttf->SetUserFont(
+        'dejavu-lgc/DejaVuLGCSans.ttf',  
+        'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
+        'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
+        'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
+    );
+    //Calculate the baseline
+    // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
+    //this should be above baseline
+    $test2 = "H";
+    //some of these additional letters should go below it
+    $test3 = "Hjgqp";
+    //get the dimension for these two:
+    $box2  = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test2);
+    $box3  = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test3);
+    $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));            
+    $error = "There is no logged pushes in the last $nb_weeks weeks";
+    $bbox  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $error);
+    if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
+        $background_color = imagecolorallocate($im, 255, 255, 255);
+        $text_color       = imagecolorallocate($im, 64, 64, 64);
+        imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $error);
+        header("Content-type: image/png");
+        imagepng($im);
+        imagedestroy($im);
+    }
+}
 
 ?>
