@@ -88,7 +88,7 @@ $bplot     = array();
 foreach ($repoList as $repository) {
     $pushes = array();
     $gitLogDao = new Git_LogDao();
-    foreach($weekNum as $key => $w) {
+    foreach ($weekNum as $key => $w) {
         $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $year[$key]);
         if ($res && !$res->isError()) {
             if ($res->valid()) {
