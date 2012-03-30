@@ -40,31 +40,12 @@ class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectS
     protected function given_TwoChildrenWithTheFirstHaving2Children() {
         $parent  = $this->buildBaseTree();
         $child1 = $parent->getChild(0);
-        
-        $child3Data = array(
-        	'id'           => '10',
-        	'title'        => 'Child 3',
-            'artifactlinks'=> '',
-        );
-        $child3 = new TreeNode($child3Data);
-        $child3->setId($child3Data['id']);
+        $child3 = $this->getTreeNode(10, 'Child 3');
         
         $child1->addChild($child3);
-        /**
-         * Add child 3 artifact link to child 1
-         */
-        $child1Data = $child1->getData();
-        $child1Data['artifactlinks'].=',10';
-        $child1->setData($child1Data);
+        $this->setArtifactLinks($child1, '8, 10');
         
-        $child4Data = array(
-            'id'            => '12',
-            'title'         => 'Child 4',
-            'artifactlinks' => '',
-        );
-        $child4 = new TreeNode($child4Data);
-        $child4->setId($child4Data['id']);
-        
+        $child4 = $this->getTreeNode(12, 'Child 4');        
         $parent->addChild($child4);
         
         return $parent;

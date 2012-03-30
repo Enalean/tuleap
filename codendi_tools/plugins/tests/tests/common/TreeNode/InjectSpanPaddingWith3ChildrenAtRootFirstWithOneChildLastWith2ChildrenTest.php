@@ -43,45 +43,16 @@ class InjectSpanPaddingWith3ChildrenAtRootFirstWithOneChildLastWith2ChildrenTest
      * 
      */
     protected function given_3ChildrenWithTheFirstHavingAChildAndTheLastHaving2Children() {
-        $parent  = $this->buildBaseTree();
-                
-        $child3Data = array(
-        	'id'            => '10',
-        	'title'         => 'Child 3',
-        	'artifactlinks' => '',
-        );
-        $child3 = new TreeNode($child3Data);
-        $child3->setId($child3Data['id']);
+        $parent = $this->buildBaseTree();
         
-        $child4Data = array(
-        	'id'            => '12',
-        	'title'         => 'Child 4',
-            'artifactlinks' => '14, 16',
-        );
-                $child4 = new TreeNode($child4Data);
-        $child4->setId($child4Data['id']);
+        $child3 = $this->getTreeNode(10, 'Child 3');
+        $child4 = $this->getTreeNode(12, 'Child 4', '14, 16');
+        $child5 = $this->getTreeNode(14, 'Child 5');
+        $child6 = $this->getTreeNode(16, 'Child 6');
         
-        $child5Data = array(
-        	'id'            => '14',
-            'title'         => 'Child 5',
-            'artifactlinks' => '',
-        );
-        $child5 = new TreeNode($child5Data);
-        $child5->setId($child5Data['id']);
         
         $child4->addChild($child5);
-        
-        $child6Data = array(
-        	'id'            => '16',
-            'title'         => 'Child 6',
-            'artifactlinks' => '',
-        );
-        $child6 = new TreeNode($child6Data);
-        $child6->setId($child6Data['id']);
-        
         $child4->addChild($child6);
-        
-        
         $parent->addChild($child3);
         $parent->addChild($child4);
         
