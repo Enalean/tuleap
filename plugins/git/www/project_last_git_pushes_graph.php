@@ -126,9 +126,9 @@ if ($displayChart) {
     //ttf from jpgraph
     $ttf = new TTF();
     $ttf->SetUserFont(
-        'dejavu-lgc/DejaVuLGCSans.ttf',  
-        'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
-        'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
+        'dejavu-lgc/DejaVuLGCSans.ttf',
+        'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
+        'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
         'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
     );
     //Calculate the baseline

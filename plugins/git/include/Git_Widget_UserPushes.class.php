@@ -95,18 +95,20 @@ class Git_Widget_UserPushes extends Widget {
                                  '.$entry['repository_name'].'
                                  </span>
                                  </legend>
-                                 <a href="'.$this->pluginPath.'/index.php/'.$entry['group_id'].'/view/'.$entry['repository_id'].'/">
                                  '.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
                     $i       = 0;
                     $hp      = Codendi_HTMLPurifier::instance();
                     foreach ($dar as $row) {
                         $content .= '<tr class="'.html_get_alt_row_color(++$i).'">
                                          <td><span title="'.$dh->timeAgoInWords($row['push_date'], true).'">'.$hp->purify(format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['push_date'])).'</span></td>
-                                         <td>'.$hp->purify($row['commits_number']).'</td>
+                                         <td>
+                                             <a href="'.$this->pluginPath.'/index.php/'.$entry['group_id'].'/view/'.$entry['repository_id'].'/">
+                                             '.$hp->purify($row['commits_number']).'
+                                             </a>
+                                         </td>
                                      </tr>';
                     }
                     $content .= "</table>
-                                 </a>
                                  </fieldset>";
                 } else {
                     $content .= $GLOBALS['Language']->getText('plugin_git', 'widget_user_pushes_no_content');
