@@ -104,8 +104,8 @@ foreach ($repoList as $repository) {
         $pushes = array_pad($pushes, $nb_weeks, 0);
     }
     if ($displayChart) {
-    	$b2plot = new BarPlot($pushes);
-    	$color  = $colors[$i++ % $nb_colors];   
+        $b2plot = new BarPlot($pushes);
+        $color  = $colors[$i++ % $nb_colors];   
         $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
         $b2plot->SetLegend($repository['repository_name']);
         $bplot[] = $b2plot;
@@ -138,8 +138,8 @@ if ($displayChart) {
     //some of these additional letters should go below it
     $test3 = "Hjgqp";
     //get the dimension for these two:
-    $box2  = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test2);
-    $box3  = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test3);
+    $box2  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
+    $box3  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
     $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));            
     $error = "There is no logged pushes in the last $nb_weeks weeks";
     $bbox  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $error);
