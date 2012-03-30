@@ -1,4 +1,4 @@
-Version 4.0.28 (Not released yet)
+Version 4.0.28 (Friday, March 30th 2012)
    == Bug Fix ==
    * homepage: three feature boxes displayed the same content
    * svn: Fix double escaping issue in commit message in web ui
