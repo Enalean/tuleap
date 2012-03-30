@@ -31,6 +31,7 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 $vDuration = new Valid_UInt();
+$vGroupId->required();
 if ($request->valid($vDuration)) {
     $nb_weeks = $request->get('duration');
 } else {
@@ -84,21 +85,21 @@ $i = 0;
 $bplot = array();
 foreach ($repoList as $repository) {
     $pushes = array();
-    $pushes = array_pad($pushes, $nb_weeks, 0);
     $gitLogDao = new Git_LogDao();
-    foreach($weekNum as $w) {
+    foreach($weekNum as $key => $w) {
         $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], intval($w));
         if ($res && !$res->isError()) {
             if ($res->valid()) {
                 $row = $res->current();
-                $pushes[$w] = intval($row['pushes']);
+                $pushes[$key] = intval($row['pushes']);
                 $res->next();
             }
         }
+    $pushes = array_pad($pushes, $nb_weeks, 0);
     }
     $b2plot = new BarPlot($pushes);
     $color = $colors[$i++ % $nb_colors];   
-    $b2plot->SetFillgradient($color, $color.':0.6', GRAD_MIDVER);
+    $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
     $b2plot->SetLegend($repository['repository_name']);
     $bplot[] = $b2plot;
 }
