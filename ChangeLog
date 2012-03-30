@@ -1,3 +1,12 @@
+Version 5.0 (Not released yet)
+   == Plugins ==
+   * AgileDashoard 0.7.1
+   * Tracker 5.4.8
+
+   == Development ==
+   * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:
+     stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult);
+
 Version 4.0.28 (Friday, March 30th 2012)
    == Bug Fix ==
    * homepage: three feature boxes displayed the same content

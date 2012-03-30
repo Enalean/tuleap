@@ -204,44 +204,6 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     }
 }
 
-class Planning_ControllerEditWithInvalidPlanningIdTest extends TuleapTestCase {
-    public function itGeneratesError404() {
-        $invalid_id       = 'invalid';
-        $request          = new Codendi_Request(array('planning_id' => $invalid_id));
-        $planning_factory = new MockPlanningFactory();
-        $controller       = aPlanningController()->with('request', $request)
-                                                 ->with('planning_factory', $planning_factory)
-                                                 ->build();
-        
-        $planning_factory->expectOnce('getPlanning', array($invalid_id));
-        $planning_factory->throwOn('getPlanning', new Planning_NotFoundException());
-        
-        $GLOBALS['Response']->expectOnce('sendStatusCode', array(404));
-        $controller->edit();
-    }
-}
-
-class Planning_ControllerEditWithValidPlanningIdTest extends TuleapTestCase {
-    public function itRendersAnEditForm() {
-        $planning         = aPlanning()->build();
-        $request          = new Codendi_Request(array('planning_id' => $planning->getId()));
-        $planning_factory = new MockPlanningFactory();
-        $controller       = aPlanningController()->with('request', $request)
-                                                 ->with('planning_factory', $planning_factory)
-                                                 ->build();
-        
-        $planning_factory->expectOnce('getPlanning', array($planning->getId()));
-        $planning_factory->setReturnValue('getPlanning', $planning);
-        $planning_factory->setReturnValue('getAvailableTrackers', array());
-        
-        ob_start();
-        $controller->edit();
-        $output = ob_get_clean();
-        
-        $this->assertPattern('/\<form/', $output);
-    }
-}
-
 class Planning_ControllerDeleteTest extends TuleapTestCase {
     public function itDeletesThePlanningAndRedirectsToTheIndex() {
         $group_id         = '34';
@@ -256,28 +218,6 @@ class Planning_ControllerDeleteTest extends TuleapTestCase {
         $planning_factory->expectOnce('deletePlanning', array($planning_id));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$group_id);
         $controller->delete();
-    }
-}
-
-class Planning_ControllerUpdateTest extends TuleapTestCase {
-    public function itUpdatesThePlanningAndRedirectsToTheIndex() {
-        $group_id         = '34';
-        $planning_id      = '12';
-        $request          = new Codendi_Request(array('group_id' => $group_id));
-        
-        $request->set('planning_id', $planning_id);
-        $request->set('planning_name', 'Release Planning');
-        $request->set('backlog_tracker_ids', array('1', '2'));
-        $request->set('planning_tracker_id', '3');
-        
-        $planning_factory = new MockPlanningFactory();
-        $controller       = aPlanningController()->with('request', $request)
-                                                 ->with('planning_factory', $planning_factory)
-                                                 ->build();
-        
-        $planning_factory->expectOnce('updatePlanning', array($planning_id, 'Release Planning', array('1', '2'), '3'));
-        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$group_id);
-        $controller->update();
     }
 }
 

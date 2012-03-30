@@ -652,7 +652,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (count($artlink_fields)) {
-                    $this->createArtifactLink($artlink_fields, $linked_artifact_id, $current_user);
+                    $this->linkArtifact($artlink_fields, $linked_artifact_id, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
                     $GLOBALS['Response']->sendStatusCode(400);
@@ -1148,7 +1148,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return UserManager::instance();
     }
 
-    private function createArtifactLink($artlink_fields, $linked_artifact_id, User $current_user) {
+    private function linkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
         $comment       = '';
         $email         = '';
         $artlink_field = $artlink_fields[0];
@@ -1164,13 +1164,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getLinkedArtifacts() {
         $artifact_links       = array();
-        $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
-        if ($artifact_link_fields) {
-            $field          = $artifact_link_fields[0];
+        $artifact_link_field = $this->getAnArtifactLinkField();
+        if ($artifact_link_field) {
             $changeset      = $this->getLastChangeset();
-            $artifact_links = $field->getLinkedArtifacts($changeset);
+            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset);
         }
         return $artifact_links;
+    }
+    
+    public function getAnArtifactLinkField() {
+        $field = null;
+        $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+        if ($artifact_link_fields) {
+            $field = $artifact_link_fields[0];
+        }
+        return $field;
     }
 }
 

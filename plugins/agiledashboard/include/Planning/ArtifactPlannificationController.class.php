@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     /**
@@ -80,35 +84,15 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         return $this->planning_factory->getPlanning($planning_id);
     }
 
-    
+    /**
+     * @return BreadCrumb_BreadCrumbGenerator
+     */
     public function getBreadcrumbs($plugin_path) {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $breadcrumbs    = array();
-        $url_parameters = array(
-            'group_id' => (int) $this->request->get('group_id'),
-        );
+        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+        $planningBreadCrumbGenerator = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
+        $artifactsBreadCrumbGenerator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
+        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $planningBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
         
-        $breadcrumbs[] = array(
-            'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
-        );
-        $planning = $this->getPlanning();
-        if ($planning) {
-            $url_parameters['planning_id'] = (int) $planning->getId();
-            $url_parameters['action']      = 'show';
-            $breadcrumbs[] = array(
-                'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-                'title' => $hp->purify($planning->getName()),
-            );
-            if ($this->artifact) {
-                $url_parameters['aid'] = (int) $this->artifact->getId();
-                $breadcrumbs[] = array(
-                    'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-                    'title' => $hp->purify($this->artifact->getTitle()),
-                );
-            }
-        }
-        return $breadcrumbs;
     }
     
 }
