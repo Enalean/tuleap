@@ -24,7 +24,6 @@ require_once dirname(__FILE__).'/InjectSpanPadding.class.php';
 
 class InjectSpanPaddingWith2ChildrenAndTheFirstWith2ChildrenTest extends InjectSpanPadding {
 
-    protected $treeNode;
     /**
      * Return this Tree
      *
