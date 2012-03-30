@@ -42,7 +42,7 @@ class Git_LogDao extends DataAccessObject {
                 FROM plugin_git_log
                 WHERE repository_id = $repository_id
                 AND WEEK(push_date) = $week
-                GROUP BY week, repo;
+                GROUP BY week, repo
                ";
         return $this->retrieve($sql);
     }
