@@ -996,13 +996,14 @@ ul.plugin_tracker_my_artifacts_list {
     border-collapse:collapse;
     zoom:1;
 }
-.tree-view tr {
-    height:100%;
-}
 
 .first-column {
+    white-space:nowrap;
+}
+
+.first-column, .tree-view tr {
     height:100%;
-    white-space: nowrap;
+    zoom: 1;
 }
 .first-column + td {
     padding-left:10px;
@@ -1048,7 +1049,6 @@ ul.plugin_tracker_my_artifacts_list {
     width:7px;
     height:100%;
     border-right:1px grey dotted;
-    margin-top:-1px;
 }
 
 .node-minus {
@@ -1080,12 +1080,9 @@ ul.plugin_tracker_my_artifacts_list {
 
 .node-tree {
     display: inline-block;
-    width:8px;
-    height:8px;
-    /* center img size is 2X2 px */
-    margin-top:4px;
-    margin-left:4px;
-    background-image:url(../images/tree.png);/* TODO : Better img with blank background */
+    width:16px;
+    height:16px;
+    background-image:url(/themes/common/images/ic/toggle-small-expand.png);
     background-repeat:no-repeat;
     cursor:pointer;
 }
