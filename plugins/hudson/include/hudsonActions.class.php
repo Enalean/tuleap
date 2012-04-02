@@ -85,10 +85,10 @@ class hudsonActions extends Actions {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','edit_job_error'));
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_updated'));
+            $em       = EventManager::instance();
+            $params   = array('request' => $request);
+            $em->processEvent('update_ci_triggers', $params);
         }
-        $em       = EventManager::instance();
-        $params   = array('request' => $request);
-        $em->processEvent('update_ci_triggers', $params);
     }
     function deleteJob() {
         $request =& HTTPRequest::instance();
@@ -99,10 +99,10 @@ class hudsonActions extends Actions {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','delete_job_error'));
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_deleted'));
+            $em       = EventManager::instance();
+            $params   = array('job_id' => $job_id);
+            $em->processEvent('delete_ci_triggers', $params);
         }
-        $em       = EventManager::instance();
-        $params   = array('job_id' => $job_id);
-        $em->processEvent('delete_ci_triggers', $params);
     }
     // }}}
    
