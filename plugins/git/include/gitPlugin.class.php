@@ -37,35 +37,36 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('cssfile',                                         'cssFile',                         false);
-        $this->_addHook('javascript_file',                                 'jsFile',                          false);
-        $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                      false);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',             false);
-        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',            false);
-        $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',             false);
-        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess', false);
-        $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',        false);
-        $this->_addHook('project_is_deleted',                              'project_is_deleted',              false);
-        $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',         false);
+        $this->_addHook('cssfile',                                         'cssFile',                                      false);
+        $this->_addHook('javascript_file',                                 'jsFile',                                       false);
+        $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',                          false);
+        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',                         false);
+        $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',                          false);
+        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
+        $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
+        $this->_addHook('project_is_deleted',                              'project_is_deleted',                           false);
+        $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
 
         // Stats plugin
-        $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
+        $this->_addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);
+        $this->_addHook('plugin_statistics_disk_usage_service_label',      'plugin_statistics_disk_usage_service_label',   false);
+        $this->_addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
 
-        $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
-        
-        $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
-        $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
-        
-        $this->_addHook('permission_get_name',               'permission_get_name',               false);
-        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
-        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
-        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
-        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('statistics_collector',              'statistics_collector',                    false);
+        $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
+
+        $this->_addHook(Event::EDIT_SSH_KEYS,                              'edit_ssh_keys',                                false);
+        $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
+
+        $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
+        $this->_addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
+        $this->_addHook('permission_get_object_name',                      'permission_get_object_name',                   false);
+        $this->_addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
+        $this->_addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
+        $this->_addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
+        $this->_addHook('statistics_collector',                            'statistics_collector',                         false);
+        $this->_addHook('ci_triggers',                                     'ci_triggers',                                  false);
     }
 
     public function getPluginInfo() {
@@ -384,6 +385,19 @@ class GitPlugin extends Plugin {
             $formatter  = $params['formatter'];
             $gitBackend = Backend::instance('Git','GitBackend');
             echo $gitBackend->getBackendStatistics($formatter);
+        }
+    }
+
+    public function ci_triggers($params) {
+        if (isset($params['group_id']) && !empty($params['group_id'])) {
+            $pm      = ProjectManager::instance();
+            $project = $pm->getProject($params['group_id']);
+            if ($project->usesService(self::SERVICE_SHORTNAME)) {
+                $params['services'][] = array('service' => self::SERVICE_SHORTNAME,
+                                              'name'    => 'Git',
+                                              'checked' => false);
+                // TODO: Manage $params['job_id']
+            }
         }
     }
 
