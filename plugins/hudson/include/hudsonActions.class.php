@@ -49,15 +49,16 @@ class hudsonActions extends Actions {
                 $token = null;
             }
             $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            if ( ! $job_dao->createHudsonJob($group_id, $job_url, $job->getName(), $use_svn_trigger, $use_cvs_trigger, $token)) {
+            $jobId = $job_dao->createHudsonJob($group_id, $job_url, $job->getName(), $use_svn_trigger, $use_cvs_trigger, $token);
+            if (!$jobId) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson','add_job_error'));
             } else {
+                $em       = EventManager::instance();
+                $params   = array('job_id' => $jobId, 'request' => $request);
+                $em->processEvent('save_ci_triggers', $params);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_added'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id='.intval($group_id));
             }
-            $em       = EventManager::instance();
-            $params   = array('group_id' => $group_id, 'request' => $request);
-            $em->processEvent('save_ci_triggers', $params);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }

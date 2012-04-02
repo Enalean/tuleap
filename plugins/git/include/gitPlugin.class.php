@@ -442,12 +442,8 @@ class GitPlugin extends Plugin {
      * @return Void
      */
     public function save_ci_triggers($params) {
-        if (isset($params['group_id']) && !empty($params['group_id']) && isset($params['request']) && !empty($params['request'])) {
-            $pm      = ProjectManager::instance();
-            $project = $pm->getProject($params['group_id']);
-            if ($project->usesService(self::SERVICE_SHORTNAME)) {
-                // TODO: Store data
-            }
+        if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
+            // TODO: Store data
         }
     }
 
