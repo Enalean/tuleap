@@ -1,4 +1,4 @@
-var TreeTable = (function(treeTableId){
+var TreeTable = (function(treeTableId) {
 	var treeTable = Class.create({
 		
 		initialize : function(rootId) {
@@ -145,9 +145,9 @@ var TreeTable = (function(treeTableId){
 		collapseAll: function() {
 			this.root.getElementsBySelector('TR').each(this.collapse, this);
 			return this;
-		},
-
-	});	
+		}
+	});
+	
 	return new treeTable(treeTableId);
 	
 })('treeTable');
