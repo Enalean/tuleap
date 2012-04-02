@@ -407,7 +407,23 @@ class GitPlugin extends Plugin {
                     // TODO: retrieve job details
                 }
                 // TODO: i18n
-                $addForm  = '<p><label for="hudson_use_plugin_git_trigger">Git repository id: </label><input id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger"/></p>';
+                $addForm  = '<p>
+                                 <div id="hudson_use_plugin_git_trigger_form">
+                                     <label for="hudson_use_plugin_git_trigger">Git repository id: </label>
+                                     <input id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger"/>
+                                 </div>
+                                 <div id="hudson_use_plugin_git_trigger_checkbox">
+                                     Git 
+                                     <input onclick="toggle_checkbox()" type="checkbox" />
+                                 </div>
+                                 <script>
+                                     function toggle_checkbox() {
+                                         Effect.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 });
+                                         Effect.toggle(\'hudson_use_plugin_git_trigger_checkbox\', \'slide\', { duration: 0.3 });
+                                     }
+                                     Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
+                                 </script>
+                             </p>';
                 $editForm = '<label for="new_hudson_use_plugin_git_trigger">Trigger a build after Git pushes in repository: </label><input id="new_hudson_use_plugin_git_trigger" name="new_hudson_use_plugin_git_trigger" />';
                 $params['services'][] = array('service'       => self::SERVICE_SHORTNAME,
                                               'title'         => 'Git trigger',

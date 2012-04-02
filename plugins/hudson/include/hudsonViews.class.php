@@ -417,12 +417,16 @@ class hudsonViews extends Views {
         if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
             echo $GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger');
             if ($project->usesSVN()) {
+                echo '  <p>';
                 echo '   <label for="hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn').'</label>';
                 echo '   <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" />';
+                echo '  </p>';
             }
             if ($project->usesCVS()) {
+                echo '  <p>';
                 echo '   <label for="hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs').'</label>';
                 echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
+                echo '  </p>';
             }
             foreach ($services as $service) {
                 echo $service['add_form'];
