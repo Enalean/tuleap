@@ -1,120 +1,153 @@
 var TreeTable = (function(treeTableId){
-	var treeTable = {
-			root : null,
-			_setRoot : function (root) {
-				this.root = root;
-			},
-			
-			_defineChildren: function() {
-				
-				function _hasChildren() {
-					return this.collapsed || this.getElementsByClassName('node-child').length > 0;
-				};
-				
-				function _getLevel() {
-					var numSpan = 0;
-					var currentEl = this.down('TD');
-					if (currentEl) {
-						currentEl = currentEl.down('SPAN');
-					} else {
-						return 0;
-					}
-					while (currentEl) {
+	var treeTable = Class.create({
+		
+		initialize : function(rootId) {
+			this.rootId = rootId;
+			Event.observe(window, 'load', this.load.bind(this));
+		},
+		
+		load : function() {
+			this.root = $(this.rootId);
+			this.root.hide();
+			function _eventOnNode(event) {
+				this.toggleCollapse(Event.element(event).up('TR'));
+				Event.stop(event);
+			}
+			$A(this.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode.bind(this), this);
+			$A(this.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode.bind(this), this);
+			this.collapseAll();
+		    new Effect.Appear(this.root,{'queue':'end', 'duration': 0.5});
+		},
+		
+		isCollapsed: function(TRElement) {
+			var nodeChild = this.getNodeChild(TRElement);
+			if (nodeChild) {
+				return nodeChild.visible()==false;
+			}
+			return false;
+		},
+		
+		toggleCollapse: function(TRElement) {
+			if(this.isCollapsed(TRElement)) {
+				this.expand(TRElement);
+			} else {
+				this.collapse(TRElement);
+			}
+		},
+		
+		hasChildren: function(TRElement) {
+			return TRElement.getElementsByClassName('node-child').length > 0;
+		},
+		
+		getNodeChild: function(TRElement) {
+			if(TRElement) {
+				var nodeChild = TRElement.getElementsByClassName('node-child');
+				if (nodeChild[0]) {
+					return nodeChild[0];
+				}
+			}
+		},
+		
+		collapseImg: function(TRElement) {
+			var nodeTree = TRElement.getElementsByClassName('node-tree');
+			if (nodeTree.length > 0) {
+				nodeTree[0].setStyle({backgroundImage:'url(/themes/common/images/ic/toggle-small.png)'});
+			} else {
+				console.log('node tree not found');
+			}
+		},
+		
+		expandImg: function(TRElement) {
+			var nodeTree = TRElement.getElementsByClassName('node-tree');
+			if (nodeTree.length > 0) {
+				nodeTree[0].setStyle({backgroundImage: 'url(/themes/common/images/ic/toggle-small-expand.png)'});
+			} else {
+				console.log('node tree not found');
+			}
+		},
+		
+		getLevel: function(TRElement) {
+			var numSpan = 0;
+			if (TRElement) {
+				var curEl = TRElement.down('TD');
+				if (curEl) {
+					curEl = curEl.down('SPAN');
+					while (curEl) {
 						numSpan++;
-						currentEl = currentEl.next('SPAN');
+						curEl = curEl.next('SPAN');
 					}
 					return numSpan / 2;
 				}
-				
-				function _collapse() {
-					var nodeChild = this.getElementsByClassName('node-child');
-					if (nodeChild.length > 0) {
-						nodeChild[0].hide();
-//						new Effect.Fade(nodeChild[0],{'duration': 0.25});
-						var children = this.getChildren();
-						children.each(function(child) {
-							child.collapse();
-							child.hide();
-//							new Effect.Fade(child,{'duration': 0.25});
-						});
-						this.collapsed = true;
-					} else {
-						this.collapsed = false;
-					}
-					return this;
+			}
+			return numSpan;
+		},
+		
+		collapse: function(TRElement) {
+			var nodeChild = this.getNodeChild(TRElement);
+			if (nodeChild) {
+				var TRHeight = TRElement.getHeight();
+				if ( typeof TRHeight =="number") {
+					TRHeight-=nodeChild.getHeight();
+					TRHeight+="px";
 				}
-				
-				function _expand() {
-					var nodeChild = this.getElementsByClassName('node-child');
-					if (nodeChild.length > 0) {
-						nodeChild[0].show();
-//						new Effect.Appear(nodeChild[0],{'duration': 0.25});
-						var children = this.getChildren();
-						children.each(function(child) {
-							child.show();
-//							new Effect.Appear(child,{'duration': 0.25});
-						});
-					}
-					this.collapsed = false;
-					return this;
+				nodeChild.hide();
+	//			new Effect.Fade(nodeChild,{'duration': 0.25});
+				var children = this.getChildren(TRElement);
+				children.each(function(child) {
+					this.hide(child);
+			//		new Effect.Fade(TRElement,{'duration': 0.25});
+				}, this);
+				this.expandImg(TRElement);
+				TRElement.setStyle({height: TRHeight});
+			}
+			return this;
+		},
+		
+		expand: function(TRElement) {
+			var nodeChild = this.getNodeChild(TRElement);
+			if (nodeChild) {
+				nodeChild.show();
+	//			new Effect.Appear(nodeChild[0],{'duration': 0.25});
+				this.getChildren(TRElement).each(this.show, this);
+				this.collapseImg(TRElement);
+			}
+			return this;
+		},
+		
+		hide: function(TRElement) {
+			this.collapse(TRElement);
+			TRElement.hide();
+	//		new Effect.Fade(TRElement,{'duration': 0.25});
+		},
+		
+		show: function(TRElement) {
+			TRElement.show();
+			TRElement.setStyle({whiteSpace:'nowrap'});
+	//		new Effect.Appear(TRElement,{'duration': 0.25});
+		},
+		
+		getChildren: function(TRElement) {
+			var children     = $A();
+			if (!TRElement) return children;
+			var myLevel      = this.getLevel(TRElement);
+			var currentEl    = TRElement.next('TR');
+			var currentLevel = this.getLevel(currentEl);
+			while (currentLevel > myLevel) {
+				if (currentLevel == myLevel + 1) {
+					children.push(currentEl);
 				}
-				
-				function _getChildren() {
-					var myLevel      = this.getLevel();
-					var children     = $A();
-					var currentEl    = this.next('TR');
-					var currentLevel = currentEl ? currentEl.getLevel() : 0;
-					while (currentLevel > myLevel) {
-						if (currentLevel == myLevel + 1) {
-							children.push(currentEl);
-						}
-						currentEl    = currentEl.next('TR');
-						currentLevel = currentEl ? currentEl.getLevel() : 0;
-					}
-					return children;
-				}
-				
-				function _toggleCollapse() {
-					if(this.collapsed) {
-						this.expand();
-					} else {
-						this.collapse();
-					}
-					return this;
-				}
+				currentEl    = currentEl.next('TR');
+				currentLevel = this.getLevel(currentEl);
+			}
+			return children;
+		},
+		
+		collapseAll: function() {
+			this.root.getElementsBySelector('TR').each(this.collapse, this);
+			return this;
+		},
 
-				var TRElements = this.root.getElementsBySelector('TR');
-				TRElements.each(function(TRElement) {
-					TRElement.getLevel       = _getLevel.bind(TRElement);
-					TRElement.getChildren    = _getChildren.bind(TRElement);
-					TRElement.hasChildren    = _hasChildren.bind(TRElement);
-					TRElement.collapse       = _collapse.bind(TRElement);
-					TRElement.expand         = _expand.bind(TRElement);
-					TRElement.toggleCollapse = _toggleCollapse.bind(TRElement);
-				});
-			},
-			
-			collapse:function() {
-				this.root.getElementsBySelector('TR').invoke('collapse');
-				return this;
-			},
-	};
-	
-	function treeTableLoad() {
-		treeTable._setRoot($(treeTableId));
-		treeTable.root.hide();
-		treeTable._defineChildren();
-		treeTable.collapse();
-		function _eventOnNode(event) {
-			Event.element(event).up('TR').toggleCollapse();
-			Event.stop(event);
-		}
-		$A(TreeTable.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode);
-		$A(TreeTable.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode);
-	    new Effect.Appear(treeTable.root,{queue:'end', duration: 0.5});
-	}
-	
-	Event.observe(window, 'load', treeTableLoad);
-	return treeTable;
+	});	
+	return new treeTable(treeTableId);
 	
 })('treeTable');
