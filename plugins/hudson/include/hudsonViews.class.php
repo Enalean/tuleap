@@ -247,13 +247,7 @@ class hudsonViews extends Views {
                 if (!empty($services)) {
                     foreach ($services as $service) {
                         echo '  <p>';
-                        echo '   <label for="new_hudson_use_'.$service['service'].'_trigger">'.$service['name'].'</label>';
-                        if ($service['checked']) {
-                            $checked = ' checked="checked" ';
-                        } else {
-                            $checked = '';
-                        }
-                        echo '   <input id="new_hudson_use_'.$service['service'].'_trigger" name="new_hudson_use_'.$service['service'].'_trigger" type="checkbox" '.$checked.' />';
+                        echo $service['edit_form'];
                         echo '  </p>';
                     }
                 }
@@ -307,7 +301,7 @@ class hudsonViews extends Views {
             }
             if (!empty($services)) {
                 foreach ($services as $service) {
-                    echo '  <th class="boxtitle">'.$service['name'].'</th>';
+                    echo '  <th class="boxtitle">'.$service['title'].'</th>';
                 }
             }
             if ($user->isMember($request->get('group_id'), 'A')) {
@@ -355,7 +349,7 @@ class hudsonViews extends Views {
                     }
                     if (!empty($services)) {
                         foreach ($services as $service) {
-                            if ($service['checked'] == 1) {
+                            if ($service['used'] == true) {
                                 echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$service['name'].'" title="'.$service['name'].'"></td>';
                             } else {
                                 echo '  <td>&nbsp;</td>';
@@ -431,8 +425,7 @@ class hudsonViews extends Views {
                 echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
             }
             foreach ($services as $service) {
-                echo '   <label for="hudson_use_'.$service['service'].'_trigger">'.$service['name'].'</label>';
-                echo '   <input id="hudson_use_'.$service['service'].'_trigger" name="hudson_use_'.$service['service'].'_trigger" type="checkbox" />';
+                echo $service['add_form'];
             }
             //echo '  </p>';
             //echo '  <p>';

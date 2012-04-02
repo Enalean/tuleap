@@ -67,6 +67,9 @@ class GitPlugin extends Plugin {
         $this->_addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
         $this->_addHook('statistics_collector',                            'statistics_collector',                         false);
         $this->_addHook('ci_triggers',                                     'ci_triggers',                                  false);
+        $this->_addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
+        $this->_addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
+        $this->_addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
     }
 
     public function getPluginInfo() {
@@ -388,16 +391,73 @@ class GitPlugin extends Plugin {
         }
     }
 
+    /**
+     * Add ci trigger information for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
     public function ci_triggers($params) {
         if (isset($params['group_id']) && !empty($params['group_id'])) {
             $pm      = ProjectManager::instance();
             $project = $pm->getProject($params['group_id']);
             if ($project->usesService(self::SERVICE_SHORTNAME)) {
-                $params['services'][] = array('service' => self::SERVICE_SHORTNAME,
-                                              'name'    => 'Git',
-                                              'checked' => false);
-                // TODO: Manage $params['job_id']
+                if (isset($params['job_id']) && !empty($params['job_id'])) {
+                    // TODO: retrieve job details
+                }
+                // TODO: i18n
+                $addForm  = '<p><label for="hudson_use_plugin_git_trigger">Git repository id: </label><input id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger"/></p>';
+                $editForm = '<label for="new_hudson_use_plugin_git_trigger">Trigger a build after Git pushes in repository: </label><input id="new_hudson_use_plugin_git_trigger" name="new_hudson_use_plugin_git_trigger" />';
+                $params['services'][] = array('service'       => self::SERVICE_SHORTNAME,
+                                              'title'         => 'Git trigger',
+                                              'used'          => false,
+                                              'add_form'      => $addForm,
+                                              'edit_form'     => $editForm);
             }
+        }
+    }
+
+    /**
+     * Save ci trigger for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function save_ci_triggers($params) {
+        if (isset($params['group_id']) && !empty($params['group_id']) && isset($params['request']) && !empty($params['request'])) {
+            $pm      = ProjectManager::instance();
+            $project = $pm->getProject($params['group_id']);
+            if ($project->usesService(self::SERVICE_SHORTNAME)) {
+                // TODO: Store data
+            }
+        }
+    }
+
+    /**
+     * Update ci trigger for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function update_ci_triggers($params) {
+        if (isset($params['request']) && !empty($params['request'])) {
+            // TODO: Update trigger
+        }
+    }
+
+    /**
+     * Delete ci trigger for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function delete_ci_triggers($params) {
+        if (isset($params['job_id']) && !empty($params['job_id'])) {
+            // TODO: delete job trigger
         }
     }
 

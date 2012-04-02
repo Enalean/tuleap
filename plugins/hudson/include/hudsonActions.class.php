@@ -43,7 +43,6 @@ class hudsonActions extends Actions {
             $job = new HudsonJob($job_url);
             $use_svn_trigger = ($request->get('hudson_use_svn_trigger') === 'on');
             $use_cvs_trigger = ($request->get('hudson_use_cvs_trigger') === 'on');
-            // TODO: Store plugins details too
             if ($use_svn_trigger || $use_cvs_trigger) {
                 $token = $request->get('hudson_trigger_token');
             } else {
@@ -56,6 +55,9 @@ class hudsonActions extends Actions {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_added'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id='.intval($group_id));
             }
+            $em       = EventManager::instance();
+            $params   = array('group_id' => $group_id, 'request' => $request);
+            $em->processEvent('save_ci_triggers', $params);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
@@ -84,6 +86,9 @@ class hudsonActions extends Actions {
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_updated'));
         }
+        $em       = EventManager::instance();
+        $params   = array('request' => $request);
+        $em->processEvent('update_ci_triggers', $params);
     }
     function deleteJob() {
         $request =& HTTPRequest::instance();
@@ -95,6 +100,9 @@ class hudsonActions extends Actions {
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson','job_deleted'));
         }
+        $em       = EventManager::instance();
+        $params   = array('job_id' => $job_id);
+        $em->processEvent('delete_ci_triggers', $params);
     }
     // }}}
    
