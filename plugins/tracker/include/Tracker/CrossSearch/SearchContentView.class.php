@@ -140,7 +140,12 @@ class Tracker_CrossSearch_SearchContentView {
         $html = '';
         foreach ($this->criteria as $criterion) {
             $value = '';
-            $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
+            
+            if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
+                $field = $criterion->field;
+            } else {
+                $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
+            }
             if ($field) {
                 $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
             }

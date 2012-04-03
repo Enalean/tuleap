@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once 'SemanticTitleReportField.class.php';
+
 class Tracker_CrossSearch_ViewBuilder {
     /**
      * @var Tracker_FormElementFactory
@@ -74,8 +77,16 @@ class Tracker_CrossSearch_ViewBuilder {
     }
     
     public function getCriteria(Project $project, Tracker_Report $report, array $request_criteria) {
+        $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
+        $semantic_fields = $this->getSemanticFieldsCriteria($report);
+        
+        return array_merge($shared_fields, $semantic_fields);
+    }
+
+    public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, array $request_criteria) {
         $fields   = $this->formElementFactory->getProjectSharedFields($project);
         $criteria = array();
+        
         foreach ($fields as $field) {
             $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
             
@@ -86,7 +97,15 @@ class Tracker_CrossSearch_ViewBuilder {
         }
         return $criteria;
     }
-    
+
+    public function getSemanticFieldsCriteria(Tracker_Report $report) {
+        $field       = new Tracker_CrossSearch_SemanticTitleReportField();
+        $id          = null;
+        $rank        = 0;
+        $is_advanced = true;
+        return array(new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced));
+    }
+
     protected function getView(Project $project, Service $service, $criteria, $trackers) {
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
     }
@@ -153,7 +172,5 @@ class Tracker_CrossSearch_ViewBuilder {
         
         return $tracker_ids;
     }
-
 }
-
 ?>
