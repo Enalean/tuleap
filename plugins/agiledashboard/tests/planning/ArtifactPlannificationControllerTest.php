@@ -120,25 +120,27 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     public function itDisplaysTheSearchContentView() {
         $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
+        $semantic_criteria      = array('title' => 'bonjour', 'status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED);
         $expected_criteria = aCrossSearchCriteria()
-                            ->withSharedFieldsCriteria($shared_fields_criteria)
+                            ->withSharedFieldsCriteria(array('221' => array('values' => null)))
+                            ->withSemanticCriteria($semantic_criteria)
                             ->build();
-        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $expected_criteria);
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expected_criteria);
     }
     
     public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
         $shared_fields_criteria = null;
         $expectedCriteria = aCrossSearchCriteria()->build();
-        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $expectedCriteria);
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, null, $expectedCriteria);
     }
      
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
         $shared_fields_criteria = 'invalid parameter type';
         $expectedCriteria = aCrossSearchCriteria()->build();
-        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $expectedCriteria);
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, null, $expectedCriteria);
     }
     
-    private function assertThatWeBuildAcontentViewWith($requested_criteria, $expected_criteria) {
+    private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, $expected_criteria) {
         $project_id = 1111;
         $id         = 987;
         $request_params     = array(
@@ -147,8 +149,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             'group_id'    => $project_id,
         );
         
-        if ($requested_criteria !== null) {
-            $request_params['criteria'] = $requested_criteria;
+        if ($shared_field_criteria !== null) {
+            $request_params['criteria'] = $shared_field_criteria;
         }
         $request  = new Codendi_Request($request_params);
         
@@ -163,7 +165,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $tracker_ids  = array();
         
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, $expected_criteria, $already_linked_items, $tracker_ids));
+        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
         $view_builder->setReturnValue('buildCustomContentView', $content_view);
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
