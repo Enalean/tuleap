@@ -35,6 +35,9 @@ class Tracker_CrossSearch_CriteriaBuilder {
         $this->semantic_value_factory = $semantic_value_factory;
     }
     
+    /**
+     * @return array of \Tracker_Report_Criteria 
+     */
     public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
@@ -42,6 +45,9 @@ class Tracker_CrossSearch_CriteriaBuilder {
         return array_merge($semantic_fields, $shared_fields);
     }
 
+    /**
+     * @return array of \Tracker_Report_Criteria 
+     */
     public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
         $fields   = $this->form_element_factory->getProjectSharedFields($project);
         $criteria = array();
