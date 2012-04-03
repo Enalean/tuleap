@@ -60,15 +60,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $artifact         = $artifact_factory->getArtifactById($artifact_id);
-        $changeset        = $artifact->getChangeset($changeset_id);
-        $tracker          = $artifact->getTracker();
-        $semantic         = Tracker_Semantic_Title::load($tracker);
-        $field            = $semantic->getField();
-        $value            = $changeset->getValue($field);
-        
-        return $value->getText();
+        // Never used (god save polymorphism)
     }
     
 }
