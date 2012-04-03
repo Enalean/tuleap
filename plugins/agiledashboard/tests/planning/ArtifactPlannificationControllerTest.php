@@ -123,6 +123,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $semantic_criteria      = array('title' => 'bonjour', 'status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED);
         $expected_criteria = aCrossSearchCriteria()
                             ->withSharedFieldsCriteria(array('220' => array('values' => array('toto', 'titi'))))
+                            ->withSemanticCriteria($semantic_criteria)
                             ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expected_criteria);
     }
@@ -136,7 +137,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
         $shared_fields_criteria = 'invalid parameter type';
         $expectedCriteria = aCrossSearchCriteria()->build();
-        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, null, $expectedCriteria);
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, 'sfdsf', $expectedCriteria);
     }
     
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, $expected_criteria) {
@@ -151,8 +152,13 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         if ($shared_field_criteria !== null) {
             $request_params['criteria'] = $shared_field_criteria;
         }
-        $request  = new Codendi_Request($request_params);
         
+        if ($semantic_criteria !== null) {
+            $request_params['semantic_criteria'] = $semantic_criteria;
+        }
+        
+        $request  = new Codendi_Request($request_params);
+
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $a_list_of_draggable_items = 'A list of draggable items';
         $content_view->setReturnValue('fetch', $a_list_of_draggable_items);

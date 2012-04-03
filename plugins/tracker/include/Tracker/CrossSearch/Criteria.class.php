@@ -31,7 +31,7 @@ class Tracker_CrossSearch_Criteria {
      */
     public function __construct($shared_fields_criteria=array(), $semantic_criteria = null) {
         $this->shared_fields_criteria = $shared_fields_criteria;
-        $this->semantic_criteria      = isset($semantic_criteria) ? $semantic_criteria : array('title' => '', 'status' => '');
+        $this->semantic_criteria      = $semantic_criteria ? $semantic_criteria : array('title' => '', 'status' => '');
     }
     
     public function getSharedFields() {

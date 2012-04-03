@@ -26,6 +26,11 @@ class CriteriaTest extends TuleapTestCase {
         $criteria = new Tracker_CrossSearch_Criteria(array());
         $this->assertIdentical('', $criteria->getStatus());
         $this->assertIdentical('', $criteria->getTitle());
+
+        $criteria = new Tracker_CrossSearch_Criteria(array(), array());
+        $this->assertIdentical('', $criteria->getStatus());
+        $this->assertIdentical('', $criteria->getTitle());
     }
+    
 }
 ?>

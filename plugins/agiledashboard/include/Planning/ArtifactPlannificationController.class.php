@@ -54,19 +54,21 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
 
     private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Planning $planning, $artifacts_to_select) {
         $project  = $manager->getProject($this->request->get('group_id'));
-        $request_criteria = $this->getCriteriaFromRequest();
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
         $tracker_ids = $planning->getBacklogTrackerIds();
-        $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria);
+        $request_criteria  = $this->getArrayFromRequest('criteria');
+        $semantic_criteria = $this->getArrayFromRequest('semantic_criteria');
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria);
+        error_log(print_r($cross_search_criteria, true));
         return $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
     }
     
-    private function getCriteriaFromRequest() {
+    private function getArrayFromRequest($parameter_name) {
         $request_criteria = array();
-        $valid_criteria = new Valid_Array('criteria');
+        $valid_criteria = new Valid_Array($parameter_name);
         $valid_criteria->required();
         if ($this->request->valid($valid_criteria)) {
-            $request_criteria = $this->request->get('criteria');
+            $request_criteria = $this->request->get($parameter_name);
         }
         return $request_criteria;
     }
