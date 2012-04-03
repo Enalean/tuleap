@@ -54,7 +54,7 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
     
     /***** Assertions *********************************************************/
     
-    private function assertNotEmpty($array) {
+    protected function assertNotEmpty($array) {
         $this->assertTrue(count($array) > 0);
     }
     
