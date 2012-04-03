@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 
 class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Field {
 
-    public $id = 'semantic_title';
+    private $id = 'semantic_title';
     
     public function isUsed() {
         return true;
