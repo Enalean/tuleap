@@ -21,7 +21,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once('Git_CiDao.class.php');
+require_once('Git_Ci.class.php');
 
 /**
  * GitPlugin
@@ -400,53 +400,9 @@ class GitPlugin extends Plugin {
      * @return Void
      */
     public function ci_triggers($params) {
-        if (isset($params['group_id']) && !empty($params['group_id'])) {
-            $pm      = ProjectManager::instance();
-            $project = $pm->getProject($params['group_id']);
-            if ($project->usesService(self::SERVICE_SHORTNAME)) {
-                $repositoryId = '';
-                $used         = array();
-                $checked      = '';
-                $ciDao        = new Git_CiDao();
-                if (isset($params['job_id']) && !empty($params['job_id'])) {
-                    $res   = $ciDao->retrieveTrigger($params['job_id']);
-                    if ($res && !$res->isError() && $res->rowCount() == 1) {
-                        $row = $res->getRow();
-                        $repositoryId = $row['repository_id'];
-                        $checked      = 'checked="checked"';
-                    }
-                } else {
-                    $res = $ciDao->retrieveTriggers($params['group_id']);
-                    foreach ($res as $row) {
-                        $used[$row['job_id']] = true;
-                    }
-                }
-                // TODO: i18n
-                $addForm  = '<p>
-                                 <div id="hudson_use_plugin_git_trigger_form">
-                                     <label for="hudson_use_plugin_git_trigger">Git repository id: </label>
-                                     <input id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />
-                                 </div>
-                                 <div id="hudson_use_plugin_git_trigger_checkbox">
-                                     Git 
-                                     <input onclick="toggle_checkbox()" type="checkbox" '.$checked.' />
-                                 </div>
-                                 <script>
-                                     function toggle_checkbox() {
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 });
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_checkbox\', \'slide\', { duration: 0.3 });
-                                     }
-                                     Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
-                                 </script>
-                             </p>';
-                $editForm = '<label for="new_hudson_use_plugin_git_trigger">Trigger a build after Git pushes in repository: </label><input id="new_hudson_use_plugin_git_trigger" name="new_hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />';
-                $params['services'][] = array('service'       => self::SERVICE_SHORTNAME,
-                                              'title'         => 'Git trigger',
-                                              'used'          => $used,
-                                              'add_form'      => $addForm,
-                                              'edit_form'     => $editForm);
-            }
-        }
+        $ci = new Git_Ci();
+        $triggers = $ci->retrieveTriggers($params);
+        $params['services'][] = $triggers;
     }
 
     /**
@@ -460,8 +416,8 @@ class GitPlugin extends Plugin {
         if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
             $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
             if ($repositoryId) {
-                $ciDao = new Git_CiDao();
-                $ciDao->saveTrigger($params['job_id'], $repositoryId);
+                $ci = new Git_Ci();
+                $ci->saveTrigger($params['job_id'], $repositoryId);
             }
         }
     }
@@ -478,8 +434,8 @@ class GitPlugin extends Plugin {
             $jobId        = $params['request']->get('job_id');
             $repositoryId = $params['request']->get('new_hudson_use_plugin_git_trigger');
             if ($jobId && $repositoryId) {
-                $ciDao = new Git_CiDao();
-                $ciDao->saveTrigger($jobId, $repositoryId);
+                $ci = new Git_Ci();
+                $ci->saveTrigger($jobId, $repositoryId);
             }
         }
     }
@@ -493,8 +449,8 @@ class GitPlugin extends Plugin {
      */
     public function delete_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
-            $ciDao = new Git_CiDao();
-            $ciDao->deleteTrigger($params['job_id']);
+            $ci = new Git_Ci();
+            $ci->deleteTrigger($params['job_id']);
         }
     }
 
