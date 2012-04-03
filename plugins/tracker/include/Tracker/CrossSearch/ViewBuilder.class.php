@@ -21,6 +21,7 @@
 require_once 'SemanticTitleReportField.class.php';
 require_once 'Criteria.class.php';
 require_once 'SemanticStatusReportField.class.php';
+require_once 'SemanticValueFactory.class.php';
 class Tracker_CrossSearch_ViewBuilder {
     /**
      * @var Tracker_FormElementFactory
@@ -33,14 +34,24 @@ class Tracker_CrossSearch_ViewBuilder {
     private $tracker_factory;
     
     /**
+     * @var Tracker_CrossSearch_SemanticValueFactory
+     */
+    private $semantic_value_factory;
+    
+    /**
      * @var Tracker_CrossSearch_Search
      */
     private $search;
 
-    public function __construct(Tracker_FormElementFactory $formElementFactory, TrackerFactory $tracker_factory, Tracker_CrossSearch_Search $search) {
-        $this->formElementFactory = $formElementFactory;
-        $this->tracker_factory    = $tracker_factory;
-        $this->search             = $search;
+    public function __construct(Tracker_FormElementFactory               $formElementFactory,
+                                TrackerFactory                           $tracker_factory,
+                                Tracker_CrossSearch_Search               $search,
+                                Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
+        
+        $this->formElementFactory     = $formElementFactory;
+        $this->tracker_factory        = $tracker_factory;
+        $this->semantic_value_factory = $semantic_value_factory;
+        $this->search                 = $search;
     }
     
     /**
@@ -95,7 +106,7 @@ class Tracker_CrossSearch_ViewBuilder {
 
     public function getSemanticFieldsCriteria(Tracker_Report $report, $cross_search_criteria) {
         $field       = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle());
-        $statusfield = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus());
+        $statusfield = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus(), $this->semantic_value_factory);
         $id          = null;
         $rank        = 0;
         $is_advanced = true;

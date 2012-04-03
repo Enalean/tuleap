@@ -29,6 +29,7 @@ require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
 require_once('CrossSearch/ViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
+require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 
@@ -819,9 +820,13 @@ class TrackerManager { /* extends Engine? */
     private function getHierarchyFactory() {
         return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
     }
+    
+    private function getSemanticValueFactory() {
+        return new Tracker_CrossSearch_SemanticValueFactory();
+    }
 
     public function getCrossSearchViewBuilder() {
-        return new Tracker_CrossSearch_ViewBuilder($this->getTracker_FormElementFactory(), $this->getTrackerFactory(), $this->getCrossSearch());
+        return new Tracker_CrossSearch_ViewBuilder($this->getTracker_FormElementFactory(), $this->getTrackerFactory(), $this->getCrossSearch(), $this->getSemanticValueFactory());
     }
 
 }

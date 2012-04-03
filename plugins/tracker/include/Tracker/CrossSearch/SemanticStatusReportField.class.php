@@ -34,10 +34,19 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
      */
     private $id = 'status';
     
+    /**
+     * @var string
+     */
     private $status;
     
-    public function __construct($status) {
-        $this->status = $status;
+    /**
+     * @var Tracker_CrossSearch_SemanticValueFactory
+     */
+    private $factory;
+    
+    public function __construct($status, $factory) {
+        $this->status  = $status;
+        $this->factory = $factory;
     }
     
     public function isUsed() {
@@ -72,12 +81,7 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        
-        $tracker = $artifact_factory->getArtifactById($artifact_id)->getTracker();
-        $value   = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
-        
-        return $value;
+        return $this->factory->getStatus($artifact_id, $changeset_id);
     }
     
 }

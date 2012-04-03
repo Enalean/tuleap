@@ -20,15 +20,18 @@
 
 require_once dirname(__FILE__).'/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report_Criteria.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 
 Mock::generate('Tracker_Report_Criteria');
+Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
 
 class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
         $this->status = '1';
-        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status);
+        $this->semantic_value_factory = new MockTracker_CrossSearch_SemanticValueFactory();
+        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $this->semantic_value_factory);
         
         $this->setText('Status', array('plugin_tracker_crosssearch', 'semantic_status_label'));
         $this->setText('Any',    array('plugin_tracker_crosssearch', 'semantic_status_any'));
@@ -77,7 +80,7 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
 
     private function fetchCriteria($option) {
         $criteria = new MockTracker_Report_Criteria();
-        $field = new Tracker_CrossSearch_SemanticStatusReportField($option);
+        $field = new Tracker_CrossSearch_SemanticStatusReportField($option, $this->semantic_value_factory);
         return $field->fetchCriteria($criteria);
     }
 
