@@ -56,7 +56,7 @@ class Tracker_CrossSearch_SearchView {
     public function __construct(Project                                 $project,
                                 Service                                 $service,
                                 array                                   $criteria, 
-                                                                        $trackers,
+                                array                                   $trackers,
                                 Tracker_CrossSearch_SearchContentView   $content_view) {
         $this->project           = $project;
         $this->service           = $service;
@@ -120,6 +120,7 @@ class Tracker_CrossSearch_SearchView {
             $html .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_not_found').'</em></p>';
         }
         $html .= '</div>';
+        
         return $html;
     }
 

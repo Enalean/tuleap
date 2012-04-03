@@ -25,56 +25,56 @@ class Tracker_CrossSearch_SharedFieldFactory {
     const VALUE_NONE = 100;
     
     public function getSharedFields($criteria) {
-        $sharedFields = array();
+        $shared_fields = array();
 
         if ($criteria) {
-            foreach($criteria as $fieldId => $data) {
-                $valueIds = $data['values'];
+            foreach($criteria as $field_id => $data) {
+                $value_ids = $data['values'];
                 
-                if ($valueIds != array('')) {
-                    $sharedFields[] = $this->getSharedField($fieldId, $valueIds);
+                if ($value_ids != array('')) {
+                    $shared_fields[] = $this->getSharedField($field_id, $value_ids);
                 }
             }
         }
         
-        return $sharedFields;
+        return $shared_fields;
     }
     
-    private function getSharedField($fieldId, $valueIds) {
-        $sharedField = new Tracker_CrossSearch_SharedField();
+    private function getSharedField($field_id, $value_ids) {
+        $shared_field = new Tracker_CrossSearch_SharedField();
         
-        $this->addSharedFieldId($sharedField, $fieldId);
-        $this->addSharedValueIds($sharedField, $valueIds);
+        $this->addSharedFieldId($shared_field, $field_id);
+        $this->addSharedValueIds($shared_field, $value_ids);
 
-        return $sharedField;
+        return $shared_field;
     }
     
-    private function addSharedFieldId(Tracker_CrossSearch_SharedField $sharedField, $fieldId) {
-        foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
-            $sharedField->addFieldId($row['id']);
+    private function addSharedFieldId(Tracker_CrossSearch_SharedField $shared_field, $field_id) {
+        foreach ($this->getDao()->searchSharedFieldIds($field_id) as $row) {
+            $shared_field->addFieldId($row['id']);
         }
     }
     
-    private function addSharedValueIds(Tracker_CrossSearch_SharedField $sharedField, array $valueIds) {
-        $notNoneValueIds = $this->filterAndAddNoneValueIds($sharedField, $valueIds);
+    private function addSharedValueIds(Tracker_CrossSearch_SharedField $shared_field, array $value_ids) {
+        $not_none_value_ids = $this->filterAndAddNoneValueIds($shared_field, $value_ids);
 
-        foreach ($this->getDao()->searchSharedValueIds($notNoneValueIds ) as $row) {
-            $sharedField->addValueId($row['id']);
+        foreach ($this->getDao()->searchSharedValueIds($not_none_value_ids ) as $row) {
+            $shared_field->addValueId($row['id']);
         }
     }
     
-    private function filterAndAddNoneValueIds(Tracker_CrossSearch_SharedField $sharedField, array $valueIds) {
-        $notNoneValueIds = array();
+    private function filterAndAddNoneValueIds(Tracker_CrossSearch_SharedField $shared_field, array $value_ids) {
+        $not_none_value_ids = array();
         
-        foreach($valueIds as $valueId) {
-            if ($valueId == self::VALUE_NONE) {
-                $sharedField->addValueId($valueId);
+        foreach($value_ids as $value_id) {
+            if ($value_id == self::VALUE_NONE) {
+                $shared_field->addValueId($value_id);
             } else {
-                $notNoneValueIds[] = $valueId;
+                $not_none_value_ids[] = $value_id;
             }
         }
         
-        return $notNoneValueIds;
+        return $not_none_value_ids;
     }
     
     protected function getDao() {

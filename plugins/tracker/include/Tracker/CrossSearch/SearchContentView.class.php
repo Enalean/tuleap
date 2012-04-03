@@ -45,28 +45,31 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
-    function __construct(       
-                        Tracker_Report                   $report, 
-                        array                            $criteria, 
-                        TreeNode                         $tree_of_artifacts, 
-                        Tracker_ArtifactFactory          $artifact_factory, 
-                        Tracker_FormElementFactory       $factory) {
+    function __construct(Tracker_Report                   $report, 
+                         array                            $criteria, 
+                         TreeNode                         $tree_of_artifacts, 
+                         Tracker_ArtifactFactory          $artifact_factory, 
+                         Tracker_FormElementFactory       $factory) {
+        
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
-        $this->factory    = $factory;
-        $treeVisistor            = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->tree_of_artifacts->accept($treeVisistor);
+        $this->factory           = $factory;
+        
+        $treeVisitor = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
+        $this->tree_of_artifacts->accept($treeVisitor);
     }
     
     public function fetch() {
+        $report_can_be_modified = false;
+        
         $html  = '';
         $html .= '<table cellpadding="0" cellspacing="0"><tr valign="top"><td>';
-        $report_can_be_modified = false;
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         $html .= $this->fetchResults();
         $html .= '</td></tr></table>';
+        
         return $html;
     }
     
@@ -79,6 +82,7 @@ class Tracker_CrossSearch_SearchContentView {
             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
         }
         $html .= '</div>';
+        
         return $html;
     }
     
@@ -92,9 +96,10 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     public function visit(TreeNode $node) {
-        $html = '';
-        $row = $node->getData();
+        $html     = '';
+        $row      = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
+        
         if ($artifact) {
             $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
             $html .= '<td nowrap>';
@@ -104,26 +109,30 @@ class Tracker_CrossSearch_SearchContentView {
             $html .= $this->draggableCell($row['id'], $row['title']);
             $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
             $html .= '</tr>';
+            
             foreach ($node->getChildren() as $child) {
                 $html .= $child->accept($this);
             }
         }
+        
         return $html;
     }
     
     private function fetchTBody() {
+        $this->current_index = 0;
+        
         $html  = '';
         $html .= '<tbody>';
-        $this->current_index = 0;
         foreach ($this->tree_of_artifacts->getChildren() as $child) {
             $html.= $child->accept($this);
         }
         $html .= '</tbody>';
+        
         return $html;
     }
     
     private function fetchTHead() {
-        $html = '';
+        $html  = '';
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
@@ -135,13 +144,16 @@ class Tracker_CrossSearch_SearchContentView {
         }
         $html .= '  </tr>';
         $html .= '</thead>';
+        
         return $html;
     }
     
     private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
         $html = '';
+        
         foreach ($this->criteria as $criterion) {
             $value = '';
+            
             if ($this->shouldDisplayField($criterion->field)) {
                 if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticStatusReportField')) {
                     $field = $criterion->field;
@@ -152,9 +164,11 @@ class Tracker_CrossSearch_SearchContentView {
                 if ($field) {
                     $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
                 }
+                
                 $html .= '<td>'. $value .'</td>';
             }
         }
+        
         return $html;
     }
     

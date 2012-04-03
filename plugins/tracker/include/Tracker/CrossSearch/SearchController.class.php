@@ -35,7 +35,7 @@ class Tracker_CrossSearch_SearchController {
     /**
      * @var ProjectManager
      */
-    private $projectManager;
+    private $project_manager;
     
     /**
      * @var Layout
@@ -43,14 +43,14 @@ class Tracker_CrossSearch_SearchController {
     private $layout;
     
     public function __construct(Codendi_Request                 $request,
-                                ProjectManager                  $projectManager, 
+                                ProjectManager                  $project_manager, 
                                 Layout                          $layout,
                                 Tracker_CrossSearch_ViewBuilder $view_builder) {
         
-        $this->request            = $request;
-        $this->projectManager     = $projectManager;
-        $this->layout             = $layout;
-        $this->view_builder       = $view_builder;
+        $this->request         = $request;
+        $this->project_manager = $project_manager;
+        $this->layout          = $layout;
+        $this->view_builder    = $view_builder;
     }
 
     public function search() {
@@ -58,7 +58,7 @@ class Tracker_CrossSearch_SearchController {
             $request_criteria  = $this->request->get('criteria');
             $semantic_criteria = $this->request->get('semantic_criteria');
             $project_id        = $this->request->get('group_id');
-            $project           = $this->getProject($project_id, $this->projectManager);
+            $project           = $this->getProject($project_id, $this->project_manager);
             
             if (! $request_criteria) {
                 $request_criteria = array();
@@ -82,11 +82,12 @@ class Tracker_CrossSearch_SearchController {
     /**
      * @return Project
      */
-    private function getProject($projectId, $projectManager) {
-        $project   = $projectManager->getProject($projectId);
+    private function getProject($project_id, $project_manager) {
+        $project = $project_manager->getProject($project_id);
+        
         if ($project->isError()) {
-            $errorMessage = $GLOBALS['Language']->getText('project', 'does_not_exist');
-            throw new Tracker_CrossSearch_ProjectNotFoundException($errorMessage);
+            $error_message = $GLOBALS['Language']->getText('project', 'does_not_exist');
+            throw new Tracker_CrossSearch_ProjectNotFoundException($error_message);
         } else {
             return $project;
         }

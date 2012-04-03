@@ -21,9 +21,8 @@
 class Tracker_CrossSearch_SemanticValueFactory {
     public function getStatus($artifact_id, $changeset_id) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        
-        $tracker = $artifact_factory->getArtifactById($artifact_id)->getTracker();
-        $value   = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
+        $tracker          = $artifact_factory->getArtifactById($artifact_id)->getTracker();
+        $value            = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
         
         return $value;
     }
