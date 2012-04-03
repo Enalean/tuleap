@@ -109,34 +109,36 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
 }
 
 
-class Tracker_CrossSearch_ViewBuilder_WithTitleTest extends TuleapTestCase {
-    public function itPassesTheSearchedTitleToTheField() {
+class Tracker_CrossSearch_ViewBuilder_WithSemanticTest extends TuleapTestCase {
+    
+    protected function getReportCriteria($cross_search_criteria) {
         $semantic_factory      = new MockTracker_CrossSearch_SemanticValueFactory();
         $builder               = new Tracker_CrossSearch_CriteriaBuilder(new MockTracker_FormElementFactory(), $semantic_factory);
         $report                = new MockTracker_Report();
+        return $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
+    }
+    
+    public function itPassesTheSearchedTitleToTheField() {
+        
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->withSemanticCriteria(array('title' => 'Foo', 'status' => ''))
                                 ->build();
-        $report_criteria       = $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
+        $report_criteria = $this->getReportCriteria($cross_search_criteria);
+        
         $actual_field          = $report_criteria[0]->field;
         $expected_field        = new Tracker_CrossSearch_SemanticTitleReportField('Foo');
         
         $this->assertEqual($expected_field, $actual_field);
     }
-}
-
-class Tracker_CrossSearch_CriteriaBuilder_SemanticStatusFieldTest extends TuleapTestCase {
 
     public function itPassesTheSearchedStatusToTheField() {
-        $semantic_factory      = new MockTracker_CrossSearch_SemanticValueFactory();
-        $builder               = new Tracker_CrossSearch_CriteriaBuilder(new MockTracker_FormElementFactory(), $semantic_factory);
-        $report                = new MockTracker_Report();
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->forOpenItems()
                                 ->build();
-        $report_criteria       = $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
+        $report_criteria       = $this->getReportCriteria($cross_search_criteria);
         $actual_field          = $report_criteria[1]->field;
-        $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN, $semantic_factory);
+        $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN,
+                                                                                   new MockTracker_CrossSearch_SemanticValueFactory());
         
         $this->assertEqual($expected_field, $actual_field);
     }
