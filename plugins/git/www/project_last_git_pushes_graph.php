@@ -40,7 +40,6 @@ if ($request->valid($vDuration)) {
 
 $dao             = new GitDao();
 $repoList        = $dao->getProjectRepositoryList($groupId);
-$duration        = 7 * $nb_weeks;
 $day             = 24 * 3600;
 $week            = 7 * $day;
 $today           = $_SERVER['REQUEST_TIME'];
