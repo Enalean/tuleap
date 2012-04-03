@@ -122,8 +122,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
         $semantic_criteria      = array('title' => 'bonjour', 'status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED);
         $expected_criteria = aCrossSearchCriteria()
-                            ->withSharedFieldsCriteria(array('221' => array('values' => null)))
-                            ->withSemanticCriteria($semantic_criteria)
+                            ->withSharedFieldsCriteria(array('220' => array('values' => array('toto', 'titi'))))
                             ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expected_criteria);
     }
