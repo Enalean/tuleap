@@ -19,6 +19,7 @@
  */
 
 require_once 'SemanticTitleReportField.class.php';
+require_once 'Criteria.class.php';
 
 class Tracker_CrossSearch_ViewBuilder {
     /**
@@ -45,9 +46,9 @@ class Tracker_CrossSearch_ViewBuilder {
     /**
      * @return Tracker_CrossSearch_SearchView 
      */
-    public function buildView(Project $project, array $request_criteria, $title) {
+    public function buildView(Project $project, Tracker_CrossSearch_Criteria $request_criteria) {
         $service            = $this->getService($project);
-        $criteria           = $this->getCriteria($project, $this->getReport(), $request_criteria, $title);
+        $criteria           = $this->getCriteria($project, $this->getReport(), $request_criteria);
         $trackers           = $this->getTrackers($project, $this->tracker_factory);
         return $this->getView($project, $service, $criteria, $trackers);
    
@@ -56,39 +57,39 @@ class Tracker_CrossSearch_ViewBuilder {
     /**
      * @return type Tracker_CrossSearch_SearchContentView
      */
-    public function buildContentView(Project $project, array $request_criteria, $title) {
+    public function buildContentView(Project $project, Tracker_CrossSearch_Criteria $cross_search_criteria) {
         $tracker_ids        = $this->getTrackersIds($project, $this->tracker_factory);
-        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $request_criteria, $title, array(), $tracker_ids);
+        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $cross_search_criteria, array(), $tracker_ids);
     }
     
     /**
      * @return Planning_SearchContentView
      */
-    public function buildPlanningContentView(Project $project, array $request_criteria, $title, array $excludedArtifactIds, array $tracker_ids) {
-        return $this->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $excludedArtifactIds, $tracker_ids);
+    public function buildPlanningContentView(Project $project, Tracker_CrossSearch_Criteria $cross_search_criteria, array $excludedArtifactIds, array $tracker_ids) {
+        return $this->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
     }
     
-    private function buildCustomContentView($classname, Project $project, array $request_criteria, $title, array $excludedArtifactIds, array $tracker_ids) {
+    private function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Criteria $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
         $report             = $this->getReport();
-        $criteria           = $this->getCriteria($project, $report, $request_criteria, $title);
+        $criteria           = $this->getCriteria($project, $report, $request_criteria);
         $artifacts          = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
         
         return $this->getContentView($classname, $report, $criteria, $artifacts);
     }
     
-    public function getCriteria(Project $project, Tracker_Report $report, array $request_criteria, $title) {
+    public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
-        $semantic_fields = $this->getSemanticFieldsCriteria($report, $title);
+        $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
         
         return array_merge($shared_fields, $semantic_fields);
     }
 
-    public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, array $request_criteria) {
+    public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
         $fields   = $this->formElementFactory->getProjectSharedFields($project);
         $criteria = array();
         
         foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
+            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria->getSharedFields()));
             
             $id          = null;
             $rank        = 0;
@@ -98,8 +99,8 @@ class Tracker_CrossSearch_ViewBuilder {
         return $criteria;
     }
 
-    public function getSemanticFieldsCriteria(Tracker_Report $report, $title) {
-        $field       = new Tracker_CrossSearch_SemanticTitleReportField($title);
+    public function getSemanticFieldsCriteria(Tracker_Report $report, $cross_search_criteria) {
+        $field       = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle());
         $id          = null;
         $rank        = 0;
         $is_advanced = true;

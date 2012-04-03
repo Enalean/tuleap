@@ -58,8 +58,8 @@ class Tracker_CrossSearch_Search {
     /**
      * @deprecated
      */
-    public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, $criteria = null, $excludedArtifactIds = array()) {
-        $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
+    public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Criteria $criteria, $excludedArtifactIds = array()) {
+        $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria->getSharedFields());
         $artifacts            = array();
         
         if (count($searchedSharedFields) > 0) { 

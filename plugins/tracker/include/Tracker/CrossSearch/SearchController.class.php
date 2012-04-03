@@ -22,6 +22,7 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
+require_once 'Criteria.class.php';
 require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
 require_once dirname(__FILE__) .'/../HomeNavPresenter.class.php';
 
@@ -58,12 +59,17 @@ class Tracker_CrossSearch_SearchController {
             $project_id       = $this->request->get('group_id');
             $project          = $this->getProject($project_id, $this->projectManager);
             
-            if (!$request_criteria) {
-                $request_criteria = array();
-            }
+            if (! $request_criteria)                                     { $request_criteria                   = array(); }
+            if (! array_key_exists('shared_fields', $request_criteria))  { $request_criteria['shared_fields']  = array(); }
+            if (! array_key_exists('semantic_title', $request_criteria)) { $request_criteria['semantic_title'] = null; }
             
-            $view = $this->view_builder->buildView($project, $request_criteria);
-            $content_view = $this->view_builder->buildContentView($project, $request_criteria);
+            $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria['shared_fields'],
+                    
+                                                                      $request_criteria['semantic_title']);
+            
+            $view         = $this->view_builder->buildView($project, $cross_search_criteria);
+            $content_view = $this->view_builder->buildContentView($project, $cross_search_criteria);
+            
             $view->render($content_view);
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
