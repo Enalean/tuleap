@@ -81,7 +81,7 @@ class Tracker_CrossSearch_ViewBuilder {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
         
-        return array_merge($shared_fields, $semantic_fields);
+        return array_merge($semantic_fields, $shared_fields);
     }
 
     public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
