@@ -64,7 +64,6 @@ class Git_Ci {
                         $used[$row['job_id']] = true;
                     }
                 }
-                // TODO: i18n
                 $addForm  = '<p>
                                  <div id="hudson_use_plugin_git_trigger_form">
                                      <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
