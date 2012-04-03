@@ -24,6 +24,9 @@ require_once dirname(__FILE__).'/../Report/Tracker_Report_Criteria.class.php';
 
 class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Field {
 
+    /**
+     * @var string
+     */
     private $id = 'title';
     
     /**
