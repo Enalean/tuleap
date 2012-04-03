@@ -111,15 +111,9 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
 
 class Tracker_CrossSearch_ViewBuilder_WithSemanticTest extends TuleapTestCase {
     
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         $this->semantic_factory = new MockTracker_CrossSearch_SemanticValueFactory();
-    }
-    
-    protected function getReportCriteria($cross_search_criteria) {
-        $builder               = new Tracker_CrossSearch_CriteriaBuilder(new MockTracker_FormElementFactory(), $this->semantic_factory);
-        $report                = new MockTracker_Report();
-        return $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
     }
     
     public function itPassesTheSearchedTitleToTheField() {
@@ -146,6 +140,13 @@ class Tracker_CrossSearch_ViewBuilder_WithSemanticTest extends TuleapTestCase {
         
         $this->assertEqual($expected_field, $actual_field);
     }
+    
+    protected function getReportCriteria($cross_search_criteria) {
+        $builder               = new Tracker_CrossSearch_CriteriaBuilder(new MockTracker_FormElementFactory(), $this->semantic_factory);
+        $report                = new MockTracker_Report();
+        return $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
+    }
+    
 }
 
 ?>
