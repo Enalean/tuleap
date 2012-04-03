@@ -37,16 +37,16 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     /**
      * @var string
      */
-    private $status;
+    private $searched_status;
     
     /**
      * @var Tracker_CrossSearch_SemanticValueFactory
      */
-    private $factory;
+    private $semantic_value_factory;
     
-    public function __construct($status, $factory) {
-        $this->status  = $status;
-        $this->factory = $factory;
+    public function __construct($searched_status, Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
+        $this->searched_status        = $searched_status;
+        $this->semantic_value_factory = $semantic_value_factory;
     }
     
     public function isUsed() {
@@ -56,9 +56,9 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $selected        = 'selected="selected"';
         $not_selected    = '';
-        $selectionOpen   = $this->status === self::STATUS_OPEN   ? $selected : $not_selected;
-        $selectionClosed = $this->status === self::STATUS_CLOSED ? $selected : $not_selected;
-        $selectionAny    = $this->status === self::STATUS_ANY    ? $selected : $not_selected;
+        $selectionOpen   = $this->searched_status === self::STATUS_OPEN   ? $selected : $not_selected;
+        $selectionClosed = $this->searched_status === self::STATUS_CLOSED ? $selected : $not_selected;
+        $selectionAny    = $this->searched_status === self::STATUS_ANY    ? $selected : $not_selected;
         
         $label = $this->getLabel();
         return '
@@ -81,7 +81,7 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        return $this->factory->getStatus($artifact_id, $changeset_id);
+        return $this->semantic_value_factory->getStatus($artifact_id, $changeset_id);
     }
     
 }

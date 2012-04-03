@@ -32,10 +32,10 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
     /**
      * @var string
      */
-    private $title;
+    private $searched_title;
     
-    public function __construct($title) {
-        $this->title = $title;
+    public function __construct($searched_title) {
+        $this->searched_title = $searched_title;
     }
     
     public function isUsed() {
@@ -46,7 +46,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
         $html  = '';
         $html .= '<label for="tracker_report_criteria_semantic_title" title="#">'. $this->getLabel().'</label>';
         $html .= '<br />';
-        $html .= '<input type="text" name="semantic_criteria[title]" id="tracker_report_criteria_semantic_title" value="'.$this->title.'" />';
+        $html .= '<input type="text" name="semantic_criteria[title]" id="tracker_report_criteria_semantic_title" value="'.$this->searched_title.'" />';
         
         return $html;
     }
