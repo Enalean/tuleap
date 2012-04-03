@@ -30,6 +30,7 @@ Mock::generate('Tracker_CrossSearch_SearchDao');
 Mock::generate('Project');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Hierarchy');
+Mock::generate('Tracker_HierarchyFactory');
 
 class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
@@ -68,7 +69,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
                 ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
                 ->build();
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, array('title' => null, 'status' => null), array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, array('title' => '', 'status' => ''), array()));
 
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -79,7 +80,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
                 ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
                 ->build();
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, array('title' => null, 'status' => null), array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, array('title' => '', 'status' => ''), array()));
         
         $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
         $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);
