@@ -25,6 +25,7 @@ Mock::generate('Tracker_Report_Criteria');
 
 class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function setUp() {
+        parent::setUp();
         $this->status = '1';
         $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status);
     }
@@ -40,9 +41,9 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function itCanRenderASearchCriteria() {
         $criteria = new MockTracker_Report_Criteria();
         $html = $this->field->fetchCriteria($criteria);
-        $this->assertPattern('%<select>.*Open.*</select>%s', $html);
-        $this->assertPattern('%<select>.*Any.*</select>%s', $html);
-        $this->assertPattern('%<select>.*Closed.*</select>%s', $html);
+        $this->assertPattern('%<select.*Open.*</select>%s', $html);
+        $this->assertPattern('%<select.*Any.*</select>%s', $html);
+        $this->assertPattern('%<select.*Closed.*</select>%s', $html);
     }
     
     public function testTheCriteriaIncludesTheLabel() {
