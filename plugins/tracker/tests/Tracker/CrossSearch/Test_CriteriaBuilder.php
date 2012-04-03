@@ -20,13 +20,13 @@
  */
 
 /**
- * @return \Tracker_CrossSearch_CriteriaBuilder 
+ * @return \TTest_Tracker_CrossSearch_CriteriaBuilder
  */
 function aCrossSearchCriteria() {
-    return new Tracker_CrossSearch_CriteriaBuilder();
+    return new Test_Tracker_CrossSearch_CriteriaBuilder();
 }
 
-class Tracker_CrossSearch_CriteriaBuilder {
+class Test_Tracker_CrossSearch_CriteriaBuilder {
 
     public function __construct() {
         $this->sharedFieldsCriteria = array();
@@ -41,7 +41,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     }
 
     /**
-     * @return \Tracker_CrossSearch_CriteriaBuilder 
+     * @return \Test_Tracker_CrossSearch_CriteriaBuilder
      */
     public function withSharedFieldsCriteria($criteria) {
         $this->sharedFieldsCriteria = $criteria;
@@ -49,7 +49,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     }
 
     /**
-     * @return \Tracker_CrossSearch_CriteriaBuilder 
+     * @return \Test_Tracker_CrossSearch_CriteriaBuilder
      */
     public function withSemanticCriteria($semantic_criteria) {
         $this->semanticCriteria = $semantic_criteria;
