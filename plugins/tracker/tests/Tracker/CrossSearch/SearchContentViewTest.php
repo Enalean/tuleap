@@ -47,7 +47,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         return $root;
     }
     
-    public function itDisplaysSemanticStatusInSearchResults() {
+    public function itDoesNotTryToRetrieveSharedFieldOriginForSemanticStatus() {
         $status            = '1'; // Open
         $report            = new MockTracker_Report();
         $status_field      = new Tracker_CrossSearch_SemanticStatusReportField($status);
@@ -58,13 +58,11 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $tree_of_artifacts = $this->buildTreeWithArtifact($artifact_id);
         $artifact_factory  = new MockTracker_ArtifactFactory();
         $factory           = new MockTracker_FormElementFactory();
+        $tracker           = new MockTracker();
         
         $artifact_factory->setReturnValue('getArtifactById', $artifact, array($artifact_id));
         $artifact_factory->expectOnce('getArtifactById', array($artifact_id));
-        
-        $tracker = new MockTracker();
         $artifact->setReturnValue('getTracker', $tracker);
-        // TODO: do not call getFieldFromTrackerAndSharedField (status_field is not a shared field)
         $factory->setReturnValue('getFieldFromTrackerAndSharedField', $status_field, array($tracker, $status_field));
         $factory->expectNever('getFieldFromTrackerAndSharedField');
         
@@ -74,27 +72,6 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
                                                           $artifact_factory,
                                                           $factory);
         $html = $view->fetch();
-//        echo '<pre>'.Codendi_HTMLPurifier::instance()->purify($html).'</pre>';
-//        $this->assertPattern('/<select>.*<option [^>]*selected[^>]*>'.$status.'/', $html);
     }
-    
-//    public function itDisplaysASelectBoxWithOpenCloseOptions() {}
-//    public function itDisplaysTheSearchedSemanticStatusInSearchForm() {} {
-//        $status            = '1'; // Open
-//        $report            = new MockTracker_Report();
-//        $status_field      = new Tracker_CrossSearch_SemanticStatusReportField($status);
-//        $criteria          = array($this->buildCriteriaWithField($status_field));
-//        $tree_of_artifacts = new TreeNode();
-//        $artifact_factory  = new MockTracker_ArtifactFactory();
-//        $factory           = new MockTracker_FormElementFactory();
-//        
-//        $view = new Tracker_CrossSearch_SearchContentView($report,
-//                                                          $criteria,
-//                                                          $tree_of_artifacts,
-//                                                          $artifact_factory,
-//                                                          $factory);
-//        $html = $view->fetch();
-//        $this->assertPattern('/<select>.*<option [^>]*selected[^>]*>'.$status.'/', $html);
-//    }
 }
 ?>
