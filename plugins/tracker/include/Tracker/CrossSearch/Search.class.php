@@ -28,7 +28,7 @@ class Tracker_CrossSearch_Search {
     /**
      * @var Tracker_CrossSearch_SharedFieldFactory
      */
-    private $sharedFieldFactory;
+    private $shared_field_factory;
     
     /**
      * @var Tracker_CrossSearch_SearchDao
@@ -41,43 +41,43 @@ class Tracker_CrossSearch_Search {
      */
     private $hierarchy_factory;
     
-    public function __construct(Tracker_CrossSearch_SharedFieldFactory $sharedFieldFactory,
+    public function __construct(Tracker_CrossSearch_SharedFieldFactory $shared_field_factory,
                                 Tracker_CrossSearch_SearchDao          $dao,
                                 Tracker_HierarchyFactory               $hierarchy_factory) {
-        $this->hierarchy_factory  = $hierarchy_factory;
-        $this->sharedFieldFactory = $sharedFieldFactory;
-        $this->dao                = $dao;
+        $this->hierarchy_factory    = $hierarchy_factory;
+        $this->shared_field_factory = $shared_field_factory;
+        $this->dao                  = $dao;
     }
 
     
-    public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Criteria $criteria, $excludedArtifactIds = array()) {
+    public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Criteria $criteria, $excluded_artifact_ids = array()) {
         $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
-        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $criteria, $excludedArtifactIds);
+        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $criteria, $excluded_artifact_ids);
     }
     
     /**
      * @deprecated
      */
-    public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Criteria $criteria, $excludedArtifactIds = array()) {
-        $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria->getSharedFields());
+    public function getMatchingArtifacts(array $tracker_ids, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Criteria $criteria, $excluded_artifact_ids = array()) {
+        $shared_fields   = $this->shared_field_factory->getSharedFields($criteria->getSharedFields());
         $semantic_fields = array('title'  => $criteria->getTitle(),
                                  'status' => $criteria->getStatus());
         
-        $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $semantic_fields, $excludedArtifactIds);
-        return $this->sortResults($artifacts, $trackerIds, $hierarchy);
+        $artifacts = $this->dao->searchMatchingArtifacts($tracker_ids, $shared_fields, $semantic_fields, $excluded_artifact_ids);
+        return $this->sortResults($artifacts, $tracker_ids, $hierarchy);
     }
     
-    private function sortResults($artifacts, array $trackerIds, Tracker_Hierarchy $hierarchy) {
+    private function sortResults($artifacts, array $tracker_ids, Tracker_Hierarchy $hierarchy) {
         $root = new TreeNode();
         $root->setId(0);
         if ($artifacts) {
-            list($artifactsById, $artifactsByTracker) = $this->indexArtifactsByIdAndTracker($artifacts);
-            $artifactsInTree = array();
-            $trackerIds = $this->sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy);
-            foreach ($trackerIds as $tracker_id) {
-                if (isset($artifactsByTracker[$tracker_id])) {
-                    foreach ($artifactsByTracker[$tracker_id] as $artifact) {
-                        $this->appendArtifactAndSonsToParent($artifact, $artifactsInTree, $root, $artifactsById, $hierarchy);
+            list($artifacts_by_id, $artifacts_by_tracker) = $this->indexArtifactsByIdAndTracker($artifacts);
+            $artifacts_in_tree = array();
+            $tracker_ids = $this->sortTrackerIdsAccordinglyToHierarchy($tracker_ids, $hierarchy);
+            foreach ($tracker_ids as $tracker_id) {
+                if (isset($artifacts_by_tracker[$tracker_id])) {
+                    foreach ($artifacts_by_tracker[$tracker_id] as $artifact) {
+                        $this->appendArtifactAndSonsToParent($artifact, $artifacts_in_tree, $root, $artifacts_by_id, $hierarchy);
                     }
                 }
             }
@@ -85,18 +85,22 @@ class Tracker_CrossSearch_Search {
         return $root;
     }
     
-    private function appendArtifactAndSonsToParent(array $artifact, array &$artifactsInTree, TreeNode $parent, array $artifacts, Tracker_Hierarchy $hierarchy) {
+    private function appendArtifactAndSonsToParent(array $artifact, array &$artifacts_in_tree, TreeNode $parent, array $artifacts, Tracker_Hierarchy $hierarchy) {
         $id = $artifact['id'];
-        if (!isset($artifactsInTree[$id])) {
+        
+        if (!isset($artifacts_in_tree[$id])) {
             $node = new TreeNode();
+            
             $node->setId($id);
             $node->setData($artifact);
             $parent->addChild($node);
-            $artifactsInTree[$id] = true;
-            $artifactlinks = explode(',', $artifact['artifactlinks']);
+            
+            $artifacts_in_tree[$id] = true;
+            $artifactlinks          = explode(',', $artifact['artifactlinks']);
+            
             foreach ($artifactlinks as $link_id) {
                 if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact, $hierarchy)) {
-                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifactsInTree, $node, $artifacts, $hierarchy);
+                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifacts_in_tree, $node, $artifacts, $hierarchy);
                 }
             }
         }
@@ -107,27 +111,28 @@ class Tracker_CrossSearch_Search {
     }
     
     private function indexArtifactsByIdAndTracker($artifacts) {
-        $artifactsById      = array();
-        $artifactsByTracker = array();
+        $artifactsById        = array();
+        $artifacts_by_tracker = array();
+        
         foreach ($artifacts as $artifact) {
             //by id
             $artifactsById[$artifact['id']] = $artifact;
             
             //by tracker_id
             $tracker_id = $artifact['tracker_id'];
-            if (isset($artifactsByTracker[$tracker_id])) {
-                $artifactsByTracker[$tracker_id][] = $artifact;
+            if (isset($artifacts_by_tracker[$tracker_id])) {
+                $artifacts_by_tracker[$tracker_id][] = $artifact;
             } else {
-                $artifactsByTracker[$tracker_id] = array($artifact);
+                $artifacts_by_tracker[$tracker_id] = array($artifact);
             }
         }
-        return array($artifactsById, $artifactsByTracker);
+        return array($artifactsById, $artifacts_by_tracker);
     }
     
-    private function sortTrackerIdsAccordinglyToHierarchy(array $trackerIds, Tracker_Hierarchy $hierarchy) {
+    private function sortTrackerIdsAccordinglyToHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy) {
         $this->hierarchyTmp = $hierarchy;
-        usort($trackerIds, array($this, 'sortByTrackerLevel'));
-        return $trackerIds;
+        usort($tracker_ids, array($this, 'sortByTrackerLevel'));
+        return $tracker_ids;
     }
     
     protected function sortByTrackerLevel($tracker1_id, $tracker2_id) {

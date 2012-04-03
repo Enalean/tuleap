@@ -23,10 +23,10 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, array $semantic_fields, array $excludedArtifactIds = array()) {
-        $trackerIds                = $this->da->quoteSmartImplode(',', $trackerIds);
-        $excludedArtifactIds       = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
-        $shared_fields_constraints = $this->getSharedFieldsSqlFragment($sharedFields);
+    public function searchMatchingArtifacts(array $tracker_ids, array $shared_fields, array $semantic_fields, array $excluded_artifact_ids = array()) {
+        $tracker_ids               = $this->da->quoteSmartImplode(',', $tracker_ids);
+        $excluded_artifact_ids     = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
+        $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
         
@@ -63,14 +63,14 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             ) ON CV2.changeset_id = artifact.last_changeset_id
 
             WHERE artifact.use_artifact_permissions = 0
-            AND   artifact.tracker_id IN ($trackerIds)
+            AND   artifact.tracker_id IN ($tracker_ids)
             $title_constraint
             $status_constraint
         ";
         
-        if ($excludedArtifactIds != '') {
+        if ($excluded_artifact_ids != '') {
             $sql .= "
-              AND artifact.id NOT IN ($excludedArtifactIds) ";
+              AND artifact.id NOT IN ($excluded_artifact_ids) ";
         }
         $sql .= "
             GROUP BY artifact.id
@@ -79,37 +79,37 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    protected function getSharedFieldsSqlFragment(array $sharedFields) {
-        $fragmentNumber = 0;
-        $sqlFragments   = array();
+    protected function getSharedFieldsSqlFragment(array $shared_fields) {
+        $fragment_number = 0;
+        $sql_fragments   = array();
         
-        foreach ($sharedFields as $sharedField) {
-            $sqlFragments[] = $this->getSharedFieldFragment($fragmentNumber++, $sharedField);
+        foreach ($shared_fields as $shared_field) {
+            $sql_fragments[] = $this->getSharedFieldFragment($fragment_number++, $shared_field);
         }
         
-        return implode(' ', $sqlFragments);
+        return implode(' ', $sql_fragments);
     }
     
-    protected function getSharedFieldFragment($fragmentNumber, Tracker_CrossSearch_SharedField $sharedField) {
-        $fieldIds = $this->da->quoteSmartImplode(',', $sharedField->getFieldIds());
-        $valueIds = $this->da->quoteSmartImplode(',', $sharedField->getValueIds());
+    protected function getSharedFieldFragment($fragment_number, Tracker_CrossSearch_SharedField $shared_field) {
+        $field_ids = $this->da->quoteSmartImplode(',', $shared_field->getFieldIds());
+        $value_ids = $this->da->quoteSmartImplode(',', $shared_field->getValueIds());
         
         // Table aliases
-        $changeset_value      = "CV_$fragmentNumber";
-        $changeset_value_list = "CVL_$fragmentNumber";
+        $changeset_value      = "CV_$fragment_number";
+        $changeset_value_list = "CVL_$fragment_number";
         
-        $sqlFragment = "
+        $sql_fragment = "
             INNER JOIN tracker_changeset_value AS $changeset_value ON (
                     $changeset_value.changeset_id = c.id
-                AND $changeset_value.field_id IN ($fieldIds)
+                AND $changeset_value.field_id IN ($field_ids)
             )
             INNER JOIN tracker_changeset_value_list AS $changeset_value_list ON (
                     $changeset_value_list.changeset_value_id = $changeset_value.id
-                AND $changeset_value_list.bindvalue_id IN ($valueIds)
+                AND $changeset_value_list.bindvalue_id IN ($value_ids)
             )
         ";
         
-        return $sqlFragment;
+        return $sql_fragment;
     }
     
     protected function getTitleSqlFragment($title) {
