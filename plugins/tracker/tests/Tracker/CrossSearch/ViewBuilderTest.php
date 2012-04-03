@@ -47,18 +47,18 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
     public function itBuildCustomContentView() {
         $formElementFactory = new MockTracker_FormElementFactory();
-        $formElementFactory->setReturnValue('getProjectSharedFields', array());
         $tracker_factory    = new MockTrackerFactory();
         $tracker_factory->setReturnValue('getTrackersByGroupId', array());
-        $project            = new MockProject();
-        $request_criteria   = aCrossSearchCriteria()->build();
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, new MockTracker_CrossSearch_SemanticValueFactory());
-        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
-        $classname = 'Tracker_CrossSearch_SearchContentView';
-        $view      = $builder->buildContentView($project, $request_criteria);
-        $this->assertIsA($view, $classname);
+        $criteria_builder   = new MockTracker_CrossSearch_CriteriaBuilder();
+        $criteria_builder->setReturnValue('getCriteria', array());
+        $project            = new MockProject();
+        
+        $builder            = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
+        $view               = $builder->buildContentView($project, aCrossSearchCriteria()->build());
+        
+        $this->assertIsA($view, 'Tracker_CrossSearch_SearchContentView');
     }
     
 }
