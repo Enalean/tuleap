@@ -27,12 +27,12 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     /**
      * @var string
      */
-    private $id = '';
+    private $id = 'status';
     
     private $status;
     
     public function __construct($status) {
-//        $this->status = $status;
+        $this->status = $status;
     }
     
     public function isUsed() {
@@ -40,13 +40,23 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
-        return '';
+        $label = $this->getLabel();
+        return <<<HTML
+            <label>$label</label>
+            <select>
+                <option>Any</option>
+                <option value="">Open</option>
+                <option>Closed</option>
+            </select>
+HTML;
     }
     
     public function getLabel() {
+        return 'Status';
     }
     
     public function getId() {
+        return $this->id;
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {

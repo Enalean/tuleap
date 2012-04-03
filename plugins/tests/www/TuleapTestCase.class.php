@@ -122,5 +122,15 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function setText($text, $args) {
         $GLOBALS['Language']->setReturnValue('getText', $text, $args);
     }
+    
+    protected function assertNotEmpty($string) {
+        if (! $this->assertNotNull($string)) { return; }
+        return $this->assertNotEqual($string, '');
+    }
+    
+    protected function assertNotBlank($string) {
+        if (! $this->assertNotEmpty($string)) { return; }
+        return $this->assertNoPattern('/^[ ]+$/', $string);
+    }
 }
 ?>

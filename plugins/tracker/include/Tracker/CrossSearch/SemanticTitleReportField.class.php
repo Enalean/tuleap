@@ -44,8 +44,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html  = '';
-        $html .= '<label for="tracker_report_criteria_" title="#">'. $this->getLabel();
-        $html .= '</label>';
+        $html .= '<label for="tracker_report_criteria_semantic_title" title="#">'. $this->getLabel().'</label>';
         $html .= '<br />';
         $html .= '<input type="text" name="semantic_criteria[title]" id="tracker_report_criteria_semantic_title" value="'.$this->title.'" />';
         
