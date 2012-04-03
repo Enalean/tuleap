@@ -21,6 +21,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once('Git_CiDao.class.php');
 
 /**
  * GitPlugin
@@ -404,16 +405,20 @@ class GitPlugin extends Plugin {
             $project = $pm->getProject($params['group_id']);
             if ($project->usesService(self::SERVICE_SHORTNAME)) {
                 $repositoryId = '';
-                $used         = false;
+                $used         = array();
                 $checked      = '';
+                $ciDao        = new Git_CiDao();
                 if (isset($params['job_id']) && !empty($params['job_id'])) {
-                    $ciDao = new Git_CiDao();
                     $res   = $ciDao->retrieveTrigger($params['job_id']);
                     if ($res && !$res->isError() && $res->rowCount() == 1) {
                         $row = $res->getRow();
                         $repositoryId = $row['repository_id'];
-                        $used         = true;
                         $checked      = 'checked="checked"';
+                    }
+                } else {
+                    $res = $ciDao->retrieveTriggers($params['group_id']);
+                    foreach ($res as $row) {
+                        $used[$row['job_id']] = true;
                     }
                 }
                 // TODO: i18n
@@ -453,7 +458,11 @@ class GitPlugin extends Plugin {
      */
     public function save_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
-            // TODO: Store data
+            $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
+            if ($repositoryId) {
+                $ciDao = new Git_CiDao();
+                $ciDao->saveTrigger($params['job_id'], $repositoryId);
+            }
         }
     }
 

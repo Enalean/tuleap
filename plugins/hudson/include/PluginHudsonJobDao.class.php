@@ -98,10 +98,7 @@ class PluginHudsonJobDao extends DataAccessObject {
                 (($token !== null)?$this->da->quoteSmart($token):$this->da->quoteSmart(''))
                 );
         if ($this->update($sql)) {
-            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                return $row['id'];
-            }
+            return $this->da->lastInsertId();
         }
         return false;
     }

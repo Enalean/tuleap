@@ -45,8 +45,9 @@ EOT;
      */
     public function up() {
         $sql = 'CREATE TABLE plugin_git_ci (
+                job_id INT(11) UNSIGNED NOT NULL,
                 repository_id INT(10) UNSIGNED NOT NULL,
-                job_id INT(11) UNSIGNED NOT NULL)';
+                PRIMARY KEY (job_id))';
         $this->db->createTable('plugin_git_ci', $sql);
     }
 

@@ -30,13 +30,50 @@ class Git_CiDao extends DataAccessObject {
      *
      * @param Integer $jobId Id of the CI job
      *
-     * @return
+     * @return DataAccessResult
      */
     function retrieveTrigger($jobId) {
-        $sql = "SELECT repository_id
+        $sql = 'SELECT repository_id
                 FROM plugin_git_ci
-                WHERE job_id = ".$this->da->escapeInt($jobId);
+                WHERE job_id = '.$this->da->escapeInt($jobId);
         return $this->retrieve($sql);
+    }
+
+    /**
+     * Retrieve git triggers of a project
+     *
+     * @param Integer $projectId Id of the project
+     *
+     * @return DataAccessResult
+     */
+    function retrieveTriggers($projectId) {
+        $sql = 'SELECT job_id
+                FROM plugin_git_ci
+                JOIN plugin_git USING(repository_id)
+                WHERE project_id = '.$this->da->escapeInt($projectId);
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Save a new trigger
+     *
+     * @param Integer $jobId        Id of the CI job
+     * @param Integer $repositoryId Id of the repository
+     *
+     * @return Boolean
+     */
+    function saveTrigger($jobId, $repositryId) {
+        $sql = 'INSERT INTO plugin_git_ci
+                (
+                job_id,
+                repository_id
+                )
+                VALUES
+                (
+                '.$this->da->escapeInt($jobId).',
+                '.$this->da->escapeInt($repositryId).'
+                )';
+        return $this->update($sql);
     }
 
 }
