@@ -59,7 +59,7 @@ class Git_Widget_ProjectPushes extends Widget {
         $group_id = $request->get('group_id');
         $request  = HTTPRequest::instance();
         $content  = '<div style="text-align:center"><p>';
-        $graph    = '<img src="/plugins/git/project_last_git_pushes_graph.php?group_id='.$group_id.'&duration='.$this->duration.'" title="Project last git pushes graph" />';
+        $graph    = '<img src="/plugins/git/project_last_git_pushes_graph.php?group_id='.$group_id.'&duration='.$this->duration.'" title="'.$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title').'" />';
         $content .= $graph.'</div>';
         return $content;
     }
