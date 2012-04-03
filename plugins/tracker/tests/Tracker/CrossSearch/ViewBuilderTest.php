@@ -33,6 +33,7 @@ Mock::generate('TrackerFactory');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
 Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
+Mock::generate('Tracker_CrossSearch_CriteriaBuilder');
 
 class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 }
@@ -53,8 +54,8 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $request_criteria   = aCrossSearchCriteria()->build();
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-        $this->semantic_factory = new MockTracker_CrossSearch_SemanticValueFactory();
-        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $this->semantic_factory);
+        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, new MockTracker_CrossSearch_SemanticValueFactory());
+        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
         $classname = 'Tracker_CrossSearch_SearchContentView';
         $view      = $builder->buildContentView($project, $request_criteria);
         $this->assertIsA($view, $classname);
@@ -65,7 +66,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
         $project = new MockProject();
-        $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search(), new MockTracker_CrossSearch_SemanticValueFactory());
+        $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search(), new MockTracker_CrossSearch_CriteriaBuilder());
         
         $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
         $cross_search_criteria = aCrossSearchCriteria()

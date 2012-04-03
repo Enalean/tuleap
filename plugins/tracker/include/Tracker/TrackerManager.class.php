@@ -826,7 +826,8 @@ class TrackerManager { /* extends Engine? */
     }
 
     public function getCrossSearchViewBuilder() {
-        return new Tracker_CrossSearch_ViewBuilder($this->getTracker_FormElementFactory(), $this->getTrackerFactory(), $this->getCrossSearch(), $this->getSemanticValueFactory());
+        $criteria_builder = new Tracker_CrossSearch_CriteriaBuilder($this->getTracker_FormElementFactory(), $this->getSemanticValueFactory());
+        return new Tracker_CrossSearch_ViewBuilder($this->getTracker_FormElementFactory(), $this->getTrackerFactory(), $this->getCrossSearch(), $criteria_builder);
     }
 
 }

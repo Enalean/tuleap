@@ -35,11 +35,6 @@ class Tracker_CrossSearch_ViewBuilder {
     private $tracker_factory;
     
     /**
-     * @var Tracker_CrossSearch_SemanticValueFactory
-     */
-    private $semantic_value_factory;
-    
-    /**
      * @var Tracker_CrossSearch_Search
      */
     private $search;
@@ -53,13 +48,12 @@ class Tracker_CrossSearch_ViewBuilder {
     public function __construct(Tracker_FormElementFactory               $form_element_factory,
                                 TrackerFactory                           $tracker_factory,
                                 Tracker_CrossSearch_Search               $search,
-                                Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
+                                Tracker_CrossSearch_CriteriaBuilder      $criteria_builder) {
         
         $this->form_element_factory   = $form_element_factory;
         $this->tracker_factory        = $tracker_factory;
-        $this->semantic_value_factory = $semantic_value_factory;
         $this->search                 = $search;
-        $this->criteria_builder       = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory);
+        $this->criteria_builder       = $criteria_builder;
     }
     
     /**
