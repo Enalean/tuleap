@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Renders both the cross-tracker search form and results. 
+ */
 class Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_Report

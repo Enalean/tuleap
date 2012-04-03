@@ -28,7 +28,7 @@
  * It was placed in the Tracker/CrossSearch namespace because it's the only
  * place where it is used for now.
  * 
- * Grouping the title and status retrieval in a same class is probably not the
+ * Grouping the title and status retrieval in the same class is probably not the
  * best design, but it was the easier to start with.
  */
 class Tracker_CrossSearch_SemanticValueFactory {

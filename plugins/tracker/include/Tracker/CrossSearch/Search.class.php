@@ -23,6 +23,11 @@ require_once 'SearchDao.class.php';
 require_once dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 
+/**
+ * The cross-tracker search model.
+ * 
+ * See: getHierarchicallySortedArtifacts()
+ */
 class Tracker_CrossSearch_Search {
     
     /**
@@ -48,8 +53,17 @@ class Tracker_CrossSearch_Search {
         $this->shared_field_factory = $shared_field_factory;
         $this->dao                  = $dao;
     }
-
     
+    /**
+     * Retrieve a tree of artifacts matching the given search criteria.
+     * 
+     * The artifacts tree matches the trackers hierarchy definition.
+     * 
+     * @param array                        $tracker_ids            The trackers to retrieve artifacts from.
+     * @param Tracker_CrossSearch_Criteria $criteria               The criteria that artifacts should match (e.g. title).
+     * @param array                        $excluded_artifact_ids  Some (optional) artifacts to exclude.
+     * @return TreeNode
+     */
     public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Criteria $criteria, $excluded_artifact_ids = array()) {
         $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
         return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $criteria, $excluded_artifact_ids);

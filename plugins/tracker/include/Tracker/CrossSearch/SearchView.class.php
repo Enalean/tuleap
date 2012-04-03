@@ -26,6 +26,9 @@ require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
 require_once 'html.php';
 
+/**
+ * Renders the whole cross-tracker search page (including header and footer).
+ */
 class Tracker_CrossSearch_SearchView {
     
     /**

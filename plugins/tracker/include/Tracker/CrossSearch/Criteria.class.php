@@ -18,11 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * The criteria for a cross-tracker search.
+ * Includes both semantic field criteria (e.g. title, status) and shared field
+ * ones.
+ */
 class Tracker_CrossSearch_Criteria {
     /**
      * @var array of array
      */
     private $shared_fields_criteria;
+    
+    /**
+     * @var array of string
+     */
     private $semantic_criteria;
 
     /**

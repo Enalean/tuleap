@@ -22,6 +22,10 @@
 require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report_Criteria.class.php';
 
+/**
+ * A report field to render the searched/current title of an artifact (as
+ * defined in the semantic admininistration UI).
+ */
 class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Field {
 
     /**
