@@ -64,7 +64,7 @@ class Tracker_CrossSearch_SearchController {
                 $request_criteria = array();
             }
             
-            $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria['title']);
+            $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria);
             
             $view         = $this->view_builder->buildView($project, $cross_search_criteria);
             $content_view = $this->view_builder->buildContentView($project, $cross_search_criteria);

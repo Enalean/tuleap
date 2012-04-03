@@ -23,18 +23,15 @@ class Tracker_CrossSearch_Criteria {
      * @var array of array
      */
     private $shared_fields_criteria;
-    private $title;
-    private $status;
+    private $semantic_criteria;
 
     /**
      * @param array of array $shared_fields_criteria
-     * @param string $title
-     * @param string $status 
+     * @param array of string $semantic_criteria
      */
-    public function __construct($shared_fields_criteria=array(), $title, $status = null) {
+    public function __construct($shared_fields_criteria=array(), $semantic_criteria) {
         $this->shared_fields_criteria = $shared_fields_criteria;
-        $this->title                  = $title;
-        $this->status                 = $status;
+        $this->semantic_criteria      = $semantic_criteria;
     }
     
     public function getSharedFields() {
@@ -42,11 +39,11 @@ class Tracker_CrossSearch_Criteria {
     }
     
     public function getTitle() {
-        return $this->title;
+        return $this->semantic_criteria['title'];
     }
     
     public function getStatus() {
-        return $this->status;
+        return $this->semantic_criteria['status'];
     }
 
 

@@ -22,6 +22,7 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_CrossSearch_Search');
@@ -46,7 +47,7 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
         $tracker_factory    = new MockTrackerFactory();
         $tracker_factory->setReturnValue('getTrackersByGroupId', array());
         $project            = new MockProject();
-        $request_criteria   = new Tracker_CrossSearch_Criteria(array(), '');
+        $request_criteria   = new Tracker_CrossSearch_Criteria(array(), array('title' => '', 'status' => ''));
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
 
@@ -60,7 +61,8 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
         $this->request = new Codendi_Request(array(
             'group_id' => '66',
-            'criteria' => array()
+            'criteria' => array(),
+            'semantic_criteria' => array('title' => '', 'status' => '')
         ));
         
         $project = new MockProject();
@@ -76,7 +78,8 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
     public function testSubmittedValueIsSelectedInCriterion() {
         $this->request = new Codendi_Request(array(
             'group_id' => '66', 
-            'criteria' => array('220' => array('values' => array('350')))
+            'criteria' => array('220' => array('values' => array('350'))),
+            'semantic_criteria' => array('title' => '', 'status' => '')
         ));
         
         $project = new MockProject();
@@ -93,7 +96,8 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
         $this->request = new Codendi_Request(array(
             'group_id' => '66', 
             'criteria' => array('220' => array('values' => array('350', '351')),
-                                '221' => array('values' => array('352')))
+                                '221' => array('values' => array('352'))),
+            'semantic_criteria' => array('title' => '', 'status' => '')
         ));
         
         $project = new MockProject();
@@ -122,7 +126,7 @@ class Tracker_CrossSearch_ViewBuilder_WithTitleTest extends TuleapTestCase {
     public function itPassesTheSearchedTitleToTheField() {
         $builder               = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
         $report                = new MockTracker_Report();
-        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), 'Foo');
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), array('title' => 'Foo', 'status' => ''));
         $report_criteria       = $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
         $actual_field          = $report_criteria[0]->field;
         $expected_field        = new Tracker_CrossSearch_SemanticTitleReportField('Foo');
@@ -133,14 +137,13 @@ class Tracker_CrossSearch_ViewBuilder_WithTitleTest extends TuleapTestCase {
 
 class Tracker_CrossSearch_CriteriaBuilder_SemanticStatusFieldTest extends TuleapTestCase {
 
-    const STATUS_OPEN = "Open";
     public function itPassesTheSearchedStatusToTheField() {
         $builder               = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
         $report                = new MockTracker_Report();
-        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '', self::STATUS_OPEN);
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), array('status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN, 'title' => ''));
         $report_criteria       = $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
         $actual_field          = $report_criteria[1]->field;
-        $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(self::STATUS_OPEN);
+        $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN);
         
         $this->assertEqual($expected_field, $actual_field);
     }
@@ -152,7 +155,7 @@ class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
         $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
         
         $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
-        $builder->buildView($project, new Tracker_CrossSearch_Criteria(array(), ''));
+        $builder->buildView($project, new Tracker_CrossSearch_Criteria(array(), array('status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN, 'title' => '')));
     }
 }
 

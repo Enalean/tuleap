@@ -44,7 +44,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $title     = 'Foo';
-        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array('350'))), $title);
+        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array('350'))), array('title' => $title, 'status' => null));
                 
         $sharedFields = array(new Tracker_CrossSearch_SharedField());
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria->getSharedFields()));
@@ -57,7 +57,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
     function testGetProjectArtifactsWhenNoCriteria() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))), null);
+        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))), array('title' => null, 'status' => null));
 
         $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, null, array()));
 
@@ -66,7 +66,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
     function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $criteria   = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))), null);
+        $criteria   = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))), array('title' => null, 'status' => null));
         
         $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, null, array()));
         
@@ -87,7 +87,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
         
         
-        $artifacts = $this->search->getMatchingArtifacts($trackerIds, $tracker_hierarchy, new Tracker_CrossSearch_Criteria(array(), ''));
+        $artifacts = $this->search->getMatchingArtifacts($trackerIds, $tracker_hierarchy, new Tracker_CrossSearch_Criteria(array(), array('title' => null, 'status' => null)));
         $expected  = $this->getExpectedForTrackerOutsideHierarchy();
         $this->assertEqual($artifacts->__toString(), $expected->__toString());
     }

@@ -52,8 +52,11 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->manager               = new MockProjectManager();
         $criteria                    = array('124' => array('stuff'));
         $empty_title                 = 'toto';
-        $this->cross_search_criteria = new Tracker_CrossSearch_Criteria($criteria, $empty_title);
-        $this->request               = new Codendi_Request(array('group_id' => '66', 'criteria' => $criteria, 'semantic_criteria' => array('title' => $empty_title)));
+        $semantic_criteria           = array('title' => $empty_title, 'status' => 'Closed');
+        $this->cross_search_criteria = new Tracker_CrossSearch_Criteria($criteria, $semantic_criteria);
+        $this->request               = new Codendi_Request(array('group_id' => '66',
+                                                                 'criteria' => $criteria,
+                                                                 'semantic_criteria' => $semantic_criteria));
         $this->view_builder          = new MockTracker_CrossSearch_ViewBuilder();
         
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
@@ -103,7 +106,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
     
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
-        $no_criteria = new Tracker_CrossSearch_Criteria(array(), null);
+        $no_criteria = new Tracker_CrossSearch_Criteria(array(), array());
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $this->view_builder->expectOnce('buildView', array('*', $no_criteria));
         $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());

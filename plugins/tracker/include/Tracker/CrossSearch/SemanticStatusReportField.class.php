@@ -25,6 +25,8 @@ require_once 'Criteria.class.php';
 
 class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Field {
 
+    const STATUS_OPEN = "Open";
+
     /**
      * @var string
      */
@@ -50,10 +52,10 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
         $label = $this->getLabel();
         return <<<HTML
             <label>$label</label>
-            <select>
-                <option $selectionAny>Any</option>
-                <option $selectionOpen>Open</option>
-                <option $selectionClosed>Closed</option>
+            <select name="semantic_criteria[status]">
+                <option value="Any"    $selectionAny>Any</option>
+                <option value="Open"   $selectionOpen>Open</option>
+                <option value="Closed" $selectionClosed>Closed</option>
             </select>
 HTML;
     }
