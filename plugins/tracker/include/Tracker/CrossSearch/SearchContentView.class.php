@@ -101,7 +101,6 @@ class Tracker_CrossSearch_SearchContentView {
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
-            $html .= $this->draggableCell($row['id'], $row['title']);
             $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
             $html .= '</tr>';
             foreach ($node->getChildren() as $child) {
@@ -127,11 +126,8 @@ class Tracker_CrossSearch_SearchContentView {
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_title_label').'</span></th>';
         foreach ($this->criteria as $header) {
-            if ($this->shouldDisplayField($header->field)) {
-                $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
-            }
+            $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
         }
         $html .= '  </tr>';
         $html .= '</thead>';
@@ -139,39 +135,23 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
-        $html = '';
+        $html  = '';
+        
         foreach ($this->criteria as $criterion) {
             $value = '';
-            if ($this->shouldDisplayField($criterion->field)) {
-                if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticStatusReportField')) {
-                    $field = $criterion->field;
-                } else {
-                    $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
-                }
-                
-                if ($field) {
-                    $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
-                }
-                $html .= '<td>'. $value .'</td>';
+            if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticStatusReportField') ||
+                is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
+                $field = $criterion->field;
+            } else {
+                $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
             }
+
+            if ($field) {
+                $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
+            }
+            $html .= '<td>'. $value .'</td>';
         }
         return $html;
     }
-    
-    private function shouldDisplayField(Tracker_Report_Field $field) {
-        return ! is_a($field, 'Tracker_CrossSearch_SemanticTitleReportField');
-    }
-    
-    private function draggableCell($id, $title) {
-        $html  = '';
-        $html .= '<td class="planning-draggable" id="art-'.$id.'">';
-        $html .= '<div>';
-        $html .= $title;
-        $html .= '</div>';
-        $html .= '</td>';
-        return $html;
-        
-    }
-
 }
 ?>
