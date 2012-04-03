@@ -24,6 +24,9 @@ require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class
 require_once 'common/include/Codendi_Request.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_CrossSearch_Search');
+Mock::generate('Tracker_CrossSearch_SearchContentView');
+Mock::generate('TrackerFactory');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
 
@@ -48,8 +51,8 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
 
         $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search);
-        $classname = 'Planning_SearchContentView';
-        $view      = $builder->buildPlanningContentView($project, $request_criteria, array(), array());
+        $classname = 'Tracker_CrossSearch_SearchContentView';
+        $view      = $builder->buildContentView($project, $request_criteria, array(), array());
         $this->assertIsA($view, $classname);
     }
     
@@ -108,18 +111,31 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
     
     private function getCriteria($project, $report) {
         $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
-        return $searchViewBuilder->getCriteria($project, $report, $this->request->get('criteria'));
+        return $searchViewBuilder->getSharedFieldsCriteria($project, $report, $this->request->get('criteria'));
     }
 
 }
+
 class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
+        $project = new MockProject();
+        $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
+        
         $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
-        $project            = new MockProject();
-        $builder   = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
         $builder->buildView($project, array());
     }
-    
-    
 }
+
+class Tracker_CrossSearch_ViewBuilder_WithTitleTest extends TuleapTestCase {
+    public function itPassesTheSearchedTitleToTheField() {
+        $builder        = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
+        $report         = new MockTracker_Report();
+        $criteria       = $builder->getSemanticFieldsCriteria($report, 'Foo');
+        $actual_field   = $criteria[0]->field;
+        $expected_field = new Tracker_CrossSearch_SemanticTitleReportField('Foo');
+        
+        $this->assertEqual($expected_field, $actual_field);
+    }
+}
+
 ?>

@@ -20,10 +20,20 @@
  */
 
 require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
+require_once dirname(__FILE__).'/../Report/Tracker_Report_Criteria.class.php';
 
 class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Field {
 
     private $id = 'semantic_title';
+    
+    /**
+     * @var string
+     */
+    private $title;
+    
+    public function __construct($title) {
+        $this->title = $title;
+    }
     
     public function isUsed() {
         return true;
@@ -34,7 +44,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
         $html .= '<label for="tracker_report_criteria_" title="#">'. $this->getLabel();
         $html .= '</label>';
         $html .= '<br />';
-        $html .= '<input type="text" name="criteria[semantic_title]" id="tracker_report_criteria_semantic_title" value="" />';
+        $html .= '<input type="text" name="semantic_title" id="tracker_report_criteria_semantic_title" value="'.$this->title.'" />';
         
         return $html;
     }
