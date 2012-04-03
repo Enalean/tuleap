@@ -61,8 +61,9 @@ class Tracker_CrossSearch_Search {
     public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Criteria $criteria, $excludedArtifactIds = array()) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria->getSharedFields());
         $title                = $criteria->getTitle();
+        $status               = $criteria->getStatus();
         
-        $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $title, $excludedArtifactIds);
+        $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $title, $status, $excludedArtifactIds);
         return $this->sortResults($artifacts, $trackerIds, $hierarchy);
     }
     

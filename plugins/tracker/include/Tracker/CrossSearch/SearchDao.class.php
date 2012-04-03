@@ -23,11 +23,12 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, $title, array $excludedArtifactIds = array()) {
+    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, $title, $status, array $excludedArtifactIds = array()) {
         $trackerIds                = $this->da->quoteSmartImplode(',', $trackerIds);
         $excludedArtifactIds       = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($sharedFields);
         $title_constraint          = $this->getTitleSqlFragment($title);
+        $status_constraint         = $this->getStatusSqlFragment($status);
         
         $sql = "
             SELECT artifact.id,
@@ -47,6 +48,13 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
             
             ) ON (c.id = CV.changeset_id)
+            
+            LEFT JOIN (
+                           tracker_changeset_value      AS CV3
+                INNER JOIN tracker_semantic_status      AS SS  ON (CV3.field_id = SS.field_id)
+                INNER JOIN tracker_changeset_value_list AS CVL ON (CV3.id       = CVL.changeset_value_id AND SS.open_value_id = CVL.bindvalue_id)
+            
+            ) ON (c.id = CV3.changeset_id)
 
             LEFT JOIN (
                            tracker_changeset_value_artifactlink AS CVAL
@@ -57,6 +65,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             WHERE artifact.use_artifact_permissions = 0
             AND   artifact.tracker_id IN ($trackerIds)
             $title_constraint
+            $status_constraint
         ";
         
         if ($excludedArtifactIds != '') {
@@ -108,6 +117,19 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         if (! $title) { return ''; }
         
         return "AND CVT.value LIKE CONCAT('%', $title, '%')";
+    }
+    
+    protected function getStatusSqlFragment($status) {
+        switch ($status) {
+        case Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN:
+            return "AND  SS.open_value_id IS NOT NULL";
+            break;
+        case Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED:
+            return "AND  SS.open_value_id IS NULL";    
+            break;
+        default:
+            // no constraint
+        }
     }
 }    
 ?>

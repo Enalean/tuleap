@@ -25,8 +25,10 @@ require_once 'Criteria.class.php';
 
 class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Field {
 
-    const STATUS_OPEN = "Open";
-
+    const STATUS_OPEN   = "Open";
+    const STATUS_CLOSED = "Closed";
+    const STATUS_ANY    = "Any";
+    
     /**
      * @var string
      */
@@ -35,7 +37,7 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     private $status;
     
     public function __construct($status) {
-        $this->status                = $status;
+        $this->status = $status;
     }
     
     public function isUsed() {
@@ -43,11 +45,11 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
-        $selected = 'selected="selected"';
-        $not_selected = '';
-        $selectionOpen   = $this->status === 'Open'   ? $selected : $not_selected;
-        $selectionClosed = $this->status === 'Closed' ? $selected : $not_selected;
-        $selectionAny    = $this->status === 'Any'    ? $selected : $not_selected;
+        $selected        = 'selected="selected"';
+        $not_selected    = '';
+        $selectionOpen   = $this->status === self::STATUS_OPEN   ? $selected : $not_selected;
+        $selectionClosed = $this->status === self::STATUS_CLOSED ? $selected : $not_selected;
+        $selectionAny    = $this->status === self::STATUS_ANY    ? $selected : $not_selected;
         
         $label = $this->getLabel();
         return <<<HTML
@@ -71,8 +73,8 @@ HTML;
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
         
-        $tracker         = $artifact_factory->getArtifactById($artifact_id)->getTracker();
-        $value           = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
+        $tracker = $artifact_factory->getArtifactById($artifact_id)->getTracker();
+        $value   = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
         
         return $value;
     }
