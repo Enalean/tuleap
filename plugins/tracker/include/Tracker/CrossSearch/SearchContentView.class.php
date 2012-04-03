@@ -129,7 +129,9 @@ class Tracker_CrossSearch_SearchContentView {
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
         $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
         foreach ($this->criteria as $header) {
-            $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
+            if (! is_a($header->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
+                $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
+            }
         }
         $html .= '  </tr>';
         $html .= '</thead>';
@@ -141,15 +143,14 @@ class Tracker_CrossSearch_SearchContentView {
         foreach ($this->criteria as $criterion) {
             $value = '';
             
-            if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
-                $field = $criterion->field;
-            } else {
+            if (!is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
                 $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
+                
+                if ($field) {
+                    $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
+                }
+                $html .= '<td>'. $value .'</td>';
             }
-            if ($field) {
-                $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
-            }
-            $html .= '<td>'. $value .'</td>';
         }
         return $html;
     }    
