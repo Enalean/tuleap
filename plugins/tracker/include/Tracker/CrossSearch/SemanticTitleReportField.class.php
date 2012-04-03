@@ -61,7 +61,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        return 'Qux';
+        // Never used (god save polymorphism)
     }
     
 }
