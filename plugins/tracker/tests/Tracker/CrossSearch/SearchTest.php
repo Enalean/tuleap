@@ -23,6 +23,8 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Search.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Criteria.class.php';
+require_once 'Test_CriteriaBuilder.php';
+
 Mock::generate('Tracker_CrossSearch_SharedFieldFactory');
 Mock::generate('Tracker_CrossSearch_SearchDao');
 Mock::generate('Project');
@@ -46,7 +48,10 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $title     = 'Foo';
         $status    = Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN;
-        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array('350'))), array('title' => $title, 'status' => $status));
+        $criteria  = aCrossSearchCriteria()
+                ->withSharedFieldsCriteria(array('220' => array('values' => array('350'))))
+                ->withSemanticCriteria(array('title' => $title, 'status' => $status))
+                ->build();
                 
         $sharedFields = array(new Tracker_CrossSearch_SharedField());
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria->getSharedFields()));
@@ -59,8 +64,10 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
     function testGetProjectArtifactsWhenNoCriteria() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))), array('title' => null, 'status' => null));
-
+        $criteria  = aCrossSearchCriteria()
+                ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
+                ->build();
+        
         $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, null, null, array()));
 
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
@@ -68,7 +75,9 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
     function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $criteria   = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))), array('title' => null, 'status' => null));
+        $criteria  = aCrossSearchCriteria()
+                ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
+                ->build();
         
         $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, null, null, array()));
         
@@ -88,8 +97,9 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $trackerIds = array(111, 112, 113, 666);
         $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
         
+        $criteria  = aCrossSearchCriteria()->build();
         
-        $artifacts = $this->search->getMatchingArtifacts($trackerIds, $tracker_hierarchy, new Tracker_CrossSearch_Criteria(array(), array('title' => null, 'status' => null)));
+        $artifacts = $this->search->getMatchingArtifacts($trackerIds, $tracker_hierarchy, $criteria);
         $expected  = $this->getExpectedForTrackerOutsideHierarchy();
         $this->assertEqual($artifacts->__toString(), $expected->__toString());
     }

@@ -27,6 +27,7 @@ require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class
 
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
+require_once 'Test_CriteriaBuilder.php';
 
 Mock::generate('ProjectManager');
 Mock::generate('Project');
@@ -53,7 +54,10 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $criteria                    = array('124' => array('stuff'));
         $empty_title                 = 'toto';
         $semantic_criteria           = array('title' => $empty_title, 'status' => 'Closed');
-        $this->cross_search_criteria = new Tracker_CrossSearch_Criteria($criteria, $semantic_criteria);
+        $this->cross_search_criteria = aCrossSearchCriteria()
+                ->withSharedFieldsCriteria($criteria)
+                ->withSemanticCriteria($semantic_criteria)
+                ->build();
         $this->request               = new Codendi_Request(array('group_id' => '66',
                                                                  'criteria' => $criteria,
                                                                  'semantic_criteria' => $semantic_criteria));
@@ -106,7 +110,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
     
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
-        $no_criteria = new Tracker_CrossSearch_Criteria(array(), array());
+        $no_criteria = aCrossSearchCriteria()->build();
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $this->view_builder->expectOnce('buildView', array('*', $no_criteria));
         $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
