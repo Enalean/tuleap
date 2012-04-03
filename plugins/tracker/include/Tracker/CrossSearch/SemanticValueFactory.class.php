@@ -18,6 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This factory provides a simple way to retrieve semantic values (e.g. title,
+ * status...) given some artifact and changeset ids.
+ * 
+ * This didn't seem to be the point of the various existing factories in
+ * Tracker/Semantic, that's why this class was written.
+ * 
+ * It was placed in the Tracker/CrossSearch namespace because it's the only
+ * place where it is used for now.
+ * 
+ * Grouping the title and status retrieval in a same class is probably not the
+ * best design, but it was the easier to start with.
+ */
 class Tracker_CrossSearch_SemanticValueFactory {
     public function getStatus($artifact_id, $changeset_id) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
