@@ -100,7 +100,7 @@ class Git_Ci {
      * @return Boolean
      */
     function saveTrigger($jobId, $repositoryId) {
-        $this->dao->saveTrigger($jobId, $repositoryId);
+        return $this->dao->saveTrigger($jobId, $repositoryId);
     }
 
     /**
@@ -111,7 +111,7 @@ class Git_Ci {
      * @return Boolean
      */
     function deleteTrigger($jobId) {
-        $this->dao->deleteTrigger($jobId);
+        return $this->dao->deleteTrigger($jobId);
     }
 
 }
