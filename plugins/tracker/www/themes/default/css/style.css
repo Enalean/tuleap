@@ -1022,14 +1022,14 @@ ul.plugin_tracker_my_artifacts_list {
 
 .node-last-left {
     overflow:visible;
-    border-right:1px grey dotted;
+    border-right:1px gray dotted;
     /* 8px - 1px of border*/
     width:7px;
     
 }
 .node-last-right {
     overflow:hidden;
-    border-bottom:1px grey dotted;
+    border-bottom:1px gray dotted;
     /* 8px - 1px of border*/
     height:7px;
     margin-left:-4px;
@@ -1048,12 +1048,12 @@ ul.plugin_tracker_my_artifacts_list {
     /* 8px - 1px of border*/
     width:7px;
     height:100%;
-    border-right:1px grey dotted;
+    border-right:1px gray dotted;
 }
 
 .node-minus {
     overflow:hidden;
-    border-bottom:1px grey dotted;
+    border-bottom:1px gray dotted;
     /* 8px - 1px of border*/
     height:7px;
     margin-left:-4px;
@@ -1075,7 +1075,7 @@ ul.plugin_tracker_my_artifacts_list {
     width:8px;
     margin-left:4px;
     height: 100%;
-    border-right:1px grey dotted;
+    border-right:1px gray dotted;
 }
 
 .node-tree {
@@ -1089,7 +1089,7 @@ ul.plugin_tracker_my_artifacts_list {
 
 .node-minus-tree {
     overflow:hidden;
-    border-bottom:1px grey dotted;
+    border-bottom:1px gray dotted;
     width:4px;
     margin-right:1px;
     margin-left:1px;

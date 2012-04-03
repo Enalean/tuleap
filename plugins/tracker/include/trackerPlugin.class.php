@@ -83,9 +83,33 @@ class trackerPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
             echo '<!--[if IE]><style type="text/css">
+            
             .node-content {
              	display:inline;
             }
+            
+            .node-pipe {
+                zoom:1;
+                *display: inline;
+            }
+
+            .node-minus {
+                zoom:1;
+                *display: inline;
+            }
+            .node-child {
+                zoom:1;
+            }
+            .node-minus-tree {
+                zoom:1;
+                *display: inline;
+            }
+
+            .node-indent {
+                zoom:1;
+                *display: inline;
+            }
+            
             </style><![endif]-->';
         }
     }
