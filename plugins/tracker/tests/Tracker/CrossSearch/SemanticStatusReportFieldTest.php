@@ -26,8 +26,14 @@ Mock::generate('Tracker_Report_Criteria');
 class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
+        
         $this->status = '1';
         $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status);
+        
+        $this->setText('Status', array('plugin_tracker_crosssearch', 'semantic_status_label'));
+        $this->setText('Any',    array('plugin_tracker_crosssearch', 'semantic_status_any'));
+        $this->setText('Open',   array('plugin_tracker_crosssearch', 'semantic_status_open'));
+        $this->setText('Closed', array('plugin_tracker_crosssearch', 'semantic_status_closed'));
     }
     
     public function itHasAnId() {

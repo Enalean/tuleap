@@ -127,7 +127,7 @@ class Tracker_CrossSearch_SearchContentView {
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
+        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_title_label').'</span></th>';
         foreach ($this->criteria as $header) {
             if ($this->shouldDisplayField($header->field)) {
                 $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';

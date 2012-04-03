@@ -52,19 +52,19 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
         $selectionAny    = $this->status === self::STATUS_ANY    ? $selected : $not_selected;
         
         $label = $this->getLabel();
-        return <<<HTML
-            <label>$label</label>
+        return '
+            <label>'.$label.'</label>
             <br/>
             <select name="semantic_criteria[status]">
-                <option value="Any"    $selectionAny>Any</option>
-                <option value="Open"   $selectionOpen>Open</option>
-                <option value="Closed" $selectionClosed>Closed</option>
+                <option value="'.self::STATUS_ANY.'"    '.$selectionAny.'>'   . $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_any')    . '</option>
+                <option value="'.self::STATUS_OPEN.'"   '.$selectionOpen.'>'  . $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_open')   . '</option>
+                <option value="'.self::STATUS_CLOSED.'" '.$selectionClosed.'>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_closed') . '</option>
             </select>
-HTML;
+        ';
     }
     
     public function getLabel() {
-        return 'Status';
+        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_label');
     }
     
     public function getId() {
