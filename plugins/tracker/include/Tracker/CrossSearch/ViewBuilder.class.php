@@ -20,7 +20,7 @@
 
 require_once 'SemanticTitleReportField.class.php';
 require_once 'Criteria.class.php';
-
+require_once 'SemanticStatusReportField.class.php';
 class Tracker_CrossSearch_ViewBuilder {
     /**
      * @var Tracker_FormElementFactory
@@ -101,10 +101,13 @@ class Tracker_CrossSearch_ViewBuilder {
 
     public function getSemanticFieldsCriteria(Tracker_Report $report, $cross_search_criteria) {
         $field       = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle());
+        $statusfield = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus());
         $id          = null;
         $rank        = 0;
         $is_advanced = true;
-        return array(new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced));
+        return array(
+            new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced), 
+            new Tracker_Report_Criteria($id, $report, $statusfield, $rank, $is_advanced));
     }
 
     protected function getView(Project $project, Service $service, $criteria, $trackers) {

@@ -33,7 +33,7 @@ Mock::generate('Tracker_Report');
 class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 }
 
-class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
+class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -46,7 +46,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $tracker_factory    = new MockTrackerFactory();
         $tracker_factory->setReturnValue('getTrackersByGroupId', array());
         $project            = new MockProject();
-        $request_criteria   = new Tracker_CrossSearch_Criteria(array());
+        $request_criteria   = new Tracker_CrossSearch_Criteria(array(), '');
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
 
@@ -118,16 +118,6 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
 }
 
-class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
-    public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
-        $project = new MockProject();
-        $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
-        
-        $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
-        $builder->buildView($project, new Tracker_CrossSearch_Criteria());
-    }
-}
-
 class Tracker_CrossSearch_ViewBuilder_WithTitleTest extends TuleapTestCase {
     public function itPassesTheSearchedTitleToTheField() {
         $builder               = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
@@ -140,5 +130,31 @@ class Tracker_CrossSearch_ViewBuilder_WithTitleTest extends TuleapTestCase {
         $this->assertEqual($expected_field, $actual_field);
     }
 }
+
+class Tracker_CrossSearch_CriteriaBuilder_SemanticStatusFieldTest extends TuleapTestCase {
+
+    const STATUS_OPEN = "Open";
+    public function itPassesTheSearchedStatusToTheField() {
+        $builder               = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
+        $report                = new MockTracker_Report();
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '', self::STATUS_OPEN);
+        $report_criteria       = $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
+        $actual_field          = $report_criteria[1]->field;
+        $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(self::STATUS_OPEN);
+        
+        $this->assertEqual($expected_field, $actual_field);
+    }
+}
+
+class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
+    public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
+        $project = new MockProject();
+        $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
+        
+        $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
+        $builder->buildView($project, new Tracker_CrossSearch_Criteria(array(), ''));
+    }
+}
+
 
 ?>

@@ -103,7 +103,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
     
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
-        $no_criteria = new Tracker_CrossSearch_Criteria();
+        $no_criteria = new Tracker_CrossSearch_Criteria(array(), null);
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $this->view_builder->expectOnce('buildView', array('*', $no_criteria));
         $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());

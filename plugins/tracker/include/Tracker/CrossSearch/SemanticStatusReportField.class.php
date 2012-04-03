@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,38 +19,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CrossSearch_Criteria {
+require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
+require_once dirname(__FILE__).'/../Report/Tracker_Report_Criteria.class.php';
+
+class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Field {
+
     /**
-     * @var array of array
+     * @var string
      */
-    private $shared_fields_criteria;
-    private $title;
+    private $id = '';
+    
     private $status;
-
-    /**
-     * @param array of array $shared_fields_criteria
-     * @param string $title
-     * @param string $status 
-     */
-    public function __construct($shared_fields_criteria=array(), $title, $status = null) {
-        $this->shared_fields_criteria = $shared_fields_criteria;
-        $this->title                  = $title;
-        $this->status                 = $status;
+    
+    public function __construct($status) {
+//        $this->status = $status;
     }
     
-    public function getSharedFields() {
-        return $this->shared_fields_criteria;
+    public function isUsed() {
+        return true;
     }
     
-    public function getTitle() {
-        return $this->title;
+    public function fetchCriteria(Tracker_Report_Criteria $criteria) {
+        return '';
     }
     
-    public function getStatus() {
-        return $this->status;
+    public function getLabel() {
     }
-
-
+    
+    public function getId() {
+    }
+    
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+        // Never used (god save polymorphism)
+    }
     
 }
 
