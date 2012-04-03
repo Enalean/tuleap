@@ -63,7 +63,7 @@ class Git_CiDao extends DataAccessObject {
      * @return Boolean
      */
     function saveTrigger($jobId, $repositoryId) {
-        $sql = 'INSERT INTO plugin_git_ci
+        $sql = 'REPLACE INTO plugin_git_ci
                 (
                 job_id,
                 repository_id
@@ -77,16 +77,14 @@ class Git_CiDao extends DataAccessObject {
     }
 
     /**
-     * Update trigger
+     * Delete trigger
      *
-     * @param Integer $jobId        Id of the CI job
-     * @param Integer $repositoryId Id of the repository
+     * @param Integer $jobId Id of the CI job
      *
      * @return Boolean
      */
-    function updateTrigger($jobId, $repositoryId) {
-        $sql = 'UPDATE plugin_git_ci
-                SET repository_id = '.$this->da->escapeInt($repositoryId).'
+    function deleteTrigger($jobId) {
+        $sql = 'DELETE FROM plugin_git_ci
                 WHERE job_id = '.$this->da->escapeInt($jobId);
         return $this->update($sql);
     }

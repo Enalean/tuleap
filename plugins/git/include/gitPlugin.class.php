@@ -477,10 +477,9 @@ class GitPlugin extends Plugin {
         if (isset($params['request']) && !empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
             $repositoryId = $params['request']->get('new_hudson_use_plugin_git_trigger');
-            var_dump($jobId, $repositoryId);
             if ($jobId && $repositoryId) {
                 $ciDao = new Git_CiDao();
-                $ciDao->updateTrigger($jobId, $repositoryId);
+                $ciDao->saveTrigger($jobId, $repositoryId);
             }
         }
     }
@@ -494,7 +493,8 @@ class GitPlugin extends Plugin {
      */
     public function delete_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
-            // TODO: delete job trigger
+            $ciDao = new Git_CiDao();
+            $ciDao->deleteTrigger($params['job_id']);
         }
     }
 
