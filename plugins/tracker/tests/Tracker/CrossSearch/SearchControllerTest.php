@@ -50,9 +50,10 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->service               = new MockService();
         $this->project               = new MockProject();
         $this->manager               = new MockProjectManager();
-        $this->request_criteria      = array('shared_fields' => array(), 'semantic_title' => '');
-        $this->cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '');
-        $this->request               = new Codendi_Request(array('group_id' => '66', 'criteria' => $this->request_criteria));
+        $criteria                    = array('124' => array('stuff'));
+        $empty_title                 = 'toto';
+        $this->cross_search_criteria = new Tracker_CrossSearch_Criteria($criteria, $empty_title);
+        $this->request               = new Codendi_Request(array('group_id' => '66', 'criteria' => $criteria, 'semantic_criteria' => array('title' => $empty_title)));
         $this->view_builder          = new MockTracker_CrossSearch_ViewBuilder();
         
         $this->manager->setReturnValue('getProject', $this->project, array('66'));

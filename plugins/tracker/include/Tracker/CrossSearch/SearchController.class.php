@@ -55,17 +55,16 @@ class Tracker_CrossSearch_SearchController {
 
     public function search() {
         try {
-            $request_criteria = $this->request->get('criteria');
-            $project_id       = $this->request->get('group_id');
-            $project          = $this->getProject($project_id, $this->projectManager);
+            $request_criteria  = $this->request->get('criteria');
+            $semantic_criteria = $this->request->get('semantic_criteria');
+            $project_id        = $this->request->get('group_id');
+            $project           = $this->getProject($project_id, $this->projectManager);
             
-            if (! $request_criteria)                                     { $request_criteria                   = array(); }
-            if (! array_key_exists('shared_fields', $request_criteria))  { $request_criteria['shared_fields']  = array(); }
-            if (! array_key_exists('semantic_title', $request_criteria)) { $request_criteria['semantic_title'] = null; }
+            if (! $request_criteria) {
+                $request_criteria = array();
+            }
             
-            $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria['shared_fields'],
-                    
-                                                                      $request_criteria['semantic_title']);
+            $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria['title']);
             
             $view         = $this->view_builder->buildView($project, $cross_search_criteria);
             $content_view = $this->view_builder->buildContentView($project, $cross_search_criteria);
