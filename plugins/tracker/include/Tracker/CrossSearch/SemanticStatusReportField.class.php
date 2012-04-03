@@ -54,6 +54,7 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
         $label = $this->getLabel();
         return <<<HTML
             <label>$label</label>
+            <br/>
             <select name="semantic_criteria[status]">
                 <option value="Any"    $selectionAny>Any</option>
                 <option value="Open"   $selectionOpen>Open</option>
