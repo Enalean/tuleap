@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationCo
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_FormElement_Builder.php');
+require_once(dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/Test_CriteriaBuilder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
@@ -118,18 +119,23 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itDisplaysTheSearchContentView() {
-        $requested_criteria = array('stuff');
-        $this->assertThatWeBuildAcontentViewWith($requested_criteria, array('stuff'));
+        $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
+        $expected_criteria = aCrossSearchCriteria()
+                            ->withSharedFieldsCriteria($shared_fields_criteria)
+                            ->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $expected_criteria);
     }
     
     public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
-        $requested_criteria = null;
-        $this->assertThatWeBuildAcontentViewWith($requested_criteria, array());
+        $shared_fields_criteria = null;
+        $expectedCriteria = aCrossSearchCriteria()->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $expectedCriteria);
     }
      
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
-        $requested_criteria = 'invalid parameter type';
-        $this->assertThatWeBuildAcontentViewWith($requested_criteria, array());
+        $shared_fields_criteria = 'invalid parameter type';
+        $expectedCriteria = aCrossSearchCriteria()->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $expectedCriteria);
     }
     
     private function assertThatWeBuildAcontentViewWith($requested_criteria, $expected_criteria) {
@@ -157,8 +163,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $tracker_ids  = array();
         
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildPlanningContentView', array($project, $expected_criteria, $already_linked_items, $tracker_ids));
-        $view_builder->setReturnValue('buildPlanningContentView', $content_view);
+        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, $expected_criteria, $already_linked_items, $tracker_ids));
+        $view_builder->setReturnValue('buildCustomContentView', $content_view);
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
@@ -227,7 +233,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->setReturnValue('buildPlanningContentView', $content_view);
+        $view_builder->setReturnValue('buildCustomContentView', $content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager(), new MockTracker_CrossSearch_Search());
     }
     

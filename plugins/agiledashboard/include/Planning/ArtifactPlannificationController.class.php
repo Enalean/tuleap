@@ -57,7 +57,8 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $request_criteria = $this->getCriteriaFromRequest();
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
         $tracker_ids = $planning->getBacklogTrackerIds();
-        return $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria);
+        return $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
     }
     
     private function getCriteriaFromRequest() {
@@ -94,7 +95,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         return new BreadCrumb_Merger($baseBreadCrumbGenerator, $planningBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
         
     }
-    
+
 }
 
 ?>
