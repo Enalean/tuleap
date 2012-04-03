@@ -121,9 +121,9 @@ class Git_Widget_ProjectPushes extends Widget {
     function getPreferences() {
         return "<table>
                     <tr>
-                        <td> Retrieve pushes for the last </td>
+                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_duration')."</td>
                         <td><input name='plugin_git_project_pushes_duration' value='".$this->duration."'/></td>
-                        <td> week(s). </td>
+                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_group_by')."</td>
                     </tr>
                 </table>";
         
