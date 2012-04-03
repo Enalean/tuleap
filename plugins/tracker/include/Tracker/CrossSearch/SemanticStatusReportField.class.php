@@ -32,11 +32,8 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     
     private $status;
     
-    private $cross_search_criteria;
-    
-    public function __construct($status, Tracker_CrossSearch_Criteria $cross_search_criteria) {
+    public function __construct($status) {
         $this->status                = $status;
-        $this->cross_search_criteria = $cross_search_criteria;
     }
     
     public function isUsed() {
@@ -46,9 +43,9 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $selected = 'selected="selected"';
         $not_selected = '';
-        $selectionOpen   = $this->cross_search_criteria->getStatus() === 'Open'   ? $selected : $not_selected;
-        $selectionClosed = $this->cross_search_criteria->getStatus() === 'Closed' ? $selected : $not_selected;
-        $selectionAny    = $this->cross_search_criteria->getStatus() === 'Any'    ? $selected : $not_selected;
+        $selectionOpen   = $this->status === 'Open'   ? $selected : $not_selected;
+        $selectionClosed = $this->status === 'Closed' ? $selected : $not_selected;
+        $selectionAny    = $this->status === 'Any'    ? $selected : $not_selected;
         
         $label = $this->getLabel();
         return <<<HTML

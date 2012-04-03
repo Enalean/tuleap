@@ -26,8 +26,7 @@ Mock::generate('Tracker_Report_Criteria');
 class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function setUp() {
         $this->status = '1';
-        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '', '');
-        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $cross_search_criteria);
+        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status);
     }
     
     public function itHasAnId() {
@@ -71,8 +70,7 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
 
     private function fetchCriteria($option) {
         $criteria = new MockTracker_Report_Criteria();
-        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '', $option);
-        $field = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $cross_search_criteria);
+        $field = new Tracker_CrossSearch_SemanticStatusReportField($option);
         return $field->fetchCriteria($criteria);
     }
 
