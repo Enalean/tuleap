@@ -43,14 +43,14 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array('350'))));
+        $title     = 'Foo';
+        $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array('350'))), $title);
                 
         $sharedFields = array(new Tracker_CrossSearch_SharedField());
-        
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria->getSharedFields()));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields, array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields, $title, array()));
         
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -59,7 +59,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria  = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))));
 
-        $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($this->trackerIds, array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, null, array()));
 
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -67,8 +67,8 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria   = new Tracker_CrossSearch_Criteria(array('220' => array('values' => array(''))));
-                
-        $this->searchDao->expectNever('searchArtifactsFromTrackers');
+        
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, null, array()));
         
         $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
         $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);

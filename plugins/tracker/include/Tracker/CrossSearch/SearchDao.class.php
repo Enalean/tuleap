@@ -23,30 +23,42 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, array $excludedArtifactIds = array()) {
-        $trackerIds          = $this->da->quoteSmartImplode(',', $trackerIds);
-        $excludedArtifactIds = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
+    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, $title, array $excludedArtifactIds = array()) {
+        $trackerIds                = $this->da->quoteSmartImplode(',', $trackerIds);
+        $excludedArtifactIds       = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($sharedFields);
+        $title_constraint          = $this->getTitleSqlFragment($title);
+        
         $sql = "
-            SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title, artifact.tracker_id, GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
+            SELECT artifact.id,
+                   artifact.last_changeset_id,
+                   CVT.value                      AS title,
+                   artifact.tracker_id,
+                   GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
                    
-            FROM tracker_artifact AS artifact
-                INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-                    $shared_fields_constraints
-                LEFT JOIN (
-                    tracker_changeset_value AS CV
-                        INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
+            FROM       tracker_artifact  AS artifact
+            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+            
+            $shared_fields_constraints
+            
+            LEFT JOIN (
+                           tracker_changeset_value      AS CV
+                INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
+                INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
+            
+            ) ON (c.id = CV.changeset_id)
 
-                ) ON (c.id = CV.changeset_id)
-
-                LEFT JOIN (
-                    tracker_changeset_value_artifactlink AS CVAL
-                    INNER JOIN tracker_changeset_value AS CV2 ON (CV2.id = CVAL.changeset_value_id) 
-                ) ON CV2.changeset_id = artifact.last_changeset_id
+            LEFT JOIN (
+                           tracker_changeset_value_artifactlink AS CVAL
+                INNER JOIN tracker_changeset_value              AS CV2 ON (CV2.id = CVAL.changeset_value_id) 
+            
+            ) ON CV2.changeset_id = artifact.last_changeset_id
 
             WHERE artifact.use_artifact_permissions = 0
-              AND artifact.tracker_id IN ($trackerIds)";
+            AND   artifact.tracker_id IN ($trackerIds)
+            $title_constraint
+        ";
+        
         if ($excludedArtifactIds != '') {
             $sql .= "
               AND artifact.id NOT IN ($excludedArtifactIds) ";
@@ -89,6 +101,13 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         ";
         
         return $sqlFragment;
+    }
+    
+    protected function getTitleSqlFragment($title) {
+        $title = $this->da->quoteSmart($title);
+        if (! $title) { return ''; }
+        
+        return "AND CVT.value LIKE CONCAT('%', $title, '%')";
     }
 }    
 ?>
