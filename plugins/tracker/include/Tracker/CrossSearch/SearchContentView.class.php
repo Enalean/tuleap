@@ -129,7 +129,7 @@ class Tracker_CrossSearch_SearchContentView {
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
         $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
         foreach ($this->criteria as $header) {
-            if (! is_a($header->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
+            if ($this->shouldDisplayField($header->field)) {
                 $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
             }
         }
@@ -143,7 +143,7 @@ class Tracker_CrossSearch_SearchContentView {
         foreach ($this->criteria as $criterion) {
             $value = '';
             
-            if (!is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField')) {
+            if ($this->shouldDisplayField($criterion->field)) {
                 $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
                 
                 if ($field) {
@@ -153,7 +153,11 @@ class Tracker_CrossSearch_SearchContentView {
             }
         }
         return $html;
-    }    
+    }
+    
+    private function shouldDisplayField(Tracker_Report_Field $field) {
+        return ! is_a($field, 'Tracker_CrossSearch_SemanticTitleReportField');
+    }
     
     private function draggableCell($id, $title) {
         $html  = '';
