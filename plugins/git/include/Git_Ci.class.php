@@ -67,7 +67,7 @@ class Git_Ci {
                 // TODO: i18n
                 $addForm  = '<p>
                                  <div id="hudson_use_plugin_git_trigger_form">
-                                     <label for="hudson_use_plugin_git_trigger">Git repository id: </label>
+                                     <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
                                      <input id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />
                                  </div>
                                  <div id="hudson_use_plugin_git_trigger_checkbox">
@@ -82,9 +82,9 @@ class Git_Ci {
                                      Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
                                  </script>
                              </p>';
-                $editForm = '<label for="new_hudson_use_plugin_git_trigger">Trigger a build after Git pushes in repository: </label><input id="new_hudson_use_plugin_git_trigger" name="new_hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />';
+                $editForm = '<label for="new_hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label><input id="new_hudson_use_plugin_git_trigger" name="new_hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />';
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
-                             'title'         => 'Git trigger',
+                             'title'         => $GLOBALS['Language']->getText('plugin_git', 'ci_trigger'),
                              'used'          => $used,
                              'add_form'      => $addForm,
                              'edit_form'     => $editForm);
