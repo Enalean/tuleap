@@ -38,16 +38,17 @@ class Tracker_CrossSearch_Criteria {
         return $this->shared_fields_criteria;
     }
     
+    public function getSemanticCriteria() {
+        return $this->semantic_criteria;
+    }
+    
     public function getTitle() {
         return $this->semantic_criteria['title'];
     }
     
     public function getStatus() {
         return $this->semantic_criteria['status'];
-    }
-
-
-    
+    }    
 }
 
 ?>
