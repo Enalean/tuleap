@@ -30,34 +30,32 @@ if ($request->valid($vGroupId)) {
 } else {
     header('Location: '.get_server_url());
 }
+
 $vDuration = new Valid_UInt();
-$vGroupId->required();
 if ($request->valid($vDuration)) {
     $nb_weeks = $request->get('duration');
 } else {
     header('Location: '.get_server_url());
 }
 
-$dao      = new GitDao();
-$repoList = $dao->getProjectRepositoryList($groupId);
-
-//$nb_weeks        = 4 * 3;
+$dao             = new GitDao();
+$repoList        = $dao->getProjectRepositoryList($groupId);
 $duration        = 7 * $nb_weeks;
 $day             = 24 * 3600;
 $week            = 7 * $day;
 $today           = $_SERVER['REQUEST_TIME'];
 $start_of_period = strtotime("-$nb_weeks weeks");
 
-$dates = array();
-$year = array();
+$dates   = array();
+$year    = array();
 $weekNum = array();
 for ($i = $start_of_period ; $i <= $today ; $i += $week) {
-    $dates[] = date('M d', $i);
+    $dates[]   = date('M d', $i);
     $weekNum[] = intval(date('W', $i));
-    $year[] = intval(date('Y', $i));
+    $year[]    = intval(date('Y', $i));
 }
 $nb_repo = count($repoList);
-$graph = new Chart(500, 300+16*$nb_repo);
+$graph   = new Chart(500, 300+16*$nb_repo);
 $graph->SetScale('textlin');
 
 $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
