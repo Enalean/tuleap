@@ -50,9 +50,9 @@ class Tracker_CrossSearch_Search {
     }
 
     
-    public function getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds = array()) {
+    public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Criteria $criteria, $excludedArtifactIds = array()) {
         $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
-        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $request_criteria, $excludedArtifactIds);
+        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $criteria, $excludedArtifactIds);
     }
     
     /**
