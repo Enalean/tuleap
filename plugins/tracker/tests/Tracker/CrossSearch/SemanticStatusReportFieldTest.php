@@ -26,7 +26,8 @@ Mock::generate('Tracker_Report_Criteria');
 class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function setUp() {
         $this->status = '1';
-        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status);
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '', '');
+        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $cross_search_criteria);
     }
     
     public function itHasAnId() {
@@ -50,5 +51,31 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
         $html = $this->field->fetchCriteria($criteria);
         $this->assertPattern('%<label.*Status.*</label>%s', $html);
     }
+    
+    public function itUsesTheCriteriaToDeduceWichOptionsAreSelected() {
+        $this->assertOptionIsSelected('Open');
+        $this->assertOptionIsSelected('Closed');
+        $this->assertOptionIsSelected('Any');
+    }
+
+    public function testNoOptionIsSelectedIfThereIsNoStatusCriteria() {
+        $this->assertNoPattern("%selected=\"selected\">%", $this->fetchCriteria(null));
+        $this->assertNoPattern("%selected=\"selected\">%", $this->fetchCriteria('non supported criteria'));
+    }
+    
+    private function assertOptionIsSelected($option) {
+        $html = $this->fetchCriteria($option);
+        $this->assertPattern("%selected=\"selected\">$option%", $html);
+        
+    }
+
+    private function fetchCriteria($option) {
+        $criteria = new MockTracker_Report_Criteria();
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria(array(), '', $option);
+        $field = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $cross_search_criteria);
+        return $field->fetchCriteria($criteria);
+    }
+
+    
 }
 ?>

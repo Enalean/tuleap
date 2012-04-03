@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report_Criteria.class.php';
+require_once 'Criteria.class.php';
 
 class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Field {
 
@@ -31,8 +32,11 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     
     private $status;
     
-    public function __construct($status) {
-        $this->status = $status;
+    private $cross_search_criteria;
+    
+    public function __construct($status, Tracker_CrossSearch_Criteria $cross_search_criteria) {
+        $this->status                = $status;
+        $this->cross_search_criteria = $cross_search_criteria;
     }
     
     public function isUsed() {
@@ -40,13 +44,19 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
+        $selected = 'selected="selected"';
+        $not_selected = '';
+        $selectionOpen   = $this->cross_search_criteria->getStatus() === 'Open'   ? $selected : $not_selected;
+        $selectionClosed = $this->cross_search_criteria->getStatus() === 'Closed' ? $selected : $not_selected;
+        $selectionAny    = $this->cross_search_criteria->getStatus() === 'Any'    ? $selected : $not_selected;
+        
         $label = $this->getLabel();
         return <<<HTML
             <label>$label</label>
             <select>
-                <option>Any</option>
-                <option value="">Open</option>
-                <option>Closed</option>
+                <option $selectionAny>Any</option>
+                <option $selectionOpen>Open</option>
+                <option $selectionClosed>Closed</option>
             </select>
 HTML;
     }
