@@ -60,7 +60,6 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         
         $this->assertIsA($view, 'Tracker_CrossSearch_SearchContentView');
     }
-    
 }
 
 class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {

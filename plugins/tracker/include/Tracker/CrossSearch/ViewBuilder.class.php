@@ -90,7 +90,6 @@ class Tracker_CrossSearch_ViewBuilder {
         
         return $this->getContentView($classname, $report, $criteria, $artifacts);
     }
-    
 
     protected function getView(Project $project, Service $service, $criteria, $trackers, $content_view) {
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);

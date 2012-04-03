@@ -32,6 +32,17 @@
  * best design, but it was the easier to start with.
  */
 class Tracker_CrossSearch_SemanticValueFactory {
+    public function getTitle($artifact_id, $changeset_id) {
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $artifact         = $artifact_factory->getArtifactById($artifact_id);
+        $changeset        = $artifact->getChangeset($changeset_id);
+        $tracker          = $artifact->getTracker();
+        $semantic         = Tracker_Semantic_Title::load($tracker);
+        $field            = $semantic->getField();
+        $value            = $changeset->getValue($field);
+        
+        return $value->getText();
+    }
     public function getStatus($artifact_id, $changeset_id) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
         $tracker          = $artifact_factory->getArtifactById($artifact_id)->getTracker();

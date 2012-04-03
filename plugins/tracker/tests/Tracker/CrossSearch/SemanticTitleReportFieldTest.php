@@ -25,9 +25,10 @@ Mock::generate('Tracker_Report_Criteria');
 
 class Tracker_CrossSearch_SemanticTitleReportFieldTest extends TuleapTestCase {
     public function itDisplaysTheCurrentTitleValue() {
-        $field    = new Tracker_CrossSearch_SemanticTitleReportField('Foo');
-        $criteria = new MockTracker_Report_Criteria();
-        $output   = $field->fetchCriteria($criteria);
+        $semantic_value_factory = new MockTracker_CrossSearch_SemanticValueFactory();
+        $field                  = new Tracker_CrossSearch_SemanticTitleReportField('Foo', $semantic_value_factory);
+        $criteria               = new MockTracker_Report_Criteria();
+        $output                 = $field->fetchCriteria($criteria);
         
         $this->assertPattern('/<input [^>]* value="Foo"/', $output);
     }

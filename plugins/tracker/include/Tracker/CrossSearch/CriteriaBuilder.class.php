@@ -65,7 +65,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     }
 
     public function getSemanticFieldsCriteria(Tracker_Report $report, $cross_search_criteria) {
-        $field        = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle());
+        $field        = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle(), $this->semantic_value_factory);
         $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus(), $this->semantic_value_factory);
         $id           = null;
         $rank         = 0;

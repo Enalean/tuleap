@@ -34,8 +34,14 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
      */
     private $searched_title;
     
-    public function __construct($searched_title) {
-        $this->searched_title = $searched_title;
+    /**
+     * @var Tracker_CrossSearch_SemanticValueFactory
+     */
+    private $semantic_value_factory;
+    
+    public function __construct($searched_title, Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
+        $this->searched_title         = $searched_title;
+        $this->semantic_value_factory = $semantic_value_factory;
     }
     
     public function isUsed() {
@@ -60,9 +66,8 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        // Never used (god save polymorphism)
+        return $this->semantic_value_factory->getTitle($artifact_id, $changeset_id);
     }
-    
 }
 
 ?>
