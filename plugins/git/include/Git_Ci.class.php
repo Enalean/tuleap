@@ -100,6 +100,7 @@ class Git_Ci {
      * @return Boolean
      */
     function saveTrigger($jobId, $repositoryId) {
+        // TODO: Manage the case repository does not exist or is not in the same project as the job
         return $this->dao->saveTrigger($jobId, $repositoryId);
     }
 
