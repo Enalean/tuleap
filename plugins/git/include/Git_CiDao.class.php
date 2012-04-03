@@ -62,7 +62,7 @@ class Git_CiDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function saveTrigger($jobId, $repositryId) {
+    function saveTrigger($jobId, $repositoryId) {
         $sql = 'INSERT INTO plugin_git_ci
                 (
                 job_id,
@@ -71,8 +71,23 @@ class Git_CiDao extends DataAccessObject {
                 VALUES
                 (
                 '.$this->da->escapeInt($jobId).',
-                '.$this->da->escapeInt($repositryId).'
+                '.$this->da->escapeInt($repositoryId).'
                 )';
+        return $this->update($sql);
+    }
+
+    /**
+     * Update trigger
+     *
+     * @param Integer $jobId        Id of the CI job
+     * @param Integer $repositoryId Id of the repository
+     *
+     * @return Boolean
+     */
+    function updateTrigger($jobId, $repositoryId) {
+        $sql = 'UPDATE plugin_git_ci
+                SET repository_id = '.$this->da->escapeInt($repositoryId).'
+                WHERE job_id = '.$this->da->escapeInt($jobId);
         return $this->update($sql);
     }
 

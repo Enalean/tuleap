@@ -475,7 +475,13 @@ class GitPlugin extends Plugin {
      */
     public function update_ci_triggers($params) {
         if (isset($params['request']) && !empty($params['request'])) {
-            // TODO: Update trigger
+            $jobId        = $params['request']->get('job_id');
+            $repositoryId = $params['request']->get('new_hudson_use_plugin_git_trigger');
+            var_dump($jobId, $repositoryId);
+            if ($jobId && $repositoryId) {
+                $ciDao = new Git_CiDao();
+                $ciDao->updateTrigger($jobId, $repositoryId);
+            }
         }
     }
 
