@@ -50,7 +50,7 @@ class Tracker_CrossSearch_SemanticTitleReportField implements Tracker_Report_Fie
     }
     
     public function getLabel() {
-        return 'Title';        
+        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary');
     }
     
     public function getId() {
