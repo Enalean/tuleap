@@ -169,7 +169,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $trackers           = array($tracker1);
         
         $this->setContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
-        $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
+        $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $this->content_view);
         return $view;
     }
     
@@ -208,7 +208,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     private function renderAndGetContent($view) {
         ob_start();
-        $view->render($this->content_view);
+        $view->render();
         $output = ob_get_clean();
         return $output;
     }

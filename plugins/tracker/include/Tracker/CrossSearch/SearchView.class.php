@@ -47,18 +47,25 @@ class Tracker_CrossSearch_SearchView {
      * @var Array of Tracker
      */
     private $trackers;
-
-    public function __construct(Project                          $project,
-                                Service                          $service,
-                                array                            $criteria, 
-                                                                 $trackers) {
+    
+    /**
+     * @var Tracker_CrossSearch_SearchContentView
+     */
+    private $content_view;
+    
+    public function __construct(Project                                 $project,
+                                Service                                 $service,
+                                array                                   $criteria, 
+                                                                        $trackers,
+                                Tracker_CrossSearch_SearchContentView   $content_view) {
         $this->project           = $project;
         $this->service           = $service;
         $this->criteria          = $criteria;
         $this->trackers          = $trackers;
+        $this->content_view      = $content_view;
     }
     
-    public function render(Tracker_CrossSearch_SearchContentView $content_view) {
+    public function render() {
         $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
@@ -79,7 +86,7 @@ class Tracker_CrossSearch_SearchView {
         $html .= '</p>';
         
         if ($this->criteria) {
-            $html .= $content_view->fetch();
+            $html .= $this->content_view->fetch();
             $html .= $this->fetchTrackerList();
         } else {
             $html .= '<em>'. 'There is no shared field to query across your trackers' .'</em>';

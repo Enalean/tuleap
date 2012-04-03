@@ -50,7 +50,8 @@ class Tracker_CrossSearch_ViewBuilder {
         $service            = $this->getService($project);
         $criteria           = $this->getCriteria($project, $this->getReport(), $request_criteria);
         $trackers           = $this->getTrackers($project, $this->tracker_factory);
-        return $this->getView($project, $service, $criteria, $trackers);
+        $content_view       = $this->buildContentView($project, $request_criteria);
+        return $this->getView($project, $service, $criteria, $trackers, $content_view);
    
     }
     
@@ -110,8 +111,8 @@ class Tracker_CrossSearch_ViewBuilder {
             new Tracker_Report_Criteria($id, $report, $statusfield, $rank, $is_advanced));
     }
 
-    protected function getView(Project $project, Service $service, $criteria, $trackers) {
-        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
+    protected function getView(Project $project, Service $service, $criteria, $trackers, $content_view) {
+        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
     }
     
     /**

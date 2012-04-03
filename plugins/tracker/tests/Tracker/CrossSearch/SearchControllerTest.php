@@ -96,13 +96,10 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
         
     public function itRendersViewUsingTheGivenProjectAndCriteria() {
-        $contentView = new MockTracker_CrossSearch_SearchContentView();
         $view = new MockTracker_CrossSearch_SearchView();
-        $view->expectOnce('render', array($contentView));
+        $view->expectOnce('render');
                 
         $controller = $this->getController();        
-        $this->view_builder->setReturnValue('buildContentView', $contentView);
-        $this->view_builder->expectOnce('buildContentView', array($this->project, $this->cross_search_criteria));
         $this->view_builder->setReturnValue('buildView', $view);
         $this->view_builder->expectOnce('buildView', array($this->project, $this->cross_search_criteria));
         
