@@ -23,12 +23,12 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, $title, $status, array $excludedArtifactIds = array()) {
+    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, array $semantic_fields, array $excludedArtifactIds = array()) {
         $trackerIds                = $this->da->quoteSmartImplode(',', $trackerIds);
         $excludedArtifactIds       = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($sharedFields);
-        $title_constraint          = $this->getTitleSqlFragment($title);
-        $status_constraint         = $this->getStatusSqlFragment($status);
+        $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
+        $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
         
         $sql = "
             SELECT artifact.id,
