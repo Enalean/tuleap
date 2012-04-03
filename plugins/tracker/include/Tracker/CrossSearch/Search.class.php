@@ -60,13 +60,7 @@ class Tracker_CrossSearch_Search {
      */
     public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Criteria $criteria, $excludedArtifactIds = array()) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria->getSharedFields());
-        $artifacts            = array();
-        
-        if (count($searchedSharedFields) > 0) { 
-            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $excludedArtifactIds);
-        } elseif (count($trackerIds) > 0) {
-            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds, $excludedArtifactIds);
-        }
+        $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $excludedArtifactIds);
         return $this->sortResults($artifacts, $trackerIds, $hierarchy);
     }
     
