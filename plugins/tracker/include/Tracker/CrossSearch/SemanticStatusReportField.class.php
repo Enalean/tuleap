@@ -69,7 +69,12 @@ HTML;
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        // Never used (god save polymorphism)
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        
+        $tracker         = $artifact_factory->getArtifactById($artifact_id)->getTracker();
+        $value           = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
+        
+        return $value;
     }
     
 }

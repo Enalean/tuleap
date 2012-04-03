@@ -32,6 +32,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
+Mock::generate('Tracker_CrossSearch_SemanticStatusReportField');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
@@ -50,7 +51,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     public function itDoesNotTryToRetrieveSharedFieldOriginForSemanticStatus() {
         $status            = '1'; // Open
         $report            = new MockTracker_Report();
-        $status_field      = new Tracker_CrossSearch_SemanticStatusReportField($status);
+        $status_field      = new MockTracker_CrossSearch_SemanticStatusReportField();
         $criterion         = new Tracker_Report_Criteria(null, $report, $status_field, 0, true);
         $criteria          = array($criterion);
         $artifact_id       = 123;
