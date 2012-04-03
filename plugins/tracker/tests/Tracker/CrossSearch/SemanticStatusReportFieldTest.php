@@ -29,9 +29,9 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
-        $this->status = '1';
+        $this->status                 = 'open';
         $this->semantic_value_factory = new MockTracker_CrossSearch_SemanticValueFactory();
-        $this->field  = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $this->semantic_value_factory);
+        $this->field                  = new Tracker_CrossSearch_SemanticStatusReportField($this->status, $this->semantic_value_factory);
         
         $this->setText('Status', array('plugin_tracker_crosssearch', 'semantic_status_label'));
         $this->setText('Any',    array('plugin_tracker_crosssearch', 'semantic_status_any'));
@@ -49,7 +49,8 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     
     public function itCanRenderASearchCriteria() {
         $criteria = new MockTracker_Report_Criteria();
-        $html = $this->field->fetchCriteria($criteria);
+        $html     = $this->field->fetchCriteria($criteria);
+        
         $this->assertPattern('%<select.*Open.*</select>%s', $html);
         $this->assertPattern('%<select.*Any.*</select>%s', $html);
         $this->assertPattern('%<select.*Closed.*</select>%s', $html);
@@ -57,7 +58,8 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     
     public function testTheCriteriaIncludesTheLabel() {
         $criteria = new MockTracker_Report_Criteria();
-        $html = $this->field->fetchCriteria($criteria);
+        $html     = $this->field->fetchCriteria($criteria);
+        
         $this->assertPattern('%<label.*Status.*</label>%s', $html);
     }
     
@@ -73,14 +75,16 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
     }
     
     private function assertOptionIsSelected($option) {
-        $html = $this->fetchCriteria($option);
+        $html = $this->fetchCriteria(strtolower($option));
+        
         $this->assertPattern("%selected=\"selected\">$option%", $html);
         
     }
 
     private function fetchCriteria($option) {
         $criteria = new MockTracker_Report_Criteria();
-        $field = new Tracker_CrossSearch_SemanticStatusReportField($option, $this->semantic_value_factory);
+        $field    = new Tracker_CrossSearch_SemanticStatusReportField($option, $this->semantic_value_factory);
+        
         return $field->fetchCriteria($criteria);
     }
 

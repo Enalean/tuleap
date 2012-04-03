@@ -25,9 +25,13 @@ require_once 'Criteria.class.php';
 
 class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Field {
 
-    const STATUS_OPEN   = "Open";
-    const STATUS_CLOSED = "Closed";
-    const STATUS_ANY    = "Any";
+    const STATUS_ANY    = 'any';
+    const STATUS_OPEN   = 'open';
+    const STATUS_CLOSED = 'closed';
+    
+    private function getAllStatus() {
+        return array(self::STATUS_ANY, self::STATUS_OPEN, self::STATUS_CLOSED);
+    }
     
     /**
      * @var string
@@ -54,22 +58,24 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
-        $selected        = 'selected="selected"';
-        $not_selected    = '';
-        $selectionOpen   = $this->searched_status === self::STATUS_OPEN   ? $selected : $not_selected;
-        $selectionClosed = $this->searched_status === self::STATUS_CLOSED ? $selected : $not_selected;
-        $selectionAny    = $this->searched_status === self::STATUS_ANY    ? $selected : $not_selected;
-        
-        $label = $this->getLabel();
-        return '
-            <label>'.$label.'</label>
-            <br/>
-            <select name="semantic_criteria[status]">
-                <option value="'.self::STATUS_ANY.'"    '.$selectionAny.'>'   . $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_any')    . '</option>
-                <option value="'.self::STATUS_OPEN.'"   '.$selectionOpen.'>'  . $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_open')   . '</option>
-                <option value="'.self::STATUS_CLOSED.'" '.$selectionClosed.'>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_closed') . '</option>
-            </select>
-        ';
+        $html  = '';
+        $html .= '<label>'.$this->getLabel().'</label>
+                  <br/>
+                  <select name="semantic_criteria[status]">';
+        foreach($this->getAllStatus() as $status) {
+            $html .= '<option value="'.$status.'" '.$this->getSelected($status).'>'.$this->getValueLabel($status).'</option>';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+    
+    private function getSelected($status) {
+        return $this->searched_status === $status ? 'selected="selected"' : '';
+    }
+    
+    private function getValueLabel($status) {
+        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', "semantic_status_$status");
     }
     
     public function getLabel() {
