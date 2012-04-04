@@ -29,7 +29,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
-        $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment();
+        //$artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment(array(5254, 5255, 5256));
+        $artifact_link_constraints = '';
         
         $sql = "
             SELECT artifact.id,
@@ -135,9 +136,17 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         }
     }
     
-    protected function getArtifactLinkSearchSqlFragment() {
-        //return $this->getSearchOnArtifactLink(9309, array(5254, 5255));
-        return '';
+    /**
+     * Return the SQL statements that perform "artifact link" search
+     * 
+     * @param array $artifact_ids
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkSearchSqlFragment(array $artifact_ids) {
+        $artifact_ids_list = $this->da->quoteSmartImplode(',', $artifact_ids);
+        $field_ids_list    = $this->getArtifactLinkFields($artifact_ids_list);
+        return $this->getSearchOnArtifactLink($field_ids_list, $artifact_ids_list);
     }
     
     /**
@@ -149,24 +158,46 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * 
      * Given I Look for sprint #34 related artifacts it returns stories 20, 30 and 40
      * 
-     * @param Integer          $field_id
-     * @param Array of Integer $artifact_ids
-     * @return type 
+     * @param String  $field_ids_list
+     * @param String  $artifact_ids_list
+     * 
+     * @return String 
      */
-    protected function getSearchOnArtifactLink($field_id, array $artifact_ids) {
-        $artifact_ids = $this->da->quoteSmartImplode(',', $artifact_ids);
-        
+    protected function getSearchOnArtifactLink($field_ids_list, $artifact_ids_list) {        
         // Table aliases
-        $tracker_artifact                     = 'ALS_A_'.$field_id;
-        $tracker_changeset_value              = 'ALS_CV_'.$field_id;
-        $tracker_changeset_value_artifactlink = 'ALS_CVAL'.$field_id;
+        $tracker_artifact                     = 'ALS_A';
+        $tracker_changeset_value              = 'ALS_CV';
+        $tracker_changeset_value_artifactlink = 'ALS_CVAL';
         
-        $sql = "INNER JOIN tracker_artifact                    AS $tracker_artifact          ON ($tracker_artifact.id IN ($artifact_ids))
+        $sql = "INNER JOIN tracker_artifact                    AS $tracker_artifact          ON ($tracker_artifact.id IN ($artifact_ids_list))
                 INNER JOIN tracker_changeset_value             AS $tracker_changeset_value   ON ($tracker_artifact.last_changeset_id = $tracker_changeset_value.changeset_id 
-                                                                                                 AND $tracker_changeset_value.field_id = $field_id)
+                                                                                                 AND $tracker_changeset_value.field_id IN ($field_ids_list))
                 INNER JOIN tracker_changeset_value_artifactlink AS $tracker_changeset_value_artifactlink ON (artifact.id = $tracker_changeset_value_artifactlink.artifact_id
                                                                                                              AND $tracker_changeset_value.id = $tracker_changeset_value_artifactlink.changeset_value_id)";
         return $sql;
+    }
+    
+    /**
+     * Find artifact link fields used by given artifacts
+     * 
+     * @param String $artifact_ids_list
+     * 
+     * @return String 
+     */
+    protected function getArtifactLinkFields($artifact_ids_list) {
+        $sql = "SELECT GROUP_CONCAT(DISTINCT F.id) AS field_ids
+                FROM tracker_field            AS F
+                  INNER JOIN tracker          AS T ON (F.tracker_id = T.id)
+                  INNER JOIN tracker_artifact AS A ON (T.id = A.tracker_id)
+                WHERE A.id IN ($artifact_ids_list)
+                  AND formElement_type = 'art_link'";
+        $dar = $this->retrieve($sql);
+        if ($dar && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            return $row['field_ids'];
+        } else {
+            return '';
+        }
     }
 }    
 ?>
