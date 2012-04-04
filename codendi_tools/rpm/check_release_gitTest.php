@@ -23,17 +23,13 @@ require_once 'CheckReleaseGit.class.php';
 require_once 'GitExec.class.php';
 
 Mock::generate('GitExec');
-class check_releqse_gitTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        $gitExec = new MockGitExec();
-        $this->release_checker = new CheckReleaseGit($gitExec);
-    }
+class GitTagFinderTest extends TuleapTestCase {
     
     public function itFindsTheGreatestVersionNumberFromTheTags() {
-        $this->assertEqual('4.01.0', $this->release_checker->maxVersion(array('4.0.2', '4.01.0')));
-        $this->assertEqual('4.10', $this->release_checker->maxVersion(array('4.10', '4.9')));
+        $gitExec = new MockGitExec();
+        $checkReleaseGit = new GitTagFinder($gitExec);
+        $this->assertEqual('4.01.0', $checkReleaseGit->maxVersion(array('4.0.2', '4.01.0')));
+        $this->assertEqual('4.10', $checkReleaseGit->maxVersion(array('4.10', '4.9')));
     }
     
     public function itListsAllTags() {
@@ -45,7 +41,7 @@ class check_releqse_gitTest extends TuleapTestCase {
 'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
-        $checkReleaseGit = new CheckReleaseGit($gitExec);
+        $checkReleaseGit = new GitTagFinder($gitExec);
         $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $checkReleaseGit->getVersionList());
     }
     
@@ -57,9 +53,11 @@ class check_releqse_gitTest extends TuleapTestCase {
 'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
-        $checkReleaseGit = new CheckReleaseGit($gitExec);
+        $checkReleaseGit = new GitTagFinder($gitExec);
         $this->assertEqual(array('4.1'), $checkReleaseGit->getVersionList());
     }
+}
+class GitChangeDetectorTest extends TuleapTestCase {
     
     public function itFindsOnlyChangedPaths() {
         $revision = 'refs/tags/4.0.29';
@@ -72,7 +70,9 @@ class check_releqse_gitTest extends TuleapTestCase {
         $release_checker = new CheckReleaseGit($gitExec);
         $this->assertEqual(array('documentation/cli'), $release_checker->retainPathsThatHaveChanged($candidate_paths, $revision));
     }
-    
+}
+class VersionIncrementFilterTest extends TuleapTestCase {
+
     public function itFiltersPathsThatHaveBeenIncremented() {
         $last_release_tag = 'refs/tags/4.0.29';
         $current_version  = 'HEAD';

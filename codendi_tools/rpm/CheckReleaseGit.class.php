@@ -28,25 +28,6 @@ class CheckReleaseGit {
         $this->git_exec = $git_exec;
     }
 
-    public function getVersionList() {
-        $ls_remote_output = $this->git_exec->lsRemote('origin');
-        $versions = array();
-        $tags = preg_grep('%tags/[\d\.]{1,}$%', $ls_remote_output);
-        foreach ($tags as $line) {
-            $parts      = explode('/', $line);
-            $versions[] = array_pop($parts);
-        }
-        return $versions;
-    }
-
-    public function maxVersion($versions) {
-        return array_reduce($versions, array($this, 'max'));
-    }
-    
-    private function max($v1, $v2) {
-        return version_compare($v1, $v2, '>') ? $v1 : $v2;
-    }
-
     public function retainPathsThatHaveChanged($candidate_paths, $revision) {
         $changedPaths = array();
         foreach ($candidate_paths as $path) {
@@ -72,4 +53,57 @@ class CheckReleaseGit {
     
 }
 
+class GitTagFinder {
+
+    /**
+     * @var GitExec
+     */
+    private $git_exec;
+    
+    public function __construct($git_exec) {
+        $this->git_exec = $git_exec;
+    }
+
+    public function getVersionList() {
+        $ls_remote_output = $this->git_exec->lsRemote('origin');
+        $versions = array();
+        $tags = preg_grep('%tags/[\d\.]{1,}$%', $ls_remote_output);
+        foreach ($tags as $line) {
+            $parts      = explode('/', $line);
+            $versions[] = array_pop($parts);
+        }
+        return $versions;
+    }
+
+    public function maxVersion($versions) {
+        return array_reduce($versions, array($this, 'max'));
+    }
+    
+    private function max($v1, $v2) {
+        return version_compare($v1, $v2, '>') ? $v1 : $v2;
+    }
+}
+
+class GitChangeDetector {
+    
+    /**
+     * @var GitExec
+     */
+    private $git_exec;
+    
+    public function __construct($git_exec) {
+        $this->git_exec = $git_exec;
+    }    
+}
+
+class VersionIncrementFilter {
+    /**
+     * @var GitExec
+     */
+    private $git_exec;
+    
+    public function __construct($git_exec) {
+        $this->git_exec = $git_exec;
+    }
+}
 ?>
