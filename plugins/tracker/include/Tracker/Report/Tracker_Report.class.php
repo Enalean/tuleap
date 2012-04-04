@@ -27,6 +27,7 @@ require_once('Tracker_Report_RendererFactory.class.php');
 require_once('Tracker_Report_Criteria.class.php');
 require_once('Tracker_Report_Session.class.php');
 require_once('common/include/Toggler.class.php');
+require_once dirname(__FILE__).'/../IFetchTrackerSwitcher.class.php';
 
 /**
  * Tracker_ report.
@@ -252,7 +253,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return '';
     }
     
-    protected function displayHeader(TrackerManager $tracker_manager, $request, $current_user, $report_can_be_modified) {
+    protected function displayHeader(Tracker_IFetchTrackerSwitcher $tracker_manager, $request, $current_user, $report_can_be_modified) {
         $hp = Codendi_HTMLPurifier::instance();
         
         $link_artifact_id = (int)$request->get('link-artifact-id');
@@ -442,7 +443,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    public function display(TrackerManager $tracker_manager, $request, $current_user) {
+    public function display(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         
         $link_artifact_id       = (int)$request->get('link-artifact-id');
         $report_can_be_modified = !$link_artifact_id;
@@ -856,7 +857,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * @param Request $request
      * @return ReportRenderer
      */
-    public function processRendererRequest($renderer_id, TrackerManager $tracker_manager, $request, $current_user, $store_in_session = true) {
+    public function processRendererRequest($renderer_id, Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user, $store_in_session = true) {
         $rrf = Tracker_Report_RendererFactory::instance();
         if ($renderer = $rrf->getReportRendererByReportAndId($this, $renderer_id, $store_in_session)) {
             $renderer->process($tracker_manager, $request, $current_user);
@@ -918,7 +919,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         if ($this->isObsolete()) {
             header('X-Codendi-Tracker-Report-IsObsolete: '. $this->getLastUpdaterUserName());
         }

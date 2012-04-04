@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'IDisplayTrackerLayout.class.php';
+
 /**
  * All elements that must be dispatched from TrackerManager have to implement this
  * interface.
@@ -41,6 +43,6 @@ interface Tracker_Dispatchable_Interface {
      *
      * @return void
      */
-    public function process(TrackerManager $trackerManager, $request, $current_user);
+    public function process(Tracker_IDisplayTrackerLayout $trackerManager, $request, $current_user);
 }
 ?>

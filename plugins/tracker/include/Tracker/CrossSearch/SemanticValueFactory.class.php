@@ -31,22 +31,43 @@
  * Grouping the title and status retrieval in the same class is probably not the
  * best design, but it was the easier to start with.
  */
+
+require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
+require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
+require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_Status.class.php';
+
 class Tracker_CrossSearch_SemanticValueFactory {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_Semantic_TitleFactory $semantic_title_factory) {
+        $this->artifact_factory       = $artifact_factory;
+        $this->semantic_title_factory = $semantic_title_factory;
+    }
+    
     public function getTitle($artifact_id, $changeset_id) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $artifact         = $artifact_factory->getArtifactById($artifact_id);
+        $artifact         = $this->artifact_factory->getArtifactById($artifact_id);
         $changeset        = $artifact->getChangeset($changeset_id);
         $tracker          = $artifact->getTracker();
-        $semantic         = Tracker_Semantic_Title::load($tracker);
+        $semantic         = $this->semantic_title_factory->getByTracker($tracker);
+        
+        if ($semantic == null) { return ''; }
+        
         $field            = $semantic->getField();
         $value            = $changeset->getValue($field);
         
         return $value->getText();
     }
+    
     public function getStatus($artifact_id, $changeset_id) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
         $tracker          = $artifact_factory->getArtifactById($artifact_id)->getTracker();
-        $value            = Tracker_Semantic_Status::load($tracker)->getField()->fetchChangesetValue($artifact_id, $changeset_id, null);
+        $semantic         = Tracker_Semantic_Status::load($tracker);
+        
+        if ($semantic == null) { return ''; }
+        
+        $field = $semantic->getField();
+        
+        if ($field == null) { return ''; }
+        
+        $value = $field->fetchChangesetValue($artifact_id, $changeset_id, null);
         
         return $value;
     }

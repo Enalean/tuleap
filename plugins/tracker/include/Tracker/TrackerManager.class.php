@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'IDisplayTrackerLayout.class.php';
+require_once 'IFetchTrackerSwitcher.class.php';
 require_once('TrackerFactory.class.php');
 require_once('Tracker_URL.class.php');
 require_once('Tracker_CannotAccessTrackerException.class.php');
@@ -33,7 +35,7 @@ require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 
-class TrackerManager { /* extends Engine? */
+class TrackerManager implements Tracker_IFetchTrackerSwitcher { /* extends Engine? */
     
     /**
      * Check that the service is used and the plugin is allowed for project $project
@@ -822,9 +824,10 @@ class TrackerManager { /* extends Engine? */
     
 
     public function getCrossSearchViewBuilder() {
-        $formElementFactory = Tracker_FormElementFactory::instance(); 
-        $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory();
-        $criteria_builder = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue);
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory($this->getArtifactFactory(), Tracker_Semantic_TitleFactory::instance());
+        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue);
+        
         return new Tracker_CrossSearch_ViewBuilder(
             $formElementFactory, 
             $this->getTrackerFactory(), 

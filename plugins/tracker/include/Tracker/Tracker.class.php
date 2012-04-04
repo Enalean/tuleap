@@ -32,6 +32,7 @@ require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
 require_once('Hierarchy/Controller.class.php');
+require_once 'IFetchTrackerSwitcher.class.php';
 
 require_once('json.php');
 
@@ -266,7 +267,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return $this;
     }
     
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         //TODO: log the admin actions (add a formElement, ...) ?
         $hp = Codendi_HTMLPurifier::instance();
         $func = (string)$request->get('func');
@@ -594,13 +595,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
      * If the user request a 'link-artifact-id' then display also manual and recent 
      * panels to ease the selection of artifacts to link
      *
-     * @param TrackerManager  $tracker_manager The tracker manager instance
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager instance
      * @param Codendi_Request $request         The request
      * @param User            $current_user    The user who made the request
      *
      * @return void
      */
-    public function displayAReport(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAReport(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $report = null;
 
         //Does the user wants to change its report?
@@ -730,7 +731,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     /**
      * Display the submit form
      */
-    public function displaySubmit(TrackerManager $tracker_manager, $request, $current_user, $link = null) {
+    public function displaySubmit(Tracker_IFetchTrackerSwitcher $tracker_manager, $request, $current_user, $link = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array(
                 array(
@@ -822,7 +823,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     /**
      * Display the submit form
      */
-    public function displaySearch(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displaySearch(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         
         $pm = ProjectManager::instance();
@@ -963,7 +964,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return $html;
     }
     
-    public function displayHeader(TrackerManager $tracker_manager, $title, $breadcrumbs, $toolbar = null) {
+    public function displayHeader(Tracker_IDisplayTrackerLayout $tracker_manager, $title, $breadcrumbs, $toolbar = null) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
             $breadcrumbs = array_merge(array(array('title' => $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML),
@@ -998,7 +999,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $tracker_manager->displayHeader($project, $title, $breadcrumbs, $toolbar);
         }
     }
-    public function displayFooter(TrackerManager $tracker_manager) {
+    public function displayFooter(Tracker_IDisplayTrackerLayout $tracker_manager) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $tracker_manager->displayFooter($project);
         }
@@ -1085,7 +1086,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 ),
         );
     }
-    public function displayAdminHeader(TrackerManager $tracker_manager, $title, $breadcrumbs) {
+    public function displayAdminHeader(Tracker_IDisplayTrackerLayout $tracker_manager, $title, $breadcrumbs) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
             $title = ($title ? $title .' - ' : ''). $GLOBALS['Language']->getText('plugin_tracker_include_type','administration');
@@ -1105,7 +1106,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $this->displayHeader($tracker_manager, $title, $breadcrumbs, $toolbar);
         }
     }
-    public function displayAdmin(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdmin(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $title = '';
         $breadcrumbs = array();
@@ -1164,7 +1165,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    public function displayAdminItemHeader(TrackerManager $tracker_manager, $item, $breadcrumbs = array(), $title = null) {
+    public function displayAdminItemHeader(Tracker_IDisplayTrackerLayout $tracker_manager, $item, $breadcrumbs = array(), $title = null) {
         $items = $this->getAdminItems();
         $title = $title ? $title : $items[$item]['title'];
         $breadcrumbs = array_merge(
@@ -1176,7 +1177,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayAdminHeader($tracker_manager, $title, $breadcrumbs);
         echo '<h2>'. $title .'</h2>';
     }
-    protected function displayAdminOptions(TrackerManager $tracker_manager, $request, $current_user) {
+    protected function displayAdminOptions(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayAdminItemHeader($tracker_manager, 'editoptions');
         $project = ProjectManager::instance()->getProject($this->group_id);
@@ -1236,7 +1237,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayFooter($tracker_manager);
     }
 
-    protected function displayAdminPermsHeader(TrackerManager $tracker_manager, $title, $breadcrumbs) {
+    protected function displayAdminPermsHeader(Tracker_IDisplayTrackerLayout $tracker_manager, $title, $breadcrumbs) {
         $items = $this->getAdminItems();
         $breadcrumbs = array_merge(array(
                 $items['editperms']
@@ -1259,7 +1260,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         );
     }
 
-    public function displayAdminPerms(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminPerms(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $items = $this->getAdminItems();
         $title = $items['editperms']['title'];
         $breadcrumbs = array();
@@ -1269,7 +1270,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayFooter($tracker_manager);
     }
 
-    public function displayAdminPermsTracker(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminPermsTracker(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $items = $this->getPermsItems();
         $title = $items['tracker']['title'];
         $breadcrumbs = array(
@@ -1354,7 +1355,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->displayFooter($tracker_manager);
     }
 
-    public function displayAdminPermsFields(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminPermsFields(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $items = $this->getPermsItems();
         $title = $items['fields']['title'];
         $breadcrumbs = array(
@@ -1597,7 +1598,7 @@ EOS;
         $this->displayFooter($tracker_manager);
     }
 
-    public function displayAdminFormElementsHeader(TrackerManager $tracker_manager, $title, $breadcrumbs) {
+    public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $tracker_manager, $title, $breadcrumbs) {
         $items = $this->getAdminItems();
         $breadcrumbs = array_merge(array(
                 $items['editformElements']
@@ -1605,7 +1606,7 @@ EOS;
         $this->displayAdminHeader($tracker_manager, $title, $breadcrumbs);
     }
 
-    public function displayAdminFormElements(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminFormElements(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $items = $this->getAdminItems();
         $title = $items['editformElements']['title'];
@@ -1642,7 +1643,7 @@ EOS;
         $this->displayFooter($tracker_manager);
     }
 
-    public function displayAdminCSVImportHeader(TrackerManager $tracker_manager, $title, $breadcrumbs) {
+    public function displayAdminCSVImportHeader(Tracker_IDisplayTrackerLayout $tracker_manager, $title, $breadcrumbs) {
         $items = $this->getAdminItems();
         $breadcrumbs = array_merge(array(
                 $items['csvimport']
@@ -1650,7 +1651,7 @@ EOS;
         $this->displayAdminHeader($tracker_manager, $title, $breadcrumbs);
     }
     
-    public function displayAdminCSVImport(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminCSVImport(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $items = $this->getAdminItems();
         $title = $items['csvimport']['title'];
@@ -1671,7 +1672,7 @@ EOS;
         $this->displayFooter($tracker_manager);
     }
     
-    public function displayMasschangeForm(TrackerManager $tracker_manager, $masschange_aids) {
+    public function displayMasschangeForm(Tracker_IDisplayTrackerLayout $tracker_manager, $masschange_aids) {
         $breadcrumbs = array(
                 array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change'),
@@ -1809,13 +1810,13 @@ EOS;
     /**
      * Add an artefact in the tracker
      *
-     * @param TrackerManager  $tracker_manager
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager
      * @param Codendi_Request $request
      * @param User            $user
      *
      * @return Tracker_Artifact the new artifact
      */
-    public function createArtifact(TrackerManager $tracker_manager, $request, $user) {
+    public function createArtifact(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $user) {
         $email = null;
         if ($user->isAnonymous()) {
             $email = $request->get('email');
@@ -2288,7 +2289,7 @@ EOS;
         return $dateformat_csv_export_pref;
     }
     
-    protected function displayImportPreview(TrackerManager $tracker_manager, $request, $current_user, $session) {
+    protected function displayImportPreview(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user, $session) {
         $hp = Codendi_HTMLPurifier::instance();
         
         if ($_FILES['csv_filename']) {
@@ -2588,7 +2589,7 @@ EOS;
      *
      * @return boolean true if import succeed, false otherwise
      */
-    protected function importFromCSV(TrackerManager $tracker_manager, $request, $current_user, $header, $lines) {
+    protected function importFromCSV(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user, $header, $lines) {
         $is_error = false;
         if (count($lines) >= 1) {
             if ($request->exist('notify') && $request->get('notify') == 'ok') {

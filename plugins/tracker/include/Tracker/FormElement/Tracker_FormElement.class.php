@@ -21,7 +21,7 @@
 require_once('Tracker_FormElement_Interface.class.php');
 require_once('IProvideFactoryButtonInformation.class.php');
 require_once('Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../IDisplayTrackerLayout.class.php');
 
 require_once 'View/Admin/UpdateVisitor.class.php';
 require_once 'View/Admin/UpdateSharedVisitor.class.php';
@@ -156,13 +156,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Process the request
      * 
-     * @param TrackerManager  $tracker_manager The tracker manager
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
      * @param Codendi_Request $request         The data coming from the user
      * @param User            $current_user    The user who mades the request
      *
      * @return void
      */
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         switch ($request->get('func')) {
         case 'admin-formElement-update':
             $this->processUpdate($tracker_manager, $request, $current_user);
@@ -190,14 +190,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Update the form element
      * 
-     * @param TrackerManager  $tracker_manager The tracker manager
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
      * @param Codendi_Request $request         The data coming from the user
      * @param User            $current_user    The user who mades the request
      * @param bool            $redirect        Do we need to redirect? default is false
      *
      * @return void
      */
-    protected function processUpdate(TrackerManager $tracker_manager, $request, $current_user, $redirect = false) {
+    protected function processUpdate(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user, $redirect = false) {
         if (is_array($request->get('formElement_data'))) {
             $formElement_data = $request->get('formElement_data');
             //First store the specific properties if needed
@@ -319,13 +319,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Display the form to administrate the element
      * 
-     * @param TrackerManager  $tracker_manager The tracker manager
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
      * @param Codendi_Request $request         The data coming from the user
      * @param User            $current_user    The user who mades the request
      * 
      * @return void
      */
-    public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
+    public function displayAdminFormElement(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
         if ($this->isTargetSharedField()) {
             $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);

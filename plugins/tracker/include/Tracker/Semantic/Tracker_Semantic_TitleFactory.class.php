@@ -40,6 +40,10 @@ class Tracker_Semantic_TitleFactory {
         return self::$instance;
     }
     
+    public function getByTracker($tracker) {
+        return Tracker_Semantic_Title::load($tracker);
+    }
+    
     /**
      * Creates a Tracker_Semantic_Title Object
      * 

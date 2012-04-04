@@ -340,13 +340,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Display the artifact
      * 
-     * @param TrackerManager  $tracker_manager The tracker manager
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
      * @param Codendi_Request $request         The data coming from the user
      * @param User            $current_user    The current user
      *
      * @return void
      */
-    public function display(TrackerManager $tracker_manager, $request, $current_user) {
+    public function display(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $tracker = $this->getTracker();
         $title = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
@@ -584,13 +584,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Process the artifact functions
      *
-     * @param TrackerManager  $tracker_manager The tracker manager
+     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
      * @param Codendi_Request $request         The data from the user
      * @param User            $current_user    The current user
      *
      * @return void
      */
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
         switch ($request->get('func')) {
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
