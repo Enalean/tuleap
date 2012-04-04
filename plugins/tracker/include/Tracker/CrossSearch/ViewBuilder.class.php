@@ -18,13 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Planning/SearchContentView.class.php';
-
+require_once 'SemanticTitleReportField.class.php';
+require_once 'Criteria.class.php';
+require_once 'SemanticStatusReportField.class.php';
+require_once 'SemanticValueFactory.class.php';
+require_once 'CriteriaBuilder.class.php';
 class Tracker_CrossSearch_ViewBuilder {
     /**
      * @var Tracker_FormElementFactory
      */
-    private $formElementFactory;
+    private $form_element_factory;
     
     /**
      * @var TrackerFactory
@@ -36,62 +39,60 @@ class Tracker_CrossSearch_ViewBuilder {
      */
     private $search;
 
-    public function __construct(Tracker_FormElementFactory $formElementFactory, TrackerFactory $tracker_factory, Tracker_CrossSearch_Search $search) {
-        $this->formElementFactory = $formElementFactory;
-        $this->tracker_factory    = $tracker_factory;
-        $this->search             = $search;
+
+    /**
+     * @var Tracker_CrossSearch_CriteriaBuilder
+     */
+    private $criteria_builder;
+    
+    public function __construct(Tracker_FormElementFactory               $form_element_factory,
+                                TrackerFactory                           $tracker_factory,
+                                Tracker_CrossSearch_Search               $search,
+                                Tracker_CrossSearch_CriteriaBuilder      $criteria_builder) {
+        
+        $this->form_element_factory   = $form_element_factory;
+        $this->tracker_factory        = $tracker_factory;
+        $this->search                 = $search;
+        $this->criteria_builder       = $criteria_builder;
     }
     
     /**
      * @return Tracker_CrossSearch_SearchView 
      */
-    public function buildView(Project $project, array $request_criteria) {
-        $service            = $this->getService($project);
-        $criteria           = $this->getCriteria($project, $this->getReport(), $request_criteria);
-        $trackers           = $this->getTrackers($project, $this->tracker_factory);
-        return $this->getView($project, $service, $criteria, $trackers);
+    public function buildView(Project $project, Tracker_CrossSearch_Criteria $request_criteria) {
+        $service      = $this->getService($project);
+        
+        $criteria     = $this->criteria_builder->getCriteria($project, $this->getReport(), $request_criteria);
+        $trackers     = $this->getTrackers($project, $this->tracker_factory);
+        $content_view = $this->buildContentView($project, $request_criteria);
+        
+        return $this->getView($project, $service, $criteria, $trackers, $content_view);
    
     }
     
     /**
      * @return type Tracker_CrossSearch_SearchContentView
      */
-    public function buildContentView(Project $project, array $request_criteria) {
-        $tracker_ids        = $this->getTrackersIds($project, $this->tracker_factory);
-        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $request_criteria, array(), $tracker_ids);
+    public function buildContentView(Project $project, Tracker_CrossSearch_Criteria $cross_search_criteria) {
+        $tracker_ids = $this->getTrackersIds($project, $this->tracker_factory);
+        
+        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView',
+                                             $project,
+                                             $cross_search_criteria,
+                                             array(),
+                                             $tracker_ids);
     }
     
-    /**
-     * @return Planning_SearchContentView
-     */
-    public function buildPlanningContentView(Project $project, array $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
-        return $this->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $excludedArtifactIds, $tracker_ids);
-    }
-    
-    private function buildCustomContentView($classname, Project $project, array $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
-        $report             = $this->getReport();
-        $criteria           = $this->getCriteria($project, $report, $request_criteria);
-        $artifacts          = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
+    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Criteria $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
+        $report    = $this->getReport();
+        $criteria  = $this->criteria_builder->getCriteria($project, $report, $request_criteria);
+        $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
         
         return $this->getContentView($classname, $report, $criteria, $artifacts);
     }
-    
-    public function getCriteria(Project $project, Tracker_Report $report, array $request_criteria) {
-        $fields   = $this->formElementFactory->getProjectSharedFields($project);
-        $criteria = array();
-        foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
-            
-            $id          = null;
-            $rank        = 0;
-            $is_advanced = true;
-            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
-        }
-        return $criteria;
-    }
-    
-    protected function getView(Project $project, Service $service, $criteria, $trackers) {
-        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
+
+    protected function getView(Project $project, Service $service, $criteria, $trackers, $content_view) {
+        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
     }
     
     /**
@@ -99,24 +100,29 @@ class Tracker_CrossSearch_ViewBuilder {
      */
     private function getService(Project $project) {
         $service = $project->getService('plugin_tracker');
+        
         if ($service) {
             return $service;
         } else {
-            $serviceLabel = $GLOBALS['Language']->getText('plugin_tracker', 'title');
-            $errorMessage = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($serviceLabel));
+            $service_label = $GLOBALS['Language']->getText('plugin_tracker', 'title');
+            $error_message = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($service_label));
             
-            throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);
+            throw new Tracker_CrossSearch_ServiceNotUsedException($error_message);
         }
     }
     protected function getContentView($classname, Tracker_Report $report, $criteria, $artifacts) {
-        $artifact_factory   = Tracker_ArtifactFactory::instance();
-        return new $classname($report, $criteria, $artifacts, $artifact_factory, $this->formElementFactory);
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        
+        return new $classname($report, $criteria, $artifacts, $artifact_factory, $this->form_element_factory);
     }
     
     private function getReport() {
-        $name = "Shared field search";
+        $name               = "Shared field search";
         $is_query_displayed = true;
-        $report_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $updated_by = $updated_at = 0;
+        
+        $report_id = $description = $current_renderer_id = $parent_report_id
+            = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
+            = 0;
         
         $report = new Tracker_Report($report_id, 
                                      $name, 
@@ -129,7 +135,6 @@ class Tracker_CrossSearch_ViewBuilder {
                                      $is_query_displayed, 
                                      $updated_by, 
                                      $updated_at);
-        
         return $report;
     }
 
@@ -137,26 +142,15 @@ class Tracker_CrossSearch_ViewBuilder {
         return $tracker_factory->getTrackersByGroupId($project->getGroupId());
     }
     
-    
-    private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
-        $currentValue = array();
-        if (isset($request_criteria[$field->getId()]['values'])) {
-            $currentValue = $request_criteria[$field->getId()]['values'];
-        }
-        return $currentValue;
-    }
-
     public function getTrackersIds($project, $tracker_factory) {
-        $trackers = $this->getTrackers($project, $tracker_factory);
-        
+        $trackers    = $this->getTrackers($project, $tracker_factory);
         $tracker_ids = array();
+        
         foreach ($trackers as $tracker) {
             $tracker_ids[] = $tracker->getId();
         }
         
         return $tracker_ids;
     }
-
 }
-
 ?>

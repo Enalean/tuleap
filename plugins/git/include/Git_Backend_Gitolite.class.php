@@ -21,6 +21,7 @@
 
 require_once 'Git_Backend_Interface.php';
 require_once 'Git.class.php';
+require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
 class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
@@ -330,6 +331,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return false;
     }
 
+    /**
+     * @throws GitRepositoryAlreadyExistsException 
+     */
     public function fork(GitRepository $old, GitRepository $new) {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
@@ -338,7 +342,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         
         $new_project = $new->getProject();
         if ($this->getDao()->isRepositoryExisting($new_project->getId(), $new->getPath())) {
-            throw new GitBackendException('Respository already exists');
+            throw new GitRepositoryAlreadyExistsException('Respository already exists');
         } else {
             $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
             if ($forkSucceeded) {

@@ -29,6 +29,7 @@ require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
 require_once('CrossSearch/ViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
+require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 
@@ -185,7 +186,7 @@ class TrackerManager { /* extends Engine? */
     /**
      * @return Tracker_CrossSearch_SearchController 
      */
-    protected function getCrossSearchController(Codendi_Request $request) {        
+    protected function getCrossSearchController(Codendi_Request $request) {
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
@@ -482,7 +483,10 @@ class TrackerManager { /* extends Engine? */
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            $this->displayTrackerHomeNav($project);
+            
+            if ($user->useLabFeatures()) {
+                $this->displayTrackerHomeNav($project);
+            }
             
             $html .= '<p>';
             if (count($trackers)) {
@@ -734,24 +738,26 @@ class TrackerManager { /* extends Engine? */
     protected function getTrackerFactory() {
         return TrackerFactory::instance();
     }
-    protected function getTracker_FormElementFactory() {
-        return Tracker_FormElementFactory::instance();
-    }
+    
     protected function getArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
     }
+    
     protected function getArtifactReportFactory() {
         return Tracker_ReportFactory::instance();
     }
+    
     protected function getProject($group_id) {
         return ProjectManager::instance()->getProject($group_id);
     }
+    
     /**
      * @return ReferenceManager
      */
     protected function getReferenceManager() {
         return ReferenceManager::instance();
     }
+    
     /**
      * Check if user has permission to create a tracker or not
      *
@@ -760,7 +766,7 @@ class TrackerManager { /* extends Engine? */
      *
      * @return boolean true if user has persission to create trackers, false otherwise
      */
-    function userCanCreateTracker($group_id, $user = false) {
+    public function userCanCreateTracker($group_id, $user = false) {
         if (!is_a($user, 'User')) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
@@ -768,7 +774,7 @@ class TrackerManager { /* extends Engine? */
         return $user->isMember($group_id, 'A');
     }
     
-    function search($request, $current_user) {
+    public function search($request, $current_user) {
         if ($request->exist('tracker')) {
             $tracker_id = $request->get('tracker');
             $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
@@ -781,7 +787,7 @@ class TrackerManager { /* extends Engine? */
                 }
             }
         } else {
-            
+           /// ??? 
         }
         
     }
@@ -793,7 +799,7 @@ class TrackerManager { /* extends Engine? */
      *
      * @return Boolean
      */
-    function deleteProjectTrackers($groupId) {
+    public function deleteProjectTrackers($groupId) {
         $deleteStatus = true;
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($groupId);
         if (!empty($trackers)) {
@@ -807,18 +813,24 @@ class TrackerManager { /* extends Engine? */
     }
 
     public function getCrossSearch() {
+        $hierarchyFactory   = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
         $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $this->getHierarchyFactory());
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $hierarchyFactory);
         return $search;
     }
-
-    private function getHierarchyFactory() {
-        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
-    }
+    
 
     public function getCrossSearchViewBuilder() {
-        return new Tracker_CrossSearch_ViewBuilder($this->getTracker_FormElementFactory(), $this->getTrackerFactory(), $this->getCrossSearch());
+        $formElementFactory = Tracker_FormElementFactory::instance(); 
+        $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory();
+        $criteria_builder = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue);
+        return new Tracker_CrossSearch_ViewBuilder(
+            $formElementFactory, 
+            $this->getTrackerFactory(), 
+            $this->getCrossSearch(), 
+            $criteria_builder
+        );
     }
 
 }

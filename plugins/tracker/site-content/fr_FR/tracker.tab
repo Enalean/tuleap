@@ -11,12 +11,18 @@ plugin_tracker_homenav	search	Recherche
 
 plugin_tracker_crosssearch	title	Recherche
 
-plugin_tracker_crosssearch	summary	Titre
+plugin_tracker_crosssearch	semantic_title_label	Titre
+plugin_tracker_crosssearch	semantic_status_label	État
+plugin_tracker_crosssearch	semantic_status_any	Tous
+plugin_tracker_crosssearch	semantic_status_open	Ouvert
+plugin_tracker_crosssearch	semantic_status_closed	Fermé
 
 plugin_tracker_crosssearch	included_trackers_title	Liste des outils de suivi inclus dans la recherche :
 plugin_tracker_crosssearch	included_trackers_not_found	Aucun outil de suivi ne correspond.
 
 plugin_tracker_crosssearch	no_matching_artifact	Aucun artefact ne correspond à la recherche
+
+plugin_tracker_crosssearch	creation_lab_feature	Cette fonctionnalité est expérimentale. En cas de doute, ne l'utilisez pas!
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2 or any later version at your convenience.

@@ -19,19 +19,14 @@
  */
 
 require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
+require_once('Tracker_FormElement_Used.class.php');
+require_once('common/ddd/Entity.class.php');
 
 /**
  * Base interface for all form elements in trackers, from fieldsets to selectboxes
  */
-interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface {
+interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, Entity, Tracker_FormElement_Used{
     
-    /**
-     *  Get the id
-     *
-     * @return int
-     */
-    public function getId();
-
     /**
      * get the permissions for thios tracker
      *
@@ -39,13 +34,6 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface {
      */
     public function getPermissions();
     
-    /**
-     * say if a formElement is used
-     *
-     * @return bool
-     */
-    public function isUsed();
-
 
     /**
      * Transforms FormElement into a SimpleXMLElement

@@ -56,23 +56,19 @@ class TreeNode_GetStateVisitor {
     }
 
     private function getDefaultChildrenPrefix($prefix) {
-        array_push($prefix, self::STATE_PIPE);
-        return $prefix;
+        return array_merge($prefix, array(self::STATE_PIPE));
     }
     
     private function getChildrenPrefixForLastChild($prefix) {
-        array_push($prefix, self::STATE_BLANK);
-        return $prefix;
+        return array_merge($prefix, array(self::STATE_BLANK));
     }
     
     private function getDefaultState($prefix) {
-        array_push($prefix, self::STATE_NODE);
-        return $prefix;
+        return array_merge($prefix, array(self::STATE_NODE));
     }
     
     private function getStateWhenChildIsTheLastOne($prefix) {
-        array_push($prefix, self::STATE_LAST);
-        return $prefix;
+        return array_merge($prefix, array(self::STATE_LAST));
     }
     
     private function isLastChildren($i, $nb_children) {

@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('Chart.class.php');
-require_once($GLOBALS['jpgraph_dir'].'/jpgraph_pie.php');
+require_once('jpgraph_pie.php');
 
 /**
 * PieChart

@@ -26,7 +26,7 @@ function show_features_boxes() {
     $w->display();
 
     $w = new Widget_Static($Language->getText('include_features_boxes','newest_releases'));
-    $w->setContent(show_top_downloads());
+    $w->setContent(show_newest_releases());
     $w->setRssUrl('/export/rss_sfnewreleases.php');
     $w->display();
 
@@ -36,7 +36,7 @@ function show_features_boxes() {
     $w->display();
 
     $w = new Widget_Static($Language->getText('include_features_boxes','most_active_week'));
-    $w->setContent(show_top_downloads());
+    $w->setContent(show_highest_ranked_projects());
     $w->display();
 }
 
@@ -174,12 +174,12 @@ function show_highest_ranked_projects() {
     $return  = "";
     $hp = Codendi_HTMLPurifier::instance();
     //don't take into account test projects and template projects
-    $sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,".
-        "project_weekly_metric.ranking,project_weekly_metric.percentile ".
-        "FROM groups,project_weekly_metric ".
-        "WHERE groups.group_id=project_weekly_metric.group_id AND ".
-        "groups.is_public=1 AND groups.type=1 AND groups.status='A' AND groups.type=1 ".
-        "ORDER BY ranking ASC LIMIT 20";
+    $sql="SELECT groups.group_name,groups.unix_group_name,groups.group_id,
+        project_weekly_metric.ranking,project_weekly_metric.percentile 
+        FROM groups,project_weekly_metric 
+        WHERE groups.group_id=project_weekly_metric.group_id AND 
+        groups.is_public=1 AND groups.type=1 AND groups.status='A' AND groups.type=1 
+        ORDER BY ranking ASC LIMIT 20";
     $result=db_query($sql);
     if (!$result || db_numrows($result) < 1) {
         return db_error();

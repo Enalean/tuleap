@@ -315,10 +315,6 @@ class Project extends Group {
         return $this->project_data_array['cvs_is_private'];
     }
 
-    function getSVNMailingList() {
-        return $this->project_data_array['svn_events_mailing_list'];
-    }
-
     function getSVNMailingHeader() {
         return $this->project_data_array['svn_events_mailing_header'];
     }

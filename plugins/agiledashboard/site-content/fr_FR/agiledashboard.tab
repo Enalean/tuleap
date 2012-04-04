@@ -12,7 +12,6 @@ plugin_agiledashboard	planning-allows-assignment	Ce planning permet l'associatio
 plugin_agiledashboard	planning_all_fields_mandatory	Veuillez sélectionner une valeur pour chaque champ.
 plugin_agiledashboard	planning_index	Plannings
 plugin_agiledashboard	planning_new	Nouveau Planning
-plugin_agiledashboard	planning_edit	Edition Planning
 plugin_agiledashboard	planning_show	Vue du Planning
 
 

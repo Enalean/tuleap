@@ -42,21 +42,18 @@ class HTMLCleaner {
   }
 
   function &_cleanFull($html) {
-    $fullClean = htmlentities($html, ENT_QUOTES, 'UTF-8');
-    return $fullClean;
+    return htmlentities($html, ENT_QUOTES, 'UTF-8');
   }
 
   function &clean($html, $level=HTMLCLEANER_LOW) {
     switch($level) {
     case HTMLCLEANER_LOW:
-      $return = HTMLCleaner::_cleanLow($html);
-      return $return;
+      return HTMLCleaner::_cleanLow($html);
       break;
       
     case HTMLCLEANER_FULL:
     default:
-      $return = HTMLCleaner::_cleanFull($html);
-      return $return;
+      return HTMLCleaner::_cleanFull($html);
     }
   }
 }

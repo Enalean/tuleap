@@ -1,3 +1,8 @@
+Version 2.1.7 (Tuleap 4.0.28)
+    * Display meaningful info when fork fails due to already exiting repo
+    * Prevent usage of non alphanum characters in fork namespace
+    * Fix RPM installation due to new path in recent version of EPEL gitolite
+
 Version 2.1.6 (Tuleap 4.0.28)
     * Fix display of html code in combobox
 

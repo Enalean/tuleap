@@ -1,10 +1,32 @@
-Version 4.0.28 (Not released yet)
+Version 5.0 (Not released yet)
+   == Plugins ==
+   * AgileDashoard 0.7.1
+   * Tracker 5.4.8
+
+   == Development ==
+   * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:
+     stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult);
+   * Move core tests to source root
+   * Rename codendi_tools to tools
+   * "Tests" plugin is now in /plugins but only manage display of tests (no longer embbed core tests
+
+Version 4.0.28 (Friday, March 30th 2012)
+   == Bug Fix ==
+   * homepage: three feature boxes displayed the same content
+   * svn: Fix double escaping issue in commit message in web ui
+   * Fix missing dependency on viewvc
+
+   == Enhancement ==
+   * SVN notifications by path: Add the possibility, via post-commit hook, to controls what notification
+   gets sent. An SVN admin would be able to specify an SVN repository pattern
+   that is matched to determine if an email is sent for a given checkin.
+
    == Plugins ==
    * AgileDashoard v0.7
-   * Tracker v5.4.5
+   * Tracker v5.4.7
    * TrackerDateReminder v1.2.1
-   * Git 2.1.6
-   * Docman 2.25.1
+   * Git 2.1.7
+   * Docman 2.25.2
 
    == Development ==
    * Improve output of UnitTest to make them more readable.

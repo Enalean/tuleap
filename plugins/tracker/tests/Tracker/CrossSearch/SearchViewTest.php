@@ -24,6 +24,7 @@ if (!defined('TRACKER_BASE_URL')) {
 
 require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
+require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 
 Mock::generate('Service');
 Mock::generate('Project');
@@ -34,6 +35,7 @@ Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_SharedFormElementFactory');
 Mock::generate('Tracker_Artifact_Changeset');
+Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
 
 class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
@@ -72,7 +74,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     function testRenderShouldDisplayArtifacts() {
         $service   = new MockService();
-        $criteria  = $this->GivenCriteria();
+//        $criteria  = $this->GivenCriteria();
         $artifacts = array(
             array(
                 'id'                => '6',
@@ -87,7 +89,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
                 'artifactlinks'     => '',
             )
         );
-        
+        $criteria = $this->GivenCriteriaMatching($artifacts);
         
         $root = new TreeNode();
         $root->addChild(new TreeNode($artifacts[0]));
@@ -107,7 +109,6 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
             array(
                 'id'                => '6',
                 'last_changeset_id' => '12345',
-                'title'             => 'As a user I want to search on shared fields',
                 'artifactlinks'     => '',
             )
         );
@@ -119,7 +120,6 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         
         $output = $this->renderAndGetContent($view);
         
-        $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/shared field value/', $output);
     }
     
@@ -153,9 +153,9 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $view = $this->GivenASearchView($service, $criteria, $artifacts, $root);
         
         $output = $this->renderAndGetContent($view);
-        $pattern  = '(.*)?(tree-node-6)(.*)?(node-indent)(.*)?(node-last-left)(.*)?(node-tree)(.*)?(node-indent)(.*)?(node-minus-tree)(.*)?(node-child)';
-        $pattern .= '(.*)?(tree-node-8)(.*)?(node-blank)(.*)?';
-        $this->assertPattern("%^$pattern$%ism", $output);
+        
+        $this->assertPattern('%div class="tree-last tree-collapsable" id="tree-node-6"%', $output);
+        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts, $root) {
@@ -169,7 +169,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $trackers           = array($tracker1);
         
         $this->setContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
-        $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
+        $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $this->content_view);
         return $view;
     }
     
@@ -206,9 +206,27 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         return $criteria;
     }
     
+    private function GivenCriteriaMatching($artifacts) {
+        $semantic_value_factory = new MockTracker_CrossSearch_SemanticValueFactory();
+        $criteria               = array();
+        
+        foreach($artifacts as $artifact) {
+            $expected_params = array($artifact['id'], $artifact['last_changeset_id']);
+            
+            $semantic_value_factory->setReturnValue('getTitle', $artifact['title'], $expected_params);
+            
+            $criterion        = new stdClass();
+            $criterion->field = new Tracker_CrossSearch_SemanticTitleReportField('', $semantic_value_factory);
+            
+            $criteria[] = $criterion;
+        }
+        
+        return $criteria;
+    }
+    
     private function renderAndGetContent($view) {
         ob_start();
-        $view->render($this->content_view);
+        $view->render();
         $output = ob_get_clean();
         return $output;
     }
@@ -217,4 +235,5 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
     }
 }
+
 ?>

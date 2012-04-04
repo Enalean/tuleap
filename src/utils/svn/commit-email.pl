@@ -8,9 +8,9 @@
 # command line arguments.
 #
 # $HeadURL: https://svn.collab.net/repos/svn/trunk/tools/hook-scripts/commit-email.pl.in $
-# $LastChangedDate: 2007-04-04 14:56:25 +0000 (Wed, 04 Apr 2007) $
-# $LastChangedBy: nterray $
-# $LastChangedRevision: 5701 $
+# $LastChangedDate: 2012-03-23 08:59:24 +0000 (Fri, 23 Mar 2012) $
+# $LastChangedBy: hosniah $
+# $LastChangedRevision: 21391 $
 #
 #
 #
@@ -260,17 +260,10 @@ my $no_diff = 1; # no inline diff for Codendi
 # arrays to store all references.
 my %references;
 
-# get the mail header and mailto address from Codendi DB
+# get the mail header from Codendi DB
 $svnmailheader = &svnGroup_mail_header();
 if ($svnmailheader eq 'NULL') {
   $svnmailheader = "";
-}
-
-$svnmailto = &svnGroup_mailto();
-# we put off unvalid email and login
-$svnmailto = &filter_valid_logins_and_emails($svnmailto);
-if ($svnmailto ne 'NULL' && $svnmailto ne '') {
-  push(@{$current_project->{email_addresses}}, $svnmailto);
 }
 
 if ($debug) {
@@ -279,7 +272,6 @@ if ($debug) {
   print STDERR "mod_url: ", $mod_url, "\n";
   print STDERR "add_url: ", $add_url, "\n";
   print STDERR "mail header in db: ", $svnmailheader, "\n";
-  print STDERR "svnmailto: ", $svnmailto, "\n";
 }
 
 ######################################################################
@@ -383,6 +375,26 @@ if ($debug) {
 # Figure out what directories have changed using svnlook.
 my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos, 
                                      '-r', $rev);
+
+# Retrive emails watching a given path that appears in the list of changed directories
+
+my @svn_events_mailing_lists = ();
+foreach my $dirVal (@dirschanged) {
+  my @directory_notif = get_emails_by_path($dirVal, $group_id);
+  push(@svn_events_mailing_lists, @directory_notif);
+}
+my @svn_events_notifications = redundancy_grep(\@svn_events_mailing_lists);
+
+$svn_events_notifications = join(',', @svn_events_notifications);
+# we put off unvalid email and login
+$svnmailto = &filter_valid_logins_and_emails($svn_events_notifications);
+if ($svnmailto ne 'NULL' && $svnmailto ne '') {
+  push(@{$current_project->{email_addresses}}, $svnmailto);
+}
+
+if ($debug) {
+  print STDERR "svnmailto: ", $svnmailto, "\n";
+}
 
 # Lose the trailing slash in the directory names if one exists, except
 # in the case of '/'.

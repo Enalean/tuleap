@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     /**
@@ -50,18 +54,21 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
 
     private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Planning $planning, $artifacts_to_select) {
         $project  = $manager->getProject($this->request->get('group_id'));
-        $request_criteria = $this->getCriteriaFromRequest();
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
         $tracker_ids = $planning->getBacklogTrackerIds();
-        return $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
+        $request_criteria  = $this->getArrayFromRequest('criteria');
+        $semantic_criteria = $this->getArrayFromRequest('semantic_criteria');
+        $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria);
+        error_log(print_r($cross_search_criteria, true));
+        return $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
     }
     
-    private function getCriteriaFromRequest() {
+    private function getArrayFromRequest($parameter_name) {
         $request_criteria = array();
-        $valid_criteria = new Valid_Array('criteria');
+        $valid_criteria = new Valid_Array($parameter_name);
         $valid_criteria->required();
         if ($this->request->valid($valid_criteria)) {
-            $request_criteria = $this->request->get('criteria');
+            $request_criteria = $this->request->get($parameter_name);
         }
         return $request_criteria;
     }
@@ -80,37 +87,17 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         return $this->planning_factory->getPlanning($planning_id);
     }
 
-    
+    /**
+     * @return BreadCrumb_BreadCrumbGenerator
+     */
     public function getBreadcrumbs($plugin_path) {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $breadcrumbs    = array();
-        $url_parameters = array(
-            'group_id' => (int) $this->request->get('group_id'),
-        );
+        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+        $planningBreadCrumbGenerator = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
+        $artifactsBreadCrumbGenerator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
+        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $planningBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
         
-        $breadcrumbs[] = array(
-            'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
-        );
-        $planning = $this->getPlanning();
-        if ($planning) {
-            $url_parameters['planning_id'] = (int) $planning->getId();
-            $url_parameters['action']      = 'show';
-            $breadcrumbs[] = array(
-                'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-                'title' => $hp->purify($planning->getName()),
-            );
-            if ($this->artifact) {
-                $url_parameters['aid'] = (int) $this->artifact->getId();
-                $breadcrumbs[] = array(
-                    'url'   => $plugin_path .'/?'. http_build_query($url_parameters),
-                    'title' => $hp->purify($this->artifact->getTitle()),
-                );
-            }
-        }
-        return $breadcrumbs;
     }
-    
+
 }
 
 ?>

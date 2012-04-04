@@ -33,7 +33,6 @@ class trackerPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
         
         $this->_addHook('cssfile',                             'cssFile',                           false);
-        $this->_addHook('javascript_file',                     'hierarchicalViewJS',                false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
@@ -63,13 +62,7 @@ class trackerPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
-    public function hierarchicalViewJS() {        
-        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
-            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
-        }
-    }
-    
+
     public function cssFile($params) {
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
@@ -82,35 +75,6 @@ class trackerPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
-            echo '<!--[if IE]><style type="text/css">
-            
-            .node-content {
-             	display:inline;
-            }
-            
-            .node-pipe {
-                zoom:1;
-                *display: inline;
-            }
-
-            .node-minus {
-                zoom:1;
-                *display: inline;
-            }
-            .node-child {
-                zoom:1;
-            }
-            .node-minus-tree {
-                zoom:1;
-                *display: inline;
-            }
-
-            .node-indent {
-                zoom:1;
-                *display: inline;
-            }
-            
-            </style><![endif]-->';
         }
     }
     
@@ -123,7 +87,6 @@ class trackerPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
-//                 '/plugins/tracker/scripts/TrackerSearchTreeView.js',
                 '/plugins/tracker/scripts/TrackerReports.js',
                 '/plugins/tracker/scripts/TrackerBinds.js',
                 '/plugins/tracker/scripts/ReorderColumns.js',

@@ -81,6 +81,24 @@ class Planning_ShowPresenter {
     public function destinationHelp() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_destination_help');
     }
+    
+    public function getDestinationDroppableClass() {
+        if ($this->canDrop()) {
+            return 'planning-droppable';
+        }
+        return false;
+    }
+    
+    public function canDrop() {
+        return $this->artifact && $this->artifact->getAnArtifactLinkField();
+    }
+    
+    public function errorCantDrop() {
+        if ($this->canDrop()) {
+            return false;
+        }
+        return '<div class="feedback_warning">'. $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field') .'</div>';
+    }
 }
 
 ?>

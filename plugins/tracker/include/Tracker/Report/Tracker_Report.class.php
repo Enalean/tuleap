@@ -428,8 +428,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->id . '">' . $criterion->fetch() . '</li>';
-                $used[$criterion->field->id] = $criterion->field;
+                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">' . $criterion->fetch() . '</li>';
+                $used[$criterion->field->getId()] = $criterion->field;
             }
         }
         if ($report_can_be_modified && $this->userCanUpdate($current_user)) {

@@ -260,10 +260,12 @@ class Tracker_ReportFactory extends Error {
         $row['updated_at'] = null;
         $report = $this->getInstanceFromRow($row);
         // create criteria
+        $report->criterias = array();
         foreach ($xml->criterias->criteria as $criteria) {
             $report->criterias[] = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $xmlMapping);
         }
         // create renderers
+        $report->renderers = array();
         foreach ($xml->renderers->renderer as $renderer) {
             $rend = $this->getRendererFactory()->getInstanceFromXML($renderer, $report, $xmlMapping);
             $report->renderers[] = $rend; 
