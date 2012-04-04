@@ -29,8 +29,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
-        //$artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment(array(5254, 5255, 5256));
-        $artifact_link_constraints = '';
+        $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment(array(/*5254, 5255, 5256*/));
         
         $sql = "
             SELECT artifact.id,
@@ -80,6 +79,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             GROUP BY artifact.id
             ORDER BY title
         ";
+        //echo $sql;
         return $this->retrieve($sql);
     }
     
@@ -144,9 +144,14 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * @return String
      */
     protected function getArtifactLinkSearchSqlFragment(array $artifact_ids) {
-        $artifact_ids_list = $this->da->quoteSmartImplode(',', $artifact_ids);
-        $field_ids_list    = $this->getArtifactLinkFields($artifact_ids_list);
-        return $this->getSearchOnArtifactLink($field_ids_list, $artifact_ids_list);
+        if (count($artifact_ids)) {
+            $artifact_ids_list = $this->da->quoteSmartImplode(',', $artifact_ids);
+            $field_ids_list    = $this->getArtifactLinkFields($artifact_ids_list);
+            if ($field_ids_list) {
+                return $this->getSearchOnArtifactLink($field_ids_list, $artifact_ids_list);
+            }
+        }
+        return '';
     }
     
     /**
