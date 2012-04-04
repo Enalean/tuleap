@@ -516,9 +516,9 @@
     </section>
 
     <section id="TheCodendiDashboard">
-      <title>The &SYS_PRODUCT_NAME; Dashboard</title>
+      <title>The &SYS_PRODUCT_NAME; Platform Homepage</title>
 
-      <para>The &SYS_PRODUCT_NAME; Dashboard resides on the right hand side of the &SYS_PRODUCT_NAME;
+      <para>The &SYS_PRODUCT_NAME; Platform Homepage resides on the right hand side of the &SYS_PRODUCT_NAME;
       Home Page. It is a sort of a fish-eye view of the global &SYS_PRODUCT_NAME; activity.
       Several indicators are available:</para>
 
@@ -546,7 +546,7 @@
           various projects. If you want to keep aware of new incoming
           releases visit this page on a regular basis. &SYS_PRODUCT_NAME; also
           allows you to monitor the new software releases posted by a
-          given project. To do so go to the Project Summary page of
+          given project. To do so go to the Project Dashboard of
           this project by clicking on the project title and then
           select the monitor icon
           (<inlinemediaobject><imageobject><imagedata format="PNG"

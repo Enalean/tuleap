@@ -11,7 +11,7 @@
 href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 ?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-"file:/usr/local/docbook-dtd/docbookx.dtd"
+"/usr/share/tuleap_dev/documentation/lib/docbook-dtd/docbookx.dtd"
 [
 
 <!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">

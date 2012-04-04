@@ -30,7 +30,7 @@ https://projectname.&SYS_DEFAULT_DOMAIN;
 
         <listitem>
           <para>Click on the &#34;Home Page&#34; link in the Project Main menu
-          at the top of the Project Summary page.</para>
+          at the top of the Project Dashboard.</para>
         </listitem>
       </itemizedlist>
 
@@ -511,7 +511,7 @@ scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
           <para>The second reason is that using the &SYS_PRODUCT_NAME; logo in your Web
           site will automatically increase the Web access counter that &SYS_PRODUCT_NAME;
           is maintaining for you. The number of accesses to your site can be
-          viewed by visiting your Project Summary page and click on the
+          viewed by visiting your Project Dashboard and click on the
           &#34;Statistics&#34; link below the project description (see <xref
           linkend="FigureASampleProjectSummaryPage" />). This will also help
           us to identify projects that may require additional hosting
@@ -530,7 +530,7 @@ http://&SYS_DEFAULT_DOMAIN;/sflogo.php?group_id=N&#38;type=1
 
       <para>You can use this logo in anchor and image tags. For example you
       can associate a hyperlink to the logo that goes directly to your Project
-      Summary page:</para>
+      Dashboard:</para>
 
         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 &#60;A href=&#34;http://&SYS_DEFAULT_DOMAIN;/projects/projectname&#34;&#62;

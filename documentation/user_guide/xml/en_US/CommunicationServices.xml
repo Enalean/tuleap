@@ -135,7 +135,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
       of the news and its text body. You can type URLs in the body. &SYS_PRODUCT_NAME; will
       detect them and transform them into a hyperlink in the published
       version. You can also choose whether you want the news to be public this means
-      visible on your Project Summary page for all &SYS_PRODUCT_NAME; users or private 
+      visible on your Project Dashboard for all &SYS_PRODUCT_NAME; users or private 
       which means visible for your project members only.</para>
 
       <para>
