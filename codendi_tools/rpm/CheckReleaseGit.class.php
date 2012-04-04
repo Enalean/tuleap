@@ -21,12 +21,21 @@
 class CheckReleaseGit {
     //put your code here
     public function getVersionList($ls_remote_output) {
-        $lines = explode('\n', $ls_remote_output);
+        $lines    = explode('\n', $ls_remote_output);
+        $versions = array();
         foreach ($lines as $line) {
-            $parts = explode('/', $line);
-            $versions[] = $parts[2];
+            $parts      = explode('/', $line);
+            $versions[] = array_pop($parts);
         }
         return $versions;
+    }
+
+    public function maxVersion($versions) {
+        return array_reduce($versions, array($this, 'max'));
+    }
+    
+    public function max($v1, $v2) {
+        return version_compare($v1, $v2, '>') ? $v1 : $v2;
     }
 }
 

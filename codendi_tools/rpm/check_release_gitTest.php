@@ -22,7 +22,9 @@
 require_once 'CheckReleaseGit.class.php';
 class check_releqse_gitTest extends TuleapTestCase {
     public function itFindsTheGreatestVersionNumberFromTheTags() {
-        $this->assertEqual(0, 0);
+        $release_checker = new CheckReleaseGit();
+        $this->assertEqual('4.01.0', $release_checker->maxVersion(array('4.0.2', '4.01.0')));
+        $this->assertEqual('4.10', $release_checker->maxVersion(array('4.10', '4.9')));
     }
     
     public function itListsAllTags() {
