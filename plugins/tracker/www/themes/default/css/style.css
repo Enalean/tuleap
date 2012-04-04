@@ -991,14 +991,18 @@ ul.plugin_tracker_my_artifacts_list {
 /** Tree Node **/
 
 .tree-view, .tree-view tr, .tree-view td, .tree-view tbody {
+    height:100%;
     overflow:auto;
     vertical-align:top;
     border:0px;
     margin:0px;
-    padding-left:2px;
-    padding-right:2px;
     border-collapse:collapse;
+    border-spacing: 0px;
     zoom:1;
+}
+.tree-view td {
+    margin:2px;
+    padding:0px;
 }
 
 .first-column {
@@ -1007,7 +1011,6 @@ ul.plugin_tracker_my_artifacts_list {
 
 .first-column, .tree-view tr {
     height:100%;
-    zoom: 1;
 }
 .first-column + td {
     padding-left:10px;
@@ -1041,6 +1044,7 @@ ul.plugin_tracker_my_artifacts_list {
 }
 
 .node-blank {
+    vertical-align:top;
     overflow:hidden;
     display:inline-block;
     width:8px;
@@ -1048,14 +1052,16 @@ ul.plugin_tracker_my_artifacts_list {
 }
 
 .node-pipe {
+    vertical-align:top;
     display:inline-block;
     /* 8px - 1px of border*/
     width:7px;
-    height:100%;
+    height:inherit;
     border-right:1px gray dotted;
 }
 
 .node-minus {
+    vertical-align:top;
     overflow:hidden;
     border-bottom:1px gray dotted;
     /* 8px - 1px of border*/
@@ -1064,6 +1070,7 @@ ul.plugin_tracker_my_artifacts_list {
 }
 
 .node-content {
+    vertical-align:top;
     overflow:hidden;
     cursor:pointer;
     display:inline-block;
@@ -1074,9 +1081,12 @@ ul.plugin_tracker_my_artifacts_list {
 }
 
 .node-child {
+    vertical-align:top;
     overflow:hidden;
     display:block;
     width:8px;
+    padding: 0px;
+    margin:0px;
     margin-left:4px;
     height: 100%;
     border-right:1px gray dotted;

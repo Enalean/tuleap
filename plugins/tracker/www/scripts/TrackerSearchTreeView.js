@@ -85,7 +85,7 @@ var TreeTable = (function(treeTableId) {
 			var nodeChild = this.getNodeChild(TRElement);
 			if (nodeChild) {
 				var TRHeight = TRElement.getHeight();
-				if ( typeof TRHeight =="number") {
+				if ( typeof TRHeight == "number") {
 					TRHeight-=nodeChild.getHeight();
 					TRHeight+="px";
 				}
