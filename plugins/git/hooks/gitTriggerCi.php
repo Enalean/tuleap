@@ -50,7 +50,7 @@ function error($msg) {
 /**
  * Trigger jobs corresponding to the Git repository
  *
- * @param String  $repositoryLocation Name of the git repository
+ * @param String $repositoryLocation Name of the git repository
  *
  * @return Void
  */
