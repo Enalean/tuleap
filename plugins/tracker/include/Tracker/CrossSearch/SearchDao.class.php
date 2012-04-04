@@ -115,9 +115,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     protected function getTitleSqlFragment($title) {
-        $title = $this->da->quoteSmart($title);
         if (! $title) { return ''; }
-        
+        $title = $this->da->quoteSmart($title);
         return "AND CVT.value LIKE CONCAT('%', $title, '%')";
     }
     
