@@ -49,7 +49,7 @@ $dates   = array();
 $year    = array();
 $weekNum = array();
 for ($i = $start_of_period ; $i <= $today ; $i += $week) {
-    $dates[]   = date('Y-m-d', $i);
+    $dates[]   = date('M d', $i);
     $weekNum[] = intval(date('W', $i));
     $year[]    = intval(date('Y', $i));
 }
