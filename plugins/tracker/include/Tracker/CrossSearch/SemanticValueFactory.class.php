@@ -65,7 +65,6 @@ class Tracker_CrossSearch_SemanticValueFactory {
     public function getTitle($artifact_id, $changeset_id) {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         $tracker  = $artifact->getTracker();
-//        var_dump($tracker);
         $semantic = $this->semantic_title_factory->getByTracker($tracker);
         $field    = $semantic->getField();
         

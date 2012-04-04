@@ -30,90 +30,69 @@ Mock::generate('Tracker_Semantic_StatusFactory');
 
 class MockArtifactBuilder {
     public function __construct() {
-        $this->id      = 123;
-        $this->tracker = new MockTracker();
-        
-        $this->tracker->setReturnValue('getId', 456);
+        $this->id       = 123;
+        $this->tracker  = new MockTracker();
+        $this->artifact = new MockTracker_Artifact();
     }
     
     public function build() {
-        $artifact = new MockTracker_Artifact();
+        $this->artifact->setReturnValue('getId', $this->id);
+        $this->artifact->setReturnValue('getTracker', $this->tracker);
         
-        $artifact->setReturnValue('getId', $this->id);
-        $artifact->setReturnValue('getTracker', $this->tracker);
-        
-        return $artifact;
+        return $this->artifact;
     }
 }
 
 class MockArtifactFactoryBuilder {
+    public function __construct() {
+        $this->factory = new MockTracker_ArtifactFactory();
+    }
+    
     public function withArtifact($artifact) {
-        $this->artifact = $artifact;
+        $this->factory->setReturnValue('getArtifactById', $artifact, array($artifact->getId()));
         return $this;
     }
     
     public function build() {
-        $factory = new MockTracker_ArtifactFactory();
-        
-        $expected_params = array($this->artifact->getId());
-        $factory->expectOnce('getArtifactById', $expected_params);
-        $factory->setReturnValue('getArtifactById', $this->artifact, $expected_params);
-        
-        return $factory;
+        return $this->factory;
     }
 }
 
 class MockSemanticTitleFactoryBuilder {
     public function __construct() {
-        $this->semantic_titles = array();
+        $this->factory = new MockTracker_Semantic_TitleFactory();
     }
     
     public function withNoFieldForTracker($tracker) {
-        $semantic_title = new MockTracker_Semantic_Title();
-        $semantic_title->setReturnValue('getField', null);
+        $semantic_title = new MockTracker_Semantic_Status();
         
-        $this->semantic_titles[$tracker->getId()] = $semantic_title;
+        $semantic_title->setReturnValue('getField', null);
+        $this->factory->setReturnValue('getByTracker', $semantic_title, array($tracker));
         
         return $this;
     }
     
     public function build() {
-        $factory = new MockTracker_Semantic_TitleFactory();
-        
-        foreach($this->semantic_titles as $tracker => $semantic_title) {
-            $expected_params = array($tracker);
-//            $factory->expectOnce('getByTracker', $expected_params);
-            $factory->setReturnValue('getByTracker', $semantic_title);
-        }
-        
-        return $factory;
+        return $this->factory;
     }
 }
 
 class MockSemanticStatusFactoryBuilder {
     public function __construct() {
-        $this->semantic_statuses = array();
+        $this->factory = new MockTracker_Semantic_StatusFactory();
     }
     
     public function withNoFieldForTracker($tracker) {
         $semantic_status = new MockTracker_Semantic_Status();
-        $semantic_status->setReturnValue('getField', null);
         
-        $this->semantic_statuses[$tracker->getId()] = $semantic_status;
+        $semantic_status->setReturnValue('getField', null);
+        $this->factory->setReturnValue('getByTracker', $semantic_status, array($tracker));
         
         return $this;
     }
     
     public function build() {
-        $factory = new MockTracker_Semantic_StatusFactory();
-        
-        foreach($this->semantic_statuses as $tracker => $semantic_status) {
-            $expected_params = array($tracker);
-//            $factory->expectOnce('getByTracker', $expected_params);
-            $factory->setReturnValue('getByTracker', $semantic_status);
-        }
-        
-        return $factory;
+        return $this->factory;
     }
 }
 
