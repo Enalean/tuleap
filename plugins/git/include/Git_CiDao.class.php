@@ -55,6 +55,21 @@ class Git_CiDao extends DataAccessObject {
     }
 
     /**
+     * Retrieve Jobs path corresponding to the repository
+     *
+     * @param Integer $repositoryId Id of the repository
+     *
+     * @return DataAccessResult
+     */
+    function retrieveTriggersPathByRepository($repositoryId) {
+        $sql = 'SELECT job_url, token
+                FROM plugin_hudson_job
+                JOIN plugin_git_ci USING(job_id)
+                WHERE repository_id = '.$this->da->escapeInt($repositoryId);
+        return $this->retrieve($sql);
+    }
+
+    /**
      * Check that the repository exist and belong to the same project as the ci job
      *
      * @param Integer $jobId        Id of the CI job

@@ -143,7 +143,20 @@ class Git_Ci {
      * @return Void
      */
     function triggerCiBuild($repositoryId) {
-        // TODO : launch all triggers that correspond to $repositoryId
+        $res = $this->getDao()->retrieveTriggersPathByRepository($repositoryId);
+        if ($res && !$res->isError() && $res->rowCount() > 0) {
+            foreach ($res as $row) {
+                $token = '';
+                if (!empty($row['token'])) {
+                    $token = '?token='.$row['token'];
+                }
+                $url = $row['job_url'].'/build';
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_exec($ch);
+                curl_close($ch);
+            }
+        }
     }
 
 }
