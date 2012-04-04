@@ -50,7 +50,7 @@ class CheckReleaseGit {
     public function retainPathsThatHaveChanged($candidate_paths, $revision) {
         $changedPaths = array();
         foreach ($candidate_paths as $path) {
-            if ($this->git_exec->hasChanged($path, $revision)) {
+            if ($this->git_exec->hasChangedSince($path, $revision)) {
                 $changedPaths[] = $path;
             }
         }

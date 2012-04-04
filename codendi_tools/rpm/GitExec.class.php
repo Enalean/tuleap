@@ -20,7 +20,7 @@
  */
 class GitExec {
 
-    public function hasChanged($path, $version) {
+    public function hasChangedSince($path, $version) {
         $return_code;
         $output;
         exec("git diff --quiet $version -- $path", $output, $return_code);

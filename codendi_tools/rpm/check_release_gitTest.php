@@ -64,8 +64,8 @@ class check_releqse_gitTest extends TuleapTestCase {
     public function itFindsOnlyChangedPaths() {
         $revision = 'refs/tags/4.0.29';
         $gitExec = new MockGitExec();
-        $gitExec->setReturnValue('hasChanged', true, array('documentation/cli', $revision));
-        $gitExec->setReturnValue('hasChanged', false, array('plugins/tracker', $revision));
+        $gitExec->setReturnValue('hasChangedSince', true, array('documentation/cli', $revision));
+        $gitExec->setReturnValue('hasChangedSince', false, array('plugins/tracker', $revision));
         
         $candidate_paths = array('documentation/cli', 'plugins/tracker');
         
