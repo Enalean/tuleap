@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class CheckReleaseGit {
+    
+    public function __construct($git_exec) {
+        $this->git_exec = $git_exec;
+    }
     //put your code here
     public function getVersionList($ls_remote_output) {
         $lines    = explode('\n', $ls_remote_output);
@@ -34,12 +38,32 @@ class CheckReleaseGit {
         return array_reduce($versions, array($this, 'max'));
     }
     
-    public function max($v1, $v2) {
+    private function max($v1, $v2) {
         return version_compare($v1, $v2, '>') ? $v1 : $v2;
     }
+
+    public function retainPathsThatHaveChanged($candidate_paths, $revision) {
+        $changedPaths = array();
+        foreach ($candidate_paths as $path) {
+            if ($this->git_exec->hasChanged($path, $revision)) {
+                $changedPaths[] = $path;
+            }
+        }
+        return $changedPaths;
+    }
+
+    public function keepPathsThatHaventBeenIncremented($changed_paths, $old_revision, $new_revision) {
+        $non_incremented_paths = array();
+        foreach ($changed_paths as $path) {
+            $oldRevisionFileContent = $this->git_exec->fileContent($path, $old_revision);
+            $currentRevisionFileContent = $this->git_exec->fileContent($path, $new_revision);
+            if (version_compare($oldRevisionFileContent, $currentRevisionFileContent, '>=')) {
+                $non_incremented_paths[] = $path;
+            }
+        }
+        return $non_incremented_paths;
+    }
     
-    //diff : git diff --quiet refs/???/maxversion -- path
-    //if it changed then path/VERSION must have changed to a greater version from (rpms or from VERSION file content)  
 }
 
 ?>

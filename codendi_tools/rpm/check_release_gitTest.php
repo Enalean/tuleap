@@ -20,16 +20,24 @@
  */
 
 require_once 'CheckReleaseGit.class.php';
+require_once 'GitExec.class.php';
+
+Mock::generate('GitExec');
 class check_releqse_gitTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $gitExec = new MockGitExec();
+        $this->release_checker = new CheckReleaseGit($gitExec);
+    }
+    
     public function itFindsTheGreatestVersionNumberFromTheTags() {
-        $release_checker = new CheckReleaseGit();
-        $this->assertEqual('4.01.0', $release_checker->maxVersion(array('4.0.2', '4.01.0')));
-        $this->assertEqual('4.10', $release_checker->maxVersion(array('4.10', '4.9')));
+        $this->assertEqual('4.01.0', $this->release_checker->maxVersion(array('4.0.2', '4.01.0')));
+        $this->assertEqual('4.10', $this->release_checker->maxVersion(array('4.10', '4.9')));
     }
     
     public function itListsAllTags() {
-        $release_checker = new CheckReleaseGit();
-         $version_list = $release_checker->getVersionList(
+         $version_list = $this->release_checker->getVersionList(
 'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2\n
 e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0\n
 e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1\n
@@ -40,13 +48,32 @@ e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
     }
     
     public function itFindsOnlyChangedPaths() {
+        $revision = 'refs/tags/4.0.29';
         $gitExec = new MockGitExec();
-        $gitExec->setReturnValue('hasChanged', true, array('documentation/cli', '4.0.29'));
-        $gitExec->setReturnValue('hasChanged', false, array('plugins/tracker', '4.0.29'));
+        $gitExec->setReturnValue('hasChanged', true, array('documentation/cli', $revision));
+        $gitExec->setReturnValue('hasChanged', false, array('plugins/tracker', $revision));
+        
+        $candidate_paths = array('documentation/cli', 'plugins/tracker');
         
         $release_checker = new CheckReleaseGit($gitExec);
-        $this->assertEqual(array('plugins/tracker'), $release_checker->keepChangedPaths($candidate_paths, '4.0.29'));
+        $this->assertEqual(array('documentation/cli'), $release_checker->retainPathsThatHaveChanged($candidate_paths, $revision));
     }
+    
+    public function itFiltersPathsThatHaveBeenIncremented() {
+        $last_release_tag = 'refs/tags/4.0.29';
+        $current_version  = 'HEAD';
+        $changed_paths = array('src/www/soap', 'plugins/mailman');
+        $not_incremented_paths = array('plugins/mailman');
+        $gitExec = new MockGitExec();
+        $gitExec->setReturnValue('fileContent', '1.1', array('src/www/soap', $last_release_tag));
+        $gitExec->setReturnValue('fileContent', '1.2', array('src/www/soap', $current_version));
+        $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman', $last_release_tag));
+        $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman', $current_version));
+        $release_checker = new CheckReleaseGit($gitExec);
+        $actual_non_incremented_paths = $release_checker->keepPathsThatHaventBeenIncremented($changed_paths, $last_release_tag, $current_version);
+        $this->assertEqual($not_incremented_paths, $actual_non_incremented_paths);
+    }
+    //if it changed then path/VERSION must have changed to a greater version from (rpms or from VERSION file content)  
     
 }
 ?>
