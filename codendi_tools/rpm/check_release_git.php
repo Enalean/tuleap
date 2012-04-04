@@ -37,8 +37,7 @@ $candidate_paths = array_merge($other_paths, $plugins, $themes);
 $new_revision = 'HEAD';
 
 $tagFinder = new GitTagFinder(new GitExec());
-$versions = $tagFinder->getVersionList();
-$maxVersion = $tagFinder->maxVersion($versions);
+$maxVersion = $tagFinder->getMaxVersionFrom('origin');
 
 echo "latest version : $maxVersion".PHP_EOL;
 

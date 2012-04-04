@@ -30,8 +30,13 @@ class GitTagFinder {
         $this->git_exec = $git_exec;
     }
 
-    public function getVersionList() {
-        $ls_remote_output = $this->git_exec->lsRemote('origin');
+    public function getMaxVersionFrom($git_remote_name_or_url = 'origin') {
+        $version_list = $this->getVersionList($git_remote_name_or_url);
+        return $this->maxVersion($version_list);
+    }
+
+    public function getVersionList($git_remote_name_or_url) {
+        $ls_remote_output = $this->git_exec->lsRemote($git_remote_name_or_url);
         $versions = array();
         $tags = preg_grep('%tags/[\d\.]{1,}$%', $ls_remote_output);
         foreach ($tags as $line) {
