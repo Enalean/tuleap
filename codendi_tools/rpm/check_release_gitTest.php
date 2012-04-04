@@ -34,11 +34,11 @@ class GitTagFinderTest extends TuleapTestCase {
     
     public function itListsAllTags() {
          $version_list = array(
-'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
+            'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
         $git_tag_finder = new GitTagFinder($gitExec);
@@ -47,10 +47,10 @@ class GitTagFinderTest extends TuleapTestCase {
     
     public function itListsOnlyTagsThatAreNumeric() {
          $version_list = array(
-'cef75eb766883a62700306de0e57a14b54aa72ec	refs/branches/4.0.2',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/textualTag',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/437_numericalbeginning',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1');
+            'cef75eb766883a62700306de0e57a14b54aa72ec	refs/branches/4.0.2',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/textualTag',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/437_numericalbeginning',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
         $git_tag_finder = new GitTagFinder($gitExec);
@@ -59,11 +59,11 @@ class GitTagFinderTest extends TuleapTestCase {
     
     public function itGetsTheMaxVersionDirectlyFromTheRemote() {
          $version_list = array(
-'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9',
-'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
+            'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9',
+            'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
         $git_tag_finder = new GitTagFinder($gitExec);
