@@ -85,7 +85,7 @@ class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisit
         $lastIndex = count($states) - 1;
         foreach ($states as $state_id) {
             $isLastState = $curIndex == $lastIndex;
-            $html.= $this->getPaddingForAState($state_id, $showTree);
+            $html.= $this->getPaddingForAState($state_id, $showTree && $isLastState);
             $curIndex++;
         }
         return $html;
