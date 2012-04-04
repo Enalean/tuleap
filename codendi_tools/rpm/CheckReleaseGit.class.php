@@ -95,4 +95,24 @@ class VersionIncrementFilter {
         return $non_incremented_paths;
     }
 }
+
+class CheckReleaseReporter {
+
+    public function reportOn($non_incremented_paths) {
+        $COLOR_RED     = "\033[31m";
+        $COLOR_GREEN   = "\033[32m";
+        $COLOR_NOCOLOR = "\033[0m";
+        foreach ($non_incremented_paths as $non_incremented_path) {
+            echo "$COLOR_RED $non_incremented_path changed but wasn't incremented $COLOR_NOCOLOR".PHP_EOL;
+        }
+
+        if (! $non_incremented_paths) {
+            echo "$COLOR_GREEN Everything was incremented correctly $COLOR_NOCOLOR".PHP_EOL;
+        }
+
+        exit(count($non_incremented_paths));
+    }
+}
+
+
 ?>

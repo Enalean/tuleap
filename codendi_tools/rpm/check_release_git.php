@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2010. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,17 +48,6 @@ $changed_paths = $change_detector->retainPathsThatHaveChanged($candidate_paths, 
 $version_increment_filter = new VersionIncrementFilter(new GitExec());
 $non_incremented_paths = $version_increment_filter->keepPathsThatHaventBeenIncremented($changed_paths, $maxVersion, $new_revision);
 
-
-$COLOR_RED     = "\033[31m";
-$COLOR_GREEN   = "\033[32m";
-$COLOR_NOCOLOR = "\033[0m";
-foreach ($non_incremented_paths as $non_incremented_path) {
-    echo "$COLOR_RED $non_incremented_path changed but wasn't incremented $COLOR_NOCOLOR".PHP_EOL;
-}
-
-if (! $non_incremented_paths) {
-    echo "$COLOR_GREEN Everything was incremented correctly $COLOR_NOCOLOR".PHP_EOL;
-}
-
-exit(count($non_incremented_paths));
+$check_release_reporter = new CheckReleaseReporter();
+$check_release_reporter->reportOn($non_incremented_paths);
 ?>
