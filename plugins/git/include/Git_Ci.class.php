@@ -27,7 +27,7 @@ require_once('Git_CiDao.class.php');
  */
 class Git_Ci {
 
-    private $dao;
+    private $_dao;
 
     /**
      * Get CI dao
@@ -36,9 +36,9 @@ class Git_Ci {
      */
     function getDao() {
         if (!isset($this->dao)) {
-            $this->dao = new Git_CiDao();
+            $this->_dao = new Git_CiDao();
         }
-        return $this->dao;
+        return $this->_dao;
     }
 
     /**
@@ -119,7 +119,7 @@ class Git_Ci {
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return $this->getDao()->saveTrigger($jobId, $repositoryId);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_repository_not_in_project'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'ci_repository_not_in_project'));
             return false;
         }
     }
