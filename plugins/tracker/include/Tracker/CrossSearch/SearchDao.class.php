@@ -29,7 +29,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
-        
+        $tracker_constraint        = $tracker_ids ? " AND   artifact.tracker_id IN ($tracker_ids) " : "";
+
         $sql = "
             SELECT artifact.id,
                    artifact.last_changeset_id,
@@ -63,7 +64,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             ) ON CV2.changeset_id = artifact.last_changeset_id
 
             WHERE artifact.use_artifact_permissions = 0
-            AND   artifact.tracker_id IN ($tracker_ids)
+            $tracker_constraint
             $title_constraint
             $status_constraint
         ";
@@ -76,6 +77,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             GROUP BY artifact.id
             ORDER BY title
         ";
+        
         return $this->retrieve($sql);
     }
     
