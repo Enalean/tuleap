@@ -22,6 +22,8 @@ require_once('Git_CiDao.class.php');
 
 /**
  * Continuous integration DAO for Git
+ *
+ * @TODO: Unit tests
  */
 class Git_Ci {
 
@@ -100,8 +102,13 @@ class Git_Ci {
      * @return Boolean
      */
     function saveTrigger($jobId, $repositoryId) {
-        // TODO: Manage the case repository does not exist or is not in the same project as the job
-        return $this->dao->saveTrigger($jobId, $repositoryId);
+        $dar = $this->dao->checkRepository($jobId, $repositoryId);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            return $this->dao->saveTrigger($jobId, $repositoryId);
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_repository_not_in_project'));
+            return false;
+        }
     }
 
     /**

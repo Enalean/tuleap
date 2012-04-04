@@ -55,6 +55,23 @@ class Git_CiDao extends DataAccessObject {
     }
 
     /**
+     * Check that the repository exist and belong to the same project as the ci job
+     *
+     * @param Integer $jobId        Id of the CI job
+     * @param Integer $repositoryId Id of the repository
+     *
+     * @return DataAccessResult
+     */
+    function checkRepository($jobId, $repositoryId) {
+        $sql = 'SELECT job_id
+                FROM plugin_hudson_job
+                JOIN plugin_git ON group_id=project_id
+                WHERE repository_id = '.$this->da->escapeInt($repositoryId).'
+                AND job_id = '.$this->da->escapeInt($jobId);
+        return $this->retrieve($sql);
+    }
+
+    /**
      * Save a new trigger
      *
      * @param Integer $jobId        Id of the CI job
