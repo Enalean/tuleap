@@ -135,6 +135,17 @@ class Git_Ci {
         return $this->getDao()->deleteTrigger($jobId);
     }
 
+    /**
+     * Trigger CI build
+     *
+     * @param Integer $repositoryId Id of the repository where a push occured
+     *
+     * @return Void
+     */
+    function triggerCiBuild($repositoryId) {
+        // TODO : launch all triggers that correspond to $repositoryId
+    }
+
 }
 
 ?>
