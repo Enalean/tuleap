@@ -35,7 +35,6 @@ function getCandidatePaths() {
 require_once 'CheckReleaseGit.class.php';
 require_once 'GitExec.class.php';
 
-$new_revision = 'HEAD';
 $candidate_paths = getCandidatePaths();
 
 $tagFinder = new GitTagFinder(new GitExec());
@@ -43,12 +42,8 @@ $maxVersion = $tagFinder->getMaxVersionFrom('origin');
 
 echo "latest version : $maxVersion".PHP_EOL;
 
-$change_detector = new GitChangeDetector(new GitExec());
-$changed_paths = $change_detector->retainPathsThatHaveChanged($candidate_paths, $maxVersion);
-
-$version_increment_filter = new VersionIncrementFilter(new GitExec());
-$non_incremented_paths = $version_increment_filter->keepPathsThatHaventBeenIncremented($changed_paths, $maxVersion, $new_revision);
-
-$check_release_reporter = new CheckReleaseReporter();
-$check_release_reporter->reportOn($non_incremented_paths);
+$check_release_reporter = new CheckReleaseReporter(
+                            new VersionIncrementFilter(new GitExec(), 
+                                    new GitChangeDetector(new GitExec(), $candidate_paths), $maxVersion));
+$check_release_reporter->reportViolations();
 ?>

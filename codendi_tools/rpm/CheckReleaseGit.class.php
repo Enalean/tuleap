@@ -62,13 +62,14 @@ class GitChangeDetector {
      */
     private $git_exec;
     
-    public function __construct($git_exec) {
+    public function __construct($git_exec, $candidate_paths) {
         $this->git_exec = $git_exec;
+        $this->candidate_paths = $candidate_paths;
     }    
 
-    public function retainPathsThatHaveChanged($candidate_paths, $revision) {
+    public function retainPathsThatHaveChanged($revision) {
         $changedPaths = array();
-        foreach ($candidate_paths as $path) {
+        foreach ($this->candidate_paths as $path) {
             if ($this->git_exec->hasChangedSince($path, $revision)) {
                 $changedPaths[] = $path;
             }
@@ -83,15 +84,18 @@ class VersionIncrementFilter {
      */
     private $git_exec;
     
-    public function __construct($git_exec) {
+    public function __construct($git_exec, $changed_paths_finder, $old_revision) {
         $this->git_exec = $git_exec;
+        $this->change_detector = $changed_paths_finder;
+        $this->old_revision = $old_revision;
     }
 
-    public function keepPathsThatHaventBeenIncremented($changed_paths, $old_revision, $new_revision) {
+    public function keepPathsThatHaventBeenIncremented() {
+        $changed_paths = $this->change_detector->retainPathsThatHaveChanged($this->old_revision);
         $non_incremented_paths = array();
         foreach ($changed_paths as $path) {
-            $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $old_revision);
-            $currentRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $new_revision);
+            $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $this->old_revision);
+            $currentRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", 'HEAD');
             echo("$path : old revision $oldRevisionFileContent new revision $currentRevisionFileContent".PHP_EOL);
             if (version_compare($oldRevisionFileContent, $currentRevisionFileContent, '>=')) {
                 $non_incremented_paths[] = $path;
@@ -103,7 +107,11 @@ class VersionIncrementFilter {
 
 class CheckReleaseReporter {
 
-    public function reportOn($non_incremented_paths) {
+    public function __construct($non_incremented_path_finder) {
+        $this->non_incremented_path_finder = $non_incremented_path_finder;
+    }
+    public function reportViolations() {
+        $non_incremented_paths = $this->non_incremented_path_finder->keepPathsThatHaventBeenIncremented();
         $COLOR_RED     = "\033[31m";
         $COLOR_GREEN   = "\033[32m";
         $COLOR_NOCOLOR = "\033[0m";
