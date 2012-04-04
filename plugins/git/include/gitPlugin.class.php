@@ -441,15 +441,21 @@ class GitPlugin extends Plugin {
         if (isset($params['request']) && !empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
             $repositoryId = $params['request']->get('new_hudson_use_plugin_git_trigger');
-            if ($jobId && $repositoryId) {
+            if ($jobId) {
                 $vJobId = new Valid_Uint('job_id');
                 $vJobId->required();
-                $vRepoId = new Valid_Uint('new_hudson_use_plugin_git_trigger');
-                $vRepoId->required();
-                if($params['request']->valid($vJobId) && $params['request']->valid($vRepoId)) {
+                if($params['request']->valid($vJobId)) {
                     $ci = new Git_Ci();
-                    if (!$ci->saveTrigger($jobId, $repositoryId)) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                    $vRepoId = new Valid_Uint('new_hudson_use_plugin_git_trigger');
+                    $vRepoId->required();
+                    if ($params['request']->valid($vRepoId)) {
+                        if (!$ci->saveTrigger($jobId, $repositoryId)) {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                        }
+                    } else {
+                        if (!$ci->deleteTrigger($jobId)) {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));
+                        }
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
