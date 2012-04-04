@@ -40,8 +40,6 @@ $candidate_paths = getCandidatePaths();
 $tagFinder = new GitTagFinder(new GitExec());
 $maxVersion = $tagFinder->getMaxVersionFrom('origin');
 
-echo "latest version : $maxVersion".PHP_EOL;
-
 $check_release_reporter = new CheckReleaseReporter(
                             new VersionIncrementFilter(new GitExec(), 
                                     new GitChangeDetector(new GitExec(), $candidate_paths), $maxVersion));

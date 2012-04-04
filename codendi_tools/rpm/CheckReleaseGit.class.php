@@ -32,7 +32,9 @@ class GitTagFinder {
 
     public function getMaxVersionFrom($git_remote_name_or_url = 'origin') {
         $version_list = $this->getVersionList($git_remote_name_or_url);
-        return $this->maxVersion($version_list);
+        $maxVersion = $this->maxVersion($version_list);
+        echo "latest version : $maxVersion".PHP_EOL;
+        return $maxVersion;
     }
 
     public function getVersionList($git_remote_name_or_url) {
