@@ -32,6 +32,9 @@ class GitExec {
         exec("git show $version:$path", $output);
         return $output;
     }
+    public function lsRemote($remote) {
+        
+    }
 }
 
 ?>

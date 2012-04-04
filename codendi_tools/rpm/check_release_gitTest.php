@@ -37,15 +37,21 @@ class check_releqse_gitTest extends TuleapTestCase {
     }
     
     public function itListsAllTags() {
-         $version_list = $this->release_checker->getVersionList(
+         $version_list = 
 'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2\n
 e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0\n
 e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1\n
 e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9\n
-e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
-        
-        $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $version_list);
+e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10';
+        $gitExec = new MockGitExec();
+        $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
+        $checkReleaseGit = new CheckReleaseGit($gitExec);
+        $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $checkReleaseGit->getVersionList());
     }
+    
+//    public function itExtractsAllTagsFromARemote() {
+//        $this->assert
+//    }
     
     public function itFindsOnlyChangedPaths() {
         $revision = 'refs/tags/4.0.29';

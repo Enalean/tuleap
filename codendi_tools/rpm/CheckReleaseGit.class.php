@@ -24,7 +24,8 @@ class CheckReleaseGit {
         $this->git_exec = $git_exec;
     }
     //put your code here
-    public function getVersionList($ls_remote_output) {
+    public function getVersionList() {
+        $ls_remote_output = $this->git_exec->lsRemote('origin');
         $lines    = explode('\n', $ls_remote_output);
         $versions = array();
         foreach ($lines as $line) {
