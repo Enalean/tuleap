@@ -37,21 +37,29 @@ class check_releqse_gitTest extends TuleapTestCase {
     }
     
     public function itListsAllTags() {
-         $version_list = 
-'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2\n
-e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0\n
-e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1\n
-e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9\n
-e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10';
+         $version_list = array(
+'cef75eb766883a62700306de0e57a14b54aa72ec	refs/tags/4.0.2',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.01.0',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.9',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
         $checkReleaseGit = new CheckReleaseGit($gitExec);
         $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $checkReleaseGit->getVersionList());
     }
     
-//    public function itExtractsAllTagsFromARemote() {
-//        $this->assert
-//    }
+    public function itListsOnlyTagsThatAreNumeric() {
+         $version_list = array(
+'cef75eb766883a62700306de0e57a14b54aa72ec	refs/branches/4.0.2',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/textualTag',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/437_numericalbeginning',
+'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1');
+        $gitExec = new MockGitExec();
+        $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
+        $checkReleaseGit = new CheckReleaseGit($gitExec);
+        $this->assertEqual(array('4.1'), $checkReleaseGit->getVersionList());
+    }
     
     public function itFindsOnlyChangedPaths() {
         $revision = 'refs/tags/4.0.29';
@@ -71,15 +79,14 @@ e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10';
         $changed_paths = array('src/www/soap', 'plugins/mailman');
         $not_incremented_paths = array('plugins/mailman');
         $gitExec = new MockGitExec();
-        $gitExec->setReturnValue('fileContent', '1.1', array('src/www/soap', $last_release_tag));
-        $gitExec->setReturnValue('fileContent', '1.2', array('src/www/soap', $current_version));
-        $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman', $last_release_tag));
-        $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman', $current_version));
+        $gitExec->setReturnValue('fileContent', '1.1', array('src/www/soap/VERSION', $last_release_tag));
+        $gitExec->setReturnValue('fileContent', '1.2', array('src/www/soap/VERSION', $current_version));
+        $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman/VERSION', $last_release_tag));
+        $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman/VERSION', $current_version));
         $release_checker = new CheckReleaseGit($gitExec);
         $actual_non_incremented_paths = $release_checker->keepPathsThatHaventBeenIncremented($changed_paths, $last_release_tag, $current_version);
         $this->assertEqual($not_incremented_paths, $actual_non_incremented_paths);
     }
-    //if it changed then path/VERSION must have changed to a greater version from (rpms or from VERSION file content)  
     
 }
 ?>

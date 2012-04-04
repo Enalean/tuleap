@@ -19,16 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class CheckReleaseGit {
+    /**
+     * @var GitExec
+     */
+    private $git_exec;
     
     public function __construct($git_exec) {
         $this->git_exec = $git_exec;
     }
-    //put your code here
+
     public function getVersionList() {
         $ls_remote_output = $this->git_exec->lsRemote('origin');
-        $lines    = explode('\n', $ls_remote_output);
         $versions = array();
-        foreach ($lines as $line) {
+        $tags = preg_grep('%tags/[\d\.]{1,}$%', $ls_remote_output);
+        foreach ($tags as $line) {
             $parts      = explode('/', $line);
             $versions[] = array_pop($parts);
         }
@@ -56,8 +60,9 @@ class CheckReleaseGit {
     public function keepPathsThatHaventBeenIncremented($changed_paths, $old_revision, $new_revision) {
         $non_incremented_paths = array();
         foreach ($changed_paths as $path) {
-            $oldRevisionFileContent = $this->git_exec->fileContent($path, $old_revision);
-            $currentRevisionFileContent = $this->git_exec->fileContent($path, $new_revision);
+            $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $old_revision);
+            $currentRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $new_revision);
+            echo("$path : old revision $oldRevisionFileContent new revision $currentRevisionFileContent".PHP_EOL);
             if (version_compare($oldRevisionFileContent, $currentRevisionFileContent, '>=')) {
                 $non_incremented_paths[] = $path;
             }
