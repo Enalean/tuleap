@@ -43,5 +43,5 @@ $maxVersion = $tagFinder->getMaxVersionFrom('origin');
 $check_release_reporter = new CheckReleaseReporter(
                             new VersionIncrementFilter(new GitExec(), 
                                     new GitChangeDetector(new GitExec(), $candidate_paths), $maxVersion));
-$check_release_reporter->reportViolations();
+$check_release_reporter->reportViolations($candidate_paths);
 ?>

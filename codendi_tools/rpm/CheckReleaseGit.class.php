@@ -63,7 +63,7 @@ class GitChangeDetector {
         $this->candidate_paths = $candidate_paths;
     }    
 
-    public function retainPathsThatHaveChanged($revision) {
+    public function findPathsThatChangedSince($revision) {
         $changedPaths = array();
         foreach ($this->candidate_paths as $path) {
             if ($this->git_exec->hasChangedSince($path, $revision)) {
@@ -77,14 +77,14 @@ class GitChangeDetector {
 class VersionIncrementFilter {
     private $git_exec;
     
-    public function __construct($git_exec, $changed_paths_finder, $old_revision) {
+    public function __construct($git_exec, GitChangeDetector $changed_paths_finder, $old_revision) {
         $this->git_exec = $git_exec;
         $this->change_detector = $changed_paths_finder;
         $this->old_revision = $old_revision;
     }
 
-    public function keepPathsThatHaventBeenIncremented() {
-        $changed_paths = $this->change_detector->retainPathsThatHaveChanged($this->old_revision);
+    public function find() {
+        $changed_paths = $this->change_detector->findPathsThatChangedSince($this->old_revision);
         $non_incremented_paths = array();
         foreach ($changed_paths as $path) {
             $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $this->old_revision);
@@ -100,11 +100,11 @@ class VersionIncrementFilter {
 
 class CheckReleaseReporter {
 
-    public function __construct($non_incremented_path_finder) {
-        $this->non_incremented_path_finder = $non_incremented_path_finder;
+    public function __construct(VersionIncrementFilter $non_incremented_path_finder) {
+        $this->non_incremented_paths_finder = $non_incremented_path_finder;
     }
     public function reportViolations() {
-        $non_incremented_paths = $this->non_incremented_path_finder->keepPathsThatHaventBeenIncremented();
+        $non_incremented_paths = $this->non_incremented_paths_finder->find();
         $COLOR_RED     = "\033[31m";
         $COLOR_GREEN   = "\033[32m";
         $COLOR_NOCOLOR = "\033[0m";
