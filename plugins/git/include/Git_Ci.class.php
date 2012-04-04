@@ -30,12 +30,24 @@ class Git_Ci {
     private $dao;
 
     /**
-     * Constructor of the class
+     * Get CI dao
      *
-     * @return Void
+     * @return Git_CiDao
      */
-    function __construct() {
-        $this->dao = new Git_CiDao();
+    function getDao() {
+        if (!isset($this->dao)) {
+            $this->dao = new Git_CiDao();
+        }
+        return $this->dao;
+    }
+
+    /**
+     * Wrapper for unit tests
+     *
+     * @return ProjectManager
+     */
+    function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     /**
@@ -47,23 +59,24 @@ class Git_Ci {
      */
     function retrieveTriggers($params) {
         if (isset($params['group_id']) && !empty($params['group_id'])) {
-            $pm      = ProjectManager::instance();
-            $project = $pm->getProject($params['group_id']);
+            $project = $this->getProjectManager()->getProject($params['group_id']);
             if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
                 $repositoryId = '';
                 $used         = array();
                 $checked      = '';
                 if (isset($params['job_id']) && !empty($params['job_id'])) {
-                    $res = $this->dao->retrieveTrigger($params['job_id']);
+                    $res = $this->getDao()->retrieveTrigger($params['job_id']);
                     if ($res && !$res->isError() && $res->rowCount() == 1) {
                         $row          = $res->getRow();
                         $repositoryId = $row['repository_id'];
                         $checked      = 'checked="checked"';
                     }
                 } else {
-                    $res = $this->dao->retrieveTriggers($params['group_id']);
-                    foreach ($res as $row) {
-                        $used[$row['job_id']] = true;
+                    $res = $this->getDao()->retrieveTriggers($params['group_id']);
+                    if ($res && !$res->isError() && $res->rowCount() > 0) {
+                        foreach ($res as $row) {
+                            $used[$row['job_id']] = true;
+                        }
                     }
                 }
                 $addForm  = '<p>
@@ -102,9 +115,9 @@ class Git_Ci {
      * @return Boolean
      */
     function saveTrigger($jobId, $repositoryId) {
-        $dar = $this->dao->checkRepository($jobId, $repositoryId);
+        $dar = $this->getDao()->checkRepository($jobId, $repositoryId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            return $this->dao->saveTrigger($jobId, $repositoryId);
+            return $this->getDao()->saveTrigger($jobId, $repositoryId);
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_repository_not_in_project'));
             return false;
@@ -119,7 +132,7 @@ class Git_Ci {
      * @return Boolean
      */
     function deleteTrigger($jobId) {
-        return $this->dao->deleteTrigger($jobId);
+        return $this->getDao()->deleteTrigger($jobId);
     }
 
 }
