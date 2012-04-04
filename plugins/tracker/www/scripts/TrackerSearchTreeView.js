@@ -21,7 +21,7 @@ var TreeTable = (function(treeTableId) {
 		isCollapsed: function(TRElement) {
 			var nodeChild = this.getNodeChild(TRElement);
 			if (nodeChild) {
-				return nodeChild.visible()==false;
+				return nodeChild.visible() == false;
 			}
 			return false;
 		},
@@ -51,8 +51,6 @@ var TreeTable = (function(treeTableId) {
 			var nodeTree = TRElement.getElementsByClassName('node-tree');
 			if (nodeTree.length > 0) {
 				nodeTree[0].setStyle({backgroundImage:'url(/themes/common/images/ic/toggle-small.png)'});
-			} else {
-				console.log('node tree not found');
 			}
 		},
 		
@@ -60,8 +58,6 @@ var TreeTable = (function(treeTableId) {
 			var nodeTree = TRElement.getElementsByClassName('node-tree');
 			if (nodeTree.length > 0) {
 				nodeTree[0].setStyle({backgroundImage: 'url(/themes/common/images/ic/toggle-small-expand.png)'});
-			} else {
-				console.log('node tree not found');
 			}
 		},
 		
@@ -86,8 +82,8 @@ var TreeTable = (function(treeTableId) {
 			if (nodeChild) {
 				var TRHeight = TRElement.getHeight();
 				if ( typeof TRHeight == "number") {
-					TRHeight-=nodeChild.getHeight();
-					TRHeight+="px";
+					TRHeight -= nodeChild.getHeight();
+					TRHeight += "px";
 				}
 				nodeChild.hide();
 				var children = this.getChildren(TRElement);
