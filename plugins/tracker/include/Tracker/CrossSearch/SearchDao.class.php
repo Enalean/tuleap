@@ -29,6 +29,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
+        $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment();
         
         $sql = "
             SELECT artifact.id,
@@ -42,6 +43,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             
             $shared_fields_constraints
             
+            $artifact_link_constraints
+        
             LEFT JOIN (
                            tracker_changeset_value      AS CV
                 INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
@@ -130,6 +133,40 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         default:
             // no constraint
         }
+    }
+    
+    protected function getArtifactLinkSearchSqlFragment() {
+        //return $this->getSearchOnArtifactLink(9309, array(5254, 5255));
+        return '';
+    }
+    
+    /**
+     * Build the search for artifact link
+     * 
+     * Looks for artifacts that are linked to a given one:
+     * - Sprint #34 "2.0"
+     *   (links: story #20, story #30, task #40)
+     * 
+     * Given I Look for sprint #34 related artifacts it returns stories 20, 30 and 40
+     * 
+     * @param Integer          $field_id
+     * @param Array of Integer $artifact_ids
+     * @return type 
+     */
+    protected function getSearchOnArtifactLink($field_id, array $artifact_ids) {
+        $artifact_ids = $this->da->quoteSmartImplode(',', $artifact_ids);
+        
+        // Table aliases
+        $tracker_artifact                     = 'ALS_A_'.$field_id;
+        $tracker_changeset_value              = 'ALS_CV_'.$field_id;
+        $tracker_changeset_value_artifactlink = 'ALS_CVAL'.$field_id;
+        
+        $sql = "INNER JOIN tracker_artifact                    AS $tracker_artifact          ON ($tracker_artifact.id IN ($artifact_ids))
+                INNER JOIN tracker_changeset_value             AS $tracker_changeset_value   ON ($tracker_artifact.last_changeset_id = $tracker_changeset_value.changeset_id 
+                                                                                                 AND $tracker_changeset_value.field_id = $field_id)
+                INNER JOIN tracker_changeset_value_artifactlink AS $tracker_changeset_value_artifactlink ON (artifact.id = $tracker_changeset_value_artifactlink.artifact_id
+                                                                                                             AND $tracker_changeset_value.id = $tracker_changeset_value_artifactlink.changeset_value_id)";
+        return $sql;
     }
 }    
 ?>
