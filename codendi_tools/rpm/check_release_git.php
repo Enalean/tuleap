@@ -36,15 +36,17 @@ $candidate_paths = array_merge($other_paths, $plugins, $themes);
 
 $new_revision = 'HEAD';
 
-$releaseChecker = new CheckReleaseGit(new GitExec());
 $tagFinder = new GitTagFinder(new GitExec());
 $versions = $tagFinder->getVersionList();
 $maxVersion = $tagFinder->maxVersion($versions);
 
 echo "latest version : $maxVersion".PHP_EOL;
 
-$changed_paths = $releaseChecker->retainPathsThatHaveChanged($candidate_paths, $maxVersion);
-$non_incremented_paths = $releaseChecker->keepPathsThatHaventBeenIncremented($changed_paths, $maxVersion, $new_revision);
+$change_detector = new GitChangeDetector(new GitExec());
+$changed_paths = $change_detector->retainPathsThatHaveChanged($candidate_paths, $maxVersion);
+
+$version_increment_filter = new VersionIncrementFilter(new GitExec());
+$non_incremented_paths = $version_increment_filter->keepPathsThatHaventBeenIncremented($changed_paths, $maxVersion, $new_revision);
 
 
 $COLOR_RED     = "\033[31m";

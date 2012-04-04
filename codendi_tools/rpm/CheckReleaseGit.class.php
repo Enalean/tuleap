@@ -18,40 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class CheckReleaseGit {
-    /**
-     * @var GitExec
-     */
-    private $git_exec;
-    
-    public function __construct($git_exec) {
-        $this->git_exec = $git_exec;
-    }
-
-    public function retainPathsThatHaveChanged($candidate_paths, $revision) {
-        $changedPaths = array();
-        foreach ($candidate_paths as $path) {
-            if ($this->git_exec->hasChangedSince($path, $revision)) {
-                $changedPaths[] = $path;
-            }
-        }
-        return $changedPaths;
-    }
-
-    public function keepPathsThatHaventBeenIncremented($changed_paths, $old_revision, $new_revision) {
-        $non_incremented_paths = array();
-        foreach ($changed_paths as $path) {
-            $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $old_revision);
-            $currentRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $new_revision);
-            echo("$path : old revision $oldRevisionFileContent new revision $currentRevisionFileContent".PHP_EOL);
-            if (version_compare($oldRevisionFileContent, $currentRevisionFileContent, '>=')) {
-                $non_incremented_paths[] = $path;
-            }
-        }
-        return $non_incremented_paths;
-    }
-    
-}
 
 class GitTagFinder {
 
@@ -94,6 +60,16 @@ class GitChangeDetector {
     public function __construct($git_exec) {
         $this->git_exec = $git_exec;
     }    
+
+    public function retainPathsThatHaveChanged($candidate_paths, $revision) {
+        $changedPaths = array();
+        foreach ($candidate_paths as $path) {
+            if ($this->git_exec->hasChangedSince($path, $revision)) {
+                $changedPaths[] = $path;
+            }
+        }
+        return $changedPaths;
+    }
 }
 
 class VersionIncrementFilter {
@@ -104,6 +80,19 @@ class VersionIncrementFilter {
     
     public function __construct($git_exec) {
         $this->git_exec = $git_exec;
+    }
+
+    public function keepPathsThatHaventBeenIncremented($changed_paths, $old_revision, $new_revision) {
+        $non_incremented_paths = array();
+        foreach ($changed_paths as $path) {
+            $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $old_revision);
+            $currentRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $new_revision);
+            echo("$path : old revision $oldRevisionFileContent new revision $currentRevisionFileContent".PHP_EOL);
+            if (version_compare($oldRevisionFileContent, $currentRevisionFileContent, '>=')) {
+                $non_incremented_paths[] = $path;
+            }
+        }
+        return $non_incremented_paths;
     }
 }
 ?>
