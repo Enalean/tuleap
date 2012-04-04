@@ -23,6 +23,7 @@ require_once 'CheckReleaseGit.class.php';
 require_once 'GitExec.class.php';
 
 Mock::generate('GitExec');
+Mock::generate('ChangeDetector');
 class GitTagFinderTest extends TuleapTestCase {
     
     public function itFindsTheGreatestVersionNumberFromTheTags() {
@@ -89,7 +90,6 @@ class GitChangeDetectorTest extends TuleapTestCase {
 class VersionIncrementFilterTest extends TuleapTestCase {
 
     public function itFiltersPathsThatHaveBeenIncremented() {
-        Mock::generate('ChangeDetector');
 
         $last_release_tag = 'refs/tags/4.0.29';
         $current_version  = 'HEAD';
@@ -104,7 +104,7 @@ class VersionIncrementFilterTest extends TuleapTestCase {
         $change_detector = new MockChangeDetector();
         $change_detector->setReturnValue('findPathsThatChangedSince', $changed_paths);
         
-        $version_increment_filter = new VersionIncrementFilter($gitExec, $change_detector, $last_release_tag);
+        $version_increment_filter = new VersionIncrementFilter($gitExec, $last_release_tag, $change_detector);
         $actual_non_incremented_paths = $version_increment_filter->find($current_version);
         $this->assertEqual($not_incremented_paths, $actual_non_incremented_paths);
     }

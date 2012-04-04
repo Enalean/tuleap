@@ -21,8 +21,6 @@
 
 class GitTagFinder {
 
-    private $git_exec;
-    
     public function __construct($git_exec) {
         $this->git_exec = $git_exec;
     }
@@ -56,8 +54,6 @@ class GitTagFinder {
 
 class ChangeDetector {
     
-    private $git_exec;
-    
     public function __construct($git_exec, $candidate_paths) {
         $this->git_exec = $git_exec;
         $this->candidate_paths = $candidate_paths;
@@ -75,9 +71,8 @@ class ChangeDetector {
 }
 
 class VersionIncrementFilter {
-    private $git_exec;
     
-    public function __construct($git_exec, ChangeDetector $changed_paths_finder, $old_revision) {
+    public function __construct($git_exec, $old_revision, ChangeDetector $changed_paths_finder) {
         $this->git_exec = $git_exec;
         $this->change_detector = $changed_paths_finder;
         $this->old_revision = $old_revision;
