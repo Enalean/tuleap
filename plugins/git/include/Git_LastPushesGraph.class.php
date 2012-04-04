@@ -27,19 +27,35 @@ class Git_LastPushesGraph {
     
     public $displayChart;
     public $repoList;
+    public $weeksNumber;
+    protected $dates = array();
+    protected $weekNum = array();
+    protected $year = array();
     
     /**
      * Constructor.
      *
      * @return Void
      */
-    public function __construct($groupId) {
+    public function __construct($groupId, $weeksNumber) {
         $dao             = new GitDao();
 		$this->repoList  = $dao->getProjectRepositoryList($groupId);
 		$this->displayChart = false;
+		$this->weeksNumber = $weeksNumber;
     }
 
-    function prepareGraph($dates) {
+    public function setUpGraphEnvironnment() {
+        $week            = 7 * 24 * 3600;
+        $today           = $_SERVER['REQUEST_TIME'];
+        $start_of_period = strtotime("-$this->weeksNumber weeks");
+        for ($i = $start_of_period ; $i <= $today ; $i += $week) {
+            $this->dates[]   = date('M d', $i);
+            $this->weekNum[]   = intval(date('W', $i));
+            $this->year[]   = intval(date('Y', $i));
+        }
+    }
+    
+    function prepareGraph() {
         $nb_repo = count($this->repoList);
         $graph   = new Chart(500, 300+16*$nb_repo);
         $graph->SetScale('textlin');
@@ -49,7 +65,7 @@ class Git_LastPushesGraph {
         $graph->title->SetFont(FF_FONT2, FS_BOLD);
         $graph->xaxis->SetLabelMargin(30);
         $graph->xaxis->SetLabelAlign('right', 'center');
-        $graph->xaxis->SetTickLabels($dates);
+        $graph->xaxis->SetTickLabels($this->dates);
         $graph->yaxis->SetPos('min');
         $graph->yaxis->SetTitle("Pushes", 'center');
         $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
@@ -61,17 +77,17 @@ class Git_LastPushesGraph {
         return $graph;
     }
 
-    function displayRepositoryPushesByWeek($repoList, $w, $year, $weekNum, $nb_weeks) {
+    function displayRepositoryPushesByWeek() {
         $nb_repo = count($this->repoList);
         $colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
         $nb_colors = count($colors);
         $i         = 0;
         $bplot     = array();
-        foreach ($repoList as $repository) {
+        foreach ($this->repoList as $repository) {
             $pushes = array();
             $gitLogDao = new Git_LogDao();
-            foreach ($weekNum as $key => $w) {
-                $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $year[$key]);
+            foreach ($this->weekNum as $key => $w) {
+                $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
                 if ($res && !$res->isError()) {
                     if ($res->valid()) {
                         $row          = $res->current();
@@ -82,7 +98,7 @@ class Git_LastPushesGraph {
                         }
                     }
                 }
-            $pushes = array_pad($pushes, $nb_weeks, 0);
+            $pushes = array_pad($pushes, $this->weeksNumber, 0);
             }    
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);

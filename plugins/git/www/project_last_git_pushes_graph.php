@@ -36,26 +36,10 @@ if ($request->valid($vDuration)) {
 } else {
     header('Location: '.get_server_url());
 }
-$imageRenderer = new Git_LastPushesGraph($groupId);
-
-$repoList = $imageRenderer->repoList;
-
-$day             = 24 * 3600;
-$week            = 7 * $day;
-$today           = $_SERVER['REQUEST_TIME'];
-$start_of_period = strtotime("-$nb_weeks weeks");
-
-$dates   = array();
-$year    = array();
-$weekNum = array();
-for ($i = $start_of_period ; $i <= $today ; $i += $week) {
-    $dates[]   = date('M d', $i);
-    $weekNum[] = intval(date('W', $i));
-    $year[]    = intval(date('Y', $i));
-}
-
-$graph = $imageRenderer->prepareGraph($dates);
-$bplot = $imageRenderer->displayRepositoryPushesByWeek($repoList, $w, $year, $weekNum, $nb_weeks);
+$imageRenderer = new Git_LastPushesGraph($groupId, $nb_weeks);
+$imageRenderer->setUpGraphEnvironnment();
+$graph = $imageRenderer->prepareGraph();
+$bplot = $imageRenderer->displayRepositoryPushesByWeek();
 if ($imageRenderer->displayChart) {
     $imageRenderer->displayAccumulatedGraph($bplot, $graph);
 } else {
