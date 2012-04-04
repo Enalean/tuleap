@@ -8,12 +8,14 @@ var TreeTable = (function(treeTableId) {
 		
 		load : function() {
 			this.root = $(this.rootId);
+			this.collapseAll();
 			function _eventOnNode(event) {
 				this.toggleCollapse(Event.element(event).up('TR'));
 				Event.stop(event);
 			}
 			$A(this.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode.bind(this), this);
 			$A(this.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode.bind(this), this);
+			this.expandAll();
 		},
 		
 		isCollapsed: function(TRElement) {
@@ -88,11 +90,9 @@ var TreeTable = (function(treeTableId) {
 					TRHeight+="px";
 				}
 				nodeChild.hide();
-	//			new Effect.Fade(nodeChild,{'duration': 0.25});
 				var children = this.getChildren(TRElement);
 				children.each(function(child) {
 					this.hide(child);
-			//		new Effect.Fade(TRElement,{'duration': 0.25});
 				}, this);
 				this.expandImg(TRElement);
 				TRElement.setStyle({height: TRHeight});
@@ -104,7 +104,6 @@ var TreeTable = (function(treeTableId) {
 			var nodeChild = this.getNodeChild(TRElement);
 			if (nodeChild) {
 				nodeChild.show();
-	//			new Effect.Appear(nodeChild[0],{'duration': 0.25});
 				this.getChildren(TRElement).each(this.show, this);
 				this.collapseImg(TRElement);
 			}
@@ -114,13 +113,11 @@ var TreeTable = (function(treeTableId) {
 		hide: function(TRElement) {
 			this.collapse(TRElement);
 			TRElement.hide();
-	//		new Effect.Fade(TRElement,{'duration': 0.25});
 		},
 		
 		show: function(TRElement) {
 			TRElement.show();
 			TRElement.setStyle({whiteSpace:'nowrap'});
-	//		new Effect.Appear(TRElement,{'duration': 0.25});
 		},
 		
 		getChildren: function(TRElement) {
@@ -141,6 +138,11 @@ var TreeTable = (function(treeTableId) {
 		
 		collapseAll: function() {
 			this.root.getElementsBySelector('TR').each(this.collapse, this);
+			return this;
+		},
+		
+		expandAll: function() {
+			this.root.getElementsBySelector('TR').each(this.expand, this);
 			return this;
 		}
 	});

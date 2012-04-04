@@ -993,6 +993,10 @@ ul.plugin_tracker_my_artifacts_list {
 .tree-view, .tree-view tr, .tree-view td, .tree-view tbody {
     overflow:auto;
     vertical-align:top;
+    border:0px;
+    margin:0px;
+    padding-left:2px;
+    padding-right:2px;
     border-collapse:collapse;
     zoom:1;
 }
