@@ -24,17 +24,19 @@ function getSystemOutput($cmd) {
     return $result;
 }
 
+function getCandidatePaths() {
+    echo "Please check documentation/cli and documentation/user_guide manually!!".PHP_EOL;
+    $plugins = getSystemOutput('find plugins -type d -depth 1');
+    $themes = getSystemOutput('find src/www/themes -type d -depth 1 ! -path *common');
+    $other_paths = array('cli', 'src/www/soap');
+    return array_merge($other_paths, $plugins, $themes);
+}
+
 require_once 'CheckReleaseGit.class.php';
 require_once 'GitExec.class.php';
 
-
-echo "Please check documentation/cli and documentation/user_guide manually!!".PHP_EOL;
-$plugins = getSystemOutput('find plugins -type d -depth 1');
-$themes = getSystemOutput('find src/www/themes -type d -depth 1 ! -path *common');
-$other_paths = array('cli', 'src/www/soap');
-$candidate_paths = array_merge($other_paths, $plugins, $themes);
-
 $new_revision = 'HEAD';
+$candidate_paths = getCandidatePaths();
 
 $tagFinder = new GitTagFinder(new GitExec());
 $maxVersion = $tagFinder->getMaxVersionFrom('origin');
