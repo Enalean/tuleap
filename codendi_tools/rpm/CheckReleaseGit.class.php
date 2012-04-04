@@ -37,6 +37,9 @@ class CheckReleaseGit {
     public function max($v1, $v2) {
         return version_compare($v1, $v2, '>') ? $v1 : $v2;
     }
+    
+    //diff : git diff --quiet refs/???/maxversion -- path
+    //if it changed then path/VERSION must have changed to a greater version from (rpms or from VERSION file content)  
 }
 
 ?>

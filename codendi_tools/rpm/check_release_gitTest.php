@@ -39,5 +39,14 @@ e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $version_list);
     }
     
+    public function itFindsOnlyChangedPaths() {
+        $gitExec = new MockGitExec();
+        $gitExec->setReturnValue('hasChanged', true, array('documentation/cli', '4.0.29'));
+        $gitExec->setReturnValue('hasChanged', false, array('plugins/tracker', '4.0.29'));
+        
+        $release_checker = new CheckReleaseGit($gitExec);
+        $this->assertEqual(array('plugins/tracker'), $release_checker->keepChangedPaths($candidate_paths, '4.0.29'));
+    }
+    
 }
 ?>
