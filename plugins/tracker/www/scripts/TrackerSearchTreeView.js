@@ -8,15 +8,12 @@ var TreeTable = (function(treeTableId) {
 		
 		load : function() {
 			this.root = $(this.rootId);
-			this.root.hide();
 			function _eventOnNode(event) {
 				this.toggleCollapse(Event.element(event).up('TR'));
 				Event.stop(event);
 			}
 			$A(this.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode.bind(this), this);
 			$A(this.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode.bind(this), this);
-			this.collapseAll();
-		    new Effect.Appear(this.root,{'queue':'end', 'duration': 0.5});
 		},
 		
 		isCollapsed: function(TRElement) {
