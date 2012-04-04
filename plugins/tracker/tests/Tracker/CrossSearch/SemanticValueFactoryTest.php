@@ -19,87 +19,10 @@
  */
 
 require_once dirname(__FILE__).'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
-
-Mock::generate('Tracker');
-Mock::generate('Tracker_Artifact');
-Mock::generate('Tracker_ArtifactFactory');
-Mock::generate('Tracker_Semantic_Title');
-Mock::generate('Tracker_Semantic_TitleFactory');
-Mock::generate('Tracker_Semantic_Status');
-Mock::generate('Tracker_Semantic_StatusFactory');
-
-class MockArtifactBuilder {
-    public function __construct() {
-        $this->id       = 123;
-        $this->tracker  = new MockTracker();
-        $this->artifact = new MockTracker_Artifact();
-    }
-    
-    public function build() {
-        $this->artifact->setReturnValue('getId', $this->id);
-        $this->artifact->setReturnValue('getTracker', $this->tracker);
-        
-        return $this->artifact;
-    }
-}
-
-class MockArtifactFactoryBuilder {
-    public function __construct() {
-        $this->factory = new MockTracker_ArtifactFactory();
-    }
-    
-    public function withArtifact($artifact) {
-        $this->factory->setReturnValue('getArtifactById', $artifact, array($artifact->getId()));
-        return $this;
-    }
-    
-    public function build() {
-        return $this->factory;
-    }
-}
-
-class MockSemanticTitleFactoryBuilder {
-    public function __construct() {
-        $this->factory = new MockTracker_Semantic_TitleFactory();
-    }
-    
-    public function withNoFieldForTracker($tracker) {
-        $semantic_title = new MockTracker_Semantic_Status();
-        
-        $semantic_title->setReturnValue('getField', null);
-        $this->factory->setReturnValue('getByTracker', $semantic_title, array($tracker));
-        
-        return $this;
-    }
-    
-    public function build() {
-        return $this->factory;
-    }
-}
-
-class MockSemanticStatusFactoryBuilder {
-    public function __construct() {
-        $this->factory = new MockTracker_Semantic_StatusFactory();
-    }
-    
-    public function withNoFieldForTracker($tracker) {
-        $semantic_status = new MockTracker_Semantic_Status();
-        
-        $semantic_status->setReturnValue('getField', null);
-        $this->factory->setReturnValue('getByTracker', $semantic_status, array($tracker));
-        
-        return $this;
-    }
-    
-    public function build() {
-        return $this->factory;
-    }
-}
-
-function aMockArtifact()              { return new MockArtifactBuilder(); }
-function aMockArtifactFactory()       { return new MockArtifactFactoryBuilder(); }
-function aMockSemanticTitleFactory()  { return new MockSemanticTitleFactoryBuilder(); }
-function aMockSemanticStatusFactory() { return new MockSemanticStatusFactoryBuilder(); }
+require_once dirname(__FILE__).'/../../builders/aMockArtifact.php';
+require_once dirname(__FILE__).'/../../builders/aMockArtifactFactory.php';
+require_once dirname(__FILE__).'/../../builders/aMockSemanticTitleFactory.php';
+require_once dirname(__FILE__).'/../../builders/aMockSemanticStatusFactory.php';
 
 class Tracker_CrossSearch_SemanticValueFactory_NoSemanticTitleTest extends TuleapTestCase {
     public function itReturnsAnEmptyTitle() {
