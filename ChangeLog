@@ -1,7 +1,7 @@
 Version 5.0 (Not released yet)
    == Plugins ==
-   * AgileDashoard 0.7.1
-   * Tracker 5.4.8
+   * AgileDashoard 0.8
+   * Tracker 5.4.9
 
    == Development ==
    * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:

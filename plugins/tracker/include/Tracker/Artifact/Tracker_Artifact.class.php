@@ -648,6 +648,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->display($tracker_manager, $request, $current_user);
                 }
                 break;
+            case 'unassociate-artifact-to':
+                $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+                $linked_artifact_id = $request->get('linked-artifact-id');
+                if (count($artlink_fields)) {
+                    $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+                    $GLOBALS['Response']->sendStatusCode(400);
+                }
+                break;
             case 'associate-artifact-to':
                 $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
                 $linked_artifact_id = $request->get('linked-artifact-id');
@@ -1179,6 +1189,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $field = $artifact_link_fields[0];
         }
         return $field;
+    }
+
+    private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
+        $comment       = '';
+        $email         = '';
+        $artlink_field = $artlink_fields[0];
+        $fields_data   = array();
+        $fields_data[$artlink_field->getId()]['new_values'] = '';
+        $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
+        $this->createNewChangeset($fields_data, $comment, $current_user, $email);
     }
 }
 

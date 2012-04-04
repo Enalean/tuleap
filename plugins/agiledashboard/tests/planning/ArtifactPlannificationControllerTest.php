@@ -61,11 +61,14 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itDisplaysTheArtifactTitleAndId() {
-        $id = 987;
-        $title = "screen hangs with macos and some escapable characters #<";
+        $id             = 987;
+        $title          = "screen hangs with macos and some escapable characters #<";
+        $expected_title = Codendi_HTMLPurifier::instance()->purify($title);
+
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
+
         $this->assertPattern("/art-$id/", $content);
-        $this->assertPattern("/$title/", $content);
+        $this->assertPattern("/$expected_title/", $content);
     }
     
     public function itDisplaysTheNameOfThePlanning() {
@@ -178,6 +181,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('getTitle', $title);
         $artifact->setReturnValue('fetchTitle', "#$id $title");
         $artifact->setReturnValue('getId', $id);
+        $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
         $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
         return $artifact;
     }
@@ -187,16 +191,19 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     private function GivenAnArtifactFactory(array $artifacts = array()) {
+        $open_artifacts = array(
+            $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
+            $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
+        );
+
         $factory  = new MockTracker_ArtifactFactory();
         foreach ($artifacts as $artifact) {
             $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
+            $open_artifacts[] = $artifact;
         }
         $factory->setReturnValue(
             'getOpenArtifactsByTrackerId', 
-            array(
-                $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
-                $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
-                ), 
+            $open_artifacts, 
             array($this->planning->getPlanningTrackerId()));
         return $factory;
     }

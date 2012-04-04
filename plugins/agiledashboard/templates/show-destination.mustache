@@ -1,5 +1,6 @@
-<div id="art-{{destination_id}}" class="release_planner {{getDestinationDroppableClass}}">
-    {{{destination_title}}}
+<div id="art-{{destination_id}}" class="release_planner card {{getDestinationDroppableClass}}">
+    <div class="card-link">{{{destination_link}}}</div>
+    {{> select-destination}}
     <p class="help">{{destinationHelp}}</p>
     {{^canDrop}}
     {{{errorCantDrop}}}
@@ -9,13 +10,9 @@
         {{^getLinkedItems}}
         No items yet
         {{/getLinkedItems}}
-        <ul>
-            {{#getLinkedItems}}
-            <li>
-                {{getTitle}}
-            </li>
-            {{/getLinkedItems}}
-        </ul>
+        {{#getLinkedItems}}
+            {{> cards}}
+        {{/getLinkedItems}}
     </div>
     {{/canDrop}}
 </div>

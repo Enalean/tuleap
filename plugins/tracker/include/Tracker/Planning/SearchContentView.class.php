@@ -41,6 +41,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         if ($artifact) {
             $row['title'] = $artifact->getTitle();
             $row['link']  = $artifact->fetchDirectLinkToArtifact();
+            $row['class'] = 'planning-draggable-toplan';
             $node->setData($row);
         }
         $this->injectArtifactInChildren($node);

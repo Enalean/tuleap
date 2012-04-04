@@ -2,8 +2,8 @@
     display: none;
 }
 
-.agiledashboard .product_backlog {
-    float: left;
+.planning-backlog > table {
+    width: 100%;
 }
 
 .agiledashboard .release_planner {
@@ -62,6 +62,11 @@
     text-align:right;
 }
 
+.release_planner {
+    background: white;
+}
+
+.planning-backlog-hover .tracker_report_renderer,
 .planning-droppable-hover {
     background: #fcfcfc;
     -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
@@ -69,3 +74,8 @@
     box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
 }
 
+.planning-artifact-chooser {
+    padding: 0.5em 1em;
+}
+.planning-artifact-chooser > option {
+}
