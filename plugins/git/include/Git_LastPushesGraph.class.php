@@ -22,41 +22,50 @@ require_once 'pre.php';
 require_once 'common/chart/Chart.class.php';
 
 class Git_LastPushesGraph {
-  
-    function prepareGraph($nb_repo, $dates){
-		$graph   = new Chart(500, 300+16*$nb_repo);
-		$graph->SetScale('textlin');
-
-		$graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
-		$graph->SetMarginColor('white');
-		$graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
-		$graph->title->SetFont(FF_FONT2, FS_BOLD);
-		$graph->xaxis->SetLabelMargin(30);
-		$graph->xaxis->SetLabelAlign('right', 'center');
-		$graph->xaxis->SetTickLabels($dates);
-
-		$graph->yaxis->SetPos('min');
-		$graph->yaxis->SetTitle("Pushes", 'center');
-
-		$graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
-		$graph->yaxis->title->SetAngle(90);
-		$graph->yaxis->title->Align('center', 'top');
-		$graph->yaxis->SetTitleMargin(30);
-
-		$graph->yaxis->SetLabelAlign('center', 'top');
-		$graph->legend->Pos(0.1, 0.98, 'right', 'bottom');
-		return $graph;
-    }
     
-    function displayAccumulatedGraph($bplot, $graph){
-    	// Create the accumulated bar plot
-    	$abplot = new AccBarPlot($bplot);
-    	$abplot->SetShadow();
-    	$abplot->SetAbsWidth(10);
-    	$graph->Add($abplot);
-    	$graph->Stroke();
+    public $displayChart;
+
+    /**
+     * Constructor.
+     *
+     * @return Void
+     */
+    public function __construct() {
+        if (empty($this->duration)) {
+            $this->displayChart = false;
+        }
     }
-    
+
+    function prepareGraph($nb_repo, $dates) {
+        $graph   = new Chart(500, 300+16*$nb_repo);
+        $graph->SetScale('textlin');
+        $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
+        $graph->SetMarginColor('white');
+        $graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
+        $graph->title->SetFont(FF_FONT2, FS_BOLD);
+        $graph->xaxis->SetLabelMargin(30);
+        $graph->xaxis->SetLabelAlign('right', 'center');
+        $graph->xaxis->SetTickLabels($dates);
+        $graph->yaxis->SetPos('min');
+        $graph->yaxis->SetTitle("Pushes", 'center');
+        $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
+        $graph->yaxis->title->SetAngle(90);
+        $graph->yaxis->title->Align('center', 'top');
+        $graph->yaxis->SetTitleMargin(30);
+        $graph->yaxis->SetLabelAlign('center', 'top');
+        $graph->legend->Pos(0.1, 0.98, 'right', 'bottom');
+        return $graph;
+    }
+
+    function displayAccumulatedGraph($bplot, $graph) {
+        // Create the accumulated bar plot
+        $abplot = new AccBarPlot($bplot);
+        $abplot->SetShadow();
+        $abplot->SetAbsWidth(10);
+        $graph->Add($abplot);
+        $graph->Stroke();
+    }
+
     function displayError($msg) {
         //ttf from jpgraph
         $ttf = new TTF();
@@ -87,3 +96,4 @@ class Git_LastPushesGraph {
         }
     }       
 }
+?>

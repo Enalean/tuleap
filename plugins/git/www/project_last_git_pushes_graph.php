@@ -93,7 +93,6 @@ if ($displayChart) {
     //$pngErrorMessage = new Git_LastPushesGraph();
     $msg = "There is no logged pushes in the last $nb_weeks weeks";
     $imageRenderer->displayError($msg);
-
 }
 
 ?>
