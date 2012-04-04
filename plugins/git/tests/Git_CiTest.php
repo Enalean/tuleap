@@ -55,6 +55,7 @@ class Git_CiTest extends UnitTestCase {
         $gitCi = new Git_CiTestVersion();
         $gitCi->setReturnValue('getProjectManager', $pm);
         $this->assertEqual(null, $gitCi->retrieveTriggers(array('group_id' => 1)));
+        $project->expectOnce('usesService');
     }
 
     function testRetrieveTriggersWithJobId() {
@@ -96,6 +97,9 @@ class Git_CiTest extends UnitTestCase {
                         'add_form'      => $addForm,
                         'edit_form'     => $editForm);
         $this->assertEqual($result, $gitCi->retrieveTriggers(array('group_id' => 1, 'job_id' => 1)));
+        $dao->expectOnce('retrieveTrigger');
+        $dao->expectNever('retrieveTriggers');
+        $project->expectOnce('usesService');
     }
 
     function testRetrieveTriggersNoJobId() {
@@ -136,6 +140,9 @@ class Git_CiTest extends UnitTestCase {
                         'add_form'      => $addForm,
                         'edit_form'     => $editForm);
         $this->assertEqual($result, $gitCi->retrieveTriggers(array('group_id' => 1)));
+        $dao->expectNever('retrieveTrigger');
+        $dao->expectOnce('retrieveTriggers');
+        $project->expectOnce('usesService');
     }
 
 }
