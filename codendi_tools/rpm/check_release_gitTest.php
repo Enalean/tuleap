@@ -81,7 +81,7 @@ class GitChangeDetectorTest extends TuleapTestCase {
         
         $candidate_paths = array('documentation/cli', 'plugins/tracker');
         
-        $release_checker = new GitChangeDetector($gitExec, $candidate_paths);
+        $release_checker = new ChangeDetector($gitExec, $candidate_paths);
         $this->assertEqual(array('documentation/cli'), $release_checker->findPathsThatChangedSince($revision));
     }
 }
@@ -89,7 +89,7 @@ class GitChangeDetectorTest extends TuleapTestCase {
 class VersionIncrementFilterTest extends TuleapTestCase {
 
     public function itFiltersPathsThatHaveBeenIncremented() {
-        Mock::generate('GitChangeDetector');
+        Mock::generate('ChangeDetector');
 
         $last_release_tag = 'refs/tags/4.0.29';
         $current_version  = 'HEAD';
@@ -101,7 +101,7 @@ class VersionIncrementFilterTest extends TuleapTestCase {
         $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman/VERSION', $last_release_tag));
         $gitExec->setReturnValue('fileContent', '2.3', array('plugins/mailman/VERSION', $current_version));
         
-        $change_detector = new MockGitChangeDetector();
+        $change_detector = new MockChangeDetector();
         $change_detector->setReturnValue('findPathsThatChangedSince', $changed_paths);
         
         $version_increment_filter = new VersionIncrementFilter($gitExec, $change_detector, $last_release_tag);
