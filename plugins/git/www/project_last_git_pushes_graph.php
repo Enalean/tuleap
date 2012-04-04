@@ -19,8 +19,8 @@
  */
 
 require_once 'pre.php';
-require_once 'common/chart/Chart.class.php';
 require_once dirname(__FILE__).'/../include/GitDao.class.php';
+require_once dirname(__FILE__).'/../include/Git_LastPushesGraph.class.php';
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
@@ -37,6 +37,7 @@ if ($request->valid($vDuration)) {
 } else {
     header('Location: '.get_server_url());
 }
+$imageRenderer = new Git_LastPushesGraph();
 
 $dao             = new GitDao();
 $repoList        = $dao->getProjectRepositoryList($groupId);
@@ -54,30 +55,7 @@ for ($i = $start_of_period ; $i <= $today ; $i += $week) {
     $year[]    = intval(date('Y', $i));
 }
 $nb_repo = count($repoList);
-$graph   = new Chart(500, 300+16*$nb_repo);
-$graph->SetScale('textlin');
-
-$graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
-$graph->SetMarginColor('white');
-$graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
-$graph->title->SetFont(FF_FONT2, FS_BOLD);
-
-$graph->xaxis->SetLabelMargin(30);
-$graph->xaxis->SetLabelAlign('right', 'center');
-$graph->xaxis->SetTickLabels($dates);
-
-$graph->yaxis->SetPos('min');
-$graph->yaxis->SetTitle("Pushes", 'center');
-
-$graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
-$graph->yaxis->title->SetAngle(90);
-$graph->yaxis->title->Align('center', 'top');
-$graph->yaxis->SetTitleMargin(30);
-
-$graph->yaxis->SetLabelAlign('center', 'top');
-$graph->legend->Pos(0.1, 0.98, 'right', 'bottom');
-
-$nb_repo   = count($repoList);
+$graph = $imageRenderer->prepareGraph($nb_repo, $dates);
 $colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
 $nb_colors = count($colors);
 $i         = 0;
@@ -110,44 +88,12 @@ foreach ($repoList as $repository) {
 }
 
 if ($displayChart) {
-    // Create the accumulated bar plot
-    $abplot = new AccBarPlot($bplot);
-    $abplot->SetShadow();
-    $abplot->SetAbsWidth(10);
-    $graph->Add($abplot);
-    $graph->Stroke();
+    $imageRenderer->displayAccumulatedGraph($bplot, $graph);
 } else {
-    //If there is no git stats yet, generate a message as an image 
-    //(plz remember that we must return some img data)
-            
-    //ttf from jpgraph
-    $ttf = new TTF();
-    $ttf->SetUserFont(
-        'dejavu-lgc/DejaVuLGCSans.ttf',
-        'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
-        'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
-        'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-    );
-    //Calculate the baseline
-    // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
-    //this should be above baseline
-    $test2 = "H";
-    //some of these additional letters should go below it
-    $test3 = "Hjgqp";
-    //get the dimension for these two:
-    $box2  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
-    $box3  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
-    $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));            
-    $error = "There is no logged pushes in the last $nb_weeks weeks";
-    $bbox  = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $error);
-    if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-        $background_color = imagecolorallocate($im, 255, 255, 255);
-        $text_color       = imagecolorallocate($im, 64, 64, 64);
-        imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $error);
-        header("Content-type: image/png");
-        imagepng($im);
-        imagedestroy($im);
-    }
+    //$pngErrorMessage = new Git_LastPushesGraph();
+    $msg = "There is no logged pushes in the last $nb_weeks weeks";
+    $imageRenderer->displayError($msg);
+
 }
 
 ?>
