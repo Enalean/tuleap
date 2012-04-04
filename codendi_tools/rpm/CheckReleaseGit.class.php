@@ -21,9 +21,6 @@
 
 class GitTagFinder {
 
-    /**
-     * @var GitExec
-     */
     private $git_exec;
     
     public function __construct($git_exec) {
@@ -59,9 +56,6 @@ class GitTagFinder {
 
 class GitChangeDetector {
     
-    /**
-     * @var GitExec
-     */
     private $git_exec;
     
     public function __construct($git_exec, $candidate_paths) {
@@ -81,9 +75,6 @@ class GitChangeDetector {
 }
 
 class VersionIncrementFilter {
-    /**
-     * @var GitExec
-     */
     private $git_exec;
     
     public function __construct($git_exec, $changed_paths_finder, $old_revision) {
