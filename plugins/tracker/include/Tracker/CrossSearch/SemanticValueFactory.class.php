@@ -34,36 +34,54 @@
 
 require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
-require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_Status.class.php';
+require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_StatusFactory.class.php';
 
 class Tracker_CrossSearch_SemanticValueFactory {
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_Semantic_TitleFactory $semantic_title_factory) {
-        $this->artifact_factory       = $artifact_factory;
-        $this->semantic_title_factory = $semantic_title_factory;
+    
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    
+    /**
+     * @var Tracker_Semantic_TitleFactory
+     */
+    private $semantic_title_factory;
+    
+    /**
+     * @var Tracker_Semantic_StatusFactory
+     */
+    private $semantic_status_factory;
+    
+    public function __construct(Tracker_ArtifactFactory        $artifact_factory,
+                                Tracker_Semantic_TitleFactory  $semantic_title_factory,
+                                Tracker_Semantic_StatusFactory $semantic_status_factory) {
+        
+        $this->artifact_factory        = $artifact_factory;
+        $this->semantic_title_factory  = $semantic_title_factory;
+        $this->semantic_status_factory = $semantic_status_factory;
     }
     
     public function getTitle($artifact_id, $changeset_id) {
-        $artifact         = $this->artifact_factory->getArtifactById($artifact_id);
-        $changeset        = $artifact->getChangeset($changeset_id);
-        $tracker          = $artifact->getTracker();
-        $semantic         = $this->semantic_title_factory->getByTracker($tracker);
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        $tracker  = $artifact->getTracker();
+//        var_dump($tracker);
+        $semantic = $this->semantic_title_factory->getByTracker($tracker);
+        $field    = $semantic->getField();
         
-        if ($semantic == null) { return ''; }
+        if ($field == null) { return ''; }
         
-        $field            = $semantic->getField();
-        $value            = $changeset->getValue($field);
+        $changeset = $artifact->getChangeset($changeset_id);
+        $value     = $changeset->getValue($field);
         
         return $value->getText();
     }
     
     public function getStatus($artifact_id, $changeset_id) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $tracker          = $artifact_factory->getArtifactById($artifact_id)->getTracker();
-        $semantic         = Tracker_Semantic_Status::load($tracker);
-        
-        if ($semantic == null) { return ''; }
-        
-        $field = $semantic->getField();
+        $artifact         = $this->artifact_factory->getArtifactById($artifact_id);
+        $tracker          = $artifact->getTracker();
+        $semantic         = $this->semantic_status_factory->getByTracker($tracker);
+        $field            = $semantic->getField();
         
         if ($field == null) { return ''; }
         

@@ -40,6 +40,10 @@ class Tracker_Semantic_StatusFactory {
         return self::$instance;
     }
     
+    public function getByTracker($tracker) {
+        return Tracker_Semantic_Status::load($tracker);
+    }
+    
     /**
      * Creates a Tracker_Semantic_Status Object
      * 
