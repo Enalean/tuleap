@@ -22,7 +22,11 @@ class CheckReleaseGit {
     //put your code here
     public function getVersionList($ls_remote_output) {
         $lines = explode('\n', $ls_remote_output);
-        return $lines;
+        foreach ($lines as $line) {
+            $parts = explode('/', $line);
+            $versions[] = $parts[2];
+        }
+        return $versions;
     }
 }
 
