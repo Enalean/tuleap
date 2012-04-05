@@ -31,12 +31,18 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
         $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment(array(/*5254, 5255, 5256*/));
         
+        $artifact_link_columns = array(/*9309, 9330*/);
+        
+        $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_columns);
+        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_columns);
+        
         $sql = "
             SELECT artifact.id,
                    artifact.last_changeset_id,
                    CVT.value                      AS title,
                    artifact.tracker_id,
                    GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
+                   $artifact_link_columns_select
                    
             FROM       tracker_artifact  AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
@@ -65,6 +71,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             
             ) ON CV2.changeset_id = artifact.last_changeset_id
 
+            $artifact_link_columns_join
+        
             WHERE artifact.use_artifact_permissions = 0
             AND   artifact.tracker_id IN ($tracker_ids)
             $title_constraint
@@ -79,7 +87,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             GROUP BY artifact.id
             ORDER BY title
         ";
-        //echo $sql;
+        //echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
     
@@ -117,9 +125,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     protected function getTitleSqlFragment($title) {
-        $title = $this->da->quoteSmart($title);
+        $title = trim($title);
         if (! $title) { return ''; }
         
+        $title = $this->da->quoteSmart($title);
         return "AND CVT.value LIKE CONCAT('%', $title, '%')";
     }
     
@@ -204,5 +213,110 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             return '';
         }
     }
-}    
+    
+    /**
+     * Return the columns to display artifact link titles
+     * 
+     * @param array $field_ids
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkSelects(array $field_ids) {
+        $sql = '';
+        foreach ($field_ids as $field_id) {
+            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS '.$this->getArtifactLinkColumnTitle($field_id);
+        }
+        return $sql;
+    }
+    
+    /**
+     * Return the table name that holds artifact link title for a given field
+     * 
+     * @param Integer $field_id
+     * 
+     * @return String
+     */
+    public function getArtifactLinkColumnTitle($field_id) {
+        return 'AL_COL_VAL_'.$field_id;
+    }
+
+    /**
+     * Return the join statements to retrieve artifact link titles
+     * 
+     * @param array $field_ids
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkColumns(array $field_ids) {
+        $sql = '';
+        foreach ($field_ids as $field_id) {
+            $sql .= $this->getArtifactLinkColumn($field_id);
+        }
+        return $sql;
+    }
+    
+    /**
+     * Return the needed joins to retrieve artifact links title
+     * 
+     * /!\ WARNING /!\ This code doesn't manage multiple assignements.
+     * If a story was linked in 2 sprints, only one sprint is returned by code
+     * below.
+     * 
+     * @param Integer $field_id
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkColumn($field_id) {
+        $field_id = intval($field_id);
+        
+        $tracker_artifact_title        = 'AL_COL_'.$field_id;
+        $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
+        $al_tracker_changeset_value_al = 'AL_COL_CVAL_'.$field_id;
+        
+        $title_sql = $this->getArtifactTitleSqlFragment("$tracker_artifact_title.last_changeset_id", $field_id);
+        
+        $sql = "LEFT JOIN (
+                    tracker_artifact AS $tracker_artifact_title
+
+                    $title_sql
+
+                INNER JOIN tracker_changeset_value  AS $al_tracker_changeset_value   ON ($tracker_artifact_title.last_changeset_id = $al_tracker_changeset_value.changeset_id AND $al_tracker_changeset_value.field_id IN ($field_id))
+                INNER JOIN tracker_changeset_value_artifactlink AS $al_tracker_changeset_value_al ON ($al_tracker_changeset_value.id = $al_tracker_changeset_value_al.changeset_value_id)
+                ) ON ($al_tracker_changeset_value_al.artifact_id = artifact.id)";
+        return $sql;
+    }
+    
+    /**
+     * Given a table id, return the table alias that holds the title value
+     * 
+     * @param String $table_id
+     * 
+     * @return String
+     */
+    protected function getArtifactTitleValueTableAlias($table_id) {
+        return 'CVT_'.$table_id;
+    }
+    
+    /**
+     * Returns joins needed to retrieve title of an artifact
+     * 
+     * @param String $last_changeset_reference The table field to join with
+     * @param String $table_id                 An identifier to be appened to tables to avoid naming clashes.
+     * 
+     * @return String
+     */
+    protected function getArtifactTitleSqlFragment($last_changeset_reference, $table_id) {
+        $tracker_changeset_value_title = 'CV_'.$table_id;
+        $tracker_semantic_title        = 'ST_'.$table_id;
+        $tracker_changeset_value_text  = $this->getArtifactTitleValueTableAlias($table_id);
+        
+        $sql = "LEFT JOIN (
+                        tracker_changeset_value      AS $tracker_changeset_value_title
+                        INNER JOIN tracker_semantic_title       AS $tracker_semantic_title  ON ($tracker_changeset_value_title.field_id = $tracker_semantic_title.field_id)
+                        INNER JOIN tracker_changeset_value_text AS $tracker_changeset_value_text ON ($tracker_changeset_value_title.id       = $tracker_changeset_value_text.changeset_value_id)
+                    ) ON ($tracker_changeset_value_title.changeset_id = $last_changeset_reference)";
+        return $sql;
+    }
+    
+}
 ?>
