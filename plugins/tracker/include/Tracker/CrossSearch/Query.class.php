@@ -23,7 +23,7 @@
  * Includes both semantic field criteria (e.g. title, status) and shared field
  * ones.
  */
-class Tracker_CrossSearch_Criteria {
+class Tracker_CrossSearch_Query {
     /**
      * @var array of array
      */

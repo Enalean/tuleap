@@ -22,7 +22,7 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
-require_once 'Criteria.class.php';
+require_once 'Query.class.php';
 require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
 require_once dirname(__FILE__) .'/../HomeNavPresenter.class.php';
 
@@ -64,7 +64,7 @@ class Tracker_CrossSearch_SearchController {
                 $request_criteria = array();
             }
             
-            $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria);
+            $cross_search_criteria = new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria);
             $view                  = $this->view_builder->buildView($project, $cross_search_criteria);
             
             $view->render();

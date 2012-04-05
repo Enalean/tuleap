@@ -19,7 +19,7 @@
  */
 
 require_once 'SemanticTitleReportField.class.php';
-require_once 'Criteria.class.php';
+require_once 'Query.class.php';
 require_once 'SemanticStatusReportField.class.php';
 require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
@@ -60,7 +60,7 @@ class Tracker_CrossSearch_ViewBuilder {
     /**
      * @return Tracker_CrossSearch_SearchView 
      */
-    public function buildView(Project $project, Tracker_CrossSearch_Criteria $request_criteria) {
+    public function buildView(Project $project, Tracker_CrossSearch_Query $request_criteria) {
         $service      = $this->getService($project);
         
         $criteria     = $this->criteria_builder->getCriteria($project, $this->getReport(), $request_criteria);
@@ -74,7 +74,7 @@ class Tracker_CrossSearch_ViewBuilder {
     /**
      * @return type Tracker_CrossSearch_SearchContentView
      */
-    public function buildContentView(Project $project, Tracker_CrossSearch_Criteria $cross_search_criteria) {
+    public function buildContentView(Project $project, Tracker_CrossSearch_Query $cross_search_criteria) {
         $tracker_ids = $this->getTrackersIds($project, $this->tracker_factory);
         
         return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView',
@@ -84,7 +84,7 @@ class Tracker_CrossSearch_ViewBuilder {
                                              $tracker_ids);
     }
     
-    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Criteria $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
+    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
         $report    = $this->getReport();
         $criteria  = $this->criteria_builder->getCriteria($project, $report, $request_criteria);
         $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);

@@ -19,15 +19,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__). '/../../../include/Tracker/CrossSearch/Criteria.class.php';
+require_once dirname(__FILE__). '/../../../include/Tracker/CrossSearch/Query.class.php';
 
 class CriteriaTest extends TuleapTestCase {
     public function itCanBeInstantiatedWithoutSemanticCriteria() {
-        $criteria = new Tracker_CrossSearch_Criteria(array());
+        $criteria = new Tracker_CrossSearch_Query(array());
         $this->assertIdentical('open', $criteria->getStatus());
         $this->assertIdentical('', $criteria->getTitle());
 
-        $criteria = new Tracker_CrossSearch_Criteria(array(), array());
+        $criteria = new Tracker_CrossSearch_Query(array(), array());
         $this->assertIdentical('open', $criteria->getStatus());
         $this->assertIdentical('', $criteria->getTitle());
     }

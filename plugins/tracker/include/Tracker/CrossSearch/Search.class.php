@@ -60,11 +60,11 @@ class Tracker_CrossSearch_Search {
      * The artifacts tree matches the trackers hierarchy definition.
      * 
      * @param array                        $tracker_ids            The trackers to retrieve artifacts from.
-     * @param Tracker_CrossSearch_Criteria $criteria               The criteria that artifacts should match (e.g. title).
+     * @param Tracker_CrossSearch_Query $criteria               The criteria that artifacts should match (e.g. title).
      * @param array                        $excluded_artifact_ids  Some (optional) artifacts to exclude.
      * @return TreeNode
      */
-    public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Criteria $criteria, $excluded_artifact_ids = array()) {
+    public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Query $criteria, $excluded_artifact_ids = array()) {
         $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
         return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $criteria, $excluded_artifact_ids);
     }
@@ -72,7 +72,7 @@ class Tracker_CrossSearch_Search {
     /**
      * @deprecated
      */
-    public function getMatchingArtifacts(array $tracker_ids, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Criteria $criteria, $excluded_artifact_ids = array()) {
+    public function getMatchingArtifacts(array $tracker_ids, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Query $criteria, $excluded_artifact_ids = array()) {
         $shared_fields   = $this->shared_field_factory->getSharedFields($criteria->getSharedFields());
         $semantic_fields = $criteria->getSemanticCriteria();
         

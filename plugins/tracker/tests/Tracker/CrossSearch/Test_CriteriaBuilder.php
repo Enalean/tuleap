@@ -34,10 +34,10 @@ class Test_Tracker_CrossSearch_CriteriaBuilder {
     }
     
     /**
-     * @return \Tracker_CrossSearch_Criteria 
+     * @return \Tracker_CrossSearch_Query
      */
     public function build() {
-        return new Tracker_CrossSearch_Criteria($this->sharedFieldsCriteria, $this->semanticCriteria);
+        return new Tracker_CrossSearch_Query($this->sharedFieldsCriteria, $this->semanticCriteria);
     }
 
     /**

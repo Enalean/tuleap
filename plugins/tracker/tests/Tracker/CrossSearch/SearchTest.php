@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Search.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Criteria.class.php';
+require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Query.class.php';
 require_once 'Test_CriteriaBuilder.php';
 
 Mock::generate('Tracker_CrossSearch_SharedFieldFactory');
