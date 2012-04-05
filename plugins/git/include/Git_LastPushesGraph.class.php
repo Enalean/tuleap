@@ -44,6 +44,12 @@ class Git_LastPushesGraph {
 		$this->weeksNumber = $weeksNumber;
     }
 
+    /**
+     * Init some class properties according to 'weeks number' parameter 
+     * given in class constructors.
+     *
+     * @return Void
+     */
     public function setUpGraphEnvironnment() {
         $week            = 7 * 24 * 3600;
         $today           = $_SERVER['REQUEST_TIME'];
@@ -55,6 +61,11 @@ class Git_LastPushesGraph {
         }
     }
     
+    /**
+     * Manage graph axis
+     *
+     * @return Chart
+     */
     function prepareGraph() {
         $nb_repo = count($this->repoList);
         $graph   = new Chart(500, 300+16*$nb_repo);
@@ -77,6 +88,12 @@ class Git_LastPushesGraph {
         return $graph;
     }
 
+    /**
+     * Collect, into an array, logged git pushes matching project repositories for the given duration,
+     * then build a JpGraph barPlot object with retrived data.  
+     *
+     * @return BarPlot
+     */
     function displayRepositoryPushesByWeek() {
         $nb_repo = count($this->repoList);
         $colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
@@ -111,8 +128,15 @@ class Git_LastPushesGraph {
         return $bplot;
     }
 
+    /**
+     * Create a JpGraph accumulated barPlot chart 
+     *
+     * @param Array $bplot Array of JpGraph barPlot objects
+     * @param Chart $graph The output graph that will contains accumulated barPlots
+     *
+     * @return Void
+     */
     function displayAccumulatedGraph($bplot, $graph) {
-        // Create the accumulated bar plot
         $abplot = new AccBarPlot($bplot);
         $abplot->SetShadow();
         $abplot->SetAbsWidth(10);
@@ -120,6 +144,13 @@ class Git_LastPushesGraph {
         $graph->Stroke();
     }
 
+    /**
+     * Diplay error message as png image 
+     *
+     * @param String $msg Message to display
+     *
+     * @return Void
+     */
     function displayError($msg) {
         //ttf from jpgraph
         $ttf = new TTF();
