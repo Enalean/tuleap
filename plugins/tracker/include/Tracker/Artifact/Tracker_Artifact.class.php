@@ -340,13 +340,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Display the artifact
      * 
-     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The current user
+     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
+     * @param Codendi_Request                $request         The data coming from the user
+     * @param User                           $current_user    The current user
      *
      * @return void
      */
-    public function display(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
+    public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $tracker = $this->getTracker();
         $title = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
@@ -354,7 +354,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->id)
         );
-        $tracker->displayHeader($tracker_manager, $title, $breadcrumbs);
+        $tracker->displayHeader($layout, $title, $breadcrumbs);
         
         $current_user->addRecentElement($this);
         $from_aid = $request->get('from_aid');
@@ -398,7 +398,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         
         echo $html;
         
-        $tracker->displayFooter($tracker_manager);
+        $tracker->displayFooter($layout);
         exit();
     }
     
@@ -584,13 +584,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Process the artifact functions
      *
-     * @param Tracker_IDisplayTrackerLayout  $tracker_manager The tracker manager
-     * @param Codendi_Request $request         The data from the user
-     * @param User            $current_user    The current user
+     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
+     * @param Codendi_Request                $request         The data from the user
+     * @param User                           $current_user    The current user
      *
      * @return void
      */
-    public function process(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
@@ -645,7 +645,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     $GLOBALS['Response']->redirect($url_redirection);
                 } else {
-                    $this->display($tracker_manager, $request, $current_user);
+                    $this->display($layout, $request, $current_user);
                 }
                 break;
             case 'associate-artifact-to':
@@ -662,7 +662,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
                 } else {
-                    $this->display($tracker_manager, $request, $current_user);
+                    $this->display($layout, $request, $current_user);
                 }
                 break;
         }

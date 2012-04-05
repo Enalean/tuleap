@@ -225,8 +225,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return json_encode($json_values);
     }
     
-    public function process(Tracker_IDisplayTrackerLayout $tracker_manager, $request, $current_user) {
-        parent::process($tracker_manager, $request, $current_user);
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+        parent::process($layout, $request, $current_user);
         switch($request->get('func')) {
             case 'textboxlist':
                 if ($request->get('keyword')) {
