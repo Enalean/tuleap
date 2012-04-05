@@ -20,10 +20,9 @@
  */
 
 /**
- * Represents an object that can be considered the same purely based on its id, regardless of
- * other attributes. For instance an object retrieved from the database.
+ * An object that can return its ID
  */
-interface Entity {
+interface Tracker_FormElement_IHaveAnId {
     
     /**
      *  Get the id
