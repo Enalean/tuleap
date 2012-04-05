@@ -18,8 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Display the page header and footer for the current service.
+ */
 interface Tracker_IDisplayTrackerLayout {
+    
+    /**
+     * Display header for the current service
+     *
+     * @param Project $project    The project
+     * @param string  $title      The title for this page
+     * @param array   $breadcrumb The breadcrumbs for this page
+     * @param ?       $toolbar    The toolbar
+     *
+     * @return void
+     */
     public function displayHeader($project, $title, $breadcrumbs, $toolbar);
+    
+    /**
+     * Display footer for the current service.
+     *
+     * @param Project $project The project
+     */
     public function displayFooter($project);
 }
 ?>

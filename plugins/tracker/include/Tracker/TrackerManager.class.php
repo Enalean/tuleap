@@ -197,16 +197,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         );
     }
     
-    /**
-     * Display header for tracker service
-     *
-     * @param Project $project    The project
-     * @param string  $title      The title for this page
-     * @param array   $breadcrumb The breadcrumbs for this page
-     * @param ?       $toolbar    The toolbar
-     *
-     * @return void
-     */
     public function displayHeader($project, $title, $breadcrumbs, $toolbar) {
         if (count($breadcrumbs)) {
             $breadcrumbs = array_merge(
@@ -227,11 +217,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         }
     }
     
-    /**
-     * Display footer for tracker service
-     *
-     * @param Project $project The project
-     */
     public function displayFooter($project) {
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayFooter();
@@ -590,21 +575,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
     
-    /**
-     * Display a selectbox to switch to a tracker of:
-     *  + any projects the user is member of
-     *  + an additional project
-     *
-     * The additionnal project may be useful for example in the ArtifactLink selector,
-     * To make sure that the project of the main artifact is included.
-     *
-     * @param User    $user            the user
-     * @param string  $separator       the separator between the title and the selectbox (eg: '<br />' or ' ')
-     * @param Project $include_project the project to include in the selectbox (null if no one)
-     * @param Tracker $current_tracker the current tracker (default is null, aka no current tracker)
-     *
-     * @return string html
-     */
     public function fetchTrackerSwitcher(User $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';

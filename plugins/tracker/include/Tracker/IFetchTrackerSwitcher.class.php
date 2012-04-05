@@ -23,7 +23,29 @@ require_once 'common/user/User.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'Tracker.class.php';
 
+/**
+ * Render a tracker switching selectbox. Also display headers and footers
+ * See:
+ *  + Tracker_IDisplayTrackerLayout
+ *  + fetchTrackerSwitcher
+ */
 interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout {
+    
+    /**
+     * Display a selectbox to switch to a tracker of:
+     *  + any projects the user is member of
+     *  + an additional project
+     *
+     * The additionnal project may be useful for example in the ArtifactLink selector,
+     * To make sure that the project of the main artifact is included.
+     *
+     * @param User    $user            the user
+     * @param string  $separator       the separator between the title and the selectbox (eg: '<br />' or ' ')
+     * @param Project $include_project the project to include in the selectbox (null if no one)
+     * @param Tracker $current_tracker the current tracker (default is null, aka no current tracker)
+     *
+     * @return string html
+     */
     public function fetchTrackerSwitcher(User $user, $separator, Project $include_project = null, Tracker $current_tracker = null);
 }
 ?>
