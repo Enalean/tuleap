@@ -35,7 +35,7 @@ require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 
-class TrackerManager implements Tracker_IFetchTrackerSwitcher { /* extends Engine? */
+class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
     /**
      * Check that the service is used and the plugin is allowed for project $project
