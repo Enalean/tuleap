@@ -249,7 +249,7 @@ class GitDao extends DataAccessObject {
                   
         $rs = $this->retrieve($sql);
         $list = array();
-        if ($rs && $rs->rowCount() > 0 ) {        
+        if ($rs && $rs->rowCount() > 0 ) {
             foreach ($rs as $row) {
                 $repoId        = $row[self::REPOSITORY_ID];
                 $list[$repoId] = $row;
@@ -257,7 +257,7 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
-    
+
     /**
      * Return the list of users that owns repositories in the project $projectId
      *

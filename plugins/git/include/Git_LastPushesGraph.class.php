@@ -41,13 +41,13 @@ class Git_LastPushesGraph {
      */
     public function __construct($groupId, $weeksNumber) {
         $dao             = new GitDao();
-		$this->repoList  = $dao->getProjectRepositoryList($groupId);
-		$this->displayChart = false;
-		if ($weeksNumber < self::MAX_WEEKSNUMBER) {
-		    $this->weeksNumber = $weeksNumber;
-		} else {
-		    $this->weeksNumber = self::MAX_WEEKSNUMBER;
-		}
+        $this->repoList  = $dao->getProjectRepositoryList($groupId);
+        $this->displayChart = false;
+        if ($weeksNumber < self::MAX_WEEKSNUMBER) {
+            $this->weeksNumber = $weeksNumber;
+        } else {
+            $this->weeksNumber = self::MAX_WEEKSNUMBER;
+        }
     }
 
     /**
@@ -58,14 +58,14 @@ class Git_LastPushesGraph {
      */
     public function setUpGraphEnvironnment() {
         $today           = $_SERVER['REQUEST_TIME'];
-        $start_of_period = strtotime("-$this->weeksNumber weeks");
-        for ($i = $start_of_period ; $i <= $today ; $i += self::WEEKS_IN_SECONDS) {
+        $startPeriod = strtotime("-$this->weeksNumber weeks");
+        for ($i = $startPeriod ; $i <= $today ; $i += $week) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[]   = intval(date('W', $i));
             $this->year[]   = intval(date('Y', $i));
         }
     }
-    
+
     /**
      * Manage graph axis
      *
@@ -95,7 +95,7 @@ class Git_LastPushesGraph {
 
     /**
      * Collect, into an array, logged git pushes matching project repositories for the given duration,
-     * then build a JpGraph barPlot object with retrived data.  
+     * then build a JpGraph barPlot object with retrived data.
      *
      * @return BarPlot
      */
@@ -110,21 +110,19 @@ class Git_LastPushesGraph {
             $gitLogDao = new Git_LogDao();
             foreach ($this->weekNum as $key => $w) {
                 $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
-                if ($res && !$res->isError()) {
-                    if ($res->valid()) {
-                        $row          = $res->current();
+                if ($res && !$res->isError() && $res->rowCount() > 0) {
+                    foreach($res as $row) {
                         $pushes[$key] = intval($row['pushes']);
-                        $res->next();
                         if ($pushes[$key] > 0) {
                             $this->displayChart = true;
                         }
                     }
                 }
-            $pushes = array_pad($pushes, $this->weeksNumber, 0);
-            }    
+                $pushes = array_pad($pushes, $this->weeksNumber, 0);
+            }
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
-                $color  = $colors[$i++ % $nb_colors];   
+                $color  = $colors[$i++ % $nb_colors];
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
                 $b2plot->SetLegend($repository['repository_name']);
                 $bplot[] = $b2plot;
