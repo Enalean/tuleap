@@ -115,22 +115,24 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     protected function getTitleSqlFragment($title) {
-        if (! $title) { return ''; }
-        $title = $this->da->quoteSmart($title);
-        return "AND CVT.value LIKE CONCAT('%', $title, '%')";
+        if (! $title) {
+            return '';
+        }
+        $title = $this->da->quoteSmart('%'. $title .'%');
+        return " AND CVT.value LIKE $title ";
     }
     
     protected function getStatusSqlFragment($status) {
         switch ($status) {
         case Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN:
-            return "AND  SS.open_value_id IS NOT NULL";
+            return " AND SS.open_value_id IS NOT NULL ";
             break;
         case Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED:
-            return "AND  SS.open_value_id IS NULL";    
+            return " AND SS.open_value_id IS NULL ";
             break;
         default:
             // no constraint
         }
     }
-}    
+}
 ?>
