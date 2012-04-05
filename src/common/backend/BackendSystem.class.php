@@ -75,44 +75,99 @@ class BackendSystem extends Backend {
     }
 
     /**
+     * Hard reset of system related stuff (nscd for uid/gid and fs cache).
+     * 
+     * Should be used before modification of system (new user, project, etc)
+     * 
+     */
+    public function flushNscdAndFsCache() {
+        $this->refreshGroupCache();
+        $this->refreshUserCache();
+        clearstatcache();
+    }
+    
+    /**
+     * Ensure user home directory is created and has the right uid
+     * 
+     * @param User $user 
+     */
+    public function userHomeSanityCheck(User $user) {
+        if (!$this->userHomeExists($user->getUserName())) {
+            $this->createUserHome($user);
+        }
+        if (!$this->isUserHomeOwnedByUser($user)) {
+            $this->setUserHomeOwnership($user);
+        }
+    }
+    
+    /**
      * Create user home directory
+     * 
      * Also copy files from the skel directory to the new home directory.
      * If the directory already exists, nothing is done.
+     * 
+     * @param User $user
+     * 
      * @return true if directory is successfully created, false otherwise
      */
-    public function createUserHome($user_id) {
-        $user=$this->getUserManager()->getUserById($user_id);
-        if (!$user) return false;
-        $homedir=$GLOBALS['homedir_prefix']."/".$user->getUserName();
-
-        //echo "Creating $homedir\n";
+    public function createUserHome(User $user) {
+        $homedir = $user->getUnixHomeDir();
 
         if (!is_dir($homedir)) {
-            if (is_dir(strtolower($homedir))) {
-                // Codendi 3.6 to 4.0 migration
-                if (!rename(strtolower($homedir),$homedir)) {
-                    $this->log("Can't rename user home ".strtolower($homedir)." to $homedir", Backend::LOG_ERROR);
-                    return false;
-                }
-            } else if (mkdir($homedir,0751)) {
+            if (mkdir($homedir, 0751)) {
                 // copy the contents of the $codendi_shell_skel dir into homedir
                 if (is_dir($GLOBALS['codendi_shell_skel'])) {
-                    system("cd ".$GLOBALS['codendi_shell_skel']."; tar cf - . | (cd  $homedir ; tar xf - )");
+                    system("cd " . $GLOBALS['codendi_shell_skel'] . "; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
                 touch($homedir);
-                $this->recurseChownChgrp($homedir,$user->getUserName(),$user->getUserName());
-
-                return true;
+                $this->setUserHomeOwnership($user);
             } else {
                 $this->log("Can't create user home: $homedir", Backend::LOG_ERROR);
+                return false;
             }
+        } else {
+            $this->log("User home already exists: $homedir", Backend::LOG_WARNING);
         }
-        return false;
+        return true;
     }
-
+    
+    /**
+     * Verify if given name exists as user home directory
+     * 
+     * @param String $username
+     * 
+     * @return Boolean
+     */
     public function userHomeExists($username) {
     	return (is_dir($GLOBALS['homedir_prefix']."/".$username));
     }
+    
+    /**
+     * Verify is user home directory has the right uid
+     * 
+     * @param User $user 
+     * 
+     * @return Boolean
+     */
+    private function isUserHomeOwnedByUser(User $user) {
+        $stat = stat($user->getUnixHomeDir());
+        if ($stat) {
+            if ($stat['uid'] != $user->getRealUnixUID()) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Set user's uid/gid on its home directory (recursively)
+     * 
+     * @param User $user 
+     */
+    private function setUserHomeOwnership(User $user) {
+        $this->recurseChownChgrp($user->getUnixHomeDir(), $user->getUserName(), $user->getUserName());
+    }
+    
     /**
      * Create project home directory
      * If the directory already exists, nothing is done.

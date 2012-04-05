@@ -1,4 +1,7 @@
 Version 5.0 (Not released yet)
+   == Bug fix ==
+   * Ensure NSCD and internal FS cache are properly flushed before doing something related to filesystem. Fix bugs related to directory ownership of users.
+
    == Plugins ==
    * AgileDashoard 0.8
    * Tracker 5.4.9

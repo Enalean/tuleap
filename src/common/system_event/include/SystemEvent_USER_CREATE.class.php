@@ -47,26 +47,34 @@ class SystemEvent_USER_CREATE extends SystemEvent {
      */
     function process() {
         // Check parameters
-        $user_id=$this->getIdFromParam($this->parameters);
-
-        if ($user_id == 0) {
+        $user_id = $this->getIdFromParam($this->parameters);
+        $user    = UserManager::instance()->getUserById($user_id);
+        if ($user && !$user->isAnonymous()) {
+            if ($this->createUser($user)) {
+                $this->done();
+                return true;
+            } else {
+                $this->error("Could not create user home " . $user->getUserName() . " id: " . $user->getId());
+                return false;
+            }
+        } else {
             return $this->setErrorBadParam();
         }
-
-        // Need to add new user alias
+    }
+    
+    /**
+     * Perform user creation on system
+     * 
+     * @param User $user
+     * 
+     * @return Boolean
+     */
+    private function createUser(User $user) {
         Backend::instance('Aliases')->setNeedUpdateMailAliases();
-
-        // Create user home directory
-        if (!Backend::instance('System')->createUserHome($user_id)) {
-            $this->error("Could not create user home");
-            return false;
-        }
         
-        // Need to update system user cache
-        Backend::instance('System')->setNeedRefreshUserCache();
-
-        $this->done();
-        return true;
+        $system_backend = Backend::instance('System');
+        $system_backend->flushNscdAndFsCache();
+        return $system_backend->createUserHome($user);
     }
 
 }

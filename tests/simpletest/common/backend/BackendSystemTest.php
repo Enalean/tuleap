@@ -27,6 +27,7 @@ require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 require_once('common/user/User.class.php');
 Mock::generate('User');
+require_once(dirname(__FILE__).'/../user/UserTestBuilder.php');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
@@ -46,18 +47,17 @@ Mock::generatePartial('BackendSystem', 'BackendTestVersion', array('getUserManag
 
 class BackendSystemTest extends UnitTestCase {
     
-    function __construct($name = 'BackendSystem test') {
-        parent::__construct($name);
-    }
-
     function setUp() {
         $GLOBALS['homedir_prefix']            = dirname(__FILE__) . '/_fixtures/home/users';
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
-        $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/codendi';
-        $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/pub';
+        $GLOBALS['ftp_frs_dir_prefix']        = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/codendi';
+        $GLOBALS['ftp_anon_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/pub';
         $GLOBALS['sys_file_deletion_delay']   = 5;
+        $GLOBALS['sys_custom_incdir']         = $GLOBALS['tmp_dir'];
+        $GLOBALS['sys_incdir']                = $GLOBALS['tmp_dir'];
+        $GLOBALS['codendi_log']               = $GLOBALS['tmp_dir'];
     }
     
     
@@ -71,6 +71,14 @@ class BackendSystemTest extends UnitTestCase {
         unset($GLOBALS['ftp_frs_dir_prefix']);
         unset($GLOBALS['ftp_anon_dir_prefix']);
         unset($GLOBALS['sys_file_deletion_delay']);
+        unset($GLOBALS['sys_custom_incdir']);
+        unset($GLOBALS['sys_incdir']);
+        
+        $logfile = $GLOBALS['codendi_log'].'/codendi_syslog';
+        if (is_file($logfile)) {
+            unlink($logfile);
+        }
+        unset($GLOBALS['codendi_log']);
     }
     
     function testConstructor() {
@@ -79,25 +87,15 @@ class BackendSystemTest extends UnitTestCase {
     
 
     function testCreateUserHome() {
-
-        $user = new MockUser($this);
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user->setReturnValue('getUserName', 'codendiadm');
-
-        $um = new MockUserManager();
-        $um->setReturnReference('getUserById', $user, array(104));
+        $user = aUser()->withUserName('codendiadm')->build();
         
-        $backend = new BackendTestVersion($this);
-        $backend->setReturnValue('getUserManager', $um);
+        $backend = new BackendTestVersion();
 
-        $this->assertEqual($backend->createUserHome(104),True);
+        $this->assertEqual($backend->createUserHome($user),True);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
 
         $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/codendiadm/.profile"),"User files from /etc/codendi_skel should be created");
-
-
-        // Check that a wrong user id does not raise an error
-        $this->assertEqual($backend->createUserHome(99999),False);
 
         // Cleanup
         $backend->recurseDeleteInDir($GLOBALS['homedir_prefix']."/codendiadm");
@@ -143,25 +141,26 @@ class BackendSystemTest extends UnitTestCase {
     }
 
     function testArchiveUserHome() {
-        $user = new MockUser($this);
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user->setReturnValue('getUserName', 'codendiadm');
+        $user = aUser()->withUserName('codendiadm')->build();
+        
+        $backend = new BackendTestVersion();
 
+        $backend->createUserHome($user);
+        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
+
+        //
+        // Run test
+        //
+        
         $um = new MockUserManager();
         $um->setReturnReference('getUserById', $user, array(104));
         
-        $backend = new BackendTestVersion($this);
         $backend->setReturnValue('getUserManager', $um);
-
-        $backend->createUserHome(104);
-        $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
-
+        
         $this->assertEqual($backend->archiveUserHome(104),True);
         $this->assertFalse(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be deleted");
         $this->assertTrue(is_file($GLOBALS['tmp_dir']."/codendiadm.tgz"),"Archive should be created");
-
-        // Check that a wrong user id does not raise an error
-        $this->assertEqual($backend->archiveUserHome(99999),False);
 
         // Cleanup
         unlink($GLOBALS['tmp_dir']."/codendiadm.tgz");
@@ -363,17 +362,12 @@ class BackendSystemTest extends UnitTestCase {
     }
     
     public function testRenameUserHomeDirectory() {
-        $user = new MockUser($this);
         // We use codendiadm uid/gid to avoid chown warnings (because test is not run as root)
-        $user->setReturnValue('getUserName', 'codendiadm');
-
-        $um = new MockUserManager();
-        $um->setReturnReference('getUserById', $user, array(104));
+        $user = aUser()->withUserName('codendiadm')->build();
         
         $backend = new BackendTestVersion($this);
-        $backend->setReturnValue('getUserManager', $um);
         
-        $backend->createUserHome(104);
+        $backend->createUserHome($user);
         $this->assertEqual($backend->renameUserHomeDirectory($user, 'toto'),True);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/toto"),"Home dir should be created");
 

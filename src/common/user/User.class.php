@@ -632,6 +632,10 @@ class User {
         return $this->unix_uid;
     }
     
+    function getUnixHomeDir() {
+        return $GLOBALS['homedir_prefix']."/".$this->getUserName();
+    }
+    
     /**
      * @return string unix box of the user
      */
