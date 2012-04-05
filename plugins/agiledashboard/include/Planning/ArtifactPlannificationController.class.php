@@ -59,7 +59,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $request_criteria  = $this->getArrayFromRequest('criteria');
         $semantic_criteria = $this->getArrayFromRequest('semantic_criteria');
         $cross_search_criteria = new Tracker_CrossSearch_Criteria($request_criteria, $semantic_criteria);
-        error_log(print_r($cross_search_criteria, true));
+        
         return $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
     }
     
