@@ -129,15 +129,16 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
-        $shared_fields_criteria = null;
-        $expectedCriteria = aCrossSearchCriteria()->build();
-        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, null, $expectedCriteria);
+        $shared_fields_criteria = $semantic_criteria = null;
+        $expectedCriteria       = aCrossSearchCriteria()->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
      
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
         $shared_fields_criteria = 'invalid parameter type';
-        $expectedCriteria = aCrossSearchCriteria()->build();
-        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, 'sfdsf', $expectedCriteria);
+        $semantic_criteria      = 'another invalid parameter type';
+        $expectedCriteria       = aCrossSearchCriteria()->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
     
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, $expected_criteria) {
