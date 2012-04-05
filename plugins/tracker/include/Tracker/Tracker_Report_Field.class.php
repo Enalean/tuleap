@@ -19,10 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'FormElement/Tracker_FormElement_Used.class.php';
+require_once 'FormElement/Tracker_FormElement_Usable.class.php';
 require_once('common/ddd/Entity.class.php');
 
-interface Tracker_Report_Field extends Entity, Tracker_FormElement_Used {
+interface Tracker_Report_Field extends Entity, Tracker_FormElement_Usable {
     
     /**
      * Return a label (e.g. usable both in a form or as a column header)
