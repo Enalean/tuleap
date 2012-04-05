@@ -74,7 +74,7 @@ class Git_LastPushesGraph {
     function prepareGraph() {
         $nb_repo = count($this->repoList);
         $graph   = new Chart(500, 300+16*$nb_repo);
-        $graph->SetScale('textlin');
+        $graph->SetScale('textint');
         $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
         $graph->SetMarginColor('white');
         $graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
