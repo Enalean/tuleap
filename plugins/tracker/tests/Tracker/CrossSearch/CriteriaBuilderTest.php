@@ -194,6 +194,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         $this->assertEqual($artifact_criteria[0]->field, $expected_criterion);
     }
     // tout le monde a isadvanced == true et un report
+    
+    
 }
 
 ?>

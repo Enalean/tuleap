@@ -51,5 +51,19 @@ class Criteria_ArtifactTest extends TuleapTestCase {
         $this->assertEqual(array(1, 55, 1001, 99, 2), $criteria->listArtifactIds());
 
     }
+    
+    public function itCanReturnTheListOfArtifactsFromATrackerId() {
+        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), array(132 => array(1, 55), 456 => array(2, 55)));
+        
+        $this->assertEqual(array(1, 55), $criteria->getArtifactsOfTracker(132));
+        $this->assertEqual(array(2, 55), $criteria->getArtifactsOfTracker(456));
+    }
+    
+    public function itReturnsAnEmptyArrayIfThereAreNoCorrespondingTrackerIds() {
+        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), array(132 => array()));
+    
+        $this->assertEqual(array(), $criteria->getArtifactsOfTracker(132));
+        $this->assertEqual(array(), $criteria->getArtifactsOfTracker(456));
+    }
 }
 ?>

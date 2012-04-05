@@ -18,13 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CrossSearch_ArtifactReportField {
+class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     
     public function __construct($artifact_ids) {
         $this->artifact_ids = $artifact_ids;
     }
     
-    public function fetchCriteria() {
+    
+    public function getId() {
+        
+    }
+    
+    public function fetchCriteria(Tracker_Report_Criteria $criteria) {
+        return 'nawak';
+    }
+    
+    public function isUsed() {
+        
+    }
+    
+    public function getLabel() {
+        
+    }
+        
+    /**
+    * Display the field as a Changeset value.
+    * Used in report table
+    * @param int $artifact_id the corresponding artifact id
+    * @param int $changeset_id the corresponding changeset
+    * @param mixed $value the value of the field
+    * @return string
+    */
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+        
         
     }
 }

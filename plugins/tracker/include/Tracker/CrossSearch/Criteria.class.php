@@ -62,7 +62,7 @@ class Tracker_CrossSearch_Criteria {
     public function getStatus() {
         return $this->semantic_criteria['status'];
     }
-
+    
     /**
      * @return the flattened list of artifact_ids
      */
@@ -73,6 +73,14 @@ class Tracker_CrossSearch_Criteria {
         }
         
         return $id_list;
-    }    
+    }
+    
+    public function getArtifactsOfTracker($tracker_id) {
+        if (isset($this->artifact_ids[$tracker_id])) {
+            return $this->artifact_ids[$tracker_id];
+        } else {
+            return array();
+        }
+    }
 }
 ?>
