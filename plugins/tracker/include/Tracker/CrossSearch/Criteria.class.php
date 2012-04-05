@@ -64,11 +64,19 @@ class Tracker_CrossSearch_Criteria {
     }
 
     /**
-     * @return $artifact_ids array(tracker_id_1 => array(artifact_id_1, artifact_id_2), tracker_id_2 => array(artifact_id_3))
+     * @return the flattened list of artifact_ids
      */
-    public function getArtifactIds() {
-        return $this->artifact_ids;
+    public function listArtifactIds() {
+        if (!$this->artifact_ids) {
+            return array();
+        }
+        
+        $id_list = array();
+        foreach ($this->artifact_ids as $artifact_ids) {
+            $id_list = array_merge($id_list, $artifact_ids);
+        }
+        
+        return $id_list;
     }    
 }
-
 ?>

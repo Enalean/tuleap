@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'ArtifactReportField.class.php';
+
+
 /**
  * Builds the cross-tracker search criteria, based on the request content.
  */
@@ -82,9 +85,12 @@ class Tracker_CrossSearch_CriteriaBuilder {
     }
 
     public function getArtifactListCriteria(Tracker_CrossSearch_Criteria $cross_search_criteria) {
-        if ($cross_search_criteria->getArtifactIds()) {
-            return new Tracker_Report_Criteria(null, null, null, null, null);
+        $criteria = array();
+        if ($cross_search_criteria->listArtifactIds()) {
+            $field = new Tracker_CrossSearch_ArtifactReportField($cross_search_criteria->listArtifactIds());
+            $criteria[] = new Tracker_Report_Criteria(null, null, $field, null, null);
         }
+        return $criteria;
     }
     
     private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
