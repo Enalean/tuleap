@@ -63,7 +63,7 @@ class Tracker_CrossSearch_ViewBuilder {
     public function buildView(Project $project, Tracker_CrossSearch_Query $request_criteria) {
         $service      = $this->getService($project);
         
-        $criteria     = $this->criteria_builder->getCriteria($project, $this->getReport(), $request_criteria);
+        $criteria     = $this->getCriteria($project, $request_criteria);
         $trackers     = $this->getTrackers($project, $this->tracker_factory);
         $content_view = $this->buildContentView($project, $request_criteria);
         
@@ -86,7 +86,7 @@ class Tracker_CrossSearch_ViewBuilder {
     
     public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
         $report    = $this->getReport();
-        $criteria  = $this->criteria_builder->getCriteria($project, $report, $request_criteria);
+        $criteria  = $this->getCriteria($project, $request_criteria);
         $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
         
         return $this->getContentView($classname, $report, $criteria, $artifacts);
@@ -94,6 +94,10 @@ class Tracker_CrossSearch_ViewBuilder {
 
     protected function getView(Project $project, Service $service, $criteria, $trackers, $content_view) {
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
+    }
+    
+    private function getCriteria(Project $project, Tracker_CrossSearch_Query $request_criteria) {
+        return $this->criteria_builder->getCriteria($project, $this->getReport(), $request_criteria);
     }
     
     /**
