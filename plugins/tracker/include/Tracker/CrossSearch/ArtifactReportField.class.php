@@ -25,7 +25,7 @@ class Tracker_CrossSearch_ArtifactReportField {
     }
     
     public function fetchCriteria() {
-        return $this->artifact_ids;
+        
     }
 }
 ?>

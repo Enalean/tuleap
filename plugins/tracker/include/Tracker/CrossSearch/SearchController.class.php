@@ -55,15 +55,12 @@ class Tracker_CrossSearch_SearchController {
 
     public function search() {
         try {
+            $cross_search_criteria = $this->getCrossSearchCriteriaFromRequest();
             
-            $criteria = $this->getCriteriaFromRequest();
-            
-            $project_id        = $this->request->get('group_id');
-            $project           = $this->getProject($project_id, $this->project_manager);
-            
-            $cross_search_criteria = new Tracker_CrossSearch_Criteria($criteria['criteria'], $criteria['semantic_criteria'], $criteria['artifact_criteria']);
+            $project_id            = $this->request->get('group_id');
+            $project               = $this->getProject($project_id, $this->project_manager);
+
             $view                  = $this->view_builder->buildView($project, $cross_search_criteria);
-            
             $view->render();
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
@@ -76,7 +73,7 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getCriteriaFromRequest() {
+    protected function getCrossSearchCriteriaFromRequest() {
         $criteria_vars = array('criteria', 'semantic_criteria', 'artifact_criteria');
         $criteria      = array();
         foreach ($criteria_vars as $criterion_name) {
@@ -87,7 +84,7 @@ class Tracker_CrossSearch_SearchController {
                 $criteria[$criterion_name] = $criterion_value;
             }
         }
-        return $criteria;
+        return new Tracker_CrossSearch_Criteria($criteria['criteria'], $criteria['semantic_criteria'], $criteria['artifact_criteria']);
     }
     
     /**
