@@ -200,7 +200,7 @@ class Git_LastPushesGraph {
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
-            $msg = "There is no logged pushes in the last $nb_weeks weeks";
+            $msg = "There is no logged pushes in the last $this->weeksNumber weeks";
             $this->displayError($msg);
         }
     }
