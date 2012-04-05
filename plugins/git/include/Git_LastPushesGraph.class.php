@@ -37,6 +37,9 @@ class Git_LastPushesGraph {
     /**
      * Constructor.
      *
+     * @param Integer $groupId Project Id
+     * @param Integer $weeksNumber Statistics duration in weeks
+     *
      * @return Void
      */
     public function __construct($groupId, $weeksNumber) {
@@ -120,7 +123,7 @@ class Git_LastPushesGraph {
                         }
                     }
                 }
-            $pushes = array_pad($pushes, $this->weeksNumber, 0);
+                $pushes = array_pad($pushes, $this->weeksNumber, 0);
             }    
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
@@ -188,8 +191,6 @@ class Git_LastPushesGraph {
 
     /**
      * Display the graph else an error if no pushes for this period
-     * 
-     * @param void
      * 
      * @return void
      */
