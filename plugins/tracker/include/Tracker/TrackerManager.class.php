@@ -812,11 +812,11 @@ class TrackerManager { /* extends Engine? */
         return $deleteStatus;
     }
 
-    public function getCrossSearch() {
+    private function getCrossSearch() {
         $hierarchyFactory   = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
         $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $hierarchyFactory);
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $hierarchyFactory, array(/*9309, 9330*/));
         return $search;
     }
     

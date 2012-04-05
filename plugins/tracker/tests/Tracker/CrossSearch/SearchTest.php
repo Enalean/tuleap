@@ -41,8 +41,9 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $this->searchDao          = new MockTracker_CrossSearch_SearchDao();
         $this->trackerIds         = array(201, 202);
         $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
+        $this->artifact_link_field_ids = array();
         
-        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory, $this->artifact_link_field_ids);
     }
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
@@ -58,7 +59,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria->getSharedFields()));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields, $semantic_fields, array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields, $semantic_fields, $this->artifact_link_field_ids, array()));
         
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -69,7 +70,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
                 ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
                 ->build();
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, array('title' => '', 'status' => ''), array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, array('title' => '', 'status' => ''), $this->artifact_link_field_ids, array()));
 
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -80,9 +81,9 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
                 ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
                 ->build();
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, array('title' => '', 'status' => ''), array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, array('title' => '', 'status' => ''), $this->artifact_link_field_ids, array()));
         
-        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory, $this->artifact_link_field_ids);
         $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);
         
         $this->assertFalse($artifacts->hasChildren());
@@ -96,7 +97,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         
         $this->searchDao->setReturnValue('searchMatchingArtifacts', $this->getResultsForTrackerOutsideHierarchy());
         $trackerIds = array(111, 112, 113, 666);
-        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory);
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory, $this->artifact_link_field_ids);
         
         $criteria  = aCrossSearchCriteria()->build();
         
