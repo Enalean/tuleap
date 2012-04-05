@@ -59,7 +59,8 @@ var Planning = {
     loadDraggables: function (container) {
         container.select('.planning-draggable').each(function(element) {
             new Draggable(element, {
-                revert: 'failure'
+                revert: 'failure',
+                scroll: window
             });
         })
     }
