@@ -74,7 +74,6 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     function testRenderShouldDisplayArtifacts() {
         $service   = new MockService();
-//        $criteria  = $this->GivenCriteria();
         $artifacts = array(
             array(
                 'id'                => '6',
