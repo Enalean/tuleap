@@ -84,6 +84,11 @@ class Tracker_CrossSearch_SemanticValueFactory {
         return $value;
     }
     
+    /**
+     * @param Tracker_Artifact $artifact
+     * @param mixed $semantic_factory
+     * @return mixed
+     */
     private function getField(Tracker_Artifact $artifact, $semantic_factory) {
         return $semantic_factory->getByTracker($artifact->getTracker())->getField();
     }
