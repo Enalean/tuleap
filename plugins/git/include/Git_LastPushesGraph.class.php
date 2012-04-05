@@ -184,6 +184,25 @@ class Git_LastPushesGraph {
             imagepng($im);
             imagedestroy($im);
         }
-    }       
+    }
+
+    /**
+     * Display the graph else an error if no pushes for this period
+     * 
+     * @param void
+     * 
+     * @return void
+     */
+    public function display() {
+        $this->setUpGraphEnvironnment();
+        $graph = $this->prepareGraph();
+        $bplot = $this->displayRepositoryPushesByWeek();
+        if ($this->displayChart) {
+            $this->displayAccumulatedGraph($bplot, $graph);
+        } else {
+            $msg = "There is no logged pushes in the last $nb_weeks weeks";
+            $this->displayError($msg);
+        }
+    }
 }
 ?>

@@ -37,14 +37,5 @@ if ($request->valid($vDuration)) {
     header('Location: '.get_server_url());
 }
 $imageRenderer = new Git_LastPushesGraph($groupId, $nb_weeks);
-$imageRenderer->setUpGraphEnvironnment();
-$graph = $imageRenderer->prepareGraph();
-$bplot = $imageRenderer->displayRepositoryPushesByWeek();
-if ($imageRenderer->displayChart) {
-    $imageRenderer->displayAccumulatedGraph($bplot, $graph);
-} else {
-    $msg = "There is no logged pushes in the last $nb_weeks weeks";
-    $imageRenderer->displayError($msg);
-}
-
+$imageRenderer->display();
 ?>
