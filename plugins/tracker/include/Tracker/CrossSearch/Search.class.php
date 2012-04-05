@@ -20,7 +20,7 @@
 
 require_once 'SharedFieldFactory.class.php';
 require_once 'SearchDao.class.php';
-require_once 'ResultSorter.class.php';
+require_once dirname(__FILE__).'/../Hierarchy/Sorter.class.php';
 require_once dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 
@@ -76,8 +76,8 @@ class Tracker_CrossSearch_Search {
         
         $artifacts = $this->dao->searchMatchingArtifacts($tracker_ids, $shared_fields, $semantic_fields, $excluded_artifact_ids);
         
-        $result_sorter = new ResultSorter();
-        return $result_sorter->sortResults($artifacts, $tracker_ids, $hierarchy);
+        $result_sorter = new Tracker_Hierarchy_Sorter();
+        return $result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
     }
     
 }

@@ -18,9 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ResultSorter {
+/**
+ * Sorts artifacts in a TreeNode structure 
+ */
+class Tracker_Hierarchy_Sorter {
     
-    public function sortResults($artifacts, array $tracker_ids, Tracker_Hierarchy $hierarchy) {
+    /**
+     * The artifacts tree matches the trackers hierarchy definition.
+     * 
+     * @param DataAccessResult $artifacts
+     * @param array $tracker_ids
+     * @param Tracker_Hierarchy $hierarchy
+     * @return \TreeNode 
+     */
+    public function sortArtifacts($artifacts, array $tracker_ids, Tracker_Hierarchy $hierarchy) {
         $root = new TreeNode();
         $root->setId(0);
         if ($artifacts) {
