@@ -42,10 +42,10 @@ class Criteria_ArtifactTest extends TuleapTestCase {
     }
     
     public function itFlattensTheNestedArrayOfArtifactIds() {
-        $criteria = new Tracker_CrossSearch_Criteria(null, null, array(132 => array(1, 55, 1001)));
+        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), array(132 => array(1, 55, 1001)));
         $this->assertEqual(array(1, 55, 1001), $criteria->listArtifactIds());
 
-        $criteria = new Tracker_CrossSearch_Criteria(null, null, 
+        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), 
                 array(132 => array(1, 55, 1001),
                       138 => array(99, 2)));
         $this->assertEqual(array(1, 55, 1001, 99, 2), $criteria->listArtifactIds());

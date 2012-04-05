@@ -41,7 +41,7 @@ class Tracker_CrossSearch_Criteria {
      * @param array of string $semantic_criteria
      * @param $artifact_ids array(tracker_id_1 => array(artifact_id_1, artifact_id_2), tracker_id_2 => array(artifact_id_3))
      */
-    public function __construct($shared_fields_criteria=array(), $semantic_criteria = null, $artifact_ids = null) {
+    public function __construct(Array $shared_fields_criteria=array(), Array $semantic_criteria = array(), Array $artifact_ids = array()) {
         $this->shared_fields_criteria = $shared_fields_criteria;
         $this->semantic_criteria      = $semantic_criteria ? $semantic_criteria : array('title' => '', 'status' => '');
         $this->artifact_ids           = $artifact_ids;
@@ -67,10 +67,6 @@ class Tracker_CrossSearch_Criteria {
      * @return the flattened list of artifact_ids
      */
     public function listArtifactIds() {
-        if (!$this->artifact_ids) {
-            return array();
-        }
-        
         $id_list = array();
         foreach ($this->artifact_ids as $artifact_ids) {
             $id_list = array_merge($id_list, $artifact_ids);
