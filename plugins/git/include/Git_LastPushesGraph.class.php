@@ -59,7 +59,7 @@ class Git_LastPushesGraph {
     public function setUpGraphEnvironnment() {
         $today           = $_SERVER['REQUEST_TIME'];
         $startPeriod = strtotime("-$this->weeksNumber weeks");
-        for ($i = $startPeriod ; $i <= $today ; $i += $week) {
+        for ($i = $startPeriod ; $i <= $today ; $i += self::WEEKS_IN_SECONDS) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[]   = intval(date('W', $i));
             $this->year[]   = intval(date('Y', $i));
@@ -110,19 +110,21 @@ class Git_LastPushesGraph {
             $gitLogDao = new Git_LogDao();
             foreach ($this->weekNum as $key => $w) {
                 $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
-                if ($res && !$res->isError() && $res->rowCount() > 0) {
-                    foreach($res as $row) {
+                if ($res && !$res->isError()) {
+                    if ($res->valid()) {
+                        $row          = $res->current();
                         $pushes[$key] = intval($row['pushes']);
+                        $res->next();
                         if ($pushes[$key] > 0) {
                             $this->displayChart = true;
                         }
                     }
                 }
-                $pushes = array_pad($pushes, $this->weeksNumber, 0);
-            }
+            $pushes = array_pad($pushes, $this->weeksNumber, 0);
+            }    
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
-                $color  = $colors[$i++ % $nb_colors];
+                $color  = $colors[$i++ % $nb_colors];   
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
                 $b2plot->SetLegend($repository['repository_name']);
                 $bplot[] = $b2plot;
