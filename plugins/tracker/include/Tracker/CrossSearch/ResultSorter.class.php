@@ -25,7 +25,7 @@ class ResultSorter {
         $root->setId(0);
         if ($artifacts) {
             list($artifacts_by_id, $artifacts_by_tracker) = $this->indexArtifactsByIdAndTracker($artifacts);
-            $tracker_ids = $this->sortTrackerIdsAccordinglyToHierarchy($tracker_ids, $hierarchy);
+            $tracker_ids = $hierarchy->sortTrackerIds($tracker_ids);
             $this->organizeArtifactsInTrackerHierarchy($root, $hierarchy, $artifacts_by_id, $artifacts_by_tracker, $tracker_ids);
         }
         return $root;
@@ -90,25 +90,5 @@ class ResultSorter {
         return array($artifactsById, $artifacts_by_tracker);
     }
     
-    private function sortTrackerIdsAccordinglyToHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy) {
-        $this->hierarchyTmp = $hierarchy;
-        usort($tracker_ids, array($this, 'sortByTrackerLevel'));
-        return $tracker_ids;
-    }
-    
-    protected function sortByTrackerLevel($tracker1_id, $tracker2_id) {
-        try {
-            $level1 = $this->hierarchyTmp->getLevel($tracker1_id);
-        } catch (Exception $e) {
-            return 1;
-        }
-        try {
-            $level2 = $this->hierarchyTmp->getLevel($tracker2_id);
-        } catch (Exception $e) {
-            return -1;
-        }
-        return strcmp($level1, $level2);
-    }
-
 }
 ?>

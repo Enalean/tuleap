@@ -81,5 +81,24 @@ class Tracker_Hierarchy {
         }
         $callstack[] = $tracker_id;
     }
+
+    public function sortTrackerIds(array $tracker_ids) {
+        usort($tracker_ids, array($this, 'sortByLevel'));
+        return $tracker_ids;
+    }
+    
+    protected function sortByLevel($tracker1_id, $tracker2_id) {
+        try {
+            $level1 = $this->getLevel($tracker1_id);
+        } catch (Exception $e) {
+            return 1;
+        }
+        try {
+            $level2 = $this->getLevel($tracker2_id);
+        } catch (Exception $e) {
+            return -1;
+        }
+        return strcmp($level1, $level2);
+    }
 }
 ?>
