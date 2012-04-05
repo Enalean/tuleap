@@ -23,5 +23,9 @@ class Tracker_CrossSearch_ArtifactReportField {
     public function __construct($artifact_ids) {
         $this->artifact_ids = $artifact_ids;
     }
+    
+    public function fetchCriteria() {
+        return $this->artifact_ids;
+    }
 }
 ?>

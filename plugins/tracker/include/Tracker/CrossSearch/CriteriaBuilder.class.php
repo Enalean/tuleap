@@ -56,8 +56,9 @@ class Tracker_CrossSearch_CriteriaBuilder {
     public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
+        $artifact_fields = $this->getArtifactLinkCriteria($request_criteria);
         
-        return array_merge($semantic_fields, $shared_fields);
+        return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
 
     /**
@@ -79,7 +80,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
         return $criteria;
     }
 
-    public function getSemanticFieldsCriteria(Tracker_Report $report, $cross_search_criteria) {
+    public function getSemanticFieldsCriteria(Tracker_Report $report, Tracker_CrossSearch_Criteria $cross_search_criteria) {
         $field        = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle(), $this->semantic_value_factory);
         $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus(), $this->semantic_value_factory);
         $id           = null;
@@ -92,10 +93,11 @@ class Tracker_CrossSearch_CriteriaBuilder {
         );
     }
 
-    public function getArtifactListCriteria(Tracker_CrossSearch_Criteria $cross_search_criteria) {
+    public function getArtifactLinkCriteria(Tracker_CrossSearch_Criteria $cross_search_criteria) {
         $criteria = array();
-        if ($cross_search_criteria->listArtifactIds()) {
-            $field = new Tracker_CrossSearch_ArtifactReportField($cross_search_criteria->listArtifactIds());
+        $artifact_ids = $cross_search_criteria->listArtifactIds();
+        if (count($artifact_ids) > 0) {
+            $field = new Tracker_CrossSearch_ArtifactReportField($artifact_ids);
             $criteria[] = new Tracker_Report_Criteria(null, null, $field, null, null);
         }
         return $criteria;
