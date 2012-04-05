@@ -26,8 +26,8 @@ function getSystemOutput($cmd) {
 
 function getCandidatePaths() {
     echo "Please check documentation/cli and documentation/user_guide manually!!".PHP_EOL;
-    $plugins = getSystemOutput('find plugins -type d -depth 1');
-    $themes = getSystemOutput('find src/www/themes -type d -depth 1 ! -path *common');
+    $plugins     = getSystemOutput('find plugins -type d -depth 1');
+    $themes      = getSystemOutput('find src/www/themes -type d -depth 1 ! -path *common');
     $other_paths = array('cli', 'src/www/soap');
     return array_merge($other_paths, $plugins, $themes);
 }
@@ -36,11 +36,11 @@ require_once 'CheckReleaseGit.class.php';
 require_once 'GitExec.class.php';
 
 $git_exec   = new GitExec();
-$tagFinder  = new GitTagFinder($git_exec);
-$maxVersion = $tagFinder->getMaxVersionFrom('origin');
+$tagFinder  = new LastReleaseFinder($git_exec);
+$last_release_number = $tagFinder->retrieveFrom('origin');
 
 $check_release_reporter = new CheckReleaseReporter(
-                              new VersionIncrementFilter($git_exec, $maxVersion,
+                              new NonIncrementedPathFinder($git_exec, $last_release_number,
                                   new ChangeDetector($git_exec, getCandidatePaths())));
 $check_release_reporter->reportViolations();
 ?>

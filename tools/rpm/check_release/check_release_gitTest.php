@@ -28,7 +28,7 @@ class GitTagFinderTest extends TuleapTestCase {
     
     public function itFindsTheGreatestVersionNumberFromTheTags() {
         $gitExec = new MockGitExec();
-        $checkReleaseGit = new GitTagFinder($gitExec);
+        $checkReleaseGit = new LastReleaseFinder($gitExec);
         $this->assertEqual('4.01.0', $checkReleaseGit->maxVersion(array('4.0.2', '4.01.0')));
         $this->assertEqual('4.10', $checkReleaseGit->maxVersion(array('4.10', '4.9')));
     }
@@ -42,8 +42,8 @@ class GitTagFinderTest extends TuleapTestCase {
             'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
-        $git_tag_finder = new GitTagFinder($gitExec);
-        $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $git_tag_finder->getVersionList('origin'));
+        $git_tag_finder = new LastReleaseFinder($gitExec);
+        $this->assertEqual(array('4.0.2', '4.01.0', '4.1', '4.9', '4.10'), $git_tag_finder->getReleaseList('origin'));
     }
     
     public function itListsOnlyTagsThatAreNumeric() {
@@ -54,8 +54,8 @@ class GitTagFinderTest extends TuleapTestCase {
             'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.1');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
-        $git_tag_finder = new GitTagFinder($gitExec);
-        $this->assertEqual(array('4.1'), $git_tag_finder->getVersionList('origin'));
+        $git_tag_finder = new LastReleaseFinder($gitExec);
+        $this->assertEqual(array('4.1'), $git_tag_finder->getReleaseList('origin'));
     }
     
     public function itGetsTheMaxVersionDirectlyFromTheRemote() {
@@ -67,8 +67,8 @@ class GitTagFinderTest extends TuleapTestCase {
             'e0f6385781c8456e3b920284734786c5af2b7f12	refs/tags/4.10');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('lsRemote', $version_list, array('origin'));
-        $git_tag_finder = new GitTagFinder($gitExec);
-        $this->assertEqual('4.10', $git_tag_finder->getMaxVersionFrom('origin'));
+        $git_tag_finder = new LastReleaseFinder($gitExec);
+        $this->assertEqual('4.10', $git_tag_finder->retrieveFrom('origin'));
     }
 }
 
@@ -104,7 +104,7 @@ class VersionIncrementFilterTest extends TuleapTestCase {
         $change_detector = new MockChangeDetector();
         $change_detector->setReturnValue('findPathsThatChangedSince', $changed_paths);
         
-        $version_increment_filter = new VersionIncrementFilter($gitExec, $last_release_tag, $change_detector);
+        $version_increment_filter = new NonIncrementedPathFinder($gitExec, $last_release_tag, $change_detector);
         $actual_non_incremented_paths = $version_increment_filter->find($current_version);
         $this->assertEqual($not_incremented_paths, $actual_non_incremented_paths);
     }

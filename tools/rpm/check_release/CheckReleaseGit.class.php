@@ -19,20 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitTagFinder {
+class LastReleaseFinder {
 
     public function __construct($git_exec) {
         $this->git_exec = $git_exec;
     }
 
-    public function getMaxVersionFrom($git_remote_name_or_url = 'origin') {
-        $version_list = $this->getVersionList($git_remote_name_or_url);
-        $maxVersion = $this->maxVersion($version_list);
+    public function retrieveFrom($git_remote_name_or_url = 'origin') {
+        $version_list = $this->getReleaseList($git_remote_name_or_url);
+        $maxVersion   = $this->maxVersion($version_list);
         echo "latest version : $maxVersion".PHP_EOL;
         return $maxVersion;
     }
 
-    public function getVersionList($git_remote_name_or_url) {
+    public function getReleaseList($git_remote_name_or_url) {
         $ls_remote_output = $this->git_exec->lsRemote($git_remote_name_or_url);
         $versions = array();
         $tags = preg_grep('%tags/[\d\.]{1,}$%', $ls_remote_output);
@@ -70,7 +70,7 @@ class ChangeDetector {
     }
 }
 
-class VersionIncrementFilter {
+class NonIncrementedPathFinder {
     
     public function __construct($git_exec, $old_revision, ChangeDetector $changed_paths_finder) {
         $this->git_exec = $git_exec;
@@ -95,7 +95,7 @@ class VersionIncrementFilter {
 
 class CheckReleaseReporter {
 
-    public function __construct(VersionIncrementFilter $non_incremented_path_finder) {
+    public function __construct(NonIncrementedPathFinder $non_incremented_path_finder) {
         $this->non_incremented_paths_finder = $non_incremented_path_finder;
     }
     public function reportViolations() {
