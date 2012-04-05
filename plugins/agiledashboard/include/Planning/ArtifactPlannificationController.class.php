@@ -90,13 +90,11 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
-        $planningBreadCrumbGenerator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
-        $artifactsBreadCrumbGenerator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
-        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $planningBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
-        
+        $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+        $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
+        $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
+        return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
     }
-
 }
 
 ?>
