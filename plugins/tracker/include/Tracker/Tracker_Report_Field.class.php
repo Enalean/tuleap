@@ -24,8 +24,16 @@ require_once('common/ddd/Entity.class.php');
 
 interface Tracker_Report_Field extends Entity, Tracker_FormElement_Used {
     
+    /**
+     * Return a label (e.g. usable both in a form or as a column header)
+     */
     function getLabel();
     
+    /**
+     * Display the field as a criteria
+     * @param Tracker_Report_Criteria $criteria
+     * @return string
+     */
     function fetchCriteria(Tracker_Report_Criteria $criteria);
     
     /**
