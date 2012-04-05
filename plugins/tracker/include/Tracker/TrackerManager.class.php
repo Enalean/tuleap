@@ -824,12 +824,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher { /* extends Engin
     
 
     public function getCrossSearchViewBuilder() {
-        $formElementFactory = Tracker_FormElementFactory::instance();
-        $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory($this->getArtifactFactory(), Tracker_Semantic_TitleFactory::instance(), Tracker_Semantic_StatusFactory::instance());
-        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue);
+        $artifact_factory        = $this->getArtifactFactory();
+        $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
+        $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
+        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $criteria_builder        = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory);
         
         return new Tracker_CrossSearch_ViewBuilder(
-            $formElementFactory, 
+            $form_element_factory, 
             $this->getTrackerFactory(), 
             $this->getCrossSearch(), 
             $criteria_builder
