@@ -79,8 +79,8 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     }
     
     private function getValueLabel($status) {
-        $semanticStatus = "semantic_status_$status";
-        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', $semanticStatus);
+        $semantic_status_value_key = "semantic_status_$status";
+        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', $semantic_status_value_key);
     }
     
     public function getLabel() {
