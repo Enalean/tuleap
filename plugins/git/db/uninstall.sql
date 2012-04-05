@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS plugin_git_post_receive_mail;
 DROP TABLE IF EXISTS plugin_git_log;
+DROP TABLE IF EXISTS plugin_git_ci;
 DROP TABLE IF EXISTS plugin_git;
 
 DELETE FROM service WHERE short_name='plugin_git';
