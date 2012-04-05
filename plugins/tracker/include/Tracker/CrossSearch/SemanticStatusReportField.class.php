@@ -63,11 +63,11 @@ class Tracker_CrossSearch_SemanticStatusReportField implements Tracker_Report_Fi
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html  = '';
-        $html .= '<label>'.$this->getLabel().'</label>
+        $html .= '<label>'. $this->getLabel() .'</label>
                   <br/>
                   <select name="semantic_criteria[status]">';
         foreach($this->getAllStatus() as $status) {
-            $html .= '<option value="'.$status.'" '.$this->getSelected($status).'>'.$this->getValueLabel($status).'</option>';
+            $html .= '<option value="'. $status .'" '. $this->getSelected($status) .'>'. $this->getValueLabel($status) .'</option>';
         }
         $html .= '</select>';
 
