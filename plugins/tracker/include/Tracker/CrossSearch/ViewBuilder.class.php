@@ -23,6 +23,7 @@ require_once 'Criteria.class.php';
 require_once 'SemanticStatusReportField.class.php';
 require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
+
 class Tracker_CrossSearch_ViewBuilder {
     /**
      * @var Tracker_FormElementFactory

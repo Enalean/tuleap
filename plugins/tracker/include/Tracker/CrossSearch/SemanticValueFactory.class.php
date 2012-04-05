@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
+require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
+require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_StatusFactory.class.php';
+
 /**
  * This factory provides a simple way to retrieve semantic values (e.g. title,
  * status...) given some artifact and changeset ids.
@@ -31,11 +35,6 @@
  * Grouping the title and status retrieval in the same class is probably not the
  * best design, but it was the easier to start with.
  */
-
-require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
-require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_StatusFactory.class.php';
-
 class Tracker_CrossSearch_SemanticValueFactory {
     
     /**
