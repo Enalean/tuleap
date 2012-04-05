@@ -149,7 +149,8 @@ class Git_Ci {
                     $token = '?token='.$row['token'];
                 }
                 $url = $row['job_url'].'/build';
-                $ch = curl_init();
+                $ch  = curl_init();
+                curl_setopt($ch, CURLOPT_FAILONERROR, true);
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_exec($ch);
                 curl_close($ch);
