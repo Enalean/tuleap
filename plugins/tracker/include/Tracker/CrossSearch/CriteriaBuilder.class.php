@@ -81,6 +81,12 @@ class Tracker_CrossSearch_CriteriaBuilder {
         );
     }
 
+    public function getArtifactListCriteria(Tracker_CrossSearch_Criteria $cross_search_criteria) {
+        if ($cross_search_criteria->getArtifactIds()) {
+            return new Tracker_Report_Criteria(null, null, null, null, null);
+        }
+    }
+    
     private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
         $current_value = array();
         

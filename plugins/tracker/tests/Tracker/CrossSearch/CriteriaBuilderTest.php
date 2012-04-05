@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
@@ -112,7 +111,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->withSemanticCriteria(array('title' => 'Foo', 'status' => ''))
                                 ->build();
-        $report_criteria = $this->getReportCriteria($cross_search_criteria);
+        $report_criteria = $this->getSemanticCriteria($cross_search_criteria);
         
         $actual_field          = $report_criteria[0]->field;
         $expected_field        = new Tracker_CrossSearch_SemanticTitleReportField('Foo', $this->semantic_factory);
@@ -124,7 +123,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->forOpenItems()
                                 ->build();
-        $report_criteria       = $this->getReportCriteria($cross_search_criteria);
+        $report_criteria       = $this->getSemanticCriteria($cross_search_criteria);
         $actual_field          = $report_criteria[1]->field;
         $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN,
                                                                                    new MockTracker_CrossSearch_SemanticValueFactory());
@@ -132,14 +131,37 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $this->assertEqual($expected_field, $actual_field);
     }
     
-    protected function getReportCriteria($cross_search_criteria) {
+    protected function getSemanticCriteria($cross_search_criteria) {
         $builder               = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory);
         $report                = new MockTracker_Report();
         return $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
     }
 }
 
-class Tracker_CrossSearch_CriteriaBuilder_WithArtifactIDTest extends Tracker_CrossSearch_CriteriaBuilderTest {
+class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     
+    public function itDoesntCreateACriteriaAtAll() {
+        $criteria = aCrossSearchCriteria()->build();
+        $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory);
+        $artifact_id_criteria = $builder->getArtifactListCriteria($criteria);
+        
+        $this->assertEqual(array(), $artifact_id_criteria);
+    }       
+}
+
+
+class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracker_CrossSearch_CriteriaBuilderTest {
+    
+    public function itCreatesASingleArtifactIdCriteria() {
+        $criteria = aCrossSearchCriteria()
+                    ->withArtifactIds(1, 33, 512)
+                    ->build();
+        $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory);
+        $artifact_id_criteria = $builder->getArtifactListCriteria($criteria);
+
+//        $expected_criterion = new Tracker_CrossSearch_ArtifactIdReportField(array(1, 33, 512));
+        $this->assertEqual(count($artifact_id_criteria), 1);
+//        $this->assertEqual($artifact_id_criteria[0], $expected_criterion);
+    }
 }
 ?>

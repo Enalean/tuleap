@@ -31,13 +31,14 @@ class Test_Tracker_CrossSearch_CriteriaBuilder {
     public function __construct() {
         $this->sharedFieldsCriteria = array();
         $this->semanticCriteria     = array('title' => '', 'status' => '');
+        $this->artifact_ids         = array();
     }
     
     /**
      * @return \Tracker_CrossSearch_Criteria 
      */
     public function build() {
-        return new Tracker_CrossSearch_Criteria($this->sharedFieldsCriteria, $this->semanticCriteria);
+        return new Tracker_CrossSearch_Criteria($this->sharedFieldsCriteria, $this->semanticCriteria, $this->artifact_ids);
     }
 
     /**
@@ -58,6 +59,11 @@ class Test_Tracker_CrossSearch_CriteriaBuilder {
     
     public function forOpenItems() {
         $this->semanticCriteria['status'] = Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN;
+        return $this;
+    }
+
+    public function withArtifactIds() {
+        $this->artifact_ids = func_get_args();
         return $this;
     }
     
