@@ -24,6 +24,7 @@ require_once 'GitDao.class.php';
 require_once 'Git_LogDao.class.php';
 
 class Git_LastPushesGraph {
+    const MAX_WEEKSNUMBER = 25;
     
     public $displayChart;
     public $repoList;
@@ -41,7 +42,11 @@ class Git_LastPushesGraph {
         $dao             = new GitDao();
 		$this->repoList  = $dao->getProjectRepositoryList($groupId);
 		$this->displayChart = false;
-		$this->weeksNumber = $weeksNumber;
+		if ($weeksNumber < self::MAX_WEEKSNUMBER) {
+		    $this->weeksNumber = $weeksNumber;
+		} else {
+		    $this->weeksNumber = self::MAX_WEEKSNUMBER;
+		}
     }
 
     /**
