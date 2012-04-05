@@ -1001,7 +1001,8 @@ ul.plugin_tracker_my_artifacts_list {
     zoom:1;
 }
 .tree-view td {
-    margin:2px;
+    margin-left:2px;
+    margin-right:2px;
     padding:0px;
 }
 

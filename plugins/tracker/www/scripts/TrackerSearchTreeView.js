@@ -50,14 +50,14 @@ var TreeTable = (function(treeTableId) {
 		collapseImg: function(TRElement) {
 			var nodeTree = TRElement.getElementsByClassName('node-tree');
 			if (nodeTree.length > 0) {
-				nodeTree[0].setStyle({backgroundImage:'url(/themes/common/images/ic/toggle-small.png)'});
+				nodeTree[0].setStyle({backgroundImage:'url(' + codendi.imgroot + '/ic/toggle-small.png)'});
 			}
 		},
 		
 		expandImg: function(TRElement) {
 			var nodeTree = TRElement.getElementsByClassName('node-tree');
 			if (nodeTree.length > 0) {
-				nodeTree[0].setStyle({backgroundImage: 'url(/themes/common/images/ic/toggle-small-expand.png)'});
+				nodeTree[0].setStyle({backgroundImage: 'url(' + codendi.imgroot + '/ic/toggle-small-expand.png)'});
 			}
 		},
 		
@@ -81,10 +81,11 @@ var TreeTable = (function(treeTableId) {
 			var nodeChild = this.getNodeChild(TRElement);
 			if (nodeChild) {
 				var TRHeight = TRElement.getHeight();
-				if ( typeof TRHeight == "number") {
-					TRHeight -= nodeChild.getHeight();
-					TRHeight += "px";
+				if ( typeof TRHeight != "number") {
+					TRHeight = TRHeight.match(/[0-9]+/);
 				}
+				TRHeight -= nodeChild.getHeight();
+				TRHeight += "px";
 				nodeChild.hide();
 				var children = this.getChildren(TRElement);
 				children.each(function(child) {
