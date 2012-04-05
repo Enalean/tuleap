@@ -24,35 +24,48 @@ require_once dirname(__FILE__).'/../../builders/aMockArtifactFactory.php';
 require_once dirname(__FILE__).'/../../builders/aMockSemanticTitleFactory.php';
 require_once dirname(__FILE__).'/../../builders/aMockSemanticStatusFactory.php';
 
-class Tracker_CrossSearch_SemanticValueFactory_NoSemanticTitleTest extends TuleapTestCase {
-    public function itReturnsAnEmptyTitle() {
-        $artifact                = aMockArtifact()->build();
-        $artifact_factory        = aMockArtifactFactory()->withArtifact($artifact)->build();
-        $semantic_title_factory  = aMockSemanticTitleFactory()->withNoFieldForTracker($artifact->getTracker())->build();
-        $semantic_status_factory = aMockSemanticStatusFactory()->build();
-        
+abstract class Tracker_CrossSearch_SemanticValueFactory_NoSemanticTest extends TuleapTestCase {
+
+    protected $artifact_id  = 123;
+
+    protected $changeset_id = 'whatever';
+
+    public function setUp() {
+        $this->artifact = aMockArtifact()->withId($this->artifact_id)->build();
+    }
+
+    protected function buildSemanticValueFactory($semantic_title_factory, $semantic_status_factory) {
+        $artifact_factory       = aMockArtifactFactory()->withArtifact($this->artifact)->build();
         $semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
-        
-        $artifact_id  = $artifact->getId();
-        $changeset_id = 'whatever';
-        
-        $this->assertEqual($semantic_value_factory->getTitle($artifact_id, $changeset_id), '');
+        return $semantic_value_factory;
     }
 }
 
-class Tracker_CrossSearch_SemanticValueFactory_NoSemanticStatusTest extends TuleapTestCase {
+class racker_CrossSearch_SemanticValueFactory_NoSemanticTitleTest extends Tracker_CrossSearch_SemanticValueFactory_NoSemanticTest {
+
+    public function itReturnsAnEmptyTitle() {
+        $semantic_value_factory = $this->GivenThereIsNoSemanticTitleDefined();
+        $this->assertEqual($semantic_value_factory->getTitle($this->artifact_id, $this->changeset_id), '');
+    }
+
+    private function GivenThereIsNoSemanticTitleDefined() {
+        $semantic_title_factory  = aMockSemanticTitleFactory()->withNoFieldForTracker($this->artifact->getTracker())->build();
+        $semantic_status_factory = aMockSemanticStatusFactory()->build();
+        return $this->buildSemanticValueFactory($semantic_title_factory, $semantic_status_factory);
+    }
+}
+
+class Tracker_CrossSearch_SemanticValueFactory_NoSemanticStatusTest extends Tracker_CrossSearch_SemanticValueFactory_NoSemanticTest {
+
     public function itReturnsAnEmptyStatus() {
-        $artifact                = aMockArtifact()->build();
-        $artifact_factory        = aMockArtifactFactory()->withArtifact($artifact)->build();
+        $semantic_value_factory = $this->GivenThereIsNoSemanticStatusDefined();
+        $this->assertEqual($semantic_value_factory->getStatus($this->artifact_id, $this->changeset_id), '');
+    }
+
+    private function GivenThereIsNoSemanticStatusDefined() {
         $semantic_title_factory  = aMockSemanticTitleFactory()->build();
-        $semantic_status_factory = aMockSemanticStatusFactory()->withNoFieldForTracker($artifact->getTracker())->build();
-        
-        $semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
-        
-        $artifact_id  = $artifact->getId();
-        $changeset_id = 'whatever';
-        
-        $this->assertEqual($semantic_value_factory->getStatus($artifact_id, $changeset_id), '');
+        $semantic_status_factory = aMockSemanticStatusFactory()->withNoFieldForTracker($this->artifact->getTracker())->build();
+        return $this->buildSemanticValueFactory($semantic_title_factory, $semantic_status_factory);
     }
 }
 
