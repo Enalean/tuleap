@@ -18,14 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Git_LastPushesGraph.class.php';
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
-    $project = ProjectManager::instance()->getProject($groupId);
 } else {
     header('Location: '.get_server_url());
 }

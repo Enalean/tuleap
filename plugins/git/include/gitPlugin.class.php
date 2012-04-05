@@ -443,8 +443,14 @@ class GitPlugin extends Plugin {
         if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
             $params['codendi_widgets'][] = 'plugin_git_user_pushes';
         }
-        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
-            $params['codendi_widgets'][] = 'plugin_git_project_pushes';
+        $request  = HTTPRequest::instance();
+        $groupId = $request->get('group_id');
+        $pm       = ProjectManager::instance();
+        $project  = $pm->getProject($groupId);
+        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+            	$params['codendi_widgets'][] = 'plugin_git_project_pushes';
+        	}
         }
     }
 
