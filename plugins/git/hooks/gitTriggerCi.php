@@ -55,11 +55,14 @@ function error($msg) {
  * @return Void
  */
 function triggerCiBuild($repositoryLocation) {
-    $repoFactory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+    $pm = ProjectManager::instance();
+    $repoFactory = new GitRepositoryFactory(new GitDao(), $pm);
     $repository  = $repoFactory->getFromFullPath($repositoryLocation);
     if ($repository) {
-        $gitCi = new Git_CI();
-        $gitCi->triggerCiBuild($repository->getId());
+        if ($repository->getProject()->usesService('hudson')) {
+            $gitCi = new Git_CI();
+            $gitCi->triggerCiBuild($repository->getId());
+        }
     }
 }
 
