@@ -731,7 +731,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     /**
      * Display the submit form
      */
-    public function displaySubmit(Tracker_IFetchTrackerSwitcher $tracker_manager, $request, $current_user, $link = null) {
+    public function displaySubmit(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $link = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array(
                 array(
@@ -741,7 +741,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         );
         
         if (!$link) {
-            $this->displayHeader($tracker_manager, $this->name, $breadcrumbs);
+            $this->displayHeader($layout, $this->name, $breadcrumbs);
         }
         
         if ($link) {
@@ -767,7 +767,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         array(
                             $link, 
                             $artifact->getTracker()->getItemName(), 
-                            $tracker_manager->fetchTrackerSwitcher($current_user, ' ', $project, $this),
+                            $layout->fetchTrackerSwitcher($current_user, ' ', $project, $this),
                         )
                     ),
                     CODENDI_PURIFIER_DISABLED
@@ -816,7 +816,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         
         echo $html;
         if (!$link) {
-            $this->displayFooter($tracker_manager);
+            $this->displayFooter($layout);
         }
     }
     
