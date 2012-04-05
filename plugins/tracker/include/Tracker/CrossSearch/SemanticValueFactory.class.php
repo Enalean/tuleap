@@ -63,9 +63,7 @@ class Tracker_CrossSearch_SemanticValueFactory {
     
     public function getTitle($artifact_id, $changeset_id) {
         $artifact = $this->getArtifact($artifact_id);
-        $tracker  = $artifact->getTracker();
-        $semantic = $this->semantic_title_factory->getByTracker($tracker);
-        $field    = $semantic->getField();
+        $field    = $this->getField($artifact, $this->semantic_title_factory);
         
         if ($field == null) { return ''; }
         
@@ -77,15 +75,17 @@ class Tracker_CrossSearch_SemanticValueFactory {
     
     public function getStatus($artifact_id, $changeset_id) {
         $artifact = $this->getArtifact($artifact_id);
-        $tracker  = $artifact->getTracker();
-        $semantic = $this->semantic_status_factory->getByTracker($tracker);
-        $field    = $semantic->getField();
+        $field    = $this->getField($artifact, $this->semantic_status_factory);
         
         if ($field == null) { return ''; }
         
         $value = $field->fetchChangesetValue($artifact_id, $changeset_id, null);
         
         return $value;
+    }
+    
+    private function getField(Tracker_Artifact $artifact, $semantic_factory) {
+        return $semantic_factory->getByTracker($artifact->getTracker())->getField();
     }
     
     /**
