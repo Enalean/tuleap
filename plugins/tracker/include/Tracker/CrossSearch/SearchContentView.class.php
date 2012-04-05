@@ -60,8 +60,8 @@ class Tracker_CrossSearch_SearchContentView {
         $this->artifact_factory  = $artifact_factory;
         $this->factory           = $factory;
         
-        $treeVisitor = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->tree_of_artifacts->accept($treeVisitor);
+        $tree_visitor = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
+        $this->tree_of_artifacts->accept($tree_visitor);
     }
     
     public function fetch() {

@@ -769,23 +769,23 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @return Boolean
      */
     public function deleteProjectTrackers($groupId) {
-        $deleteStatus = true;
+        $delete_status = true;
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($groupId);
         if (!empty($trackers)) {
             foreach ($trackers as $tracker) {
                 if (!$this->getTrackerFactory()->markAsDeleted($tracker->getId())) {
-                    $deleteStatus = false;
+                    $delete_status = false;
                 }
             }
         }
-        return $deleteStatus;
+        return $delete_status;
     }
 
     public function getCrossSearch() {
-        $hierarchyFactory   = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
-        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
-        $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $hierarchyFactory);
+        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+        $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
+        $dao                  = new Tracker_CrossSearch_SearchDao();
+        $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory);
         return $search;
     }
     
