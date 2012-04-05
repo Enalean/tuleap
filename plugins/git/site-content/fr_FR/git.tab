@@ -177,6 +177,7 @@ plugin_git	widget_user_pushes_past_days	Nombre maximum de jours dans le passé
 plugin_git	widget_user_pushes_details	Détails
 plugin_git	widget_project_pushes_duration	Affiche les push Git pour la(les) dernière(s)
 plugin_git	widget_project_pushes_group_by	semaine(s).
+plugin_git	widget_project_pushes_max_weeks	Pour garantir la lisibilité du graphique, le nombre de semaines ne doit pas dépasser 25.
 
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git pushes

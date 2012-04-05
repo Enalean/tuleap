@@ -24,7 +24,8 @@ require_once 'GitDao.class.php';
 require_once 'Git_LogDao.class.php';
 
 class Git_LastPushesGraph {
-    const MAX_WEEKSNUMBER = 25;
+    const MAX_WEEKSNUMBER  = 25;
+    const WEEKS_IN_SECONDS = 604800;
     
     public $displayChart;
     public $repoList;
@@ -56,10 +57,9 @@ class Git_LastPushesGraph {
      * @return Void
      */
     public function setUpGraphEnvironnment() {
-        $week            = 7 * 24 * 3600;
         $today           = $_SERVER['REQUEST_TIME'];
         $start_of_period = strtotime("-$this->weeksNumber weeks");
-        for ($i = $start_of_period ; $i <= $today ; $i += $week) {
+        for ($i = $start_of_period ; $i <= $today ; $i += self::WEEKS_IN_SECONDS) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[]   = intval(date('W', $i));
             $this->year[]   = intval(date('Y', $i));
@@ -200,7 +200,7 @@ class Git_LastPushesGraph {
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
-            $msg = "There is no logged pushes in the last $this->weeksNumber weeks";
+            $msg = "There is no logged pushes in the last $this->weeksNumber week(s)";
             $this->displayError($msg);
         }
     }

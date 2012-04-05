@@ -125,6 +125,9 @@ class Git_Widget_ProjectPushes extends Widget {
                         <td><input name='plugin_git_project_pushes_duration' value='".$this->duration."'/></td>
                         <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_group_by')."</td>
                     </tr>
+                    <tr>
+                        <td colspan='2'>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_max_weeks')."</td>
+                    </tr>
                 </table>";
         
     }
