@@ -21,7 +21,7 @@
 
 class LastReleaseFinder {
 
-    public function __construct($git_exec) {
+    public function __construct(GitExec $git_exec) {
         $this->git_exec = $git_exec;
     }
 
@@ -54,7 +54,7 @@ class LastReleaseFinder {
 
 class ChangeDetector {
     
-    public function __construct($git_exec, $candidate_paths) {
+    public function __construct(GitExec $git_exec, $candidate_paths) {
         $this->git_exec = $git_exec;
         $this->candidate_paths = $candidate_paths;
     }    
@@ -71,8 +71,8 @@ class ChangeDetector {
 }
 
 class NonIncrementedPathFinder {
-    
-    public function __construct($git_exec, $old_revision, ChangeDetector $changed_paths_finder) {
+
+    public function __construct(GitExec $git_exec, $old_revision, ChangeDetector $changed_paths_finder) {
         $this->git_exec = $git_exec;
         $this->change_detector = $changed_paths_finder;
         $this->old_revision = $old_revision;
@@ -82,14 +82,24 @@ class NonIncrementedPathFinder {
         $changed_paths = $this->change_detector->findPathsThatChangedSince($this->old_revision);
         $non_incremented_paths = array();
         foreach ($changed_paths as $path) {
-            $oldRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", $this->old_revision);
-            $currentRevisionFileContent = $this->git_exec->fileContent($path."/VERSION", 'HEAD');
-            echo("$path : old revision $oldRevisionFileContent new revision $currentRevisionFileContent".PHP_EOL);
-            if (version_compare($oldRevisionFileContent, $currentRevisionFileContent, '>=')) {
-                $non_incremented_paths[] = $path;
-            }
+            $this->appendIfNotIncremented($non_incremented_paths, $changed_path);
         }
         return $non_incremented_paths;
+    }
+
+    private function appendIfNotIncremented(&$non_incremented_paths, $changed_path) {
+        $last_declared_version    = $this->getContentOfVERSIONFileAt($path, $this->old_revision);
+        $current_declared_version = $this->getContentOfVERSIONFileAt($path, 'HEAD');
+
+        echo("$path : old revision $last_declared_version new revision $current_declared_version".PHP_EOL);
+
+        if (version_compare($last_declared_version, $current_declared_version, '>=')) {
+            $non_incremented_paths[] = $path;
+        }
+    }
+
+    private function getContentOfVERSIONFileAt($path, $revision) {
+        return $this->git_exec->fileContent($path."/VERSION", $revision);        
     }
 }
 
@@ -98,11 +108,13 @@ class CheckReleaseReporter {
     public function __construct(NonIncrementedPathFinder $non_incremented_path_finder) {
         $this->non_incremented_paths_finder = $non_incremented_path_finder;
     }
+    
     public function reportViolations() {
-        $non_incremented_paths = $this->non_incremented_paths_finder->find();
         $COLOR_RED     = "\033[31m";
         $COLOR_GREEN   = "\033[32m";
         $COLOR_NOCOLOR = "\033[0m";
+        
+        $non_incremented_paths = $this->non_incremented_paths_finder->find();
         foreach ($non_incremented_paths as $non_incremented_path) {
             echo "$COLOR_RED $non_incremented_path changed but wasn't incremented $COLOR_NOCOLOR".PHP_EOL;
         }

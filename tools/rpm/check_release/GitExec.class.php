@@ -32,11 +32,11 @@ class GitExec {
         exec("git show $version:$path", $output);
         return implode(PHP_EOL, $output);
     }
+    
     public function lsRemote($remote) {
         $output;
         exec("git ls-remote $remote", $output);
         return $output;
-        
     }
 }
 
