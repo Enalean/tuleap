@@ -191,7 +191,7 @@ class TrackerManager { /* extends Engine? */
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
-            $this->getCrossSearchViewBuilder()
+            $this->getCrossSearchViewBuilder($request->get('group_id'))
         );
     }
     
@@ -820,11 +820,11 @@ class TrackerManager { /* extends Engine? */
         return $search;
     }
     
-
-    public function getCrossSearchViewBuilder() {
+    public function getCrossSearchViewBuilder($group_id) {
         $formElementFactory = Tracker_FormElementFactory::instance(); 
         $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory();
-        $criteria_builder = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue);
+        $planningTrackerIds = $this->getPlanningTrackers($group_id);
+        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue, $planningTrackerIds);
         return new Tracker_CrossSearch_ViewBuilder(
             $formElementFactory, 
             $this->getTrackerFactory(), 
@@ -833,5 +833,27 @@ class TrackerManager { /* extends Engine? */
         );
     }
 
+    /**
+     * Return the 'Planning' tracker (tracker we should be able to use artifacts to perform search.
+     * 
+     * This method hard code dependency with agile dashboard and planning stuff.
+     * It should be renamed later on when planning definition is clearly defined.
+     * 
+     * @param Integer $group_id
+     * 
+     * @return Array of Integer
+     */
+    private function getPlanningTrackers($group_id) {
+        $tracker_ids = array();
+        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
+        if (class_exists('PlanningFactory')) {
+            $pf = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+            foreach ($pf->getPlannings($group_id) as $pl) {
+                $pl = $pf->getPlanning($pl->getId());
+                $tracker_ids[] = $pl->getPlanningTrackerId();
+            }
+        }
+        return $tracker_ids;
+    }
 }
 ?>

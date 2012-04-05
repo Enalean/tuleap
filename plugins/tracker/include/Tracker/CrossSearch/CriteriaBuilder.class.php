@@ -37,9 +37,17 @@ class Tracker_CrossSearch_CriteriaBuilder {
      */
     private $semantic_value_factory;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory, Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
+    /**
+     * @var Array
+     */
+    private $planning_tracker_ids;
+    
+    public function __construct(Tracker_FormElementFactory               $form_element_factory, 
+                                Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory,
+                                array                                    $planning_tracker_ids) {
         $this->form_element_factory   = $form_element_factory;
         $this->semantic_value_factory = $semantic_value_factory;
+        $this->planning_tracker_ids   = $planning_tracker_ids;
     }
     
     /**
