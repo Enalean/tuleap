@@ -788,10 +788,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                     $GLOBALS['HTML']->redirect(TRACKER_BASE_URL.'/?group_id='. $tracker->getGroupId());
                 }
             }
-        } else {
-           /// ??? 
         }
-        
     }
 
     /**
