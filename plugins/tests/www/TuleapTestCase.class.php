@@ -124,13 +124,12 @@ abstract class TuleapTestCase extends UnitTestCase {
     }
     
     protected function assertNotEmpty($string) {
-        if (! $this->assertNotNull($string)) { return; }
-        return $this->assertNotEqual($string, '');
+        return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
     }
     
     protected function assertNotBlank($string) {
-        if (! $this->assertNotEmpty($string)) { return; }
-        return $this->assertNoPattern('/^[ ]+$/', $string);
+        // What about trim() ?
+        return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
     }
 }
 ?>

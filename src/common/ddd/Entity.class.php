@@ -24,6 +24,7 @@
  * other attributes. For instance an object retrieved from the database.
  */
 interface Entity {
+    
     /**
      *  Get the id
      *
