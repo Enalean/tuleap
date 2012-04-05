@@ -36,7 +36,7 @@ foreach ($argv as $arg) {
 triggerCiBuild($params['repo_location']);
 
 /**
- * Pint an error then exit
+ * Print an error then exit
  *
  * @param String $msg Error message to display
  *

@@ -21,7 +21,7 @@
 require_once('Git_CiDao.class.php');
 
 /**
- * Continuous integration DAO for Git
+ * Continuous integration for Git
  */
 class Git_Ci {
 
