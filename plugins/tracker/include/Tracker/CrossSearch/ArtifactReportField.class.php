@@ -21,12 +21,13 @@
 class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     
     protected $artifact_ids;
-    
+    protected $id = 'artifact_of_tracker';
     /**
      * @var Tracker
      */
     protected $tracker;
     
+    ///TODO: change $tracker to a name more explicit like 'stuff'
     public function __construct(Tracker $tracker, $artifact_ids) {
         $this->artifact_ids = $artifact_ids;
         $this->tracker      = $tracker;
@@ -34,13 +35,14 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     
     
     public function getId() {
-        
+        return $this->id.'['.$this->tracker->getId().']';
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
     }
     
     public function isUsed() {
+        return true;
     }
     
     public function getLabel() {
