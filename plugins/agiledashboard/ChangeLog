@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 5.0
+    * Remove an artifact already planified
+    
 Version 0.9 - Tuleap 5.0
     * Take into account cross tracker search based on semantic (see tracker 5.5 changelog for details).
 
