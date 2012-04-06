@@ -170,9 +170,7 @@ class Tracker_CrossSearch_SearchContentView {
             $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
                 $values = array();
-                // TODO: array_unique is here because the SQL query returns to much things
-                //       fix dao!
-                foreach (array_unique(explode(',', $row[$key])) as $id) {
+                foreach (explode(',', $row[$key]) as $id) {
                     $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
                 }
                 $value = implode(', ', $values);
