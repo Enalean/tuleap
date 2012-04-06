@@ -75,12 +75,15 @@ class Tracker_CrossSearch_Query {
         return $id_list;
     }
     
+    //TODO : is it going to be used?
     public function getArtifactsOfTracker($tracker_id) {
+        $artifacts = array();
         if (isset($this->artifact_ids[$tracker_id])) {
-            return $this->artifact_ids[$tracker_id];
-        } else {
-            return array();
+            foreach($this->artifact_ids[$tracker_id] as $artifact_id) {
+                $artifacts[] = new Tracker_Artifact($artifact_id, $tracker_id, null, null, null);
+            }
         }
+        return $artifacts;
     }
 }
 ?>

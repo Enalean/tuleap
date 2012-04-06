@@ -28,6 +28,8 @@ Mock::generate('Response');
 require_once 'common/layout/Layout.class.php';
 Mock::generate('Layout');
 
+require_once 'MockBuilder.php';
+
 /**
  * Abstract class to use for unit tests inside Tuleap.
  *

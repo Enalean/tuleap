@@ -20,7 +20,7 @@
 
 class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     
-    protected $artifact_ids;
+    protected $artifacts;
     protected $id = 'artifact_of_tracker';
     /**
      * @var Tracker
@@ -28,8 +28,8 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     protected $tracker;
     
     ///TODO: change $tracker to a name more explicit like 'stuff'
-    public function __construct(Tracker $tracker, $artifact_ids) {
-        $this->artifact_ids = $artifact_ids;
+    public function __construct(Tracker $tracker, array $artifacts) {
+        $this->artifacts    = $artifacts;
         $this->tracker      = $tracker;
     }
     
@@ -39,6 +39,30 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
+        $trackerId = $this->tracker->getId();
+        $html = '';
+        $html.= '<label for="'.$this->id.'_'.$trackerId.'" title="#'.$trackerId.'">'.$this->tracker->getName().'</label>';
+        $html.= <<<MARKUP
+        <div class="tracker_report_criteria">
+        <input type="hidden" name="artifact_criteria[$trackerId][values]">
+        <select id="tracker_report_criteria_adv_$trackerId" multiple="multiple" size="7" name="artifact_criteria[$trackerId][values][]">
+        <option selected="selected" value="">Any</option>
+        <option value="100">None</option>
+MARKUP;
+        foreach ($this->artifacts as $artifact) {
+            $html.= '<option value="'.$artifact->getId().'">'.$artifact->getTitle().'</option>';
+        }
+        $html.= <<<MARKUP
+        </select>
+        </input>
+        </div>       
+MARKUP;
+        
+        /*
+        <option style="" value="571">New</option>
+
+         */
+        return $html;
     }
     
     public function isUsed() {
