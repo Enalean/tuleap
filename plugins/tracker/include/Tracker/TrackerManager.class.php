@@ -820,11 +820,9 @@ class TrackerManager { /* extends Engine? */
         return $search;
     }
     
-    private function getArtifactLinkFieldsOfTrackers(Tracker_FormElementFactory $formElementFactory, array $planning_tracker_ids) {
+    private function getArtifactLinkFieldsOfTrackers(Tracker_FormElementFactory $formElementFactory, array $planning_trackers) {
         $art_link_field_ids = array();
-        $trackerFactory = $this->getTrackerFactory();
-        foreach ($planning_tracker_ids as $trackerId) {
-            $tracker = $trackerFactory->getTrackerById($trackerId);
+        foreach ($planning_trackers as $tracker) {
             $fields = $formElementFactory->getUsedArtifactLinkFields($tracker);
             foreach ($fields as $field) {
                 $art_link_field_ids[] = $field->getId();
@@ -834,11 +832,11 @@ class TrackerManager { /* extends Engine? */
     }
     
     public function getCrossSearchViewBuilder($group_id) {
-        $formElementFactory   = Tracker_FormElementFactory::instance();
-        $planning_tracker_ids = $this->getPlanningTrackers($group_id);
-        $art_link_field_ids   = $this->getArtifactLinkFieldsOfTrackers($formElementFactory, $planning_tracker_ids);
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        $planning_trackers  = $this->getPlanningTrackers($group_id);
+        $art_link_field_ids = $this->getArtifactLinkFieldsOfTrackers($formElementFactory, $planning_trackers);
         $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory();
-        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue, $planning_tracker_ids);
+        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue, $planning_trackers);
         return new Tracker_CrossSearch_ViewBuilder(
             $formElementFactory, 
             $this->getTrackerFactory(), 
@@ -858,16 +856,19 @@ class TrackerManager { /* extends Engine? */
      * @return Array of Integer
      */
     private function getPlanningTrackers($group_id) {
-        $tracker_ids = array();
+        $trackers = array();
         @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
         if (class_exists('PlanningFactory')) {
-            $pf = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
-            foreach ($pf->getPlannings($group_id) as $pl) {
-                $pl = $pf->getPlanning($pl->getId());
-                $tracker_ids[] = $pl->getPlanningTrackerId();
+            $tracker_factory  = $this->getTrackerFactory();
+            $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+            foreach ($planning_factory->getPlannings($group_id) as $planning) {
+                $planning   = $planning_factory->getPlanning($planning->getId());
+                if ($tracker = $tracker_factory->getTrackerById($planning->getPlanningTrackerId())) {
+                    $trackers[] = $tracker;
+                }
             }
         }
-        return $tracker_ids;
+        return $trackers;
     }
 }
 ?>

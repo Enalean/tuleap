@@ -38,16 +38,16 @@ class Tracker_CrossSearch_CriteriaBuilder {
     private $semantic_value_factory;
 
     /**
-     * @var Array
+     * @var Array of Tracker
      */
-    private $planning_tracker_ids;
+    private $planning_trackers;
     
     public function __construct(Tracker_FormElementFactory               $form_element_factory, 
                                 Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory,
-                                array                                    $planning_tracker_ids) {
+                                array                                    $planning_trackers) {
         $this->form_element_factory   = $form_element_factory;
         $this->semantic_value_factory = $semantic_value_factory;
-        $this->planning_tracker_ids   = $planning_tracker_ids;
+        $this->planning_trackers      = $planning_trackers;
     }
     
     /**
@@ -95,8 +95,8 @@ class Tracker_CrossSearch_CriteriaBuilder {
 
     public function getArtifactLinkCriteria(Tracker_Report $report, Tracker_CrossSearch_Criteria $cross_search_criteria) {
         $criteria = array();
-        foreach ($this->planning_tracker_ids as $tracker_id) {
-            $field = new Tracker_CrossSearch_ArtifactReportField($tracker_id, $cross_search_criteria->getArtifactsOfTracker($tracker_id));
+        foreach ($this->planning_trackers as $tracker) {
+            $field = new Tracker_CrossSearch_ArtifactReportField($tracker, $cross_search_criteria->getArtifactsOfTracker($tracker->getId()));
             $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, null);
         }
         return $criteria;
