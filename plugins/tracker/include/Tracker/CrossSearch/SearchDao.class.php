@@ -90,6 +90,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             GROUP BY artifact.id
             ORDER BY title
         ";
+        //echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
     
@@ -227,7 +228,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     protected function getArtifactLinkSelects(array $field_ids) {
         $sql = '';
         foreach ($field_ids as $field_id) {
-            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS art_link_'.$field_id;
+            $sql .= ', GROUP_CONCAT(AL_COL_'.$field_id.'.id) AS art_link_'.$field_id;
         }
         return $sql;
     }
@@ -265,12 +266,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
         $al_tracker_changeset_value_al = 'AL_COL_CVAL_'.$field_id;
         
-        $title_sql = $this->getArtifactTitleSqlFragment("$tracker_artifact_title.last_changeset_id", $field_id);
+        //$title_sql = $this->getArtifactTitleSqlFragment("$tracker_artifact_title.last_changeset_id", $field_id);
         
         $sql = "LEFT JOIN (
                     tracker_artifact AS $tracker_artifact_title
-
-                    $title_sql
 
                 INNER JOIN tracker_changeset_value  AS $al_tracker_changeset_value   ON ($tracker_artifact_title.last_changeset_id = $al_tracker_changeset_value.changeset_id AND $al_tracker_changeset_value.field_id IN ($field_id))
                 INNER JOIN tracker_changeset_value_artifactlink AS $al_tracker_changeset_value_al ON ($al_tracker_changeset_value.id = $al_tracker_changeset_value_al.changeset_value_id)
