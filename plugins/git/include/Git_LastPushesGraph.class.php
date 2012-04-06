@@ -60,10 +60,9 @@ class Git_LastPushesGraph {
      * @return Void
      */
     public function setUpGraphEnvironnment() {
-        // TODO: Fix this algorythm its input is too random
         $today       = $_SERVER['REQUEST_TIME'];
         $startPeriod = strtotime("-$this->weeksNumber weeks");
-        for ($i = $startPeriod ; $i <= $today ; $i += self::WEEKS_IN_SECONDS) {
+        for ($i = $startPeriod ; $i < $today ; $i += self::WEEKS_IN_SECONDS) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
             $this->year[]    = intval(date('Y', $i));
