@@ -28,12 +28,11 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-$vDuration = new Valid_UInt();
-if ($request->valid($vDuration)) {
-    $nb_weeks = $request->get('duration');
-} else {
-    header('Location: '.get_server_url());
+$plugin = PluginManager::instance()->getPluginByName('git');
+$duration = $plugin->getPluginInfo()->getPropVal('duration');
+if (empty($duration) || $duration > 25) {
+    $duration = 12;
 }
-$imageRenderer = new Git_LastPushesGraph($groupId, $nb_weeks);
+$imageRenderer = new Git_LastPushesGraph($groupId, $duration);
 $imageRenderer->display();
 ?>

@@ -1,3 +1,4 @@
 <?php
 $git_backup_dir = '/tmp/';
+$duration = 12;
 ?>

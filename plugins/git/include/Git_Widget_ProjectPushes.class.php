@@ -23,9 +23,6 @@
  */
 class Git_Widget_ProjectPushes extends Widget {
 
-    //The default duration is 3 months back
-    public $duration;
-
     /**
      * Constructor of the widget.
      *
@@ -34,10 +31,6 @@ class Git_Widget_ProjectPushes extends Widget {
     public function __construct() {
         parent::__construct('plugin_git_project_pushes');
 
-        $this->duration = user_get_preference('plugin_git_project_pushes_duration');
-        if (empty($this->duration)) {
-            $this->duration = 12;
-        }
     }
 
     /**
@@ -59,7 +52,7 @@ class Git_Widget_ProjectPushes extends Widget {
         $group_id = $request->get('group_id');
         $request  = HTTPRequest::instance();
         $content  = '<div style="text-align:center"><p>';
-        $graph    = '<img src="/plugins/git/project_last_git_pushes_graph.php?group_id='.$group_id.'&duration='.$this->duration.'" title="'.$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title').'" />';
+        $graph    = '<img src="/plugins/git/project_last_git_pushes_graph.php?group_id='.$group_id.'" title="'.$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title').'" />';
         $content .= $graph.'</div>';
         return $content;
     }
@@ -82,55 +75,6 @@ class Git_Widget_ProjectPushes extends Widget {
         return $GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_description');
     }
 
-    /**
-     * Update preferences
-     *
-     * @param Array $request HTTP request
-     *
-     * @return Boolean
-     */
-    function updatePreferences($request) {
-        $request->valid(new Valid_String('cancel'));
-        $vWeeks   = new Valid_UInt('plugin_git_project_pushes_duration');
-        $vWeeks->required();
-        if (!$request->exist('cancel')) {            
-            if ($request->valid($vWeeks)) {
-                $this->duration = $request->get('plugin_git_project_pushes_duration');
-            } else {
-                $this->duration = 12;
-            }
-            user_set_preference('plugin_git_project_pushes_duration', $this->duration);
-        }
-        return true;
-    }
-
-    /**
-     * Widget has preferences
-     *
-     * @return Boolean
-     */
-    function hasPreferences() {
-        return true;
-    }
-
-    /**
-     * Display preferences form
-     *
-     * @return String
-     */
-    function getPreferences() {
-        return "<table>
-                    <tr>
-                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_duration')."</td>
-                        <td><input name='plugin_git_project_pushes_duration' value='".$this->duration."'/></td>
-                        <td>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_group_by')."</td>
-                    </tr>
-                    <tr>
-                        <td colspan='2'>".$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_max_weeks')."</td>
-                    </tr>
-                </table>";
-        
-    }
 }
 
 ?>
