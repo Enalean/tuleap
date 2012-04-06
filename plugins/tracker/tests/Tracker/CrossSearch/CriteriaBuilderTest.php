@@ -105,8 +105,29 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $report  = new MockTracker_Report();
         return $criteria_builder->getCriteria($project, $report, $cross_search_criteria);
     }
-    
+
     public function testAllCriteriaHaveAReport() {
+        $criteria = $this->givenACriteriaWith_SharedField_SemanticTitle_SemanticStatus_Artifact();
+        
+        foreach ($criteria as $criterion) {
+            $this->assertIsA($criterion->report, 'Tracker_Report');
+        }
+    }
+    
+    public function testAllCriteriaAreAdvancedCriteria() {
+        $criteria = $this->givenACriteriaWith_SharedField_SemanticTitle_SemanticStatus_Artifact();
+        foreach ($criteria as $criterion) {
+            $this->assertTrue($criterion->is_advanced);
+        }
+    }
+    
+    public function testGetCriteriaAssemblesAllCriterias() {
+        $criteria = $this->givenACriteriaWith_SharedField_SemanticTitle_SemanticStatus_Artifact();
+                
+        $this->assertEqual(count($criteria), 4);        
+    }
+    
+    private function givenACriteriaWith_SharedField_SemanticTitle_SemanticStatus_Artifact() {
         $release_tracker_id = 133;
         $release_tracker    = aTracker()->withId($release_tracker_id)->build();
         
@@ -118,19 +139,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $this->artifact_criteria     = array($release_tracker_id => array(3, 6));
         $this->planning_trackers     = array($release_tracker);
         
-        $criteria = $this->getCriteria();
-        $this->assertEqual(count($criteria), 4);
-        foreach ($criteria as $criterion) {
-            $this->assertNotNull($criterion->report);
-        }
-    }
-    
-    public function testAllCriteriaAreAdvancedCriteria() {
-    
-    }
-    
-    public function testGetCriteriaAssemblesAllCriteriaTypes() {
-    
+        return $this->getCriteria();
     }
     
 }
