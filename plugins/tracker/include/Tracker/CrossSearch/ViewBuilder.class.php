@@ -122,7 +122,7 @@ class Tracker_CrossSearch_ViewBuilder {
     }
     
     private function getReport() {
-        $name               = "Shared field search";
+        $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
         $is_query_displayed = true;
         
         $report_id = $description = $current_renderer_id = $parent_report_id

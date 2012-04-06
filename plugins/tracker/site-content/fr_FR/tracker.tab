@@ -11,8 +11,8 @@ plugin_tracker_homenav	search	Recherche
 
 plugin_tracker_crosssearch	title	Recherche
 
-plugin_tracker_crosssearch	semantic_title_label	Titre
-plugin_tracker_crosssearch	semantic_status_label	État
+plugin_tracker_crosssearch	semantic_title_label	Titre (Sémantique)
+plugin_tracker_crosssearch	semantic_status_label	État (Sémantique)
 plugin_tracker_crosssearch	semantic_status_any	Tous
 plugin_tracker_crosssearch	semantic_status_open	Ouvert
 plugin_tracker_crosssearch	semantic_status_closed	Fermé

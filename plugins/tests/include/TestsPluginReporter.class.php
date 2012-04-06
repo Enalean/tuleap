@@ -124,7 +124,7 @@ class TestsPluginHtmlReporter extends HtmlReporter implements iCodeCoverageRepor
      *    @access public
      */
     function paintFail($message) {
-        $output_buffering_is_active = ob_get_level() > 1;
+        $output_buffering_is_active = ob_get_level() > 2;
         if ($output_buffering_is_active) ob_end_clean();
         $this->_fails++;
         print "<span class=\"fail\">Fail</span>: ";

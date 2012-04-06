@@ -47,12 +47,26 @@ class Tracker_CrossSearch_Search {
      */
     private $hierarchy_factory;
     
+    /**
+     * @var array
+     */
+    private $artifact_link_field_ids_for_column_display;
+
+    /**
+     * @var Tracker_Hierarchy_Sorter
+     */
+    private $result_sorter;
+    
     public function __construct(Tracker_CrossSearch_SharedFieldFactory $shared_field_factory,
                                 Tracker_CrossSearch_SearchDao          $dao,
-                                Tracker_HierarchyFactory               $hierarchy_factory) {
+                                Tracker_HierarchyFactory               $hierarchy_factory,
+                                array                                  $artifact_link_field_ids_for_column_display) {
         $this->hierarchy_factory    = $hierarchy_factory;
         $this->shared_field_factory = $shared_field_factory;
         $this->dao                  = $dao;
+        $this->result_sorter        = new Tracker_Hierarchy_Sorter();
+        
+        $this->artifact_link_field_ids_for_column_display = $artifact_link_field_ids_for_column_display;
     }
     
     /**
@@ -74,10 +88,9 @@ class Tracker_CrossSearch_Search {
         $shared_fields   = $this->shared_field_factory->getSharedFields($criteria->getSharedFields());
         $semantic_fields = $criteria->getSemanticCriteria();
         
-        $artifacts = $this->dao->searchMatchingArtifacts($tracker_ids, $shared_fields, $semantic_fields, $excluded_artifact_ids);
+        $artifacts = $this->dao->searchMatchingArtifacts($criteria, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
-        $result_sorter = new Tracker_Hierarchy_Sorter();
-        return $result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
+        return $this->result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
     }
     
 }

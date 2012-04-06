@@ -30,8 +30,11 @@ Mock::generate('Tracker_Report');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
+Mock::generate('Tracker_CrossSearch_ArtifactReportField');
+Mock::generate('Tracker_CrossSearch_SemanticStatusReportField');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
@@ -87,6 +90,68 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById($artifact->getId())->returns($artifact);
         $artifact_factory->expectOnce('getArtifactById', array($artifact->getId()));
         return $artifact_factory;
+    }
+    
+    public function itUsesExtraColumnsFromArtifactRow() {
+        $report            = new MockTracker_Report();
+        
+        $release_tracker_id = 743;
+        $release_tracker    = aTracker()->withId($release_tracker_id)->build();
+        $art_link_release_field_id   = 131;
+        $art_link_release_field      = mock('Tracker_CrossSearch_ArtifactReportField');
+        stub($art_link_release_field)->getTracker()->returns($release_tracker);
+        stub($art_link_release_field)->getArtifactLinkFieldName()->returns('art_link_'.$art_link_release_field_id);
+        $art_link_release_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_release_field, 0, true);
+        
+        $sprint_tracker_id = 365;
+        $sprint_tracker    = aTracker()->withId($sprint_tracker_id)->build();
+        $art_link_sprint_field_id   = 511;
+        $art_link_sprint_field      = mock('Tracker_CrossSearch_ArtifactReportField');
+        stub($art_link_sprint_field)->getTracker()->returns($sprint_tracker);
+        stub($art_link_sprint_field)->getArtifactLinkFieldName()->returns('art_link_'.$art_link_sprint_field_id);
+        $art_link_sprint_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_sprint_field, 0, true);
+        
+        $criteria = array($art_link_release_criterion, $art_link_sprint_criterion);
+        
+        $sprint_id = '354';
+        $sprint    = stub('Tracker_Artifact')->getTitle()->returns('The planning known as Sprint');
+        
+        $release_id = '666';
+        $release    = stub('Tracker_Artifact')->getTitle()->returns('I release I can fly');
+        
+        $artifact_node = new TreeNode();
+        $artifact_node->setId(1);
+        $artifact_node->setData(array('id' => 123,
+                                      'title' => 'foo',
+                                      'last_changeset_id' => '567',
+                                      'art_link_'.$art_link_sprint_field_id => $sprint_id,
+                                      'art_link_'.$art_link_release_field_id => $release_id));
+        
+        $tree_of_artifacts = new TreeNode();
+        $tree_of_artifacts->setId(0);
+        $tree_of_artifacts->addChild($artifact_node);
+        
+        $artifact_factory  = new MockTracker_ArtifactFactory();
+        $factory           = new MockTracker_FormElementFactory();
+        $tracker           = new MockTracker();
+        $artifact          = new MockTracker_Artifact();
+        
+        $artifact->setReturnValue('getTracker', $tracker);
+        
+        stub($artifact_factory)->getArtifactById(123)->returns($artifact);
+        stub($artifact_factory)->getArtifactById($sprint_id)->returns($sprint);
+        stub($artifact_factory)->getArtifactById($release_id)->returns($release);
+        
+
+        $view = new Tracker_CrossSearch_SearchContentView($report,
+                                                          $criteria,
+                                                          $tree_of_artifacts,
+                                                          $artifact_factory,
+                                                          $factory);
+        $html = $view->fetch();
+        
+        $this->assertPattern('/The planning known as Sprint/', $html);
+        $this->assertPattern('/I release I can fly/', $html);
     }
 }
 ?>

@@ -193,7 +193,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
-            $this->getCrossSearchViewBuilder()
+            $this->getCrossSearchViewBuilder($request->get('group_id'))
         );
     }
     
@@ -781,30 +781,68 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $delete_status;
     }
 
-    public function getCrossSearch() {
+    private function getCrossSearch(array $art_link_column_field_ids) {
         $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
         $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                  = new Tracker_CrossSearch_SearchDao();
-        $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory);
+        $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
         return $search;
     }
     
+    private function getArtifactLinkFieldsOfTrackers(Tracker_FormElementFactory $formElementFactory, array $planning_trackers) {
+        $art_link_field_ids = array();
+        foreach ($planning_trackers as $tracker) {
+            $fields = $formElementFactory->getUsedArtifactLinkFields($tracker);
+            if (count($fields)) { 
+                $art_link_field_ids[] = $fields[0]->getId();
+            }
+        }
+        return $art_link_field_ids;
+    }
+    
+    public function getCrossSearchViewBuilder($group_id) {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $planning_trackers  = $this->getPlanningTrackers($group_id);
+        $art_link_field_ids = $this->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
 
-    public function getCrossSearchViewBuilder() {
         $artifact_factory        = $this->getArtifactFactory();
         $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
         $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
         $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
-        $form_element_factory    = Tracker_FormElementFactory::instance();
-        $criteria_builder        = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory);
-        
+
+        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory, $planning_trackers);
         return new Tracker_CrossSearch_ViewBuilder(
             $form_element_factory, 
             $this->getTrackerFactory(), 
-            $this->getCrossSearch(), 
+            $this->getCrossSearch($art_link_field_ids), 
             $criteria_builder
         );
     }
 
+    /**
+     * Return the 'Planning' tracker (tracker we should be able to use artifacts to perform search.
+     * 
+     * This method hard code dependency with agile dashboard and planning stuff.
+     * It should be renamed later on when planning definition is clearly defined.
+     * 
+     * @param Integer $group_id
+     * 
+     * @return Array of Integer
+     */
+    private function getPlanningTrackers($group_id) {
+        $trackers = array();
+        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
+        if (class_exists('PlanningFactory')) {
+            $tracker_factory  = $this->getTrackerFactory();
+            $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+            foreach ($planning_factory->getPlannings($group_id) as $planning) {
+                $planning   = $planning_factory->getPlanning($planning->getId());
+                if ($tracker = $tracker_factory->getTrackerById($planning->getPlanningTrackerId())) {
+                    $trackers[] = $tracker;
+                }
+            }
+        }
+        return $trackers;
+    }
 }
 ?>
