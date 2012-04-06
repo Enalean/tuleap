@@ -132,19 +132,25 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
-        $shared_fields_criteria = $semantic_criteria = null;
-        $expectedCriteria       = aCrossSearchCriteria()->build();
+        $shared_fields_criteria = $semantic_criteria = array();
+        $expectedCriteria       = aCrossSearchCriteria()
+                                  ->withSharedFieldsCriteria($shared_fields_criteria)
+                                  ->withSemanticCriteria($semantic_criteria)
+                                  ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
      
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
-        $shared_fields_criteria = 'invalid parameter type';
-        $semantic_criteria      = 'another invalid parameter type';
-        $expectedCriteria       = aCrossSearchCriteria()->build();
+        $shared_fields_criteria = array('invalid parameter type');
+        $semantic_criteria      = array('another invalid parameter type');
+        $expectedCriteria       = aCrossSearchCriteria()
+                                  ->withSharedFieldsCriteria($shared_fields_criteria)
+                                  ->withSemanticCriteria($semantic_criteria)
+                                  ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
     
-    private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, $expected_criteria) {
+    private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
         $project_id                = 1111;
         $id                        = 987;
         $a_list_of_draggable_items = 'A list of draggable items';
@@ -164,7 +170,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
 
 
-    private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $content) {
+    private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
         $tracker_ids  = array();
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
