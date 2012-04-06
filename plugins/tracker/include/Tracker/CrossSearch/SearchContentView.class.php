@@ -175,17 +175,17 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     private function getFormElementFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
-        if ($this->isNotASharedField($report_field)) {
-            return $report_field;
-        } else {
+        if ($this->isASharedField($report_field)) {
             return $this->factory->getFieldFromTrackerAndSharedField($tracker, $report_field);
+        } else {
+            return $report_field;
         }
     }
     
-    protected function isNotASharedField($criterionField) {
-        return is_a($criterionField, 'Tracker_CrossSearch_SemanticTitleReportField') 
-        || is_a($criterionField, 'Tracker_CrossSearch_SemanticStatusReportField')
-        || is_a($criterionField, 'Tracker_CrossSearch_ArtifactReportField');
+    private function isASharedField(Tracker_Report_Field $report_field) {
+        return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
+                 $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
+                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
     }
 
 }
