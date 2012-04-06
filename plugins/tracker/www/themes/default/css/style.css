@@ -992,7 +992,6 @@ ul.plugin_tracker_my_artifacts_list {
 
 .tree-view, .tree-view tr, .tree-view td, .tree-view tbody {
     height:100%;
-    overflow:auto;
     vertical-align:top;
     border:0px;
     margin:0px;
@@ -1000,6 +999,11 @@ ul.plugin_tracker_my_artifacts_list {
     border-spacing: 0px;
     zoom:1;
 }
+
+.tree-view, .tree-view tbody {
+    overflow:auto;
+}
+
 .tree-view td {
     margin-left:2px;
     margin-right:2px;
@@ -1008,11 +1012,9 @@ ul.plugin_tracker_my_artifacts_list {
 
 .first-column {
     white-space:nowrap;
-}
-
-.first-column, .tree-view tr {
     height:100%;
 }
+
 .first-column + td {
     padding-left:10px;
 }
