@@ -62,8 +62,8 @@ class Test_Tracker_CrossSearch_CriteriaBuilder {
         return $this;
     }
 
-    public function withArtifactIds() {
-        $this->artifact_ids = func_get_args();
+    public function withArtifactIds($artifact_ids) {
+        $this->artifact_ids = $artifact_ids;
         return $this;
     }
     

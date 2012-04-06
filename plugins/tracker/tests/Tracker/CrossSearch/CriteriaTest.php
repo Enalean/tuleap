@@ -42,25 +42,29 @@ class Criteria_ArtifactTest extends TuleapTestCase {
     }
     
     public function itFlattensTheNestedArrayOfArtifactIds() {
-        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), array(132 => array(1, 55, 1001)));
+        
+        $criteria = $this->givenAnArtifactCriteria(array(132 => array(1, 55, 1001)));
         $this->assertEqual(array(1, 55, 1001), $criteria->listArtifactIds());
 
-        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), 
-                array(132 => array(1, 55, 1001),
-                      138 => array(99, 2)));
+        $criteria = $this->givenAnArtifactCriteria(array(132 => array(1, 55, 1001),
+                                           138 => array(99, 2)));
         $this->assertEqual(array(1, 55, 1001, 99, 2), $criteria->listArtifactIds());
 
     }
     
+    private function givenAnArtifactCriteria($artifacts) {
+        return new Tracker_CrossSearch_Criteria(array(), array(), $artifacts);
+    }
+    
     public function itCanReturnTheListOfArtifactsFromATrackerId() {
-        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), array(132 => array(1, 55), 456 => array(2, 55)));
+        $criteria = $this->givenAnArtifactCriteria(array(132 => array(1, 55), 456 => array(2, 55)));
         
         $this->assertEqual(array(1, 55), $criteria->getArtifactsOfTracker(132));
         $this->assertEqual(array(2, 55), $criteria->getArtifactsOfTracker(456));
     }
     
     public function itReturnsAnEmptyArrayIfThereAreNoCorrespondingTrackerIds() {
-        $criteria = new Tracker_CrossSearch_Criteria(array(), array(), array(132 => array()));
+        $criteria = $this->givenAnArtifactCriteria(array(132 => array()));
     
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(132));
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(456));
