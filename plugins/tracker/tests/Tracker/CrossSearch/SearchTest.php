@@ -59,7 +59,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria->getSharedFields()));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields, $semantic_fields, $this->artifact_link_field_ids, array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($criteria, $this->trackerIds, $sharedFields, $semantic_fields, $this->artifact_link_field_ids, array()));
         
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -70,7 +70,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
                 ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
                 ->build();
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, null, array('title' => '', 'status' => 'open'), $this->artifact_link_field_ids, array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($criteria, $this->trackerIds, null, array('title' => '', 'status' => 'open'), $this->artifact_link_field_ids, array()));
 
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }
@@ -81,12 +81,25 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
                 ->withSharedFieldsCriteria(array('220' => array('values' => array(''))))
                 ->build();
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array(array(), null, array('title' => '', 'status' => 'open'), $this->artifact_link_field_ids, array()));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($criteria, array(), null, array('title' => '', 'status' => 'open'), $this->artifact_link_field_ids, array()));
         
         $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory, $this->artifact_link_field_ids);
         $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);
         
         $this->assertFalse($artifacts->hasChildren());
+    }
+    
+    public function itPassesTheCriteriaToTheDao() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
+        
+        $query  = aCrossSearchCriteria()
+                ->withArtifactIds(array(200 => array(4, 6)))
+                ->build();
+        
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array(new EqualExpectation($query), '*', '*', '*', '*', '*'));
+        
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory, $this->artifact_link_field_ids);
+        $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $query);
     }
     
     function testGetMatchingArtifactsShouldReturnArtifactFromTrackersOutsidesHierarchy() {

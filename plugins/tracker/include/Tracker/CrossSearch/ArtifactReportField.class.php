@@ -44,8 +44,8 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
         $html.= '<label for="'.$this->id.'_'.$trackerId.'" title="#'.$trackerId.'">'.$this->tracker->getName().'</label>';
         $html.= <<<MARKUP
         <div class="tracker_report_criteria">
-        <input type="hidden" name="artifact_criteria[$trackerId][values]">
-        <select id="tracker_report_criteria_adv_$trackerId" multiple="multiple" size="7" name="artifact_criteria[$trackerId][values][]">
+        <input type="hidden" name="artifact_criteria[$trackerId]">
+        <select id="tracker_report_criteria_adv_$trackerId" multiple="multiple" size="7" name="artifact_criteria[$trackerId][]">
         <option selected="selected" value="">Any</option>
         <option value="100">None</option>
 MARKUP;
