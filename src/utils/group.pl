@@ -172,7 +172,7 @@ sub get_emails_by_path {
     } else {
         $subPathsExpression = "";
     }
-    $query = "SELECT svn_events_mailing_list FROM svn_notification WHERE group_id = $groupid and path = '/' ".$subPathsExpression;
+    $query = "SELECT svn_events_mailing_list FROM svn_notification WHERE group_id = $groupid and (path = '/' ".$subPathsExpression.")";
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     my @emails = ();
