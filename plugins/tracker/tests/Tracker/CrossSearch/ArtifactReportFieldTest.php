@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../../include/Tracker/TrackerManager.class.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report_Criteria.class.php';
 
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
+Mock::generate('Tracker_FormElementFactory');
 
 class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
     public function setUp() {
@@ -52,6 +55,21 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
         
         $this->assertEqual($expected, $artifactReportField->getId());
+    }
+    
+    public function itReturnsTheArtifactLinkOfTheTracker() {
+        $form_element_factory           = new MockTracker_FormElementFactory();
+        
+        $art_link_release_field_id = 135;
+        $artifact_link_field_of_release_tracker = new MockTracker_FormElement_Field_ArtifactLink();
+        $artifact_link_field_of_release_tracker->setReturnValue('getId', $art_link_release_field_id);
+        $form_element_factory->setReturnValue('getUsedArtifactLinkFields', array($artifact_link_field_of_release_tracker), array($this->tracker));
+        
+        $artifact_report_field = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        
+        $database_field_key = $artifact_report_field->getArtifactLinkFieldName($form_element_factory);
+        
+        $this->assertEqual($database_field_key, 'art_link_'.$art_link_release_field_id);
     }
         
 }

@@ -167,10 +167,7 @@ class Tracker_CrossSearch_SearchContentView {
         $value = '';
 
         if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
-            $fields = $this->factory->getUsedArtifactLinkFields($field->getTracker());
-            $artifact_link_field = $fields[0]; // TODO: empty array
-
-            $key = 'art_link_' . $artifact_link_field->getId();
+            $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
                 $value = $row[$key];
             }

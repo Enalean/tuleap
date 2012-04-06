@@ -65,5 +65,19 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
         
         
     }
+    
+    /**
+     * Return an index name based on artifact link field id
+     * 
+     * @param Tracker_FormElementFactory $form_element_factory
+     * 
+     * @return String
+     */
+    public function getArtifactLinkFieldName(Tracker_FormElementFactory $form_element_factory) {
+        $fields = $form_element_factory->getUsedArtifactLinkFields($this->getTracker());
+        $artifact_link_field = $fields[0]; // TODO: empty array
+        return 'art_link_' . $artifact_link_field->getId();
+    }
 }
+
 ?>
