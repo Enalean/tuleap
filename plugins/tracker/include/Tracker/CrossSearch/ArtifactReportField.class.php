@@ -20,8 +20,12 @@
 
 class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     
-    public function __construct($artifact_ids) {
+    protected $artifact_ids;
+    protected $tracker_id;
+    
+    public function __construct($tracker_id, $artifact_ids) {
         $this->artifact_ids = $artifact_ids;
+        $this->tracker_id   = $tracker_id;
     }
     
     
@@ -30,15 +34,12 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
-        return 'nawak';
     }
     
     public function isUsed() {
-        
     }
     
     public function getLabel() {
-        
     }
         
     /**
