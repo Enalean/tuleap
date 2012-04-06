@@ -82,7 +82,12 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $database_field_key        = $artifact_report_field->getArtifactLinkFieldName($form_element_factory);
         
         $this->assertEqual($database_field_key, 'art_link_'.$art_link_release_field_id);
-
+    }
+    
+    public function itReturnsNoArtifactLinkFieldNameWhenTrackerHasNoArtifact() {
+        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields($this->tracker)->returns(array());
+        $artifact_report_field = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $this->assertNull($artifact_report_field->getArtifactLinkFieldName($form_element_factory));
     }
     
     public function ItDisplaysJustTheOptions_Any_IfThereAreNoArtifactsGiven() {

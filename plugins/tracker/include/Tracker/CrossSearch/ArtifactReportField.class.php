@@ -111,8 +111,8 @@ MARKUP;
      */
     public function getArtifactLinkFieldName(Tracker_FormElementFactory $form_element_factory) {
         $fields = $form_element_factory->getUsedArtifactLinkFields($this->getTracker());
-        $artifact_link_field = $fields[0]; // TODO: empty array
-        return 'art_link_' . $artifact_link_field->getId();
+        if (empty($fields)) return;
+        return 'art_link_' . $fields[0]->getId();
     }
 }
 
