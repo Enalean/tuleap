@@ -113,6 +113,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $factory           = new MockTracker_FormElementFactory();
         $tracker           = new MockTracker();
         $artifact          = new MockTracker_Artifact();
+        $artifact->setReturnValue('getTracker', $tracker);
         
         $artifact_factory->setReturnValue('getArtifactById', $artifact);
         

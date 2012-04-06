@@ -152,12 +152,7 @@ class Tracker_CrossSearch_SearchContentView {
         
         foreach ($this->criteria as $criterion) {
             $value = '';
-            
-            if ($this->isNotASharedField($criterion->field)) {
-                $field = $criterion->field;
-            } else {
-                $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
-            }
+            $field = $this->getFormElementFieldFromReportField($criterion->field, $artifact->getTracker());
             
             if ($field) {
                 if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
@@ -177,6 +172,14 @@ class Tracker_CrossSearch_SearchContentView {
         }
         
         return $html;
+    }
+    
+    private function getFormElementFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
+        if ($this->isNotASharedField($report_field)) {
+            return $report_field;
+        } else {
+            return $this->factory->getFieldFromTrackerAndSharedField($tracker, $report_field);
+        }
     }
     
     protected function isNotASharedField($criterionField) {
