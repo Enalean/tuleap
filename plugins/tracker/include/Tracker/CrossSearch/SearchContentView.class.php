@@ -153,9 +153,7 @@ class Tracker_CrossSearch_SearchContentView {
         foreach ($this->criteria as $criterion) {
             $value = '';
             
-            if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField') ||
-                is_a($criterion->field, 'Tracker_CrossSearch_SemanticStatusReportField')) {
-
+            if ($this->isNotASharedField($criterion->field)) {
                 $field = $criterion->field;
             } else {
                 $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
@@ -169,6 +167,12 @@ class Tracker_CrossSearch_SearchContentView {
         }
         
         return $html;
+    }
+    
+    protected function isNotASharedField($criterionField) {
+        return is_a($criterionField, 'Tracker_CrossSearch_SemanticTitleReportField') 
+        || is_a($criterionField, 'Tracker_CrossSearch_SemanticStatusReportField')
+        || is_a($criterionField, 'Tracker_CrossSearch_ArtifactReportField');
     }
 }
 ?>
