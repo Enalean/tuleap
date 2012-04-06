@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationCo
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_FormElement_Builder.php');
+require_once(dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/Test_CriteriaBuilder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
@@ -121,55 +122,81 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itDisplaysTheSearchContentView() {
-        $requested_criteria = array('stuff');
-        $this->assertThatWeBuildAcontentViewWith($requested_criteria, array('stuff'));
+        $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
+        $semantic_criteria      = array('title' => 'bonjour', 'status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED);
+        $expected_criteria = aCrossSearchCriteria()
+                            ->withSharedFieldsCriteria(array('220' => array('values' => array('toto', 'titi'))))
+                            ->withSemanticCriteria($semantic_criteria)
+                            ->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expected_criteria);
     }
     
     public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
-        $requested_criteria = null;
-        $this->assertThatWeBuildAcontentViewWith($requested_criteria, array());
+        $shared_fields_criteria = $semantic_criteria = null;
+        $expectedCriteria       = aCrossSearchCriteria()->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
      
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
-        $requested_criteria = 'invalid parameter type';
-        $this->assertThatWeBuildAcontentViewWith($requested_criteria, array());
+        $shared_fields_criteria = 'invalid parameter type';
+        $semantic_criteria      = 'another invalid parameter type';
+        $expectedCriteria       = aCrossSearchCriteria()->build();
+        $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
     
-    private function assertThatWeBuildAcontentViewWith($requested_criteria, $expected_criteria) {
-        $project_id = 1111;
-        $id         = 987;
-        $request_params     = array(
-            'aid'         => $id,
+    private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, $expected_criteria) {
+        $project_id                = 1111;
+        $id                        = 987;
+        $a_list_of_draggable_items = 'A list of draggable items';
+        $project                   = stub('Project')->getId()->returns($project_id);
+        $already_linked_items      = array();
+        $factory                   = $this->GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items);
+        $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
+        $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
+
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, array($project), new MockTracker_CrossSearch_Search());
+        $this->assertPattern("/$a_list_of_draggable_items/", $content);
+    }
+
+    private function GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items) {
+        $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
+        return $this->GivenAnArtifactFactory(array($artifact));
+    }
+
+
+    private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $content) {
+        $content_view = $this->GivenAContentViewThatFetch($content);
+        $tracker_ids  = array();
+        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
+        $view_builder->setReturnValue('buildCustomContentView', $content_view);
+
+        return $view_builder;
+    }
+
+    private function GivenAContentViewThatFetch($content) {
+        $content_view = stub('Tracker_CrossSearch_SearchContentView')->fetch()->returns($content);
+        return $content_view;
+    }
+
+    private function buildRequest($aid, $project_id, $shared_field_criteria, $semantic_criteria) {
+        $request_params = array(
+            'aid'         => $aid,
             'planning_id' => $this->planning->getId(),
             'group_id'    => $project_id,
         );
-        
-        if ($requested_criteria !== null) {
-            $request_params['criteria'] = $requested_criteria;
+
+        if ($shared_field_criteria !== null) {
+            $request_params['criteria'] = $shared_field_criteria;
         }
-        $request  = new Codendi_Request($request_params);
-        
-        $content_view = new MockTracker_CrossSearch_SearchContentView();
-        $a_list_of_draggable_items = 'A list of draggable items';
-        $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
-        
-        $project = new MockProject();
-        $project_manager = $this->GivenAProjectManagerThatReturns($project, $project_id);
-        
-        $already_linked_items = array();
-        $tracker_ids  = array();
-        
-        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildPlanningContentView', array($project, $expected_criteria, $already_linked_items, $tracker_ids));
-        $view_builder->setReturnValue('buildPlanningContentView', $content_view);
-        
-        $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, new MockTracker_CrossSearch_Search());
-        
-        $this->assertPattern("/$a_list_of_draggable_items/", $content);
+
+        if ($semantic_criteria !== null) {
+            $request_params['semantic_criteria'] = $semantic_criteria;
+        }
+
+        return new Codendi_Request($request_params);
     }
-    
+
     private function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
         $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
         $artifact->setReturnValue('getAnArtifactLinkField', anArtifactLinkField());
@@ -234,11 +261,13 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->setReturnValue('buildPlanningContentView', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager(), new MockTracker_CrossSearch_Search());
+        $view_builder->setReturnValue('buildCustomContentView', $content_view);
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, array(), new MockTracker_CrossSearch_Search());
     }
     
-    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search) {
+    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, array $projects, $search) {
+        $project_manager = $this->GivenAProjectManagerThatReturns($projects);
+
         $planning_factory = new MockPlanningFactory();
         $planning_factory->setReturnValue('getPlanning', $this->planning, array($this->planning->getId()));
         
@@ -249,9 +278,11 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         return $content;
     }
 
-    public function GivenAProjectManagerThatReturns($project, $project_id) {
-        $project_manager = new MockProjectManager();
-        $project_manager->setReturnValue('getProject', $project, array($project_id));
+    private function GivenAProjectManagerThatReturns(array $projects) {
+        $project_manager = mock('ProjectManager');
+        foreach ($projects as $project) {
+            stub($project_manager)->getProject($project->getId())->returns($project);
+        }
         return $project_manager;
     }
 }

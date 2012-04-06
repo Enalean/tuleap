@@ -22,12 +22,13 @@ require_once('Tracker_FormElement.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('common/user/UserHelper.class.php');
+require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
-abstract class Tracker_FormElement_Field extends Tracker_FormElement {
+abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field  {
     
     protected $has_errors = false;
     
@@ -39,15 +40,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      */
     public abstract function fetchCriteriaValue($criteria);
     
-    /**
-     * Display the field as a Changeset value.
-     * Used in report table
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     * @return string
-     */
-    public abstract function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null);
     
     /**
      * Display the field as a Changeset value.
@@ -165,11 +157,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         return "$R.value_id";
     }
     
-    /**
-     * Display the field as a criteria
-     * @param Tracker_Report_Criteria $criteria
-     * @return string
-     */
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html = '';
         if ($this->criteriaCanBeAdvanced()) {

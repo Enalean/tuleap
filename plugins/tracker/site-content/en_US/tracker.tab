@@ -12,7 +12,11 @@ plugin_tracker_homenav	search	Cross Trackers Search
 
 plugin_tracker_crosssearch	title	Cross Trackers Search
 
-plugin_tracker_crosssearch	summary	Title
+plugin_tracker_crosssearch	semantic_title_label	Title
+plugin_tracker_crosssearch	semantic_status_label	Status
+plugin_tracker_crosssearch	semantic_status_any	Any
+plugin_tracker_crosssearch	semantic_status_open	Open
+plugin_tracker_crosssearch	semantic_status_closed	Closed
 
 plugin_tracker_crosssearch	included_trackers_title	List of trackers included into the search:
 plugin_tracker_crosssearch	included_trackers_not_found	No relevant tracker found

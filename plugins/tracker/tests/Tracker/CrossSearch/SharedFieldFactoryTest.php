@@ -25,6 +25,7 @@ Mock::generate('Tracker_CrossSearch_SharedFieldDao');
 class Tracker_CrossSearch_SharedFieldFactoryTest extends UnitTestCase {
     
     function setUp() {
+        parent::setUp();
         $this->factory = TestHelper::getPartialMock('Tracker_CrossSearch_SharedFieldFactory', array('getDao'));
         $this->dao     = new MockTracker_CrossSearch_SharedFieldDao();
         $this->factory->setReturnValue('getDao', $this->dao);

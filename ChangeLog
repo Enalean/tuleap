@@ -3,8 +3,8 @@ Version 5.0 (Not released yet)
    * Ensure NSCD and internal FS cache are properly flushed before doing something related to filesystem. Fix bugs related to directory ownership of users.
 
    == Plugins ==
-   * AgileDashoard 0.8
-   * Tracker 5.4.9
+   * AgileDashoard 0.9
+   * Tracker 5.5
 
    == Development ==
    * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:

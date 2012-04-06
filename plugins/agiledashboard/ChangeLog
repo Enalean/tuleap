@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 5.0
+    * Take into account cross tracker search based on semantic (see tracker 5.5 changelog for details).
+
 Version 0.8 - Tuleap 5.0
     * Improve styling of cards when they are planned
     * Allow to remove one artifact from a planning

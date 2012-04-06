@@ -20,12 +20,20 @@
 
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/ViewBuilder.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
+require_once 'Test_CriteriaBuilder.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_CrossSearch_Search');
+Mock::generate('Tracker_CrossSearch_SearchContentView');
+Mock::generate('TrackerFactory');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
+Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
+Mock::generate('Tracker_CrossSearch_CriteriaBuilder');
 
 class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 }
@@ -39,87 +47,34 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
     public function itBuildCustomContentView() {
         $formElementFactory = new MockTracker_FormElementFactory();
-        $formElementFactory->setReturnValue('getProjectSharedFields', array());
         $tracker_factory    = new MockTrackerFactory();
         $tracker_factory->setReturnValue('getTrackersByGroupId', array());
-        $project            = new MockProject();
-        $request_criteria   = array();
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-
-        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search);
-        $classname = 'Planning_SearchContentView';
-        $view      = $builder->buildPlanningContentView($project, $request_criteria, array(), array());
-        $this->assertIsA($view, $classname);
+        $criteria_builder   = new MockTracker_CrossSearch_CriteriaBuilder();
+        $criteria_builder->setReturnValue('getCriteria', array());
+        $project            = new MockProject();
+        
+        $builder            = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
+        $view               = $builder->buildContentView($project, aCrossSearchCriteria()->build());
+        
+        $this->assertIsA($view, 'Tracker_CrossSearch_SearchContentView');
     }
-    
-
-    public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66',
-            'criteria' => array()
-        ));
-        
-        $project = new MockProject();
-        $report  = new MockTracker_Report();
-        
-        $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-        
-        $criteria = $this->getCriteria($project, $report);
-        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
-    }
-    
-    public function testSubmittedValueIsSelectedInCriterion() {
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66', 
-            'criteria' => array('220' => array('values' => array('350')))
-        ));
-        
-        $project = new MockProject();
-        $report  = new MockTracker_Report();
-        
-        $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-        
-        $criteria = $this->getCriteria($project, $report);
-        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
-    }
-    
-    public function testSubmittedValuesAreSelectedInCriterion() {
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66', 
-            'criteria' => array('220' => array('values' => array('350', '351')),
-                                '221' => array('values' => array('352')))
-        ));
-        
-        $project = new MockProject();
-        $report  = new MockTracker_Report();
-        
-        $fields = array(aTextField()->withId(220)->build(),
-                        aTextField()->withId(221)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-        
-        $criteria = $this->getCriteria($project, $report);
-        $this->assertEqual(count($criteria), 2);
-        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
-        $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
-    }
-    
-    private function getCriteria($project, $report) {
-        $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
-        return $searchViewBuilder->getCriteria($project, $report, $this->request->get('criteria'));
-    }
-
 }
+
 class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
+        $project = new MockProject();
+        $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search(), new MockTracker_CrossSearch_CriteriaBuilder());
+        
         $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
-        $project            = new MockProject();
-        $builder   = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
-        $builder->buildView($project, array());
+        $cross_search_criteria = aCrossSearchCriteria()
+                                ->forOpenItems()
+                                ->build();
+
+        $builder->buildView($project, $cross_search_criteria);
     }
-    
-    
 }
+
+
 ?>

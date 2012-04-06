@@ -27,6 +27,7 @@ require_once('Tracker_Report_RendererFactory.class.php');
 require_once('Tracker_Report_Criteria.class.php');
 require_once('Tracker_Report_Session.class.php');
 require_once('common/include/Toggler.class.php');
+require_once dirname(__FILE__).'/../IFetchTrackerSwitcher.class.php';
 
 /**
  * Tracker_ report.
@@ -252,14 +253,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return '';
     }
     
-    protected function displayHeader(TrackerManager $tracker_manager, $request, $current_user, $report_can_be_modified) {
+    protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified) {
         $hp = Codendi_HTMLPurifier::instance();
         
         $link_artifact_id = (int)$request->get('link-artifact-id');
         $title            = '';
         $breadcrumbs      = array();
         if ($report_can_be_modified) {
-            $this->getTracker()->displayHeader($tracker_manager, $title, $breadcrumbs);
+            $this->getTracker()->displayHeader($layout, $title, $breadcrumbs);
         }
         
         if ($request->existAndNonEmpty('pv')) {
@@ -335,7 +336,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             if ($artifact) {
                 $project = $artifact->getTracker()->getProject();
             }
-            echo $tracker_manager->fetchTrackerSwitcher($current_user, '<br />', $project, $this->getTracker());
+            echo $layout->fetchTrackerSwitcher($current_user, '<br />', $project, $this->getTracker());
             
             
             //Reports
@@ -428,8 +429,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->id . '">' . $criterion->fetch() . '</li>';
-                $used[$criterion->field->id] = $criterion->field;
+                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">' . $criterion->fetch() . '</li>';
+                $used[$criterion->field->getId()] = $criterion->field;
             }
         }
         if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
@@ -442,7 +443,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    public function display(TrackerManager $tracker_manager, $request, $current_user) {
+    public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         
         $link_artifact_id       = (int)$request->get('link-artifact-id');
         $report_can_be_modified = !$link_artifact_id;
@@ -495,7 +496,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         if ($request->get('only-renderer')) {
             echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
         } else {
-            $this->displayHeader($tracker_manager, $request, $current_user, $report_can_be_modified);
+            $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
             
             $html = '';
             
@@ -706,7 +707,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html .= '</div>';
             echo $html;
             if ($report_can_be_modified) {
-                $this->getTracker()->displayFooter($tracker_manager);
+                $this->getTracker()->displayFooter($layout);
                 exit();
             }
         }
@@ -856,10 +857,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * @param Request $request
      * @return ReportRenderer
      */
-    public function processRendererRequest($renderer_id, TrackerManager $tracker_manager, $request, $current_user, $store_in_session = true) {
+    public function processRendererRequest($renderer_id, Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $store_in_session = true) {
         $rrf = Tracker_Report_RendererFactory::instance();
         if ($renderer = $rrf->getReportRendererByReportAndId($this, $renderer_id, $store_in_session)) {
-            $renderer->process($tracker_manager, $request, $current_user);
+            $renderer->process($layout, $request, $current_user);
         }
     }
     
@@ -918,7 +919,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         if ($this->isObsolete()) {
             header('X-Codendi-Tracker-Report-IsObsolete: '. $this->getLastUpdaterUserName());
         }
@@ -940,7 +941,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                     }
-                    $tracker->displayMasschangeForm($tracker_manager, $masschange_aids);
+                    $tracker->displayMasschangeForm($layout, $masschange_aids);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
@@ -1014,7 +1015,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     if ($request->exist('store_in_session')) {
                         $store_in_session = (bool)$request->get('store_in_session');
                     }
-                    $this->processRendererRequest($request->get('renderer'), $tracker_manager, $request, $current_user, $store_in_session);
+                    $this->processRendererRequest($request->get('renderer'), $layout, $request, $current_user, $store_in_session);
                 }
                 break;
             case 'rename-renderer':
@@ -1143,7 +1144,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
                 }
-                $this->display($tracker_manager, $request, $current_user);
+                $this->display($layout, $request, $current_user);
                 break;
         }
     }

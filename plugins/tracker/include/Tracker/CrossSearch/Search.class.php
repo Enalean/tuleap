@@ -20,15 +20,21 @@
 
 require_once 'SharedFieldFactory.class.php';
 require_once 'SearchDao.class.php';
+require_once dirname(__FILE__).'/../Hierarchy/Sorter.class.php';
 require_once dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 
+/**
+ * The cross-tracker search model.
+ * 
+ * See: getHierarchicallySortedArtifacts()
+ */
 class Tracker_CrossSearch_Search {
     
     /**
      * @var Tracker_CrossSearch_SharedFieldFactory
      */
-    private $sharedFieldFactory;
+    private $shared_field_factory;
     
     /**
      * @var Tracker_CrossSearch_SearchDao
@@ -41,110 +47,37 @@ class Tracker_CrossSearch_Search {
      */
     private $hierarchy_factory;
     
-    public function __construct(Tracker_CrossSearch_SharedFieldFactory $sharedFieldFactory,
+    public function __construct(Tracker_CrossSearch_SharedFieldFactory $shared_field_factory,
                                 Tracker_CrossSearch_SearchDao          $dao,
                                 Tracker_HierarchyFactory               $hierarchy_factory) {
-        $this->hierarchy_factory  = $hierarchy_factory;
-        $this->sharedFieldFactory = $sharedFieldFactory;
-        $this->dao                = $dao;
-    }
-
-    
-    public function getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds = array()) {
-        $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
-        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $request_criteria, $excludedArtifactIds);
+        $this->hierarchy_factory    = $hierarchy_factory;
+        $this->shared_field_factory = $shared_field_factory;
+        $this->dao                  = $dao;
     }
     
     /**
-     * @deprecated
+     * Retrieve a tree of artifacts matching the given search criteria.
+     * 
+     * The artifacts tree matches the trackers hierarchy definition.
+     * 
+     * @param array                        $tracker_ids            The trackers to retrieve artifacts from.
+     * @param Tracker_CrossSearch_Query $criteria               The criteria that artifacts should match (e.g. title).
+     * @param array                        $excluded_artifact_ids  Some (optional) artifacts to exclude.
+     * @return TreeNode
      */
-    public function getMatchingArtifacts(array $trackerIds, Tracker_Hierarchy $hierarchy, $criteria = null, $excludedArtifactIds = array()) {
-        $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
-        $artifacts            = array();
+    public function getHierarchicallySortedArtifacts($tracker_ids, Tracker_CrossSearch_Query $criteria, $excluded_artifact_ids = array()) {
+        $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
+        return $this->getMatchingArtifacts($tracker_ids, $hierarchy, $criteria, $excluded_artifact_ids);
+    }
+    
+    public function getMatchingArtifacts(array $tracker_ids, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Query $criteria, $excluded_artifact_ids = array()) {
+        $shared_fields   = $this->shared_field_factory->getSharedFields($criteria->getSharedFields());
+        $semantic_fields = $criteria->getSemanticCriteria();
         
-        if (count($searchedSharedFields) > 0) { 
-            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $excludedArtifactIds);
-        } elseif (count($trackerIds) > 0) {
-            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds, $excludedArtifactIds);
-        }
-        return $this->sortResults($artifacts, $trackerIds, $hierarchy);
-    }
-    
-    private function sortResults($artifacts, array $trackerIds, Tracker_Hierarchy $hierarchy) {
-        $root = new TreeNode();
-        $root->setId(0);
-        if ($artifacts) {
-            list($artifactsById, $artifactsByTracker) = $this->indexArtifactsByIdAndTracker($artifacts);
-            $artifactsInTree = array();
-            $trackerIds = $this->sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy);
-            foreach ($trackerIds as $tracker_id) {
-                if (isset($artifactsByTracker[$tracker_id])) {
-                    foreach ($artifactsByTracker[$tracker_id] as $artifact) {
-                        $this->appendArtifactAndSonsToParent($artifact, $artifactsInTree, $root, $artifactsById, $hierarchy);
-                    }
-                }
-            }
-        }
-        return $root;
-    }
-    
-    private function appendArtifactAndSonsToParent(array $artifact, array &$artifactsInTree, TreeNode $parent, array $artifacts, Tracker_Hierarchy $hierarchy) {
-        $id = $artifact['id'];
-        if (!isset($artifactsInTree[$id])) {
-            $node = new TreeNode();
-            $node->setId($id);
-            $node->setData($artifact);
-            $parent->addChild($node);
-            $artifactsInTree[$id] = true;
-            $artifactlinks = explode(',', $artifact['artifactlinks']);
-            foreach ($artifactlinks as $link_id) {
-                if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact, $hierarchy)) {
-                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifactsInTree, $node, $artifacts, $hierarchy);
-                }
-            }
-        }
-    }
-    
-    private function artifactCanBeAppended($artifact_id, array $artifacts, array $parent_artifact, Tracker_Hierarchy $hierarchy) {
-        return isset($artifacts[$artifact_id]) && $hierarchy->isChild($parent_artifact['tracker_id'], $artifacts[$artifact_id]['tracker_id']);
-    }
-    
-    private function indexArtifactsByIdAndTracker($artifacts) {
-        $artifactsById      = array();
-        $artifactsByTracker = array();
-        foreach ($artifacts as $artifact) {
-            //by id
-            $artifactsById[$artifact['id']] = $artifact;
-            
-            //by tracker_id
-            $tracker_id = $artifact['tracker_id'];
-            if (isset($artifactsByTracker[$tracker_id])) {
-                $artifactsByTracker[$tracker_id][] = $artifact;
-            } else {
-                $artifactsByTracker[$tracker_id] = array($artifact);
-            }
-        }
-        return array($artifactsById, $artifactsByTracker);
-    }
-    
-    private function sortTrackerIdsAccordinglyToHierarchy(array $trackerIds, Tracker_Hierarchy $hierarchy) {
-        $this->hierarchyTmp = $hierarchy;
-        usort($trackerIds, array($this, 'sortByTrackerLevel'));
-        return $trackerIds;
-    }
-    
-    protected function sortByTrackerLevel($tracker1_id, $tracker2_id) {
-        try {
-            $level1 = $this->hierarchyTmp->getLevel($tracker1_id);
-        } catch (Exception $e) {
-            return 1;
-        }
-        try {
-            $level2 = $this->hierarchyTmp->getLevel($tracker2_id);
-        } catch (Exception $e) {
-            return -1;
-        }
-        return strcmp($level1, $level2);
+        $artifacts = $this->dao->searchMatchingArtifacts($tracker_ids, $shared_fields, $semantic_fields, $excluded_artifact_ids);
+        
+        $result_sorter = new Tracker_Hierarchy_Sorter();
+        return $result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
     }
     
 }

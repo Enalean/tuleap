@@ -11,7 +11,11 @@ plugin_tracker_homenav	search	Recherche
 
 plugin_tracker_crosssearch	title	Recherche
 
-plugin_tracker_crosssearch	summary	Titre
+plugin_tracker_crosssearch	semantic_title_label	Titre
+plugin_tracker_crosssearch	semantic_status_label	État
+plugin_tracker_crosssearch	semantic_status_any	Tous
+plugin_tracker_crosssearch	semantic_status_open	Ouvert
+plugin_tracker_crosssearch	semantic_status_closed	Fermé
 
 plugin_tracker_crosssearch	included_trackers_title	Liste des outils de suivi inclus dans la recherche :
 plugin_tracker_crosssearch	included_trackers_not_found	Aucun outil de suivi ne correspond.

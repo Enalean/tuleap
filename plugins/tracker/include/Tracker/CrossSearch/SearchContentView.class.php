@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Renders both the cross-tracker search form and results. 
+ */
 class Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_Report
@@ -45,28 +48,31 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
-    function __construct(       
-                        Tracker_Report                   $report, 
-                        array                            $criteria, 
-                        TreeNode                         $tree_of_artifacts, 
-                        Tracker_ArtifactFactory          $artifact_factory, 
-                        Tracker_FormElementFactory       $factory) {
+    function __construct(Tracker_Report                   $report, 
+                         array                            $criteria, 
+                         TreeNode                         $tree_of_artifacts, 
+                         Tracker_ArtifactFactory          $artifact_factory, 
+                         Tracker_FormElementFactory       $factory) {
+        
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
-        $this->factory    = $factory;
-        $treeVisistor            = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->tree_of_artifacts->accept($treeVisistor);
+        $this->factory           = $factory;
+        
+        $tree_visitor = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
+        $this->tree_of_artifacts->accept($tree_visitor);
     }
     
     public function fetch() {
+        $report_can_be_modified = false;
+        
         $html  = '';
         $html .= '<table cellpadding="0" cellspacing="0"><tr valign="top"><td>';
-        $report_can_be_modified = false;
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         $html .= $this->fetchResults();
         $html .= '</td></tr></table>';
+        
         return $html;
     }
     
@@ -79,6 +85,7 @@ class Tracker_CrossSearch_SearchContentView {
             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
         }
         $html .= '</div>';
+        
         return $html;
     }
     
@@ -92,73 +99,76 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     public function visit(TreeNode $node) {
-        $html = '';
-        $row = $node->getData();
+        $html     = '';
+        $row      = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
+        
         if ($artifact) {
             $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
             $html .= '<td nowrap>';
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
-            $html .= $this->draggableCell($row['id'], $row['title']);
             $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
             $html .= '</tr>';
+            
             foreach ($node->getChildren() as $child) {
                 $html .= $child->accept($this);
             }
         }
+        
         return $html;
     }
     
     private function fetchTBody() {
+        $this->current_index = 0;
+        
         $html  = '';
         $html .= '<tbody>';
-        $this->current_index = 0;
         foreach ($this->tree_of_artifacts->getChildren() as $child) {
             $html.= $child->accept($this);
         }
         $html .= '</tbody>';
+        
         return $html;
     }
     
     private function fetchTHead() {
-        $html = '';
+        $html  = '';
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
         foreach ($this->criteria as $header) {
             $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
         }
         $html .= '  </tr>';
         $html .= '</thead>';
+        
         return $html;
     }
     
     private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
         $html = '';
+        
         foreach ($this->criteria as $criterion) {
             $value = '';
-            $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
+            
+            if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField') ||
+                is_a($criterion->field, 'Tracker_CrossSearch_SemanticStatusReportField')) {
+
+                $field = $criterion->field;
+            } else {
+                $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
+            }
+
             if ($field) {
                 $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
             }
+
             $html .= '<td>'. $value .'</td>';
         }
-        return $html;
-    }    
-    
-    private function draggableCell($id, $title) {
-        $html  = '';
-        $html .= '<td class="planning-draggable" id="art-'.$id.'">';
-        $html .= '<div>';
-        $html .= $title;
-        $html .= '</div>';
-        $html .= '</td>';
-        return $html;
         
+        return $html;
     }
-
 }
 ?>

@@ -354,13 +354,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     /**
      * Process the request
      * 
-     * @param TrackerManager  $tracker_manager The tracker manager
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The user who mades the request
+     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
+     * @param Codendi_Request                $request         The data coming from the user
+     * @param User                           $current_user    The user who mades the request
      *
      * @return void
      */
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'fetch-artifacts':
                 $read_only              = false;
@@ -479,7 +479,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 exit();
                 break;
             default:
-                parent::process($tracker_manager, $request, $current_user);
+                parent::process($layout, $request, $current_user);
                 break;
         }
     }

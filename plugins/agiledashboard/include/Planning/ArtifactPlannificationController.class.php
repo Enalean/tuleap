@@ -32,9 +32,9 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
-        $aid = $request->get('aid');
-        $this->group_id = $request->get('group_id');
-        $this->artifact = $artifact_factory->getArtifactById($aid);
+        $aid                    = $request->get('aid');
+        $this->group_id         = $request->get('group_id');
+        $this->artifact         = $artifact_factory->getArtifactById($aid);
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
     }
@@ -46,7 +46,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning = $this->getPlanning();
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
-
         $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
         $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
@@ -54,18 +53,21 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
 
     private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Planning $planning, $artifacts_to_select) {
         $project  = $manager->getProject($this->request->get('group_id'));
-        $request_criteria = $this->getCriteriaFromRequest();
-        $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
-        $tracker_ids = $planning->getBacklogTrackerIds();
-        return $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
+        $excludedArtifactIds   = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
+        $tracker_ids           = $planning->getBacklogTrackerIds();
+        $request_criteria      = $this->getArrayFromRequest('criteria');
+        $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
+        $cross_search_criteria = new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria);
+        
+        return $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
     }
     
-    private function getCriteriaFromRequest() {
+    private function getArrayFromRequest($parameter_name) {
         $request_criteria = array();
-        $valid_criteria = new Valid_Array('criteria');
+        $valid_criteria = new Valid_Array($parameter_name);
         $valid_criteria->required();
         if ($this->request->valid($valid_criteria)) {
-            $request_criteria = $this->request->get('criteria');
+            $request_criteria = $this->request->get($parameter_name);
         }
         return $request_criteria;
     }
@@ -88,13 +90,11 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $baseBreadCrumbGenerator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
-        $planningBreadCrumbGenerator = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
-        $artifactsBreadCrumbGenerator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
-        return new BreadCrumb_Merger($baseBreadCrumbGenerator, $planningBreadCrumbGenerator, $artifactsBreadCrumbGenerator);
-        
+        $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+        $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
+        $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
+        return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
     }
-    
 }
 
 ?>
