@@ -109,6 +109,7 @@ class Git_LastPushesGraph {
         $i        = 0;
         $bplot    = array();
         foreach ($this->repoList as $repository) {
+            $legend    = null;
             $pushes    = array();
             $gitLogDao = new Git_LogDao();
             foreach ($this->weekNum as $key => $w) {
@@ -120,6 +121,7 @@ class Git_LastPushesGraph {
                         $res->next();
                         if ($pushes[$key] > 0) {
                             $this->displayChart = true;
+                            $legend             = $repository['repository_name'];
                         }
                     }
                 }
@@ -129,8 +131,9 @@ class Git_LastPushesGraph {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];   
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
-                // TODO: don't set a repository in legend if there is no pushes in it within the graph
-                $b2plot->SetLegend($repository['repository_name']);
+                if (!empty($legend)) {
+                    $b2plot->SetLegend($legend);
+                }
                 $bplot[] = $b2plot;
             }
         }
@@ -181,7 +184,7 @@ class Git_LastPushesGraph {
         $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
         $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
         if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-            $backgroundColor = imagecolorallocate($im, 255, 255, 255);
+            $backgroundColor  = imagecolorallocate($im, 255, 255, 255);
             $textColor        = imagecolorallocate($im, 64, 64, 64);
             imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
             header("Content-type: image/png");
