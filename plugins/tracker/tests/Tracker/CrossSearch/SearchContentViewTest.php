@@ -35,15 +35,16 @@ Mock::generate('Tracker');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
-    public function setUp() {
-    }
-    
     public function itDoesNotTryToRetrieveSharedFieldOriginForSemanticStatus() {
-        $artifact          = anArtifact()->withId(123)->withTracker(mock('Tracker'))->build();
+        $artifact          = $this->givenThereIsAnArtifact();
         $tree_of_artifacts = $this->buildTreeWithArtifact($artifact);
         $artifact_factory  = $this->buildAnArtifactFactoryThatReturns($artifact);
         
         $this->thenItFetchsTheSearchContentView($tree_of_artifacts, $artifact_factory);
+    }
+    
+    private function givenThereIsAnArtifact() {
+        return anArtifact()->withId(123)->withTracker(mock('Tracker'))->build();
     }
     
     private function thenItFetchsTheSearchContentView($tree_of_artifacts, $artifact_factory) {
