@@ -24,11 +24,11 @@ require_once dirname(__FILE__). '/../../../include/Tracker/CrossSearch/Query.cla
 class QueryTest extends TuleapTestCase {
     public function itCanBeInstantiatedWithoutSemanticQuery() {
         $criteria = new Tracker_CrossSearch_Query(array());
-        $this->assertIdentical('open', $criteria->getStatus());
+        $this->assertIdentical('', $criteria->getStatus());
         $this->assertIdentical('', $criteria->getTitle());
 
         $criteria = new Tracker_CrossSearch_Query(array(), array());
-        $this->assertIdentical('open', $criteria->getStatus());
+        $this->assertIdentical('', $criteria->getStatus());
         $this->assertIdentical('', $criteria->getTitle());
     }
     

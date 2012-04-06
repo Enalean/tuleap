@@ -43,7 +43,7 @@ class Tracker_CrossSearch_Query {
      */
     public function __construct(Array $shared_fields_criteria=array(), Array $semantic_criteria = array(), Array $artifact_ids = array()) {
         $this->shared_fields_criteria = $shared_fields_criteria;
-        $this->semantic_criteria      = $semantic_criteria ? $semantic_criteria : array('title' => '', 'status' => 'open');
+        $this->semantic_criteria      = $semantic_criteria ? $semantic_criteria : array('title' => '', 'status' => '');
         $this->artifact_ids           = $artifact_ids;
     }
     
