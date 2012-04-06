@@ -164,10 +164,12 @@ class Git_LastPushesGraph {
     function displayError($msg) {
         //ttf from jpgraph
         $ttf = new TTF();
-        $ttf->SetUserFont('dejavu-lgc/DejaVuLGCSans.ttf',
-                          'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
-                          'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
-                          'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf');
+        $ttf->SetUserFont(
+            'dejavu-lgc/DejaVuLGCSans.ttf',
+            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
+            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
+            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
+        );
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
