@@ -34,13 +34,17 @@ class Tracker_CrossSearch_Query {
      */
     private $semantic_criteria;
 
+    private $artifact_ids;
+    
     /**
      * @param array of array $shared_fields_criteria
      * @param array of string $semantic_criteria
+     * @param $artifact_ids array(tracker_id_1 => array(artifact_id_1, artifact_id_2), tracker_id_2 => array(artifact_id_3))
      */
-    public function __construct($shared_fields_criteria = array(), $semantic_criteria = null) {
+    public function __construct(Array $shared_fields_criteria=array(), Array $semantic_criteria = array(), Array $artifact_ids = array()) {
         $this->shared_fields_criteria = $shared_fields_criteria;
         $this->semantic_criteria      = $semantic_criteria ? $semantic_criteria : array('title' => '', 'status' => 'open');
+        $this->artifact_ids           = $artifact_ids;
     }
     
     public function getSharedFields() {
@@ -57,7 +61,26 @@ class Tracker_CrossSearch_Query {
     
     public function getStatus() {
         return $this->semantic_criteria['status'];
-    }    
+    }
+    
+    /**
+     * @return the flattened list of artifact_ids
+     */
+    public function listArtifactIds() {
+        $id_list = array();
+        foreach ($this->artifact_ids as $artifact_ids) {
+            $id_list = array_merge($id_list, $artifact_ids);
+        }
+        
+        return $id_list;
+    }
+    
+    public function getArtifactsOfTracker($tracker_id) {
+        if (isset($this->artifact_ids[$tracker_id])) {
+            return $this->artifact_ids[$tracker_id];
+        } else {
+            return array();
+        }
+    }
 }
-
 ?>

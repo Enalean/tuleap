@@ -42,7 +42,7 @@ Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('Tracker_Hierarchy');
 Mock::generate('Tracker');
 Mock::generate('TrackerFactory');
-Mock::generate('Tracker_CrossSearch_Criteria');
+Mock::generate('Tracker_CrossSearch_Query');
 
 class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     public function setUp() {

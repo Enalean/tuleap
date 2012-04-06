@@ -76,7 +76,7 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchResults() {
+    private function fetchResults() {  
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
         if ($this->tree_of_artifacts->hasChildren()) {
@@ -109,7 +109,7 @@ class Tracker_CrossSearch_SearchContentView {
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
-            $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
+            $html .= $this->fetchColumnsValues($artifact, $row);
             $html .= '</tr>';
             
             foreach ($node->getChildren() as $child) {
@@ -138,8 +138,8 @@ class Tracker_CrossSearch_SearchContentView {
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        foreach ($this->criteria as $header) {
-            $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
+        foreach ($this->criteria as $criteria) {
+            $html .= '<th class="boxtitle"><span class="label">'. $criteria->field->getLabel().'</span></th>';
         }
         $html .= '  </tr>';
         $html .= '</thead>';
@@ -147,28 +147,50 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
+    private function fetchColumnsValues(Tracker_Artifact $artifact, array $row) {
         $html = '';
         
         foreach ($this->criteria as $criterion) {
             $value = '';
-            
-            if (is_a($criterion->field, 'Tracker_CrossSearch_SemanticTitleReportField') ||
-                is_a($criterion->field, 'Tracker_CrossSearch_SemanticStatusReportField')) {
-
-                $field = $criterion->field;
-            } else {
-                $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
-            }
-
+            $field = $this->getFieldFromReportField($criterion->field, $artifact->getTracker());
             if ($field) {
-                $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
+                $value = $this->getValueFromFieldOrRow($artifact, $field, $row);
             }
-
+            
             $html .= '<td>'. $value .'</td>';
         }
         
         return $html;
     }
+    
+    private function getValueFromFieldOrRow(Tracker_Artifact $artifact, Tracker_Report_Field $field, array $row) {
+        $value = '';
+
+        if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
+            $key = $field->getArtifactLinkFieldName($this->factory);
+            if (isset($row[$key])) {
+                $value = $row[$key];
+            }
+        } else {
+            $value = $field->fetchChangesetValue($artifact->getId(), $row['last_changeset_id'], null);
+        }
+        
+        return $value;
+    }
+    
+    private function getFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
+        if ($this->isASharedField($report_field)) {
+            return $this->factory->getFieldFromTrackerAndSharedField($tracker, $report_field);
+        } else {
+            return $report_field;
+        }
+    }
+    
+    private function isASharedField(Tracker_Report_Field $report_field) {
+        return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
+                 $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
+                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
+    }
+
 }
 ?>

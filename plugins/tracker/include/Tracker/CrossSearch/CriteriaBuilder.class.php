@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'ArtifactReportField.class.php';
+
+
 /**
  * Builds the cross-tracker search criteria, based on the request content.
  */
@@ -34,9 +36,17 @@ class Tracker_CrossSearch_CriteriaBuilder {
      */
     private $semantic_value_factory;
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory, Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory) {
+    /**
+     * @var Array of Tracker
+     */
+    private $planning_trackers;
+    
+    public function __construct(Tracker_FormElementFactory               $form_element_factory, 
+                                Tracker_CrossSearch_SemanticValueFactory $semantic_value_factory,
+                                array                                    $planning_trackers) {
         $this->form_element_factory   = $form_element_factory;
         $this->semantic_value_factory = $semantic_value_factory;
+        $this->planning_trackers      = $planning_trackers;
     }
     
     /**
@@ -45,8 +55,9 @@ class Tracker_CrossSearch_CriteriaBuilder {
     public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $request_criteria) {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
+        $artifact_fields = $this->getArtifactLinkCriteria($report, $request_criteria);
         
-        return array_merge($semantic_fields, $shared_fields);
+        return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
 
     /**
@@ -71,7 +82,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSemanticFieldsCriteria(Tracker_Report $report, $cross_search_criteria) {
+    public function getSemanticFieldsCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_criteria) {
         $field        = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle(), $this->semantic_value_factory);
         $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus(), $this->semantic_value_factory);
         $id           = null;
@@ -84,6 +95,15 @@ class Tracker_CrossSearch_CriteriaBuilder {
         );
     }
 
+    public function getArtifactLinkCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_criteria) {
+        $criteria = array();
+        foreach ($this->planning_trackers as $tracker) {
+            $field = new Tracker_CrossSearch_ArtifactReportField($tracker, $cross_search_criteria->getArtifactsOfTracker($tracker->getId()));
+            $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
+        }
+        return $criteria;
+    }
+    
     private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
         $current_value = array();
         

@@ -23,26 +23,37 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $tracker_ids, array $shared_fields, array $semantic_fields, array $excluded_artifact_ids = array()) {
+    public function searchMatchingArtifacts(array $tracker_ids, 
+                                            array $shared_fields, 
+                                            array $semantic_fields, 
+                                            array $artifact_link_field_ids_for_column_display, 
+                                            array $excluded_artifact_ids = array()) {
         $tracker_ids               = $this->da->quoteSmartImplode(',', $tracker_ids);
         $excluded_artifact_ids     = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
         $tracker_constraint        = $tracker_ids ? " AND   artifact.tracker_id IN ($tracker_ids) " : "";
-
+        $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment(array(/*5254, 5255, 5256*/));
+        
+        $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
+        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display);
+        
         $sql = "
             SELECT artifact.id,
                    artifact.last_changeset_id,
                    CVT.value                      AS title,
                    artifact.tracker_id,
                    GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
+                   $artifact_link_columns_select
                    
             FROM       tracker_artifact  AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
             
             $shared_fields_constraints
             
+            $artifact_link_constraints
+        
             LEFT JOIN (
                            tracker_changeset_value      AS CV
                 INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
@@ -63,6 +74,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             
             ) ON CV2.changeset_id = artifact.last_changeset_id
 
+            $artifact_link_columns_join
+        
             WHERE artifact.use_artifact_permissions = 0
             $tracker_constraint
             $title_constraint
@@ -77,7 +90,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             GROUP BY artifact.id
             ORDER BY title
         ";
-        
         return $this->retrieve($sql);
     }
     
@@ -115,6 +127,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     protected function getTitleSqlFragment($title) {
+        $title = trim($title); 
         if (! $title) {
             return '';
         }
@@ -134,5 +147,168 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             // no constraint
         }
     }
+    
+    /**
+     * Return the SQL statements that perform "artifact link" search
+     * 
+     * @param array $artifact_ids
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkSearchSqlFragment(array $artifact_ids) {
+        if (count($artifact_ids)) {
+            $artifact_ids_list = $this->da->quoteSmartImplode(',', $artifact_ids);
+            $field_ids_list    = $this->getArtifactLinkFields($artifact_ids_list);
+            if ($field_ids_list) {
+                return $this->getSearchOnArtifactLink($field_ids_list, $artifact_ids_list);
+            }
+        }
+        return '';
+    }
+    
+    /**
+     * Build the search for artifact link
+     * 
+     * Looks for artifacts that are linked to a given one:
+     * - Sprint #34 "2.0"
+     *   (links: story #20, story #30, task #40)
+     * 
+     * Given I Look for sprint #34 related artifacts it returns stories 20, 30 and 40
+     * 
+     * @param String  $field_ids_list
+     * @param String  $artifact_ids_list
+     * 
+     * @return String 
+     */
+    protected function getSearchOnArtifactLink($field_ids_list, $artifact_ids_list) {        
+        // Table aliases
+        $tracker_artifact                     = 'ALS_A';
+        $tracker_changeset_value              = 'ALS_CV';
+        $tracker_changeset_value_artifactlink = 'ALS_CVAL';
+        
+        $sql = "INNER JOIN tracker_artifact                    AS $tracker_artifact          ON ($tracker_artifact.id IN ($artifact_ids_list))
+                INNER JOIN tracker_changeset_value             AS $tracker_changeset_value   ON ($tracker_artifact.last_changeset_id = $tracker_changeset_value.changeset_id 
+                                                                                                 AND $tracker_changeset_value.field_id IN ($field_ids_list))
+                INNER JOIN tracker_changeset_value_artifactlink AS $tracker_changeset_value_artifactlink ON (artifact.id = $tracker_changeset_value_artifactlink.artifact_id
+                                                                                                             AND $tracker_changeset_value.id = $tracker_changeset_value_artifactlink.changeset_value_id)";
+        return $sql;
+    }
+    
+    /**
+     * Find artifact link fields used by given artifacts
+     * 
+     * @param String $artifact_ids_list
+     * 
+     * @return String 
+     */
+    protected function getArtifactLinkFields($artifact_ids_list) {
+        $sql = "SELECT GROUP_CONCAT(DISTINCT F.id) AS field_ids
+                FROM tracker_field            AS F
+                  INNER JOIN tracker          AS T ON (F.tracker_id = T.id)
+                  INNER JOIN tracker_artifact AS A ON (T.id = A.tracker_id)
+                WHERE A.id IN ($artifact_ids_list)
+                  AND formElement_type = 'art_link'";
+        $dar = $this->retrieve($sql);
+        if ($dar && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            return $row['field_ids'];
+        } else {
+            return '';
+        }
+    }
+    
+    /**
+     * Return the columns to display artifact link titles
+     * 
+     * @param array $field_ids
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkSelects(array $field_ids) {
+        $sql = '';
+        foreach ($field_ids as $field_id) {
+            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS art_link_'.$field_id;
+        }
+        return $sql;
+    }
+
+    /**
+     * Return the join statements to retrieve artifact link titles
+     * 
+     * @param array $field_ids
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkColumns(array $field_ids) {
+        $sql = '';
+        foreach ($field_ids as $field_id) {
+            $sql .= $this->getArtifactLinkColumn($field_id);
+        }
+        return $sql;
+    }
+    
+    /**
+     * Return the needed joins to retrieve artifact links title
+     * 
+     * /!\ WARNING /!\ This code doesn't manage multiple assignements.
+     * If a story was linked in 2 sprints, only one sprint is returned by code
+     * below.
+     * 
+     * @param Integer $field_id
+     * 
+     * @return String
+     */
+    protected function getArtifactLinkColumn($field_id) {
+        $field_id = intval($field_id);
+        
+        $tracker_artifact_title        = 'AL_COL_'.$field_id;
+        $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
+        $al_tracker_changeset_value_al = 'AL_COL_CVAL_'.$field_id;
+        
+        $title_sql = $this->getArtifactTitleSqlFragment("$tracker_artifact_title.last_changeset_id", $field_id);
+        
+        $sql = "LEFT JOIN (
+                    tracker_artifact AS $tracker_artifact_title
+
+                    $title_sql
+
+                INNER JOIN tracker_changeset_value  AS $al_tracker_changeset_value   ON ($tracker_artifact_title.last_changeset_id = $al_tracker_changeset_value.changeset_id AND $al_tracker_changeset_value.field_id IN ($field_id))
+                INNER JOIN tracker_changeset_value_artifactlink AS $al_tracker_changeset_value_al ON ($al_tracker_changeset_value.id = $al_tracker_changeset_value_al.changeset_value_id)
+                ) ON ($al_tracker_changeset_value_al.artifact_id = artifact.id)";
+        return $sql;
+    }
+    
+    /**
+     * Given a table id, return the table alias that holds the title value
+     * 
+     * @param String $table_id
+     * 
+     * @return String
+     */
+    protected function getArtifactTitleValueTableAlias($table_id) {
+        return 'CVT_'.$table_id;
+    }
+    
+    /**
+     * Returns joins needed to retrieve title of an artifact
+     * 
+     * @param String $last_changeset_reference The table field to join with
+     * @param String $table_id                 An identifier to be appened to tables to avoid naming clashes.
+     * 
+     * @return String
+     */
+    protected function getArtifactTitleSqlFragment($last_changeset_reference, $table_id) {
+        $tracker_changeset_value_title = 'CV_'.$table_id;
+        $tracker_semantic_title        = 'ST_'.$table_id;
+        $tracker_changeset_value_text  = $this->getArtifactTitleValueTableAlias($table_id);
+        
+        $sql = "LEFT JOIN (
+                        tracker_changeset_value      AS $tracker_changeset_value_title
+                        INNER JOIN tracker_semantic_title       AS $tracker_semantic_title  ON ($tracker_changeset_value_title.field_id = $tracker_semantic_title.field_id)
+                        INNER JOIN tracker_changeset_value_text AS $tracker_changeset_value_text ON ($tracker_changeset_value_title.id       = $tracker_changeset_value_text.changeset_value_id)
+                    ) ON ($tracker_changeset_value_title.changeset_id = $last_changeset_reference)";
+        return $sql;
+    }
+    
 }
 ?>

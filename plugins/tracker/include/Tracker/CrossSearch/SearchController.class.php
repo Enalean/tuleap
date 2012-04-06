@@ -55,18 +55,12 @@ class Tracker_CrossSearch_SearchController {
 
     public function search() {
         try {
-            $request_criteria  = $this->request->get('criteria');
-            $semantic_criteria = $this->request->get('semantic_criteria');
-            $project_id        = $this->request->get('group_id');
-            $project           = $this->getProject($project_id, $this->project_manager);
+            $cross_search_criteria = $this->getCrossSearchCriteriaFromRequest();
             
-            if (! $request_criteria) {
-                $request_criteria = array();
-            }
-            
-            $cross_search_criteria = new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria);
+            $project_id            = $this->request->get('group_id');
+            $project               = $this->getProject($project_id, $this->project_manager);
+
             $view                  = $this->view_builder->buildView($project, $cross_search_criteria);
-            
             $view->render();
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
@@ -77,6 +71,20 @@ class Tracker_CrossSearch_SearchController {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
         }
+    }
+    
+    protected function getCrossSearchCriteriaFromRequest() {
+        $criteria_vars = array('criteria', 'semantic_criteria', 'artifact_criteria');
+        $criteria      = array();
+        foreach ($criteria_vars as $criterion_name) {
+            $criterion_value = $this->request->get($criterion_name);
+            if ($criterion_value === false) {
+                $criteria[$criterion_name] = array();
+            } else {
+                $criteria[$criterion_name] = $criterion_value;
+            }
+        }
+        return new Tracker_CrossSearch_Query($criteria['criteria'], $criteria['semantic_criteria'], $criteria['artifact_criteria']);
     }
     
     /**
