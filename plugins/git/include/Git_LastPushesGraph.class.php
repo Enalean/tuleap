@@ -62,7 +62,7 @@ class Git_LastPushesGraph {
     public function setUpGraphEnvironnment() {
         $today       = $_SERVER['REQUEST_TIME'];
         $startPeriod = strtotime("-$this->weeksNumber weeks");
-        for ($i = $startPeriod ; $i < $today ; $i += self::WEEKS_IN_SECONDS) {
+        for ($i = $startPeriod ; $i < $today+self::WEEKS_IN_SECONDS ; $i += self::WEEKS_IN_SECONDS) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
             $this->year[]    = intval(date('Y', $i));
@@ -125,7 +125,7 @@ class Git_LastPushesGraph {
                         }
                     }
                 }
-                $pushes = array_pad($pushes, $this->weeksNumber, 0);
+                $pushes = array_pad($pushes, $this->weeksNumber+1, 0);
             }    
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
