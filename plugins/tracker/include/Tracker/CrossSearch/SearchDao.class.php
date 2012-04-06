@@ -225,8 +225,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      */
     protected function getArtifactLinkSelects(array $field_ids) {
         $sql = '';
-        foreach ($field_ids as $tracker_id => $field_id) {
-            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS art_link_'.$tracker_id;
+        foreach ($field_ids as $field_id) {
+            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS art_link_'.$field_id;
         }
         return $sql;
     }

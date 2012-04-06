@@ -30,6 +30,7 @@ Mock::generate('Tracker_Report');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
 Mock::generate('Tracker_CrossSearch_ArtifactReportField');
@@ -81,12 +82,14 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         
         $release_tracker_id = 743;
         $release_tracker    = aTracker()->withId($release_tracker_id)->build();
+        $art_link_release_field_id   = 131;
         $art_link_release_field      = new MockTracker_CrossSearch_ArtifactReportField();
         $art_link_release_field->setReturnValue('getTracker', $release_tracker);
         $art_link_release_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_release_field, 0, true);
         
         $sprint_tracker_id = 365;
         $sprint_tracker    = aTracker()->withId($sprint_tracker_id)->build();
+        $art_link_sprint_field_id   = 511;
         $art_link_sprint_field      = new MockTracker_CrossSearch_ArtifactReportField();
         $art_link_sprint_field->setReturnValue('getTracker', $sprint_tracker);
         $art_link_sprint_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_sprint_field, 0, true);
@@ -99,8 +102,8 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $artifact_node->setData(array('id' => 123,
                                       'title' => 'foo',
                                       'last_changeset_id' => '567',
-                                      'art_link_'.$sprint_tracker_id => 'The planning known as Sprint',
-                                      'art_link_'.$release_tracker_id => 'I release I can fly'));
+                                      'art_link_'.$art_link_sprint_field_id => 'The planning known as Sprint',
+                                      'art_link_'.$art_link_release_field_id => 'I release I can fly'));
         
         $tree_of_artifacts = new TreeNode();
         $tree_of_artifacts->setId(0);
@@ -112,6 +115,14 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $artifact          = new MockTracker_Artifact();
         
         $artifact_factory->setReturnValue('getArtifactById', $artifact);
+        
+        $artifact_link_field_of_release_tracker = new MockTracker_FormElement_Field_ArtifactLink();
+        $artifact_link_field_of_release_tracker->setReturnValue('getId', $art_link_release_field_id);
+        $factory->setReturnValue('getUsedArtifactLinkFields', array($artifact_link_field_of_release_tracker), array($release_tracker));
+        
+        $artifact_link_field_of_sprint_tracker = new MockTracker_FormElement_Field_ArtifactLink();
+        $artifact_link_field_of_sprint_tracker->setReturnValue('getId', $art_link_sprint_field_id);
+        $factory->setReturnValue('getUsedArtifactLinkFields', array($artifact_link_field_of_sprint_tracker), array($sprint_tracker));
         
         $view = new Tracker_CrossSearch_SearchContentView($report,
                                                           $criteria,
