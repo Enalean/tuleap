@@ -76,7 +76,7 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchResults() {
+    private function fetchResults() {  
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
         if ($this->tree_of_artifacts->hasChildren()) {
@@ -109,7 +109,7 @@ class Tracker_CrossSearch_SearchContentView {
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
-            $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
+            $html .= $this->fetchColumnsValues($artifact, $row);
             $html .= '</tr>';
             
             foreach ($node->getChildren() as $child) {
@@ -138,8 +138,8 @@ class Tracker_CrossSearch_SearchContentView {
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        foreach ($this->criteria as $header) {
-            $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
+        foreach ($this->criteria as $criteria) {
+            $html .= '<th class="boxtitle"><span class="label">'. $criteria->field->getLabel().'</span></th>';
         }
         $html .= '  </tr>';
         $html .= '</thead>';
@@ -147,7 +147,7 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
+    private function fetchColumnsValues(Tracker_Artifact $artifact, array $row) {
         $html = '';
         
         foreach ($this->criteria as $criterion) {
@@ -158,9 +158,13 @@ class Tracker_CrossSearch_SearchContentView {
             } else {
                 $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
             }
-
+            
             if ($field) {
-                $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
+                if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
+                    $value = $row['art_link_'.$field->getTracker()->getId()];
+                } else {
+                    $value = $field->fetchChangesetValue($artifact->getId(), $row['last_changeset_id'], null);
+                }
             }
 
             $html .= '<td>'. $value .'</td>';
@@ -174,5 +178,6 @@ class Tracker_CrossSearch_SearchContentView {
         || is_a($criterionField, 'Tracker_CrossSearch_SemanticStatusReportField')
         || is_a($criterionField, 'Tracker_CrossSearch_ArtifactReportField');
     }
+
 }
 ?>

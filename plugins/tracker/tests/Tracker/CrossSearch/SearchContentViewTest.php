@@ -32,6 +32,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
+Mock::generate('Tracker_CrossSearch_ArtifactReportField');
 Mock::generate('Tracker_CrossSearch_SemanticStatusReportField');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
@@ -73,6 +74,54 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
                                                           $artifact_factory,
                                                           $factory);
         $html = $view->fetch();
+    }
+    
+    public function itUsesExtraColumnsFromArtifactRow() {
+        $report            = new MockTracker_Report();
+        
+        $release_tracker_id = 743;
+        $release_tracker    = aTracker()->withId($release_tracker_id)->build();
+        $art_link_release_field      = new MockTracker_CrossSearch_ArtifactReportField();
+        $art_link_release_field->setReturnValue('getTracker', $release_tracker);
+        $art_link_release_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_release_field, 0, true);
+        
+        $sprint_tracker_id = 365;
+        $sprint_tracker    = aTracker()->withId($sprint_tracker_id)->build();
+        $art_link_sprint_field      = new MockTracker_CrossSearch_ArtifactReportField();
+        $art_link_sprint_field->setReturnValue('getTracker', $sprint_tracker);
+        $art_link_sprint_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_sprint_field, 0, true);
+        
+        $criteria          = array($art_link_release_criterion, $art_link_sprint_criterion);
+        
+        //
+        $artifact_node = new TreeNode();
+        $artifact_node->setId(1);
+        $artifact_node->setData(array('id' => 123,
+                                      'title' => 'foo',
+                                      'last_changeset_id' => '567',
+                                      'art_link_'.$sprint_tracker_id => 'The planning known as Sprint',
+                                      'art_link_'.$release_tracker_id => 'I release I can fly'));
+        
+        $tree_of_artifacts = new TreeNode();
+        $tree_of_artifacts->setId(0);
+        $tree_of_artifacts->addChild($artifact_node);
+        
+        $artifact_factory  = new MockTracker_ArtifactFactory();
+        $factory           = new MockTracker_FormElementFactory();
+        $tracker           = new MockTracker();
+        $artifact          = new MockTracker_Artifact();
+        
+        $artifact_factory->setReturnValue('getArtifactById', $artifact);
+        
+        $view = new Tracker_CrossSearch_SearchContentView($report,
+                                                          $criteria,
+                                                          $tree_of_artifacts,
+                                                          $artifact_factory,
+                                                          $factory);
+        $html = $view->fetch();
+        
+        $this->assertPattern('/The planning known as Sprint/', $html);
+        $this->assertPattern('/I release I can fly/', $html);
     }
 }
 ?>

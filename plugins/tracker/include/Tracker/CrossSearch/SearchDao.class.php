@@ -225,21 +225,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      */
     protected function getArtifactLinkSelects(array $field_ids) {
         $sql = '';
-        foreach ($field_ids as $field_id) {
-            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS '.$this->getArtifactLinkColumnTitle($field_id);
+        foreach ($field_ids as $tracker_id => $field_id) {
+            $sql .= ', '.$this->getArtifactTitleValueTableAlias($field_id).'.value AS art_link_'.$tracker_id;
         }
         return $sql;
-    }
-    
-    /**
-     * Return the table name that holds artifact link title for a given field
-     * 
-     * @param Integer $field_id
-     * 
-     * @return String
-     */
-    public function getArtifactLinkColumnTitle($field_id) {
-        return 'AL_COL_VAL_'.$field_id;
     }
 
     /**

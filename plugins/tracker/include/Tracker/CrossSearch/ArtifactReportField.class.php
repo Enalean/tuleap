@@ -46,7 +46,11 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     public function getLabel() {
         return $this->tracker->getName();
     }
-        
+
+    public function getTracker() {
+        return $this->tracker;
+    }
+    
     /**
     * Display the field as a Changeset value.
     * Used in report table
