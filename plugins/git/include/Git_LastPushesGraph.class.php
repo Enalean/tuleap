@@ -30,21 +30,21 @@ class Git_LastPushesGraph {
     public $displayChart;
     public $repoList;
     public $weeksNumber;
-    protected $dates = array();
+    protected $dates   = array();
     protected $weekNum = array();
-    protected $year = array();
+    protected $year    = array();
     
     /**
      * Constructor.
      *
-     * @param Integer $groupId Project Id
+     * @param Integer $groupId     Project Id
      * @param Integer $weeksNumber Statistics duration in weeks
      *
      * @return Void
      */
     public function __construct($groupId, $weeksNumber) {
-        $dao             = new GitDao();
-        $this->repoList  = $dao->getProjectRepositoryList($groupId);
+        $dao                = new GitDao();
+        $this->repoList     = $dao->getProjectRepositoryList($groupId);
         $this->displayChart = false;
         if ($weeksNumber < self::MAX_WEEKSNUMBER) {
             $this->weeksNumber = $weeksNumber;
@@ -60,12 +60,12 @@ class Git_LastPushesGraph {
      * @return Void
      */
     public function setUpGraphEnvironnment() {
-        $today           = $_SERVER['REQUEST_TIME'];
+        $today       = $_SERVER['REQUEST_TIME'];
         $startPeriod = strtotime("-$this->weeksNumber weeks");
         for ($i = $startPeriod ; $i <= $today ; $i += self::WEEKS_IN_SECONDS) {
             $this->dates[]   = date('M d', $i);
-            $this->weekNum[]   = intval(date('W', $i));
-            $this->year[]   = intval(date('Y', $i));
+            $this->weekNum[] = intval(date('W', $i));
+            $this->year[]    = intval(date('Y', $i));
         }
     }
 
@@ -103,13 +103,13 @@ class Git_LastPushesGraph {
      * @return BarPlot
      */
     function displayRepositoryPushesByWeek() {
-        $nb_repo = count($this->repoList);
+        $nb_repo   = count($this->repoList);
         $colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
         $nb_colors = count($colors);
         $i         = 0;
         $bplot     = array();
         foreach ($this->repoList as $repository) {
-            $pushes = array();
+            $pushes    = array();
             $gitLogDao = new Git_LogDao();
             foreach ($this->weekNum as $key => $w) {
                 $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
@@ -162,23 +162,21 @@ class Git_LastPushesGraph {
     function displayError($msg) {
         //ttf from jpgraph
         $ttf = new TTF();
-        $ttf->SetUserFont(
-            'dejavu-lgc/DejaVuLGCSans.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
-            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-        );
+        $ttf->SetUserFont('dejavu-lgc/DejaVuLGCSans.ttf',
+                          'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
+                          'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
+                          'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf');
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
-        $test2="H";
+        $test2    = "H";
         //some of these additional letters should go below it
-        $test3="Hjgqp";
+        $test3    ="Hjgqp";
         //get the dimension for these two:
-        $box2 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
-        $box3 = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
+        $box2     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
+        $box3     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
         $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
-        $bbox = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
+        $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
         if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
             $background_color = imagecolorallocate($im, 255, 255, 255);
             $text_color       = imagecolorallocate($im, 64, 64, 64);
