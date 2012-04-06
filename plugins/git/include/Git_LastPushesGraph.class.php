@@ -76,10 +76,10 @@ class Git_LastPushesGraph {
      * @return Chart
      */
     function prepareGraph() {
-        $nb_repo = count($this->repoList);
-        $graph   = new Chart(500, 300+16*$nb_repo);
+        $nbRepo = count($this->repoList);
+        $graph  = new Chart(500, 300 + 16 * $nbRepo);
         $graph->SetScale('textint');
-        $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nb_repo);
+        $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nbRepo);
         $graph->SetMarginColor('white');
         $graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
         $graph->title->SetFont(FF_FONT2, FS_BOLD);
@@ -105,11 +105,11 @@ class Git_LastPushesGraph {
      * @return BarPlot
      */
     function displayRepositoryPushesByWeek() {
-        $nb_repo   = count($this->repoList);
-        $colors    = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_repo));
-        $nb_colors = count($colors);
-        $i         = 0;
-        $bplot     = array();
+        $nbRepo   = count($this->repoList);
+        $colors   = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo));
+        $nbColors = count($colors);
+        $i        = 0;
+        $bplot    = array();
         foreach ($this->repoList as $repository) {
             $pushes    = array();
             $gitLogDao = new Git_LogDao();
@@ -129,7 +129,7 @@ class Git_LastPushesGraph {
             }    
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
-                $color  = $colors[$i++ % $nb_colors];   
+                $color  = $colors[$i++ % $nbColors];   
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
                 // TODO: don't set a repository in legend if there is no pushes in it within the graph
                 $b2plot->SetLegend($repository['repository_name']);
@@ -182,9 +182,8 @@ class Git_LastPushesGraph {
         $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
         $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
         if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-            $background_color = imagecolorallocate($im, 255, 255, 255);
-            $text_color       = imagecolorallocate($im, 64, 64, 64);
-            imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $msg);
+            $textColor       = imagecolorallocate($im, 64, 64, 64);
+            imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
             header("Content-type: image/png");
             imagepng($im);
             imagedestroy($im);
