@@ -39,19 +39,31 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     }
     
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
-        $trackerId = $this->tracker->getId();
-        $html = '';
-        $html.= '<label for="'.$this->id.'_'.$trackerId.'" title="#'.$trackerId.'">'.$this->tracker->getName().'</label>';
-        $html.= <<<MARKUP
+        $trackerId         = $this->tracker->getId();
+        $html              = '';
+        $html             .= '<label for="'.$this->id.'_'.$trackerId.'" title="#'.$trackerId.'">'.$this->tracker->getName().'</label>';
+        $html             .= <<<MARKUP
         <div class="tracker_report_criteria">
         <input type="hidden" name="artifact_criteria[$trackerId]">
         <select id="tracker_report_criteria_adv_$trackerId" multiple="multiple" size="7" name="artifact_criteria[$trackerId][]">
-        <option selected="selected" value="">Any</option>
-        <option value="100">None</option>
 MARKUP;
+        
+        $anySelected  = ' selected="selected"';
+        $options      = '';
+//         <option value="100">None</option>
         foreach ($this->artifacts as $artifact) {
-            $html.= '<option value="'.$artifact->getId().'">'.$artifact->getTitle().'</option>';
+            $artifactId = $artifact->getId();
+            if ($artifact->isSelected) {
+                $anySelected = '';
+                $selected = ' selected="selected"';
+            } else {
+                $selected = '';
+            }
+            $options .= '<option'.$selected.' value="'.$artifactId.'">'.$artifact->getTitle().'</option>';
         }
+        $html        .= '<option'.$anySelected.'  value="">Any</option>';
+        $html        .= $options;
+        
         $html.= <<<MARKUP
         </select>
         </input>

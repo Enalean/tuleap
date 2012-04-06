@@ -98,13 +98,21 @@ class Tracker_CrossSearch_CriteriaBuilder {
     public function getArtifactLinkCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_criteria) {
         $criteria = array();
         foreach ($this->planning_trackers as $tracker) {
-            $artifactsOfTracker = $this->getArtifactByTracker($tracker->getId());
+            $trackerId        = $tracker->getId();
+            $AllArtifactsIds = $cross_search_criteria->listArtifactIds();
+            $artifactsOfTracker = $this->setSelectedArtifact($this->getArtifactByTracker($trackerId), $AllArtifactsIds);
+            
             $field = new Tracker_CrossSearch_ArtifactReportField($tracker, $artifactsOfTracker);
             $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
         }
         return $criteria;
     }
-    
+    protected function setSelectedArtifact($artifacts, $cross_search_criteria) {
+        foreach($artifacts as $artifact) {
+            $artifact->isSelected = in_array($artifact->getId(), $cross_search_criteria);
+        }
+        return $artifacts;
+    }
     public function getArtifactByTracker($tracker_id) {
         return Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker_id);
     }

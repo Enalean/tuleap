@@ -85,16 +85,17 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
 
     }
     
-    public function ItDisplaysJustTheOptions_Any_None_IfThereAreNoArtifactsGiven() {
+    public function ItDisplaysJustTheOptions_Any_IfThereAreNoArtifactsGiven() {
         $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
         $markup              = $this->fetchCriteria($artifactReportField);
         $this->assertPattern('%value="">Any%', $markup);
-        $this->assertPattern('%value="100">None%', $markup);
+//         $this->assertPattern('%value="100">None%', $markup);
     }
     
     public function ItDisplaysASelectMultipleWithAllArtifactsOfTheCorrespondingTracker() {
         $artifact            = stub('Tracker_Artifact')->getId()->returns(123);
         $artifact            = stub($artifact)->getTitle()->returns('artifact 123');
+        $artifact->isSelected= true;
         
         $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array($artifact));
         $markup              = $this->fetchCriteria($artifactReportField);
