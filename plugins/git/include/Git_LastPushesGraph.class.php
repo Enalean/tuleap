@@ -86,8 +86,7 @@ class Git_LastPushesGraph {
         $graph->xaxis->SetLabelAlign('right', 'center');
         $graph->xaxis->SetTickLabels($this->dates);
         $graph->yaxis->SetPos('min');
-        // TODO: i18n
-        $graph->yaxis->SetTitle("Pushes", 'center');
+        $graph->yaxis->SetTitle($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_label'), 'center');
         $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
         $graph->yaxis->title->SetAngle(90);
         $graph->yaxis->title->Align('center', 'top');
@@ -203,9 +202,7 @@ class Git_LastPushesGraph {
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
-            // TODO: i18n
-            $msg = "There is no logged pushes in the last $this->weeksNumber week(s)";
-            $this->displayError($msg);
+            $this->displayError($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_error', $this->weeksNumber));
         }
     }
 }

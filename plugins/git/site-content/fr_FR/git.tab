@@ -169,6 +169,7 @@ plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
 
 plugin_git	widget_user_pushes_title	Mes derniers push Git
 plugin_git	widget_project_pushes_title	Derniers push Git
+plugin_git	widget_project_pushes_label	Push
 plugin_git	widget_user_pushes_description	Affiche les derniers push Git faits par l'utilisateur
 plugin_git	widget_project_pushes_description	Affiche les derniers push Git du projet.
 plugin_git	widget_user_pushes_no_content	Pas de push a afficher
@@ -178,6 +179,7 @@ plugin_git	widget_user_pushes_details	Détails
 plugin_git	widget_project_pushes_duration	Affiche les push Git pour la(les) dernière(s)
 plugin_git	widget_project_pushes_group_by	semaine(s).
 plugin_git	widget_project_pushes_max_weeks	Pour garantir la lisibilité du graphique, le nombre de semaines ne doit pas dépasser 25.
+plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 semaine(s)
 
 plugin_git	logsdaily_field	Nom du répertoire
-plugin_git	logsdaily_title	Les Git pushes
+plugin_git	logsdaily_title	Les Git push
