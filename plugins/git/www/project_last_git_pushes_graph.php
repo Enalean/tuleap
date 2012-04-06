@@ -30,7 +30,7 @@ if ($request->valid($vGroupId)) {
 
 $plugin = PluginManager::instance()->getPluginByName('git');
 $duration = $plugin->getPluginInfo()->getPropVal('duration');
-if (empty($duration) || $duration > 25) {
+if (empty($duration) || $duration > Git_LastPushesGraph::MAX_WEEKSNUMBER) {
     $duration = 12;
 }
 $imageRenderer = new Git_LastPushesGraph($groupId, $duration);
