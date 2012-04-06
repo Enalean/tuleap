@@ -50,7 +50,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $this->request = new Codendi_Request(array(
             'group_id' => '66',
             'criteria' => array(),
-            'semantic_criteria' => array('title' => '', 'status' => '')
+            'semantic_criteria' => array('title' => '', 'status' => ''),
         ));
         
         $fields = array(aTextField()->withId(220)->build());
@@ -91,6 +91,21 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
         $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
     }
+    
+    public function testAllCriteriaHaveAReport() {
+        
+    }
+
+    public function testAllCriteriaAreAdvancedCriteria() {
+    
+    }
+    
+    public function testGetCriteriaAssemblesAllCriteriaTypes() {
+    
+    }
+    
+    
+    
     
     private function getCriteria() {
         $searchViewBuilder     = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, $this->planning_tracker_ids);
@@ -142,8 +157,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
 class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     
     public function itDoesntCreateACriteriaAtAllWhenArtifactIdsArentSet() {
-        $criteria = aCrossSearchCriteria()
-                    ->build();
+        $criteria = aCrossSearchCriteria()->build();
         
         $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, $this->planning_tracker_ids);
         $artifact_criteria = $builder->getArtifactLinkCriteria($criteria);
@@ -152,9 +166,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
     }       
     
     public function itDoesntCreateACriteriaAtAllWhenArtifactIdsAreEmpty() {
-        $criteria = aCrossSearchCriteria()
-                    ->withArtifactIds()
-                    ->build();
+        $criteria = aCrossSearchCriteria()->withArtifactIds(array())->build();
         
         $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, $this->planning_tracker_ids);
         $artifact_criteria = $builder->getArtifactLinkCriteria($criteria);
@@ -166,13 +178,12 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
 class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     
     public function itCreatesASingleArtifactIdCriteria() {
-        $criteria = aCrossSearchCriteria()
-                    ->withArtifactIds(array(1))
-                    ->build();
-        $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, $this->planning_tracker_ids);
+        $criteria = aCrossSearchCriteria()->withArtifactIds(array(999 => array(1)))->build();
+        
+        $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, array(999));
         $artifact_criteria = $builder->getArtifactLinkCriteria($criteria);
 
-        $expected_criterion = new Tracker_CrossSearch_ArtifactReportField(array(1));
+        $expected_criterion = new Tracker_CrossSearch_ArtifactReportField(999, array(1));
         $this->assertEqual(count($artifact_criteria), 1);
         $this->assertNotNull($artifact_criteria[0]);
         $this->assertEqual($artifact_criteria[0]->field, $expected_criterion);
@@ -183,15 +194,16 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
 class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     
     public function itCreatesSeveralArtifactIdCriteria() {
-        $this->planning_tracker_ids[] = 1;
-        $criteria = aCrossSearchCriteria()->withArtifactIds(array(1, 33, 512))->build();
-        $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, $this->planning_tracker_ids);
+        $criteria = aCrossSearchCriteria()->withArtifactIds(array(999=>array(1, 512), 666 => array(33)))->build();
+        $builder  = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, array(999, 666));
         $artifact_criteria = $builder->getArtifactLinkCriteria($criteria);
 
-        $expected_criterion = new Tracker_CrossSearch_ArtifactReportField(array(1, 33, 512));
-        $this->assertEqual(count($artifact_criteria), 1);
-        $this->assertNotNull($artifact_criteria[0]);
-        $this->assertEqual($artifact_criteria[0]->field, $expected_criterion);
+        $expected_criterion1 = new Tracker_CrossSearch_ArtifactReportField(999, array(1, 512));
+        $expected_criterion2 = new Tracker_CrossSearch_ArtifactReportField(666, array(33));
+        $this->assertEqual(count($artifact_criteria), 2);
+        $this->assertEqual($artifact_criteria[0]->field, $expected_criterion1);
+        $this->assertEqual($artifact_criteria[1]->field, $expected_criterion2);
+        
     }
     // tout le monde a isadvanced == true et un report
     

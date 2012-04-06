@@ -95,9 +95,8 @@ class Tracker_CrossSearch_CriteriaBuilder {
 
     public function getArtifactLinkCriteria(Tracker_CrossSearch_Criteria $cross_search_criteria) {
         $criteria = array();
-        $artifact_ids = $cross_search_criteria->listArtifactIds();
-        if (count($artifact_ids) > 0) {
-            $field = new Tracker_CrossSearch_ArtifactReportField($artifact_ids);
+        foreach ($this->planning_tracker_ids as $tracker_id) {
+            $field = new Tracker_CrossSearch_ArtifactReportField($tracker_id, $cross_search_criteria->getArtifactsOfTracker($tracker_id));
             $criteria[] = new Tracker_Report_Criteria(null, null, $field, null, null);
         }
         return $criteria;
