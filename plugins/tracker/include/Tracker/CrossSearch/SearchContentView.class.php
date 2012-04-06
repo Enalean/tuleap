@@ -169,8 +169,13 @@ class Tracker_CrossSearch_SearchContentView {
         if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
             $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
-                $value = $row[$key];
+                $values = array();
+                foreach (explode(',', $row[$key]) as $id) {
+                    $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
+                }
+                $value = implode(', ', $values);
             }
+            
         } else {
             $value = $field->fetchChangesetValue($artifact->getId(), $row['last_changeset_id'], null);
         }

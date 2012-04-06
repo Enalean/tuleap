@@ -113,14 +113,21 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         
         $criteria          = array($art_link_release_criterion, $art_link_sprint_criterion);
         
-        //
+        $sprint_id = '354';
+        $sprint = mock('Tracker_Artifact');
+        stub($sprint)->getTitle()->returns('The planning known as Sprint');
+        
+        $release_id = '666';
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTitle()->returns('I release I can fly');
+        
         $artifact_node = new TreeNode();
         $artifact_node->setId(1);
         $artifact_node->setData(array('id' => 123,
                                       'title' => 'foo',
                                       'last_changeset_id' => '567',
-                                      'art_link_'.$art_link_sprint_field_id => 'The planning known as Sprint',
-                                      'art_link_'.$art_link_release_field_id => 'I release I can fly'));
+                                      'art_link_'.$art_link_sprint_field_id => $sprint_id,
+                                      'art_link_'.$art_link_release_field_id => $release_id));
         
         $tree_of_artifacts = new TreeNode();
         $tree_of_artifacts->setId(0);
@@ -130,9 +137,12 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $factory           = new MockTracker_FormElementFactory();
         $tracker           = new MockTracker();
         $artifact          = new MockTracker_Artifact();
+        
         $artifact->setReturnValue('getTracker', $tracker);
         
-        $artifact_factory->setReturnValue('getArtifactById', $artifact);
+        $artifact_factory->setReturnValue('getArtifactById', $artifact, array(123));
+        $artifact_factory->setReturnValue('getArtifactById', $sprint, array($sprint_id));
+        stub($artifact_factory)->getArtifactById($release_id)->returns($release);
         
 
         $view = new Tracker_CrossSearch_SearchContentView($report,
