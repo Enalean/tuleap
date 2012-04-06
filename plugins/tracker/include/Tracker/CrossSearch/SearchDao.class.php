@@ -23,7 +23,11 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $tracker_ids, array $shared_fields, array $semantic_fields, array $artifact_link_columns_field_id, array $excluded_artifact_ids = array()) {
+    public function searchMatchingArtifacts(array $tracker_ids, 
+                                            array $shared_fields, 
+                                            array $semantic_fields, 
+                                            array $artifact_link_field_ids_for_column_display, 
+                                            array $excluded_artifact_ids = array()) {
         $tracker_ids               = $this->da->quoteSmartImplode(',', $tracker_ids);
         $excluded_artifact_ids     = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
@@ -31,10 +35,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
         $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment(array(/*5254, 5255, 5256*/));
         
-        //$artifact_link_columns = array(/*9309, 9330*/);
-        
-        $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_columns_field_id);
-        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_columns_field_id);
+        $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
+        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display);
         
         $sql = "
             SELECT artifact.id,
