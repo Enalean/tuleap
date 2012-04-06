@@ -152,29 +152,36 @@ class Tracker_CrossSearch_SearchContentView {
         
         foreach ($this->criteria as $criterion) {
             $value = '';
-            $field = $this->getFormElementFieldFromReportField($criterion->field, $artifact->getTracker());
-            
+            $field = $this->getFieldFromReportField($criterion->field, $artifact->getTracker());
             if ($field) {
-                if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
-                    $fields = $this->factory->getUsedArtifactLinkFields($field->getTracker());
-                    $artifact_link_field = $fields[0]; // TODO: empty array
-                    
-                    $key = 'art_link_'.$artifact_link_field->getId();
-                    if (isset($row[$key])) {
-                        $value = $row[$key];
-                    }
-                } else {
-                    $value = $field->fetchChangesetValue($artifact->getId(), $row['last_changeset_id'], null);
-                }
+                $value = $this->getValueFromFieldOrRow($artifact, $field, $row);
             }
-
+            
             $html .= '<td>'. $value .'</td>';
         }
         
         return $html;
     }
     
-    private function getFormElementFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
+    private function getValueFromFieldOrRow(Tracker_Artifact $artifact, Tracker_Report_Field $field, array $row) {
+        $value = '';
+
+        if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
+            $fields = $this->factory->getUsedArtifactLinkFields($field->getTracker());
+            $artifact_link_field = $fields[0]; // TODO: empty array
+
+            $key = 'art_link_' . $artifact_link_field->getId();
+            if (isset($row[$key])) {
+                $value = $row[$key];
+            }
+        } else {
+            $value = $field->fetchChangesetValue($artifact->getId(), $row['last_changeset_id'], null);
+        }
+        
+        return $value;
+    }
+    
+    private function getFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
         if ($this->isASharedField($report_field)) {
             return $this->factory->getFieldFromTrackerAndSharedField($tracker, $report_field);
         } else {
