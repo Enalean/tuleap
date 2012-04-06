@@ -59,8 +59,14 @@ class Criteria_ArtifactTest extends TuleapTestCase {
     public function itCanReturnTheListOfArtifactsFromATrackerId() {
         $criteria = $this->givenAnArtifactQuery(array(132 => array(1, 55), 456 => array(2, 55)));
         
-        $this->assertEqual(array(1, 55), $criteria->getArtifactsOfTracker(132));
-        $this->assertEqual(array(2, 55), $criteria->getArtifactsOfTracker(456));
+        $artifacts132 = $criteria->getArtifactsOfTracker(132);
+        $artifacts456 = $criteria->getArtifactsOfTracker(456);
+        
+        $this->assertEqual(1, $artifacts132[0]->getId());
+        $this->assertEqual(55, $artifacts132[1]->getId());
+        
+        $this->assertEqual(2, $artifacts456[0]->getId());
+        $this->assertEqual(55, $artifacts456[1]->getId());
     }
     
     public function itReturnsAnEmptyArrayIfThereAreNoCorrespondingTrackerIds() {

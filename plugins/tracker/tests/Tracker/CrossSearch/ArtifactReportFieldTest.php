@@ -20,9 +20,12 @@
 
 require_once dirname(__FILE__).'/../../../include/Tracker/TrackerManager.class.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report_Criteria.class.php';
+require_once dirname(__FILE__).'/../../Test_Artifact_Builder.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/Artifact/Tracker_Artifact.class.php';
 
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
+Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 Mock::generate('Tracker_FormElementFactory');
 
@@ -57,20 +60,51 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $this->assertEqual($expected, $artifactReportField->getId());
     }
     
-    public function itReturnsTheArtifactLinkOfTheTracker() {
-        $form_element_factory           = new MockTracker_FormElementFactory();
+    public function itDisplaysTheTitleOfTheTracker() {
+        $this->tracker->setReturnValue('getName', 'Sprint');
+        $this->tracker->setReturnValue('getId', 666);
+        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $markup              = $this->fetchCriteria($artifactReportField);
+        $this->assertPattern('%Sprint%', $markup);
+        $this->assertPattern('%666%',    $markup);
         
+    }
+ 
+    
+    public function itReturnsTheArtifactLinkOfTheTracker() {
+        $form_element_factory      = new MockTracker_FormElementFactory();
         $art_link_release_field_id = 135;
         $artifact_link_field_of_release_tracker = new MockTracker_FormElement_Field_ArtifactLink();
         $artifact_link_field_of_release_tracker->setReturnValue('getId', $art_link_release_field_id);
         $form_element_factory->setReturnValue('getUsedArtifactLinkFields', array($artifact_link_field_of_release_tracker), array($this->tracker));
         
-        $artifact_report_field = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
-        
-        $database_field_key = $artifact_report_field->getArtifactLinkFieldName($form_element_factory);
+        $artifact_report_field     = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $database_field_key        = $artifact_report_field->getArtifactLinkFieldName($form_element_factory);
         
         $this->assertEqual($database_field_key, 'art_link_'.$art_link_release_field_id);
+
     }
+    
+    public function ItDisplaysJustTheOptions_Any_None_IfThereAreNoArtifactsGiven() {
+        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $markup              = $this->fetchCriteria($artifactReportField);
+        $this->assertPattern('%value="">Any%', $markup);
+        $this->assertPattern('%value="100">None%', $markup);
+    }
+    
+    public function ItDisplaysASelectMultipleWithAllArtifactsOfTheCorrespondingTracker() {
+        $artifact            = stub('Tracker_Artifact')->getId()->returns(123);
+        $artifact            = stub($artifact)->getTitle()->returns('artifact 123');
         
+        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array($artifact));
+        $markup              = $this->fetchCriteria($artifactReportField);
+        
+        $this->assertPattern('%value="123">artifact 123%', $markup);
+    }
+    
+    private function fetchCriteria($artifactReportField) {
+        $criteria = new MockTracker_Report_Criteria();
+        return $artifactReportField->fetchCriteria($criteria);
+    }
 }
 ?>
