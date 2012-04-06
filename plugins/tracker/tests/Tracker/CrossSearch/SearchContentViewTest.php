@@ -32,14 +32,36 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
-Mock::generate('Tracker_CrossSearch_SemanticStatusReportField');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
-    private function buildTreeWithArtifact($artifact_id) {
+    public function setUp() {
+    }
+    
+    public function itDoesNotTryToRetrieveSharedFieldOriginForSemanticStatus() {
+        $artifact          = anArtifact()->withId(123)->withTracker(mock('Tracker'))->build();
+        $tree_of_artifacts = $this->buildTreeWithArtifact($artifact);
+        $artifact_factory  = $this->buildAnArtifactFactoryThatReturns($artifact);
+        
+        $this->thenItFetchsTheSearchContentView($tree_of_artifacts, $artifact_factory);
+    }
+    
+    private function thenItFetchsTheSearchContentView($tree_of_artifacts, $artifact_factory) {
+        $report   = mock('Tracker_Report');
+        $criteria = $this->buildCriteria($report);
+        $factory  = $this->buildAFormElementFactory();
+        $view     = new Tracker_CrossSearch_SearchContentView($report,
+                                                              $criteria,
+                                                              $tree_of_artifacts,
+                                                              $artifact_factory,
+                                                              $factory);
+        $html = $view->fetch();
+    }
+    
+    private function buildTreeWithArtifact($artifact) {
         $artifact_node = new TreeNode();
         $artifact_node->setId(1);
-        $artifact_node->setData(array('id' => $artifact_id, 'title' => 'foo', 'last_changeset_id' => '567'));
+        $artifact_node->setData(array('id' => $artifact->getId(), 'title' => 'foo', 'last_changeset_id' => '567'));
         
         $root = new TreeNode();
         $root->setId(0);
@@ -48,31 +70,22 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         return $root;
     }
     
-    public function itDoesNotTryToRetrieveSharedFieldOriginForSemanticStatus() {
-        $status            = '1'; // Open
-        $report            = new MockTracker_Report();
-        $status_field      = new MockTracker_CrossSearch_SemanticStatusReportField();
-        $criterion         = new Tracker_Report_Criteria(null, $report, $status_field, 0, true);
-        $criteria          = array($criterion);
-        $artifact_id       = 123;
-        $artifact          = new MockTracker_Artifact();
-        $tree_of_artifacts = $this->buildTreeWithArtifact($artifact_id);
-        $artifact_factory  = new MockTracker_ArtifactFactory();
-        $factory           = new MockTracker_FormElementFactory();
-        $tracker           = new MockTracker();
-        
-        $artifact_factory->setReturnValue('getArtifactById', $artifact, array($artifact_id));
-        $artifact_factory->expectOnce('getArtifactById', array($artifact_id));
-        $artifact->setReturnValue('getTracker', $tracker);
-        $factory->setReturnValue('getFieldFromTrackerAndSharedField', $status_field, array($tracker, $status_field));
+    private function buildCriteria($report) {
+        $status_field = mock('Tracker_CrossSearch_SemanticStatusReportField');
+        $criterion    = new Tracker_Report_Criteria(null, $report, $status_field, 0, true);
+        return array($criterion);
+    }
+    
+    private function buildAFormElementFactory() {
+        $factory = mock('Tracker_FormElementFactory');
         $factory->expectNever('getFieldFromTrackerAndSharedField');
-        
-        $view = new Tracker_CrossSearch_SearchContentView($report,
-                                                          $criteria,
-                                                          $tree_of_artifacts,
-                                                          $artifact_factory,
-                                                          $factory);
-        $html = $view->fetch();
+        return $factory;
+    }
+    
+    private function buildAnArtifactFactoryThatReturns($artifact) {
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById($artifact->getId())->returns($artifact);
+        $artifact_factory->expectOnce('getArtifactById', array($artifact->getId()));
+        return $artifact_factory;
     }
 }
 ?>
