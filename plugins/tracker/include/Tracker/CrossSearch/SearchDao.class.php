@@ -37,6 +37,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $tracker_constraint        = $tracker_ids ? " AND   artifact.tracker_id IN ($tracker_ids) " : "";
         $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment($query->listArtifactIds());
         
+        // TODO /!\ GROUP CONCAT returns each select value twice, to be checked (temp. solved by a array_unique in
+        // view
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
         $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display);
         
