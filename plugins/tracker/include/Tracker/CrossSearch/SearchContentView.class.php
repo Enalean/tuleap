@@ -161,7 +161,10 @@ class Tracker_CrossSearch_SearchContentView {
             
             if ($field) {
                 if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
-                    $value = $row['art_link_'.$field->getTracker()->getId()];
+                    $key = 'art_link_'.$field->getTracker()->getId();
+                    if (isset($row[$key])) {
+                        $value = $row[$key];
+                    }
                 } else {
                     $value = $field->fetchChangesetValue($artifact->getId(), $row['last_changeset_id'], null);
                 }
