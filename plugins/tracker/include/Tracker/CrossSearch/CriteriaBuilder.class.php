@@ -56,7 +56,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
     public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Criteria $request_criteria) {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
-        $artifact_fields = $this->getArtifactLinkCriteria($request_criteria);
+        $artifact_fields = $this->getArtifactLinkCriteria($report, $request_criteria);
         
         return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
@@ -93,11 +93,11 @@ class Tracker_CrossSearch_CriteriaBuilder {
         );
     }
 
-    public function getArtifactLinkCriteria(Tracker_CrossSearch_Criteria $cross_search_criteria) {
+    public function getArtifactLinkCriteria(Tracker_Report $report, Tracker_CrossSearch_Criteria $cross_search_criteria) {
         $criteria = array();
         foreach ($this->planning_tracker_ids as $tracker_id) {
             $field = new Tracker_CrossSearch_ArtifactReportField($tracker_id, $cross_search_criteria->getArtifactsOfTracker($tracker_id));
-            $criteria[] = new Tracker_Report_Criteria(null, null, $field, null, null);
+            $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, null);
         }
         return $criteria;
     }
