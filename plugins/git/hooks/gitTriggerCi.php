@@ -18,6 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This script is called by post-receive-trigger-ci hook in order to trigger CI build after a git push
+ *
+ * Usage: php gitTriggerCi.php --repo_location="/path/to/git/repository/repositoryName.git"
+ */
+
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 require_once('pre.php');
 
@@ -33,7 +39,9 @@ foreach ($argv as $arg) {
     }
 }
 
-triggerCiBuild($params['repo_location']);
+if (isset($params['repo_location']) && !empty($params['repo_location'])) {
+    triggerCiBuild($params['repo_location']);
+}
 
 /**
  * Print an error then exit
