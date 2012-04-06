@@ -824,8 +824,8 @@ class TrackerManager { /* extends Engine? */
         $art_link_field_ids = array();
         foreach ($planning_trackers as $tracker) {
             $fields = $formElementFactory->getUsedArtifactLinkFields($tracker);
-            foreach ($fields as $field) {
-                $art_link_field_ids[$tracker->getId()] = $field->getId();
+            if (count($fields)) { 
+                $art_link_field_ids[$tracker->getId()] = $fields[0]->getId();
             }
         }
         return $art_link_field_ids;
