@@ -812,23 +812,37 @@ class TrackerManager { /* extends Engine? */
         return $deleteStatus;
     }
 
-    private function getCrossSearch() {
+    private function getCrossSearch(array $art_link_column_field_ids) {
         $hierarchyFactory   = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
         $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $hierarchyFactory, array(/*9309, 9330*/));
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $hierarchyFactory, $art_link_column_field_ids);
         return $search;
     }
     
+    private function getArtifactLinkFieldsOfTrackers(Tracker_FormElementFactory $formElementFactory, array $planning_tracker_ids) {
+        $art_link_field_ids = array();
+        $trackerFactory = $this->getTrackerFactory();
+        foreach ($planning_tracker_ids as $trackerId) {
+            $tracker = $trackerFactory->getTrackerById($trackerId);
+            $fields = $formElementFactory->getUsedArtifactLinkFields($tracker);
+            foreach ($fields as $field) {
+                $art_link_field_ids[] = $field->getId();
+            }
+        }
+        return $art_link_field_ids;
+    }
+    
     public function getCrossSearchViewBuilder($group_id) {
-        $formElementFactory = Tracker_FormElementFactory::instance(); 
+        $formElementFactory   = Tracker_FormElementFactory::instance();
+        $planning_tracker_ids = $this->getPlanningTrackers($group_id);
+        $art_link_field_ids   = $this->getArtifactLinkFieldsOfTrackers($formElementFactory, $planning_tracker_ids);
         $semanticValue      = new Tracker_CrossSearch_SemanticValueFactory();
-        $planningTrackerIds = $this->getPlanningTrackers($group_id);
-        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue, $planningTrackerIds);
+        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($formElementFactory, $semanticValue, $planning_tracker_ids);
         return new Tracker_CrossSearch_ViewBuilder(
             $formElementFactory, 
             $this->getTrackerFactory(), 
-            $this->getCrossSearch(), 
+            $this->getCrossSearch($art_link_field_ids), 
             $criteria_builder
         );
     }
