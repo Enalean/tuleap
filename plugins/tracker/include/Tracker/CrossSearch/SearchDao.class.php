@@ -252,10 +252,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     /**
      * Return the needed joins to retrieve artifact links title
      * 
-     * /!\ WARNING /!\ This code doesn't manage multiple assignements.
-     * If a story was linked in 2 sprints, only one sprint is returned by code
-     * below.
-     * 
      * @param Integer $field_id
      * 
      * @return String
@@ -266,9 +262,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $tracker_artifact_title        = 'AL_COL_'.$field_id;
         $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
         $al_tracker_changeset_value_al = 'AL_COL_CVAL_'.$field_id;
-        
-        //$title_sql = $this->getArtifactTitleSqlFragment("$tracker_artifact_title.last_changeset_id", $field_id);
-        
+                
         $sql = "LEFT JOIN (
                     tracker_artifact AS $tracker_artifact_title
 
@@ -277,38 +271,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 ) ON ($al_tracker_changeset_value_al.artifact_id = artifact.id)";
         return $sql;
     }
-    
-    /**
-     * Given a table id, return the table alias that holds the title value
-     * 
-     * @param String $table_id
-     * 
-     * @return String
-     */
-    protected function getArtifactTitleValueTableAlias($table_id) {
-        return 'CVT_'.$table_id;
-    }
-    
-    /**
-     * Returns joins needed to retrieve title of an artifact
-     * 
-     * @param String $last_changeset_reference The table field to join with
-     * @param String $table_id                 An identifier to be appened to tables to avoid naming clashes.
-     * 
-     * @return String
-     */
-    protected function getArtifactTitleSqlFragment($last_changeset_reference, $table_id) {
-        $tracker_changeset_value_title = 'CV_'.$table_id;
-        $tracker_semantic_title        = 'ST_'.$table_id;
-        $tracker_changeset_value_text  = $this->getArtifactTitleValueTableAlias($table_id);
-        
-        $sql = "LEFT JOIN (
-                        tracker_changeset_value      AS $tracker_changeset_value_title
-                        INNER JOIN tracker_semantic_title       AS $tracker_semantic_title  ON ($tracker_changeset_value_title.field_id = $tracker_semantic_title.field_id)
-                        INNER JOIN tracker_changeset_value_text AS $tracker_changeset_value_text ON ($tracker_changeset_value_title.id       = $tracker_changeset_value_text.changeset_value_id)
-                    ) ON ($tracker_changeset_value_title.changeset_id = $last_changeset_reference)";
-        return $sql;
-    }
-    
+
 }
 ?>
