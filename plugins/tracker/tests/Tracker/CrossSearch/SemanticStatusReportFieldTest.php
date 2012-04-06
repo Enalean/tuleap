@@ -60,7 +60,7 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
         $criteria = new MockTracker_Report_Criteria();
         $html     = $this->field->fetchCriteria($criteria);
         
-        $this->assertPattern('%<label.*Status.*</label>%s', $html);
+        $this->assertPattern('%<label.*Open / Closed.*</label>%s', $html);
     }
     
     public function itUsesTheCriteriaToDeduceWichOptionsAreSelected() {
@@ -78,7 +78,6 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
         $html = $this->fetchCriteria(strtolower($option));
         
         $this->assertPattern("%selected=\"selected\">$option%", $html);
-        
     }
 
     private function fetchCriteria($option) {
@@ -86,8 +85,6 @@ class Tracker_CrossSearch_SemanticStatusReportFieldTest extends TuleapTestCase {
         $field    = new Tracker_CrossSearch_SemanticStatusReportField($option, $this->semantic_value_factory);
         
         return $field->fetchCriteria($criteria);
-    }
-
-    
+    }    
 }
 ?>

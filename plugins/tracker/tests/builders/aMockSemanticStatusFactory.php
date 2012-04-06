@@ -30,12 +30,35 @@ class MockSemanticStatusFactoryBuilder {
     }
     
     public function withNoFieldForTracker($tracker) {
-        $semantic_status = new MockTracker_Semantic_Status();
-        
-        $semantic_status->setReturnValue('getField', null);
-        $this->factory->setReturnValue('getByTracker', $semantic_status, array($tracker));
-        
+        $this->withFieldForTracker(null, $tracker);
         return $this;
+    }
+    
+    public function withFieldForTracker($field, $tracker) {
+        $this->getSemantic($tracker)->setReturnValue('getField', $field);
+        return $this;
+    }
+    
+    public function withOpenValueForTracker($tracker, $value_id) {
+        $this->getSemantic($tracker)->setReturnValue('getOpenValues', array($value_id));
+        return $this;
+    }
+    
+    public function withClosedValueForTracker($tracker, $value_id) {
+        $this->getSemantic($tracker)->setReturnValue('getOpenValues', array());
+        return $this;
+    }
+    
+    /**
+     * Assumes only one mocked tracker.
+     */
+    private function getSemantic($tracker) {
+        if (! isset($this->semantic_status)) {
+            $this->semantic_status = new MockTracker_Semantic_Status();
+            $this->factory->setReturnValue('getByTracker', $this->semantic_status, array($tracker));
+        }
+        
+        return $this->semantic_status;
     }
     
     public function build() {

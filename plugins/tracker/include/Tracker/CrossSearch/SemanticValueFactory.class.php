@@ -83,9 +83,32 @@ class Tracker_CrossSearch_SemanticValueFactory {
             return ''; 
         }
         
-        $value = $field->fetchChangesetValue($artifact_id, $changeset_id, null);
+        $value  = $this->getValue($field, $changeset_id);
+        $status = $this->isOpenValue($value, $artifact) ? $this->getOpenLabel() : $this->getClosedLabel();
+        
+        return $status;
+    }
+    
+    private function getValue($field, $changeset_id) {
+        $values = $field->getBind()->getChangesetValues($changeset_id);
+        $value  = empty($values) ? null : $values[0]['id'];
         
         return $value;
+    }
+    
+    private function isOpenValue($value, $artifact) {
+        $semantic    = $this->semantic_status_factory->getByTracker($artifact->getTracker());
+        $open_values = $semantic->getOpenValues();
+        
+        return in_array($value, $open_values);
+    }
+    
+    private function getOpenLabel() {
+        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_open');
+    }
+    
+    private function getClosedLabel() {
+        return $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'semantic_status_closed');
     }
     
     /**
