@@ -60,6 +60,7 @@ class Git_LastPushesGraph {
      * @return Void
      */
     public function setUpGraphEnvironnment() {
+        // TODO: Fix this algorythm its input is too random
         $today       = $_SERVER['REQUEST_TIME'];
         $startPeriod = strtotime("-$this->weeksNumber weeks");
         for ($i = $startPeriod ; $i <= $today ; $i += self::WEEKS_IN_SECONDS) {
@@ -86,6 +87,7 @@ class Git_LastPushesGraph {
         $graph->xaxis->SetLabelAlign('right', 'center');
         $graph->xaxis->SetTickLabels($this->dates);
         $graph->yaxis->SetPos('min');
+        // TODO: i18n
         $graph->yaxis->SetTitle("Pushes", 'center');
         $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
         $graph->yaxis->title->SetAngle(90);
@@ -129,6 +131,7 @@ class Git_LastPushesGraph {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nb_colors];   
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
+                // TODO: don't set a repository in legend if there is no pushes in it within the graph
                 $b2plot->SetLegend($repository['repository_name']);
                 $bplot[] = $b2plot;
             }
@@ -169,6 +172,7 @@ class Git_LastPushesGraph {
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
+        // TODO: Use meaningful var names
         $test2    = "H";
         //some of these additional letters should go below it
         $test3    ="Hjgqp";
@@ -199,6 +203,7 @@ class Git_LastPushesGraph {
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
+            // TODO: i18n
             $msg = "There is no logged pushes in the last $this->weeksNumber week(s)";
             $this->displayError($msg);
         }
