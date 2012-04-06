@@ -32,9 +32,9 @@ function stub($classname_or_simpletest_mock) {
  * @return a simpletest mock 
  */
 function mock($classname) {
-        Mock::generate($classname);
-        $mockclassname = "Mock$classname";
-        return new $mockclassname();
+    Mock::generate($classname);
+    $mockclassname = "Mock$classname";
+    return new $mockclassname();
 }
 
 class OngoingIntelligentStub {
