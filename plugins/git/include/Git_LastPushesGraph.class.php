@@ -172,7 +172,6 @@ class Git_LastPushesGraph {
         //Calculate the baseline
         // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
         //this should be above baseline
-        // TODO: Use meaningful var names
         $test2    = "H";
         //some of these additional letters should go below it
         $test3    ="Hjgqp";
@@ -182,7 +181,8 @@ class Git_LastPushesGraph {
         $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
         $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
         if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-            $textColor       = imagecolorallocate($im, 64, 64, 64);
+            $backgroundColor = imagecolorallocate($im, 255, 255, 255);
+            $textColor        = imagecolorallocate($im, 64, 64, 64);
             imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
             header("Content-type: image/png");
             imagepng($im);
