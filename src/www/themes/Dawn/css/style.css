@@ -67,15 +67,15 @@ a:hover {
     color: #dc4900; 
 }
 /******** priorities **********/
-.priora { background-color: #eae191; }
-.priorb { background-color: #e6ce88; }
-.priorc { background-color: #e3bb7f; }
-.priord { background-color: #e0a876; }
-.priore { background-color: #dd966e; }
-.priorf { background-color: #da8365; }
-.priorg { background-color: #d7705c; }
-.priorh { background-color: #d45d53; }
-.priori { background-color: #d14b4b; }
+.priora { background-color: #ffffe0; }
+.priorb { background-color: #fff1d4; }
+.priorc { background-color: #ffe4c8; }
+.priord { background-color: #ffd6bc; }
+.priore { background-color: #ffc9b0; }
+.priorf { background-color: #ffbca4; }
+.priorg { background-color: #ffae98; }
+.priorh { background-color: #ffa18c; }
+.priori { background-color: #ff9480; }
 
 
 /********   forum    **********/

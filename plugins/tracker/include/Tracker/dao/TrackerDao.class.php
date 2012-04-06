@@ -105,7 +105,9 @@ class TrackerDao extends DataAccessObject {
                         stop_notification
                     FROM $this->table_name
                     WHERE id = $atid_template";
-            return $this->updateAndGetLastId($sql);
+            if ($this->update($sql)) {
+                return $id;
+            }
         }
         return false;
     }
@@ -161,7 +163,9 @@ class TrackerDao extends DataAccessObject {
                         $deletion_date, 
                         $instantiate_for_new_projects, 
                         $stop_notification)";
-            return $this->updateAndGetLastId($sql);
+            if ($this->update($sql)) {
+                return $id;
+            }
         }
         return false;
     }

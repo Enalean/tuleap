@@ -583,7 +583,8 @@ class ArtifactTypeFactory extends Error {
                 $this->setError('ArtifactTypeFactory: '.db_error());
                 return false;
             } else {
-                $id = db_insertid($res,'artifact_group_list','group_artifact_id');
+                //No need to get the last insert id since we already know the id : $id
+                //$id = db_insertid($res,'artifact_group_list','group_artifact_id');
                 $at_new = new ArtifactType($group,$id);
                 if (!$at_new->fetchData($id)) {
                     $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','load_fail'));
