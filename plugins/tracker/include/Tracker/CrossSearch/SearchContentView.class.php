@@ -170,7 +170,9 @@ class Tracker_CrossSearch_SearchContentView {
             $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
                 $values = array();
-                foreach (explode(',', $row[$key]) as $id) {
+                // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
+                $linked_artifact_ids = array_unique(explode(',', $row[$key]));
+                foreach ($linked_artifact_ids as $id) {
                     $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
                 }
                 $value = implode(', ', $values);
