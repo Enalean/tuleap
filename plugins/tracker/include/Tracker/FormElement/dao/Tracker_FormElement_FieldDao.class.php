@@ -338,7 +338,8 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                   JOIN tracker_field f_src ON (f_target.original_field_id = f_src.id) 
                   JOIN tracker ON (f_src.tracker_id = tracker.id)
                 WHERE tracker.group_id = $project_id
-                  AND f_target.use_it = 1";
+                  AND f_target.use_it = 1
+                  AND tracker.deletion_date IS NULL";
         return $sql;
     }
     
@@ -349,7 +350,8 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
                 WHERE tracker.group_id = $project_id 
                   AND tracker_field.original_field_id != 0
-                  AND tracker_field.use_it = 1";
+                  AND tracker_field.use_it = 1
+                  AND tracker.deletion_date IS NULL";
         return $sql;
     }
     

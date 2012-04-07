@@ -837,8 +837,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
             foreach ($planning_factory->getPlannings($group_id) as $planning) {
                 $planning   = $planning_factory->getPlanning($planning->getId());
-                if ($tracker = $tracker_factory->getTrackerById($planning->getPlanningTrackerId())) {
-                    $trackers[] = $tracker;
+                $tracker_id = $planning->getPlanningTrackerId();
+                if (!isset($trackers[$tracker_id])) {
+                    if ($tracker = $tracker_factory->getTrackerById($tracker_id)) {
+                        $trackers[$tracker_id] = $tracker;
+                    }
                 }
             }
         }

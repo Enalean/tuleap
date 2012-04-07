@@ -1,3 +1,9 @@
+Version 5.6.1 - Tuleap 5.0
+    * In cross search:
+      * List only shared fields that belongs to an active tracker
+      * List artifact link criteria only once per tracker
+      * Display each artifact link only once in results
+
 Version 5.6 - Tuleap 5.0
     * Cross tracker search allows to search based on artifact link.
 
