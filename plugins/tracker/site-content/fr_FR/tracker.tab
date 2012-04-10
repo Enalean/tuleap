@@ -1004,6 +1004,8 @@ plugin_tracker_artifact_changeset	header_html_snapshot	État
 
 plugin_tracker_formelement_admin	crossreferences_label	Références Croisées
 plugin_tracker_formelement_admin	crossreferences_description	Affiche les références croisées de l'artefact
+plugin_tracker_formelement_admin	burndown_label	Diagramme de complétion
+plugin_tracker_formelement_admin	burndown_description	Diagramme de complétion pour l'artefact
 plugin_tracker_formelement_admin	submittedby_label	Auteur de l'artefact
 plugin_tracker_formelement_admin	submittedby_description	Affiche l'auteur de l'artéfact
 plugin_tracker_formelement_admin	submittedby_help	Le champ est automatiquement renseigné avec l'utilisateur qui a soumis l'artéfact

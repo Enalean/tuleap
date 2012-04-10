@@ -1006,6 +1006,8 @@ plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
+plugin_tracker_formelement_admin	burndown_label	Burndown Chart
+plugin_tracker_formelement_admin	burndown_description	Display the burndown chart for the artifact
 plugin_tracker_formelement_admin	submittedby_label	Submitted By
 plugin_tracker_formelement_admin	submittedby_description	Display the user who submitted the artifact
 plugin_tracker_formelement_admin	submittedby_help	The field is automatically set to artifact submission user
