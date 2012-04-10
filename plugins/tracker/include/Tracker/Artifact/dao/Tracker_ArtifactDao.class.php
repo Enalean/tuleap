@@ -270,7 +270,9 @@ class Tracker_ArtifactDao extends DataAccessObject {
             $sql = "INSERT INTO $this->table_name 
                     (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
                     VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
-            return $this->updateAndGetLastId($sql);
+            if ($this->update($sql)) {
+                return $id;
+            }
         }
         return false;
     }

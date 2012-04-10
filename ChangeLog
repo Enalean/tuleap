@@ -13,6 +13,15 @@ Version 5.0 (Not released yet)
    * Rename codendi_tools to tools
    * "Tests" plugin is now in /plugins but only manage display of tests (no longer embbed core tests
 
+Version 4.0.28.1 (Friday, April 6th 2012)
+  == Bug Fix ==
+  * Fix sla #674 - SVN notifications by path: mails were sent to people monitoring the same path at different projects
+  * Fix sla #656 - Not able to create Tracker from the template
+  * Fix sla #664 - Lack of visibility in Dawn theme
+  
+  == Plugins ==
+  * Tracker v5.4.8
+  
 Version 4.0.28 (Friday, March 30th 2012)
    == Bug Fix ==
    * homepage: three feature boxes displayed the same content

@@ -16,6 +16,9 @@ Version 5.4.9 - Tuleap 5.0
 Version 5.4.8 - Tuleap 5.0
     * Refactoring.
     
+Version 5.4.8 - Tuleap 4.0.28.1
+  * Fix sla #656 - Not able to create Tracker from the template
+  
 Version 5.4.7 - Tuleap 4.0.28
   * Fix notice during install
 
