@@ -987,3 +987,8 @@ ul.plugin_tracker_my_artifacts_list {
     font-weight: bold;
     color: #0676B9;
 }
+
+.tracker_homenav_cross_search .tracker_report_criteria_advanced_toggle {
+    display: none;
+}
+
