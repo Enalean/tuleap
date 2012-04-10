@@ -227,7 +227,9 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                   INNER JOIN tracker          AS T ON (F.tracker_id = T.id)
                   INNER JOIN tracker_artifact AS A ON (T.id = A.tracker_id)
                 WHERE A.id IN ($artifact_ids_list)
-                  AND formElement_type = 'art_link'";
+                  AND formElement_type = 'art_link'
+                  AND F.use_it = 1
+               ";
         $dar = $this->retrieve($sql);
         if ($dar && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
