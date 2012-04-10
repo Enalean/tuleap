@@ -25,213 +25,62 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public $default_properties = array();
     
     public function getCriteriaFrom($criteria) {
-        //Only filter query if field is used
-        if($this->isUsed()) {
-            //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                //TODO: move this in a dao
-                $v = $criteria_value;
-                if (is_numeric($v)) {
-                    $cond = '= '. (int)$v;
-                } else {
-                    $cond = "= '$v'"; //todo quotesmart + rlike
-                }
-                $a = 'A_'. $this->id; 
-                return " INNER JOIN cross_references AS $a 
-                         ON (artifact.id = $a.source_id AND $a.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.target_id $cond
-                             OR
-                             artifact.id = $a.target_id AND $a.target_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.source_id $cond
-                         )
-                ";
-            }
-        }
     }
     
     public function getCriteriaWhere($criteria) {
-        return '';
     }
     
     public function getQuerySelect() {
-        $R1 = 'R1_'. $this->id;
-        return "$R1.id AS `". $this->name . "`";
     }
     
     public function getQueryFrom() {
-        $R1 = 'R1_'. $this->id;
-        return " LEFT JOIN (
-                     cross_references AS $R1
-                 ) ON (a.id = $R1.source_id AND $R1.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' 
-                       OR
-                       a.id = $R1.target_id AND $R1.target_type = '".Tracker_Artifact::REFERENCE_NATURE."'
-                 )
-        ";
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
-        $crossref_fact->fetchDatas();
-        if ($crossref_fact->getNbReferences()) {
-            $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = true, $condensed = true);
-        } else {
-            $html .= '';
-        }
-        return $html;
     }
     
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-        // TODO: implement it if required
-        $html = '';
-        return $html;
     }
     
-    /**
-     * Display the field value as a criteria
-     *
-     * @param Tracker_ReportCriteria $criteria
-     *
-     * @return string
-     * @see fetchCriteria
-     */
     public function fetchCriteriaValue($criteria) {
-        $value = $this->getCriteriaValue($criteria);
-        if (!$value) {
-            $value = '';
-        }
-        $hp = Codendi_HTMLPurifier::instance();
-        return '<input type="text" name="criteria['. $this->id .']" value="'. $hp->purify($this->getCriteriaValue($criteria), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
     }
 
-    /**
-     * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
-     */
     public function fetchRawValue($value) {
-        return 'references raw value';
     }
     
-    /**
-     * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
-     */
     protected function getCriteriaDao() {
-        return new Tracker_Report_Criteria_Text_ValueDao();
     }
     
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     *
-     * @return string html
-     */
     protected function fetchSubmitValue() {
-        return '';
     }
 
-    /**
-     * Fetch the html code to display the field value in masschange submission form
-     *
-     * @return string html
-     */
     protected function fetchSubmitValueMasschange() {
-        return '';
     }
 
     protected function getValueDao() {
-        return new CrossReferenceDao();
     }
 
     public function afterCreate() {
-       
     }
 
-    /**
-     * Fetch the value to display changes in followups
-     *
-     * @param Tracker_ $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     *
-     * @return string
-     */
     public function fetchFollowUp($artifact, $from, $to) {
-        //don't display anything in follow-up
-        return '';
     }
     
-    /**
-     * Fetch the value in a specific changeset
-     *
-     * @param Tracker_Artifact_Changeset $changeset
-     *
-     * @return string
-     */
     public function fetchRawValueFromChangeset($changeset) {
-        //Nothing special to say here
-        return '';
     }
     
-    /**
-     * Save the value and return the id
-     *
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return int or array of int
-     */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-       //The field is ReadOnly
-       return null;
     }
     
-    /**
-     * Keep the value 
-     * 
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return int or array of int
-     */
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
-        //The field is ReadOnly
-        return null;
     }
     
-    /**
-     * Get the value of this field
-     *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
-     *
-     * @return Tracker_Artifact_ChangesetValue or null if not found
-     */
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-        return null;
     }
     
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
     public function getSoapAvailableValues() {
-        return null;
     }
 
-    /**
-     * Fetch the html code to display the field value in artifact
-     *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
-     *
-     * @return string
-     */
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
@@ -246,6 +95,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
+        $html .= __METHOD__;
         return $html;
     }
 
@@ -260,6 +110,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $output = '';
+        //TODO: What to send in email?
         return $output;
     }
 
@@ -351,8 +202,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return string html
      */
      public function fetchSubmitMasschange() {
-         $html = $this->fetchSubmitValueMassChange();
-         return $html;
      }
 }
 ?>
