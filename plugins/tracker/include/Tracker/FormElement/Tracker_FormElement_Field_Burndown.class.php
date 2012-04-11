@@ -251,11 +251,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return String
      */
     private function fetchMissingRemainingEffortWarning() {
-        $tracker_names = implode(', ', $this->getChildTrackerNamesWithoutRemainingEffort());
+        $tracker_links = implode(', ', $this->getLinksToChildTrackersWithoutRemainingEffort());
         
-        if ($tracker_names) {
+        if ($tracker_links) {
             $warning = $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_remaining_effort_warning');
-            return "<li>$warning $tracker_names.</li>";
+            return "<li>$warning $tracker_links.</li>";
         }
     }
     
@@ -264,19 +264,23 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * 
      * @return array of String
      */
-    private function getChildTrackerNamesWithoutRemainingEffort() {
-        return array_map(array($this, 'getTrackerName'),
+    private function getLinksToChildTrackersWithoutRemainingEffort() {
+        return array_map(array($this, 'getLinkToTracker'),
                          $this->getChildTrackersWithoutRemainingEffort());
     }
     
     /**
-     * Returns the name of a given tracker. Used with array_map.
+     * Renders a link to the given tracker.
      * 
      * @param Tracker $tracker
      * @return String
      */
-    private function getTrackerName(Tracker $tracker) {
-        return $tracker->getName();
+    private function getLinkToTracker(Tracker $tracker) {
+        $tracker_id   = $tracker->getId();
+        $tracker_name = $tracker->getName();
+        $tracker_url  = TRACKER_BASE_URL."/?tracker=$tracker_id&func=admin-formElements";
+        
+        return '<a href="'.$tracker_url.'">'.$tracker_name.'</a>';
     }
     
     /**
