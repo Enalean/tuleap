@@ -9,13 +9,13 @@
 -->
       
 <chapter id="TrackerService">
-  <title>Service outils de suivi (ancienne génération)</title>
+  <title>Outils de suivi ancienne génération</title>
 
   <para><emphasis role="bold">Attention :</emphasis> ce chapitre couvre les fonctionnalités de l'ancienne
-  version du moteur de suivi (v3). Pour la documentation du moteur de suivi actuel (v5), se référer à  <xref linkend="TrackerV5Service" />.</para>
+  version de l'outil de suivi (v3). Pour la documentation de l'outil de suivi actuel (v5), se référer à  <xref linkend="TrackerV5Service" />.</para>
 
 
-  <para>Les outils de suivi (de l'anglais trackers) représentent l'un
+  <para>Les outils de suivi (ou trackers) représentent l'un
   des services les plus puissants et les plus flexibles mis à la
   disposition des projets hébergés sur &SYS_PRODUCT_NAME;. Ils assurent le suivi
   d'artefacts aussi variés que des bugs, des tâches, des fiches

@@ -441,7 +441,7 @@
 	<mediaobject>
 	  <imageobject>
 	    <imagedata format="PNG"
-	      fileref="../../screenshots/en_US/sc_artifactbrowsing.png" width="15.3cm" />
+	      fileref="../../screenshots/en_US/sc_legacyartifactbrowsing.png" width="15.3cm" />
 	  </imageobject>
 	</mediaobject>
       </figure>
@@ -1471,7 +1471,7 @@ width="14.5cm" />
       <mediaobject>
 	<imageobject>
 	  <imagedata format="PNG"
-	    fileref="../../screenshots/en_US/sc_trackercreatenewtracker.png" width="13cm"/>
+	    fileref="../../screenshots/en_US/sc_legacytrackercreatenewtracker.png" width="13cm"/>
 	</imageobject>
       </mediaobject>
     </figure>
@@ -1753,6 +1753,7 @@ width="14.5cm" />
       search and browsing templates for the artifact search screen are
       defined here (search criteria et results table).</para>
       </listitem>
+	  
       <listitem><para><emphasis role="bold">Email Notification
 	Settings</emphasis>: fine tuning of the global and personal
 	email notification settings.</para>
@@ -2974,7 +2975,7 @@ width="14.5cm" />
 	<mediaobject>
 	  <imageobject>
 	    <imagedata format="PNG"
-	      fileref="../../screenshots/en_US/sc_trackercannedresponses.png" width="15.3cm" />
+	      fileref="../../screenshots/en_US/sc_legacytrackercannedresponses.png" width="15.3cm" />
 	  </imageobject>
 	</mediaobject>
       </figure>

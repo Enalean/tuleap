@@ -17,7 +17,6 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 %ParametersDefault;
 
 <!-- Entities for inclusion of document chapters -->
-<!ENTITY BookInfo SYSTEM "BookInfo.xml">
 <!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
 <!ENTITY ChapterSiteOverview SYSTEM "SiteOverview.xml">
 <!ENTITY ChapterBecomingACitizen SYSTEM "BecomingACitizen.xml">
@@ -37,6 +36,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
 <!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
 <!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
+<!ENTITY Chapterlegalnotice SYSTEM "legalnotice.xml">
 
 <!-- Entity definition and inclusion for default and custom parameters
 (e.g. site name, server names, company name,etc.)
@@ -49,8 +49,6 @@ an entity cannot be redefined. Hence this particular order  -->
   <title>&SYS_PRODUCT_NAME; User Guide</title>
 
   <subtitle>&#34;Open Source suite for Application Lifecycle Management&#34;</subtitle>
-
-  &BookInfo;
 
   &ChapterIntroduction;
   &ChapterSiteOverview;
@@ -71,4 +69,5 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterProjectWebSite;
   &ChapterOtherServices;
   &ChapterTracker;
+  &Chapterlegalnotice;
 </book>

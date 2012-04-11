@@ -177,7 +177,7 @@
 
       <step>
 	<para>Peu après avoir validé l'enregistrement de votre compte
-	utilisateur un email doit vous parvenir vous demandant
+	utilisateur, un email doit vous parvenir vous demandant
 	confirmation. En cliquant sur l'URL contenu dans ce message,
 	vous ferez apparaître un formulaire vous demandant à nouveau
 	votre nom d'utilisateur et votre mot de passe. S'ils
@@ -235,7 +235,7 @@
     <ulink
     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;</ulink>
     et cliquez sur le lien &#34;Se connecter&#34;. Après vous être
-    authentifié, &SYS_PRODUCT_NAME; vous présente votre Page Personnelle (<xref
+    authentifié, &SYS_PRODUCT_NAME; vous présente votre Tableau de bord ou Page Personnelle (<xref
     linkend="FigureThePersonalPageOfACodendiUser" />. Vous pouvez à tout
     moment retourner sur cette Page Personnelle en sélectionnant le
     lien &#34;Ma Page Personnelle&#34; dans le menu &SYS_PRODUCT_NAME;.</para>

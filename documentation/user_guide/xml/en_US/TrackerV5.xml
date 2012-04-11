@@ -9,9 +9,9 @@
 -->
       
 <chapter id="TrackerV5Service">
-  <title>Tracker Service</title>
+  <title>Tracker</title>
 
-  <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the new version (aka v5) of Tracker service.
+  <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the new generation (aka v5) of Tracker system.
   For documentation on the legacy tracker system (v3) see <xref linkend="TrackerService" />.</para>
 
   <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and versatile

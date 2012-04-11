@@ -9,28 +9,27 @@
 -->
 
   <chapter id="ProjectSummary">
-    <title>Sommaire du projet</title>
+    <title>Tableau de bord Projet</title>
 
-    <para>La page de Sommaire du Projet est le point d'entrée d'un
-    projet hébergé sur &SYS_PRODUCT_NAME; et c'est véritablement la seule page dont
-    vous ayez à vous souvenir ou que vous ayez à conserver dans vos signets. A
+    <para>Le Tableau de bord Projet est le point d'entrée d'un
+    projet hébergé sur &SYS_PRODUCT_NAME; et c'est une page très importante que vous pouvez  conserver dans vos signets. A
     partir de cette page les utilisateurs enregistrés, les membres du
-    projet ou les administrateurs peuvent accéder à l'ensemble des
-    ressources et des services qui leur sont
-    accessibles. Contrairement à la page d'Administration du Projet
-    (voir <xref linkend="ProjectAdministration" />), le Sommaire du
-    Projet est accessible à tous les utilisateurs. D'une certaine
+    projet ou les administrateurs peuvent suivre en temps réel l'avancement du projet et accéder aux
+    ressources et  services qui leur sont
+    autorisés. Contrairement à la page d'Administration du Projet
+    (voir <xref linkend="ProjectAdministration" />), le Tableau de bord Projet
+    est accessible à tous les utilisateurs. D'une certaine
     façon il s'agit de la façade publique du projet.</para>
 
     <section id="AccessingAProjectSummaryPage">
-      <title>Accéder au Sommaire du Projet</title>
+      <title>Accéder au Tableau de bord Projet</title>
 
       <para>Pour les membres d'un projet, la façon la plus simple
-      d'accéder à la page de sommaire consiste à se rendre sur la page
+      d'accéder au Tableau de bord Projet consiste à se rendre sur la page
       personnelle et à cliquer sur le nom de projet approprié.</para>
 
       <para>Pour les autres utilisateurs, il existe plusieurs façons de
-      se rendre sur le page de sommaire d'un projet :</para>
+      se rendre sur le Tableau de bord d'un projet :</para>
 
       <procedure>
         <step>
@@ -46,7 +45,7 @@
 
         <step>
           <para>Vous pouvez aussi cliquer sur le nom du projet s'il
-          apparaît dans le tableau de bord de la page d'accueil de
+          apparaît dans la page d'accueil de
           &SYS_PRODUCT_NAME;.</para>
         </step>
 
@@ -62,16 +61,16 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
       <para>Si vous devez consulter régulièrement des projets dont
       vous n'êtes pas membre, nous vous conseillons de faire
-      apparaître l'URL de la page de sommaire dans votre page
+      apparaître l'URL du tableau de bord dans votre page
       personnelle &SYS_PRODUCT_NAME; en utilisant la fonction &#34;Cette page en
       signet&#34; du menu de &SYS_PRODUCT_NAME; (voir <xref
       linkend="LoginAndPersonalPage" />).</para>
 
       <tip>
-        <title>Le Sommaire du Projet n'est pas sa Page d'Accueil !</title>
+        <title>Le Tableau de bord Projet n'est pas sa Page d'Accueil !</title>
 
-        <para>La page de sommaire du projet ne doit pas être confondue
-        avec la page d'accueil. La page de sommaire donne une vue
+        <para>Le Tableau de bord Projet ne doit pas être confondu
+        avec la page d'accueil. Le Tableau de bord donne une vue
         d'ensemble des activités et des délivrables du projet alors
         que la page d'accueil est le point d'entrée du site Web de
         votre projet. Le site Web d'un projet peut être utilisé pour
@@ -90,17 +89,16 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
     </section>
 
     <section id="ProjectSummaryPageContent">
-      <title>Contenu de la page de sommaire</title>
+      <title>Contenu du Tableau de bord Projet</title>
 
-      <para>Un exemple de page de sommaire d'un projet est visible sur
+      <para>Un exemple de Tableau de bord Projet est visible sur
       la <xref linkend="FigureASampleProjectSummaryPage" />. La page
       se divise en plusieurs zones :</para>
 
       <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Menu principal du
-          projet</emphasis> : il se trouve en haut de la page juste
-          sous le nom du projet. Le menu principal est un
+          projet</emphasis> : il se trouve en haut de la page. Le menu principal est un
           récapitulatif de l'ensemble des services disponibles pour ce
           projet. Ce menu reste visible sur toutes les pages qui
           concernent le projet dans lequel vous naviguez.</para>
@@ -123,12 +121,12 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
         </listitem>
         
         <listitem>
-          <para><emphasis role="bold">Une zone configurable</emphasis> (voir ci dessous).</para>
+          <para><emphasis role="bold">Une zone configurable</emphasis>.</para>
         </listitem>
       </itemizedlist>
 
       <figure id="FigureASampleProjectSummaryPage">
-        <title>Un exemple de page de Sommaire d'un projet</title>
+        <title>Un exemple de Tableau de bord du Projet Playground</title>
             <mediaobject>
                 <imageobject>
                     <imagedata format="PNG" fileref="../../screenshots/fr_FR/sc_projectsummarypage.png" width="15.3cm" />
@@ -136,7 +134,7 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
             </mediaobject>
       </figure>
 
-      <para>&SYS_PRODUCT_NAME; permet aux administrateurs du projet de personnaliser la page sommaire du projet. 
+      <para>&SYS_PRODUCT_NAME; permet aux administrateurs du projet de personnaliser le Tableau de bord du projet. 
       Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
       Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
       peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>

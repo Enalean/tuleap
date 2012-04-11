@@ -8,7 +8,7 @@
 //
 -->
   <chapter id="CodendiSiteOverview">
-    <title>Vue d'ensemble du site &SYS_PRODUCT_NAME;</title>
+    <title>Vue d'ensemble de &SYS_PRODUCT_NAME;</title>
 
     <para>&SYS_PRODUCT_NAME; est un site Web de &SYS_ORG_NAME; accessible à l'URL
     <ulink
