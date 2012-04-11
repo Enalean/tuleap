@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_ReadOnly.class.php');
+require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
     
@@ -118,10 +118,29 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * Display the html field in the admin ui
      * @return string html
      */
-    protected function fetchAdminFormElement() {
-        $html = '';
+    public function fetchAdminFormElement() {
+        $html = $this->fetchWarnings();
         $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
         return $html;
+    }
+    
+    private function fetchWarnings() {
+        $warnings  = '';
+        $warnings .= $this->fetchWarningUnlessTrackerHasFormElement('start_date');
+        $warnings .= $this->fetchWarningUnlessTrackerHasFormElement('duration');
+        
+        if ($warnings) {
+            return '<ul class="feedback_warning">'.$warnings.'</ul>';
+        }
+    }
+    
+    private function fetchWarningUnlessTrackerHasFormElement($name) {
+        if (! $this->getTracker()->hasFormElementWithName($name)) {
+            $key     = "burndown_missing_${name}_warning";
+            $warning = $GLOBALS['Language']->getText('plugin_tracker', $key);
+            
+            return '<li>'.$warning.'</li>';
+        }
     }
     
     /**
