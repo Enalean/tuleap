@@ -33,7 +33,7 @@ class GitLog {
      * @return Void
      */
     public function __construct() {
-         $this->_dao = new Git_LogDao(CodendiDataAccess::instance());
+         $this->_dao = new Git_LogDao();
     }
 
     /**
