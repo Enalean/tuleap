@@ -95,7 +95,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $html .= __METHOD__;
+        $html .= '<img src="'. TRACKER_BASE_URL .'/images/please-configure-your-burndown.png" />';
         return $html;
     }
 
