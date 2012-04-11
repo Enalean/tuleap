@@ -34,13 +34,25 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private $hierarchy_factory;
     
+    /**
+     * Returns the previously injected factory (e.g. in tests), or a new
+     * instance (e.g. in production).
+     * 
+     * @return Tracker_HierarchyFactory
+     */
     public function getHierarchyFactory() {
         if ($this->hierarchy_factory == null) {
-            $this->hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+            $this->hierarchy_factory = Tracker_HierarchyFactory::build();
         }
         return $this->hierarchy_factory;
     }
     
+    /**
+     * Provides a way to inject the HierarchyFactory, since it cannot be done
+     * in the constructor.
+     * 
+     * @param Tracker_HierarchyFactory $hierarchy_factory 
+     */
     public function setHierarchyFactory($hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
     }

@@ -29,6 +29,17 @@ class Tracker_HierarchyFactory {
         $this->hierarchy_dao = $hierarchy_dao;
     }
     
+    /**
+     * Returns a new instance of Tracker_HierarchyFactory.
+     * 
+     * We should usually prefer dependency injection over static methods, but
+     * there are some cases in Tuleap legacy code where injection would require
+     * a lot of refactoring (e.g. Tracker/FormElement).
+     */
+    public static function build() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+    }
+    
     public function getChildren($tracker_id) {
         $children = array();
         
