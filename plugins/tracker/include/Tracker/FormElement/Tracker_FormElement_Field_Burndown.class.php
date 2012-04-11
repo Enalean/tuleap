@@ -134,9 +134,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getRemainingEffortEvolution($artifact) {
-        $artifact_ids = $this->getLinkedArtifacts($artifact);
-        $field_id     = $this->getFormElementFactory()->getUsedArtifactLinkFields($artifact->getTracker());
-        return $this->getBurndownDao()->searchRemainingEffort($field_id, $artifact_ids);
+        $artifact_ids         = $this->getLinkedArtifacts($artifact);
+        $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($artifact->getTracker());
+        if (count($artifact_link_fields) > 0) {
+            $field_id = $artifact_link_fields[0]->getId();
+            return $this->getBurndownDao()->searchRemainingEffort($field_id, $artifact_ids);
+        }
     }
     
     
