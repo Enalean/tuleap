@@ -522,7 +522,7 @@ class TrackerFactory {
         }
        
         if ($tracker_mapping) {
-            $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+            $hierarchy_factory    = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
         }
         /**
@@ -543,7 +543,10 @@ class TrackerFactory {
                 'group_id'       => $to_project_id
         ));*/
     }
-
+    
+    public function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+    }
     /**
      * First, creates a new Tracker Object by importing its structure from an XML file,
      * then, imports it into the Database, before verifying the consistency

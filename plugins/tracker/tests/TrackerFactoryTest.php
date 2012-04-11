@@ -20,7 +20,10 @@
 
 //require_once('common/dao/include/DataAccessObject.class.php');
 //require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
+require_once('Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Hierarchy/HierarchyFactory.class.php');
+Mock::generate('Tracker_HierarchyFactory');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
@@ -40,12 +43,6 @@ Mock::generatePartial('TrackerFactory',
                             'isNameExists',
                             'isShortNameExists',
                             'getReferenceManager'
-                      )
-);
-Mock::generatePartial('TrackerFactory',
-                      'TrackerFactoryTestVersion3',
-                      array('create',
-                            'getTrackersByGroupId'
                       )
 );
 
@@ -195,7 +192,14 @@ class TrackerFactoryTest extends UnitTestCase {
     }
     
     public function testDuplicate() {
-        $tracker_factory = new TrackerFactoryTestVersion3();
+        $hierarchy_factory = new MockTracker_HierarchyFactory();
+        $tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
+                      array('create',
+                            'getTrackersByGroupId',
+                            'getHierarchyFactory'
+                      ));
+        $tracker_factory->setReturnValue('getHierarchyFactory', $hierarchy_factory);
+        
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
         $t1->setReturnValue('getId', 1234);
@@ -215,6 +219,8 @@ class TrackerFactoryTest extends UnitTestCase {
         
         // only one call is expected with following arguments:
         $tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
+        
+        $hierarchy_factory->expectOnce('duplicate');
         
         $tracker_factory->duplicate(100, 999, null);
     }
