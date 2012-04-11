@@ -23,14 +23,18 @@
  */
 class Git_Widget_ProjectPushes extends Widget {
 
+    public $pluginPath;
+
     /**
      * Constructor of the widget.
      *
+     * @param String $pluginPath Path of plugin git
+     *
      * @return Void
      */
-    public function __construct() {
+    public function __construct($pluginPath) {
+        $this->pluginPath = $pluginPath;
         parent::__construct('plugin_git_project_pushes');
-
     }
 
     /**
@@ -52,7 +56,7 @@ class Git_Widget_ProjectPushes extends Widget {
         $groupId = $request->get('group_id');
         $request = HTTPRequest::instance();
         $content = '<div style="text-align:center"><p>
-                        <img src="/plugins/git/project_last_git_pushes_graph.php?group_id='.$groupId.'" title="'.$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title').'" />
+                        <img src="'.$this->pluginPath.'/project_last_git_pushes_graph.php?group_id='.$groupId.'" title="'.$GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title').'" />
                     </div>';
         return $content;
     }

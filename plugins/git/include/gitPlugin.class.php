@@ -424,7 +424,7 @@ class GitPlugin extends Plugin {
                 break;
             case 'plugin_git_project_pushes':
                 require_once('Git_Widget_ProjectPushes.class.php');
-                $params['instance'] = new Git_Widget_ProjectPushes();
+                $params['instance'] = new Git_Widget_ProjectPushes($this->getPluginPath());
                 break;
             default:
                 break;
