@@ -198,7 +198,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         
         <para>The &SYS_PRODUCT_NAME; IM plug-in comes with a Jabber client integrated
         into the web interface of your project. This client lets you chat into the project
-        MUC Room (see <xref linkend="MUCRooms" />).
+        MUC Room (see <xref linkend="MUCRoomsIntegration" />).
         Of course, each user can choose the client that best fits his or her needs. Several
         open source (and/or free) clients are available for the most common platforms,
         and you can find a list (non-exhaustive) of them at 
