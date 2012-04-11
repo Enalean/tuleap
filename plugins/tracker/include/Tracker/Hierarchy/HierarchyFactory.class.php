@@ -32,7 +32,7 @@ class Tracker_HierarchyFactory {
     public function getChildren($tracker_id) {
         $children = array();
         
-        foreach($this->hierarchy_dao->searchChildren($tracker_id) as $row) {
+        foreach($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
             $children[] = TrackerFactory::instance()->getTrackerById($row['id']);
         }
         
