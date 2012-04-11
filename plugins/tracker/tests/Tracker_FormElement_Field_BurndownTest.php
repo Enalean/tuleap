@@ -115,8 +115,8 @@ class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends Tuleap
 class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestCase {
     
     public function itRendersAWarningForAnyTrackerChildThatHasNoEffortField() {
-        $missing_remaining_effort_warning = 'The following trackers does not have a "remaining_effort" Integer or Float field:';
-        $this->setText($missing_remaining_effort_warning, array('plugin_tracker', 'burndown_missing_remaining_effort_warning'));
+        $warning_message = 'Foo';
+        $this->setText($warning_message, array('plugin_tracker', 'burndown_missing_remaining_effort_warning'));
         
         $stories = aMockTracker()->withName('Stories')->withFormElement('remaining_effort', 'int')->build();
         $demos   = aMockTracker()->withName('Demos')->withFormElement('remaining_effort', 'float')->build();
@@ -126,13 +126,13 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
         $children   = array($stories, $demos, $bugs, $chores);
         $tracker_id = 123;
         
-        $this->tracker           = aMockTracker()->withId($tracker_id)->build();
-        $this->hierarchy_factory = aMockHierarchyFactory()->withChildrenForTrackerId($tracker_id, $children)->build();
-        $this->field             = aBurndownField()->withTracker($this->tracker)->withHierarchyFactory($this->hierarchy_factory)->build();
+        $tracker           = aMockTracker()->withId($tracker_id)->build();
+        $hierarchy_factory = aMockHierarchyFactory()->withChildrenForTrackerId($tracker_id, $children)->build();
+        $field             = aBurndownField()->withTracker($tracker)->withHierarchyFactory($hierarchy_factory)->build();
         
-        $html = $this->field->fetchAdminFormElement();
+        $html = $field->fetchAdminFormElement();
         
-        $this->assertPattern('/'.$missing_remaining_effort_warning.'/', $html);
+        $this->assertPattern('/'.$warning_message.'/', $html);
         $this->assertNoPattern('/Stories/', $html);
         $this->assertPattern('/Bugs/', $html);
         $this->assertPattern('/Chores/', $html);
