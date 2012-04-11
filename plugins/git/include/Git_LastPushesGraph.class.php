@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
 require_once 'common/chart/Chart.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_LogDao.class.php';
@@ -126,10 +125,10 @@ class Git_LastPushesGraph {
                     }
                 }
                 $pushes = array_pad($pushes, $this->weeksNumber, 0);
-            }    
+            }
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
-                $color  = $colors[$i++ % $nbColors];   
+                $color  = $colors[$i++ % $nbColors];
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
                 if (!empty($legend)) {
                     $b2plot->SetLegend($legend);

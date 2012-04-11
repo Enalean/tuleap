@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Git_LastPushesGraph.class.php';
 
 $vGroupId = new Valid_GroupId();
