@@ -283,7 +283,7 @@
     </section>
   </section>
 
-  <section id="CVSIntegrationinCodendi">
+  <section id="CVSIntegration">
     <title>Intégration de CVS dans &SYS_PRODUCT_NAME;</title>
 
     <section id="TheCVSRepository">

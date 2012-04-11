@@ -489,7 +489,7 @@ scp -r * login@&SYS_SHELL_HOST;:/home/groups/projectname/htdocs/
       </section>
     </section>
 
-    <section id="ReferencingtheCodendiSite">
+    <section id="ReferencingtheSite">
       <title>Referencing the &SYS_PRODUCT_NAME; Site</title>
 
       <para>The &SYS_PRODUCT_NAME; Team is asking that all project Web sites hosted on

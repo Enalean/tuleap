@@ -528,7 +528,7 @@
   </section>
   
   
-  <section id="HudsonInCodendi">
+  <section id="Hudson">
     <title>Integration in &SYS_PRODUCT_NAME;</title>
     <para>
         As continuous integration is a good practice in software engineering,
@@ -559,7 +559,7 @@
             of your project, and then select the 'Add a job' link.
             You need then to give the URL of the Hudson job you want to associate
             with your project (for instance: http://[my_ci_server]:8080/hudson/job/[my_job]).
-            <figure id="HudsonAddJobInCodendi">
+            <figure id="HudsonAddJob">
               <title>Link Hudon job with your project</title>
               <mediaobject>
                 <imageobject>
@@ -589,7 +589,7 @@
         <para>
             When you select the Build tab of your project, you can see a table
             with all the jobs associated with your project.
-            <figure id="HudsonBrowseJobsInCodendi">
+            <figure id="HudsonBrowseJobs">
               <title>Hudson jobs associated with your project</title>
               <mediaobject>
                 <imageobject>

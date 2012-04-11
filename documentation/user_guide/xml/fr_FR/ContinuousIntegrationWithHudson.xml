@@ -561,7 +561,7 @@
   </section>
   
   
-  <section id="HudsonInCodendi">
+  <section id="Hudson">
     <title>Intégration dans &SYS_PRODUCT_NAME;</title>
     <para>
         Parce que l'intégration continue fait partie des bonnes pratiques de
@@ -595,12 +595,12 @@
             de votre projet, puis cliquez sur le lien 'Ajouter un job'.
             Vous devez alors entrer l'URL du job Hudson que vous souhaitez associer
             à votre projet (par exemple : http://[mon_serveur_ic]:8080/hudson/job/[mon_job]).
-            <figure id="HudsonAddJobInCodendi">
+            <figure id="HudsonAddJob">
               <title>Lier un job Hudson à votre projet</title>
               <mediaobject>
                 <imageobject>
                   <imagedata format="PNG"
-                    fileref="../../screenshots/fr_FR/sc_hudsonaddjobincodendi.png" width="14.5cm" />
+                    fileref="../../screenshots/fr_FR/sc_hudsonaddjob.png" width="14.5cm" />
                 </imageobject>
               </mediaobject>
             </figure>
@@ -628,7 +628,7 @@
             Lorsque vous cliquez sur l'onglet Build de votre projet, vous voyez
             un tableau qui vous présente l'ensemble des jobs associés à votre
             projet.
-            <figure id="HudsonBrowseJobsInCodendi">
+            <figure id="HudsonBrowseJobs">
               <title>Visualiser les jobs Hudson associés à votre projet</title>
               <mediaobject>
                 <imageobject>
