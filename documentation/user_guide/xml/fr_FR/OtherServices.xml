@@ -128,7 +128,7 @@ newgrp nom_projet
       </para>
     </section>
     
-    <section id="CodendiCLI">
+    <section id="CLI">
       <title>Client en Ligne de Commande &SYS_PRODUCT_NAME; (Command Line Interface, CLI)</title>
       <para>Une autre manière d'utiliser &SYS_PRODUCT_NAME; est d'utiliser le client en ligne 
         de commande (CLI). Il s'agit d'une application cliente qui utilise l'API

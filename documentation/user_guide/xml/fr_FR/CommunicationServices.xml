@@ -229,7 +229,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         
         <para>Le plug-in IM de &SYS_PRODUCT_NAME; contient un client Jabber intégré à l'interface
         web de votre projet. Ce client vous permet uniquement de dialoguer dans le salon de discussion
-        du projet (voir <xref linkend="CodendiMUCRooms" />).
+        du projet (voir <xref linkend="MUCRooms" />).
         Bien entendu, chaque utilisateur est libre d'utiliser le client qui correspond le mieux a ses besoins. 
         Un certain nombre de client open source (et/ou gratuit) sont disponibles pour la plupart des
         plateformes, une liste non-exhaustive est disponible à l'url 
@@ -325,7 +325,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
                 de votre projet, ou grâce à un client de messagerie instantanée.
             </para>
             
-            <section id="CodendiMUCRooms">
+            <section id="MUCRooms">
              <title>Salon de discussion dans l'interface web</title>
              <para>
              Pour entrer dans le salon de discussion de votre projet, il vous

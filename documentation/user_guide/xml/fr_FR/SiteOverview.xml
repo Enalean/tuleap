@@ -27,7 +27,7 @@
     d'ensemble et le chemin à emprunter pour accéder à un service
     particulier.</para>
 
-    <section id="CodendiHomePage">
+    <section id="HomePage">
       <title>Page d'accueil &SYS_PRODUCT_NAME;</title>
 
       <para>La page d'accueil est divisée en quatre parties (voir la <xref
@@ -485,7 +485,7 @@
         </itemizedlist>
       </section>
 
-      <section id="CodendiDiscussionForums">
+      <section id="DiscussionForums">
         <title>Forums de discussion &SYS_PRODUCT_NAME;</title>
 
         <para>Les forums de discussion &SYS_PRODUCT_NAME; proposent une alternative

@@ -22,7 +22,7 @@
     broad overview of the services available as well as a flow chart showing
     how to access a given service.</para>
 
-    <section id="CodendiHomePage">
+    <section id="HomePage">
       <title>&SYS_PRODUCT_NAME; Home Page</title>
 
       <para>The Home Page is divided in 4 parts (see <xref
@@ -440,7 +440,7 @@
         </itemizedlist>
       </section>
 
-      <section id="CodendiDiscussionForums">
+      <section id="DiscussionForums">
         <title>&SYS_PRODUCT_NAME; Discussion Forums</title>
 
         <para>Discussion Forums are an alternate way to keep in touch with the

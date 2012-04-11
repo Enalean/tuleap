@@ -126,7 +126,7 @@ newgrp projectname
       </para>
     </section>
     
-    <section id="CodendiCLI">
+    <section id="CLI">
       <title>&SYS_PRODUCT_NAME; Command Line Interface (CLI)</title>
       <para>Another way to use &SYS_PRODUCT_NAME; is to use the command line interface (CLI).
         It's a client application that use the SOAP API to interact with the 

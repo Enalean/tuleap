@@ -104,7 +104,7 @@
     </section>
   </section>
 
-  <section id="CodendiWikis">
+  <section id="Wikis">
     <title>&SYS_PRODUCT_NAME; Wikis</title>
 
     <para>&SYS_PRODUCT_NAME; wikis are project-specific. So two different projects may use the same page names without conflict.</para>

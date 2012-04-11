@@ -26,7 +26,7 @@
   site ou bien créés par chaque projet sont entièrement
   personnalisables.</para>
 
-  <section id="CodendiTrackerPrinciples">
+  <section id="TrackerPrinciples">
     <title>Terminologie et points commun</title>
 
     <para>Avant de présenter les fonctionnalités des outils de suivi,
@@ -1579,7 +1579,7 @@ width="14.5cm" />
         trouverez typiquement des outils de suivi pour les anomalies, les tâches,
         etc... Un patron particulier appelé &#34;Aucun&#34; permet de
         créer un tracker vierge de tout champ sauf certains qui restent
-        obligatoires. Voir <xref linkend="CodendiTrackerTemplates" />
+        obligatoires. Voir <xref linkend="TrackerTemplates" />
         pour plus d'information concernant ces patrons.</para>
       </listitem>
 
@@ -1600,7 +1600,7 @@ width="14.5cm" />
   </section>
 
 
-  <section id="CodendiTrackerTemplates">
+  <section id="TrackerTemplates">
     <title>Patrons d'outils de suivi du site</title>
 
     <para>Les outils de suivi standards fournis pour chaque projet
