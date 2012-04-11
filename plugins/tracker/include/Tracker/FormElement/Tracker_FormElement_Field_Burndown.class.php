@@ -218,7 +218,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         
         if ($tracker_names) {
             $warning = $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_remaining_effort_warning');
-            return '<li>'.$warning.'<ul><li>'.$tracker_names.'</li></ul></li>';
+            return "<li>$warning $tracker_names</li>";
         }
     }
     
