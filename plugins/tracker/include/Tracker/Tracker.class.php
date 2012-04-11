@@ -199,7 +199,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
     
     public function hasFormElementWithName($name) {
-        // TODO
+        $element = Tracker_FormElementFactory::instance()->getUsedFieldByName($this->getId(), $name);
+        return $element;
     }
 
     /**
