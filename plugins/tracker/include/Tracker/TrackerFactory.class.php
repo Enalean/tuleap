@@ -520,8 +520,11 @@ class TrackerFactory {
                 }
             }
         }
-        
-        
+       
+        if ($tracker_mapping) {
+            $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+            $hierarchy_factory->duplicate($tracker_mapping);
+        }
         /**
          * The trackers from a project have been duplicated in another project
          *

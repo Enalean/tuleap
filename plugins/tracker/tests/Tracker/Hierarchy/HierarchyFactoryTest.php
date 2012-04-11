@@ -71,6 +71,35 @@ class Tracker_HierarchyFactoryTest extends UnitTestCase {
         $this->assertEqual($hierarchy->getLevel(114), 3);
     }
     
+    public function testDuplicateHierarchy() {
+        $dao = $this->GivenADaoThatContainsOneFullHierrachy();
+        
+        $factory = $this->GivenAHierarchyFactory($dao);
+        
+        $tracker_mapping = array(
+            '111' => '211',
+            '112' => '212',
+            '113' => '213',
+            '114' => '214',
+        );
+        
+        $dao->expectCallCount('duplicate', 3, 'Method duplicate from Dao should be called 3 times.');
+        
+        $factory->duplicate($tracker_mapping);
+        
+    }
+    
+    private function GivenADaoThatContainsOneFullHierrachy() {
+        $dao = new MockTracker_Hierarchy_Dao();
+        $dar = TestHelper::arrayToDar(
+            array('parent_id' => 111, 'child_id' => 112),
+            array('parent_id' => 112, 'child_id' => 113),
+            array('parent_id' => 113, 'child_id' => 114)
+        );
+        $dao->setReturnValue('searchTrackerHierarchy', $dar, array(array(111, 112, 113, 114)));
+        return $dao;
+    }
+    
     private function GivenADaoThatContainsFullHierarchy() {
         $dao     = new MockTracker_Hierarchy_Dao();
         $dar1 = TestHelper::arrayToDar(
