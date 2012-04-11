@@ -166,7 +166,7 @@ class Tracker_CrossSearch_SearchContentView {
     private function getValueFromFieldOrRow(Tracker_Artifact $artifact, Tracker_Report_Field $field, array $row) {
         $value = '';
 
-        if ($field instanceof Tracker_CrossSearch_ArtifactReportField) {
+        if ($field instanceof Tracker_CrossSearch_ArtifactLinkReportField) {
             $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
                 $values = array();

@@ -29,7 +29,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 Mock::generate('Tracker_FormElementFactory');
 
-class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
+class Tracker_CrossSearch_ArtifactLinkReportFieldTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->tracker = new MockTracker();

@@ -30,13 +30,13 @@ class Tracker_CrossSearch_ArtifactLinkReportField implements Tracker_Report_Fiel
     protected $artifacts;
     
     /**
+     * The tracker used as a display and search criteria
      * @var Tracker
      */
     protected $tracker;
     
     protected $id = 'artifact_of_tracker';
     
-    ///TODO: change $tracker to a name more explicit like 'stuff'
     public function __construct(Tracker $tracker, array $artifacts, $any_is_selected = false) {
         $this->artifacts    = $artifacts;
         $this->tracker      = $tracker;

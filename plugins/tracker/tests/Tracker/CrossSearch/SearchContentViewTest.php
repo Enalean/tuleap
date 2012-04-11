@@ -33,7 +33,7 @@ Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 Mock::generate('Tracker_Report_Criteria');
 Mock::generate('Tracker');
-Mock::generate('Tracker_CrossSearch_ArtifactReportField');
+Mock::generate('Tracker_CrossSearch_ArtifactLinkReportField');
 Mock::generate('Tracker_CrossSearch_SemanticStatusReportField');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
@@ -98,7 +98,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $release_tracker_id = 743;
         $release_tracker    = aTracker()->withId($release_tracker_id)->build();
         $art_link_release_field_id   = 131;
-        $art_link_release_field      = mock('Tracker_CrossSearch_ArtifactReportField');
+        $art_link_release_field      = mock('Tracker_CrossSearch_ArtifactLinkReportField');
         stub($art_link_release_field)->getTracker()->returns($release_tracker);
         stub($art_link_release_field)->getArtifactLinkFieldName()->returns('art_link_'.$art_link_release_field_id);
         $art_link_release_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_release_field, 0, true);
@@ -106,7 +106,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $sprint_tracker_id = 365;
         $sprint_tracker    = aTracker()->withId($sprint_tracker_id)->build();
         $art_link_sprint_field_id   = 511;
-        $art_link_sprint_field      = mock('Tracker_CrossSearch_ArtifactReportField');
+        $art_link_sprint_field      = mock('Tracker_CrossSearch_ArtifactLinkReportField');
         stub($art_link_sprint_field)->getTracker()->returns($sprint_tracker);
         stub($art_link_sprint_field)->getArtifactLinkFieldName()->returns('art_link_'.$art_link_sprint_field_id);
         $art_link_sprint_criterion  = new Tracker_Report_Criteria(null, $report, $art_link_sprint_field, 0, true);
