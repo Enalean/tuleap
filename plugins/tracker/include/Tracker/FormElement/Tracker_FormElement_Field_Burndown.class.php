@@ -212,6 +212,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $html;
     }
     
+    /**
+     * Renders all the possible warnings for this field.
+     * 
+     * @return String
+     */
     private function fetchWarnings() {
         $warnings  = '';
         $warnings .= $this->fetchMissingFieldWarning('start_date', 'date');
@@ -223,6 +228,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
+    /**
+     * Renders a warning concerning some missing field in the tracker.
+     * 
+     * @param String $name
+     * @param String $type
+     * @return String 
+     */
     private function fetchMissingFieldWarning($name, $type) {
         if (! $this->getTracker()->hasFormElementWithNameAndType($name, $type)) {
             $key     = "burndown_missing_${name}_warning";
@@ -232,6 +244,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
+    /**
+     * Renders a warning concerning some child tracker(s) missing a remaining
+     * effort field.
+     * 
+     * @return String
+     */
     private function fetchMissingRemainingEffortWarning() {
         $tracker_names = implode(', ', $this->getChildTrackerNamesWithoutRemainingEffort());
         
@@ -241,29 +259,62 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
+    /**
+     * Returns the names of child trackers missing a remaining effort.
+     * 
+     * @return array of String
+     */
     private function getChildTrackerNamesWithoutRemainingEffort() {
         return array_map(array($this, 'getTrackerName'),
                          $this->getChildTrackersWithoutRemainingEffort());
     }
     
+    /**
+     * Returns the name of a given tracker. Used with array_map.
+     * 
+     * @param Tracker $tracker
+     * @return String
+     */
     private function getTrackerName(Tracker $tracker) {
         return $tracker->getName();
     }
     
+    /**
+     * Returns the child trackers missing a remaining effort.
+     * 
+     * @return array of Tracker
+     */
     private function getChildTrackersWithoutRemainingEffort() {
         return array_filter($this->getChildTrackers(),
                             array($this, 'missesRemainingEffort'));
     }
     
+    /**
+     * Returns true if the given tracker misses a remaining effort field.
+     * 
+     * @param Tracker $tracker
+     * @return Boolean
+     */
     private function missesRemainingEffort(Tracker $tracker) {
         return ! $this->hasRemainingEffort($tracker);
     }
     
+    /**
+     * Returns true if the given tracker has a remaining effort field.
+     * 
+     * @param Tracker $tracker
+     * @return Boolean
+     */
     private function hasRemainingEffort(Tracker $tracker) {
         return $tracker->hasFormElementWithNameAndType('remaining_effort', 'int')
             || $tracker->hasFormElementWithNameAndType('remaining_effort', 'float');
     }
     
+    /**
+     * Returns the children of the burndown field tracker.
+     * 
+     * @return array of Tracker
+     */
     private function getChildTrackers() {
         return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
     }
