@@ -25,6 +25,7 @@ require_once dirname(__FILE__).'/Test_Tracker_Builder.php';
 require_once dirname(__FILE__).'/Test_Artifact_Builder.php';
 require_once dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.class.php';
 require_once dirname(__FILE__).'/builders/aBurndownField.php';
+require_once dirname(__FILE__).'/builders/aMockTracker.php';
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
@@ -109,25 +110,10 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
         $missing_remaining_effort_warning = 'The following trackers does not have a "remaining_effort" Integer or Float field:';
         $this->setText($missing_remaining_effort_warning, array('plugin_tracker', 'burndown_missing_remaining_effort_warning'));
         
-        $stories = mock('Tracker');
-        stub($stories)->getName()->returns('Stories');
-        stub($stories)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(false);
-        stub($stories)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(true);
-        
-        $demos = mock('Tracker');
-        stub($demos)->getName()->returns('Demos');
-        stub($demos)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(true);
-        stub($demos)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(false);
-        
-        $bugs = mock('Tracker');
-        stub($bugs)->getName()->returns('Bugs');
-        stub($bugs)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(false);
-        stub($bugs)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(false);
-        
-        $chores = mock('Tracker');
-        stub($chores)->getName()->returns('Chores');
-        stub($chores)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(false);
-        stub($chores)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(false);
+        $stories = aMockTracker()->withName('Stories')->withFormElement('remaining_effort', 'int')->build();
+        $demos   = aMockTracker()->withName('Demos')->withFormElement('remaining_effort', 'float')->build();
+        $bugs    = aMockTracker()->withName('Bugs')->withNoFormElement('remaining_effort')->build();
+        $chores  = aMockTracker()->withName('Chores')->withFormElement('remaining_effort', 'date')->build();
         
         $children   = array($stories, $demos, $bugs, $chores);
         $tracker_id = 123;
