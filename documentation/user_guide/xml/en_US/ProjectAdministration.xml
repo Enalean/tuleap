@@ -212,7 +212,7 @@ john.smith@company.com</programlisting>
 	      not automatically be part of the newly registered project.
 	      A template project does not appear any more in the Software 
 	      Map and is excluded from project statistics on the &SYS_PRODUCT_NAME; Dashboard
-	      (see <xref linkend="TheCodendiDashboard" />) like the newest projects 
+	      (see <xref linkend="ThePlateformDashboard" />) like the newest projects 
 	      listing, most active projects, etc.
 	    </para>
 	  </listitem>

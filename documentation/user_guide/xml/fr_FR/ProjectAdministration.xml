@@ -232,7 +232,7 @@ john.smith@xerox.com</programlisting>
 	      automatiquement membres du nouveau projet.
 	      Un projet de patron n'apparaît plus dans l'arbre des projets
 	      et est exclu des statistiques de projets du tableau de bord 
-	      de &SYS_PRODUCT_NAME; (see <xref linkend="TheCodendiDashboard" />) comme 
+	      de &SYS_PRODUCT_NAME; (see <xref linkend="ThePlateformDashboard" />) comme 
 	      les projets récents, les projets les plus actifs, etc...
 	    </para>
 	  </listitem>
