@@ -120,7 +120,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function fetchAdminFormElement() {
         $html = '';
-        $html .= __METHOD__;
+        $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
         return $html;
     }
     
