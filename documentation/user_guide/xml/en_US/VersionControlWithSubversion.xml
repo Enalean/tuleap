@@ -193,7 +193,7 @@
 	those graphical clients.</para>
       </section>
 
-      <section id="SettingUprapidSVNforCodendi">
+      <section id="SettingUprapidSVN">
 	<title>Setting up rapidSVN for &SYS_PRODUCT_NAME;</title>
 
         <para>As mentioned above, rapidSVN is the graphical user

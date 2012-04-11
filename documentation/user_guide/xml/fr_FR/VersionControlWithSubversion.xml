@@ -210,7 +210,7 @@
 	les frontaux graphiques.</para>
       </section>
 
-      <section id="SettingUprapidSVNforCodendi">
+      <section id="SettingUprapidSVN">
 	<title>Configurer rapidSVN pour &SYS_PRODUCT_NAME;</title>
 
         <para>Comme indiqué précédemment, rapidSVN est le frontal
