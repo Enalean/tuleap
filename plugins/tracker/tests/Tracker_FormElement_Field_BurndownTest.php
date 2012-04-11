@@ -72,47 +72,45 @@ class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends Tuleap
         stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(false);
         $html = $this->field->fetchAdminFormElement();
         $this->assertPattern('/'.$this->missing_duration_warning.'/', $html);
-    }
-    
-    public function itCanGetLinkedArtifactIdsFromAnArtifactAndAFormFieldElementArtifact() {
-        $sprint_tracker         = aTracker()->build();
-        $last_changeset         = mock('Tracker_Artifact_Changeset');
-        $sprint                 = anArtifact()->withTracker($sprint_tracker)->withChangesets(array($last_changeset))->build();
-        
-        $task_ids               = array(54, 55);
-        $linked_tasks           = array(anArtifact()->withId(54)->build(), anArtifact()->withId(55)->build());
-        
-        $artifact_link_field_id = 12;
-        $artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
-        stub($artifact_link_field)->getLinkedArtifacts()->returns($linked_tasks);
-        
-        $this->assertEqual($task_ids, $this->field->getLinkedArtifactIds($sprint, $artifact_link_field));
-    } 
-    
-    public function itRetrieveRemainingEffortEvolutionFromDao() {
-        $task_ids               = array(54, 55);
-        $artifact_link_field_id = 12;
-        $artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
-        
-        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($artifact_link_field));
-        
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndownDao', 'getFormElementFactory', 'getLinkedArtifactIds'));
-
-        stub($field)->getFormElementFactory()->returns($form_element_factory);
-        stub($field)->getLinkedArtifactIds()->returns($task_ids);
-
-        $sprint = anArtifact()->withTracker(aTracker()->build())->build();
-        
-        $dao = mock('Tracker_FormElement_Field_BurndownDao');
-        stub($field)->getBurndownDao()->returns($dao);
-        $dao->expectOnce('searchRemainingEffort', array($artifact_link_field_id, $task_ids));
-        
-        $field->getRemainingEffortEvolution($sprint);
-    }
-    
+    }      
 }
 
 class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestCase {
+    public function itRetrieveRemainingEffortEvolutionFromDao() {
+        $sprint_tracker_id      = 113;
+        $last_changeset         = mock('Tracker_Artifact_Changeset');
+        $sprint_tracker         = aTracker()->withId($sprint_tracker_id)->build();
+        $sprint = anArtifact()->withTracker($sprint_tracker)->withChangesets(array($last_changeset))->build();
+        
+        $artifact_link_field_id = 12;
+        $artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
+        
+        $task_ids     = array(54, 55);
+        $linked_tasks = array(anArtifact()->withId(54)->build(), anArtifact()->withId(55)->build());
+        stub($artifact_link_field)->getLinkedArtifacts($last_changeset)->returns($linked_tasks);
+        
+        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($artifact_link_field));
+        
+        $effort_field_id = 35;
+        $effort_field    = stub('Tracker_FormElement_Field_Float')->getId()->returns($effort_field_id);
+        //stub($effort_field)->getType()->returns('float');
+        stub($form_element_factory)->getFormElementByName($sprint_tracker_id, 'remaining_effort')->returns($effort_field);
+        
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndownDao', 'getFormElementFactory'));
+
+        stub($field)->getFormElementFactory()->returns($form_element_factory);
+        
+
+        $dao = mock('Tracker_FormElement_Field_BurndownDao');
+        stub($field)->getBurndownDao()->returns($dao);
+        $dao->expectOnce('searchRemainingEffort', array($effort_field_id, $task_ids));
+        
+        $field->getRemainingEffortEvolution($sprint);
+    }
+}
+
+class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends TuleapTestCase {
     
     public function itRendersAWarningForAnyTrackerChildThatHasNoEffortField() {
         $warning_message = 'Foo';

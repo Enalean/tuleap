@@ -25,7 +25,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Request parameter to display burndown image 
      */
-    const FUNC_SHOW_BURNDOWN = 'show_burndown';
+    const FUNC_SHOW_BURNDOWN          = 'show_burndown';
+    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     
     public $default_properties = array();
     
@@ -161,15 +162,22 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new Tracker_FormElement_Field_BurndownDao();
     }
     
-    protected function getArtifactLinkField(Tracker_Artifact $source_artifact) {
+    private function getArtifactLinkField(Tracker_Artifact $source_artifact) {
         $artifact_link_field = $this->getFormElementFactory()->getUsedArtifactLinkFields($source_artifact->getTracker());
         if (count($artifact_link_field) > 0) {
             return $artifact_link_field[0];
         }
     }
+    
+    private function getRemainingEffortFieldId($tracker_id) {
+        return $this->getFormElementFactory()
+                    ->getFormElementByName($tracker_id, self::REMAINING_EFFORT_FIELD_NAME)
+                    ->getId();
+    }
 
     // TODO: filter hierarchy
-    public function getLinkedArtifactIds(Tracker_Artifact $source_artifact, Tracker_FormElement_Field_ArtifactLink $artifact_link_field) {
+    private function getLinkedArtifactIds(Tracker_Artifact $source_artifact) {
+        $artifact_link_field = $this->getArtifactLinkField($source_artifact);
         $linked_artifacts = $artifact_link_field->getLinkedArtifacts($source_artifact->getLastChangeset());
         $artifact_ids     = array();
         foreach($linked_artifacts as $linked_artifact) {
@@ -179,11 +187,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getRemainingEffortEvolution(Tracker_Artifact $artifact) {
-        $artifact_link_field = $this->getArtifactLinkField($artifact);
-        $artifact_ids        = $this->getLinkedArtifactIds($artifact, $artifact_link_field);
-        if ($artifact_link_field && count($artifact_ids) > 0) {
-            $field_id         = $artifact_link_field->getId();
-            return $this->getBurndownDao()->searchRemainingEffort($field_id, $artifact_ids);
+        $effort_field_id = $this->getRemainingEffortFieldId($artifact->getTracker()->getId());
+        $artifact_ids    = $this->getLinkedArtifactIds($artifact);
+        if ($effort_field_id && count($artifact_ids) > 0) {
+            return $this->getBurndownDao()->searchRemainingEffort($effort_field_id, $artifact_ids);
         }
     }
     
