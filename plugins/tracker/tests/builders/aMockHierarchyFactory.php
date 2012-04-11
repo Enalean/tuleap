@@ -18,37 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MockTrackerBuilder {
+class MockHierarchyFactoryBuilder {
     public function __construct() {
-        $this->tracker = mock('Tracker');
+        $this->factory = mock('Tracker_HierarchyFactory');
     }
     
-    public function withId($id) {
-        stub($this->tracker)->getId()->returns($id);
-        return $this;
-    }
-    
-    public function withName($name) {
-        stub($this->tracker)->getName()->returns($name);
-        return $this;
-    }
-    
-    public function withFormElement($name, $type) {
-        stub($this->tracker)->hasFormElementWithNameAndType($name, $type)->returns(true);
-        return $this;
-    }
-    
-    public function withNoFormElement($name) {
-        stub($this->tracker)->hasFormElementWithNameAndType($name, '*')->returns(false);
+    public function withNoChildrenForTrackerId($tracker_id) {
+        stub($this->factory)->getChildren($tracker_id)->returns(array());
         return $this;
     }
     
     public function build() {
-        return $this->tracker;
+        return $this->factory;
     }
 }
 
-function aMockTracker() {
-    return new MockTrackerBuilder();
+function aMockHierarchyFactory() {
+    return new MockHierarchyFactoryBuilder();
 }
 ?>

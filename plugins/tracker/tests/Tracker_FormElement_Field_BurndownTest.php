@@ -26,28 +26,22 @@ require_once dirname(__FILE__).'/Test_Artifact_Builder.php';
 require_once dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.class.php';
 require_once dirname(__FILE__).'/builders/aBurndownField.php';
 require_once dirname(__FILE__).'/builders/aMockTracker.php';
+require_once dirname(__FILE__).'/builders/aMockHierarchyFactory.php';
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
 }
 
-class Tracker_FormElement_Field_Burndown_Test extends TuleapTestCase {
+class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
         
-        $id = $tracker_id = $parent_id = $name = $label = $description
-            = $use_it = $scope = $required = $notifications = $rank = null;
+        $tracker_id = 123;
         
-        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
-        $this->tracker           = mock('Tracker');
-        $this->field             = new Tracker_FormElement_Field_Burndown($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
-        
-        stub($this->tracker)->getId()->returns(123);
-        stub($this->hierarchy_factory)->getChildren(123)->returns(array());
-        
-        $this->field->setHierarchyFactory($this->hierarchy_factory);
-        $this->field->setTracker($this->tracker);
+        $this->tracker           = aMockTracker()->withId($tracker_id)->build();
+        $this->hierarchy_factory = aMockHierarchyFactory()->withNoChildrenForTrackerId($tracker_id)->build();
+        $this->field             = aBurndownField()->withTracker($this->tracker)->withHierarchyFactory($this->hierarchy_factory)->build();
         
         $this->missing_start_date_warning = 'Missing start date';
         $this->missing_duration_warning   = 'Missing duration';
