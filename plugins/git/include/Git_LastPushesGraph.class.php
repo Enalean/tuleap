@@ -43,6 +43,7 @@ class Git_LastPushesGraph {
      */
     public function __construct($groupId, $weeksNumber) {
         $dao                = new GitDao();
+        // TODO: Optionally include presonal forks in repo list
         $this->repoList     = $dao->getProjectRepositoryList($groupId);
         $this->displayChart = false;
         if ($weeksNumber < self::MAX_WEEKSNUMBER) {
