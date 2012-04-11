@@ -31,7 +31,7 @@ class Tracker_FormElement_Field_BurndownDao extends DataAccessObject {
             $sql .= " INNER JOIN tracker_changeset_value_float AS cvi ON(cvi.changeset_value_id = cv.id)";
         }
         $sql .= " WHERE c.artifact_id IN (" . implode(',', $artifact_ids) . ")";
-        $this->retrieve($sql);
+        return $this->retrieve($sql);
     }
 }
 ?>

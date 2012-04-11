@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'dao/Tracker_FormElement_Field_BurndownDao.class.php';
 require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
@@ -129,8 +130,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        
-        /*foreach ($this->getLinkedArtifactIds($artifact) as $linked_artifact) {
+        //var_dump($this->getRemainingEffortEvolution($artifact));
+        /*foreach ($this->getRemainingEffortEvolution($artifact) as $linked_artifact) {
             var_dump($linked_artifact->getId());
         }*/
         //$linked_artifact = $this->getLinkedArtifactIds($artifact);
@@ -170,29 +171,39 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     // TODO: filter hierarchy
-    private function getLinkedArtifactIds(Tracker_Artifact $source_artifact) {
+    private function getLinkedArtifacts(Tracker_Artifact $source_artifact) {
         $artifact_link_field = $this->getArtifactLinkField($source_artifact);
         $linked_artifacts = $artifact_link_field->getLinkedArtifacts($source_artifact->getLastChangeset());
-        $artifact_ids     = array();
-        foreach($linked_artifacts as $linked_artifact) {
-            $artifact_ids[] = $linked_artifact->getId();
-        }
-        return $artifact_ids;
+        return $linked_artifacts;
     }
     
     public function getRemainingEffortEvolution(Tracker_Artifact $artifact) {
-        $tracker_id           = $artifact->getTracker()->getId();
-        $form_element_factory = $this->getFormElementFactory();
-        $effort_field         = $form_element_factory->getFormElementByName($tracker_id, self::REMAINING_EFFORT_FIELD_NAME);
-        if ($effort_field) {
-            $effort_field_id    = $effort_field->getId();
-            $effort_field_type  = $form_element_factory->getType($effort_field);
-        
-            $artifact_ids    = $this->getLinkedArtifactIds($artifact);
-            if (count($artifact_ids) > 0) {
-                return $this->getBurndownDao()->searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids);
+        $remaining_effort = array();
+        $linked_artifacts = $this->getLinkedArtifacts($artifact);
+        if (count($linked_artifacts) > 0) {
+            $burndown_dao = $this->getBurndownDao();
+            $artifact_ids_by_tracker = array();
+            
+            foreach($linked_artifacts as $linked_artifact) {
+                $tracker_id = $linked_artifact->getTracker()->getId();
+                $artifact_ids_by_tracker[$tracker_id][] = $linked_artifact->getId();
+            }
+            
+            foreach ($artifact_ids_by_tracker as $tracker_id => $artifact_ids) {
+                $form_element_factory = $this->getFormElementFactory();
+                $effort_field         = $form_element_factory->getFormElementByName($tracker_id, self::REMAINING_EFFORT_FIELD_NAME);
+            
+                if ($effort_field) {
+                    $effort_field_id   = $effort_field->getId();
+                    $effort_field_type = $form_element_factory->getType($effort_field);
+                    $dar = $burndown_dao->searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids);
+                    foreach ($dar as $row) {
+                        $remaining_effort[] = $row;
+                    }
+                }
             }
         }
+        return $remaining_effort;
     }
     
     /**
