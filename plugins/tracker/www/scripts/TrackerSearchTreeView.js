@@ -1,37 +1,38 @@
-var TreeTable = (function(treeTableId) {
+(function() {
+	
 	var treeTable = Class.create({
-		
+		/**
+		 * Called when object is constructed
+		 */
 		initialize : function(rootId) {
-			this.rootId = rootId;
-			Event.observe(window, 'load', this.load.bind(this));
+			this.root = $(rootId);
+			if (this.root !== null ) {
+				/* private method binded as event listener */
+				function _eventOnNode(event) {
+					this.toggleCollapse(Event.element(event).up('TR'));
+					Event.stop(event);
+				};
+				this.collapseAll();
+				$A(this.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
+				$A(this.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode.bindAsEventListener(this));
+				this.expandAll();
+			}
 		},
 		
-		load : function() {
-			this.root = $(this.rootId);
-			this.collapseAll();
-			function _eventOnNode(event) {
-				this.toggleCollapse(Event.element(event).up('TR'));
-				Event.stop(event);
+		getChildren: function(TRElement) {
+			var children     = $A();
+			if (!TRElement) return children;
+			var myLevel      = this.getLevel(TRElement);
+			var currentEl    = TRElement.next('TR');
+			var currentLevel = this.getLevel(currentEl);
+			while (currentLevel > myLevel) {
+				if (currentLevel == myLevel + 1) {
+					children.push(currentEl);
+				}
+				currentEl    = currentEl.next('TR');
+				currentLevel = this.getLevel(currentEl);
 			}
-			$A(this.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode.bind(this), this);
-			$A(this.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode.bind(this), this);
-			this.expandAll();
-		},
-		
-		isCollapsed: function(TRElement) {
-			var nodeChild = this.getNodeChild(TRElement);
-			if (nodeChild) {
-				return nodeChild.visible() == false;
-			}
-			return false;
-		},
-		
-		toggleCollapse: function(TRElement) {
-			if(this.isCollapsed(TRElement)) {
-				this.expand(TRElement);
-			} else {
-				this.collapse(TRElement);
-			}
+			return children;
 		},
 		
 		hasChildren: function(TRElement) {
@@ -44,20 +45,6 @@ var TreeTable = (function(treeTableId) {
 				if (nodeChild[0]) {
 					return nodeChild[0];
 				}
-			}
-		},
-		
-		collapseImg: function(TRElement) {
-			var nodeTree = TRElement.getElementsByClassName('node-tree');
-			if (nodeTree.length > 0) {
-				nodeTree[0].setStyle({backgroundImage:'url(' + codendi.imgroot + '/ic/toggle-small.png)'});
-			}
-		},
-		
-		expandImg: function(TRElement) {
-			var nodeTree = TRElement.getElementsByClassName('node-tree');
-			if (nodeTree.length > 0) {
-				nodeTree[0].setStyle({backgroundImage: 'url(' + codendi.imgroot + '/ic/toggle-small-expand.png)'});
 			}
 		},
 		
@@ -77,15 +64,51 @@ var TreeTable = (function(treeTableId) {
 			return numSpan;
 		},
 		
+		collapseAll: function() {
+			this.root.getElementsBySelector('TR').each(this.collapse, this);
+			return this;
+		},
+		
+		expandAll: function() {
+			this.root.getElementsBySelector('TR').each(this.expand, this);
+			return this;
+		},
+		
+		isCollapsed: function(TRElement) {
+			var nodeChild = this.getNodeChild(TRElement);
+			if (nodeChild) {
+				return nodeChild.visible() == false;
+			}
+			return false;
+		},
+		
+		toggleCollapse: function(TRElement) {
+			if(this.isCollapsed(TRElement)) {
+				this.expand(TRElement);
+			} else {
+				this.collapse(TRElement);
+			}
+		},
+		
+		setNodeTreeImage: function(TRElement, NodeTreeImage) {
+			var nodeTree = TRElement.getElementsByClassName('node-tree');
+			if (nodeTree.length > 0) {
+				nodeTree[0].setStyle({backgroundImage:'url(' + codendi.imgroot + NodeTreeImage + ')'});
+			}
+		},
+		
+		collapseImg: function(TRElement) {
+			this.setNodeTreeImage(TRElement, '/ic/toggle-small.png');
+		},
+		
+		expandImg: function(TRElement) {
+			this.setNodeTreeImage(TRElement, '/ic/toggle-small-expand.png');
+		},
+		
 		collapse: function(TRElement) {
 			var nodeChild = this.getNodeChild(TRElement);
 			if (nodeChild) {
-				var TRHeight = TRElement.getHeight();
-				if ( typeof TRHeight != "number") {
-					TRHeight = TRHeight.match(/[0-9]+/);
-				}
-				TRHeight -= nodeChild.getHeight();
-				TRHeight += "px";
+				var TRHeight = this._getHeight(TRElement) - this._getHeight(nodeChild) + 'px';
 				nodeChild.hide();
 				var children = this.getChildren(TRElement);
 				children.each(function(child) {
@@ -114,36 +137,22 @@ var TreeTable = (function(treeTableId) {
 		
 		show: function(TRElement) {
 			TRElement.show();
-			TRElement.setStyle({whiteSpace:'nowrap'});
 		},
 		
-		getChildren: function(TRElement) {
-			var children     = $A();
-			if (!TRElement) return children;
-			var myLevel      = this.getLevel(TRElement);
-			var currentEl    = TRElement.next('TR');
-			var currentLevel = this.getLevel(currentEl);
-			while (currentLevel > myLevel) {
-				if (currentLevel == myLevel + 1) {
-					children.push(currentEl);
-				}
-				currentEl    = currentEl.next('TR');
-				currentLevel = this.getLevel(currentEl);
+		_getHeight: function(HTMLElement) {
+			var ElementHeight = HTMLElement.getHeight();
+			if ( typeof ElementHeight != 'number') {
+				ElementHeight = ElementHeight.match(/[0-9]+/);
 			}
-			return children;
-		},
-		
-		collapseAll: function() {
-			this.root.getElementsBySelector('TR').each(this.collapse, this);
-			return this;
-		},
-		
-		expandAll: function() {
-			this.root.getElementsBySelector('TR').each(this.expand, this);
-			return this;
+			return ElementHeight;
 		}
 	});
 	
-	return new treeTable(treeTableId);
+	/**
+	 * 
+	 */
+	Event.observe(window, 'load', function() {
+		new treeTable('treeTable');
+	});
 	
-})('treeTable');
+})();
