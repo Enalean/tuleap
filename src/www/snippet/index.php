@@ -14,7 +14,7 @@ require('../snippet/snippet_utils.php');
 
 snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'), 
 		     'header'=>$Language->getText('snippet_browse','s_library'),
-		     'help' => 'TheCodendiMainMenu.html#TheCodeSnippetLibrary'));
+		     'help' => 'TheMainMenu.html#TheCodeSnippetLibrary'));
 
 
 
