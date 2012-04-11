@@ -34,6 +34,7 @@ class Git_Widget_ProjectPushes extends Widget {
      */
     public function __construct($pluginPath) {
         $this->pluginPath = $pluginPath;
+        // TODO: Make weeks number as a widget preferences stored by project.
         parent::__construct('plugin_git_project_pushes');
     }
 
