@@ -30,7 +30,7 @@ if ($request->valid($vGroupId)) {
 }
 
 $vWeeksNumber = new Valid_UInt('weeks_number');
-if($request->valid($vWeeksNumber)) {
+if ($request->valid($vWeeksNumber)) {
     $weeksNumber = $request->get('weeks_number');
 }
 
