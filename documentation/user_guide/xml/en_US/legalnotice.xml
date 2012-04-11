@@ -4,6 +4,8 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 //
 -->
+<chapter id="LegalNotice">
+<title>Legal Notice</title>
   
     <copyright>
       <year>2011</year>
@@ -687,7 +689,7 @@
       </revision>
 
     </revhistory>
-  
+</chapter>  
 <!--
 Local Variables:
 sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
