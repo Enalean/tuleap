@@ -74,6 +74,11 @@ class Git_Widget_UserPushes extends Widget {
         $dh      = new DateHelper();
         if ($result && !$result->isError() && $result->rowCount() > 0) {
             foreach ($result as $entry) {
+                if (!empty($entry['repository_namespace'])) {
+                    $namespace = $entry['repository_namespace']."/";
+                } else {
+                    $namespace = '';
+                }
                 $dar = $dao->getLastPushesByUser($user->getId(), $entry['repository_id'], $this->offset, $date);
                 if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
                     if ($project != $entry['group_name']) {
@@ -92,7 +97,7 @@ class Git_Widget_UserPushes extends Widget {
                     $content .= '<fieldset>
                                  <legend id="plugin_git_user_pushes_widget_repo_'.$entry['repository_name'].'" class="'.Toggler::getClassname('plugin_git_user_pushes_widget_project_'.$project).'">
                                  <span title="'.$GLOBALS['Language']->getText('plugin_git', 'tree_view_repository').'">
-                                 '.$entry['repository_name'].'
+                                 '.$namespace.$entry['repository_name'].'
                                  </span>
                                  </legend>
                                  '.html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_git', 'tree_view_date'), $GLOBALS['Language']->getText('plugin_git', 'tree_view_commits')));
