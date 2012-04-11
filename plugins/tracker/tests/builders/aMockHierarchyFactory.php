@@ -24,7 +24,11 @@ class MockHierarchyFactoryBuilder {
     }
     
     public function withNoChildrenForTrackerId($tracker_id) {
-        stub($this->factory)->getChildren($tracker_id)->returns(array());
+        return $this->withChildrenForTrackerId($tracker_id, array());
+    }
+    
+    public function withChildrenForTrackerId($tracker_id, $children) {
+        stub($this->factory)->getChildren($tracker_id)->returns($children);
         return $this;
     }
     

@@ -126,8 +126,8 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
         $children   = array($stories, $demos, $bugs, $chores);
         $tracker_id = 123;
         
-        $this->tracker           = stub('Tracker')->getId()->returns($tracker_id);
-        $this->hierarchy_factory = stub('Tracker_HierarchyFactory')->getChildren($tracker_id)->returns($children);
+        $this->tracker           = aMockTracker()->withId($tracker_id)->build();
+        $this->hierarchy_factory = aMockHierarchyFactory()->withChildrenForTrackerId($tracker_id, $children)->build();
         $this->field             = aBurndownField()->withTracker($this->tracker)->withHierarchyFactory($this->hierarchy_factory)->build();
         
         $html = $this->field->fetchAdminFormElement();
