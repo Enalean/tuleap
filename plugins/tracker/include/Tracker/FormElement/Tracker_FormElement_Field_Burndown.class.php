@@ -168,12 +168,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return $artifact_link_field[0];
         }
     }
-    
-    private function getRemainingEffortFieldId($tracker_id) {
-        return $this->getFormElementFactory()
-                    ->getFormElementByName($tracker_id, self::REMAINING_EFFORT_FIELD_NAME)
-                    ->getId();
-    }
 
     // TODO: filter hierarchy
     private function getLinkedArtifactIds(Tracker_Artifact $source_artifact) {
@@ -187,10 +181,17 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getRemainingEffortEvolution(Tracker_Artifact $artifact) {
-        $effort_field_id = $this->getRemainingEffortFieldId($artifact->getTracker()->getId());
-        $artifact_ids    = $this->getLinkedArtifactIds($artifact);
-        if ($effort_field_id && count($artifact_ids) > 0) {
-            return $this->getBurndownDao()->searchRemainingEffort($effort_field_id, $artifact_ids);
+        $tracker_id           = $artifact->getTracker()->getId();
+        $form_element_factory = $this->getFormElementFactory();
+        $effort_field         = $form_element_factory->getFormElementByName($tracker_id, self::REMAINING_EFFORT_FIELD_NAME);
+        if ($effort_field) {
+            $effort_field_id    = $effort_field->getId();
+            $effort_field_type  = $form_element_factory->getType($effort_field);
+        
+            $artifact_ids    = $this->getLinkedArtifactIds($artifact);
+            if (count($artifact_ids) > 0) {
+                return $this->getBurndownDao()->searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids);
+            }
         }
     }
     

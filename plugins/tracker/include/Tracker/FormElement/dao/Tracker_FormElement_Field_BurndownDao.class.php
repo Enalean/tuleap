@@ -18,17 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class Tracker_FormElement_Field_BurndownDao {
-    public function searchRemainingEffort($effort_field_id, $artifact_ids) {
+
+class Tracker_FormElement_Field_BurndownDao extends DataAccessObject {
+    
+    public function searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids) {
         $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
                     FROM tracker_changeset AS c 
                          INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = " . $effort_field_id . ")";
-        if ($type == 'int') {
+        if ($effort_field_type == 'int') {
             $sql .= " INNER JOIN tracker_changeset_value_int AS cvi ON(cvi.changeset_value_id = cv.id)";
         } else {
             $sql .= " INNER JOIN tracker_changeset_value_float AS cvi ON(cvi.changeset_value_id = cv.id)";
         }
         $sql .= " WHERE c.artifact_id IN (" . implode(',', $artifact_ids) . ")";
+        $this->retrieve($sql);
     }
 }
 ?>

@@ -91,9 +91,10 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
         
         $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($artifact_link_field));
         
-        $effort_field_id = 35;
-        $effort_field    = stub('Tracker_FormElement_Field_Float')->getId()->returns($effort_field_id);
-        //stub($effort_field)->getType()->returns('float');
+        $effort_field_id   = 35;
+        $effort_field_type = 'float';
+        $effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($effort_field_id);
+        stub($form_element_factory)->getType($effort_field)->returns($effort_field_type);
         stub($form_element_factory)->getFormElementByName($sprint_tracker_id, 'remaining_effort')->returns($effort_field);
         
         
@@ -104,7 +105,7 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
 
         $dao = mock('Tracker_FormElement_Field_BurndownDao');
         stub($field)->getBurndownDao()->returns($dao);
-        $dao->expectOnce('searchRemainingEffort', array($effort_field_id, $task_ids));
+        $dao->expectOnce('searchRemainingEffort', array($effort_field_id, $effort_field_type, $task_ids));
         
         $field->getRemainingEffortEvolution($sprint);
     }
