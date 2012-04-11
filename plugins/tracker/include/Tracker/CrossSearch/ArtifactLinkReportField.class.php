@@ -18,14 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
+/**
+ * This class is responsible of displaying an artifactlink report field criteria as a multi select box
+ */
+class Tracker_CrossSearch_ArtifactLinkReportField implements Tracker_Report_Field {
     
+    /**
+     * The artifacts of $tracker
+     * @var array of Tracker_Artifact
+     */
     protected $artifacts;
-    protected $id = 'artifact_of_tracker';
+    
     /**
      * @var Tracker
      */
     protected $tracker;
+    
+    protected $id = 'artifact_of_tracker';
     
     ///TODO: change $tracker to a name more explicit like 'stuff'
     public function __construct(Tracker $tracker, array $artifacts, $any_is_selected = false) {

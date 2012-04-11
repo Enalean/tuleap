@@ -196,7 +196,7 @@ class Tracker_CrossSearch_SearchContentView {
     private function isASharedField(Tracker_Report_Field $report_field) {
         return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
                  $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
-                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
+                 $report_field instanceof Tracker_CrossSearch_ArtifactLinkReportField);
     }
 
 }

@@ -226,7 +226,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
         $builder                 = $this->getPartiallyMockedCriteriaBuilder(array($artifact));
         $artifact_criteria       = $builder->getArtifactLinkCriteria($report, $criteria);
 
-        $expected_criterion      = new Tracker_CrossSearch_ArtifactReportField($release_tracker, array($artifact));
+        $expected_criterion      = new Tracker_CrossSearch_ArtifactLinkReportField($release_tracker, array($artifact));
         $this->assertEqual(count($artifact_criteria), 1);
         $this->assertNotNull($artifact_criteria[0]);
 
@@ -260,8 +260,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
                         
         $artifact_criteria       = $builder->getArtifactLinkCriteria($report, $criteria);
 
-        $expected_criterion1     = new Tracker_CrossSearch_ArtifactReportField($release_tracker, array($artifact1, $artifact512));
-        $expected_criterion2     = new Tracker_CrossSearch_ArtifactReportField($sprint_tracker, array($artifact33));
+        $expected_criterion1     = new Tracker_CrossSearch_ArtifactLinkReportField($release_tracker, array($artifact1, $artifact512));
+        $expected_criterion2     = new Tracker_CrossSearch_ArtifactLinkReportField($sprint_tracker, array($artifact33));
         
         $this->assertEqual(count($artifact_criteria), 2);
         $this->assertEqual($artifact_criteria[0]->field, $expected_criterion1);

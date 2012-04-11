@@ -36,7 +36,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
     }
     
     public function itIsAlwaysUsed() {
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         
         $this->assertTrue($artifactReportField->isUsed());
     }
@@ -45,7 +45,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $expected = 'Tracker Name';
         $this->tracker->setReturnValue('getName', $expected);
         
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         
         $this->assertEqual($expected, $artifactReportField->getLabel());
     }
@@ -55,7 +55,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $expected   = 'artifact_of_tracker['.$expectedId.']';
         $this->tracker->setReturnValue('getId', $expectedId);
         
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         
         $this->assertEqual($expected, $artifactReportField->getId());
     }
@@ -63,7 +63,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
     public function itDisplaysTheTitleOfTheTracker() {
         $this->tracker->setReturnValue('getName', 'Sprint');
         $this->tracker->setReturnValue('getId', 666);
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         $markup              = $this->fetchCriteria($artifactReportField);
         $this->assertPattern('%Sprint%', $markup);
         $this->assertPattern('%666%',    $markup);
@@ -78,7 +78,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $artifact_link_field_of_release_tracker->setReturnValue('getId', $art_link_release_field_id);
         $form_element_factory->setReturnValue('getUsedArtifactLinkFields', array($artifact_link_field_of_release_tracker), array($this->tracker));
         
-        $artifact_report_field     = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifact_report_field     = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         $database_field_key        = $artifact_report_field->getArtifactLinkFieldName($form_element_factory);
         
         $this->assertEqual($database_field_key, 'art_link_'.$art_link_release_field_id);
@@ -86,12 +86,12 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
     
     public function itReturnsNoArtifactLinkFieldNameWhenTrackerHasNoArtifact() {
         $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields($this->tracker)->returns(array());
-        $artifact_report_field = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifact_report_field = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         $this->assertNull($artifact_report_field->getArtifactLinkFieldName($form_element_factory));
     }
     
     public function ItDisplaysJustTheOptions_Any_IfThereAreNoArtifactsGiven() {
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array());
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array());
         $markup              = $this->fetchCriteria($artifactReportField);
         $this->assertPattern('%value="">Any%', $markup);
 //         $this->assertPattern('%value="100">None%', $markup);
@@ -102,7 +102,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $artifact            = stub($artifact)->getTitle()->returns('artifact 123');
         $artifact->isSelected= true;
         
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array($artifact));
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array($artifact));
         $markup              = $this->fetchCriteria($artifactReportField);
         
         $this->assertPattern('%option selected="selected" value="123">artifact 123%', $markup);
@@ -114,7 +114,7 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $artifact->isSelected= true;
         
         $any_is_selected     = true;
-        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array($artifact), $any_is_selected);
+        $artifactReportField = new Tracker_CrossSearch_ArtifactLinkReportField($this->tracker, array($artifact), $any_is_selected);
         $markup              = $this->fetchCriteria($artifactReportField);
         $this->assertPattern('%option selected="selected"  value="">Any%', $markup);
         $this->assertPattern('%option value="123">artifact 123%', $markup);

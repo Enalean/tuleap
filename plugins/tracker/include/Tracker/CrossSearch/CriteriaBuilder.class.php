@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ArtifactReportField.class.php';
+require_once 'ArtifactLinkReportField.class.php';
 
 
 /**
@@ -103,7 +103,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
             $any_is_selected       = in_array('', $selected_artifact_ids);
             $artifactsOfTracker = $this->setSelectedArtifact($this->getArtifactByTracker($trackerId), $selected_artifact_ids, $any_is_selected);
             
-            $field = new Tracker_CrossSearch_ArtifactReportField($tracker, $artifactsOfTracker);
+            $field = new Tracker_CrossSearch_ArtifactLinkReportField($tracker, $artifactsOfTracker);
             $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
         }
         return $criteria;
