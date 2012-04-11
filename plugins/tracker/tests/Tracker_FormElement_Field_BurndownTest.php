@@ -47,25 +47,25 @@ class Tracker_FormElement_Field_Burndown_Test extends TuleapTestCase {
     }
     
     public function itRendersNoWarningWhenTrackerHasAStartDateField() {
-        stub($this->tracker)->hasFormElementWithName('start_date')->returns(true);
+        stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(true);
         $html = $this->field->fetchAdminFormElement();
         $this->assertNoPattern('/'.$this->missing_start_date_warning.'/', $html);
     }
     
     public function itRendersAWarningWhenTrackerHasNoStartDateField() {
-        stub($this->tracker)->hasFormElementWithName('start_date')->returns(false);
+        stub($this->tracker)->hasFormElementWithNameAndType('start_date', 'date')->returns(false);
         $html = $this->field->fetchAdminFormElement();
         $this->assertPattern('/'.$this->missing_start_date_warning.'/', $html);
     }
     
     public function itRendersNoWarningWhenTrackerHasADurationField() {
-        stub($this->tracker)->hasFormElementWithName('duration')->returns(true);
+        stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(true);
         $html = $this->field->fetchAdminFormElement();
         $this->assertNoPattern('/'.$this->missing_duration_warning.'/', $html);
     }
     
     public function itRendersAWarningWhenTrackerHasNoDurationField() {
-        stub($this->tracker)->hasFormElementWithName('duration')->returns(false);
+        stub($this->tracker)->hasFormElementWithNameAndType('duration', 'int')->returns(false);
         $html = $this->field->fetchAdminFormElement();
         $this->assertPattern('/'.$this->missing_duration_warning.'/', $html);
     }

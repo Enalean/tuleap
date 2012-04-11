@@ -1329,5 +1329,5 @@ plugin_tracker_widget_myartifacts	description	List artifacts you have submitted 
 plugin_tracker_widget_myartifacts	no_artifacts	No artifacts founds.
 
 plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field, please reconfigure your tracker
-plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" field.
-plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" field.
+plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field.
+plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" Integer field.

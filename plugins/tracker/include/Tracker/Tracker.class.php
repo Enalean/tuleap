@@ -198,9 +198,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this);
     }
     
-    public function hasFormElementWithName($name) {
-        $element = Tracker_FormElementFactory::instance()->getUsedFieldByName($this->getId(), $name);
-        return $element;
+    public function hasFormElementWithNameAndType($name, $type) {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $element              = $form_element_factory->getUsedFieldByName($this->getId(), $name);
+        
+        return $element !== null && $form_element_factory->getType($element) == $type;
     }
 
     /**

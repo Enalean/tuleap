@@ -126,16 +126,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
     private function fetchWarnings() {
         $warnings  = '';
-        $warnings .= $this->fetchWarningUnlessTrackerHasFormElement('start_date');
-        $warnings .= $this->fetchWarningUnlessTrackerHasFormElement('duration');
+        $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('start_date', 'date');
+        $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('duration', 'int');
         
         if ($warnings) {
             return '<ul class="feedback_warning">'.$warnings.'</ul>';
         }
     }
     
-    private function fetchWarningUnlessTrackerHasFormElement($name) {
-        if (! $this->getTracker()->hasFormElementWithName($name)) {
+    private function fetchWarningUnlessTrackerHasFormElementWithNameAndType($name, $type) {
+        if (! $this->getTracker()->hasFormElementWithNameAndType($name, $type)) {
             $key     = "burndown_missing_${name}_warning";
             $warning = $GLOBALS['Language']->getText('plugin_tracker', $key);
             
