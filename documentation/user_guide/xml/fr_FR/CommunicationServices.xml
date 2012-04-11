@@ -314,7 +314,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
             
         </section>
         
-        <section id="MUCRooms">
+        <section id="MUCRoomsIntegration">
             <title>Salon de discussion multi-utilisateurs (MUC)</title>
             <para>Comme il a été spécifié précédement,le plug-in de messagerie
             instantanée crée un salon de discussion multi-utilisateurs pour chaque projet.

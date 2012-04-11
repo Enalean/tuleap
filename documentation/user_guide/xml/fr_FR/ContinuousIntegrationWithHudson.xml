@@ -561,7 +561,7 @@
   </section>
   
   
-  <section id="Hudson">
+  <section id="HudsonIntegration">
     <title>Intégration dans &SYS_PRODUCT_NAME;</title>
     <para>
         Parce que l'intégration continue fait partie des bonnes pratiques de

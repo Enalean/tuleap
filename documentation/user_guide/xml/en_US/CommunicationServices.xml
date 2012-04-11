@@ -280,7 +280,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
             
         </section>
         
-        <section id="MUCRooms">
+        <section id="MUCRoomsIntegration">
             <title>Multi-User Chat Room (MUC)</title>
             <para>As stated before, the IM plug-in creates a multi-user chat
             room for each project. This room is named after the project name 

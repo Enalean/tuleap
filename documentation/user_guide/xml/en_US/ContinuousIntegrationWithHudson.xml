@@ -528,7 +528,7 @@
   </section>
   
   
-  <section id="Hudson">
+  <section id="HudsonIntegration">
     <title>Integration in &SYS_PRODUCT_NAME;</title>
     <para>
         As continuous integration is a good practice in software engineering,
