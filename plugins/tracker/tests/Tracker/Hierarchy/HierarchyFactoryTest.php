@@ -92,7 +92,7 @@ class Tracker_HierarchyFactoryTest extends UnitTestCase {
             $dao = new MockTracker_Hierarchy_Dao();
             $dao->setReturnValue('searchTrackerHierarchy', array());
         }
-        return new Tracker_HierarchyFactory($dao);
+        return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'));
     }
 }
 ?>
