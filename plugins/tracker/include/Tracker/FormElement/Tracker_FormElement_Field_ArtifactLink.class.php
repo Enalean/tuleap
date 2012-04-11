@@ -107,10 +107,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         foreach ($values as $artifact_link_info) {
             $arr[] = $artifact_link_info->getArtifactId();
         }
-        $html = implode(',', $arr);
+        $html = implode(',', $this->getLi);
         return $html;
     }
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field

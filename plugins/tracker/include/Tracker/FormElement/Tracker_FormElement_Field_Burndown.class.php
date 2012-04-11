@@ -22,6 +22,11 @@ require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
     
+    /**
+     * Request parameter to display burndown image 
+     */
+    const FUNC_SHOW_BURNDOWN = 'show_burndown';
+    
     public $default_properties = array();
     
     public function getCriteriaFrom($criteria) {
@@ -95,10 +100,55 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $html .= '<img src="'. TRACKER_BASE_URL .'/images/please-configure-your-burndown.png" />';
+        
+        /*foreach ($this->getLinkedArtifactIds($artifact) as $linked_artifact) {
+            var_dump($linked_artifact->getId());
+        }*/
+        //$linked_artifact = $this->getLinkedArtifactIds($artifact);
+        
+        
+        $html .= '<img src="'. TRACKER_BASE_URL .'/?formElement='.$this->getId().'&func='.self::FUNC_SHOW_BURNDOWN.'" />';
         return $html;
     }
 
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+        switch ($request->get('func')) {
+            case self::FUNC_SHOW_BURNDOWN:
+                //header('Content-type: image/png');
+                //readfile(TRACKER_BASE_DIR.'/../www/images/please-configure-your-burndown.png');
+                $this->fetchBurndownImage();
+                break;
+            default:
+                parent::process($layout, $request, $current_user);
+        }
+    }
+    
+    
+    
+    public function fetchBurndownImage() {
+        
+    }
+    
+    public function getBurndownDao() {
+        return new Tracker_FormElement_Field_BurndownDao();
+    }
+    
+    public function getRemainingEffortEvolution($artifact) {
+        $artifact_ids = $this->getLinkedArtifacts($artifact);
+        $field_id     = $this->getFormElementFactory()->getUsedArtifactLinkFields($artifact->getTracker());
+        return $this->getBurndownDao()->searchRemainingEffort($field_id, $artifact_ids);
+    }
+    
+    
+    // TODO: filter hierarchy
+    protected function getLinkedArtifacts($source_artifact) {
+        $artifact_link_field = $this->getFormElementFactory()->getUsedArtifactLinkFields($source_artifact->getTracker());
+        if (count($artifact_link_field)) {
+            return $artifact_link_field[0]->getLinkedArtifacts($source_artifact->getLastChangeset());
+        }
+        return array();
+    }
+    
     /**
      * Fetch data to display the field value in mail
      *

@@ -20,7 +20,10 @@
 
 require_once dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php';
 require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.class.php';
-require_once dirname(__FILE__).'/../include/Tracker/Tracker.class.php';
+require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
+require_once dirname(__FILE__).'/Test_Tracker_Builder.php';
+require_once dirname(__FILE__).'/Test_Artifact_Builder.php';
+require_once dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.class.php';
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
@@ -69,6 +72,29 @@ class Tracker_FormElement_Field_Burndown_Test extends TuleapTestCase {
         $html = $this->field->fetchAdminFormElement();
         $this->assertPattern('/'.$this->missing_duration_warning.'/', $html);
     }
+    
+    public function _itRetrieveRemainingEffortEvolutionFromDao() {
+        $sprint_tracker         = aTracker()->build();
+        $sprint                 = anArtifact()->withTracker($sprint_tracker)->build();
+        
+        $artifact_link_field_id = 12;
+        $artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
+        
+        $task_ids               = array(54, 55);
+        $linked_tasks           = array(anArtifact()->withId(54)->build(), anArtifact()->withId(55)->build());
+        
+        $dao          = stub('Tracker_FormElement_Field_BurndownDao')->searchRemainingEffort($artifact_link_field_id, $task_ids)->returns('it works');
+        
+        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($artifact_link_field));
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndownDao', 'getLinkedArtifacts', 'getFormElementFactory'));
+        stub($field)->getBurndownDao()->returns($dao);
+        stub($field)->getLinkedArtifacts($sprint)->returns($linked_tasks);
+        stub($field)->getFormElementFactory()->returns($form_element_factory);
+        
+        $this->assertEqual($field->getRemainingEffortEvolution($sprint), 'it works');
+    }
+    
 }
 
 ?>
