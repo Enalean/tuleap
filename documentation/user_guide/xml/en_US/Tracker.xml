@@ -9,7 +9,7 @@
 -->
       
 <chapter id="TrackerService">
-  <title>Tracker Service (Legacy)</title>
+  <title>Tracker (Legacy)</title>
 
   <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the legacy version (aka v3) of Tracker service.
   For documentation on the current tracker system (v5) see <xref linkend="TrackerV5Service" />.</para>

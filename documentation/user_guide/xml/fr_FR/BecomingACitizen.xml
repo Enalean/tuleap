@@ -11,12 +11,11 @@
   <title>Devenir un utilisateur &SYS_PRODUCT_NAME;</title>
 
   <section id="ClassesOfCitizens">
-    <title>Les classes d'utilisateurs</title>
+    <title>Les groupes d'utilisateurs</title>
 
     <para>Avant d'aborder les explications concernant le processus
     d'enregistrement d'un utilisateur, il est utile de passer en revue
-    les différentes classes d'utilisateurs de &SYS_PRODUCT_NAME;. Il en existe
-    quatre :</para>
+    les 4 groupes d'utilisateurs pré-définis:</para>
 
     <itemizedlist mark="bullet">
       <listitem>

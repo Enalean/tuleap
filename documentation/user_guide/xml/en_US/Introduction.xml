@@ -9,42 +9,35 @@
   <chapter id="Introduction">
     <title>Introduction</title>
 
-    <para>The goal of the &SYS_ORG_NAME; Code eXchange Initiative
-    (&SYS_PRODUCT_NAME;) is to transpose and apply the principles of Open Source
-    into our own corporate environment. Establishing
-    collaborative software development and project management
-    practices as one of our core software engineering values will
-    improve the quality of our software and the productivity of our
-    development teams while providing a rich, attractive and cost
-    efficient.</para>
+    <para>&SYS_PRODUCT_NAME; is a free and Open Source Suite to improve management 
+	of software projects and connect with team members. 
+	With a single web-based solution, CTO, project managers, developers, quality managers 
+	and other users can easily build, deploy smart and quality projects.</para>
 
-    <para>The &SYS_PRODUCT_NAME; initiative is supported by an internal Web site of
-    the same name that is available at <ulink
-    url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;/</ulink>.
-    <!-- The &SYS_PRODUCT_NAME; web site is provided as a service to all
-    &SYS_ORG_NAME; software development teams who want to work
-    efficiently in a collaborative mode.  While being well and alive
-    the software community at &SYS_ORG_NAME; is also asking for more
-    communication and has a strong desire to establish bridges with
-    the rest of the company. Further, it shows a desire to speed up
-    the innovation process and to develop more flexible, better
-    quality and more usable software in less time. --></para>
+    <para>&SYS_PRODUCT_NAME; provides tools for managing projects, tasks, changes, defects, 
+	documents as well as version control, continuous integration and social collaboration. </para>
 
-    <para>The &SYS_PRODUCT_NAME; User Guide was written not only to describe the
-    &SYS_PRODUCT_NAME; features and services; it is also packed with tips and
-    guidelines to help you get the most out of &SYS_PRODUCT_NAME; and manage your
-    project in an optimal way.</para>
+    <para>With &SYS_PRODUCT_NAME;, you will be able to:</para>
+	<itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem><para>plan and monitor projects,</para></listitem>
+		<listitem><para>manage software development lifecycle: source code, builds...,</para></listitem>
+		<listitem><para>track requirements, tasks, incidents, etc.</para></listitem>
+		<listitem><para>produce documents and releases,</para></listitem>
+		<listitem><para>favour collaboration between project members.</para></listitem>
+	</itemizedlist>
+	
+    <para>&SYS_PRODUCT_NAME; 's high customization capability enables you to tailor each tool to your processes and business requirements. More info on &SYS_PRODUCT_NAME; features</para>
+	
+	<para>We want you to experience the full power of &SYS_PRODUCT_NAME; technology. So we do not distinguish between a Enterprise version and 
+	a Community version. In the same idea, we provide you in this guide all useful information and good practices to get the most of Tuleap Suite.</para>
+    
+	<para>&SYS_PRODUCT_NAME; Team makes great work to make this guide updated to every new release. Do not hesitate to help us improve it, 
+	share your experience and tips: write to the mailing list tuleap-devel</para> 
+	
+	<para>Enjoy &SYS_PRODUCT_NAME; capabilities and let us know how you use it!</para>
 
-    <para>We hope that you enjoy working with &SYS_PRODUCT_NAME;. If so, keep
-    talking about the &SYS_PRODUCT_NAME; initiative to fellow programmers, project
-    managers and managers. &SYS_PRODUCT_NAME; users are our best advocates. Also
-    keep in mind that this User Guide is yours and, following source
-    code sharing principles, we welcome your corrections and
-    contributions.</para>
-
-    <para>Enjoy &SYS_PRODUCT_NAME;!</para>
-
-    <para>The Awesome &SYS_PRODUCT_NAME; Team</para>
+    <para>The &SYS_PRODUCT_NAME; Team</para>
 
     <figure id="FigureTheCodendiHomePage">
       <title>The &SYS_PRODUCT_NAME; Home Page</title>
@@ -57,17 +50,7 @@
       </mediaobject>
     </figure>
 
-    <figure id="FigureTheCodendiHomePageTabTheme">
-      <title>The &SYS_PRODUCT_NAME; Home Page, with a different theme (with tabs)</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata format="PNG"
-                     fileref="../../screenshots/en_US/sc_homepagetabtheme.png" width="15.5cm"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
+    
   </chapter>
 <!--
 Local Variables:

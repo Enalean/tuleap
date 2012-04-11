@@ -10,44 +10,39 @@
   <chapter id="Introduction">
     <title>Introduction</title>
 
-    <para>L'objectif de l'initiative &SYS_PRODUCT_NAME; (initialement Code eXchange) de
-    &SYS_ORG_NAME; est de transposer et d'appliquer les principes du
-    développement Open Source dans notre propre environnement
-    d'entreprise. L'établissement du développement logiciel et la
-    gestion de projets en mode collaboratif comme l'une des valeurs
-    centrales de notre ingénierie logicielle, améliore la qualité des
-    composants, la productivité des équipes de projet tout en offrant
-    un environnement de travail riche, attractif et efficace.</para>
+    <para>&SYS_PRODUCT_NAME; est une Suite libre et Open Source pour améliorer la gestion des projets 
+	logiciels et favoriser la collaboration entre les membres. Avec une seule solution web, Directeurs 
+	Technique, Chefs de projet, Développeurs, Responsables Qualité et tous les autres utilisateurs impliqués 
+	dans le projet, peuvent facilement créer, développer et suivre des projets de qualité.</para>
 
-    <para>L'initiative &SYS_PRODUCT_NAME; est supportée par un site Web interne
-    disponible sur <ulink
-    url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;/</ulink>. Ce
-    site est ouvert aux équipes de développement de &SYS_ORG_NAME; qui
-    souhaitent travailler de façon efficace en mode collaboratif. <!--
-    The &SYS_PRODUCT_NAME; web site is provided as a service to all &SYS_ORG_NAME;
-    software development teams who want to share their project source
-    code with others.  While being well and alive the software
-    community at &SYS_ORG_NAME; is also asking for more communication
-    and has a strong desire to establish bridges with the rest of the
-    company. Further, it shows a desire to speed up the innovation
-    process and to develop more flexible, better quality and more
-    usable software in less time. --></para>
+   <para>&SYS_PRODUCT_NAME; fournit des outils pour gérer les projets, des tâches, des changements, des incidents, 
+   les documents ainsi que le code source, l’intégration continue et la collaboration.</para>
+   
+   <para>Avec &SYS_PRODUCT_NAME;, vous allez pouvoir:</para>
+	<itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem><para>planifier et suivre vos projets,</para></listitem>
+		<listitem><para>suivre vos exigences, tâches, bugs, etc.,</para></listitem>
+		<listitem><para>track requirements, tasks, incidents, etc.</para></listitem>
+		<listitem><para>gérer le cycle de développement du logiciel: versions de source code, builds...,</para></listitem>
+		<listitem><para>favoriser la collaboration et les discussions entre les utilisateurs de Tuleap.</para></listitem>
+	</itemizedlist>
+   
+    <para>&SYS_PRODUCT_NAME; a une haute capacité de configuration. Ceci vous permet de personnaliser finement chaque 
+	outil à vos processus et vos exigences métiers. </para>
 
-    <para>Le Guide de l'utilisateur &SYS_PRODUCT_NAME; décrit les services et les
-    fonctionnalités de &SYS_PRODUCT_NAME; mais il fournit aussi de nombreux
-    conseils pour vous aider à tirer le meilleur parti de &SYS_PRODUCT_NAME; à
-    gérer vos projets de façon optimale.</para>
+    <para>Nous souhaitons que vous utilisiez toute la puissance de la technologie Tuleap. Ainsi, nous ne faisons pas de 
+	différence entre une version « Entreprise » et une version « Communautaire ». 
+	De la même façon, nous vous fournissons ce guide qui comprend toutes les informations utiles et bonnes pratiques pour 
+	que vous utilisiez pleinement les fonctionnalités de Tuleap.</para>
 
-    <para>Nous espérons que vous apprécierez &SYS_PRODUCT_NAME;. N'hésitez pas à en
-    parler à vos collègues programmeurs, chefs de projets ou
-    responsables de groupe. Gardez aussi présent à l'esprit que ce
-    guide de l'utilisateur est avant tout fait pour vous et que nous serons
-    donc heureux de recevoir toutes vos suggestions de corrections ou
-    d'améliorations.</para>
+    <para>L’Equipe &SYS_PRODUCT_NAME; prend soin de maintenir à jour ce guide à chaque nouvelle version. 
+	N’hésitez pas à nous aider à l’améliorer. Partager votre expérience et vos astuces, en écrivant à la 
+	liste de distribution tuleap-devel </para>
 
-    <para>Profitez de &SYS_PRODUCT_NAME; !</para>
-
-    <para>L'équipe &SYS_PRODUCT_NAME;</para>
+    <para>Profitez de &SYS_PRODUCT_NAME; tenez nous au courant!</para>
+	
+	<para>L'Equipe &SYS_PRODUCT_NAME;!</para>
 
     <figure id="FigureTheCodendiHomePage">
       <title>La page d'accueil de &SYS_PRODUCT_NAME;</title>
@@ -60,18 +55,7 @@
       </mediaobject>
     </figure>
 
-    <figure id="FigureTheCodendiHomePageTabTheme">
-      <title>La page d'accueil de &SYS_PRODUCT_NAME; avec un thème différent (avec des onglets)</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata format="PNG"
-                     fileref="../../screenshots/fr_FR/sc_homepagetabtheme.png" width="15.5cm"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-
-
+    
   </chapter>
 <!--
 Local Variables:

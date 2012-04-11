@@ -8,7 +8,7 @@
 -->
 
   <chapter id="WikiService">
-  <title>Wiki Service</title>
+  <title>Wiki</title>
 
   <para>&SYS_PRODUCT_NAME; offers a Wiki service to each project. The wiki
   available in &SYS_PRODUCT_NAME; is based on a popular wiki tool called <ulink

@@ -55,7 +55,7 @@
         </step>
 
         <step>
-          <para><emphasis role="bold">La tableau de bord
+          <para><emphasis role="bold">La page d'accueil
           &SYS_PRODUCT_NAME;</emphasis> : La partie droite de la page d'accueil
           montre une série d'indicateurs statistiques concernant
           l'activité globale du site &SYS_PRODUCT_NAME;.</para>
@@ -197,7 +197,7 @@
         critère figure un lien hypertexte appelé [Filtre]. Cliquer sur
         l'un de ces liens a pour effet de n'afficher que les projets
         qui correspondent à cette valeur du critère. Les projets de type
-	patron et les projets de test (voir <xref linkend="ProjectType" />) 
+	"modèles" et les projets de test (voir <xref linkend="ProjectType" />) 
 	ne sont pas listés dans l'arbre des projets.</para>
 
         <para>Un exemple d'affichage de l'arbre des projets est montré
@@ -589,7 +589,7 @@
           <para><emphasis role="bold">Statistiques &SYS_PRODUCT_NAME;</emphasis> :
           indique le nombre total de projets hébergés sur &SYS_PRODUCT_NAME;
 	  (à part ceux qui ont le statut privé ainsi que les projets 
-	  de patron et les projets de test), le
+	  modèles et les projets de test), le
           nombre d'utilisateurs enregistrés, le nombre total de
           téléchargements et le nombre de pages visitées depuis
           l'ouverture du site.</para>

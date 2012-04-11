@@ -9,7 +9,7 @@
 -->
       
 <chapter id="TrackerV5Service">
-  <title>Outil de suivi ou Tracker</title>
+  <title>Outil de suivi (Tracker) et Rapports en temps réel</title>
 
   <para><emphasis role="bold">Attention :</emphasis> ce chapitre couvre les fonctionnalités de la nouvelle
   version du système de suivi ou tracker(v5). Pour la documentation de l'outil de suivi de l'ancienne génération (v3), se référer à  <xref linkend="TrackerService" />.</para>
@@ -570,6 +570,22 @@
        </itemizedlist>
        </para>
      </section>
+	 
+	 <section id="TrackerV5ReportRendererTable">
+        <title></title>
+        <para>Vous pouvez facilement ajouter, supprimer, déplacer les colonnes que vous souhaitez afficher sur votre tableau, ainsi 
+		que des calculs tout en bas.
+          <figure id="TrackerV5FigureTable">
+          <title>Tableau avec les fonctions de calculs</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackertable.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
      
      <section id="TrackerV5ReportRendererCharts">
       <title>La représentation de type "Graphiques"</title>
@@ -578,7 +594,7 @@
         &SYS_PRODUCT_NAME; fournit cinq types de graphes : le camembert, le graphique en bâton, le diagramme 
 		 de Gantt, la vue sous forme de tableau de post-it et le diagramme de type Burndown utilisés dans les méthodes agiles.
         <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
-         <title>Exemple de représentation "Graphique</title>
+         <title>Rapport comprenant plusieurs graphiques</title>
             <mediaobject>
              <imageobject>
                <imagedata format="PNG"
@@ -587,6 +603,7 @@
             </mediaobject>
         </figure>
        </para>
+	   
        <para>
        Vous pouvez ajouter autant de graphes que vous le souhaitez au sein 
        d'un onglet.
@@ -598,7 +615,7 @@
         <title>Graphique de type Camembert</title>
         <para>
           <figure id="TrackerV5FigurePieChartEdition">
-          <title>Edition d'un graphique de type camembert</title>
+          <title>Edition d'un graphique camembert</title>
             <mediaobject>
                 <imageobject>
                     <imagedata format="PNG"
@@ -658,6 +675,24 @@
           </figure>
         </para>
        </section>
+	   
+	   <section id="TrackerV5ReportRendererCardwall">
+        <title>Tableau de post-it</title>
+        <para>Les tableaux de post-it, très utilisés dans les méthodes agiles, permettent d'avoir une vision globale 
+		et actualisés en temps réel, sur l'avancement du travail. Il suffit de cliquer sur un post-it et le glisser 
+		vers une autre colonne pour actualiser l'état de l'artefact.
+		 <figure id="TrackerV5FigureBurndownChartEdition">
+          <title>Tableau de post-it</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackercardwall.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+	   
      </section>
      
      <section id="TrackerV5ReportRendererUpdate">
@@ -886,6 +921,8 @@
     est créé ou modifié - que ce soit avec un nouveau commentaire 
     ou un changement dans l'un des
     champs - un message est envoyé aux acteurs suivants :</para>
+	
+	
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
@@ -907,12 +944,22 @@
     A la suite se trouve un récapitulatif complet de l'artefact. Des pointeurs Web sont aussi
     présents dans le message pour vous permettre d'accéder facilement et rapidement à l'artefact sur
     &SYS_PRODUCT_NAME;.</para>
+	
+	<figure id="TrackerV5HowToLinkAnArtifact">
+                <title>Notification par email</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata format="PNG"
+                                fileref="../../screenshots/fr_FR/sc_emailnotification.png" width="15.3cm" />
+                        </imageobject>
+                    </mediaobject>
+             </figure>
 
   </section>
 <section id="TrackerV5ArtifactLinkTabs">
-        <title>Artifact Link</title>
+        <title>Champ "artifact link"</title>
         <para>
-        Le champ artifact link permet de créer des liens vers d'autres artefacts du même ou d'un autre tracker.
+        Le champ "artifact link" permet de créer des liens vers d'autres artefacts du même ou d'un autre tracker.
         Les artefacts sont affichés sous forme de tableau où chaque onglet correspond à un tracker. La présentation des artefacts dans chaque tabulation
         est non modifiable et correspond au rapport couramment utilisé par l'utilisateur et le renderer par defaut associé.
         </para>
@@ -923,11 +970,11 @@
             Une fois le bouton de mise à jour cliqué, la fenêtre modale est fermé et le id des artefacts selectionnés ajoutés (séparés par des virgules) dans le champs texte;
             et visibles (lignes jaunes) dans les onlgets correspondants.
             <figure id="TrackerV5HowToLinkAnArtifact">
-                <title>Comment lier un artefact ?</title>
+                <title>Comment lier des artefacts ?</title>
                     <mediaobject>
                         <imageobject>
                             <imagedata format="PNG"
-                                fileref="../../screenshots/en_US/sc_linkingartifact.png" width="15.3cm" />
+                                fileref="../../screenshots/fr_FR/sc_linkingartifact.png" width="15.3cm" />
                         </imageobject>
                     </mediaobject>
              </figure>
@@ -936,7 +983,7 @@
                     <mediaobject>
                         <imageobject>
                             <imagedata format="PNG"
-                                fileref="../../screenshots/en_US/sc_modalwindowlinkingartifact.png" width="15.3cm" />
+                                fileref="../../screenshots/fr_FR/sc_modalwindowlinkingartifact.png" width="15.3cm" />
                         </imageobject>
                     </mediaobject>
              </figure>
