@@ -197,7 +197,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $warnings  = '';
         $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('start_date', 'date');
         $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('duration', 'int');
-        $warnings .= $this->fetchWarningUnlessTrackerChildrenHaveRemainingEffort('remaining_effort', array('int', 'float'));
+        $warnings .= $this->fetchWarningUnlessTrackerChildrenHaveRemainingEffort();
         
         if ($warnings) {
             return '<ul class="feedback_warning">'.$warnings.'</ul>';
