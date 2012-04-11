@@ -29,6 +29,22 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
     public $default_properties = array();
     
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+    
+    public function getHierarchyFactory() {
+        if ($this->hierarchy_factory == null) {
+            $this->hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+        }
+        return $this->hierarchy_factory;
+    }
+    
+    public function setHierarchyFactory($hierarchy_factory) {
+        $this->hierarchy_factory = $hierarchy_factory;
+    }
+    
     public function getCriteriaFrom($criteria) {
     }
     
@@ -181,6 +197,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $warnings  = '';
         $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('start_date', 'date');
         $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('duration', 'int');
+        $warnings .= $this->fetchWarningUnlessTrackerChildrenHaveRemainingEffort('remaining_effort', array('int', 'float'));
         
         if ($warnings) {
             return '<ul class="feedback_warning">'.$warnings.'</ul>';
@@ -194,6 +211,42 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             
             return '<li>'.$warning.'</li>';
         }
+    }
+    
+    private function fetchWarningUnlessTrackerChildrenHaveRemainingEffort() {
+        $tracker_names = implode(', ', $this->getChildTrackerNamesWithoutRemainingEffort());
+        
+        if ($tracker_names) {
+            $warning = $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_remaining_effort_warning');
+            return '<li>'.$warning.'<ul><li>'.$tracker_names.'</li></ul></li>';
+        }
+    }
+    
+    private function getChildTrackerNamesWithoutRemainingEffort() {
+        return array_map(array($this, 'getTrackerName'),
+                         $this->getChildTrackersWithoutRemainingEffort());
+    }
+    
+    private function getTrackerName(Tracker $tracker) {
+        return $tracker->getName();
+    }
+    
+    private function getChildTrackersWithoutRemainingEffort() {
+        return array_filter($this->getChildTrackers(),
+                            array($this, 'missesRemainingEffort'));
+    }
+    
+    private function missesRemainingEffort(Tracker $tracker) {
+        return ! $this->hasRemainingEffort($tracker);
+    }
+    
+    private function hasRemainingEffort(Tracker $tracker) {
+        return $tracker->hasFormElementWithNameAndType('remaining_effort', 'int')
+            || $tracker->hasFormElementWithNameAndType('remaining_effort', 'float');
+    }
+    
+    private function getChildTrackers() {
+        return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
     }
     
     /**

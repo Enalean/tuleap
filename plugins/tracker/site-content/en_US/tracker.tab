@@ -1331,3 +1331,4 @@ plugin_tracker_widget_myartifacts	no_artifacts	No artifacts founds.
 plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field, please reconfigure your tracker
 plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field.
 plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" Integer field.
+plugin_tracker	burndown_missing_remaining_effort_warning	The following trackers does not have a "remaining_effort" Integer or Float field:

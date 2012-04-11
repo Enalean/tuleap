@@ -37,6 +37,19 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         $this->update($sql);
     }
     
+    public function searchChildren($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        
+        $sql = "
+            SELECT t.*
+            FROM       tracker           AS t
+            INNER JOIN tracker_hierarchy AS h ON (h.child_id  = t.id AND
+                                                  h.parent_id = $tracker_id)
+        ";
+        
+        return $this->retrieve($sql);
+    }
+    
     public function searchAncestorIds($tracker_id) {
         $ancestor_ids = array();
         while($tracker_id = $this->searchAncestorId($tracker_id)) {

@@ -29,6 +29,16 @@ class Tracker_HierarchyFactory {
         $this->hierarchy_dao = $hierarchy_dao;
     }
     
+    public function getChildren($tracker_id) {
+        $children = array();
+        
+        foreach($this->hierarchy_dao->searchChildren($tracker_id) as $row) {
+            $children[] = TrackerFactory::instance()->getTrackerById($row['id']);
+        }
+        
+        return $children;
+    }
+    
     public function getHierarchy($tracker_ids = array()) {
         $hierarchy             = new Tracker_Hierarchy();
         $search_tracker_ids    = $tracker_ids;

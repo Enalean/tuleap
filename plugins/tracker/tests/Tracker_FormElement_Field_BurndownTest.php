@@ -37,9 +37,14 @@ class Tracker_FormElement_Field_Burndown_Test extends TuleapTestCase {
         $id = $tracker_id = $parent_id = $name = $label = $description
             = $use_it = $scope = $required = $notifications = $rank = null;
         
-        $this->tracker = mock('Tracker');
-        $this->field   = new Tracker_FormElement_Field_Burndown($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
+        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
+        $this->tracker           = mock('Tracker');
+        $this->field             = new Tracker_FormElement_Field_Burndown($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
         
+        stub($this->tracker)->getId()->returns(123);
+        stub($this->hierarchy_factory)->getChildren(123)->returns(array());
+        
+        $this->field->setHierarchyFactory($this->hierarchy_factory);
         $this->field->setTracker($this->tracker);
         
         $this->missing_start_date_warning = 'Missing start date';
@@ -95,6 +100,100 @@ class Tracker_FormElement_Field_Burndown_Test extends TuleapTestCase {
         $this->assertEqual($field->getRemainingEffortEvolution($sprint), 'it works');
     }
     
+}
+
+class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestCase {
+    
+    public function itRendersAWarningForAnyTrackerChildThatHasNoEffortField() {
+        $missing_remaining_effort_warning = 'The following trackers does not have a "remaining_effort" Integer or Float field:';
+        $this->setText($missing_remaining_effort_warning, array('plugin_tracker', 'burndown_missing_remaining_effort_warning'));
+        
+        $stories = mock('Tracker');
+        stub($stories)->getName()->returns('Stories');
+        stub($stories)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(false);
+        stub($stories)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(true);
+        
+        $demos = mock('Tracker');
+        stub($demos)->getName()->returns('Demos');
+        stub($demos)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(true);
+        stub($demos)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(false);
+        
+        $bugs = mock('Tracker');
+        stub($bugs)->getName()->returns('Bugs');
+        stub($bugs)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(false);
+        stub($bugs)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(false);
+        
+        $chores = mock('Tracker');
+        stub($chores)->getName()->returns('Chores');
+        stub($chores)->hasFormElementWithNameAndType('remaining_effort', 'int')->returns(false);
+        stub($chores)->hasFormElementWithNameAndType('remaining_effort', 'float')->returns(false);
+        
+        $children   = array($stories, $demos, $bugs, $chores);
+        $tracker_id = 123;
+        
+        $this->tracker           = stub('Tracker')->getId()->returns($tracker_id);
+        $this->hierarchy_factory = stub('Tracker_HierarchyFactory')->getChildren($tracker_id)->returns($children);
+        $this->field             = aBurndownField()->withTracker($this->tracker)->withHierarchyFactory($this->hierarchy_factory)->build();
+        
+        $html = $this->field->fetchAdminFormElement();
+        
+        $this->assertPattern('/'.$missing_remaining_effort_warning.'/', $html);
+        $this->assertNoPattern('/Stories/', $html);
+        $this->assertPattern('/Bugs/', $html);
+        $this->assertPattern('/Chores/', $html);
+    }
+}
+
+class BurndownFieldBuilder {
+    
+    public function __construct() {
+        $this->id            = null;
+        $this->tracker_id    = null;
+        $this->parent_id     = null;
+        $this->name          = null;
+        $this->label         = null;
+        $this->description   = null;
+        $this->use_it        = null;
+        $this->scope         = null;
+        $this->required      = null;
+        $this->notifications = null;
+        $this->rank          = null;
+    }
+    
+    public function withTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
+        return $this;
+    }
+    
+    public function withHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+        $this->hierarchy_factory = $hierarchy_factory;
+        return $this;
+    }
+    
+    public function build() {
+        $field = new Tracker_FormElement_Field_Burndown(
+            $this->id,
+            $this->tracker_id,
+            $this->parent_id,
+            $this->name,
+            $this->label,
+            $this->description,
+            $this->use_it,
+            $this->scope,
+            $this->required,
+            $this->notifications,
+            $this->rank
+        );
+        
+        $field->setTracker($this->tracker);
+        $field->setHierarchyFactory($this->hierarchy_factory);
+        
+        return $field;
+    }
+}
+
+function aBurndownField() {
+    return new BurndownFieldBuilder();
 }
 
 ?>
