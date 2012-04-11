@@ -1367,7 +1367,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

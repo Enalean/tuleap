@@ -541,7 +541,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 
