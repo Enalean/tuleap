@@ -24,6 +24,7 @@ require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 require_once dirname(__FILE__).'/Test_Tracker_Builder.php';
 require_once dirname(__FILE__).'/Test_Artifact_Builder.php';
 require_once dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_BurndownDao.class.php';
+require_once dirname(__FILE__).'/builders/aBurndownField.php';
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
@@ -142,58 +143,6 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
         $this->assertPattern('/Bugs/', $html);
         $this->assertPattern('/Chores/', $html);
     }
-}
-
-class BurndownFieldBuilder {
-    
-    public function __construct() {
-        $this->id            = null;
-        $this->tracker_id    = null;
-        $this->parent_id     = null;
-        $this->name          = null;
-        $this->label         = null;
-        $this->description   = null;
-        $this->use_it        = null;
-        $this->scope         = null;
-        $this->required      = null;
-        $this->notifications = null;
-        $this->rank          = null;
-    }
-    
-    public function withTracker(Tracker $tracker) {
-        $this->tracker = $tracker;
-        return $this;
-    }
-    
-    public function withHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
-        $this->hierarchy_factory = $hierarchy_factory;
-        return $this;
-    }
-    
-    public function build() {
-        $field = new Tracker_FormElement_Field_Burndown(
-            $this->id,
-            $this->tracker_id,
-            $this->parent_id,
-            $this->name,
-            $this->label,
-            $this->description,
-            $this->use_it,
-            $this->scope,
-            $this->required,
-            $this->notifications,
-            $this->rank
-        );
-        
-        $field->setTracker($this->tracker);
-        $field->setHierarchyFactory($this->hierarchy_factory);
-        
-        return $field;
-    }
-}
-
-function aBurndownField() {
-    return new BurndownFieldBuilder();
 }
 
 ?>
