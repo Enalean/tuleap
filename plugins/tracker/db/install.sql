@@ -123,14 +123,6 @@ CREATE TABLE tracker_field_date(
     default_value_type TINYINT(1) NULL
 );
 
-DROP TABLE IF EXISTS tracker_field_burndown;
-CREATE TABLE tracker_field_burndown(
-  field_id INT(11) NOT NULL PRIMARY KEY,
-  effort_field_id int(11),
-  start_date_field_id int(11),
-  duration_field_id int(11)
-);
-
 DROP TABLE IF EXISTS tracker_field_list;
 CREATE TABLE tracker_field_list(
     field_id INT(11) NOT NULL PRIMARY KEY,
