@@ -69,7 +69,9 @@ class Tracker_CrossSearch_Query {
     public function listArtifactIds() {
         $id_list = array();
         foreach ($this->artifact_ids as $artifact_ids) {
-            $id_list = array_merge($id_list, $artifact_ids);
+            if (! in_array('', $artifact_ids)) {
+                $id_list = array_merge($id_list, $artifact_ids);
+            }
         }
         
         return $id_list;

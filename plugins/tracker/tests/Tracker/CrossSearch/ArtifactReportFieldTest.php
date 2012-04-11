@@ -105,7 +105,19 @@ class Tracker_CrossSearch_ArtifactReportFieldTest extends TuleapTestCase {
         $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array($artifact));
         $markup              = $this->fetchCriteria($artifactReportField);
         
-        $this->assertPattern('%value="123">artifact 123%', $markup);
+        $this->assertPattern('%option selected="selected" value="123">artifact 123%', $markup);
+    }
+    
+    public function itSelectsOnlyTheAnyOptionIfItIsPartOfTheSelection() {
+        $artifact            = stub('Tracker_Artifact')->getId()->returns(123);
+        $artifact            = stub($artifact)->getTitle()->returns('artifact 123');
+        $artifact->isSelected= true;
+        
+        $any_is_selected     = true;
+        $artifactReportField = new Tracker_CrossSearch_ArtifactReportField($this->tracker, array($artifact), $any_is_selected);
+        $markup              = $this->fetchCriteria($artifactReportField);
+        $this->assertPattern('%option selected="selected"  value="">Any%', $markup);
+        $this->assertPattern('%option value="123">artifact 123%', $markup);
     }
     
     private function fetchCriteria($artifactReportField) {

@@ -99,20 +99,23 @@ class Tracker_CrossSearch_CriteriaBuilder {
         $criteria = array();
         foreach ($this->planning_trackers as $tracker) {
             $trackerId        = $tracker->getId();
-            $AllArtifactsIds = $cross_search_criteria->listArtifactIds();
-            $artifactsOfTracker = $this->setSelectedArtifact($this->getArtifactByTracker($trackerId), $AllArtifactsIds);
+            $selected_artifact_ids = $cross_search_criteria->listArtifactIds();
+            $any_is_selected       = in_array('', $selected_artifact_ids);
+            $artifactsOfTracker = $this->setSelectedArtifact($this->getArtifactByTracker($trackerId), $selected_artifact_ids, $any_is_selected);
             
             $field = new Tracker_CrossSearch_ArtifactReportField($tracker, $artifactsOfTracker);
             $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
         }
         return $criteria;
     }
-    protected function setSelectedArtifact($artifacts, $cross_search_criteria) {
+    
+    protected function setSelectedArtifact($artifacts, $artifact_ids) {
         foreach($artifacts as $artifact) {
-            $artifact->isSelected = in_array($artifact->getId(), $cross_search_criteria);
+            $artifact->isSelected = in_array($artifact->getId(), $artifact_ids);
         }
         return $artifacts;
     }
+    
     public function getArtifactByTracker($tracker_id) {
         return Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker_id);
     }

@@ -43,7 +43,6 @@ class Query_ArtifactTest extends TuleapTestCase {
     }
     
     public function itFlattensTheNestedArrayOfArtifactIds() {
-        
         $criteria = $this->givenAnArtifactQuery(array(132 => array(1, 55, 1001)));
         $this->assertEqual(array(1, 55, 1001), $criteria->listArtifactIds());
 
@@ -53,10 +52,12 @@ class Query_ArtifactTest extends TuleapTestCase {
 
     }
     
-    private function givenAnArtifactQuery($artifacts) {
-        return new Tracker_CrossSearch_Query(array(), array(), $artifacts);
+    public function itReturnsAnEmptyArrayIfTheAnyOptionIsSelected() {
+        $criteria = $this->givenAnArtifactQuery(array(132 => array(1001, '')));
+        $this->assertTrue(in_array('', array('', 102)));
+        $this->assertEqual(array(), $criteria->listArtifactIds());
     }
-    
+
     public function itCanReturnTheListOfArtifactsFromATrackerId() {
         $criteria = $this->givenAnArtifactQuery(array(132 => array(1, 55), 456 => array(2, 55)));
         
@@ -76,5 +77,10 @@ class Query_ArtifactTest extends TuleapTestCase {
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(132));
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(456));
     }
+    
+    private function givenAnArtifactQuery($artifacts) {
+        return new Tracker_CrossSearch_Query(array(), array(), $artifacts);
+    }
+    
 }
 ?>

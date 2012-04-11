@@ -28,9 +28,10 @@ class Tracker_CrossSearch_ArtifactReportField implements Tracker_Report_Field {
     protected $tracker;
     
     ///TODO: change $tracker to a name more explicit like 'stuff'
-    public function __construct(Tracker $tracker, array $artifacts) {
+    public function __construct(Tracker $tracker, array $artifacts, $any_is_selected = false) {
         $this->artifacts    = $artifacts;
         $this->tracker      = $tracker;
+        $this->any_is_selected = $any_is_selected;
     }
     
     
@@ -51,9 +52,10 @@ MARKUP;
         $anySelected  = ' selected="selected"';
         $options      = '';
 //         <option value="100">None</option>
+        
         foreach ($this->artifacts as $artifact) {
             $artifactId = $artifact->getId();
-            if ($artifact->isSelected) {
+            if ($artifact->isSelected && !$this->any_is_selected) {
                 $anySelected = '';
                 $selected = ' selected="selected"';
             } else {
