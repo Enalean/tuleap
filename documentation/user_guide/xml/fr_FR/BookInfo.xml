@@ -6,46 +6,6 @@
 //
 -->
   <bookinfo>
-
-    <copyright>
-      <year>2011</year>
-      <year>2012</year>
-      <holder>Enalean SAS.</holder>
-    </copyright>
-
-    <copyright>
-      <year>2000</year>
-      <year>2001</year>
-      <year>2002</year>
-      <year>2003</year>
-      <year>2004</year>
-      <year>2005</year>
-      <year>2006</year>
-      <year>2007</year>
-      <year>2008</year>
-
-      <holder>Xerox Corporation, Codendi.</holder>
-    </copyright>
-
-    <legalnotice>
-      <para>Ce document est diffusé sous la licence GNU General Public version 2.</para>
-
-      <para>Copyright protection claimed includes all forms and matters of
-      copyrightable material and information now allowed by statutory or
-      judicial law or hereinafter granted, including without limitation,
-      material generated from the software programs which are displayed on the
-      screen such as icons, screen displays, looks, etc.</para>
-
-      <para>Xerox et tous les produits Xerox mentionnés dans cette
-      publication sont des marques déposées de Xerox
-      Corporation.</para>
-
-      <para>Ce document a été formaté à l'aide de la DTD XML
-      DocBook. La version HTML a été générée avec le génerateur HTML
-      de DocBook. La version PDF a été faite à l'aide de Apache
-      FOP.</para>
-    </legalnotice>
-
     <revhistory>
       <revision>
         <revnumber>2.9.4</revnumber>
