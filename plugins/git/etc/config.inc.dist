@@ -1,4 +1,9 @@
 <?php
+
+// Backup directory
 $git_backup_dir = '/tmp/';
-$duration = 12;
+
+// Number of weeks displayed in widget last project pushes
+$weeks_number   = 12;
+
 ?>

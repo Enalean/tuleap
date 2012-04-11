@@ -29,11 +29,18 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-$plugin = PluginManager::instance()->getPluginByName('git');
-$duration = $plugin->getPluginInfo()->getPropVal('duration');
-if (empty($duration) || $duration > Git_LastPushesGraph::MAX_WEEKSNUMBER) {
-    $duration = 12;
+$vWeeksNumber = new Valid_UInt('weeks_number');
+if($request->valid($vWeeksNumber)) {
+    $weeksNumber = $request->get('weeks_number');
 }
-$imageRenderer = new Git_LastPushesGraph($groupId, $duration);
+
+$plugin = PluginManager::instance()->getPluginByName('git');
+if (empty($weeksNumber)) {
+    $weeksNumber = $plugin->getPluginInfo()->getPropVal('weeks_number');
+}
+if (empty($weeksNumber) || $weeksNumber > Git_LastPushesGraph::MAX_WEEKSNUMBER) {
+    $weeksNumber = 12;
+}
+$imageRenderer = new Git_LastPushesGraph($groupId, $weeksNumber);
 $imageRenderer->display();
 ?>
