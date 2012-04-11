@@ -195,16 +195,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
     private function fetchWarnings() {
         $warnings  = '';
-        $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('start_date', 'date');
-        $warnings .= $this->fetchWarningUnlessTrackerHasFormElementWithNameAndType('duration', 'int');
-        $warnings .= $this->fetchWarningUnlessTrackerChildrenHaveRemainingEffort();
+        $warnings .= $this->fetchMissingFieldWarning('start_date', 'date');
+        $warnings .= $this->fetchMissingFieldWarning('duration', 'int');
+        $warnings .= $this->fetchMissingRemainingEffortWarning();
         
         if ($warnings) {
             return '<ul class="feedback_warning">'.$warnings.'</ul>';
         }
     }
     
-    private function fetchWarningUnlessTrackerHasFormElementWithNameAndType($name, $type) {
+    private function fetchMissingFieldWarning($name, $type) {
         if (! $this->getTracker()->hasFormElementWithNameAndType($name, $type)) {
             $key     = "burndown_missing_${name}_warning";
             $warning = $GLOBALS['Language']->getText('plugin_tracker', $key);
@@ -213,12 +213,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
-    private function fetchWarningUnlessTrackerChildrenHaveRemainingEffort() {
+    private function fetchMissingRemainingEffortWarning() {
         $tracker_names = implode(', ', $this->getChildTrackerNamesWithoutRemainingEffort());
         
         if ($tracker_names) {
             $warning = $GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_remaining_effort_warning');
-            return "<li>$warning $tracker_names</li>";
+            return "<li>$warning $tracker_names.</li>";
         }
     }
     
