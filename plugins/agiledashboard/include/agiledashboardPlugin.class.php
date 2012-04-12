@@ -47,6 +47,10 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_trackers_duplicated($params) {
+        require_once 'Planning/PlanningDao.class.php';
+        require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
+        require_once 'Planning/PlanningFactory.class.php';
+        
         $planning_dao     = new PlanningDao();
         $tracker_factory  = TrackerFactory::instance();
         $planning_factory = new PlanningFactory($planning_dao, $tracker_factory);

@@ -22,6 +22,7 @@ require_once('Tracker.class.php');
 require_once('dao/TrackerDao.class.php');
 require_once('CannedResponse/Tracker_CannedResponseFactory.class.php');
 require_once('Semantic/Tracker_SemanticFactory.class.php');
+require_once dirname(__FILE__).'/../constants.php';
 
 class TrackerFactory {
 
