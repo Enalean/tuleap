@@ -25,13 +25,40 @@ require_once 'Git_LogDao.class.php';
 class Git_LastPushesGraph {
     const MAX_WEEKSNUMBER  = 25;
     const WEEKS_IN_SECONDS = 604800;
-    
+
+    /**
+     * @var Boolean
+     */
     public $displayChart;
+
+    /**
+     * @var Array
+     */
     public $repoList;
+
+    /**
+     * @var Integer
+     */
     public $weeksNumber;
-    public $legend;
+
+    /**
+     * @var String
+     */
+    protected $legend;
+
+    /**
+     * @var Array
+     */
     protected $dates   = array();
+
+    /**
+     * @var Array
+     */
     protected $weekNum = array();
+
+    /**
+     * @var Array
+     */
     protected $year    = array();
     
     /**
@@ -122,9 +149,9 @@ class Git_LastPushesGraph {
     }
 
     /**
-     * Collect, into an array, logged git pushes matching project repositories for the given duration.
+     * Collect, into an array, logged git pushes matching a given git repository for the given duration.
      *
-     * @param Array $repository 
+     * @param Array $repository Git repository we want to fetch its pushes
      *
      * @return Array
      */
@@ -133,14 +160,12 @@ class Git_LastPushesGraph {
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
             $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
-            if ($res && !$res->isError()) {
-                if ($res->valid()) {
-                    $row          = $res->getRow();
-                    $pushes[$key] = intval($row['pushes']);
-                    if ($pushes[$key] > 0) {
-                        $this->displayChart = true;
-                        $this->legend       = $repository['repository_name'];
-                    }
+            if ($res && !$res->isError() && $res->valid()) {
+                $row          = $res->getRow();
+                $pushes[$key] = intval($row['pushes']);
+                if ($pushes[$key] > 0) {
+                    $this->displayChart = true;
+                    $this->legend       = $repository['repository_name'];
                 }
             }
             $pushes = array_pad($pushes, $this->weeksNumber, 0);
