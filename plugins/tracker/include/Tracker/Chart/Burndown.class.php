@@ -24,6 +24,7 @@
  * - prepare data for display
  */
 class Tracker_Chart_Burndown {
+    const SECONDS_IN_A_DAY = 86400;
     /**
      * @var Tracker_Chart_Burndown_Data 
      */
@@ -43,7 +44,7 @@ class Tracker_Chart_Burndown {
     }
     
     public function setStartDate($start_date) {
-        $this->start_date = $start_date;
+        $this->start_date = round($start_date / self::SECONDS_IN_A_DAY);
     }
     
     private function getComputedData() {

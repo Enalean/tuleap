@@ -176,17 +176,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function fetchBurndownImage(Tracker_Artifact $artifact) {
         $linked_artifacts = $this->getLinkedArtifacts($artifact);
         if (count($linked_artifacts)) {
-            
-            $start_date = mktime(0,0,0,4,11,2012);        
-            $day = 24 * 60 * 60;
-            $start_date = round($start_date / $day);
-            
-            $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date');
-            $start_date       = $artifact->getValue($start_date_field)->getTimestamp();
-            
             $burndown = $this->getBurndown($linked_artifacts);
-            
-            $burndown->setStartDate($start_date);
+            $burndown->setStartDate($this->getBurndownStartDate($artifact));
             //$burndown->setDuration();
             //$burndown->setWidth(640);
             //$burndown->setHeight(480);
@@ -199,6 +190,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function getBurndown($linked_artifacts) {
         $burndown_data = new Tracker_Chart_Burndown_Data_LinkedArtifacts($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME);
         return new Tracker_Chart_Burndown($burndown_data);
+    }
+
+    protected function getBurndownStartDate(Tracker_Artifact $artifact) {
+        $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date');
+        return $artifact->getValue($start_date_field)->getTimestamp();
     }
 
     /**
