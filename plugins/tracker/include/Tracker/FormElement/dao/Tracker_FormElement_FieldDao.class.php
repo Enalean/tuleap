@@ -365,6 +365,13 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     }
     
     public function searchProjectSharedFieldsTargets($project_id) {
+        $project_id  = $this->da->escapeInt($project_id);
+        $sql = "SELECT tracker_field.*
+                FROM tracker_field 
+                INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
+                WHERE tracker.group_id = $project_id 
+                  AND tracker_field.original_field_id != 0";
+        return $this->retrieve($sql);
         
     }
 
@@ -455,7 +462,11 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
     
-    public function updateOriginalFieldId() {
+    public function updateOriginalFieldId($id, $original_field_id) {
+        $sql = "UPDATE $this->table_name  
+                SET original_field_id = $original_field_id 
+                WHERE id = $id";
+        return $this->update($sql);
         
     }
 }

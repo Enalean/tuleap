@@ -66,6 +66,17 @@ class PlanningFactoryTest extends TuleapTestCase {
         $factory->duplicatePlannings($group_id, $tracker_mapping);
     }
     
+    function itDoesNothingIfThereAreNoTrackerMappings() {
+        $dao     = new MockPlanningDao();
+        $factory = aPlanningFactory()->withDao($dao)->build();
+        $group_id = 123;
+        $empty_tracker_mapping = array();
+        
+        $dao->expectNever('createPlanning');
+        
+        $factory->duplicatePlannings($group_id, $empty_tracker_mapping);
+    }
+    
     function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $dao          = new MockPlanningDao();
         $factory      = aPlanningFactory()->withDao($dao)->build();

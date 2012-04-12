@@ -691,7 +691,7 @@ class Tracker_FormElementFactory {
         return $this->getInstancesFromRows($dar);
     }
     
-    public function fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id) {
+    public function fixOriginalFieldIdsAfterDuplication($project_id, $field_mapping) {
         $project_target_shared_fields = $this->getDao()->searchProjectSharedFieldsTargets($project_id);
         foreach ($project_target_shared_fields as $shared_field_row) {
             $new_source_field_id = $field_mapping[$shared_field_row['original_field_id']];

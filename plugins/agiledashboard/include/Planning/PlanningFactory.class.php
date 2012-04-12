@@ -46,6 +46,8 @@ class PlanningFactory {
      * @param array  $tracker_mapping  An array mapping source tracker ids to destination tracker ids.
      */
     public function duplicatePlannings($group_id, $tracker_mapping) {
+        if (! $tracker_mapping) {return;}
+        
         $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
         
         foreach($planning_rows as $row) {

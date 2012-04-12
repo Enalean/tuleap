@@ -311,7 +311,7 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $dao->expectNever('updateOriginalFieldId');
         stub($this->form_element_factory)->getDao()->returns($dao);
         $field_mapping = array();
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id);
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($project_id, $field_mapping);
     }
     
     public function itDoesNothingWhenThereIsNoSharedFieldInTheFieldMapping() {
@@ -321,7 +321,7 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $dao->expectNever('updateOriginalFieldId');
         stub($this->form_element_factory)->getDao()->returns($dao);
         $field_mapping = array('321' => '101');
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id);
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($project_id, $field_mapping);
     }
     
     public function itUpdatesTheOrginalFieldIdForEverySharedField() {
@@ -338,7 +338,7 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
                                103 => 567,
                                555 => 888,
                                666 => 777);
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id);
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($project_id, $field_mapping);
     }
 
 }
