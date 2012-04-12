@@ -38,11 +38,21 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
+            $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
         }
     }
     
     public function tracker_event_include_css_file($params) {
         $params['include_tracker_css_file'] = true;
+    }
+    
+    public function tracker_event_trackers_duplicated($params) {
+        $planning_dao     = new PlanningDao();
+        $tracker_factory  = TrackerFactory::instance();
+        $planning_factory = new PlanningFactory($planning_dao, $tracker_factory);
+        
+        $planning_factory->duplicatePlannings($params['group_id'],
+                                              $params['tracker_mapping']);
     }
     
     /**

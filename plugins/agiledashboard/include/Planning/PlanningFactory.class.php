@@ -40,6 +40,59 @@ class PlanningFactory {
     }
     
     /**
+     * Duplicate plannings for some previously duplicated trackers.
+     * 
+     * @param int    $group_id         The id of the project where plannings should be created.
+     * @param array  $tracker_mapping  An array mapping source tracker ids to destination tracker ids.
+     */
+    public function duplicatePlannings($group_id, $tracker_mapping) {
+        $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
+        
+        foreach($planning_rows as $row) {
+            $backlog_tracker_ids = $this->extractCopiedBacklogTrackerIds($row['backlog_tracker_ids'], $tracker_mapping);
+            $planning_tracker_id = $tracker_mapping[$row['planning_tracker_id']];
+            
+            $this->dao->createPlanning($row['name'],
+                                       $group_id,
+                                       $backlog_tracker_ids,
+                                       $planning_tracker_id);
+        }
+    }
+    
+    /**
+     * @param string $source_backlog_tracker_ids Comma-separated list of the source backlog tracker ids.
+     * @param array  $tracker_mapping            Mapping of source => copied tracker ids.
+     * 
+     * @return array
+     */
+    private function extractCopiedBacklogTrackerIds($source_backlog_tracker_ids, array $tracker_mapping) {
+        $source_backlog_tracker_ids = explode(',', $source_backlog_tracker_ids);
+        $backlog_tracker_mapping    = $this->filterByKeys($tracker_mapping, $source_backlog_tracker_ids);
+        $copied_backlog_tracker_ids = array_values($backlog_tracker_mapping);
+        
+        return $copied_backlog_tracker_ids;
+    }
+    
+    /**
+     * $tracker_mapping = array(1 => 4,
+     *                          2 => 5,
+     *                          3 => 6);
+     * 
+     * $factory->filterByKeys($tracker_mapping, array(1, 3))
+     * 
+     * => array(1 => 4,
+     *          3 => 6)
+     * 
+     * @param array $array The array to filter.
+     * @param array $keys  The keys used for filtering.
+     * 
+     * @return array
+     */
+    private function filterByKeys(array $array, array $keys) {
+        return array_intersect_key($array, array_flip($keys));
+    }
+    
+    /**
      * Get a list of planning defined in a group_id
      * 
      * @param int $group_id
