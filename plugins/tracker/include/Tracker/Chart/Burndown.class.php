@@ -138,7 +138,6 @@ class Tracker_Chart_Burndown {
         // Build data for initial estimation
         list($first_day, $b) = each($remaining_effort);
         $b = array_sum($b);
-        $day = 24 * 60 * 60;
         $start_of_sprint = $first_day;
         $a = - $b / $this->duration;
         $data_initial_estimation = array();
@@ -149,7 +148,7 @@ class Tracker_Chart_Burndown {
         // for each day
         for ($x = 0 ; $x <= $this->duration ; ++$x) {
             $data_initial_estimation[] = $a * $x  + $b;
-            $timestamp_current_day = ($start_of_sprint + $x) * $day;
+            $timestamp_current_day = ($start_of_sprint + $x) * self::SECONDS_IN_A_DAY;
             $human_dates[] = date('M-d', $timestamp_current_day);
             if (isset($remaining_effort[$start_of_sprint + $x])) {
                 $nb = array_sum($remaining_effort[$start_of_sprint + $x]);
