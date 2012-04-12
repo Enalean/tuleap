@@ -100,7 +100,8 @@ class TrackerFactory {
     }
 
     protected $dao;
-    /**
+
+   /**
      * @return TrackerDao
      */
     protected function getDao() {
@@ -432,7 +433,7 @@ class TrackerFactory {
                 
                 $this->postCreateActions($tracker);
 
-                return $tracker;
+                return array('tracker' => $tracker, 'field_mapping' => $field_mapping);
             }
         }
         return false;
@@ -499,32 +500,26 @@ class TrackerFactory {
 
     /**
      * Duplicate all trackers from a project to another one
+     * Duplicate the hierrachy, the shared fields
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping = array();
-        $report_mapping  = array();
+        $field_mapping   = array();
+        
         foreach($this->getTrackersByGroupId($from_project_id) as $t) {
             if ($t->mustBeInstantiatedForNewProjects()) {
-                $report_mapping_for_this_tracker = array();
-                $new = $this->create($to_project_id,
-                        $from_project_id,
-                        $t->getId(),
-                        $t->getName(),
-                        $t->getDescription(),
-                        $t->getItemName(),
-                        $ugroup_mapping);
-                if ($new) {
-                    $tracker_mapping[$t->getId()] = $new->getId();
-                } else {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($t->getName())));
-                }
+                $this->duplicateTracker($tracker_mapping, $field_mapping, $t, $from_project_id, $to_project_id, $ugroup_mapping);
             }
         }
        
         if ($tracker_mapping) {
-            $hierarchy_factory    = $this->getHierarchyFactory();
+            $hierarchy_factory = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
         }
+        
+        $shared_factory = $this->getSharedFactory();
+        $shared_factory->duplicate($field_mapping);
+
         /**
          * The trackers from a project have been duplicated in another project
          *
@@ -544,8 +539,40 @@ class TrackerFactory {
         ));*/
     }
     
+    private function duplicateTracker(&$tracker_mapping, &$field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
+        $report_mapping_for_this_tracker = array();
+        $creation_result = $this->create($to_project_id,
+                $from_project_id,
+                $tracker->getId(),
+                $tracker->getName(),
+                $tracker->getDescription(),
+                $tracker->getItemName(),
+                $ugroup_mapping);
+        
+        if ($creation_result) {
+            $tracker_mapping[$tracker->getId()] = $creation_result['tracker']->getId();
+            $field_mapping = $this->mergeAssociativeArrayWithNumericKeys($field_mapping, $creation_result['field_mapping']);
+        } else {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($tracker->getName())));
+        }
+    }
+    
+    private function mergeAssociativeArrayWithNumericKeys ($array1, $array2) {
+        return $array1 + $array2;
+    }
+    
+    /**
+     * @return Tracker_HierarchyFactory 
+     */
     public function getHierarchyFactory() {
         return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+    }
+    
+    /**
+     * @return Tracker_SharedFormElementFactory
+     */
+    public function getSharedFactory() {
+        return new Tracker_SharedFormElementFactory(Tracker_FormElementFactory::instance(), new Tracker_FormElement_Field_List_BindFactory());
     }
     /**
      * First, creates a new Tracker Object by importing its structure from an XML file,

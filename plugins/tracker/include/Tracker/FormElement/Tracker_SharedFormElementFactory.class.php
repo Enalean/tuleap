@@ -37,6 +37,9 @@ class Tracker_SharedFormElementFactory {
         return new Tracker_FormElement_FieldDao();
     }
     
+    public function duplicate() {
+        
+    }
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
         $field = $this->getRootOriginalField($this->factory->getFormElementById($formElement_data['field_id']));
         $this->assertFieldCanBeCopied($field, $user);
