@@ -123,12 +123,8 @@ class Tracker_Chart_Burndown {
      * @return Chart
      */
     public function buildGraph() {
-        $this->title  = "Burndown";
-        $this->width  = 640;
-        $this->height = 480;
-        $this->description = "";
         
-        $this->graph = new Chart($this->width,$this->height);
+        $this->graph = new Chart($this->width, $this->height);
         $this->graph->SetScale("datlin");
         
         // title setup
