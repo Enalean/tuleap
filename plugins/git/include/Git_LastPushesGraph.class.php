@@ -83,7 +83,7 @@ class Git_LastPushesGraph {
      *
      * @return Void
      */
-    public function setUpGraphEnvironnment() {
+    protected function setUpGraphEnvironnment() {
         $today         = $_SERVER['REQUEST_TIME'];
         $startPeriod   = strtotime("-$this->weeksNumber weeks");
         $weekInSeconds = self::WEEKS_IN_SECONDS ;
@@ -99,7 +99,7 @@ class Git_LastPushesGraph {
      *
      * @return Chart
      */
-    function prepareGraph() {
+    protected function prepareGraph() {
         $nbRepo = count($this->repoList);
         $graph  = new Chart(500, 300 + 16 * $nbRepo);
         $graph->SetScale('textint');
@@ -126,7 +126,7 @@ class Git_LastPushesGraph {
      *
      * @return BarPlot
      */
-    function displayRepositoryPushesByWeek() {
+    private function displayRepositoryPushesByWeek() {
         $nbRepo   = count($this->repoList);
         $colors   = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo));
         $nbColors = count($colors);
@@ -155,7 +155,7 @@ class Git_LastPushesGraph {
      *
      * @return Array
      */
-    function getRepositoryPushesByWeek($repository) {
+    private function getRepositoryPushesByWeek($repository) {
         $pushes    = array();
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
@@ -181,7 +181,7 @@ class Git_LastPushesGraph {
      *
      * @return Void
      */
-    function displayAccumulatedGraph($bplot, $graph) {
+    protected function displayAccumulatedGraph($bplot, $graph) {
         $abplot = new AccBarPlot($bplot);
         $abplot->SetShadow();
         $abplot->SetAbsWidth(10);
