@@ -74,19 +74,11 @@ class Git_LastPushesGraph {
         // TODO: Optionally include presonal forks in repo list
         $this->repoList     = $dao->getProjectRepositoryList($groupId);
         $this->displayChart = false;
-        $this->weeksNumber = min($weeksNumber, self::MAX_WEEKSNUMBER);
-    }
-
-    /**
-     * Init some class properties according to 'weeks number' parameter 
-     * given in class constructors.
-     *
-     * @return Void
-     */
-    protected function setUpGraphEnvironnment() {
-        $today         = $_SERVER['REQUEST_TIME'];
-        $startPeriod   = strtotime("-$this->weeksNumber weeks");
-        $weekInSeconds = self::WEEKS_IN_SECONDS ;
+        $this->weeksNumber  = min($weeksNumber, self::MAX_WEEKSNUMBER);
+        // Init some class properties according to 'weeks number' parameter         
+        $today              = $_SERVER['REQUEST_TIME'];
+        $startPeriod        = strtotime("-$this->weeksNumber weeks");
+        $weekInSeconds      = self::WEEKS_IN_SECONDS ;
         for ($i = $startPeriod+$weekInSeconds ; $i < $today+$weekInSeconds ; $i += $weekInSeconds) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
@@ -232,7 +224,6 @@ class Git_LastPushesGraph {
      * @return void
      */
     public function display() {
-        $this->setUpGraphEnvironnment();
         $graph = $this->prepareGraph();
         $bplot = $this->displayRepositoryPushesByWeek();
         if ($this->displayChart) {
