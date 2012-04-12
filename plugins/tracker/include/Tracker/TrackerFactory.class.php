@@ -518,8 +518,8 @@ class TrackerFactory {
             $hierarchy_factory->duplicate($tracker_mapping);
         }
         
-        $shared_factory = $this->getSharedFactory();
-        $shared_factory->fixOriginalFieldIdsAfterDuplication($field_mapping);
+        $shared_factory = $this->getFormElementFactory();
+        $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $field_mapping);
 
         EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
             'tracker_mapping' => $tracker_mapping,
@@ -556,12 +556,6 @@ class TrackerFactory {
         return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
     }
     
-    /**
-     * @return Tracker_SharedFormElementFactory
-     */
-    public function getSharedFactory() {
-        return new Tracker_SharedFormElementFactory(Tracker_FormElementFactory::instance(), new Tracker_FormElement_Field_List_BindFactory());
-    }
     /**
      * First, creates a new Tracker Object by importing its structure from an XML file,
      * then, imports it into the Database, before verifying the consistency

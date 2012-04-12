@@ -222,13 +222,13 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
                       array('create',
                             'getTrackersByGroupId',
                             'getHierarchyFactory',
-                            'getSharedFactory'
+                            'getFormElementFactory'
                       ));
         $this->hierarchy_factory = new MockTracker_HierarchyFactory();
-        $this->shared_factory = new MockTracker_SharedFormElementFactory();
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
 
         $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
-        $this->tracker_factory->setReturnValue('getSharedFactory', $this->shared_factory);
+        $this->tracker_factory->setReturnValue('getFormElementFactory', $this->formelement_factory);
         
     }
     
@@ -267,20 +267,20 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         
         $t_new1_field_mapping = array('11' => '111', '22'=>'222');
         $t_new2_field_mapping = array('33' => '333', '44'=>'444');
-        
+        $to_project_id   = 999;
+        $from_project_id = 100;
         $this->tracker_factory->setReturnValue('create', 
                                                 array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), 
-                                                array(999, 100, 123, '*', '*', '*', null));
+                                                array($to_project_id, $from_project_id, 123, '*', '*', '*', null));
         $this->tracker_factory->setReturnValue('create', 
                                                 array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), 
-                                                array(999, 100, 567, '*', '*', '*', null)) ;
+                                                array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
         
-        $this->shared_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array(array('11' => '111', 
-                                                                                             '22' => '222', 
-                                                                                             '33' => '333', 
-                                                                                             '44' => '444')));
-        
-        $this->tracker_factory->duplicate(100, 999, null);
+        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, array('11' => '111', 
+                                                                                                             '22' => '222', 
+                                                                                                             '33' => '333', 
+                                                                                                             '44' => '444')));
+        $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
     }
     
     public function testMergesAssociativeArrayWithNumericKeys() {
