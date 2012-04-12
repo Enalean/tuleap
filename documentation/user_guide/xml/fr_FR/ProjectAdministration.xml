@@ -1403,8 +1403,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
         <listitem>
           <para>Quels utilisateurs ont téléchargé des documents du
           gestionnaire de documentation du projet hormis ceux qui sont
-          accessibles aux utilisateurs anonymes (voir <xref
-          linkend="DocumentAdministration"/>).</para>
+          accessibles aux utilisateurs anonymes.</para>
         </listitem>
       </itemizedlist>
 

@@ -134,10 +134,9 @@
 
       <para>While this is usually the best policy, some wikis should
       not be public. For those cases, &SYS_PRODUCT_NAME; offers a permission
-      mechanism based on user groups, as for file releases and
-      documents (see <xref linkend="UserGroups"/>, <xref
-      linkend="PackageModification"/> and <xref
-      linkend="DocAccessPermissions"/>). Permissions may be set at
+      mechanism based on user groups, as for file releases 
+      (see <xref linkend="UserGroups"/> and <xref
+      linkend="PackageModification"/>). Permissions may be set at
       the wiki level, and apply to all pages, or at the page level, so
       that only selected pages are protected.</para>
     </section>

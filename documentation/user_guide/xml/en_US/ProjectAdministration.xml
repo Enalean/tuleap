@@ -1299,8 +1299,7 @@ The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide th
         <listitem>
           <para>The &SYS_PRODUCT_NAME; users who downloaded documents, except for
           those documents marked as being accessible to anonymous
-          users in your Document Manager (see <xref
-          linkend="DocumentAdministration"/>).</para>
+          users in your Document Manager.</para>
         </listitem>
       </itemizedlist>
 

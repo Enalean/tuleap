@@ -153,9 +153,8 @@
       meilleure, certains Wikis ne doivent pas être publics. Pour
       répondre à ce besoin, &SYS_PRODUCT_NAME; offre un mécanisme de gestion des
       permissions basés sur les groupes d'utilisateurs comme pour le
-      gestionnaire de fichiers et de documents (voir <xref
-      linkend="UserGroups"/>, <xref linkend="PackageModification"/>
-      et <xref linkend="DocAccessPermissions"/>). Les droits d'accès
+      gestionnaire de fichiers (voir <xref linkend="UserGroups"/> et 
+      <xref linkend="PackageModification"/>). Les droits d'accès
       peuvent être définis au niveau du Wiki et s'appliquer à toutes
       les pages, ou bien au niveau de la page permettant ainsi de
       protéger uniquement certaines pages bien choisies.</para>
