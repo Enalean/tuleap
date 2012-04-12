@@ -191,6 +191,15 @@ class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends Tulea
 
 class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        
+        $this->tracker_manager = mock('TrackerManager');
+        $this->current_user    = mock('User');
+        
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+    }
+    
     public function tearDown() {
         parent::tearDown();
         Tracker_ArtifactFactory::clearInstance();
@@ -203,19 +212,13 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
                                              'src_aid'     => $artifact_id));
         
-        $artifact = stub('Tracker_Artifact');
+        $artifact        = stub('Tracker_Artifact');
         $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById($artifact_id)->returns($artifact);
         Tracker_ArtifactFactory::setInstance($artifactFactory);
         
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+        $this->field->expectOnce('fetchBurndownImage', array($artifact));
         
-        $field->expectOnce('fetchBurndownImage', array($artifact));
-        
-        $tracker_manager = mock('TrackerManager');
-        $current_user    = mock('User');
-        
-        $field->process($tracker_manager, $request, $current_user);
-        
+        $this->field->process($this->tracker_manager, $request, $this->current_user);
     }
     
     public function itMustNotBuildBurndownWhensrc_aidIsNotValid() {
@@ -226,14 +229,9 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(null);
         Tracker_ArtifactFactory::setInstance($artifactFactory);
         
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+        $this->field->expectNever('fetchBurndownImage');
         
-        $field->expectNever('fetchBurndownImage');
-        
-        $tracker_manager = mock('TrackerManager');
-        $current_user    = mock('User');
-        
-        $field->process($tracker_manager, $request, $current_user);
+        $this->field->process($this->tracker_manager, $request, $this->current_user);
     }
     
     public function itMustNotBuildBurndownWhenArtifactDoesNotExist() {
@@ -241,19 +239,12 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
                                              'src_aid'     => 999));
         
-        
-        
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
-        
         $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(null);
         Tracker_ArtifactFactory::setInstance($artifactFactory);
         
-        $field->expectNever('fetchBurndownImage');
+        $this->field->expectNever('fetchBurndownImage');
         
-        $tracker_manager = mock('TrackerManager');
-        $current_user    = mock('User');
-        
-        $field->process($tracker_manager, $request, $current_user);
+        $this->field->process($this->tracker_manager, $request, $this->current_user);
     }
 }
 

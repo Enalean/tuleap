@@ -173,8 +173,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         //var_dump($remaining_effort);
         $graph = $this->buildGraph($remaining_effort, 10);
         $graph->stroke();
-        //header('Content-type: image/png');
-        //readfile(TRACKER_BASE_DIR.'/../www/images/please-configure-your-burndown.png');
     }
     
     public function getBurndownDao() {
