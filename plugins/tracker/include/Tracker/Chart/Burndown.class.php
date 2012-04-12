@@ -68,23 +68,11 @@ class Tracker_Chart_Burndown {
     }
     
     private function getComputedData() {
-        $dbdata = $this->burndown_data->getRemainingEffort();
+        $dbdata       = $this->burndown_data->getRemainingEffort();
         $artifact_ids = $this->burndown_data->getArtifactIds();
-        $minday = $this->burndown_data->getMinDay();
-        $maxday = $this->burndown_data->getMaxDay();
-        /*$dbdata = array();
-        $minday = 0;
-        $maxday = 0;
-        while ($d = db_fetch_array($res)) {
-            if (!isset($dbdata[$d['day']])) {
-                $dbdata[$d['day']] = array();
-            }
-            $dbdata[$d['day']][$d['id']] = $d['value'];
-            if ($d['day'] > $maxday)
-                $maxday = $d['day'];
-            if ($d['day'] < $minday)
-                $minday = $d['day'];
-        }*/
+        $minday       = $this->burndown_data->getMinDay();
+        $maxday       = $this->burndown_data->getMaxDay();
+
         $data   = array();
         for ($day = $this->start_date; $day <= $maxday; $day++) {
             if (!isset($data[$this->start_date])) {
@@ -124,17 +112,17 @@ class Tracker_Chart_Burndown {
      */
     public function buildGraph() {
         
-        $this->graph = new Chart($this->width, $this->height);
-        $this->graph->SetScale("datlin");
+        $graph = new Chart($this->width, $this->height);
+        $graph->SetScale("datlin");
         
         // title setup
-        $this->graph->title->Set($this->title);
+        $graph->title->Set($this->title);
         
         //description setup
         if (is_null($this->description)) {
             $this->description = "";
         }
-        $this->graph->subtitle->Set($this->description);
+        $graph->subtitle->Set($this->description);
         
         $remaining_effort = $this->getComputedData();
         
@@ -154,8 +142,8 @@ class Tracker_Chart_Burndown {
         $start_of_sprint = $first_day;
         $a = - $b / $this->duration;
         $data_initial_estimation = array();
-        $dates = array();
-        //$end_of_weeks = array();
+        $human_dates = array();
+
         $data = array();
         $previous = $b; // init with sum of effort for the first day
         // for each day
@@ -176,19 +164,9 @@ class Tracker_Chart_Burndown {
             $previous = $nb;
             //$end_of_weeks[] = date('N', $timestamp_current_day) == 7 ? 1 : 0;
         }
-        $this->graph->xaxis->SetTickLabels($human_dates);
-        /*
-        foreach($end_of_weeks as $i => $w) {
-            if ($w) {
-                $vline = new PlotLine(VERTICAL, $i, "gray9", 1);
-                $this->graph->Add($vline);
-            }
-        }
-        */
-        foreach($remaining_effort as $d) {
-            
-        }
-        $colors = $this->graph->getThemedColors();
+        $graph->xaxis->SetTickLabels($human_dates);
+
+        $colors = $graph->getThemedColors();
         
         $current = new LinePlot($data);
         $current->SetColor($colors[1].':0.7');
@@ -198,16 +176,16 @@ class Tracker_Chart_Burndown {
         $current->mark->SetColor($colors[1].':0.7');
         $current->mark->SetFillColor($colors[1]);
         $current->mark->SetSize(3);
-        $this->graph->Add($current);
+        $graph->Add($current);
        
         //Add "initial" after current so it is on top
         $initial = new LinePlot($data_initial_estimation);
         $initial->SetColor($colors[0].':1.25');
         //$initial->SetStyle('dashed');
         $initial->SetLegend('Ideal Burndown');
-        $this->graph->Add($initial);
+        $graph->Add($initial);
         
-        return $this->graph;
+        return $graph;
     }
 
     public function display() {
