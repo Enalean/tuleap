@@ -74,32 +74,46 @@ class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends Tuleap
     }      
 }
 
-class Tracker_FormElement_Field_Burndown_LinkedArtifactsTest extends TuleapTestCase {
-    const EFFORT_FIELD_TYPE = 'float';
-    
-    
+class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTestCase {
+
+    protected $sprint_tracker_id;
     protected $sprint;
+    protected $sprint_tracker;
     protected $artifact_link_field;
     protected $form_element_factory;
     protected $last_changeset;
     protected $field;
-    protected $dao;
+    protected $burndown;
+    protected $timestamp;
     
     public function setUp() {
         parent::setUp();
         
-        $sprint_tracker_id      = 113;
-        $sprint_tracker         = aTracker()->withId($sprint_tracker_id)->build();
-        $this->last_changeset   = mock('Tracker_Artifact_Changeset');
-        $this->sprint = anArtifact()->withTracker($sprint_tracker)->withChangesets(array($this->last_changeset))->build();
+        $this->sprint_tracker_id = 113;
+        $this->sprint_tracker    = aTracker()->withId($this->sprint_tracker_id)->build();
+        $this->last_changeset    = mock('Tracker_Artifact_Changeset');
+        
+        $this->timestamp = 1334095200;
+        $start_date_field = stub('Tracker_FormElement_Field_Date');
+        $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
+        
+        $this->sprint = stub('Tracker_Artifact')->getValue($start_date_field)->returns($start_date_changeset_value);
+        stub($this->sprint)->getTracker()->returns($this->sprint_tracker);
+        stub($this->sprint)->getLastChangeset()->returns($this->last_changeset);
         
         $artifact_link_field_id    = 12;
         $this->artifact_link_field = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
         
         $this->form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($this->artifact_link_field));
+        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($start_date_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
-                
-        $this->field = aBurndownField()->build();
+        
+        
+
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown'));
+        
+        $this->burndown = mock('Tracker_Chart_Burndown');
+        stub($this->field)->getBurndown()->returns($this->burndown);
     }
     
     public function tearDown() {
@@ -107,8 +121,9 @@ class Tracker_FormElement_Field_Burndown_LinkedArtifactsTest extends TuleapTestC
         Tracker_FormElementFactory::clearInstance();
     }
     
-    public function itReturnsLinkedArtifactsOfAnArtifact() {  
-        $task_tracker_id = 120;
+    public function itCreatesABurndownWithArtifactLinkedArtifactsAndAStartDate() {
+        
+        $task_tracker_id = 120;        
         $task_tracker    = aTracker()->withId($task_tracker_id)->build();
         $task_54         = anArtifact()->withId(54)->withTracker($task_tracker)->build();
         
@@ -119,7 +134,10 @@ class Tracker_FormElement_Field_Burndown_LinkedArtifactsTest extends TuleapTestC
         $linked_artifacts = array($task_54, $bug_55);
         stub($this->artifact_link_field)->getLinkedArtifacts($this->last_changeset)->returns($linked_artifacts);
         
-        $this->assertEqual($linked_artifacts, $this->field->getLinkedArtifacts($this->sprint));
+        $this->field->expectOnce('getBurndown', array($linked_artifacts));
+        $this->burndown->expectOnce('setStartDate', array($this->timestamp));
+        
+        $this->field->fetchBurndownImage($this->sprint);
     }
 }
 

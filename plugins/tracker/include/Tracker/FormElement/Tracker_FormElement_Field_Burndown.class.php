@@ -137,6 +137,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }*/
         //$linked_artifact = $this->getLinkedArtifactIds($artifact);
         
+        //$start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date');
+        //var_dump($artifact->getValue($start_date_field)->getTimestamp());
+        
+        //var_dump($this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date')->fetchArtifactValue($artifact));
         
         $url_query = http_build_query(array('formElement' => $this->getId(),
                                             'func'        => self::FUNC_SHOW_BURNDOWN,
@@ -173,28 +177,36 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $linked_artifacts = $this->getLinkedArtifacts($artifact);
         if (count($linked_artifacts)) {
             
-            $start_date = mktime(0,0,0,4,11,2012);
-        
+            $start_date = mktime(0,0,0,4,11,2012);        
             $day = 24 * 60 * 60;
             $start_date = round($start_date / $day);
             
-            $burndown_data = new Tracker_Chart_Burndown_Data_LinkedArtifacts($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME);
-            $burndown      = new Tracker_Chart_Burndown($burndown_data);
+            $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date');
+            $start_date       = $artifact->getValue($start_date_field)->getTimestamp();
+            
+            $burndown = $this->getBurndown($linked_artifacts);
+            
             $burndown->setStartDate($start_date);
             //$burndown->setDuration();
             //$burndown->setWidth(640);
             //$burndown->setHeight(480);
             //$burndown->setTitle("Burndown");
             //$burndown->setDescription("480");
-            $graph = $burndown->buildGraph();
-            $graph->stroke();
+            $burndown->display();
         }
     }
     
-    public function getBurndownDao() {
-        return new Tracker_FormElement_Field_BurndownDao();
+    protected function getBurndown($linked_artifacts) {
+        $burndown_data = new Tracker_Chart_Burndown_Data_LinkedArtifacts($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME);
+        return new Tracker_Chart_Burndown($burndown_data);
     }
-    
+
+    /**
+     *
+     * @param Tracker_Artifact $source_artifact
+     * 
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
     private function getArtifactLinkField(Tracker_Artifact $source_artifact) {
         $artifact_link_field = $this->getFormElementFactory()->getUsedArtifactLinkFields($source_artifact->getTracker());
         if (count($artifact_link_field) > 0) {
