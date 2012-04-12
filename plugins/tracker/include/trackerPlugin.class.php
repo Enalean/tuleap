@@ -24,6 +24,17 @@ define('TRACKER_BASE_DIR', dirname(__FILE__));
 define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
 
 /**
+  * The trackers from a project have been duplicated in another project
+  *
+  * Parameters:
+  * 'tracker_mapping' => The mapping between source and target project trackers
+  * 'group_id'        => The id of the target project
+  *
+  * No expected results
+  */
+define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated');
+
+/**
  * trackerPlugin
  */
 class trackerPlugin extends Plugin {

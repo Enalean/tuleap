@@ -520,23 +520,10 @@ class TrackerFactory {
         $shared_factory = $this->getSharedFactory();
         $shared_factory->duplicate($field_mapping);
 
-        /**
-         * The trackers from a project have been duplicated in another project
-         *
-         * Parameters:
-         * 'reportMapping'  => The mapping between source and target project trackers reports
-         * 'trackerMapping' => The mapping between source and target project trackers
-         * 'ugroupsMapping' => The mapping between source and target project ugroups
-         * 'group_id        => The id of the target project
-         *
-         * No expected results
-         */
-        /*EventManager::instance()->processEvent('trackers_duplicated', array(
-                'reportMapping'  => $report_mapping,
-                'trackerMapping' => $tracker_mapping,
-                'ugroupsMapping' => $ugroup_mapping,
-                'group_id'       => $to_project_id
-        ));*/
+        EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
+            'tracker_mapping' => $tracker_mapping,
+            'group_id'        => $to_project_id
+        ));
     }
     
     private function duplicateTracker(&$tracker_mapping, &$field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
