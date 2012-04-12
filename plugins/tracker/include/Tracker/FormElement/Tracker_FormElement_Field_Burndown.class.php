@@ -137,7 +137,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         //$linked_artifact = $this->getLinkedArtifactIds($artifact);
         
         
-        $html .= '<img src="'. TRACKER_BASE_URL .'/?formElement='.$this->getId().'&func='.self::FUNC_SHOW_BURNDOWN.'" />';
+        $url_query = http_build_query(array('formElement' => $this->getId(),
+                                            'func'        => self::FUNC_SHOW_BURNDOWN,
+                                            'src_aid'         => $artifact->getId()));
+        
+        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" />';
         return $html;
     }
 
@@ -150,7 +154,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case self::FUNC_SHOW_BURNDOWN:
-                $artifact_id = $request->getValidated('aid', 'uint', 0);
+                $artifact_id = $request->getValidated('src_aid', 'uint', 0);
                 $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
                 if (! $artifact) {
                     return false;

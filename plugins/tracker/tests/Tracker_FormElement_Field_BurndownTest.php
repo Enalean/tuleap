@@ -201,7 +201,7 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         
         $request = new Codendi_Request(array('formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'aid'         => $artifact_id));
+                                             'src_aid'     => $artifact_id));
         
         $artifact = stub('Tracker_Artifact');
         $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById($artifact_id)->returns($artifact);
@@ -218,10 +218,10 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
         
     }
     
-    public function itMustNotBuildBurndownWhenAidIsNotValid() {
+    public function itMustNotBuildBurndownWhensrc_aidIsNotValid() {
         $request = new Codendi_Request(array('formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'aid'         => '; DROP DATABASE mouuahahahaha!'));
+                                             'src_aid'     => '; DROP DATABASE mouuahahahaha!'));
         
         $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(null);
         Tracker_ArtifactFactory::setInstance($artifactFactory);
@@ -239,7 +239,7 @@ class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTes
     public function itMustNotBuildBurndownWhenArtifactDoesNotExist() {
         $request = new Codendi_Request(array('formElement' => 1234,
                                              'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
-                                             'aid'         => 999));
+                                             'src_aid'     => 999));
         
         
         
