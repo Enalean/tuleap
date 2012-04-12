@@ -450,6 +450,10 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return $this->updateAndGetLastId($sql);
     }
+    
+    public function updateOriginalFieldId() {
+        
+    }
 }
 
 

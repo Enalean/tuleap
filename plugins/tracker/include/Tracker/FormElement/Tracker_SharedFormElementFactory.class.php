@@ -27,19 +27,29 @@ class Tracker_SharedFormElementFactory {
      * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory 
      */
     private $boundValuesFactory;
-            
+
+    private $dao;
+    
     function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory) {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
     }
     
+    public function setDao($dao) {
+        $this->dao = $dao;
+    }
+            
     public function getDao() {
-        return new Tracker_FormElement_FieldDao();
+        if (! $this->dao) {
+            $this->dao = new Tracker_FormElement_FieldDao();
+        }
+        return $this->dao;
     }
     
-    public function duplicate() {
-        
+    public function duplicate($field_mapping) {
+        //$this->getDao()->updateOriginalFieldId();
     }
+    
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
         $field = $this->getRootOriginalField($this->factory->getFormElementById($formElement_data['field_id']));
         $this->assertFieldCanBeCopied($field, $user);

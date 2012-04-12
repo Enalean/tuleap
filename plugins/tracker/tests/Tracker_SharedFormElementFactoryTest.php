@@ -222,4 +222,22 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
     
     
 }
+
+class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
+
+    public function itDoesNothingWhenFieldMappingIsEmpty() {
+        
+        $shared_factory = new Tracker_SharedFormElementFactory(mock('Tracker_FormElementFactory'), mock('Tracker_FormElement_Field_List_BindFactory'));
+        $dao = mock('Tracker_FormElement_FieldDao');        
+        $dao->expectNever('updateOriginalFieldId');
+        $shared_factory->setDao($dao);
+        $field_mapping = array();
+        $shared_factory->duplicate($field_mapping);
+    }
+    
+    public function itDoesNothingWhenThereIsNoSharedFieldInTheFieldMapping() {
+        
+    }
+
+}
 ?>

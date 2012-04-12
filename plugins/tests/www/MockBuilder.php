@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Returns a DSL like mockgenerator : stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult);
+ * Returns a DSL like mockgenerator : <br>
+ *   stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult); <br>
  * that is an alternative to 
  * 
- * Mock::generate('SomeClass');
- * $mock = new MockSomeClass();
- * $mock->setReturnValue('someMethod', $someResult, array($arg1, $arg2, ...);
+ * Mock::generate('SomeClass');<br>
+ * $mock = new MockSomeClass();<br>
+ * $mock->setReturnValue('someMethod', $someResult, array($arg1, $arg2, ...);<br>
  * 
  * @param a class name or a simpletest mock
  * @return \OngoingIntelligentStub 
@@ -25,7 +26,7 @@ function stub($classname_or_simpletest_mock) {
  * 
  * is exactly the same as
  * 
- * Mock::generate('SomeClass');
+ * Mock::generate('SomeClass');<br>
  * $mock = new MockSomeClass();
 
  * @param type $classname
