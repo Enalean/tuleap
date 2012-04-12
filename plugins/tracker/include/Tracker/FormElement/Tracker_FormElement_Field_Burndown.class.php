@@ -182,10 +182,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown = $this->getBurndown($linked_artifacts);
             $burndown->setStartDate($this->getBurndownStartDate($artifact));
             $burndown->setDuration($this->getBurndownDuration($artifact));
-            //$burndown->setWidth(640);
-            //$burndown->setHeight(480);
-            //$burndown->setTitle("Burndown");
-            //$burndown->setDescription("480");
             $burndown->display();
         }
     }
