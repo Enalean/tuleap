@@ -47,11 +47,7 @@ class Git_LastPushesGraph {
         // TODO: Optionally include presonal forks in repo list
         $this->repoList     = $dao->getProjectRepositoryList($groupId);
         $this->displayChart = false;
-        if ($weeksNumber < self::MAX_WEEKSNUMBER) {
-            $this->weeksNumber = $weeksNumber;
-        } else {
-            $this->weeksNumber = self::MAX_WEEKSNUMBER;
-        }
+        $this->weeksNumber = min($weeksNumber, self::MAX_WEEKSNUMBER);
     }
 
     /**
