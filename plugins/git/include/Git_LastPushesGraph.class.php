@@ -29,6 +29,7 @@ class Git_LastPushesGraph {
     public $displayChart;
     public $repoList;
     public $weeksNumber;
+    public $legend;
     protected $dates   = array();
     protected $weekNum = array();
     protected $year    = array();
@@ -97,8 +98,7 @@ class Git_LastPushesGraph {
     }
 
     /**
-     * Collect, into an array, logged git pushes matching project repositories for the given duration,
-     * then build a JpGraph barPlot object with retrived data.
+     * Build a JpGraph barPlot object with retrived data.
      *
      * @return BarPlot
      */
@@ -109,30 +109,14 @@ class Git_LastPushesGraph {
         $i        = 0;
         $bplot    = array();
         foreach ($this->repoList as $repository) {
-            $legend    = null;
-            $pushes    = array();
-            $gitLogDao = new Git_LogDao();
-            foreach ($this->weekNum as $key => $w) {
-                $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
-                if ($res && !$res->isError()) {
-                    if ($res->valid()) {
-                        $row          = $res->current();
-                        $pushes[$key] = intval($row['pushes']);
-                        $res->next();
-                        if ($pushes[$key] > 0) {
-                            $this->displayChart = true;
-                            $legend             = $repository['repository_name'];
-                        }
-                    }
-                }
-                $pushes = array_pad($pushes, $this->weeksNumber, 0);
-            }
+            $this->legend = null;
+            $pushes = $this->getRepositoryPushesByWeek($repository);
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];
                 $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
-                if (!empty($legend)) {
-                    $b2plot->SetLegend($legend);
+                if (!empty($this->legend)) {
+                    $b2plot->SetLegend($this->legend);
                 }
                 $bplot[] = $b2plot;
             }
@@ -140,6 +124,34 @@ class Git_LastPushesGraph {
         return $bplot;
     }
 
+    /**
+     * Collect, into an array, logged git pushes matching project repositories for the given duration.
+     *
+     * @param Array $repository 
+     *
+     * @return Array
+     */
+    function getRepositoryPushesByWeek($repository) {
+        $pushes    = array();
+        $gitLogDao = new Git_LogDao();
+        foreach ($this->weekNum as $key => $w) {
+            $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
+            if ($res && !$res->isError()) {
+                if ($res->valid()) {
+                    $row          = $res->current();
+                    $pushes[$key] = intval($row['pushes']);
+                    $res->next();
+                    if ($pushes[$key] > 0) {
+                        $this->displayChart = true;
+                        $this->legend       = $repository['repository_name'];
+                    }
+                }
+            }
+            $pushes = array_pad($pushes, $this->weeksNumber, 0);
+        }  
+        return $pushes;      
+    }
+    
     /**
      * Create a JpGraph accumulated barPlot chart 
      *
