@@ -247,8 +247,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
         
-        // only one call is expected with following arguments:
-        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); 
         
         $this->hierarchy_factory->expectOnce('duplicate');
         
@@ -269,10 +268,17 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $t_new1_field_mapping = array('11' => '111', '22'=>'222');
         $t_new2_field_mapping = array('33' => '333', '44'=>'444');
         
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), array(999, 100, 123, '*', '*', '*', null));
-        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), array(999, 100, 567, '*', '*', '*', null)) ;
+        $this->tracker_factory->setReturnValue('create', 
+                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), 
+                                                array(999, 100, 123, '*', '*', '*', null));
+        $this->tracker_factory->setReturnValue('create', 
+                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), 
+                                                array(999, 100, 567, '*', '*', '*', null)) ;
         
-        $this->shared_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444')));
+        $this->shared_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array(array('11' => '111', 
+                                                                                             '22' => '222', 
+                                                                                             '33' => '333', 
+                                                                                             '44' => '444')));
         
         $this->tracker_factory->duplicate(100, 999, null);
     }
