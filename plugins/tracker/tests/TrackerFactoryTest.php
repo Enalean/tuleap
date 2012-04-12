@@ -193,96 +193,8 @@ class TrackerFactoryTest extends UnitTestCase {
         $itemname = 'MyNewTracker';
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
-    
-    public function testDuplicate_duplicatesAllTrackers_withHierarchy() {
-        $hierarchy_factory = new MockTracker_HierarchyFactory();
-        $tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
-                      array('create',
-                            'getTrackersByGroupId',
-                            'getHierarchyFactory'
-                      ));
-        $tracker_factory->setReturnValue('getHierarchyFactory', $hierarchy_factory);
-        
-        $t1 = $this->GivenADuplicatableTracker(1234);
-        $t1->setReturnValue('getName', 'Bugs');
-        $t1->setReturnValue('getDescription', 'Bug Tracker');
-        $t1->setReturnValue('getItemname', 'bug');
-        $trackers = array($t1);
-        $tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
-        
-        $t_new = new MockTracker();
-        $t_new->setReturnValue('getId', 555);
-        
-        $tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
-        
-        // only one call is expected with following arguments:
-        $tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
-        
-        $hierarchy_factory->expectOnce('duplicate');
-        
-        $tracker_factory->duplicate(100, 999, null);
-    }
-    
-    public function testDuplicate_duplicatesSharedFields() {
-        $hierarchy_factory = new MockTracker_HierarchyFactory();
-        $shared_factory = new MockTracker_SharedFormElementFactory();
-        $tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
-                      array('create',
-                            'getTrackersByGroupId',
-                            'getHierarchyFactory',
-                            'getSharedFactory'
-                      ));
-        $tracker_factory->setReturnValue('getHierarchyFactory', $hierarchy_factory);
-        $tracker_factory->setReturnValue('getSharedFactory', $shared_factory);
-        
-        $t1 = $this->GivenADuplicatableTracker(123);
-        $t2 = $this->GivenADuplicatableTracker(567);
-       
-        $trackers = array($t1, $t2);
-        $tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
-        
-        $t_new1 = new MockTracker();
-        $t_new1->setReturnValue('getId', 1234);
-        
-        $t_new2 = new MockTracker();
-        $t_new2->setReturnValue('getId', 5678);        
-        
-        $t_new1_field_mapping = array('11' => '111', '22'=>'222');
-        $t_new2_field_mapping = array('33' => '333', '44'=>'444');
-        
-        $tracker_factory->setReturnValue('create', array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), array(999, 100, 123, '*', '*', '*', null));
-        $tracker_factory->setReturnValue('create', array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), array(999, 100, 567, '*', '*', '*', null)) ;
-        
-        $shared_factory->expectOnce('duplicate', array(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444')));
-        
-        $tracker_factory->duplicate(100, 999, null);
-    }
-    
-    public function testMergesAssociativeArrayWithNumericKeys() {
-        $t_new1_field_mapping = array('11' => '111', '22'=>'222');
-        $t_new2_field_mapping = array('33' => '333', '44'=>'444');
-        $this->assertEqual(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444'), ($t_new1_field_mapping + $t_new2_field_mapping));
-    }
-    
-    public function testDuplicate_ignoresNonDuplicatableTrackers() {
-        $tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
-                      array('create',
-                            'getTrackersByGroupId',
-                            'getHierarchyFactory'
-                      ));
-        
-        $t1 = new MockTracker();
-        $t1->setReturnValue('mustBeInstantiatedForNewProjects', false);
-        $t1->setReturnValue('getId', 5678);
-        $trackers = array($t1);
-        $tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
-        
-        // only one call is expected with following arguments:
-        $tracker_factory->expectNever('create');
-        
-        $tracker_factory->duplicate(100, 999, null);
-    }
 
+    
     public function testGetPossibleChildrenShouldNotContainSelf() {
         $current_tracker   = aTracker()->withId(1)->withName('Stories')->build();
         $expected_children = array(
@@ -299,13 +211,97 @@ class TrackerFactoryTest extends UnitTestCase {
         
         $this->assertEqual($possible_children, $expected_children);
     }
+
+}
+
+class TrackerFactoryDuplicationTest extends TuleapTestCase {
     
-    public function GivenADuplicatableTracker($tracker_id) {
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
+                      array('create',
+                            'getTrackersByGroupId',
+                            'getHierarchyFactory',
+                            'getSharedFactory'
+                      ));
+        $this->hierarchy_factory = new MockTracker_HierarchyFactory();
+        $this->shared_factory = new MockTracker_SharedFormElementFactory();
+
+        $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
+        $this->tracker_factory->setReturnValue('getSharedFactory', $this->shared_factory);
+        
+    }
+    
+    
+    public function testDuplicate_duplicatesAllTrackers_withHierarchy() {
+        
+        $t1 = $this->GivenADuplicatableTracker(1234);
+        stub($t1)->getName()->returns('Bugs');
+        stub($t1)->getDescription()->returns('Bug Tracker');
+        stub($t1)->getItemname()->returns('bug');
+        
+        $trackers = array($t1);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+
+        $t_new = stub('Tracker')->getId()->returns(555); 
+        
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
+        
+        // only one call is expected with following arguments:
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
+        
+        $this->hierarchy_factory->expectOnce('duplicate');
+        
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+    
+    public function testDuplicate_duplicatesSharedFields() {
+
+        $t1 = $this->GivenADuplicatableTracker(123);
+        $t2 = $this->GivenADuplicatableTracker(567);
+       
+        $trackers = array($t1, $t2);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+        
+        $t_new1 = stub('Tracker')->getId()->returns(1234);        
+        $t_new2 = stub('Tracker')->getId()->returns(5678);
+        
+        $t_new1_field_mapping = array('11' => '111', '22'=>'222');
+        $t_new2_field_mapping = array('33' => '333', '44'=>'444');
+        
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), array(999, 100, 123, '*', '*', '*', null));
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), array(999, 100, 567, '*', '*', '*', null)) ;
+        
+        $this->shared_factory->expectOnce('duplicate', array(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444')));
+        
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+    
+    public function testMergesAssociativeArrayWithNumericKeys() {
+        $t_new1_field_mapping = array('11' => '111', '22'=>'222');
+        $t_new2_field_mapping = array('33' => '333', '44'=>'444');
+        $this->assertEqual(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444'), ($t_new1_field_mapping + $t_new2_field_mapping));
+    }
+    
+    public function testDuplicate_ignoresNonDuplicatableTrackers() {
+        $t1 = new MockTracker();
+        $t1->setReturnValue('mustBeInstantiatedForNewProjects', false);
+        $t1->setReturnValue('getId', 5678);
+        $trackers = array($t1);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+        
+        $this->tracker_factory->expectNever('create');
+        
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+        
+    private function GivenADuplicatableTracker($tracker_id) {
         $t1 = new MockTracker();
         $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
         $t1->setReturnValue('getId', $tracker_id);
         return $t1;
     }
 
+    
 }
 ?>
