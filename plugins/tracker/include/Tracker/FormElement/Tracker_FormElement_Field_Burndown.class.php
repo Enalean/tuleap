@@ -144,8 +144,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case self::FUNC_SHOW_BURNDOWN:
-                //header('Content-type: image/png');
-                //readfile(TRACKER_BASE_DIR.'/../www/images/please-configure-your-burndown.png');
                 $this->fetchBurndownImage();
                 break;
             default:
@@ -156,7 +154,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
     
     public function fetchBurndownImage() {
-        
+        //header('Content-type: image/png');
+        //readfile(TRACKER_BASE_DIR.'/../www/images/please-configure-your-burndown.png');
     }
     
     public function getBurndownDao() {

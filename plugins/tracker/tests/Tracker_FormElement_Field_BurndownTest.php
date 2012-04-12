@@ -76,56 +76,63 @@ class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends Tuleap
 }
 
 class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestCase {
+    const EFFORT_FIELD_TYPE = 'float';
     
-    public function itRetrieveRemainingEffortEvolutionFromDao() {
+    
+    protected $sprint;
+    protected $artifact_link_field;
+    protected $form_element_factory;
+    protected $last_changeset;
+    protected $field;
+    protected $dao;
+    
+    public function setUp() {
+        parent::setUp();
+        
         $sprint_tracker_id      = 113;
-        $last_changeset         = mock('Tracker_Artifact_Changeset');
         $sprint_tracker         = aTracker()->withId($sprint_tracker_id)->build();
-        $sprint = anArtifact()->withTracker($sprint_tracker)->withChangesets(array($last_changeset))->build();
+        $this->last_changeset         = mock('Tracker_Artifact_Changeset');
+        $this->sprint = anArtifact()->withTracker($sprint_tracker)->withChangesets(array($this->last_changeset))->build();
         
         $artifact_link_field_id = 12;
-        $artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
+        $this->artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
         
-        $task_tracker_id = 120;
-        $task_tracker = aTracker()->withId($task_tracker_id)->build();
-        $task_ids     = array(54, 55);
-        $task_54      = anArtifact()->withId(54)->withTracker($task_tracker)->build();
-        $task_55      = anArtifact()->withId(55)->withTracker($task_tracker)->build();
-        $linked_tasks = array($task_54, $task_55);
-        stub($artifact_link_field)->getLinkedArtifacts($last_changeset)->returns($linked_tasks);
+        $this->form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($this->artifact_link_field));
         
-        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($artifact_link_field));
+        $this->dao = mock('Tracker_FormElement_Field_BurndownDao');
+        stub($this->dao)->searchRemainingEffort()->returns(array());
         
-        $effort_field_id   = 35;
-        $effort_field_type = 'float';
-        $effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($effort_field_id);
-        stub($form_element_factory)->getType($effort_field)->returns($effort_field_type);
-        stub($form_element_factory)->getFormElementByName($task_tracker_id, 'remaining_effort')->returns($effort_field);
-        
-        
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndownDao', 'getFormElementFactory'));
-
-        stub($field)->getFormElementFactory()->returns($form_element_factory);
-        
-
-        $dao = mock('Tracker_FormElement_Field_BurndownDao');
-        stub($dao)->searchRemainingEffort()->returns(array());
-        stub($field)->getBurndownDao()->returns($dao);
-        $dao->expectOnce('searchRemainingEffort', array($effort_field_id, $effort_field_type, $task_ids));
-        
-        $field->getRemainingEffortEvolution($sprint);
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndownDao', 'getFormElementFactory'));
+        stub($this->field)->getFormElementFactory()->returns($this->form_element_factory);
+        stub($this->field)->getBurndownDao()->returns($this->dao);
     }
     
-    public function itRetrieveRemainingEffortEvolutionFromSeveralSubTrackers() {
-        $sprint_tracker_id      = 113;
-        $last_changeset         = mock('Tracker_Artifact_Changeset');
-        $sprint_tracker         = aTracker()->withId($sprint_tracker_id)->build();
-        $sprint = anArtifact()->withTracker($sprint_tracker)->withChangesets(array($last_changeset))->build();
+    protected function trackerlinkedArtifacts($tracker_id, $artifact_ids) {
+        $tracker = aTracker()->withId($tracker_id)->build();
+        $artifacts=array();
+        foreach($artifact_ids as $artifact_id) {
+            $artifacts[$artifact_id] = anArtifact()->withId($artifact_id)->withTracker($tracker)->build(); 
+        }
+        return $artifacts;
+    }
+    
+    public function itRetrieveRemainingEffortEvolutionFromDao() {
+        $task_tracker_id = 120;
+        $task_ids     = array(54, 55);
+        $linked_tasks = $this->trackerlinkedArtifacts($task_tracker_id, $task_ids);
+        stub($this->artifact_link_field)->getLinkedArtifacts($this->last_changeset)->returns($linked_tasks);
         
-        $artifact_link_field_id = 12;
-        $artifact_link_field    = stub('Tracker_FormElement_Field_ArtifactLink')->getId()->returns($artifact_link_field_id);
+        $effort_field_id   = 35;
+        $effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($effort_field_id);
+        stub($this->form_element_factory)->getType($effort_field)->returns(self::EFFORT_FIELD_TYPE);
+        stub($this->form_element_factory)->getFormElementByName($task_tracker_id, 'remaining_effort')->returns($effort_field);
         
+        $this->dao->expectOnce('searchRemainingEffort', array($effort_field_id, self::EFFORT_FIELD_TYPE, $task_ids));
         
+        $this->field->getRemainingEffortEvolution($this->sprint);
+    }
+    
+    public function itRetrieveRemainingEffortEvolutionFromSeveralSubTrackers() {  
         $task_tracker_id = 120;
         $task_tracker    = aTracker()->withId($task_tracker_id)->build();
         $task_54         = anArtifact()->withId(54)->withTracker($task_tracker)->build();
@@ -137,35 +144,22 @@ class Tracker_FormElement_Field_Burndown_RemainingEffortTest extends TuleapTestC
         $bug_ids        = array(55);
         
         $linked_artifacts = array($task_54, $bug_55);
-        stub($artifact_link_field)->getLinkedArtifacts($last_changeset)->returns($linked_artifacts);
+        stub($this->artifact_link_field)->getLinkedArtifacts($this->last_changeset)->returns($linked_artifacts);
 
-        $form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($artifact_link_field));
-        
         $tasks_effort_field_id   = 35;
-        $tasks_effort_field_type = 'float';
         $tasks_effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($tasks_effort_field_id);
-        stub($form_element_factory)->getType($tasks_effort_field)->returns($tasks_effort_field_type);
-        stub($form_element_factory)->getFormElementByName($task_tracker_id, 'remaining_effort')->returns($tasks_effort_field);
+        stub($this->form_element_factory)->getType($tasks_effort_field)->returns(self::EFFORT_FIELD_TYPE);
+        stub($this->form_element_factory)->getFormElementByName($task_tracker_id, 'remaining_effort')->returns($tasks_effort_field);
         
         $bugs_effort_field_id   = 37;
-        $bugs_effort_field_type = 'float';
         $bugs_effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($bugs_effort_field_id);
-        stub($form_element_factory)->getType($bugs_effort_field)->returns($bugs_effort_field_type);
-        stub($form_element_factory)->getFormElementByName($bug_tracker_id, 'remaining_effort')->returns($bugs_effort_field);
+        stub($this->form_element_factory)->getType($bugs_effort_field)->returns(self::EFFORT_FIELD_TYPE);
+        stub($this->form_element_factory)->getFormElementByName($bug_tracker_id, 'remaining_effort')->returns($bugs_effort_field);
         
+        $this->dao->expectAt(0, 'searchRemainingEffort', array($tasks_effort_field_id, self::EFFORT_FIELD_TYPE, $task_ids));
+        $this->dao->expectAt(1, 'searchRemainingEffort', array($bugs_effort_field_id, self::EFFORT_FIELD_TYPE, $bug_ids));
         
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndownDao', 'getFormElementFactory'));
-
-        stub($field)->getFormElementFactory()->returns($form_element_factory);
-        
-
-        $dao = mock('Tracker_FormElement_Field_BurndownDao');
-        stub($field)->getBurndownDao()->returns($dao);
-        stub($dao)->searchRemainingEffort()->returns(array());
-        $dao->expectAt(0, 'searchRemainingEffort', array($tasks_effort_field_id, $tasks_effort_field_type, $task_ids));
-        $dao->expectAt(1, 'searchRemainingEffort', array($bugs_effort_field_id, $bugs_effort_field_type, $bug_ids));
-        
-        $field->getRemainingEffortEvolution($sprint);
+        $this->field->getRemainingEffortEvolution($this->sprint);
     }
 }
 
