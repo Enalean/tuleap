@@ -179,8 +179,6 @@ plugin_git	widget_user_pushes_no_content	No pushes to display
 plugin_git	widget_user_pushes_offset	Maximum number of push by repository
 plugin_git	widget_user_pushes_past_days	Maximum number of days ago
 plugin_git	widget_user_pushes_details	Details
-plugin_git	widget_project_pushes_duration	Retrieve Git pushes for the last
-plugin_git	widget_project_pushes_group_by	week(s).
 plugin_git	widget_project_pushes_max_weeks	For chart readability considerations, the maximum weeks numbers is 25.
 plugin_git	widget_project_pushes_error	There is no logged pushes in the last $1 week(s)
 

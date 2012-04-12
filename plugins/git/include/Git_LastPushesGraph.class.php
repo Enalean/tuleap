@@ -57,9 +57,10 @@ class Git_LastPushesGraph {
      * @return Void
      */
     public function setUpGraphEnvironnment() {
-        $today       = $_SERVER['REQUEST_TIME'];
-        $startPeriod = strtotime("-$this->weeksNumber weeks");
-        for ($i = $startPeriod+self::WEEKS_IN_SECONDS ; $i < $today+self::WEEKS_IN_SECONDS ; $i += self::WEEKS_IN_SECONDS) {
+        $today         = $_SERVER['REQUEST_TIME'];
+        $startPeriod   = strtotime("-$this->weeksNumber weeks");
+        $weekInSeconds = self::WEEKS_IN_SECONDS ;
+        for ($i = $startPeriod+$weekInSeconds ; $i < $today+$weekInSeconds ; $i += $weekInSeconds) {
             $this->dates[]   = date('M d', $i);
             $this->weekNum[] = intval(date('W', $i));
             $this->year[]    = intval(date('Y', $i));
@@ -134,9 +135,8 @@ class Git_LastPushesGraph {
             $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
             if ($res && !$res->isError()) {
                 if ($res->valid()) {
-                    $row          = $res->current();
+                    $row          = $res->getRow();
                     $pushes[$key] = intval($row['pushes']);
-                    $res->next();
                     if ($pushes[$key] > 0) {
                         $this->displayChart = true;
                         $this->legend       = $repository['repository_name'];
