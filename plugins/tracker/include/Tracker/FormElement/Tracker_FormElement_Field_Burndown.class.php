@@ -19,6 +19,8 @@
  */
 
 require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
+require_once dirname(__FILE__).'/../Chart/Data/LinkedArtifacts.class.php';
+require_once dirname(__FILE__).'/../Chart/Burndown.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
     
@@ -171,24 +173,21 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $linked_artifacts = $this->getLinkedArtifacts($artifact);
         if (count($linked_artifacts)) {
             
-              $start_date = mktime(0,0,0,4,11,2012);
+            $start_date = mktime(0,0,0,4,11,2012);
         
-        $day = 24 * 60 * 60;
-        $start_date = round($start_date / $day);
+            $day = 24 * 60 * 60;
+            $start_date = round($start_date / $day);
             
-            $burndown_data = new Tracker_Chart_Burndown_Data_Artifact($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME);
+            $burndown_data = new Tracker_Chart_Burndown_Data_LinkedArtifacts($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME);
             $burndown      = new Tracker_Chart_Burndown($burndown_data);
-            $burndown->setStartDate();
-            $burndown->setDuration();
+            $burndown->setStartDate($start_date);
+            //$burndown->setDuration();
             //$burndown->setWidth(640);
             //$burndown->setHeight(480);
-            $burndown->setTitle("Burndown");
+            //$burndown->setTitle("Burndown");
             //$burndown->setDescription("480");
-            $burndown->buildGraph();
-            //$remaining_effort = $this->getRemainingEffortEvolution($artifact);
-
-            //$start_date = 
-            //$duration   =
+            $graph = $burndown->buildGraph();
+            $graph->stroke();
         }
     }
     

@@ -39,10 +39,18 @@ class Tracker_Chart_Burndown {
     
     public function __construct(Tracker_Chart_Burndown_Data $burndown_data) {
         $this->burndown_data = $burndown_data;
-        $this->start_date = $_REQUEST['SERVER_TIME'] - $this->duration * 24 * 3600;
+        $this->start_date = $_SERVER['REQUEST_TIME'] - $this->duration * 24 * 3600;
     }
     
-    private function getComputedData($dbdata, $artifact_ids, $start_date, $minday, $maxday) {
+    public function setStartDate($start_date) {
+        $this->start_date = $start_date;
+    }
+    
+    private function getComputedData() {
+        $dbdata = $this->burndown_data->getRemainingEffort();
+        $artifact_ids = $this->burndown_data->getArtifactIds();
+        $minday = $this->burndown_data->getMinDay();
+        $maxday = $this->burndown_data->getMaxDay();
         /*$dbdata = array();
         $minday = 0;
         $maxday = 0;
@@ -57,9 +65,9 @@ class Tracker_Chart_Burndown {
                 $minday = $d['day'];
         }*/
         $data   = array();
-        for ($day = $start_date; $day <= $maxday; $day++) {
-            if (!isset($data[$start_date])) {
-                $data[$start_date] = array();
+        for ($day = $this->start_date; $day <= $maxday; $day++) {
+            if (!isset($data[$this->start_date])) {
+                $data[$this->start_date] = array();
             }
         }
         // We assume here that SQL returns effort value order by changeset_id ASC
@@ -67,11 +75,11 @@ class Tracker_Chart_Burndown {
 
         foreach ($artifact_ids as $aid) {
             for ($day = $minday; $day <= $maxday; $day++) {
-                if ($day < $start_date) {
+                if ($day < $this->start_date) {
                     if (isset($dbdata[$day][$aid])) {
-                        $data[$start_date][$aid] = $dbdata[$day][$aid];
+                        $data[$this->start_date][$aid] = $dbdata[$day][$aid];
                     }
-                } else if ($day == $start_date) {
+                } else if ($day == $this->start_date) {
                     if (isset($dbdata[$day][$aid])) {
                         $data[$day][$aid] = $dbdata[$day][$aid];
                     } else {
@@ -93,7 +101,7 @@ class Tracker_Chart_Burndown {
     /**
      * @return Chart
      */
-    public function buildGraph($remaining_effort, $duration) {
+    public function buildGraph() {
         $this->title  = "Burndown";
         $this->width  = 640;
         $this->height = 480;
@@ -111,6 +119,8 @@ class Tracker_Chart_Burndown {
         }
         $this->graph->subtitle->Set($this->description);
         
+        $remaining_effort = $this->getComputedData();
+        
         // order this->data by date asc
         ksort($remaining_effort);
         
@@ -125,14 +135,14 @@ class Tracker_Chart_Burndown {
         $b = array_sum($b);
         $day = 24 * 60 * 60;
         $start_of_sprint = $first_day;
-        $a = - $b / $duration;
+        $a = - $b / $this->duration;
         $data_initial_estimation = array();
         $dates = array();
         //$end_of_weeks = array();
         $data = array();
         $previous = $b; // init with sum of effort for the first day
         // for each day
-        for ($x = 0 ; $x <= $duration ; ++$x) {
+        for ($x = 0 ; $x <= $this->duration ; ++$x) {
             $data_initial_estimation[] = $a * $x  + $b;
             $timestamp_current_day = ($start_of_sprint + $x) * $day;
             $human_dates[] = date('M-d', $timestamp_current_day);
