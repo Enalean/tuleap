@@ -141,11 +141,21 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $html;
     }
 
+    /**
+     *
+     * @param Tracker_IDisplayTrackerLayout $layout
+     * @param Codendi_Request               $request
+     * @param User                          $current_user 
+     */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case self::FUNC_SHOW_BURNDOWN:
-                //$artifact = Tracker_ArtifactFactory::instance()->getArtifactById(5261);
-                //$this->fetchBurndownImage($artifact);
+                $artifact_id = $request->getValidated('aid', 'uint', 0);
+                $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+                if (! $artifact) {
+                    return false;
+                }
+                $this->fetchBurndownImage($artifact);
                 break;
             default:
                 parent::process($layout, $request, $current_user);

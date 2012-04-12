@@ -189,4 +189,72 @@ class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends Tulea
     }
 }
 
+class Tracker_FormElement_Field_Burndown_RequestProcessingTest extends TuleapTestCase {
+    
+    public function tearDown() {
+        parent::tearDown();
+        Tracker_ArtifactFactory::clearInstance();
+    }
+    
+    public function itShouldRenderGraphWhenShowBurndownFuncIsCalled() {
+        $artifact_id = 999;
+        
+        $request = new Codendi_Request(array('formElement' => 1234,
+                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                                             'aid'         => $artifact_id));
+        
+        $artifact = stub('Tracker_Artifact');
+        $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById($artifact_id)->returns($artifact);
+        Tracker_ArtifactFactory::setInstance($artifactFactory);
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+        
+        $field->expectOnce('fetchBurndownImage', array($artifact));
+        
+        $tracker_manager = mock('TrackerManager');
+        $current_user    = mock('User');
+        
+        $field->process($tracker_manager, $request, $current_user);
+        
+    }
+    
+    public function itMustNotBuildBurndownWhenAidIsNotValid() {
+        $request = new Codendi_Request(array('formElement' => 1234,
+                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                                             'aid'         => '; DROP DATABASE mouuahahahaha!'));
+        
+        $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(null);
+        Tracker_ArtifactFactory::setInstance($artifactFactory);
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+        
+        $field->expectNever('fetchBurndownImage');
+        
+        $tracker_manager = mock('TrackerManager');
+        $current_user    = mock('User');
+        
+        $field->process($tracker_manager, $request, $current_user);
+    }
+    
+    public function itMustNotBuildBurndownWhenArtifactDoesNotExist() {
+        $request = new Codendi_Request(array('formElement' => 1234,
+                                             'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                                             'aid'         => 999));
+        
+        
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('fetchBurndownImage'));
+        
+        $artifactFactory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(null);
+        Tracker_ArtifactFactory::setInstance($artifactFactory);
+        
+        $field->expectNever('fetchBurndownImage');
+        
+        $tracker_manager = mock('TrackerManager');
+        $current_user    = mock('User');
+        
+        $field->process($tracker_manager, $request, $current_user);
+    }
+}
+
 ?>
