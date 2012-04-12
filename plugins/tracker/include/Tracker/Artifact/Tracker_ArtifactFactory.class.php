@@ -20,6 +20,7 @@
 
 require_once('dao/Tracker_ArtifactDao.class.php');
 require_once('Tracker_Artifact.class.php');
+
 class Tracker_ArtifactFactory {
     
     protected $artifacts;
@@ -43,9 +44,27 @@ class Tracker_ArtifactFactory {
     public static function instance() {
         if (!isset(self::$instance)) {
             $c = __CLASS__;
-            self::$instance = new $c;
+            self::setInstance(new $c);
         }
         return self::$instance;
+    }
+    
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_ArtifactFactory $factory 
+     */
+    public static function setInstance(Tracker_ArtifactFactory $factory) {
+        self::$instance = $factory;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_ArtifactFactory $factory 
+     */
+    public static function clearInstance() {
+        self::$instance = null;
     }
     
     /**
