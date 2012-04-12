@@ -193,6 +193,9 @@ class Tracker_Chart_Burndown {
         return $this->graph;
     }
 
+    public function display() {
+        $this->buildGraph()->stroke();
+    }
 }
 
 ?>
