@@ -23,6 +23,42 @@
 
 require_once('common/user/UserManager.class.php');
 
+class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Burndown_Data {
+    private $artifact_ids     = array();
+    private $remaining_effort = array();
+    private $min_day = 0;
+    private $max_day = 0;
+ 
+    public function __construct($res, $artifact_ids) {
+        $this->artifact_ids = $artifact_ids;
+        
+        while ($d = db_fetch_array($res)) {
+            if (!isset($this->remaining_effort[$d['day']])) {
+                $this->remaining_effort[$d['day']] = array();
+            }
+            $this->remaining_effort[$d['day']][$d['id']] = $d['value'];
+            if ($d['day'] > $this->max_day) $this->max_day=$d['day'];
+            if ($d['day'] < $this->min_day) $this->min_day=$d['day'];
+        }
+    }
+    
+    public function getRemainingEffort() {
+        return $this->remaining_effort;
+    }
+    
+    public function getMinDay() {
+        return $this->min_day;
+    }
+    
+    public function getMaxDay() {
+        return $this->max_day;
+    }
+    
+    public function getArtifactIds() {
+        return $this->artifact_ids;
+    }
+}
+
 class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
 
     /**
@@ -32,16 +68,10 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
      */
     function buildProperties($engine) {
         parent::buildProperties($engine);
-        $data   = array();
         $engine->legend = null;
-        $result = array();
-        $fef = Tracker_FormElementFactory::instance();
+        $fef          = Tracker_FormElementFactory::instance();
         $effort_field = $fef->getFormElementById($this->chart->getFieldId());
-        $type = $fef->getType($effort_field);
-        $start_date = $this->chart->getStartDate();
-
-        $day = 24 * 60 * 60;
-        $start_date = round($start_date / $day);
+        $type         = $fef->getType($effort_field);
         
         $artifact_ids = explode(',', $this->artifacts['id']);
         
@@ -56,51 +86,11 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
             }
             $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
             $res = db_query($sql);
-            $dbdata = array();
-            $minday = 0;
-            $maxday = 0;
-            while ($d = db_fetch_array($res)) {
-                if (!isset($dbdata[$d['day']])) {
-                    $dbdata[$d['day']] = array();
-                }
-                $dbdata[$d['day']][$d['id']] = $d['value'];
-                if ($d['day'] > $maxday) $maxday=$d['day'];
-                if ($d['day'] < $minday) $minday=$d['day'];
-            }
-            
-            for ($day=$start_date; $day<=$maxday; $day++) {
-                if (!isset($data[$start_date])) {
-                    $data[$start_date]= array();
-                }
-            }
-            // We assume here that SQL returns effort value order by changeset_id ASC
-            // so we only keep the last value (possible to change effort several times a day)
-
-            foreach($artifact_ids as $aid) {
-                for ($day=$minday; $day<=$maxday; $day++) {
-                    if ($day < $start_date) {
-                        if (isset($dbdata[$day][$aid])) {
-                            $data[$start_date][$aid] = $dbdata[$day][$aid];
-                        }
-                    } else if ($day == $start_date) {
-                        if (isset($dbdata[$day][$aid])) {
-                            $data[$day][$aid] = $dbdata[$day][$aid];
-                        } else {
-                            $data[$day][$aid] = 0;
-                        }
-                    } else {
-                        if (isset($dbdata[$day][$aid])) {
-                            $data[$day][$aid] = $dbdata[$day][$aid];
-                        } else {
-                            // No update this day: get value from previous day
-                            $data[$day][$aid] = $data[$day-1][$aid];
-                        }
-                    }
-                } 
-            }
+            $burndown_data = new GraphOnTrackersV5_Burndown_Data($res, $artifact_ids);
         }
-        $engine->duration = $this->chart->getDuration();
-        $engine->data = $data;
+        $engine->start_date = $this->chart->getStartDate();
+        $engine->duration   = $this->chart->getDuration();
+        $engine->data       = $burndown_data;
     }
 
 }
