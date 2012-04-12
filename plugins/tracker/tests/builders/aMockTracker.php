@@ -33,12 +33,12 @@ class MockTrackerBuilder {
         return $this;
     }
     
-    public function withFormElement($name, $type) {
-        stub($this->tracker)->hasFormElementWithNameAndType($name, $type)->returns(true);
+    public function havingFormElementWithNameAndType($name, $type_or_types) {
+        stub($this->tracker)->hasFormElementWithNameAndType($name, $type_or_types)->returns(true);
         return $this;
     }
     
-    public function withNoFormElement($name) {
+    public function havingNoFormElement($name) {
         stub($this->tracker)->hasFormElementWithNameAndType($name, '*')->returns(false);
         return $this;
     }

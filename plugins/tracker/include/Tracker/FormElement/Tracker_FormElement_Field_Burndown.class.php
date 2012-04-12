@@ -329,8 +329,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Boolean
      */
     private function hasRemainingEffort(Tracker $tracker) {
-        return $tracker->hasFormElementWithNameAndType('remaining_effort', 'int')
-            || $tracker->hasFormElementWithNameAndType('remaining_effort', 'float');
+        return $tracker->hasFormElementWithNameAndType('remaining_effort', array('int', 'float'));
     }
     
     /**

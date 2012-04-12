@@ -200,7 +200,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     
     /**
      * @param string $name
-     * @param string $type
+     * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
      *
      * @return bool true if the tracker contains an element of the given name and type
      */
@@ -208,7 +208,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $element              = $form_element_factory->getUsedFieldByName($this->getId(), $name);
         
-        return $element !== null && $form_element_factory->getType($element) == $type;
+        return $element !== null && in_array($form_element_factory->getType($element), (array)$type);
     }
 
     /**
