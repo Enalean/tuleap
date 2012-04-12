@@ -296,4 +296,50 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
     }
 }
 
+
+
+class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->form_element_factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao'));
+    }
+    public function itDoesNothingWhenFieldMappingIsEmpty() {
+        $project_id = 3;
+        $no_shared_fields_copied = array();
+        $dao = stub('Tracker_FormElement_FieldDao')->searchProjectSharedFieldsTargets($project_id)->returns($no_shared_fields_copied);        
+        $dao->expectNever('updateOriginalFieldId');
+        stub($this->form_element_factory)->getDao()->returns($dao);
+        $field_mapping = array();
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id);
+    }
+    
+    public function itDoesNothingWhenThereIsNoSharedFieldInTheFieldMapping() {
+        $project_id = 3;
+        $no_shared_fields_copied = array();
+        $dao = stub('Tracker_FormElement_FieldDao')->searchProjectSharedFieldsTargets($project_id)->returns($no_shared_fields_copied);        
+        $dao->expectNever('updateOriginalFieldId');
+        stub($this->form_element_factory)->getDao()->returns($dao);
+        $field_mapping = array('321' => '101');
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id);
+    }
+    
+    public function itUpdatesTheOrginalFieldIdForEverySharedField() {
+        $project_id = 3;
+                
+        $shared_field1 = array('id' => 234, 'original_field_id' => 666);
+        $shared_field2 = array('id' => 567, 'original_field_id' => 555);
+        $copied_shared_fields = array($shared_field1, $shared_field2);
+        $dao = stub('Tracker_FormElement_FieldDao')->searchProjectSharedFieldsTargets($project_id)->returns($copied_shared_fields);        
+        $dao->expectAt(0, 'updateOriginalFieldId', array(234, 777));
+        $dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
+        stub($this->form_element_factory)->getDao()->returns($dao);
+        $field_mapping = array(999 => 234,
+                               103 => 567,
+                               555 => 888,
+                               666 => 777);
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id);
+    }
+
+}
 ?>
