@@ -28,7 +28,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * Request parameter to display burndown image 
      */
     const FUNC_SHOW_BURNDOWN          = 'show_burndown';
+    
     const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    const DURATION_FIELD_NAME         = 'duration';
+    const START_DATE_FIELD_NAME       = 'start_date';
     
     public $default_properties = array();
     
@@ -178,7 +181,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if (count($linked_artifacts)) {
             $burndown = $this->getBurndown($linked_artifacts);
             $burndown->setStartDate($this->getBurndownStartDate($artifact));
-            //$burndown->setDuration();
+            $burndown->setDuration($this->getBurndownDuration($artifact));
             //$burndown->setWidth(640);
             //$burndown->setHeight(480);
             //$burndown->setTitle("Burndown");
@@ -193,10 +196,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     protected function getBurndownStartDate(Tracker_Artifact $artifact) {
-        $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date');
+        $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
         return $artifact->getValue($start_date_field)->getTimestamp();
     }
 
+    protected function getBurndownDuration(Tracker_Artifact $artifact) {
+        $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
+        return $artifact->getValue($field)->getValue();
+    }
+    
     /**
      *
      * @param Tracker_Artifact $source_artifact
@@ -249,8 +257,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function fetchWarnings() {
         $warnings  = '';
-        $warnings .= $this->fetchMissingFieldWarning('start_date', 'date');
-        $warnings .= $this->fetchMissingFieldWarning('duration', 'int');
+        $warnings .= $this->fetchMissingFieldWarning(self::START_DATE_FIELD_NAME, 'date');
+        $warnings .= $this->fetchMissingFieldWarning(self::DURATION_FIELD_NAME, 'int');
         $warnings .= $this->fetchMissingRemainingEffortWarning();
         
         if ($warnings) {

@@ -47,6 +47,10 @@ class Tracker_Chart_Burndown {
         $this->start_date = round($start_date / self::SECONDS_IN_A_DAY);
     }
     
+    public function setDuration($duration) {
+        $this->duration = $duration;
+    }
+    
     private function getComputedData() {
         $dbdata = $this->burndown_data->getRemainingEffort();
         $artifact_ids = $this->burndown_data->getArtifactIds();

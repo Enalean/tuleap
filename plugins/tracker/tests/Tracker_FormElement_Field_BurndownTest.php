@@ -85,6 +85,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     protected $field;
     protected $burndown;
     protected $timestamp;
+    protected $duration;
     
     public function setUp() {
         parent::setUp();
@@ -97,7 +98,14 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $start_date_field = stub('Tracker_FormElement_Field_Date');
         $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
         
-        $this->sprint = stub('Tracker_Artifact')->getValue($start_date_field)->returns($start_date_changeset_value);
+        $this->duration           = 13;
+        $duration_field           = stub('Tracker_FormElement_Field_Integer');
+        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($this->duration);
+        
+        
+        $this->sprint = mock('Tracker_Artifact');
+        stub($this->sprint)->getValue($start_date_field)->returns($start_date_changeset_value);
+        stub($this->sprint)->getValue($duration_field)->returns($duration_changeset_value);
         stub($this->sprint)->getTracker()->returns($this->sprint_tracker);
         stub($this->sprint)->getLastChangeset()->returns($this->last_changeset);
         
@@ -106,6 +114,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->form_element_factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields()->returns(array($this->artifact_link_field));
         stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($start_date_field);
+        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
         
@@ -121,7 +130,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         Tracker_FormElementFactory::clearInstance();
     }
     
-    public function itCreatesABurndownWithArtifactLinkedArtifactsAndAStartDate() {
+    public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
         
         $task_tracker_id = 120;        
         $task_tracker    = aTracker()->withId($task_tracker_id)->build();
@@ -136,6 +145,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->field->expectOnce('getBurndown', array($linked_artifacts));
         $this->burndown->expectOnce('setStartDate', array($this->timestamp));
+        $this->burndown->expectOnce('setDuration', array($this->duration));
         
         $this->field->fetchBurndownImage($this->sprint);
     }
