@@ -22,6 +22,9 @@ require_once dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormE
 
 class BurndownFieldBuilder {
     
+    private $tracker;
+    private $hierarchy_factory;
+    
     public function __construct() {
         $this->id            = null;
         $this->tracker_id    = null;
@@ -61,8 +64,12 @@ class BurndownFieldBuilder {
             $this->rank
         );
         
-        $field->setTracker($this->tracker);
-        $field->setHierarchyFactory($this->hierarchy_factory);
+        if ($this->tracker) {
+            $field->setTracker($this->tracker);
+        }
+        if ($this->hierarchy_factory) {
+            $field->setHierarchyFactory($this->hierarchy_factory);
+        }
         
         return $field;
     }

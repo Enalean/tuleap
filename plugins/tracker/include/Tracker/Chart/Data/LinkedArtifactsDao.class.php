@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_BurndownDao extends DataAccessObject {
+class Tracker_Chart_Burndown_Data_LinkedArtifactsDao extends DataAccessObject {
     
     public function searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids) {
         $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value

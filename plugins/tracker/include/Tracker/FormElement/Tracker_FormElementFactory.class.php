@@ -112,9 +112,27 @@ class Tracker_FormElementFactory {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::setInstance(new $c);
         }
         return self::$_instance;
+    }
+    
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_FormElementFactory $factory 
+     */
+    public static function setInstance(Tracker_FormElementFactory $factory) {
+        self::$_instance = $factory;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_ArtifactFactory $factory 
+     */
+    public static function clearInstance() {
+        self::$_instance = null;
     }
     
     /**
