@@ -37,16 +37,20 @@ function aDateField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Date');
 }
 
+function anOpenListField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_OpenList');
+}
+
 function anArtifactLinkField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_ArtifactLink');
 }
 
 class Test_Tracker_FormElement_Builder {
     private $name;
-    
     private $id;
     private $tracker;
     private $trackerId;
+    private $originalField;
     
     public function __construct($klass) {
         $this->name = $klass;
@@ -67,12 +71,17 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
     
+    public function withOriginalField(Test_Tracker_FormElement_Builder $fieldBuilder) {
+        $this->originalField = $fieldBuilder->build();
+        return $this;
+    }
+    
     /**
      * @return Tracker_FormElement
      */
     public function build() {
         $klass  = $this->name;
-        $object = new $klass($this->id, $this->trackerId, null, null, null, null, null, null, null, null, null, null);
+        $object = new $klass($this->id, $this->trackerId, null, null, null, null, null, null, null, null, null, $this->originalField);
         if ($this->tracker) {
             $object->setTracker($this->tracker);
         }

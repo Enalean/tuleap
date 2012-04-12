@@ -272,7 +272,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), array(999, 100, 123, '*', '*', '*', null));
         $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), array(999, 100, 567, '*', '*', '*', null)) ;
         
-        $this->shared_factory->expectOnce('duplicate', array(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444')));
+        $this->shared_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444')));
         
         $this->tracker_factory->duplicate(100, 999, null);
     }

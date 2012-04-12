@@ -363,6 +363,10 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 GROUP BY original_field_id";
         return $this->retrieve($sql);
     }
+    
+    public function searchProjectSharedFieldsTargets($project_id) {
+        
+    }
 
     /**
      * Returns:

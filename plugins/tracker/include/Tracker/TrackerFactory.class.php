@@ -518,7 +518,7 @@ class TrackerFactory {
         }
         
         $shared_factory = $this->getSharedFactory();
-        $shared_factory->duplicate($field_mapping);
+        $shared_factory->fixOriginalFieldIdsAfterDuplication($field_mapping);
 
         EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
             'tracker_mapping' => $tracker_mapping,

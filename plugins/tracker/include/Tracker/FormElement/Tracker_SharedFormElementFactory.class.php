@@ -35,10 +35,13 @@ class Tracker_SharedFormElementFactory {
         $this->factory = $factory;
     }
     
-    public function setDao($dao) {
+    public function setDao(Tracker_FormElement_FieldDao $dao) {
         $this->dao = $dao;
     }
             
+    /**
+     * @return Tracker_FormElement_FieldDao
+     */
     public function getDao() {
         if (! $this->dao) {
             $this->dao = new Tracker_FormElement_FieldDao();
@@ -46,8 +49,12 @@ class Tracker_SharedFormElementFactory {
         return $this->dao;
     }
     
-    public function duplicate($field_mapping) {
-        //$this->getDao()->updateOriginalFieldId();
+    public function fixOriginalFieldIdsAfterDuplication($field_mapping, $project_id) {
+        $project_target_shared_fields = $this->getDao()->searchProjectSharedFieldsTargets($project_id);
+        foreach ($project_target_shared_fields as $shared_field_row) {
+            $new_source_field_id = $field_mapping[$shared_field_row['original_field_id']];
+            $this->getDao()->updateOriginalFieldId($shared_field_row['id'], $new_source_field_id);
+        }
     }
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
