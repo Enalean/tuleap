@@ -102,6 +102,11 @@ class Tracker_FormElement_Field_Burndown_LinkedArtifactsTest extends TuleapTestC
         $this->field = aBurndownField()->build();
     }
     
+    public function tearDown() {
+        parent::tearDown();
+        Tracker_FormElementFactory::clearInstance();
+    }
+    
     public function itReturnsLinkedArtifactsOfAnArtifact() {  
         $task_tracker_id = 120;
         $task_tracker    = aTracker()->withId($task_tracker_id)->build();
