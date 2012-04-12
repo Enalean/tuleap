@@ -51,6 +51,22 @@ class Tracker_Chart_Burndown {
         $this->duration = $duration;
     }
     
+    public function setTitle($title) {
+        $this->title = $title;
+    }
+    
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+    
+    public function setWidth($width) {
+        $this->width = $width;
+    }
+    
+    public function setHeight($height) {
+        $this->height = $height;
+    }
+    
     private function getComputedData() {
         $dbdata = $this->burndown_data->getRemainingEffort();
         $artifact_ids = $this->burndown_data->getArtifactIds();
