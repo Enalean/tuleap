@@ -118,7 +118,7 @@ class Git_LastPushesGraph {
      *
      * @return BarPlot
      */
-    private function displayRepositoryPushesByWeek() {
+    private function _displayRepositoryPushesByWeek() {
         $nbRepo   = count($this->repoList);
         $colors   = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo));
         $nbColors = count($colors);
@@ -126,7 +126,7 @@ class Git_LastPushesGraph {
         $bplot    = array();
         foreach ($this->repoList as $repository) {
             $this->legend = null;
-            $pushes = $this->getRepositoryPushesByWeek($repository);
+            $pushes = $this->_getRepositoryPushesByWeek($repository);
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];
@@ -147,7 +147,7 @@ class Git_LastPushesGraph {
      *
      * @return Array
      */
-    private function getRepositoryPushesByWeek($repository) {
+    private function _getRepositoryPushesByWeek($repository) {
         $pushes    = array();
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
@@ -188,7 +188,7 @@ class Git_LastPushesGraph {
      */
     public function display() {
         $graph = $this->prepareGraph();
-        $bplot = $this->displayRepositoryPushesByWeek();
+        $bplot = $this->_displayRepositoryPushesByWeek();
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
