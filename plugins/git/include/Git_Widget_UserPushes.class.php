@@ -67,12 +67,12 @@ class Git_Widget_UserPushes extends Widget {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();
         $user    = $um->getCurrentUser();
-        $date    = time() - ($this->pastDays * 24 * 60 * 60);
+        $date    = $_SERVER['REQUEST_TIME'] - ($this->pastDays * 24 * 60 * 60);
         $result  = $dao->getLastPushesRepositories($user->getId(), $date);
         $content = '';
         $project = '';
         $dh      = new DateHelper();
-        if ($result && !$result->isError() && $result->rowCount() > 0) {
+        if ($result && !$result->isError()) {
             foreach ($result as $entry) {
                 if (!empty($entry['repository_namespace'])) {
                     $namespace = $entry['repository_namespace']."/";
