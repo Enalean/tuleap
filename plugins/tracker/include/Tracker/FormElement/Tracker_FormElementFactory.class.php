@@ -691,22 +691,34 @@ class Tracker_FormElementFactory {
         return $this->getInstancesFromRows($dar);
     }
     
-    public function fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping) {
+    /**
+     * Fixes the original field id of the shared fields originating from the duplicated project
+     * 
+     * @param int $to_project_id
+     * @param int $from_project_id
+     * @param array $field_mapping 
+     */
+    public function fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, array $field_mapping) {
         $project_target_shared_fields  = $this->getDao()->searchProjectSharedFieldsTargets($to_project_id);
         $originals_of_template_project = $this->getDao()->searchProjectSharedFieldsOriginals($from_project_id);
-        $originals_shared_field_ids = $this->extractIdFromDar($originals_of_template_project);
+        $originals_shared_field_ids    = $this->extractIdFromDar($originals_of_template_project);
+        
         foreach ($project_target_shared_fields as $shared_field_row) {
-            if (in_array($shared_field_row['id'], $originals_shared_field_ids)) {
+            if ($this->isASharedFieldOfDuplicatedProject($shared_field_row['id'], $originals_shared_field_ids)) {
                 $new_source_field_id = $field_mapping[$shared_field_row['original_field_id']];
                 $this->getDao()->updateOriginalFieldId($shared_field_row['id'], $new_source_field_id);
             }
         }
     }
 
-    private function extractIdFromDar($originals_of_template_project) {
+    private function isASharedFieldOfDuplicatedProject($shared_field_row_id, $original_shared_field_ids) {
+        return in_array($shared_field_row_id, $original_shared_field_ids);
+    }
+    
+    private function extractIdFromDar($dar) {
         $ids = array();
-        foreach ($originals_of_template_project as $original) { 
-            $ids[] = $original['id'];
+        foreach ($dar as $row) { 
+            $ids[] = $row['id'];
         }
         return $ids;
     }
@@ -1203,6 +1215,7 @@ class Tracker_FormElementFactory {
         }
         return null;        
     }
+
 
 }
 ?>
