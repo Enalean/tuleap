@@ -180,7 +180,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact 
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact) {
-        $linked_artifacts = $this->getLinkedArtifacts($artifact);
+        $linked_artifacts = $artifact->getLinkedArtifacts();
         if (count($linked_artifacts)) {
             $burndown = $this->getBurndown($linked_artifacts);
             $burndown->setStartDate($this->getBurndownStartDate($artifact));
@@ -226,28 +226,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
         return $artifact->getValue($field)->getValue();
     }
-    
-    /**
-     * Returns the ArtifactLink field of the given artifact
-     * 
-     * @param Tracker_Artifact $source_artifact
-     * 
-     * @return Tracker_FormElement_Field_ArtifactLink
-     */
-    private function getArtifactLinkField(Tracker_Artifact $source_artifact) {
-        $artifact_link_field = $this->getFormElementFactory()->getUsedArtifactLinkFields($source_artifact->getTracker());
-        if (count($artifact_link_field) > 0) {
-            return $artifact_link_field[0];
-        }
-    }
-
-    // TODO: filter hierarchy
-    private function getLinkedArtifacts(Tracker_Artifact $source_artifact) {
-        $artifact_link_field = $this->getArtifactLinkField($source_artifact);
-        $linked_artifacts = $artifact_link_field->getLinkedArtifacts($source_artifact->getLastChangeset());
-        return $linked_artifacts;
-    }
-    
+        
     /**
      * Fetch data to display the field value in mail
      *
