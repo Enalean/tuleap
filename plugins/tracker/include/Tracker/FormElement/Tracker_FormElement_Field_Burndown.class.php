@@ -134,17 +134,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        //var_dump($this->getRemainingEffortEvolution($artifact));
-        /*foreach ($this->getRemainingEffortEvolution($artifact) as $linked_artifact) {
-            var_dump($linked_artifact->getId());
-        }*/
-        //$linked_artifact = $this->getLinkedArtifactIds($artifact);
-        
-        //$start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date');
-        //var_dump($artifact->getValue($start_date_field)->getTimestamp());
-        
-        //var_dump($this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), 'start_date')->fetchArtifactValue($artifact));
-        
+
         $url_query = http_build_query(array('formElement' => $this->getId(),
                                             'func'        => self::FUNC_SHOW_BURNDOWN,
                                             'src_aid'         => $artifact->getId()));
@@ -188,7 +178,19 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown->setTitle($this->getLabel());
             $burndown->setDescription($this->getDescription());
             $burndown->display();
+        } else {
+            $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', 'burndown_no_linked_artifacts'));
         }
+    }
+    
+    /**
+     * Display a png image with the given error message
+     * 
+     * @param String $msg 
+     */
+    protected function displayErrorImage($msg) {
+        $error = new Chart(640, 480);
+        $error->displayMessage($msg);
     }
     
     /**

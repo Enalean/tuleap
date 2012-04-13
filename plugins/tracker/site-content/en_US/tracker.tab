@@ -1332,3 +1332,4 @@ plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifa
 plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field.
 plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" Integer field.
 plugin_tracker	burndown_missing_remaining_effort_warning	Some child trackers doesn't have a "remaining_effort" Integer or Float field:
+plugin_tracker	burndown_no_linked_artifacts	It's not possible to draw burndown. There are no artifacts linked.

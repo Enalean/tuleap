@@ -111,7 +111,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'getChildTrackers'));
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage'));
         
         $this->burndown = mock('Tracker_Chart_Burndown');
         stub($this->field)->getBurndown()->returns($this->burndown);
@@ -140,6 +140,15 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->field->fetchBurndownImage($this->sprint);
     }
+    
+    public function itDisplayAMessageWhenThereAreNoLinkedArtifacts() {
+        stub($this->sprint)->getLinkedArtifacts()->returns(array());
+        
+        $this->field->expectOnce('displayErrorImage', array('*'));
+        
+        $this->field->fetchBurndownImage($this->sprint);
+    }
+    
 }
 
 class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends TuleapTestCase {

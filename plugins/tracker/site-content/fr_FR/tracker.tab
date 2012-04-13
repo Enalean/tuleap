@@ -1329,3 +1329,4 @@ plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type
 plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date.
 plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier.
 plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier ou Flottant :
+plugin_tracker	burndown_no_linked_artifacts	Impossible d'afficher le diagramme de completion. Aucun artifact lié n'a été trouvé.
