@@ -94,21 +94,21 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->sprint_tracker    = aTracker()->withId($this->sprint_tracker_id)->build();
         
         $this->timestamp            = 1334095200;
-        $start_date_field           = stub('Tracker_FormElement_Field_Date');
+        $this->start_date_field     = stub('Tracker_FormElement_Field_Date');
         $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
         
         $this->duration           = 13;
-        $duration_field           = stub('Tracker_FormElement_Field_Integer');
+        $this->duration_field     = stub('Tracker_FormElement_Field_Integer');
         $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($this->duration);
         
         $this->sprint = mock('Tracker_Artifact');
-        stub($this->sprint)->getValue($start_date_field)->returns($start_date_changeset_value);
-        stub($this->sprint)->getValue($duration_field)->returns($duration_changeset_value);
+        stub($this->sprint)->getValue($this->start_date_field)->returns($start_date_changeset_value);
+        stub($this->sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
         stub($this->sprint)->getTracker()->returns($this->sprint_tracker);
         
         $this->form_element_factory = mock('Tracker_FormElementFactory');
-        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($start_date_field);
-        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($duration_field);
+        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
+        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage'));
@@ -141,7 +141,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint);
     }
     
-    public function itDisplayAMessageWhenThereAreNoLinkedArtifacts() {
+    public function itDisplaysAMessageWhenThereAreNoLinkedArtifacts() {
         stub($this->sprint)->getLinkedArtifacts()->returns(array());
         
         $this->field->expectOnce('displayErrorImage', array('*'));
@@ -149,6 +149,41 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint);
     }
     
+    public function itDisplaysAMessageWhenThereAreNoStartDateField() {
+        $bug_tracker_id = 126;
+        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
+        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
+        
+        $linked_artifacts = array($bug_55);
+        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        
+        Tracker_FormElementFactory::clearInstance();
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        stub($form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
+        Tracker_FormElementFactory::setInstance($form_element_factory);
+        
+        $this->expectException();
+        
+        $this->field->fetchBurndownImage($this->sprint);
+    }
+
+    public function itDisplaysAMessageWhenThereAreNoDurationField() {
+        $bug_tracker_id = 126;
+        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
+        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
+        
+        $linked_artifacts = array($bug_55);
+        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        
+        Tracker_FormElementFactory::clearInstance();
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        stub($form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
+        Tracker_FormElementFactory::setInstance($form_element_factory);
+        
+        $this->expectException();
+        
+        $this->field->fetchBurndownImage($this->sprint);
+    }
 }
 
 class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends TuleapTestCase {

@@ -152,12 +152,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case self::FUNC_SHOW_BURNDOWN:
-                $artifact_id = $request->getValidated('src_aid', 'uint', 0);
-                $artifact    = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
-                if (! $artifact) {
-                    return false;
+                try  {
+                    $artifact_id = $request->getValidated('src_aid', 'uint', 0);
+                    $artifact    = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+                    if (! $artifact) {
+                        return false;
+                    }
+                    $this->fetchBurndownImage($artifact);
+                } catch (Exception $e) {
+                    $this->displayErrorImage($e->getMessage());
                 }
-                $this->fetchBurndownImage($artifact);
                 break;
             default:
                 parent::process($layout, $request, $current_user);
@@ -214,7 +218,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getBurndownStartDate(Tracker_Artifact $artifact) {
         $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
-        return $artifact->getValue($start_date_field)->getTimestamp();
+        if ($start_date_field) {
+            return $artifact->getValue($start_date_field)->getTimestamp();
+        }
+        throw new Exception($GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning'));
     }
 
     /**
@@ -226,7 +233,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private function getBurndownDuration(Tracker_Artifact $artifact) {
         $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
-        return $artifact->getValue($field)->getValue();
+        if ($field) {
+            return $artifact->getValue($field)->getValue();
+        }
+        throw new Exception($GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning'));
     }
         
     /**
