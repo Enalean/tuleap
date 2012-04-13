@@ -1493,7 +1493,7 @@ EOS;
             //body
             $i = 0;
             $a_star_is_displayed = false;
-
+            $related_parts = array();
             //The select box for the ugroups or fields (depending $group_first)
             $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';
