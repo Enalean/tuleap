@@ -191,16 +191,37 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
+    /**
+     * Returns a Burndown rendering object for given linked artifacts
+     * 
+     * @param Array of Tracker_Artifact $linked_artifacts
+     * 
+     * @return \Tracker_Chart_Burndown 
+     */
     protected function getBurndown($linked_artifacts) {
         $burndown_data = new Tracker_Chart_Burndown_Data_LinkedArtifacts($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME);
         return new Tracker_Chart_Burndown($burndown_data);
     }
 
+    /**
+     * Returns the sprint start_date as a Timestamp field value of given artifact
+     * 
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return Integer
+     */
     private function getBurndownStartDate(Tracker_Artifact $artifact) {
         $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
         return $artifact->getValue($start_date_field)->getTimestamp();
     }
 
+    /**
+     * Returns the sprint duration for burndown rendering
+     * 
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return Integer
+     */
     private function getBurndownDuration(Tracker_Artifact $artifact) {
         $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
         return $artifact->getValue($field)->getValue();
