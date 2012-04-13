@@ -182,43 +182,6 @@ class Git_LastPushesGraph {
     }
 
     /**
-     * Diplay error message as png image 
-     *
-     * @param String $msg Message to display
-     *
-     * @return Void
-     */
-    function displayError($msg) {
-        //ttf from jpgraph
-        $ttf = new TTF();
-        $ttf->SetUserFont(
-            'dejavu-lgc/DejaVuLGCSans.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
-            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-        );
-        //Calculate the baseline
-        // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
-        //this should be above baseline
-        $test2    = "H";
-        //some of these additional letters should go below it
-        $test3    ="Hjgqp";
-        //get the dimension for these two:
-        $box2     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
-        $box3     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
-        $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
-        $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
-        if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-            $backgroundColor  = imagecolorallocate($im, 255, 255, 255);
-            $textColor        = imagecolorallocate($im, 64, 64, 64);
-            imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
-            header("Content-type: image/png");
-            imagepng($im);
-            imagedestroy($im);
-        }
-    }
-
-    /**
      * Display the graph else an error if no pushes for this period
      * 
      * @return void
@@ -229,7 +192,7 @@ class Git_LastPushesGraph {
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
-            $this->displayError($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_error', $this->weeksNumber));
+            $graph->displayMessage($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_error', $this->weeksNumber));
         }
     }
 }
