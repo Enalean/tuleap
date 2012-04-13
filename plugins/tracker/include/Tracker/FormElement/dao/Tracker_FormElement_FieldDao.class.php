@@ -463,6 +463,8 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     }
     
     public function updateOriginalFieldId($id, $original_field_id) {
+        $original_field_id = $this->da->escapeInt($original_field_id);
+        $id                = $this->da->escapeInt($id);
         $sql = "UPDATE $this->table_name  
                 SET original_field_id = $original_field_id 
                 WHERE id = $id";
