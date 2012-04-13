@@ -173,9 +173,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 parent::process($layout, $request, $current_user);
         }
     }
-    
-    
-    
+
+    /**
+     * Render a burndown image based on $artifact artifact links
+     * 
+     * @param Tracker_Artifact $artifact 
+     */
     public function fetchBurndownImage(Tracker_Artifact $artifact) {
         $linked_artifacts = $this->getLinkedArtifacts($artifact);
         if (count($linked_artifacts)) {
@@ -193,18 +196,19 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new Tracker_Chart_Burndown($burndown_data);
     }
 
-    protected function getBurndownStartDate(Tracker_Artifact $artifact) {
+    private function getBurndownStartDate(Tracker_Artifact $artifact) {
         $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
         return $artifact->getValue($start_date_field)->getTimestamp();
     }
 
-    protected function getBurndownDuration(Tracker_Artifact $artifact) {
+    private function getBurndownDuration(Tracker_Artifact $artifact) {
         $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
         return $artifact->getValue($field)->getValue();
     }
     
     /**
-     *
+     * Returns the ArtifactLink field of the given artifact
+     * 
      * @param Tracker_Artifact $source_artifact
      * 
      * @return Tracker_FormElement_Field_ArtifactLink
@@ -217,7 +221,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     // TODO: filter hierarchy
-    public function getLinkedArtifacts(Tracker_Artifact $source_artifact) {
+    private function getLinkedArtifacts(Tracker_Artifact $source_artifact) {
         $artifact_link_field = $this->getArtifactLinkField($source_artifact);
         $linked_artifacts = $artifact_link_field->getLinkedArtifacts($source_artifact->getLastChangeset());
         return $linked_artifacts;
