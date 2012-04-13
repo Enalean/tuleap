@@ -95,15 +95,15 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->timestamp            = 1334095200;
         $this->start_date_field     = stub('Tracker_FormElement_Field_Date');
-        $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
+        $this->start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
         
         $this->duration           = 13;
         $this->duration_field     = stub('Tracker_FormElement_Field_Integer');
-        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($this->duration);
+        $this->duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($this->duration);
         
         $this->sprint = mock('Tracker_Artifact');
-        stub($this->sprint)->getValue($this->start_date_field)->returns($start_date_changeset_value);
-        stub($this->sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
+        stub($this->sprint)->getValue($this->start_date_field)->returns($this->start_date_changeset_value);
+        stub($this->sprint)->getValue($this->duration_field)->returns($this->duration_changeset_value);
         stub($this->sprint)->getTracker()->returns($this->sprint_tracker);
         
         $this->form_element_factory = mock('Tracker_FormElementFactory');
@@ -144,7 +144,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     public function itDisplaysAMessageWhenThereAreNoLinkedArtifacts() {
         stub($this->sprint)->getLinkedArtifacts()->returns(array());
         
-        $this->field->expectOnce('displayErrorImage', array('*'));
+        $this->expectException();
         
         $this->field->fetchBurndownImage($this->sprint);
     }
@@ -166,7 +166,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->field->fetchBurndownImage($this->sprint);
     }
-
+    
     public function itDisplaysAMessageWhenThereAreNoDurationField() {
         $bug_tracker_id = 126;
         $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
@@ -183,6 +183,50 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->expectException();
         
         $this->field->fetchBurndownImage($this->sprint);
+    }
+
+    public function itDisplaysAMessageWhenStartDateIsEmpty() {
+        
+        $bug_tracker_id = 126;
+        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
+        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
+        
+        $linked_artifacts = array($bug_55);
+        
+        
+        // Empty timestamp
+        $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns('');
+
+        $sprint = mock('Tracker_Artifact');
+        stub($sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        stub($sprint)->getValue($this->start_date_field)->returns($start_date_changeset_value);
+        stub($sprint)->getValue($this->duration_field)->returns($this->duration_changeset_value);
+        stub($sprint)->getTracker()->returns($this->sprint_tracker);
+        
+        $this->expectException();
+        
+        $this->field->fetchBurndownImage($sprint);
+    }
+    
+    public function itDisplaysAMessageWhenDurationIsEmpty() {
+        $bug_tracker_id = 126;
+        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
+        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
+        
+        $linked_artifacts = array($bug_55);
+            
+        // Empty duration
+        $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns(0);
+
+        $sprint = mock('Tracker_Artifact');
+        stub($sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        stub($sprint)->getValue($this->start_date_field)->returns($this->start_date_changeset_value);
+        stub($sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
+        stub($sprint)->getTracker()->returns($this->sprint_tracker);
+        
+        $this->expectException();
+        
+        $this->field->fetchBurndownImage($sprint);
     }
 }
 

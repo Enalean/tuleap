@@ -160,30 +160,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                     }
                     $this->fetchBurndownImage($artifact);
                 } catch (Exception $e) {
-                    $this->displayErrorImage($e->getMessage());
+                    $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', $e->getMessage()));
                 }
                 break;
             default:
                 parent::process($layout, $request, $current_user);
-        }
-    }
-
-    /**
-     * Render a burndown image based on $artifact artifact links
-     * 
-     * @param Tracker_Artifact $artifact 
-     */
-    public function fetchBurndownImage(Tracker_Artifact $artifact) {
-        $linked_artifacts = $artifact->getLinkedArtifacts();
-        if (count($linked_artifacts)) {
-            $burndown = $this->getBurndown($linked_artifacts);
-            $burndown->setStartDate($this->getBurndownStartDate($artifact));
-            $burndown->setDuration($this->getBurndownDuration($artifact));
-            $burndown->setTitle($this->getLabel());
-            $burndown->setDescription($this->getDescription());
-            $burndown->display();
-        } else {
-            $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', 'burndown_no_linked_artifacts'));
         }
     }
     
@@ -195,6 +176,37 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function displayErrorImage($msg) {
         $error = new Chart(640, 480);
         $error->displayMessage($msg);
+    }
+
+    /**
+     * Render a burndown image based on $artifact artifact links
+     * 
+     * @param Tracker_Artifact $artifact 
+     */
+    public function fetchBurndownImage(Tracker_Artifact $artifact) {
+        $burndown = $this->getBurndown($this->getLinkedArtifacts($artifact));
+        $burndown->setStartDate($this->getBurndownStartDate($artifact));
+        $burndown->setDuration($this->getBurndownDuration($artifact));
+        $burndown->setTitle($this->getLabel());
+        $burndown->setDescription($this->getDescription());
+        $burndown->display();
+    }
+    
+    /**
+     * Returns linked artifacts
+     * 
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return Array of Tracker_Artifact
+     * 
+     * @throws Exception 
+     */
+    private function getLinkedArtifacts(Tracker_Artifact $artifact) {
+        $linked_artifacts = $artifact->getLinkedArtifacts();
+        if (count($linked_artifacts)) {
+            return $linked_artifacts;
+        }
+        throw new Exception('burndown_no_linked_artifacts');
     }
     
     /**
@@ -219,9 +231,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function getBurndownStartDate(Tracker_Artifact $artifact) {
         $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
         if ($start_date_field) {
-            return $artifact->getValue($start_date_field)->getTimestamp();
+            if ($timestamp = $artifact->getValue($start_date_field)->getTimestamp()) {
+                return $timestamp;
+            }
+            throw new Exception('burndown_empty_start_date_warning');
         }
-        throw new Exception($GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_start_date_warning'));
+        throw new Exception('burndown_missing_start_date_warning');
     }
 
     /**
@@ -234,9 +249,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function getBurndownDuration(Tracker_Artifact $artifact) {
         $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
         if ($field) {
-            return $artifact->getValue($field)->getValue();
+            if ($duration = $artifact->getValue($field)->getValue()) {
+                return $duration;
+            }
+            throw new Exception('burndown_empty_duration_warning');
         }
-        throw new Exception($GLOBALS['Language']->getText('plugin_tracker', 'burndown_missing_duration_warning'));
+        throw new Exception('burndown_missing_duration_warning');
     }
         
     /**
