@@ -131,11 +131,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
         $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
         
-        stub($this->field)->getChildTrackers()->returns(array($task_tracker, $bug_tracker));
-        
         $linked_artifacts = array($task_54, $bug_55);
         stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
-        
         
         $this->field->expectOnce('getBurndown', array($linked_artifacts));
         $this->burndown->expectOnce('setStartDate', array($this->timestamp));
@@ -143,32 +140,6 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->field->fetchBurndownImage($this->sprint);
     }
-    
-    public function itCreatesABurndownWithOnlyChildrenLinkedArtifact() {
-        $task_tracker_id = 120;        
-        $task_tracker    = aTracker()->withId($task_tracker_id)->build();
-        $task_54         = anArtifact()->withId(54)->withTracker($task_tracker)->build();
-        
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
-        $faq_tracker_id = 127;
-        $faq_tracker    = aTracker()->withId($faq_tracker_id)->build();
-        $faq_56         = anArtifact()->withId(56)->withTracker($faq_tracker)->build();
-        
-        $linked_artifacts   = array($task_54, $bug_55, $faq_56);
-        $children_artifacts = array($task_54, $bug_55);
-        stub($this->field)->getChildTrackers()->returns(array($task_tracker, $bug_tracker));
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
-        
-        $this->field->expectOnce('getBurndown', array($children_artifacts));
-        $this->burndown->expectOnce('setStartDate', array($this->timestamp));
-        $this->burndown->expectOnce('setDuration', array($this->duration));
-        
-        $this->field->fetchBurndownImage($this->sprint);
-    }
-    
 }
 
 class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends TuleapTestCase {

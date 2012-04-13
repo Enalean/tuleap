@@ -180,7 +180,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact 
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact) {
-        $linked_artifacts = $this->getTrackerChildrenLinkedArtifacts($artifact);
+        $linked_artifacts = $artifact->getLinkedArtifacts();
         if (count($linked_artifacts)) {
             $burndown = $this->getBurndown($linked_artifacts);
             $burndown->setStartDate($this->getBurndownStartDate($artifact));
@@ -189,41 +189,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown->setDescription($this->getDescription());
             $burndown->display();
         }
-    }
-    
-    /**
-     * Return an indexed array index by children trackers ids
-     * 
-     * @return Array of boolean 
-     */
-    private function getChildTrackerIds() {
-        $child_trackers    = $this->getChildTrackers();
-        $child_tracker_ids = array();
-        foreach($child_trackers as $tracker) {
-            $child_tracker_ids[$tracker->getId()] = true;
-        }
-        return $child_tracker_ids;
-    }
-    
-    /**
-     * Returns the list of artifacts linked to given artifact that belongs to
-     * tracker's children
-     * 
-     * @param Tracker_Artifact $artifact
-     * 
-     * @return Array of Tracker_Artifact 
-     */
-    private function getTrackerChildrenLinkedArtifacts(Tracker_Artifact $artifact) {
-        $linked_artifacts   = $artifact->getLinkedArtifacts();
-        $child_trackers     = $this->getChildTrackerIds();
-        $filtered_artifacts = array();
-        foreach($linked_artifacts as $artifact) {
-            $tracker_id = $artifact->getTracker()->getId();
-            if (isset($child_trackers[$tracker_id])) {
-                $filtered_artifacts[] = $artifact;
-            }
-        }
-        return $filtered_artifacts;
     }
     
     /**
