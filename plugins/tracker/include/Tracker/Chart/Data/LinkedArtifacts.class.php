@@ -19,16 +19,9 @@
  */
 
 require_once 'LinkedArtifactsDao.class.php';
+require_once 'IProvideDataForBurndownChart.class.php';
 
-interface Tracker_Chart_Burndown_Data {
-    public function getRemainingEffort();
-    public function getMinDay();
-    public function getMaxDay();
-    public function getArtifactIds();
-}
-
-
-class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Burndown_Data {
+class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     private $artifact_ids     = array();
     private $remaining_effort = array();
     private $min_day = 99999;

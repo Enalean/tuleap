@@ -21,43 +21,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/user/UserManager.class.php');
-
-class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Burndown_Data {
-    private $artifact_ids     = array();
-    private $remaining_effort = array();
-    private $min_day = 0;
-    private $max_day = 0;
- 
-    public function __construct($res, $artifact_ids) {
-        $this->artifact_ids = $artifact_ids;
-        
-        while ($d = db_fetch_array($res)) {
-            if (!isset($this->remaining_effort[$d['day']])) {
-                $this->remaining_effort[$d['day']] = array();
-            }
-            $this->remaining_effort[$d['day']][$d['id']] = $d['value'];
-            if ($d['day'] > $this->max_day) $this->max_day=$d['day'];
-            if ($d['day'] < $this->min_day) $this->min_day=$d['day'];
-        }
-    }
-    
-    public function getRemainingEffort() {
-        return $this->remaining_effort;
-    }
-    
-    public function getMinDay() {
-        return $this->min_day;
-    }
-    
-    public function getMaxDay() {
-        return $this->max_day;
-    }
-    
-    public function getArtifactIds() {
-        return $this->artifact_ids;
-    }
-}
+require_once 'common/user/UserManager.class.php';
+require_once 'GraphOnTrackersV5_Burndown_Data.class.php';
 
 class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
 
@@ -68,7 +33,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
      */
     function buildProperties($engine) {
         parent::buildProperties($engine);
-        $engine->legend = null;
+
         $fef          = Tracker_FormElementFactory::instance();
         $effort_field = $fef->getFormElementById($this->chart->getFieldId());
         $type         = $fef->getType($effort_field);
@@ -86,11 +51,12 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
             }
             $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
             $res = db_query($sql);
-            $burndown_data = new GraphOnTrackersV5_Burndown_Data($res, $artifact_ids);
+            $engine->data = new GraphOnTrackersV5_Burndown_Data($res, $artifact_ids);
         }
+        
+        $engine->legend     = null;
         $engine->start_date = $this->chart->getStartDate();
         $engine->duration   = $this->chart->getDuration();
-        $engine->data       = $burndown_data;
     }
 
 }

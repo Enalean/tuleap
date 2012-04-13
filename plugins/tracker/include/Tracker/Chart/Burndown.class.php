@@ -26,7 +26,7 @@
 class Tracker_Chart_Burndown {
     const SECONDS_IN_A_DAY = 86400;
     /**
-     * @var Tracker_Chart_Burndown_Data 
+     * @var Tracker_Chart_Data_IProvideDataForBurndownChart.class.php 
      */
     private $burndown_data;
     
@@ -38,7 +38,7 @@ class Tracker_Chart_Burndown {
     private $width       = 640;
     private $height      = 480;
     
-    public function __construct(Tracker_Chart_Burndown_Data $burndown_data) {
+    public function __construct(Tracker_Chart_Data_IProvideDataForBurndownChart $burndown_data) {
         $this->burndown_data = $burndown_data;
         $this->start_date = $_SERVER['REQUEST_TIME'] - $this->duration * 24 * 3600;
     }
