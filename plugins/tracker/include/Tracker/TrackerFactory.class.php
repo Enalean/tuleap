@@ -501,7 +501,7 @@ class TrackerFactory {
 
     /**
      * Duplicate all trackers from a project to another one
-     * Duplicate the hierrachy, the shared fields
+     * Duplicate the hierarchy, the shared fields
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping = array();
@@ -528,7 +528,6 @@ class TrackerFactory {
     }
     
     private function duplicateTracker(&$tracker_mapping, &$field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
-        $report_mapping_for_this_tracker = array();
         $creation_result = $this->create($to_project_id,
                 $from_project_id,
                 $tracker->getId(),
