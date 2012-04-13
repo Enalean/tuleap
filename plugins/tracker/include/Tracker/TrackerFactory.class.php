@@ -519,7 +519,7 @@ class TrackerFactory {
         }
         
         $shared_factory = $this->getFormElementFactory();
-        $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $field_mapping);
+        $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
         EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
             'tracker_mapping' => $tracker_mapping,

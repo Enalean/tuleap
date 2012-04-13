@@ -276,7 +276,7 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
                                                 array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), 
                                                 array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
         
-        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, array('11' => '111', 
+        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, array('11' => '111', 
                                                                                                              '22' => '222', 
                                                                                                              '33' => '333', 
                                                                                                              '44' => '444')));
