@@ -116,6 +116,11 @@ class Tracker_Chart_Burndown {
         return $data;
     }
 
+    protected function reduceToMaxSum($result, $item) {
+        $sum = is_array($item) ? array_sum($item) : 0;
+        return max($result, $sum);
+    }
+    
     public function prepareDataForGraph(array $remaining_effort) {
         // order this->data by date asc
         ksort($remaining_effort);
@@ -129,7 +134,7 @@ class Tracker_Chart_Burndown {
         // 
         // Build data for initial estimation
         list($start_of_sprint, $efforts) = each($remaining_effort);
-        $first_day_effort = is_array($efforts) ? array_sum($efforts) : null;
+        $first_day_effort = array_reduce($remaining_effort, array($this, 'reduceToMaxSum'));
         $slope            = - $first_day_effort / $this->duration;
 
         $previous_effort = $first_day_effort; // init with sum of effort for the first day

@@ -147,8 +147,8 @@ class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
             15441 => array(
                 5215 => 2,
                 5217 => 1,
-                5239 => 2.5,
-                5241 => 15.5
+                5239 => 2,
+                5241 => 15
             ),
             15442 => array(
                 5215 => 2,
@@ -172,7 +172,7 @@ class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
     
     public function itShouldComputeRemainingEffortForDisplay() {
         $remaing_effort_by_day = $this->burndown->getGraphDataRemainingEffort();
-        $this->assertEqual($remaing_effort_by_day[0], 21);
+        $this->assertEqual($remaing_effort_by_day[0], 20);
         $this->assertEqual($remaing_effort_by_day[1], 21);
         $this->assertEqual($remaing_effort_by_day[2], 15.5);
     }
