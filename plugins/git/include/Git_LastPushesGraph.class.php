@@ -91,7 +91,7 @@ class Git_LastPushesGraph {
      *
      * @return Chart
      */
-    protected function prepareGraph() {
+    private function prepareGraph() {
         $nbRepo = count($this->repoList);
         $graph  = new Chart(500, 300 + 16 * $nbRepo);
         $graph->SetScale('textint');
@@ -118,7 +118,7 @@ class Git_LastPushesGraph {
      *
      * @return BarPlot
      */
-    private function _displayRepositoryPushesByWeek() {
+    private function displayRepositoryPushesByWeek() {
         $nbRepo   = count($this->repoList);
         $colors   = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo));
         $nbColors = count($colors);
@@ -126,7 +126,7 @@ class Git_LastPushesGraph {
         $bplot    = array();
         foreach ($this->repoList as $repository) {
             $this->legend = null;
-            $pushes = $this->_getRepositoryPushesByWeek($repository);
+            $pushes = $this->getRepositoryPushesByWeek($repository);
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];
@@ -147,7 +147,7 @@ class Git_LastPushesGraph {
      *
      * @return Array
      */
-    private function _getRepositoryPushesByWeek($repository) {
+    private function getRepositoryPushesByWeek($repository) {
         $pushes    = array();
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
@@ -173,7 +173,7 @@ class Git_LastPushesGraph {
      *
      * @return Void
      */
-    protected function displayAccumulatedGraph($bplot, $graph) {
+    private function displayAccumulatedGraph($bplot, $graph) {
         $abplot = new AccBarPlot($bplot);
         $abplot->SetShadow();
         $abplot->SetAbsWidth(10);
@@ -188,7 +188,7 @@ class Git_LastPushesGraph {
      */
     public function display() {
         $graph = $this->prepareGraph();
-        $bplot = $this->_displayRepositoryPushesByWeek();
+        $bplot = $this->displayRepositoryPushesByWeek();
         if ($this->displayChart) {
             $this->displayAccumulatedGraph($bplot, $graph);
         } else {
