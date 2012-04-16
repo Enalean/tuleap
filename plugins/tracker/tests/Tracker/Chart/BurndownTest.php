@@ -45,7 +45,7 @@ class Tracker_Chart_BurndownTest_FakeData implements Tracker_Chart_Data_IProvide
 
 class Tracker_Chart_BurndownTest extends TuleapTestCase {
 
-    function itNormalizeDataDayByDayStartingAtStartDate() {
+    public function itNormalizeDataDayByDayStartingAtStartDate() {
         $data = new Tracker_Chart_BurndownTest_FakeData();
         $data->remaining_effort = array(
             15311 => array(
@@ -100,7 +100,15 @@ class Tracker_Chart_BurndownTest extends TuleapTestCase {
         $this->assertEqual($day3[5241], 13);
     }
     
-    function itShouldProvideEmptyNormalizedDataWhenStartDateIsBeforeTheFirstDate() {
+    public function itdoesntMakeAnErrorWhenRemainingEffortsAreNotSet() {
+        $data = new Tracker_Chart_BurndownTest_FakeData();
+        $burndown = new Tracker_Chart_Burndown($data);
+        $burndown->prepareDataForGraph(array());
+        $expected = array_fill(0, 11, 0);
+        $this->assertEqual($expected, $burndown->getGraphDataRemainingEffort());
+    }
+    
+    public function itShouldProvideEmptyNormalizedDataWhenStartDateIsBeforeTheFirstDate() {
         $data = new Tracker_Chart_BurndownTest_FakeData();
         $data->remaining_effort = array(
             15311 => array(
@@ -134,7 +142,7 @@ class Tracker_Chart_BurndownTest extends TuleapTestCase {
 
 class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
     
-    function setUp() {
+    public function setUp() {
         $remaining_effort = array(
             15441 => array(
                 5215 => 2,
@@ -162,14 +170,14 @@ class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
         $this->burndown->prepareDataForGraph($remaining_effort);
     }
     
-    function itShouldComputeRemainingEffortForDisplay() {
+    public function itShouldComputeRemainingEffortForDisplay() {
         $remaing_effort_by_day = $this->burndown->getGraphDataRemainingEffort();
         $this->assertEqual($remaing_effort_by_day[0], 21);
         $this->assertEqual($remaing_effort_by_day[1], 21);
         $this->assertEqual($remaing_effort_by_day[2], 15.5);
     }
     
-    function itShouldComputeIdealBurndownForDisplay() {
+    public function itShouldComputeIdealBurndownForDisplay() {
         $ideal_burndown_by_day = $this->burndown->getGraphDataIdealBurndown();
         $this->assertEqual($ideal_burndown_by_day[0], 21);
         $this->assertEqual($ideal_burndown_by_day[1], 14);

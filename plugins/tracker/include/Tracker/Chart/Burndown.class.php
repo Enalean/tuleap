@@ -137,7 +137,7 @@ class Tracker_Chart_Burndown {
         return $data;
     }
 
-    public function prepareDataForGraph($remaining_effort) {
+    public function prepareDataForGraph(array $remaining_effort) {
         // order this->data by date asc
         ksort($remaining_effort);
 
@@ -150,37 +150,26 @@ class Tracker_Chart_Burndown {
         // 
         // Build data for initial estimation
         list($start_of_sprint, $efforts) = each($remaining_effort);
-        $first_day_effort = array_sum($efforts);
+        $first_day_effort = is_array($efforts) ? array_sum($efforts) : 0;
         $slope            = - $first_day_effort / $this->duration;
 
         $previous_effort = $first_day_effort; // init with sum of effort for the first day
         // for each day
         for ($day_num = 0; $day_num <= $this->duration; ++$day_num) {
+            $effort = null;
             $current_day = $start_of_sprint + $day_num;
             
             $this->graph_data_ideal_burndown[] = $slope * $day_num + $first_day_effort;
-            
             $this->graph_data_human_dates[] = date('M-d', $current_day * self::SECONDS_IN_A_DAY);
             
             if (isset($remaining_effort[$current_day])) {
                 $effort = array_sum($remaining_effort[$current_day]);
-            } else {
-                if ($day_num - 1 < count($remaining_effort) - 1) {
-                    $effort = $previous_effort;
-                } else {
-                    $effort = null;
-                }
+            } elseif ($day_num < count($remaining_effort)) {
+                $effort = $previous_effort;
             }
             $this->graph_data_remaining_effort[] = $effort;
             $previous_effort = $effort;
         }
-
-        /*
-        var_dump($this->graph_data_remaining_effort);
-        var_dump($this->graph_data_human_dates);
-        var_dump($this->graph_data_ideal_burndown);
-        die();
-        */
     }
 
     /**
