@@ -137,9 +137,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         $url_query = http_build_query(array('formElement' => $this->getId(),
                                             'func'        => self::FUNC_SHOW_BURNDOWN,
-                                            'src_aid'         => $artifact->getId()));
+                                            'src_aid'     => $artifact->getId()));
         
-        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" />';
+        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" alt="'.$this->getLabel().'" width="640" height="480" />';
         return $html;
     }
 
