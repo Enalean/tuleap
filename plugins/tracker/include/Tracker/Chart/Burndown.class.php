@@ -94,7 +94,6 @@ class Tracker_Chart_Burndown {
         $artifact_ids = $this->burndown_data->getArtifactIds();
         $minday = $this->burndown_data->getMinDay();
         $maxday = $this->burndown_data->getMaxDay();
-        //var_dump($dbdata, $artifact_ids, $minday, $maxday);
         $data = array();
         for ($day = $this->start_date; $day <= $maxday; $day++) {
             if (!isset($data[$this->start_date])) {
@@ -133,7 +132,6 @@ class Tracker_Chart_Burndown {
             }
         }
         
-        //var_dump($data);
         return $data;
     }
 
