@@ -105,33 +105,18 @@ class Tracker_Chart_Burndown {
 
         foreach ($artifact_ids as $aid) {
             for ($day = $minday; $day <= $maxday; $day++) {
-                if ($day < $this->start_date) {
-                    if (isset($dbdata[$day][$aid])) {
-                        $data[$this->start_date][$aid] = $dbdata[$day][$aid];
-                    } else {
-                        $data[$this->start_date][$aid] = 0;
-                    }
-                } else if ($day == $this->start_date) {
-                    if (isset($dbdata[$day][$aid])) {
-                        $data[$day][$aid] = $dbdata[$day][$aid];
-                    } else {
-                        $data[$day][$aid] = 0;
-                    }
+                $dbdata_of_the_day = isset($dbdata[$day][$aid]) ? $dbdata[$day][$aid] : 0;
+                if ($day <= $this->start_date) {
+                    $current_day = $this->start_date;   
                 } else {
-                    if (isset($dbdata[$day][$aid])) {
-                        $data[$day][$aid] = $dbdata[$day][$aid];
-                    } else {
-                        // No update this day: get value from previous day
-                        if (isset($data[$day - 1][$aid])) {
-                            $data[$day][$aid] = $data[$day - 1][$aid];
-                        } else {
-                            $data[$day][$aid] = 0;
-                        }
+                    $current_day = $day;
+                    if ($dbdata_of_the_day == 0 && isset($data[$day - 1][$aid])) {
+                        $dbdata_of_the_day = $data[$day - 1][$aid];
                     }
                 }
+                $data[$current_day][$aid] = $dbdata_of_the_day;
             }
         }
-        
         return $data;
     }
 
@@ -148,7 +133,7 @@ class Tracker_Chart_Burndown {
         // 
         // Build data for initial estimation
         list($start_of_sprint, $efforts) = each($remaining_effort);
-        $first_day_effort = is_array($efforts) ? array_sum($efforts) : 0;
+        $first_day_effort = is_array($efforts) ? array_sum($efforts) : null;
         $slope            = - $first_day_effort / $this->duration;
 
         $previous_effort = $first_day_effort; // init with sum of effort for the first day
@@ -158,7 +143,7 @@ class Tracker_Chart_Burndown {
             $current_day = $start_of_sprint + $day_num;
             
             $this->graph_data_ideal_burndown[] = $slope * $day_num + $first_day_effort;
-            $this->graph_data_human_dates[] = date('M-d', $current_day * self::SECONDS_IN_A_DAY);
+            $this->graph_data_human_dates[]    = date('M-d', $current_day * self::SECONDS_IN_A_DAY);
             
             if (isset($remaining_effort[$current_day])) {
                 $effort = array_sum($remaining_effort[$current_day]);
