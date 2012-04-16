@@ -94,7 +94,7 @@ class Tracker_Chart_Burndown {
         $artifact_ids = $this->burndown_data->getArtifactIds();
         $minday = $this->burndown_data->getMinDay();
         $maxday = $this->burndown_data->getMaxDay();
-        
+        //var_dump($dbdata, $artifact_ids, $minday, $maxday);
         $data = array();
         for ($day = $this->start_date; $day <= $maxday; $day++) {
             if (!isset($data[$this->start_date])) {
@@ -109,6 +109,8 @@ class Tracker_Chart_Burndown {
                 if ($day < $this->start_date) {
                     if (isset($dbdata[$day][$aid])) {
                         $data[$this->start_date][$aid] = $dbdata[$day][$aid];
+                    } else {
+                        $data[$this->start_date][$aid] = 0;
                     }
                 } else if ($day == $this->start_date) {
                     if (isset($dbdata[$day][$aid])) {
@@ -121,7 +123,11 @@ class Tracker_Chart_Burndown {
                         $data[$day][$aid] = $dbdata[$day][$aid];
                     } else {
                         // No update this day: get value from previous day
-                        $data[$day][$aid] = $data[$day - 1][$aid];
+                        if (isset($data[$day - 1][$aid])) {
+                            $data[$day][$aid] = $data[$day - 1][$aid];
+                        } else {
+                            $data[$day][$aid] = 0;
+                        }
                     }
                 }
             }
@@ -169,10 +175,12 @@ class Tracker_Chart_Burndown {
             $previous_effort = $effort;
         }
 
-        /*var_dump($this->graph_data_human_dates);
-        var_dump($this->graph_data_ideal_burndown);
+        /*
         var_dump($this->graph_data_remaining_effort);
-        die();*/
+        var_dump($this->graph_data_human_dates);
+        var_dump($this->graph_data_ideal_burndown);
+        die();
+        */
     }
 
     /**
