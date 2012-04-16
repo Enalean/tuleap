@@ -350,7 +350,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $tracker_name = $tracker->getName();
         $tracker_url  = TRACKER_BASE_URL."/?tracker=$tracker_id&func=admin-formElements";
         
-        return '<a href="'.$tracker_url.'">'.$tracker_name.'</a>';
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<a href="'.$tracker_url.'">'.$hp->purify($tracker_name).'</a>';
     }
     
     /**
