@@ -115,7 +115,14 @@ class Tracker_Chart_Burndown {
         }
         return $data;
     }
-
+    
+    /**
+     * Used with function array_reduce to have the max remaining effort
+     * 
+     * @param int   $result result of previous call or initial value (null by default)
+     * @param array $item   the current item of the array we're reducing
+     * @return int  the higher sum of array already iterated items
+     */
     protected function reduceToMaxSum($result, $item) {
         $sum = is_array($item) ? array_sum($item) : 0;
         return max($result, $sum);
@@ -134,20 +141,25 @@ class Tracker_Chart_Burndown {
         // 
         // Build data for initial estimation
         list($start_of_sprint, $efforts) = each($remaining_effort);
-        $first_day_effort = array_reduce($remaining_effort, array($this, 'reduceToMaxSum'));
-        $slope            = - $first_day_effort / $this->duration;
-
-        $previous_effort = $first_day_effort; // init with sum of effort for the first day
+        $max_effort_found = false;
+        $max_effort       = array_reduce($remaining_effort, array($this, 'reduceToMaxSum'));
+        $slope            = - $max_effort / $this->duration;
+        $previous_effort  = is_array($efforts) ? array_sum($efforts) : 0; // init with sum of effort for the first day
+        
         // for each day
         for ($day_num = 0; $day_num <= $this->duration; ++$day_num) {
             $effort = null;
             $current_day = $start_of_sprint + $day_num;
             
-            $this->graph_data_ideal_burndown[] = $slope * $day_num + $first_day_effort;
+            $this->graph_data_ideal_burndown[] = $slope * $day_num + $max_effort;
             $this->graph_data_human_dates[]    = date('M-d', $current_day * self::SECONDS_IN_A_DAY);
             
             if (isset($remaining_effort[$current_day])) {
                 $effort = array_sum($remaining_effort[$current_day]);
+                if ($max_effort_found == false) {
+                    $max_effort_found = $effort == $max_effort;
+                    $effort = $max_effort;
+                }
             } elseif ($day_num < count($remaining_effort)) {
                 $effort = $previous_effort;
             }
