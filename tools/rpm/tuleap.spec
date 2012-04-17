@@ -311,6 +311,21 @@ Requires: %{PKG_NAME}-plugin-tracker, %{PKG_NAME}-plugin-cardwall
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
 tool on top of Tracker.
 
+%package plugin-codereview
+Summary: Code review Tool
+Group: Development/Tools
+Version: @@PLUGIN_CODEREVIEW_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, reviewboard >= 1.6.5
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-codereview = %{version}
+%else
+Provides: tuleap-plugin-codereview = %{version}
+%endif
+%description plugin-codereview
+Plugin to ease the code review based on reviewBoard tool
+
+
 #
 ## Themes
 #
@@ -857,6 +872,10 @@ fi
 %files plugin-agiledashboard
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/agiledashboard
+
+%files plugin-codereview
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/codereview
 
 #
 # Themes
