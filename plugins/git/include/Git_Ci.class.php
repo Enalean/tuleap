@@ -149,17 +149,15 @@ class Git_Ci {
                     $token = '?token='.$row['token'];
                 }
                 $url = $row['job_url'].'/build';
-                $ch  = curl_init();
-                if (isset($GLOBALS['sys_proxy'])) {
-                    // we may need to verify if "http(s)://" is already in $GLOBALS['sys_proxy'] or not
-                    curl_setopt($ch, CURLOPT_PROXY, $GLOBALS['sys_proxy']);
-                    // We may need to use
-                    //curl_setopt ($ch, CURLOPT_PROXYUSERPWD, "user:password"); 
+                $context = null;
+                if (true) {
+                    $context_opt = array('http' => array('method' => 'GET',
+                                                         'proxy' => "http://ounish:2me?no!1me@lps6.sgp.st.com:8080",
+                                                         'request_fulluri' => True,
+                                                         'timeout' => 5.0));
+                    $context = stream_context_create($context_opt);
                 }
-                curl_setopt($ch, CURLOPT_FAILONERROR, true);
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_exec($ch);
-                curl_close($ch);
+                file_get_contents($url, false, $context);
             }
         }
     }
