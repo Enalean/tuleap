@@ -24,7 +24,7 @@ require_once 'IProvideDataForBurndownChart.class.php';
 class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     private $artifact_ids     = array();
     private $remaining_effort = array();
-    private $min_day = 99999;
+    private $min_day = PHP_INT_MAX;
     private $max_day = 0;
     
     public function __construct(array $linked_artifacts, $remaining_effort_field_name) {

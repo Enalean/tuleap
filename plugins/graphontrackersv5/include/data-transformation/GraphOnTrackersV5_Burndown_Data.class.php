@@ -23,19 +23,21 @@ require_once TRACKER_BASE_DIR.'/Tracker/Chart/Data/IProvideDataForBurndownChart.
 class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     private $artifact_ids     = array();
     private $remaining_effort = array();
-    private $min_day = 0;
+    private $min_day = PHP_INT_MAX;
     private $max_day = 0;
  
-    public function __construct($res, $artifact_ids) {
+    public function __construct($query_result, $artifact_ids) {
         $this->artifact_ids = $artifact_ids;
         
-        while ($d = db_fetch_array($res)) {
-            if (!isset($this->remaining_effort[$d['day']])) {
-                $this->remaining_effort[$d['day']] = array();
+        while ($row = db_fetch_array($query_result)) {
+            $current_day = $row['day'];
+            $current_id  = $row['id'];
+            if (!isset($this->remaining_effort[$current_day])) {
+                $this->remaining_effort[$current_day] = array();
             }
-            $this->remaining_effort[$d['day']][$d['id']] = $d['value'];
-            if ($d['day'] > $this->max_day) $this->max_day=$d['day'];
-            if ($d['day'] < $this->min_day) $this->min_day=$d['day'];
+            $this->remaining_effort[$current_day][$current_id] = $row['value'];
+            $this->max_day = max($this->max_day, $current_day);
+            $this->min_day = max($this->min_day, $current_day);
         }
     }
     
