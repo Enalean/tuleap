@@ -126,14 +126,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
     
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
-        $task_tracker_id = 120;        
-        $task_tracker    = aTracker()->withId($task_tracker_id)->build();
-        $task_54         = anArtifact()->withId(54)->withTracker($task_tracker)->build();
-        
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
+        $task_54          = anArtifact()->withId(54)->withTracker(aTracker()->build())->build();
+        $bug_55           = anArtifact()->withId(55)->withTracker(aTracker()->build())->build();
         $linked_artifacts = array($task_54, $bug_55);
         stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
         
@@ -152,13 +146,14 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
     
-    public function itDisplaysAMessageWhenThereAreNoStartDateField() {
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
+    private function GivenSprintHasOneLinkedArtifact() {
+        $bug_55           = anArtifact()->withId(55)->withTracker(aTracker()->build())->build();
         $linked_artifacts = array($bug_55);
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);        
+    }
+    
+    public function itDisplaysAMessageWhenThereAreNoStartDateField() {
+        $this->GivenSprintHasOneLinkedArtifact();
         
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
@@ -171,12 +166,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
     
     public function itDisplaysAMessageWhenThereAreNoDurationField() {
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
-        $linked_artifacts = array($bug_55);
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        $this->GivenSprintHasOneLinkedArtifact();
         
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
@@ -189,7 +179,6 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
 
     public function itDisplaysAMessageWhenStartDateIsEmpty() {
-        
         $bug_tracker_id = 126;
         $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
         $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
@@ -233,12 +222,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
     
     public function itDisplaysAMessageWhenUserCannotAccessStartDateField() {
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
-        $linked_artifacts = array($bug_55);
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        $this->GivenSprintHasOneLinkedArtifact();
         
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
@@ -251,12 +235,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
     
     public function itDisplaysAMessageWhenUserCannotAccessDurationField() {
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
-        $linked_artifacts = array($bug_55);
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        $this->GivenSprintHasOneLinkedArtifact();
         
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
