@@ -27,7 +27,7 @@ class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_
     private $min_day = PHP_INT_MAX;
     private $max_day = 0;
     
-    public function __construct(array $linked_artifacts, $remaining_effort_field_name) {
+    public function __construct(array $linked_artifacts, $remaining_effort_field_name, User $user) {
         $form_element_factory = Tracker_FormElementFactory::instance();
         
         $artifact_ids_by_tracker = array();
@@ -39,7 +39,7 @@ class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_
         }
 
         foreach ($artifact_ids_by_tracker as $tracker_id => $artifact_ids) {
-            $effort_field          = $form_element_factory->getUsedFieldByName($tracker_id, $remaining_effort_field_name);
+            $effort_field          = $form_element_factory->getUsedFieldByNameForUser($tracker_id, $remaining_effort_field_name, $user);
             if ($effort_field) {
                 $effort_field_id   = $effort_field->getId();
                 $effort_field_type = $form_element_factory->getType($effort_field);

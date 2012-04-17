@@ -131,7 +131,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $linked_artifacts = array($task_54, $bug_55);
         stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
         
-        $this->field->expectOnce('getBurndown', array($linked_artifacts));
+        $this->field->expectOnce('getBurndown', array($linked_artifacts, $this->current_user));
         $this->burndown->expectOnce('setStartDate', array($this->timestamp));
         $this->burndown->expectOnce('setDuration', array($this->duration));
         
