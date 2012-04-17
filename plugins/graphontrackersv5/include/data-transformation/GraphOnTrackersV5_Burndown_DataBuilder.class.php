@@ -40,9 +40,9 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
     public function buildProperties($engine) {
         parent::buildProperties($engine);
 
-        $form_element_fatory = Tracker_FormElementFactory::instance();
-        $effort_field        = $form_element_fatory->getFormElementById($this->chart->getFieldId());
-        $type                = $form_element_fatory->getType($effort_field);
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $effort_field         = $form_element_factory->getFormElementById($this->chart->getFieldId());
+        $type                 = $form_element_factory->getType($effort_field);
         
         if ($this->isValidEffortField($effort_field) && $this->isValidType($type)) {
             $engine->data    = $this->getBurnDownData($effort_field->getId(), $type);
