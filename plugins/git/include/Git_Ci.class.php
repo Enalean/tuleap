@@ -150,6 +150,12 @@ class Git_Ci {
                 }
                 $url = $row['job_url'].'/build';
                 $ch  = curl_init();
+                if (isset($GLOBALS['sys_proxy'])) {
+                    // we may need to verify if "http(s)://" is already in $GLOBALS['sys_proxy'] or not
+                    curl_setopt($ch, CURLOPT_PROXY, $GLOBALS['sys_proxy']);
+                    // We may need to use
+                    //curl_setopt ($ch, CURLOPT_PROXYUSERPWD, "user:password"); 
+                }
                 curl_setopt($ch, CURLOPT_FAILONERROR, true);
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_exec($ch);
