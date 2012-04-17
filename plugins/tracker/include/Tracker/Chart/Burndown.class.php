@@ -110,22 +110,19 @@ class Tracker_Chart_Burndown {
                         $dbdata_of_the_day = $data[$day - 1][$aid];
                     }
                 }
-                $data[$current_day][$aid] = $dbdata_of_the_day;
+                $data[$current_day][$aid] = floatval($dbdata_of_the_day);
             }
         }
         return $data;
     }
     
-    /**
-     * Used with function array_reduce to have the max remaining effort
-     * 
-     * @param int   $result result of previous call or initial value (null by default)
-     * @param array $item   the current item of the array we're reducing
-     * @return int  the higher sum of array already iterated items
-     */
-    protected function reduceToMaxSum($result, $item) {
-        $sum = is_array($item) ? array_sum($item) : 0;
-        return max($result, $sum);
+    protected function getFirstEffortNotNull( array $remaining_effort) {
+        foreach($remaining_effort as $effort) {
+            if (is_array($effort) && ($sum_of_effort = floatval(array_sum($effort))) > 0) {
+                return $sum_of_effort;
+            }
+        }
+        return 0;
     }
     
     public function prepareDataForGraph(array $remaining_effort) {
@@ -141,24 +138,24 @@ class Tracker_Chart_Burndown {
         // 
         // Build data for initial estimation
         list($start_of_sprint, $efforts) = each($remaining_effort);
-        $max_effort_found = false;
-        $max_effort       = array_reduce($remaining_effort, array($this, 'reduceToMaxSum'));
-        $slope            = - $max_effort / $this->duration;
-        $previous_effort  = is_array($efforts) ? array_sum($efforts) : 0; // init with sum of effort for the first day
+        $start_effort       = $this->getFirstEffortNotNull($remaining_effort);
+        $start_effort_found = false;
+        $slope              = - $start_effort / $this->duration;
+        $previous_effort    = $start_effort; // init with sum of effort for the first day
         
         // for each day
         for ($day_num = 0; $day_num <= $this->duration; ++$day_num) {
             $effort = null;
             $current_day = $start_of_sprint + $day_num;
             
-            $this->graph_data_ideal_burndown[] = $slope * $day_num + $max_effort;
+            $this->graph_data_ideal_burndown[] = floatval($slope * $day_num + $start_effort);
             $this->graph_data_human_dates[]    = date('M-d', $current_day * self::SECONDS_IN_A_DAY);
             
             if (isset($remaining_effort[$current_day])) {
                 $effort = array_sum($remaining_effort[$current_day]);
-                if ($max_effort_found == false) {
-                    $max_effort_found = $effort == $max_effort;
-                    $effort = $max_effort;
+                if ($start_effort_found == false) {
+                    $start_effort_found = $effort == $start_effort;
+                    $effort = $start_effort;
                 }
             } elseif ($day_num < count($remaining_effort)) {
                 $effort = $previous_effort;

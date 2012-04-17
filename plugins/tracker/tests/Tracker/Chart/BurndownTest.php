@@ -144,6 +144,8 @@ class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
     
     public function setUp() {
         $remaining_effort = array(
+            15440 =>array(
+            ),
             15441 => array(
                 5215 => 2,
                 5217 => 1,
@@ -166,23 +168,26 @@ class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
         
         $data = new Tracker_Chart_BurndownTest_FakeData();
         $this->burndown = new Tracker_Chart_Burndown($data);
-        $this->burndown->setDuration(3);
+        $this->burndown->setDuration(4);
         $this->burndown->prepareDataForGraph($remaining_effort);
     }
     
     public function itShouldComputeRemainingEffortForDisplay() {
-        $remaing_effort_by_day = $this->burndown->getGraphDataRemainingEffort();
-        $this->assertEqual($remaing_effort_by_day[0], 21);
-        $this->assertEqual($remaing_effort_by_day[1], 21);
-        $this->assertEqual($remaing_effort_by_day[2], 15.5);
+        $remaining_effort_by_day = $this->burndown->getGraphDataRemainingEffort();
+        $this->assertIdentical($remaining_effort_by_day[0], 20.0);
+        $this->assertIdentical($remaining_effort_by_day[1], 20.0);
+        $this->assertIdentical($remaining_effort_by_day[2], 21.0);
+        $this->assertIdentical($remaining_effort_by_day[3], 15.5);
+        $this->assertIdentical($remaining_effort_by_day[4], null);
     }
     
     public function itShouldComputeIdealBurndownForDisplay() {
         $ideal_burndown_by_day = $this->burndown->getGraphDataIdealBurndown();
-        $this->assertEqual($ideal_burndown_by_day[0], 21);
-        $this->assertEqual($ideal_burndown_by_day[1], 14);
-        $this->assertEqual($ideal_burndown_by_day[2], 7);
-        $this->assertEqual($ideal_burndown_by_day[3], 0);
+        $this->assertIdentical($ideal_burndown_by_day[0], 20.0);
+        $this->assertIdentical($ideal_burndown_by_day[1], 15.0);
+        $this->assertIdentical($ideal_burndown_by_day[2], 10.0);
+        $this->assertIdentical($ideal_burndown_by_day[3], 5.0);
+        $this->assertIdentical($ideal_burndown_by_day[4], 0.0);
     }
     
     /*
