@@ -80,7 +80,7 @@ class Git_CiDao extends DataAccessObject {
     function checkRepository($jobId, $repositoryId) {
         $sql = 'SELECT job_id
                 FROM plugin_hudson_job
-                JOIN plugin_git ON group_id=project_id
+                JOIN plugin_git ON (group_id = project_id)
                 WHERE repository_id = '.$this->da->escapeInt($repositoryId).'
                 AND job_id = '.$this->da->escapeInt($jobId);
         return $this->retrieve($sql);
