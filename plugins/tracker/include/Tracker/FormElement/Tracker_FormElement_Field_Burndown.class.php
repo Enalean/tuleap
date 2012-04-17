@@ -134,16 +134,24 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
-
-        $url_query = http_build_query(array('formElement' => $this->getId(),
-                                            'func'        => self::FUNC_SHOW_BURNDOWN,
-                                            'src_aid'     => $artifact->getId()));
-        
-        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" alt="'.$this->getLabel().'" width="640" height="480" />';
+        $html = '';        
+        $html .= '<img src="'.$this->getBurndownImageUrl($artifact).'" alt="'.$this->getLabel().'" width="640" height="480" />';
         return $html;
     }
 
+    /**
+     * Return the relative url to the burndown chart image.
+     * 
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return String
+     */
+    private function getBurndownImageUrl(Tracker_Artifact $artifact) {
+        $url_query = http_build_query(array('formElement' => $this->getId(),
+                                            'func'        => self::FUNC_SHOW_BURNDOWN,
+                                            'src_aid'     => $artifact->getId()));
+        return TRACKER_BASE_URL .'/?'.$url_query;
+    }
     /**
      *
      * @param Tracker_IDisplayTrackerLayout $layout
@@ -269,7 +277,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $output = '';
-        //TODO: What to send in email?
+        if ($format == Codendi_Mail::FORMAT_HTML) {
+            $output .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</p>';
+            $output .= '<img src="'.get_server_url().$this->getBurndownImageUrl($artifact).'" alt="'.$this->getLabel().'" width="640" height="480" />';
+        }
         return $output;
     }
 
