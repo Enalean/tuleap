@@ -94,7 +94,8 @@ class Tracker_Chart_Burndown {
         $artifact_ids = $this->burndown_data->getArtifactIds();
         $minday       = $this->burndown_data->getMinDay();
         $maxday       = $this->burndown_data->getMaxDay();
-        $data         = array_fill($this->start_date, abs($maxday - $this->start_date), array());
+        $num_days     = $maxday > $this->start_date ? $maxday - $this->start_date : 1;
+        $data         = array_fill($this->start_date, $num_days, array());
 
         // We assume here that SQL returns effort value order by changeset_id ASC
         // so we only keep the last value (possible to change effort several times a day)
