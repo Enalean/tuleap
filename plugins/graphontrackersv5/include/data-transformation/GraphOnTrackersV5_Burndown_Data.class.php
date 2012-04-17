@@ -19,14 +19,23 @@
  */
 
 require_once TRACKER_BASE_DIR.'/Tracker/Chart/Data/IProvideDataForBurndownChart.class.php';
-
+/**
+ * this class build data required to build a burndown
+ * 
+ */
 class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     private $artifact_ids     = array();
     private $remaining_effort = array();
     private $min_day = PHP_INT_MAX;
     private $max_day = 0;
  
-    public function __construct($query_result, $artifact_ids) {
+    /**
+     * Constructor
+     * 
+     * @param ressource $query_result result of a db_query
+     * @param array     $artifact_ids array of artifact_ids
+     */
+    public function __construct($query_result, array $artifact_ids) {
         $this->artifact_ids = $artifact_ids;
         
         while ($row = db_fetch_array($query_result)) {

@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+/**
+ *  thrown when field information is missing at runtime
+ */
 class Tracker_FormElement_Field_BurndownException extends RuntimeException {
 
 }

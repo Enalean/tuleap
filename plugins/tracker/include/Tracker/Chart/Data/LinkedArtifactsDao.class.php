@@ -22,13 +22,19 @@
 class Tracker_Chart_Burndown_Data_LinkedArtifactsDao extends DataAccessObject {
     
     public function searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids) {
-        $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
-                    FROM tracker_changeset AS c 
-                         INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = " . $effort_field_id . ")";
-        
-        $sql .= " INNER JOIN tracker_changeset_value_$effort_field_type AS cvi ON(cvi.changeset_value_id = cv.id)";
-        $sql .= " WHERE c.artifact_id IN (" . implode(',', $artifact_ids) . ")";
+        $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value";
+        $sql.= "FROM tracker_changeset AS c ";
+        $sql.= "INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = " . $effort_field_id . ") ";
+        $sql.= "INNER JOIN tracker_changeset_value_".$this->getValidEffortFieldType($effort_field_type)." AS cvi ON(cvi.changeset_value_id = cv.id) ";
+        $sql.= "WHERE c.artifact_id IN (" . implode(',', $artifact_ids) . ")";
         return $this->retrieve($sql);
+    }
+    
+    protected function getValidEffortFieldType($effort_field_type) {
+        if ($effort_field_type != 'int') {
+            $effort_field_type = 'float';
+        }
+        return $effort_field_type;
     }
 }
 ?>
