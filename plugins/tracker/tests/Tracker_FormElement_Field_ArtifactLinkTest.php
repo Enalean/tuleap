@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('common/language/BaseLanguage.class.php');
+require_once 'common/language/BaseLanguage.class.php';
 Mock::generate('BaseLanguage');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php';
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
 Mock::generatePartial(
     'Tracker_FormElement_Field_ArtifactLink', 
     'Tracker_FormElement_Field_ArtifactLinkTestVersion', 
@@ -36,7 +36,9 @@ Mock::generatePartial(
         'getDao',
         'getRuleArtifactId'
     )
-);Mock::generatePartial(
+);
+
+Mock::generatePartial(
     'Tracker_FormElement_Field_ArtifactLink', 
     'Tracker_FormElement_Field_ArtifactLinkTestVersion_ForImport', 
     array(
@@ -46,23 +48,25 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php';
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php';
 Mock::generate('Tracker_Artifact_ChangesetValue_ArtifactLink');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 Mock::generate('Tracker_FormElement_Field_Value_ArtifactLinkDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
+require_once 'common/dao/include/DataAccessResult.class.php';
 Mock::generate('DataAccessResult');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_Valid_Rule.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Tracker_Valid_Rule.class.php';
 Mock::generate('Tracker_Valid_Rule_ArtifactId');
 
-require_once('common/include/Response.class.php');
+require_once 'common/include/Response.class.php';
 Mock::generate('Response');
+
+require_once dirname(__FILE__).'/Test_Tracker_FormElement_Builder.php';
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     
