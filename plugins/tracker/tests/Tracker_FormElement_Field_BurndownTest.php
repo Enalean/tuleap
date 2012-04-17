@@ -146,10 +146,13 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
     
-    private function GivenSprintHasOneLinkedArtifact() {
+    private function GivenOneLinkedArtifact() {
         $bug_55           = anArtifact()->withId(55)->withTracker(aTracker()->build())->build();
-        $linked_artifacts = array($bug_55);
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);        
+        return array($bug_55);
+    }
+    
+    private function GivenSprintHasOneLinkedArtifact() {
+        stub($this->sprint)->getLinkedArtifacts()->returns($this->GivenOneLinkedArtifact());        
     }
     
     public function itDisplaysAMessageWhenThereAreNoStartDateField() {
@@ -179,18 +182,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
 
     public function itDisplaysAMessageWhenStartDateIsEmpty() {
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
-        $linked_artifacts = array($bug_55);
-        
-        
         // Empty timestamp
         $start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns('');
 
         $sprint = mock('Tracker_Artifact');
-        stub($sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        stub($sprint)->getLinkedArtifacts()->returns($this->GivenOneLinkedArtifact());
         stub($sprint)->getValue($this->start_date_field)->returns($start_date_changeset_value);
         stub($sprint)->getValue($this->duration_field)->returns($this->duration_changeset_value);
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
@@ -201,17 +197,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
     
     public function itDisplaysAMessageWhenDurationIsEmpty() {
-        $bug_tracker_id = 126;
-        $bug_tracker    = aTracker()->withId($bug_tracker_id)->build();
-        $bug_55         = anArtifact()->withId(55)->withTracker($bug_tracker)->build();
-        
-        $linked_artifacts = array($bug_55);
-            
         // Empty duration
         $duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns(0);
 
         $sprint = mock('Tracker_Artifact');
-        stub($sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        stub($sprint)->getLinkedArtifacts()->returns($this->GivenOneLinkedArtifact());
         stub($sprint)->getValue($this->start_date_field)->returns($this->start_date_changeset_value);
         stub($sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
