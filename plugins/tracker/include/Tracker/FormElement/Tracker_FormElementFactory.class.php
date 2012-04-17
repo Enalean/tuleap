@@ -241,6 +241,23 @@ class Tracker_FormElementFactory {
     }
     
     /**
+     * Get the field by name if user is allowed to see it
+     * 
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param User   $user
+     * 
+     * @return Tracker_FormElement_Field
+     */
+    public function getUsedFieldByNameForUser($tracker_id, $field_name, User $user) {
+        $field = $this->getUsedFieldByName($tracker_id, $field_name);
+        if ($field && $field->userCanRead($user)) {
+            return $field;
+        }
+        return null;
+    }
+    
+    /**
      * Get used formElements by parent id
      * @param int parent_id
      * @return array
