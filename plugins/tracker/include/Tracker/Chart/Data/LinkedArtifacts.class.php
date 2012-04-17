@@ -28,7 +28,6 @@ class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_
     private $max_day = 0;
     
     public function __construct(array $linked_artifacts, $remaining_effort_field_name) {
-        $burndown_dao         = $this->getBurndownDao();
         $form_element_factory = Tracker_FormElementFactory::instance();
         
         $artifact_ids_by_tracker = array();
@@ -40,27 +39,30 @@ class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_
         }
 
         foreach ($artifact_ids_by_tracker as $tracker_id => $artifact_ids) {
-            $effort_field         = $form_element_factory->getFormElementByName($tracker_id, $remaining_effort_field_name);
-
+            $effort_field          = $form_element_factory->getUsedFieldByName($tracker_id, $remaining_effort_field_name);
             if ($effort_field) {
                 $effort_field_id   = $effort_field->getId();
                 $effort_field_type = $form_element_factory->getType($effort_field);
-                $dar = $burndown_dao->searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids);
-                foreach ($dar as $row) {
-                    $day   = $row['day'];
-                    $id    = $row['id'];
-                    $value = $row['value'];
-
-                    if (!isset($this->remaining_effort[$day])) {
-                        $this->remaining_effort[$day] = array();
-                    }
-
-                    $this->remaining_effort[$day][$id] = $value;
-
-                    $this->max_day = max($this->max_day, $day);
-                    $this->min_day = min($this->min_day, $day);
-                }
+                $this->setRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids);
             }
+        }
+    }
+    
+    protected function setRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids) {
+        $remaining_effort = $this->getBurndownDao()->searchRemainingEffort($effort_field_id, $effort_field_type, $artifact_ids);
+        foreach ($remaining_effort as $row) {
+            $day   = $row['day'];
+            $id    = $row['id'];
+            $value = $row['value'];
+        
+            if (!isset($this->remaining_effort[$day])) {
+                $this->remaining_effort[$day] = array();
+            }
+        
+            $this->remaining_effort[$day][$id] = $value;
+        
+            $this->max_day = max($this->max_day, $day);
+            $this->min_day = min($this->min_day, $day);
         }
     }
     

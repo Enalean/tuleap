@@ -64,7 +64,7 @@ class Tracker_Chart_Burndown_Data_LinkedArtifactsTest extends TuleapTestCase {
         $effort_field_id   = 35;
         $effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($effort_field_id);
         stub($this->form_element_factory)->getType($effort_field)->returns(self::EFFORT_FIELD_TYPE);
-        stub($this->form_element_factory)->getFormElementByName($task_tracker_id, 'remaining_effort')->returns($effort_field);
+        stub($this->form_element_factory)->getUsedFieldByName($task_tracker_id, 'remaining_effort')->returns($effort_field);
         
         $this->dao->expectOnce('searchRemainingEffort', array($effort_field_id, self::EFFORT_FIELD_TYPE, $task_ids));
         
@@ -87,12 +87,12 @@ class Tracker_Chart_Burndown_Data_LinkedArtifactsTest extends TuleapTestCase {
         $tasks_effort_field_id   = 35;
         $tasks_effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($tasks_effort_field_id);
         stub($this->form_element_factory)->getType($tasks_effort_field)->returns(self::EFFORT_FIELD_TYPE);
-        stub($this->form_element_factory)->getFormElementByName($task_tracker_id, 'remaining_effort')->returns($tasks_effort_field);
+        stub($this->form_element_factory)->getUsedFieldByName($task_tracker_id, 'remaining_effort')->returns($tasks_effort_field);
         
         $bugs_effort_field_id   = 37;
         $bugs_effort_field      = stub('Tracker_FormElement_Field_Float')->getId()->returns($bugs_effort_field_id);
         stub($this->form_element_factory)->getType($bugs_effort_field)->returns(self::EFFORT_FIELD_TYPE);
-        stub($this->form_element_factory)->getFormElementByName($bug_tracker_id, 'remaining_effort')->returns($bugs_effort_field);
+        stub($this->form_element_factory)->getUsedFieldByName($bug_tracker_id, 'remaining_effort')->returns($bugs_effort_field);
         
         $this->dao->expectAt(0, 'searchRemainingEffort', array($tasks_effort_field_id, self::EFFORT_FIELD_TYPE, $task_ids));
         $this->dao->expectAt(1, 'searchRemainingEffort', array($bugs_effort_field_id, self::EFFORT_FIELD_TYPE, $bug_ids));

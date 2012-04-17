@@ -238,7 +238,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Integer
      */
     private function getBurndownStartDate(Tracker_Artifact $artifact) {
-        $start_date_field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
+        $start_date_field = $this->getFormElementFactory()->getUsedFieldByName($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME);
         if ($start_date_field) {
             if ($timestamp = $artifact->getValue($start_date_field)->getTimestamp()) {
                 return $timestamp;
@@ -256,7 +256,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Integer
      */
     private function getBurndownDuration(Tracker_Artifact $artifact) {
-        $field = $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
+        $field = $this->getFormElementFactory()->getUsedFieldByName($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME);
         if ($field) {
             if ($duration = $artifact->getValue($field)->getValue()) {
                 return $duration;

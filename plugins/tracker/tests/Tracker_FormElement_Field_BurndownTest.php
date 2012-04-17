@@ -107,8 +107,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->sprint)->getTracker()->returns($this->sprint_tracker);
         
         $this->form_element_factory = mock('Tracker_FormElementFactory');
-        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
-        stub($this->form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
+        stub($this->form_element_factory)->getUsedFieldByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
+        stub($this->form_element_factory)->getUsedFieldByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage'));
@@ -159,7 +159,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
-        stub($form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
+        stub($form_element_factory)->getUsedFieldByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($form_element_factory);
         
         $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning'));
@@ -177,7 +177,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
-        stub($form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
+        stub($form_element_factory)->getUsedFieldByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
         Tracker_FormElementFactory::setInstance($form_element_factory);
         
         $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning'));
