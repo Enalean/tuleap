@@ -155,26 +155,34 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->sprint)->getLinkedArtifacts()->returns($this->GivenOneLinkedArtifact());        
     }
     
-    public function itDisplaysAMessageWhenThereAreNoStartDateField() {
-        $this->GivenSprintHasOneLinkedArtifact();
-        
+    private function GivenFormElementFactoryHasOnlyDurationField() {
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
         stub($form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($form_element_factory);
+    }
+    
+    public function itDisplaysAMessageWhenThereAreNoStartDateField() {
+        $this->GivenSprintHasOneLinkedArtifact();
+        
+        $this->GivenFormElementFactoryHasOnlyDurationField();
         
         $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning'));
         
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
     
-    public function itDisplaysAMessageWhenThereAreNoDurationField() {
-        $this->GivenSprintHasOneLinkedArtifact();
-        
+    private function GivenFormElementFactoryHasOnlyStartDateField() {
         Tracker_FormElementFactory::clearInstance();
         $form_element_factory = mock('Tracker_FormElementFactory');
         stub($form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'start_date', $this->current_user)->returns($this->start_date_field);
         Tracker_FormElementFactory::setInstance($form_element_factory);
+    }
+    
+    public function itDisplaysAMessageWhenThereAreNoDurationField() {
+        $this->GivenSprintHasOneLinkedArtifact();
+        
+        $this->GivenFormElementFactoryHasOnlyStartDateField();
         
         $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning'));
         
@@ -209,32 +217,6 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_empty_duration_warning'));
         
         $this->field->fetchBurndownImage($sprint, $this->current_user);
-    }
-    
-    public function itDisplaysAMessageWhenUserCannotAccessStartDateField() {
-        $this->GivenSprintHasOneLinkedArtifact();
-        
-        Tracker_FormElementFactory::clearInstance();
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        stub($form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
-        Tracker_FormElementFactory::setInstance($form_element_factory);
-        
-        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning'));
-        
-        $this->field->fetchBurndownImage($this->sprint, $this->current_user);
-    }
-    
-    public function itDisplaysAMessageWhenUserCannotAccessDurationField() {
-        $this->GivenSprintHasOneLinkedArtifact();
-        
-        Tracker_FormElementFactory::clearInstance();
-        $form_element_factory = mock('Tracker_FormElementFactory');
-        stub($form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'start_date', $this->current_user)->returns($this->start_date_field);
-        Tracker_FormElementFactory::setInstance($form_element_factory);
-        
-        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning'));
-        
-        $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
     public function itDisplaysAnErrorIfUserDoesntHaveThePermissionToAccessTheBurndownField() {
