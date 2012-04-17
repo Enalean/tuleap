@@ -1,24 +1,25 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
- * Codendi is free software; you can redistribute it and/or modify
+ * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
- * Codendi is distributed in the hope that it will be useful,
+ * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
+require_once 'Tracker_FormElement_Field_BurndownException.class.php';
 require_once dirname(__FILE__).'/../Chart/Data/LinkedArtifacts.class.php';
 require_once dirname(__FILE__).'/../Chart/Burndown.class.php';
 
@@ -139,7 +140,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                                             'func'        => self::FUNC_SHOW_BURNDOWN,
                                             'src_aid'     => $artifact->getId()));
         
-        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" alt="'.$this->getLabel().'" />';
+        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" alt="'.$this->getLabel().'" width="640" height="480" />';
         return $html;
     }
 
@@ -159,7 +160,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                         return false;
                     }
                     $this->fetchBurndownImage($artifact);
-                } catch (Exception $e) {
+                } catch (Tracker_FormElement_Field_BurndownException $e) {
                     $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', $e->getMessage()));
                 }
                 break;
@@ -206,7 +207,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if (count($linked_artifacts)) {
             return $linked_artifacts;
         }
-        throw new Exception('burndown_no_linked_artifacts');
+        throw new Tracker_FormElement_Field_BurndownException('burndown_no_linked_artifacts');
     }
     
     /**
@@ -234,9 +235,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             if ($timestamp = $artifact->getValue($start_date_field)->getTimestamp()) {
                 return $timestamp;
             }
-            throw new Exception('burndown_empty_start_date_warning');
+            throw new Tracker_FormElement_Field_BurndownException('burndown_empty_start_date_warning');
         }
-        throw new Exception('burndown_missing_start_date_warning');
+        throw new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning');
     }
 
     /**
@@ -252,9 +253,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             if ($duration = $artifact->getValue($field)->getValue()) {
                 return $duration;
             }
-            throw new Exception('burndown_empty_duration_warning');
+            throw new Tracker_FormElement_Field_BurndownException('burndown_empty_duration_warning');
         }
-        throw new Exception('burndown_missing_duration_warning');
+        throw new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning');
     }
         
     /**

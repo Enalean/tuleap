@@ -144,7 +144,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     public function itDisplaysAMessageWhenThereAreNoLinkedArtifacts() {
         stub($this->sprint)->getLinkedArtifacts()->returns(array());
         
-        $this->expectException();
+        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_no_linked_artifacts'));
         
         $this->field->fetchBurndownImage($this->sprint);
     }
@@ -162,7 +162,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'duration')->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($form_element_factory);
         
-        $this->expectException();
+        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning'));
         
         $this->field->fetchBurndownImage($this->sprint);
     }
@@ -180,7 +180,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($form_element_factory)->getFormElementByName($this->sprint_tracker_id, 'start_date')->returns($this->start_date_field);
         Tracker_FormElementFactory::setInstance($form_element_factory);
         
-        $this->expectException();
+        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning'));
         
         $this->field->fetchBurndownImage($this->sprint);
     }
@@ -203,7 +203,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($sprint)->getValue($this->duration_field)->returns($this->duration_changeset_value);
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
         
-        $this->expectException();
+        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_empty_start_date_warning'));
         
         $this->field->fetchBurndownImage($sprint);
     }
@@ -224,7 +224,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($sprint)->getValue($this->duration_field)->returns($duration_changeset_value);
         stub($sprint)->getTracker()->returns($this->sprint_tracker);
         
-        $this->expectException();
+        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_empty_duration_warning'));
         
         $this->field->fetchBurndownImage($sprint);
     }
