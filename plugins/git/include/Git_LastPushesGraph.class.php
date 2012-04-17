@@ -98,13 +98,11 @@ class Git_LastPushesGraph {
         $graph->img->SetMargin(40, 20, 20, 80 + 16 * $nbRepo);
         $graph->SetMarginColor('white');
         $graph->title->Set($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_title'));
-        $graph->title->SetFont(FF_FONT2, FS_BOLD);
         $graph->xaxis->SetLabelMargin(30);
         $graph->xaxis->SetLabelAlign('right', 'center');
         $graph->xaxis->SetTickLabels($this->dates);
         $graph->yaxis->SetPos('min');
         $graph->yaxis->SetTitle($GLOBALS['Language']->getText('plugin_git', 'widget_project_pushes_label'), 'center');
-        $graph->yaxis->title->SetFont(FF_FONT2, FS_BOLD);
         $graph->yaxis->title->SetAngle(90);
         $graph->yaxis->title->Align('center', 'top');
         $graph->yaxis->SetTitleMargin(30);
@@ -120,7 +118,7 @@ class Git_LastPushesGraph {
      */
     private function displayRepositoryPushesByWeek() {
         $nbRepo   = count($this->repoList);
-        $colors   = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo));
+        $colors   = array_slice($GLOBALS['HTML']->getChartColors(), 0, $nbRepo);
         $nbColors = count($colors);
         $i        = 0;
         $bplot    = array();
@@ -130,7 +128,8 @@ class Git_LastPushesGraph {
             if ($this->displayChart) {
                 $b2plot = new BarPlot($pushes);
                 $color  = $colors[$i++ % $nbColors];
-                $b2plot->SetFillgradient($color, $color.':0.6', GRAD_VER);
+                $b2plot->SetColor($color.':0.7');
+                $b2plot->setFillColor($color);
                 if (!empty($this->legend)) {
                     $b2plot->SetLegend($this->legend);
                 }
@@ -175,7 +174,6 @@ class Git_LastPushesGraph {
      */
     private function displayAccumulatedGraph($bplot, $graph) {
         $abplot = new AccBarPlot($bplot);
-        $abplot->SetShadow();
         $abplot->SetAbsWidth(10);
         $graph->Add($abplot);
         $graph->Stroke();
