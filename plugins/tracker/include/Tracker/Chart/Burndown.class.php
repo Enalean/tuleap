@@ -46,7 +46,7 @@ class Tracker_Chart_Burndown {
     
     public function __construct(Tracker_Chart_Data_IProvideDataForBurndownChart $burndown_data) {
         $this->burndown_data = $burndown_data;
-        $this->start_date = $_SERVER['REQUEST_TIME'] - $this->duration * 24 * 3600;
+        $this->start_date = $_SERVER['REQUEST_TIME'] / self::SECONDS_IN_A_DAY - $this->duration ;
     }
 
     public function setStartDate($start_date) {
@@ -94,7 +94,7 @@ class Tracker_Chart_Burndown {
         $artifact_ids = $this->burndown_data->getArtifactIds();
         $minday       = $this->burndown_data->getMinDay();
         $maxday       = $this->burndown_data->getMaxDay();
-        $data         = array_fill($this->start_date, $maxday - $this->start_date, array());
+        $data         = array_fill($this->start_date, abs($maxday - $this->start_date), array());
 
         // We assume here that SQL returns effort value order by changeset_id ASC
         // so we only keep the last value (possible to change effort several times a day)
