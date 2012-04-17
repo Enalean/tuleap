@@ -86,7 +86,7 @@ class Git_LogDao extends DataAccessObject {
         } else {
             $limit = "LIMIT 10";
         }
-        $sql = "SELECT g.group_name, r.repository_name, l.push_date, l.commits_number
+        $sql = "SELECT g.group_name, r.repository_name, l.push_date, SUM(l.commits_number) AS commits_number
                 FROM plugin_git_log l
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
@@ -95,6 +95,7 @@ class Git_LogDao extends DataAccessObject {
                 AND g.status = 'A'
                 AND l.push_date > ".$this->da->escapeInt($date)."
                 ".$condition."
+                GROUP BY l.push_date
                 ORDER BY g.group_name, r.repository_name, l.push_date DESC
                 ".$limit;
         return $this->retrieve($sql);
