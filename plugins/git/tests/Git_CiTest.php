@@ -32,15 +32,7 @@ Mock::generate('DataAccessResult');
 require_once 'common/language/BaseLanguage.class.php';
 Mock::generate('BaseLanguage');
 
-class Git_CiTest extends UnitTestCase {
-
-    function setup() {
-        $GLOBALS['Language'] = new MockBaseLanguage();
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class Git_CiTest extends TuleapTestCase {
 
     function testRetrieveTriggersInvalidParams() {
         $gitCi = new Git_Ci();
