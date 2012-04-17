@@ -35,8 +35,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     const DURATION_FIELD_NAME         = 'duration';
     const START_DATE_FIELD_NAME       = 'start_date';
     
-    public $default_properties = array();
-    
     /**
      * @var Tracker_HierarchyFactory
      */
