@@ -215,55 +215,5 @@ class Chart {
     public function getTopMargin() {
         return 20 + $this->jpgraph_instance->title->getTextHeight($this->jpgraph_instance->img) + $this->jpgraph_instance->subtitle->getTextHeight($this->jpgraph_instance->img);
     }
-
-    /**
-     * Diplay a given message as png image 
-     *
-     * @param String $msg Message to display
-     *
-     * @return Void
-     */
-    public function displayMessage($msg) {
-        $font_size = 10;
-        //ttf from jpgraph
-        $ttf = new TTF();
-        $ttf->SetUserFont(
-            'dejavu-lgc/DejaVuLGCSans.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
-            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
-            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-        );
-        //Calculate the baseline
-        // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
-        //this should be above baseline
-        $test2    = "H";
-        //some of these additional letters should go below it
-        $test3    ="Hjgqp";
-        //get the dimension for these two:
-        $box_font_size = $font_size + 4;
-        $box2     = imageTTFBbox($box_font_size, 0, $ttf->File(FF_USERFONT), $test2);
-        $box3     = imageTTFBbox($box_font_size, 0, $ttf->File(FF_USERFONT), $test3);
-        $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
-        $bbox     = imageTTFBbox($box_font_size, 0, $ttf->File(FF_USERFONT), $msg);
-        
-        $image_width = $this->width;
-        if (!$image_width) {
-            $image_width = $bbox[2] - $bbox[6];
-        }
-        $image_height = $this->height;
-        if (!$image_height) {
-            $image_height = $bbox[3] - $bbox[5];
-        }
-        
-        
-        if ($im = @imagecreate($image_width, $image_height)) {
-            $backgroundColor  = imagecolorallocate($im, 255, 255, 255);
-            $textColor        = imagecolorallocate($im, 64, 64, 64);
-            imagettftext($im, $font_size, 0, 0, $image_height - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
-            header("Content-type: image/png");
-            imagepng($im);
-            imagedestroy($im);
-        }
-    }
 }
 ?>

@@ -22,6 +22,7 @@ require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
 require_once 'Tracker_FormElement_Field_BurndownException.class.php';
 require_once dirname(__FILE__).'/../Chart/Data/LinkedArtifacts.class.php';
 require_once dirname(__FILE__).'/../Chart/Burndown.class.php';
+require_once 'common/chart/ErrorChart.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
     
@@ -183,8 +184,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param String $msg 
      */
     protected function displayErrorImage($msg) {
-        $error = new Chart(640, 480);
-        $error->displayMessage($msg);
+        $error = new ErrorChart($GLOBALS['Language']->getText('plugin_tracker', 'unable_to_render_the_chart'), $msg, 640, 480);
+        $error->Stroke();
     }
 
     /**
