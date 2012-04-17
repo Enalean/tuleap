@@ -350,7 +350,7 @@ class hudsonViews extends Views {
                     if (!empty($services)) {
                         foreach ($services as $service) {
                             if ($service['used'][$row['job_id']] == true) {
-                                echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$service['name'].'" title="'.$service['name'].'"></td>';
+                                echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$service['title'].'" title="'.$service['title'].'"></td>';
                             } else {
                                 echo '  <td>&nbsp;</td>';
                             }
