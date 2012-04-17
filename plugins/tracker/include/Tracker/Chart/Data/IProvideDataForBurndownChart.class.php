@@ -23,9 +23,29 @@
  * to be rendered as a Burndown chart 
  */
 interface Tracker_Chart_Data_IProvideDataForBurndownChart {
+    /**
+     * Return an array with remaining efforts
+     * 
+     * @return array
+     */
     public function getRemainingEffort();
+    /**
+     * Return the first day set in DB to display in burndown
+     * 
+     * @return int
+     */
     public function getMinDay();
+    /**
+     * Return the last day set in DB to display in burndown
+     * 
+     * @return int
+     */
     public function getMaxDay();
+    /**
+     * Return the list of artifacts of a burndown
+     * 
+     * @return array
+     */
     public function getArtifactIds();
 }
 
