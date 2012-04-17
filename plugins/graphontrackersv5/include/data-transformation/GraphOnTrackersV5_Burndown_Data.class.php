@@ -37,7 +37,7 @@ class GraphOnTrackersV5_Burndown_Data implements Tracker_Chart_Data_IProvideData
             }
             $this->remaining_effort[$current_day][$current_id] = $row['value'];
             $this->max_day = max($this->max_day, $current_day);
-            $this->min_day = max($this->min_day, $current_day);
+            $this->min_day = min($this->min_day, $current_day);
         }
     }
     
