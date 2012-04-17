@@ -193,7 +193,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, User $user) {
         if ($this->userCanRead($user)) {
-            $burndown = $this->getBurndown($this->getLinkedArtifacts($artifact), $user);
+            $linked_artifacts = $this->getLinkedArtifacts($artifact, $user);
+            $burndown         = $this->getBurndown($linked_artifacts, $user);
             $burndown->setStartDate($this->getBurndownStartDate($artifact, $user));
             $burndown->setDuration($this->getBurndownDuration($artifact, $user));
             $burndown->setDescription($this->getDescription());
@@ -212,8 +213,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * 
      * @throws Exception 
      */
-    private function getLinkedArtifacts(Tracker_Artifact $artifact) {
-        $linked_artifacts = $artifact->getLinkedArtifacts();
+    private function getLinkedArtifacts(Tracker_Artifact $artifact, User $user) {
+        $linked_artifacts = $artifact->getLinkedArtifacts($user);
         if (count($linked_artifacts)) {
             return $linked_artifacts;
         }

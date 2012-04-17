@@ -52,7 +52,7 @@ class Planning_ShowPresenter {
     }
     
     public function getLinkedItems() {
-        $linked_items = $this->artifact->getLinkedArtifacts();
+        $linked_items = $this->artifact->getLinkedArtifacts(UserManager::instance()->getCurrentUser());
         if (! $linked_items) {
             $linked_items = array();
             return false;

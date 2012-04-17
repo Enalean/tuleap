@@ -267,6 +267,15 @@
     }
     
     /**
+     * Return the authenticated current user if any (null otherwise)
+     * 
+     * @return User
+     */
+    public function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+    
+    /**
      * For debug only
      */
     function dump() {

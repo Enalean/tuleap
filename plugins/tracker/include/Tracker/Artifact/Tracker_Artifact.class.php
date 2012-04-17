@@ -1172,16 +1172,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * 
      * @return array of Linked Artifacts
      */
-    public function getLinkedArtifacts() {
+    public function getLinkedArtifacts(User $user) {
         $artifact_links       = array();
+        // TODO: Should take user permissions into account as well!
         $artifact_link_field = $this->getAnArtifactLinkField();
         if ($artifact_link_field) {
             $changeset      = $this->getLastChangeset();
-            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset);
+            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset, $user);
         }
         return $artifact_links;
     }
     
+    /**
+     * Return the first (and only one) ArtifactLink field (if any)
+     * 
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
     public function getAnArtifactLinkField() {
         $field = null;
         $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
