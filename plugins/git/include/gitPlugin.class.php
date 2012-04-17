@@ -67,7 +67,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
         $this->_addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
         $this->_addHook('statistics_collector',                            'statistics_collector',                         false);
-        $this->_addHook('ci_triggers',                                     'ci_triggers',                                  false);
+        $this->_addHook('collect_ci_triggers',                             'collect_ci_triggers',                          false);
         $this->_addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
         $this->_addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
         $this->_addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
@@ -399,7 +399,7 @@ class GitPlugin extends Plugin {
      *
      * @return Void
      */
-    public function ci_triggers($params) {
+    public function collect_ci_triggers($params) {
         $ci = new Git_Ci();
         $triggers = $ci->retrieveTriggers($params);
         $params['services'][] = $triggers;

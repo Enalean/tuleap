@@ -89,7 +89,7 @@ class hudsonViews extends Views {
                     )
             )
         */
-        $em->processEvent('ci_triggers', $params);
+        $em->processEvent('collect_ci_triggers', $params);
         $this->_display_jobs_table($group_id, $services);
         if ($user->isMember($request->get('group_id'), 'A')) {
             $this->_display_add_job_form($group_id, $services);
@@ -268,7 +268,7 @@ class hudsonViews extends Views {
                 $em       = EventManager::instance();
                 $services = array();
                 $params   = array('group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services);
-                $em->processEvent('ci_triggers', $params);
+                $em->processEvent('collect_ci_triggers', $params);
                 if (!empty($services)) {
                     foreach ($services as $service) {
                         echo '  <p>';
