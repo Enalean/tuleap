@@ -154,7 +154,7 @@ class Tracker_Chart_Burndown {
             if (isset($remaining_effort[$current_day])) {
                 $effort = array_sum($remaining_effort[$current_day]);
                 if ($start_effort_found == false) {
-                    $start_effort_found = $effort == $start_effort;
+                    $start_effort_found = ($effort == $start_effort);
                     $effort = $start_effort;
                 }
             } elseif ($day_num < count($remaining_effort)) {
