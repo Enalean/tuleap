@@ -278,8 +278,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $output = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {
-            $output .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</p>';
             $output .= '<img src="'.get_server_url().$this->getBurndownImageUrl($artifact).'" alt="'.$this->getLabel().'" width="640" height="480" />';
+            $output .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</em></p>';
         }
         return $output;
     }
