@@ -26,13 +26,6 @@ require_once 'GraphOnTrackersV5_Burndown_Data.class.php';
 
 class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
     /**
-     * Autorized types for effort field type
-     * 
-     * @var array
-     */
-    const TRACKER_CHANGESET_TYPE = array('int', 'float');
-    
-    /**
      * build burndown chart properties
      *
      * @param Burndown_Engine $engine object
@@ -69,8 +62,13 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
         return $effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser());
     }
     
+    /**
+     * Autorized types for effort field type
+     * 
+     * @var array
+     */
     protected function isValidType($type) {
-        return in_array($type, self::TRACKER_CHANGESET_TYPE);
+        return in_array($type, array('int', 'float'));
     }
 
 }
