@@ -113,10 +113,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getUsedFieldByNameForUser($this->sprint_tracker_id, 'duration', $this->current_user)->returns($this->duration_field);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
         
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage'));
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead'));
         
         $this->burndown = mock('Tracker_Chart_Burndown');
         stub($this->field)->getBurndown()->returns($this->burndown);
+        stub($this->field)->userCanRead()->returns(true);
     }
     
     public function tearDown() {
@@ -267,6 +268,14 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
 
+    public function itDisplaysAnErrorIfUserDoesntHaveThePermissionToAccessTheBurndownField() {
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead'));
+        stub($this->field)->userCanRead($this->current_user)->returns(false);
+        
+        $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_permission_denied'));
+        
+        $this->field->fetchBurndownImage($this->sprint, $this->current_user);
+    }
 }
 
 class Tracker_FormElement_Field_Burndown_ConfigurationWarningsTest extends TuleapTestCase {

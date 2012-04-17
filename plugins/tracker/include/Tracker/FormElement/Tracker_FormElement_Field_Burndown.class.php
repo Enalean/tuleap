@@ -192,11 +192,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @param Tracker_Artifact $artifact 
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, User $user) {
-        $burndown = $this->getBurndown($this->getLinkedArtifacts($artifact));
-        $burndown->setStartDate($this->getBurndownStartDate($artifact, $user));
-        $burndown->setDuration($this->getBurndownDuration($artifact, $user));
-        $burndown->setDescription($this->getDescription());
-        $burndown->display();
+        if ($this->userCanRead($user)) {
+            $burndown = $this->getBurndown($this->getLinkedArtifacts($artifact));
+            $burndown->setStartDate($this->getBurndownStartDate($artifact, $user));
+            $burndown->setDuration($this->getBurndownDuration($artifact, $user));
+            $burndown->setDescription($this->getDescription());
+            $burndown->display();
+        } else {
+            throw new Tracker_FormElement_Field_BurndownException('burndown_permission_denied');
+        }
     }
     
     /**

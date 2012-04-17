@@ -1337,3 +1337,4 @@ plugin_tracker	burndown_empty_duration_warning	"duration" field is empty or inva
 plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or those artifacts have no 'remaining_effort' field.
 plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
 plugin_tracker	unable_to_render_the_chart	Unable to render the chart
+plugin_tracker	burndown_permission_denied	You are not allowed to access this field.
