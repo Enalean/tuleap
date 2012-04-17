@@ -35,7 +35,7 @@ class Tracker_Chart_Burndown {
     private $burndown_data;
     private $start_date;
     private $duration = 10;
-    private $title = 'Burndown';
+    private $title = '';
     private $description = '';
     private $width = 640;
     private $height = 480;
