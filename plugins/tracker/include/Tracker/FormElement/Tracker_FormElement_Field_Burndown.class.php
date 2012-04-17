@@ -139,7 +139,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                                             'func'        => self::FUNC_SHOW_BURNDOWN,
                                             'src_aid'     => $artifact->getId()));
         
-        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" alt="'.$this->getLabel().'" width="640" height="480" />';
+        $html .= '<img src="'. TRACKER_BASE_URL .'/?'.$url_query.'" alt="'.$this->getLabel().'" />';
         return $html;
     }
 
@@ -429,8 +429,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
-        return $html;
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     /**
