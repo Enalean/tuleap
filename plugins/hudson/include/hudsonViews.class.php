@@ -64,6 +64,31 @@ class hudsonViews extends Views {
         $em       = EventManager::instance();
         $services = array();
         $params   = array('group_id' => $group_id, 'services' => &$services);
+        /* $services will contain an array of details of all plugins that will trigger CI builds
+           Example of what $services may contain:
+            Array(
+                [0] => Array(
+                        [service] => plugin1
+                        [title] => title1
+                        [used] => Array(
+                                [job_id_11] => true
+                                [job_id_12] => true
+                            )
+                        [add_form]  => "html form"
+                        [edit_form] => "html form"
+                    )
+                [1] => Array(
+                        [service] => plugin2
+                        [title] => title2
+                        [used] => Array(
+                                [job_id_21] => true
+                                [job_id_22] => true
+                            )
+                        [add_form]  => "html form"
+                        [edit_form] => "html form"
+                    )
+            )
+        */
         $em->processEvent('ci_triggers', $params);
         $this->_display_jobs_table($group_id, $services);
         if ($user->isMember($request->get('group_id'), 'A')) {
