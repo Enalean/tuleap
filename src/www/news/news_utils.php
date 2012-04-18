@@ -74,7 +74,7 @@ function news_footer($params) {
     site_project_footer($params);
 }
 
-function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $allow_submit = true, $flat = false, $tail_headlines = 0) {
+function news_show_latest($group_id = '', $limit = 10, $show_projectname = true, $allow_submit = true, $hide_nb_comments = false, $tail_headlines = 0) {
     global $sys_news_group, $Language;
     $hp = Codendi_HTMLPurifier::instance(); 
     $uh = new UserHelper();
@@ -114,59 +114,61 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
     $rows   = db_numrows($result);
     
     if (!$result || $rows < 1) {
-        $return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
-        $return .= db_error();
+        $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';
     } else {
         $news_item_displayed = false;
         while ($data = db_fetch_array($result)) {
             //check if the news is private (project members) or public (registered users)
             $forum_id = $data['forum_id'];
             if (news_check_permission($forum_id, $group_id)) {
-                if ($show_summaries && $limit) {
-                    //get the first paragraph of the story
-                    $arr = explode("\n", $data['details']);
-                    $hp = Codendi_HTMLPurifier::instance();
-                    $summ_txt = '<BR>'. $hp->purify(substr($data['details'], 0, 500), CODENDI_PURIFIER_BASIC, $group_id );
-                    if (strlen($data['details']) > 500) {
-                        $summ_txt .= '...';
-                    }
-                    
-                    //show the project name 
-                    $proj_name = ' &nbsp; - &nbsp; <A HREF="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</A>';
+                $arr = explode("\n", $data['details']);
+                if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
+                    $summary = util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
                 } else {
-                    $proj_name = '';
-                    $summ_txt  = '';
+                    $summary = util_make_links( $arr[0], $group_id );
+                }
+                
+                $proj_name = '';
+                if ($show_projectname && $limit) {
+                    //show the project name 
+                    $proj_name = ' &middot; <a href="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</a>';
                 }
                 
                 
                 if (!$limit) {
                     $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span>';
-                    $return .= '<span class="news_date">'. html_time_ago($data['date']) .'</span><br>';
+                    $return .= '<span class="news_date">'. html_time_ago($data['date']) .'</span></li>';
                 } else {
+                    $comments_txt = '';
+                    if (! $hide_nb_comments) {
+                        $num_comments = (int)$data['num_comments'];
+                        $comments_txt .= ' <a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">('. $num_comments .' ';
+                        if ($num_comments == 1) {
+                            $comments_txt .= $Language->getText('news_utils', 'comment');
+                        } else {
+                            $comments_txt .= $Language->getText('news_utils', 'comments');
+                        }
+                        $comments_txt .= ')</a>';
+                    }
+                    
+                    $return .= '<div class="news">';
                     $return .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span>';
                     
-                    if (!$flat) {
-                        $return .= '<BR>&nbsp;';
-                    }
-                    $return .= '<span class="news_author">'.$uh->getLinkOnUserFromUserId($data['submitted_by']).'</span>
-                                <span class="news_date">'.html_time_ago($data['date']).'</span>'.
-                                $proj_name . $summ_txt;
-                    
-                    $num_comments = (int)$data['num_comments'];
-                    if ($num_comments == 1) {
-                        $comments_txt = ' '. $Language->getText('news_utils', 'comment');
-                    } else {
-                        $comments_txt = ' '. $Language->getText('news_utils', 'comments');
-                    }
-                    
-                    $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">['.$Language->getText('news_utils','read_more_comments').']</a>';
-                    $return .= '</div>';
+                    $return .= '<blockquote>';
+                    $return .= $summary;
+                    $return .= '<small>
+                                <span class="news_author">'. $uh->getLinkOnUserFromUserId($data['submitted_by']) .'</span>
+                                <span class="news_date">'. html_time_ago($data['date']) .'</span>'.
+                                $comments_txt .
+                                $proj_name .
+                                '</small>';
+                    $return .= '</blockquote>';
                     $return .= '<hr width="100%" size="1" noshade>';
-                    
+                    $return .= '</div>';
                 }
                 
                 if ($limit == 1 && $tail_headlines) {
-                    $return .= "<ul>";
+                    $return .= '<ul>';
                 }
                 if ($limit) {
                     $limit--;
