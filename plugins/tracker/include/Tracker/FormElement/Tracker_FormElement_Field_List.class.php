@@ -60,7 +60,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $dao = new Tracker_FormElement_Field_ListDao();
         if ($dao->duplicate($from_field_id, $this->id)) {
             $bf = new Tracker_FormElement_Field_List_BindFactory();
-            return $bf->duplicateByReference($from_field_id, $this->id);
+            return $bf->duplicate($from_field_id, $this->id);
         }
         return array();
     }

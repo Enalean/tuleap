@@ -53,8 +53,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
             
         } else {
-            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
-                    SELECT $to_field_id, label, description, rank, is_hidden";
+            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+                    SELECT $to_field_id, label, description, rank, is_hidden, original_value_id";
         }
         $sql = $insert . "
                 FROM $this->table_name
