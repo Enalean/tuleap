@@ -21,86 +21,54 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/user/UserManager.class.php');
+require_once 'common/user/UserManager.class.php';
+require_once 'GraphOnTrackersV5_Burndown_Data.class.php';
 
 class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
-
     /**
      * build burndown chart properties
      *
      * @param Burndown_Engine $engine object
      */
-    function buildProperties($engine) {
+    public function buildProperties($engine) {
         parent::buildProperties($engine);
-        $data   = array();
-        $engine->legend = null;
-        $result = array();
-        $fef = Tracker_FormElementFactory::instance();
-        $effort_field = $fef->getFormElementById($this->chart->getFieldId());
-        $type = $fef->getType($effort_field);
-        $start_date = $this->chart->getStartDate();
 
-        $day = 24 * 60 * 60;
-        $start_date = round($start_date / $day);
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $effort_field         = $form_element_factory->getFormElementById($this->chart->getFieldId());
+        $type                 = $form_element_factory->getType($effort_field);
         
-        $artifact_ids = explode(',', $this->artifacts['id']);
-        
-        if ($effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser())) {
-            $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
-                    FROM tracker_changeset AS c 
-                         INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = ". $effort_field->getId() . ")";
-            if ($type == 'int') {
-                $sql .= " INNER JOIN tracker_changeset_value_int AS cvi ON(cvi.changeset_value_id = cv.id)";
-            } else {
-                $sql .= " INNER JOIN tracker_changeset_value_float AS cvi ON(cvi.changeset_value_id = cv.id)";
-            }
-            $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
-            $res = db_query($sql);
-            $dbdata = array();
-            $minday = 0;
-            $maxday = 0;
-            while ($d = db_fetch_array($res)) {
-                if (!isset($dbdata[$d['day']])) {
-                    $dbdata[$d['day']] = array();
-                }
-                $dbdata[$d['day']][$d['id']] = $d['value'];
-                if ($d['day'] > $maxday) $maxday=$d['day'];
-                if ($d['day'] < $minday) $minday=$d['day'];
-            }
-            
-            for ($day=$start_date; $day<=$maxday; $day++) {
-                if (!isset($data[$start_date])) {
-                    $data[$start_date]= array();
-                }
-            }
-            // We assume here that SQL returns effort value order by changeset_id ASC
-            // so we only keep the last value (possible to change effort several times a day)
-
-            foreach($artifact_ids as $aid) {
-                for ($day=$minday; $day<=$maxday; $day++) {
-                    if ($day < $start_date) {
-                        if (isset($dbdata[$day][$aid])) {
-                            $data[$start_date][$aid] = $dbdata[$day][$aid];
-                        }
-                    } else if ($day == $start_date) {
-                        if (isset($dbdata[$day][$aid])) {
-                            $data[$day][$aid] = $dbdata[$day][$aid];
-                        } else {
-                            $data[$day][$aid] = 0;
-                        }
-                    } else {
-                        if (isset($dbdata[$day][$aid])) {
-                            $data[$day][$aid] = $dbdata[$day][$aid];
-                        } else {
-                            // No update this day: get value from previous day
-                            $data[$day][$aid] = $data[$day-1][$aid];
-                        }
-                    }
-                } 
-            }
+        if ($this->isValidEffortField($effort_field, $type) && $this->isValidType($type)) {
+            $engine->data    = $this->getBurnDownData($effort_field->getId(), $type);
         }
-        $engine->duration = $this->chart->getDuration();
-        $engine->data = $data;
+        
+        $engine->legend      = null;
+        $engine->start_date  = $this->chart->getStartDate();
+        $engine->duration    = $this->chart->getDuration();
+    }
+    
+    protected function getBurnDownData($effort_field_id, $type) {
+        $artifact_ids = explode(',', $this->artifacts['id']);
+        $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
+                            FROM tracker_changeset AS c 
+                                 INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = ". $effort_field_id . ")";
+        
+        $sql .= " INNER JOIN tracker_changeset_value_$type AS cvi ON(cvi.changeset_value_id = cv.id)";
+        $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
+        
+        return new GraphOnTrackersV5_Burndown_Data(db_query($sql), $artifact_ids);
+    }
+    
+    protected function isValidEffortField($effort_field, $type) {
+        return $effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser());
+    }
+    
+    /**
+     * Autorized types for effort field type
+     * 
+     * @var array
+     */
+    protected function isValidType($type) {
+        return in_array($type, array('int', 'float'));
     }
 
 }

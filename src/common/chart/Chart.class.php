@@ -33,6 +33,9 @@ require_once('jpgraph_date.php');
 */
 class Chart {
     
+    private $width  = null;
+    private $height = null;
+    
     protected $jpgraph_instance;
     
     /**
@@ -47,6 +50,9 @@ class Chart {
     * @return void
     */
     public function __construct($aWidth = 600, $aHeight = 400, $aCachedName = "", $aTimeOut = 0, $aInline = true) {
+        $this->width  = $aWidth;
+        $this->height = $aHeight;
+        
         $classname = $this->getGraphClass();
         $this->jpgraph_instance = new $classname($aWidth,$aHeight,$aCachedName,$aTimeOut,$aInline);
         $this->jpgraph_instance->SetMarginColor($GLOBALS['HTML']->getChartBackgroundColor());

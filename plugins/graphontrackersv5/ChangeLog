@@ -1,3 +1,8 @@
+Version 5.0.1 - Tuleap 5.0
+    * As per Tracker v5.7, centralize burndown rendering code into tracker.
+      Slightly modify the burndown behaviour: now the graph rendering start with
+      the value of the first day of data instead of 0 when there are no data.
+
 Version 5.0 - Tuleap 4.0.27
     * Increment version number
 

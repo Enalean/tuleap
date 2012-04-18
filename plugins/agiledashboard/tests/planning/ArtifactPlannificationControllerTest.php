@@ -115,6 +115,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
                 'planning_id' => $this->planning->getId(),
             )
         );
+        $request->setCurrentUser(aUser()->build());
 
         $content = $this->WhenICaptureTheOutputOfShowAction($request, $factory);
         $this->assertPattern('/Tutu/', $content);
@@ -200,12 +201,16 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             $request_params['semantic_criteria'] = $semantic_criteria;
         }
 
-        return new Codendi_Request($request_params);
+        $request = new Codendi_Request($request_params);
+        $request->setCurrentUser(aUser()->build());
+        return $request;
     }
 
     private function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->userCanUpdate()->returns(true);
         $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
-        $artifact->setReturnValue('getAnArtifactLinkField', anArtifactLinkField());
+        stub($artifact)->getAnArtifactLinkField()->returns($field);
         return $artifact;
     }
     
@@ -245,6 +250,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $id       = 987;
         $title    = 'Coin';
         $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifact($id, $title, array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
@@ -252,6 +258,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
@@ -259,6 +266,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $request = new Codendi_Request(array('planning_id' => $this->planning->getId()));
+        $request->setCurrentUser(aUser()->build());
         $factory = $this->GivenAnArtifactFactory();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }

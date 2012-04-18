@@ -30,8 +30,8 @@ class HTTPRequest extends Codendi_Request {
     /**
      * Constructor
      */
-    function HTTPRequest() {
-        parent::Codendi_Request($_REQUEST);
+    public function __construct() {
+        parent::__construct($_REQUEST);
     }
     
 
@@ -42,7 +42,7 @@ class HTTPRequest extends Codendi_Request {
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
      */
-    function getFromServer($variable) {
+    public function getFromServer($variable) {
         return $this->_get($variable, $_SERVER);
     }
 
@@ -53,7 +53,7 @@ class HTTPRequest extends Codendi_Request {
      *
      * @return boolean
      */
-    function isPost() {
+    public function isPost() {
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             return true;
         } else {
@@ -66,7 +66,7 @@ class HTTPRequest extends Codendi_Request {
      *
      * @return boolean
      */
-    function browserIsNetscape4() {
+    public function browserIsNetscape4() {
         return browser_is_netscape4();
     }
 
@@ -75,7 +75,7 @@ class HTTPRequest extends Codendi_Request {
      *
      * @return mixed HTTPRequest Object.
      */
-    function &instance() {
+    public function &instance() {
         static $_httprequest_instance;
         if (!$_httprequest_instance) {
             $_httprequest_instance = new HTTPRequest();
@@ -89,7 +89,7 @@ class HTTPRequest extends Codendi_Request {
      * @param  Valid_File Validator for files.
      * @return Boolean
      */
-    function validFile(&$validator) {
+    public function validFile(&$validator) {
         if(is_a($validator, 'Valid_File')) {
             $this->_validated_input[$validator->getKey()] = true;
             return $validator->validate($_FILES, $validator->getKey());
@@ -106,7 +106,7 @@ class HTTPRequest extends Codendi_Request {
      * @param mixed $value
      * @return mixed
      */
-    function _stripslashes($value) {
+    protected function _stripslashes($value) {
         if (is_string($value)) {
             $value = stripslashes($value);
         } else if (is_array($value)) {
@@ -125,9 +125,9 @@ class HTTPRequest extends Codendi_Request {
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
-    function _get($variable, $array) {
+    protected function _get($variable, $array) {
         if ($this->_exist($variable, $array)) {
-            return (get_magic_quotes_gpc()?$this->_stripslashes($array[$variable]):$array[$variable]);
+            return (get_magic_quotes_gpc() ? $this->_stripslashes($array[$variable]) : $array[$variable]);
         } else {
             return false;
         }

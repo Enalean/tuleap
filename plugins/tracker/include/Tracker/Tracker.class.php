@@ -197,6 +197,19 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public function getFormElements() {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this);
     }
+    
+    /**
+     * @param string $name
+     * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
+     *
+     * @return bool true if the tracker contains an element of the given name and type
+     */
+    public function hasFormElementWithNameAndType($name, $type) {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $element              = $form_element_factory->getUsedFieldByName($this->getId(), $name);
+        
+        return $element !== null && in_array($form_element_factory->getType($element), (array)$type);
+    }
 
     /**
      * Should probably be mobified for better efficiency
@@ -1480,7 +1493,7 @@ EOS;
             //body
             $i = 0;
             $a_star_is_displayed = false;
-
+            $related_parts = array();
             //The select box for the ugroups or fields (depending $group_first)
             $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';

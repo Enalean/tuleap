@@ -39,6 +39,7 @@ require_once('Tracker_FormElement_Field_SubmittedBy.class.php');
 require_once('Tracker_FormElement_Field_SubmittedOn.class.php');
 require_once('Tracker_FormElement_Field_ArtifactLink.class.php');
 require_once('Tracker_FormElement_Field_PermissionsOnArtifact.class.php');
+require_once('Tracker_FormElement_Field_Burndown.class.php');
 require_once('Tracker_FormElement_Field_CrossReferences.class.php');
 require_once('Tracker_FormElement_Container_Fieldset.class.php');
 require_once('Tracker_FormElement_Container_Column.class.php');
@@ -80,7 +81,8 @@ class Tracker_FormElementFactory {
         'lud'      => 'Tracker_FormElement_Field_LastUpdateDate',
         'subby'    => 'Tracker_FormElement_Field_SubmittedBy',
         'subon'    => 'Tracker_FormElement_Field_SubmittedOn',
-        'cross' => 'Tracker_FormElement_Field_CrossReferences',
+        'cross'    => 'Tracker_FormElement_Field_CrossReferences',
+        'burndown' => 'Tracker_FormElement_Field_Burndown',
     );
     protected $group_classnames       = array(
         'fieldset' => 'Tracker_FormElement_Container_Fieldset',
@@ -110,9 +112,27 @@ class Tracker_FormElementFactory {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::setInstance(new $c);
         }
         return self::$_instance;
+    }
+    
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_FormElementFactory $factory 
+     */
+    public static function setInstance(Tracker_FormElementFactory $factory) {
+        self::$_instance = $factory;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_ArtifactFactory $factory 
+     */
+    public static function clearInstance() {
+        self::$_instance = null;
     }
     
     /**
@@ -218,6 +238,23 @@ class Tracker_FormElementFactory {
             }
         }
         return $f;
+    }
+    
+    /**
+     * Get the field by name if user is allowed to see it
+     * 
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param User   $user
+     * 
+     * @return Tracker_FormElement_Field
+     */
+    public function getUsedFieldByNameForUser($tracker_id, $field_name, User $user) {
+        $field = $this->getUsedFieldByName($tracker_id, $field_name);
+        if ($field && $field->userCanRead($user)) {
+            return $field;
+        }
+        return null;
     }
     
     /**

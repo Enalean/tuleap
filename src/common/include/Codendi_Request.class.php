@@ -18,50 +18,56 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* abstract */ class Codendi_Request {
+class Codendi_Request {
     /**
      * @var array
-     * @access private
+     * @access protected
      */
-    var $_validated_input;
+    protected $_validated_input;
     
     /**
      * @var array
-     * @access private
+     * @access protected
      */
-    var $_last_access_to_input;
+    protected $_last_access_to_input;
     
     /**
      * @var array
      */
-    var $params;
+    public $params;
+    
+    /**
+     * @var UserManager
+     */
+    protected $current_user;
     
     /**
      * Constructor
      */
-    function Codendi_Request($params) {
+    public function __construct($params) {
         $this->params                = $params;
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
     }
     
-    function registerShutdownFunction() {
+    public function registerShutdownFunction() {
         if (Config::get('DEBUG_MODE') && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
-            register_shutdown_function(create_function('', '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();'));
+            $php_code = '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();';
+            register_shutdown_function(create_function('', $php_code));
         }
     }
     
-    function getCookie($name) {
+    public function getCookie($name) {
         $cookie_manager =& new CookieManager();
         return $cookie_manager->getCookie($name);
     }
     
-    function isCookie($name) {
+    public function isCookie($name) {
         $cookie_manager =& new CookieManager();
         return $cookie_manager->isCookie($name);
     }
     
-    function isAjax() {
+    public function isAjax() {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']) == 'XMLHTTPREQUEST';
     }
 
@@ -70,7 +76,7 @@
      *
      * @return string
      */
-    function _getCallTrace() {
+    protected function _getCallTrace() {
         $backtrace = debug_backtrace();
         $files = explode('/', $backtrace[1]['file']);
         return $files[count($files) - 4] . '/'.
@@ -87,7 +93,7 @@
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
      */
-    function get($variable) {
+    public function get($variable) {
         $this->_last_access_to_input[$variable] = $this->_getCallTrace();
         return $this->_get($variable, $this->params);
     }
@@ -96,7 +102,7 @@
      * Add a param and/or set its value
      *
      */
-    function set($name, $value) {
+    public function set($name, $value) {
         $this->params[$name] = $value;
     }
 
@@ -114,7 +120,7 @@
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
      */
-    function getInArray($idx, $variable) {
+    public function getInArray($idx, $variable) {
         $this->_last_access_to_input[$idx][$variable] = $this->_getCallTrace();
         if(is_array($this->params[$idx])) {
             return $this->_get($variable, $this->params[$idx]);
@@ -126,11 +132,11 @@
     /**
      * Get the value of $variable in $array. 
      *
-     * @access private
+     * @access protected
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
-    function _get($variable, $array) {
+    protected function _get($variable, $array) {
         if ($this->_exist($variable, $array)) {
             return $array[$variable];
         } else {
@@ -144,18 +150,18 @@
      * @param string $variable Name of the parameter.
      * @return boolean
      */
-    function exist($variable) {
+    public function exist($variable) {
         return $this->_exist($variable, $this->params);
     }
     
     /**
      * Check if $variable exists in $array.
      *
-     * @access private
+     * @access protected
      * @param string $variable Name of the parameter.
      * @return boolean
      */
-    function _exist($variable, $array) {
+    protected function _exist($variable, $array) {
         return isset($array[$variable]);
     }
     
@@ -165,7 +171,7 @@
      * @param string $variable Name of the parameter.
      * @return boolean
      */
-    function existAndNonEmpty($variable) {
+    public function existAndNonEmpty($variable) {
         return ($this->exist($variable) && trim($this->params[$variable]) != '');
     }
     
@@ -175,7 +181,7 @@
      * @param Valid  Validator to apply
      * @return boolean
      */
-    function valid(&$validator) {
+    public function valid(&$validator) {
         $this->_validated_input[$validator->getKey()] = true;
         return $validator->validate($this->get($validator->getKey()));
     }
@@ -186,7 +192,7 @@
      * @param Valid  Validator to apply
      * @return boolean
      */
-    function validArray(&$validator) {
+    public function validArray(&$validator) {
         $this->_validated_input[$validator->getKey()] = true;
         $isValid = true;
         $array = $this->get($validator->getKey());
@@ -213,7 +219,7 @@
      * @param Valid  Validator to apply
      * @return boolean
      */
-    function validInArray($index, &$validator) {
+    public function validInArray($index, &$validator) {
         $this->_validated_input[$index][$validator->getKey()] = true;
         return $validator->validate($this->getInArray($index, $validator->getKey()));
     }
@@ -225,7 +231,7 @@
      * @param Rule  Validator to apply
      * @return boolean
      */
-    function validKey($key, &$rule) {
+    public function validKey($key, &$rule) {
         $this->_validated_input[$key] = true;
         return $rule->isValid($this->get($key));
     }
@@ -237,7 +243,7 @@
      * @param mixed $validator Name of the validator (string, uint, email) or an instance of a validator
      * @param mixed $default_value Value return if the validator is not valid. Optional, default is null.
      */
-    function getValidated($variable, $validator = 'string', $default_value = null) {
+    public function getValidated($variable, $validator = 'string', $default_value = null) {
         $is_valid = false;
         if ($v = ValidFactory::getInstance($validator, $variable)) {
             $is_valid = $this->valid($v);
@@ -250,7 +256,7 @@
     /**
      * Check that all submitted value has been validated
      */
-    function checkThatAllVariablesAreValidated() {
+    public function checkThatAllVariablesAreValidated() {
         foreach($this->params as $key => $v) {
             if(is_array($v)) {
                 foreach($v as $subK => $subV) {
@@ -267,9 +273,30 @@
     }
     
     /**
+     * Return the authenticated current user if any (null otherwise)
+     * 
+     * @return User
+     */
+    public function getCurrentUser() {
+        if (!$this->current_user) {
+            $this->current_user = UserManager::instance()->getCurrentUser();
+        }
+        return $this->current_user;
+    }
+    
+    /**
+     * Set a current user (should be used only for tests)
+     * 
+     * @param User $user 
+     */
+    public function setCurrentUser(User $user) {
+        $this->current_user = $user;
+    }
+    
+    /**
      * For debug only
      */
-    function dump() {
+    public function dump() {
         var_dump($this->params);
     }
 }

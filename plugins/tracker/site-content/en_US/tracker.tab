@@ -1006,6 +1006,8 @@ plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
+plugin_tracker_formelement_admin	burndown_label	Burndown Chart
+plugin_tracker_formelement_admin	burndown_description	Display the burndown chart for the artifact
 plugin_tracker_formelement_admin	submittedby_label	Submitted By
 plugin_tracker_formelement_admin	submittedby_description	Display the user who submitted the artifact
 plugin_tracker_formelement_admin	submittedby_help	The field is automatically set to artifact submission user
@@ -1326,4 +1328,13 @@ plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	List artifacts you have submitted or assigned to you, by project.
 plugin_tracker_widget_myartifacts	no_artifacts	No artifacts founds.
 
-plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field, please reconfigure your tracker
+plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field or you have not the permission to modify it, please reconfigure your tracker
+plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field or you don't have the permission to access it.
+plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" Integer field or you don't have the permission to access it.
+plugin_tracker	burndown_missing_remaining_effort_warning	Some child trackers doesn't have a "remaining_effort" Integer or Float field:
+plugin_tracker	burndown_empty_start_date_warning	"start date" field is empty or invalid
+plugin_tracker	burndown_empty_duration_warning	"duration" field is empty or invalid
+plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or those artifacts have no 'remaining_effort' field.
+plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
+plugin_tracker	unable_to_render_the_chart	Unable to render the chart
+plugin_tracker	burndown_permission_denied	You are not allowed to access this field.

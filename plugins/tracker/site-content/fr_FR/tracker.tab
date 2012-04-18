@@ -1004,6 +1004,8 @@ plugin_tracker_artifact_changeset	header_html_snapshot	État
 
 plugin_tracker_formelement_admin	crossreferences_label	Références Croisées
 plugin_tracker_formelement_admin	crossreferences_description	Affiche les références croisées de l'artefact
+plugin_tracker_formelement_admin	burndown_label	Diagramme de complétion
+plugin_tracker_formelement_admin	burndown_description	Diagramme de complétion pour l'artefact
 plugin_tracker_formelement_admin	submittedby_label	Auteur de l'artefact
 plugin_tracker_formelement_admin	submittedby_description	Affiche l'auteur de l'artéfact
 plugin_tracker_formelement_admin	submittedby_help	Le champ est automatiquement renseigné avec l'utilisateur qui a soumis l'artéfact
@@ -1323,4 +1325,13 @@ plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	Affiche la liste des artefacts par projet que vous avez soumis ou qui vous ont été assignés.
 plugin_tracker_widget_myartifacts	no_artifacts	Pas d'artefact.
 
-plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact, merci de reconfigurer l'outil de suivi
+plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez pas la permission de le modifier, merci de reconfigurer l'outil de suivi
+plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y acceder.
+plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier ou bien vous n'avez pas la permission d'y acceder.
+plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier ou Flottant :
+plugin_tracker	burndown_empty_start_date_warning	Le champ "start date" est vide ou invalide
+plugin_tracker	burndown_empty_duration_warning	Le champ "duration" est vide ou invalide
+plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouvé ou le champ "remaining_effort" n'existe pas sur ces artefacts.
+plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
+plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
+plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.

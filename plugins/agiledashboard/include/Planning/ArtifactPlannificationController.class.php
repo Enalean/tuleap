@@ -29,6 +29,11 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
      */
     private $artifact;
     
+    /**
+     * @var User
+     */
+    private $current_user;
+    
     public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
@@ -37,6 +42,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->artifact         = $artifact_factory->getArtifactById($aid);
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
+        $this->current_user     = $request->getCurrentUser();
     }
 
     private function getArtifactId(Tracker_Artifact $artifact) {
@@ -47,7 +53,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $planning = $this->getPlanning();
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
         $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
-        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
+        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact, $this->current_user);
         $this->render('show', $presenter);
     }
 
@@ -75,7 +81,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     private function getTrackerLinkedItems($artifacts_to_select) {
         $linked_items = array();
         foreach ($artifacts_to_select as $artifact) {
-            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts());
+            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts($this->current_user));
         }
         return $linked_items;
     }
