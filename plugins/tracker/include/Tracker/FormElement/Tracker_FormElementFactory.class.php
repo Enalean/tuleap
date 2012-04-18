@@ -699,8 +699,10 @@ class Tracker_FormElementFactory {
      * @param array $field_mapping 
      */
     public function fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, array $field_mapping) {
-        $new_project_shared_fields  = $this->getDao()->searchProjectSharedFieldsTargets($to_project_id);
-        $template_project_fields    = $this->getDao()->searchByGroupId($from_project_id);
+        $dao = $this->getDao();
+        
+        $new_project_shared_fields  = $dao->searchProjectSharedFieldsTargets($to_project_id);
+        $template_project_fields    = $dao->searchByGroupId($from_project_id);
         $template_project_field_ids = $this->extractIdFromDar($template_project_fields);
         
         foreach ($new_project_shared_fields as $new_project_shared_field) {
@@ -710,9 +712,24 @@ class Tracker_FormElementFactory {
                 $old_original_field_id = $new_project_shared_field['original_field_id'];
                 $new_original_field_id = $this->getNewOriginalFieldIdFromMapping($old_original_field_id, $field_mapping);
                 
-                $this->getDao()->updateOriginalFieldId($field_id, $new_original_field_id);
+                $dao->updateOriginalFieldId($field_id, $new_original_field_id);
+                
+                $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
+                
+                foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
+                    $dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
+                }
             }
         }
+    }
+    
+    private function getValueMappingFromFieldMapping($original_field_id, $field_mapping) {
+        foreach($field_mapping as $row) {
+            if($row['from'] == $original_field_id) {
+                return $row['values'];
+            }
+        }
+        return array();
     }
     
     private function getNewOriginalFieldIdFromMapping($old_field_id, array $field_mapping) {
