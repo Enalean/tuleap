@@ -207,8 +207,10 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
 
     private function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->userCanUpdate()->returns(true);
         $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
-        $artifact->setReturnValue('getAnArtifactLinkField', anArtifactLinkField());
+        stub($artifact)->getAnArtifactLinkField()->returns($field);
         return $artifact;
     }
     
