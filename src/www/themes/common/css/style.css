@@ -2376,8 +2376,22 @@ input.span1, textarea.span1, .uneditable-input.span1 {
   list-style: none;
 }
 
+#homepage h2,
+#homepage h3,
 .footer h3 {
     margin: 0;
+}
+
+#homepage h2 {
+    font-size: 24px;
+    line-height: 36px;
+}
+#homepage h3 {
+    font-size: 18px;
+    line-height: 27px;
+}
+#homepage p {
+    margin-top: 0;
 }
 .footer li {
     line-height: 18px;

@@ -58,13 +58,15 @@ if ($display_homepage_news) {
                       collaborer sur les projets logiciels.
                 </p>
                 <h3>Avec <?= $GLOBALS['sys_name']?> vous allez pouvoir:</h3>
-                <ul>
-                    <li>plannifier et gérer vos projets,</li>
-                    <li>gérer le développement logiciel: versions de code source, builds d'intégration continue, etc.,</li>
-                    <li>suivre les exigences, tâches, bugs, etc.,</li>
-                    <li>produire des documents et des livrables,</li>
-                    <li>favoriser la collaboration entre les membres du projet.</li>
-                </ul>
+                <p>
+                    <ul>
+                        <li>plannifier et gérer vos projets,</li>
+                        <li>gérer le développement logiciel: versions de code source, builds d'intégration continue, etc.,</li>
+                        <li>suivre les exigences, tâches, bugs, etc.,</li>
+                        <li>produire des documents et des livrables,</li>
+                        <li>favoriser la collaboration entre les membres du projet.</li>
+                    </ul>
+                </p>
                 <p>
                     <a href="http://www.tuleap.com" target="_blank">Plus d'infos sur Tuleap</a>
                 </p>
@@ -113,45 +115,15 @@ if ($display_homepage_news) {
         <div class="row-fluid">
             <div class="span4">
                 <h3>Statistiques <?= $GLOBALS['sys_name']?></h3>
-                <p>Hosted Projects: <b>66</b>
-                    <br />Registered Users: <b>225</b>
-                    <br />Files Downloaded: <b>181</b>
-                </p>
+                <p><?= show_sitestats() ?></p>
             </div>
             <div class="span4">
                 <h3>Derniers projets</h3>
-                <p>(03/26) <a href="/projects/domain/">Hosting - Domains</a>
-                    <br />
-                            (03/10) <a href="/projects/Tax-Saving/">Taxe-Saving (Belgique)</a>
-                    <br />
-                            (02/16) <a href="/projects/Labels/">Labels</a>
-                    <br />
-                            (02/08) <a href="/projects/employees/">Human Resources</a>
-                    <br />
-                            (01/07) <a href="/projects/POS/">POS</a>
-                    <br />
-                            (01/07) <a href="/projects/Catalog/">Catalog</a>
-                    <br />
-                            (01/04) <a href="/projects/mapadherent/">Map adhérent</a>
-                    <br />
-                            (12/15) <a href="/projects/ISTEAEXP/">Export ISTEA</a>
-                    <br />
-                            (11/15) <a href="/projects/memberspayplan/">Members Payment plans</a>
-                    <br />
-                            (10/29) <a href="/projects/Registerisk/">Registerisk</a>
-                    <br />
-                    <a href="/new/?func=projects">[ More ]</a>
-                </p>
-    
+                <p><?= show_newest_projects() ?></p>
             </div>
             <div class="span4">
                 <h3>Dernières versions</h3>
-                <p>(3.1.1)&nbsp;<a href="/projects/hosting/">Module Hosting</a>
-                    <br />
-                            (0.2.3)&nbsp;<a href="/projects/belgium/">Belgium</a>
-                    <br />
-                    <a href="/new/?func=releases">[ More ]</a>
-                </p>
+                <p><?= show_newest_releases() ?></p>
             </div>
         </div>
         <?php } ?>
