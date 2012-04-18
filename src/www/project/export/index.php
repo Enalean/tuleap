@@ -213,43 +213,48 @@ echo '
                         'dependencies_export_links' => &$dependencies_data_export_links,
                         'dependencies_export_format_links' => &$dependencies_data_export_format_links);
     $em->processEvent('project_export_entry', $exportable_items);
+    
+    function key_exists_and_value_not_null($key, array $array) {
+        return (isset($array[$key]) && $array[$key] != null);
+    }
+    
     foreach ($exportable_items['labels'] as $key => $label) {
         echo '<tr class="'.util_get_alt_row_color($iu).'">';
         echo ' <td><b>'.$label.'</b></td>';
         echo ' <td align="center">';
-        if ($entry_data_export_links[$key] != null) {
+        if (key_exists_and_value_not_null($key, $entry_data_export_links)) {
             echo '  <a href="'.$entry_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';    
         } else {
             echo '-';
         }
         echo '  <br>';
-        if ($entry_data_export_format_links[$key] != null) {
+        if (key_exists_and_value_not_null($key, $entry_data_export_format_links)) {
             echo '  <a href="'.$entry_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';    
         } else {
             echo '-';
         }
         echo ' </td>';
         echo ' <td align="center">';
-        if ($history_data_export_links[$key] != null) {
+        if (key_exists_and_value_not_null($key, $history_data_export_links)) {
             echo '  <a href="'.$history_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
         } else {
             echo '-';
         }
         echo '  <br>';
-        if ($history_data_export_format_links[$key] != null) {
+        if (key_exists_and_value_not_null($key, $history_data_export_format_links)) {
             echo '  <a href="'.$history_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
         } else {
             echo '-';
         }
         echo ' </td>';
         echo ' <td align="center">';
-        if ($dependencies_data_export_links[$key] != null) {
+        if (key_exists_and_value_not_null($key, $dependencies_data_export_links)) {
             echo '  <a href="'.$dependencies_data_export_links[$key].'">'.$Language->getText('project_export_index','export').'</a>';
         } else {
             echo '-';
         }
         echo '  <br>';
-        if ($dependencies_data_export_format_links[$key] != null) {
+        if (key_exists_and_value_not_null($key, $dependencies_data_export_format_links)) {
             echo '  <a href="'.$dependencies_data_export_format_links[$key].'">'.$Language->getText('project_export_index','show_format').'</a>';
         } else {
             echo '-';
