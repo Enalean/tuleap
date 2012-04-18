@@ -94,10 +94,20 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
         $wclause = 'news_bytes.is_approved = 1';
     }
     
-    $sql = "SELECT groups.group_name,groups.unix_group_name,news_bytes.submitted_by,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details 
-            FROM news_bytes,groups 
+    $sql = "SELECT groups.group_name,
+                    groups.unix_group_name,
+                    news_bytes.submitted_by,
+                    news_bytes.forum_id,
+                    news_bytes.summary,
+                    news_bytes.date,
+                    news_bytes.details,
+                    count(forum.msg_id) AS num_comments
+            FROM news_bytes 
+                INNER JOIN groups ON (news_bytes.group_id = groups.group_id)
+                LEFT JOIN forum ON (forum.group_forum_id = news_bytes.forum_id)
             WHERE $wclause 
-              AND groups.status = 'A' AND news_bytes.group_id=groups.group_id 
+              AND groups.status = 'A' 
+            GROUP BY news_bytes.forum_id
             ORDER BY date DESC LIMIT ". db_ei($limit + $tail_headlines);
     
     $result = db_query($sql);
@@ -144,14 +154,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
                                 <span class="news_date">'.html_time_ago(db_result($result,$i,'date')).'</span>'.
                                 $proj_name . $summ_txt;
                     
-                    $sql  = 'SELECT count(*) FROM forum WHERE group_forum_id='. db_result($result, $i, 'forum_id');
-                    $res2 = db_query($sql);
-                    
-                    $num_comments = db_result($res2, 0, 0);
-                    if (!$num_comments) {
-                        $num_comments = '0';
-                    }
-                    
+                    $num_comments = (int)db_result($result, $i, 'num_comments');
                     if ($num_comments == 1) {
                         $comments_txt = ' '. $Language->getText('news_utils', 'comment');
                     } else {
