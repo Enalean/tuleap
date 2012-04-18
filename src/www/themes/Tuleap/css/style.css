@@ -365,21 +365,6 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
-/* {{{ News */
-.news_summary a {
-    font-size: 1.5em;
-    /*font-weight: normal*/;
-}
-
-.news_date {
-    font-style: italic;
-}
-
-.news_author {
-    font-style: italic;
-}
-/* }}} */
-
 /*
  * Tabs
  *

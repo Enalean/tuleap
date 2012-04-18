@@ -284,20 +284,6 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
-/* {{{ News */
-.news_summary {
-    font-weight: bold;
-}
-
-.news_date {
-    font-style: italic;
-}
-
-.news_author {
-    font-style: italic;
-}
-/* }}} */
-
 /* {{{ File Release System */
 .frs_filename_col {
     width: 44%;
@@ -2368,59 +2354,8 @@ input.span1, textarea.span1, .uneditable-input.span1 {
 #homepage img {
     vertical-align: middle;
 }
-#homepage blockquote {
-  padding: 0 0 0 15px;
-  margin: 0 0 18px;
-  border-left: 5px solid #eeeeee;
-}
-#homepage blockquote p {
-  margin-bottom: 0;
-  font-size: 16px;
-  font-weight: 300;
-  line-height: 22.5px;
-}
-#homepage blockquote small {
-  display: block;
-  line-height: 18px;
-  color: #999999;
-}
-#homepage blockquote small:before {
-  content: '\2014 \00A0';
-}
-#homepage blockquote.pull-right {
-  float: right;
-  padding-left: 0;
-  padding-right: 15px;
-  border-left: 0;
-  border-right: 5px solid #eeeeee;
-}
-#homepage blockquote.pull-right p,
-#homepage blockquote.pull-right small {
-  text-align: right;
-}
-#homepage q:before,
-#homepage q:after,
-#homepage blockquote:before,
-#homepage blockquote:after {
-  content: "";
-}
 
-#homepage .news_summary {
-    font-weight: normal;
-}
-
-#homepage .news_summary a {
-    font-size: 1em;
-}
-
-#homepage .news_date {
-    font-style: normal;
-}
-
-#homepage .news_author {
-    font-style: normal;
-}
-
+.news hr,
 #homepage hr {
   margin: 18px 0;
   border: 0;
@@ -2448,4 +2383,45 @@ input.span1, textarea.span1, .uneditable-input.span1 {
 }
 .footer.container {
     color: #666;
+}
+/* }}} */
+
+/* {{{ News */
+
+.news blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 18px;
+  border-left: 5px solid #eeeeee;
+}
+.news blockquote p {
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 22.5px;
+}
+.news blockquote small {
+  display: block;
+  line-height: 18px;
+  color: #999999;
+}
+.news blockquote small:before {
+  content: '\2014 \00A0';
+}
+.news blockquote.pull-right {
+  float: right;
+  padding-left: 0;
+  padding-right: 15px;
+  border-left: 0;
+  border-right: 5px solid #eeeeee;
+}
+.news blockquote.pull-right p,
+.news blockquote.pull-right small {
+  text-align: right;
+}
+.news q:before,
+.news q:after,
+.news blockquote:before,
+.news blockquote:after {
+  content: "";
+}
 /* }}} */
