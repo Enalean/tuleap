@@ -74,102 +74,101 @@ function news_footer($params) {
     site_project_footer($params);
 }
 
-function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_submit=true,$flat=false,$tail_headlines=0) {
-    global $sys_news_group,$Language;
+function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $allow_submit = true, $flat = false, $tail_headlines = 0) {
+    global $sys_news_group, $Language;
     $hp = Codendi_HTMLPurifier::instance(); 
     $uh = new UserHelper();
     
     $return  = "";
     if (!$group_id) {
-	$group_id=$sys_news_group;
+        $group_id = $sys_news_group;
     }
-
+    
     /*
-       Show a simple list of the latest news items with a link to the forum
-       */
-
+    Show a simple list of the latest news items with a link to the forum
+    */
+    
     if ($group_id != $sys_news_group) {
-	$wclause="news_bytes.group_id=". db_ei($group_id) ." AND news_bytes.is_approved <> '4'";
+        $wclause = "news_bytes.group_id = ". db_ei($group_id) ." AND news_bytes.is_approved <> '4'";
     } else {
-	$wclause='news_bytes.is_approved=1';
+        $wclause = 'news_bytes.is_approved = 1';
     }
-
-    $sql="SELECT groups.group_name,groups.unix_group_name,news_bytes.submitted_by,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details ".
-	"FROM news_bytes,groups ".
-	"WHERE $wclause ".
-	"AND groups.status = 'A' AND news_bytes.group_id=groups.group_id ".
-	'ORDER BY date DESC LIMIT '.db_ei($limit+$tail_headlines);
-
-    $result=db_query($sql);
-    $rows=db_numrows($result);
-
+    
+    $sql = "SELECT groups.group_name,groups.unix_group_name,news_bytes.submitted_by,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details 
+            FROM news_bytes,groups 
+            WHERE $wclause 
+              AND groups.status = 'A' AND news_bytes.group_id=groups.group_id 
+            ORDER BY date DESC LIMIT ". db_ei($limit + $tail_headlines);
+    
+    $result = db_query($sql);
+    $rows   = db_numrows($result);
+    
     if (!$result || $rows < 1) {
-	$return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
-	$return .= db_error();
+        $return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
+        $return .= db_error();
     } else {
         $news_item_displayed = false;
-        for ($i=0; $i<$rows; $i++) {
+        for ($i = 0 ; $i < $rows ; $i++) {
             //check if the news is private (project members) or public (registered users)
-            $forum_id=db_result($result,$i,'forum_id');
-            if (news_check_permission($forum_id,$group_id)) {
+            $forum_id = db_result($result, $i, 'forum_id');
+            if (news_check_permission($forum_id, $group_id)) {
                 $news_item_displayed = true;
                 if ($show_summaries && $limit) {
-                //get the first paragraph of the story
-                $arr=explode("\n",db_result($result,$i,'details'));
+                    //get the first paragraph of the story
+                    $arr = explode("\n", db_result($result, $i, 'details'));
                     
-                        //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
-                if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
-                    $summ_txt='<BR>'. util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
+                    //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
+                    if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
+                        $summ_txt = '<BR>'. util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
+                    } else {
+                        $summ_txt = '<BR>'. util_make_links( $arr[0], $group_id );
+                    }
+                    //show the project name 
+                    $proj_name = ' &nbsp; - &nbsp; <A HREF="/projects/'. strtolower(db_result($result,$i,'unix_group_name')) .'/">'. db_result($result,$i,'group_name') .'</A>';
                 } else {
-                    $summ_txt='<BR>'. util_make_links( $arr[0], $group_id );
+                    $proj_name = '';
+                    $summ_txt  = '';
                 }
-                //show the project name 
-                $proj_name=' &nbsp; - &nbsp; <A HREF="/projects/'. strtolower(db_result($result,$i,'unix_group_name')) .'/">'. db_result($result,$i,'group_name') .'</A>';
-                } else {
-                $proj_name='';
-                $summ_txt='';
-                }
-        
+                
                 
                 if (!$limit) {
-        
-                $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">'. db_result($result,$i,'summary') . '</a></span>';
-                $return .= ' <span class="news_date">'. html_time_ago(db_result($result,$i,'date')).'</span><br>';
+                    $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">'. db_result($result, $i, 'summary') . '</a></span>';
+                    $return .= '<span class="news_date">'. html_time_ago(db_result($result, $i, 'date')) .'</span><br>';
                 } else {
-                $return .= '
-                        <span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">'. db_result($result,$i,'summary') . '</a></span>';
-        
-                if (!$flat) {
-                    $return .= '
-                                                   <BR>&nbsp;';
+                    $return .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result, $i, 'forum_id') .'">'. db_result($result, $i, 'summary') . '</a></span>';
+                    
+                    if (!$flat) {
+                        $return .= '<BR>&nbsp;';
+                    }
+                    $return .= '<span class="news_author">'.$uh->getLinkOnUserFromUserId(db_result($result, $i, 'submitted_by')).'</span>
+                                <span class="news_date">'.html_time_ago(db_result($result,$i,'date')).'</span>'.
+                                $proj_name . $summ_txt;
+                    
+                    $sql  = 'SELECT count(*) FROM forum WHERE group_forum_id='. db_result($result, $i, 'forum_id');
+                    $res2 = db_query($sql);
+                    
+                    $num_comments = db_result($res2, 0, 0);
+                    if (!$num_comments) {
+                        $num_comments = '0';
+                    }
+                    
+                    if ($num_comments == 1) {
+                        $comments_txt = ' '. $Language->getText('news_utils', 'comment');
+                    } else {
+                        $comments_txt = ' '. $Language->getText('news_utils', 'comments');
+                    }
+                    
+                    $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">['.$Language->getText('news_utils','read_more_comments').']</a>';
+                    $return .= '</div>';
+                    $return .= '<hr width="100%" size="1" noshade>';
+                    
                 }
-                $return .= ' <span class="news_author">'.$uh->getLinkOnUserFromUserId(db_result($result,$i,'submitted_by')).'</span>'.
-                           ' <span class="news_date">'.html_time_ago(db_result($result,$i,'date')).'</span>'.
-                           $proj_name . $summ_txt;
-        
-                $sql='SELECT count(*) FROM forum WHERE group_forum_id='.db_result($result,$i,'forum_id');
-                $res2 = db_query($sql);
-                $num_comments = db_result($res2,0,0);
-        
-                if (!$num_comments) {
-                    $num_comments = '0';
-                }
-        
-                if ($num_comments == 1) {
-                    $comments_txt = ' '.$Language->getText('news_utils','comment');
-                } else {
-                    $comments_txt = ' '.$Language->getText('news_utils','comments');
-                }
-        
-                $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <A HREF="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">['.$Language->getText('news_utils','read_more_comments').']</a></div><HR width="100%" size="1" noshade>';
-                                          
-                }
-        
-                if ($limit==1 && $tail_headlines) {
-                $return .= "<ul>";
+                
+                if ($limit == 1 && $tail_headlines) {
+                    $return .= "<ul>";
                 }
                 if ($limit) {
-                $limit--;
+                    $limit--;
                 }
             }    
         }
@@ -179,24 +178,28 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
         }
     }
     if ($group_id != $sys_news_group) {
-	$archive_url='/news/?group_id='.$group_id;
+        $archive_url = '/news/?group_id='. $group_id;
     } else {
-	$archive_url='/news/';
+        $archive_url = '/news/';
     }
     
     if ($tail_headlines) {
-	$return .= '</ul>'."\n";
+        $return .= '</ul>'."\n";
     }
     
-    $return .= '<div align="center">'
-	.'<a href="'.$archive_url.'">['.$Language->getText('news_utils','news_archive').']</a></div>';
-
+    $return .= '<div align="center">
+                    <a href="'.$archive_url.'">['.$Language->getText('news_utils','news_archive').']</a></div>';
+            
     if ($allow_submit && $group_id != $sys_news_group) {
-	//you can only submit news from a project now
-	//you used to be able to submit general news
-	$return .= '<div align="center"><A HREF="/news/submit.php?group_id='.$group_id.'"><FONT SIZE="-1">['.$Language->getText('news_utils','submit_news').']</FONT></A></center></div>';
+        //you can only submit news from a project now
+        //you used to be able to submit general news
+        $return .= '<div align="center">
+            <A HREF="/news/submit.php?group_id='.$group_id.'">
+                <FONT SIZE="-1">['.$Language->getText('news_utils','submit_news').']</FONT>
+            </A>
+        </div>';
     }
-
+    
     return $return;
 }
 
