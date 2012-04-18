@@ -372,7 +372,23 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 WHERE tracker.group_id = $project_id 
                   AND tracker_field.original_field_id != 0";
         return $this->retrieve($sql);
+    }
+    
+    public function searchByGroupId($group_id) {
+        $group_id  = $this->da->escapeInt($group_id);
         
+        $sql = "
+            SELECT f.*
+        
+            FROM       tracker_field AS f
+            INNER JOIN tracker       AS t ON (f.tracker_id = t.id)
+        
+            WHERE t.group_id = $group_id
+            AND   f.use_it   = 1
+            AND   t.deletion_date IS NULL
+        ";
+        
+        return $this->retrieve($sql);
     }
 
     /**

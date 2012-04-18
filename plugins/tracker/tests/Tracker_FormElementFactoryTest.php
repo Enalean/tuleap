@@ -302,72 +302,85 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        
+        $this->new_project_id      = 3;
+        $this->template_project_id = 29;
+        
+        $this->dao                  = mock('Tracker_FormElement_FieldDao');
         $this->form_element_factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao'));
+        
+        stub($this->form_element_factory)->getDao()->returns($this->dao);
     }
     
     public function itDoesNothingWhenFieldMappingIsEmpty() {
-        $to_project_id = 3;
-        $from_project_id = 29;        
-
-        $no_shared_fields_copied = array();
-        $dao = mock('Tracker_FormElement_FieldDao');
-        stub($dao)->searchProjectSharedFieldsTargets($to_project_id)->returns($no_shared_fields_copied);        
-        stub($dao)->searchProjectSharedFieldsOriginals($from_project_id)->returns(array());        
-        $dao->expectNever('updateOriginalFieldId');
-        stub($this->form_element_factory)->getDao()->returns($dao);
-        $field_mapping = array();
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
+        $template_project_fields   = array();
+        $new_project_shared_fields = array();
+        $field_mapping             = array();
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
+        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        
+        $this->dao->expectNever('updateOriginalFieldId');
+        
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id, $field_mapping);
     }
     
     public function itDoesNothingWhenThereIsNoSharedFieldInTheFieldMapping() {
-        $to_project_id = 3;
-        $from_project_id = 29;        
-        $no_shared_fields_copied = array();
-        $dao = mock('Tracker_FormElement_FieldDao');
-        stub($dao)->searchProjectSharedFieldsTargets($to_project_id)->returns($no_shared_fields_copied);        
-        stub($dao)->searchProjectSharedFieldsOriginals($from_project_id)->returns(array());        
-        $dao->expectNever('updateOriginalFieldId');
-        stub($this->form_element_factory)->getDao()->returns($dao);
-        $field_mapping = array('321' => '101');
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id,   $field_mapping);
+        $template_project_fields   = array(array('id' => 321));
+        $new_project_shared_fields = array();
+        $field_mapping             = array(array('from' => 321, 'to' => 101));
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
+        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        
+        $this->dao->expectNever('updateOriginalFieldId');
+        
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id,   $field_mapping);
     }
     
     public function itUpdatesTheOrginalFieldIdForEverySharedField() {
-        $to_project_id = 3;
-        $from_project_id = 29;        
-                
-        $shared_field1 = array('id' => 234, 'original_field_id' => 666);
-        $shared_field2 = array('id' => 567, 'original_field_id' => 555);
-        $copied_shared_fields = array($shared_field1, $shared_field2);
-        $dao = mock('Tracker_FormElement_FieldDao');
-        stub($dao)->searchProjectSharedFieldsTargets($to_project_id)  ->returns($copied_shared_fields);        
-        stub($dao)->searchProjectSharedFieldsOriginals($from_project_id)->returns(array());        
-        $dao->expectAt(0, 'updateOriginalFieldId', array(234, 777));
-        $dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
-        stub($this->form_element_factory)->getDao()->returns($dao);
-        $field_mapping = array(999 => 234,
-                               103 => 567,
-                               555 => 888,
-                               666 => 777);
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
+        $template_project_fields    = array(array('id' => 999),
+                                            array('id' => 103),
+                                            array('id' => 555),
+                                            array('id' => 666));
+        
+        $new_project_shared_field_1 = array('id' => 234, 'original_field_id' => 666);
+        $new_project_shared_field_2 = array('id' => 567, 'original_field_id' => 555);
+        $new_project_shared_fields  = array($new_project_shared_field_1, $new_project_shared_field_2);
+        
+        $field_mapping              = array(array('from' => 999, 'to' => 234),
+                                            array('from' => 103, 'to' => 567),
+                                            array('from' => 555, 'to' => 888),
+                                            array('from' => 666, 'to' => 777));
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);        
+        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        
+        $this->dao->expectAt(0, 'updateOriginalFieldId', array(234, 777));
+        $this->dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
+        
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id, $field_mapping);
     }
 
     public function itDoesntUpdateWhenTheOriginalFieldIdRefersToAfieldOutsideTheTemplateProject() {
-        $to_project_id   = 3;
-        $from_project_id = 29;        
-        $shared_field_in_template      = array('id' => 234, 'original_field_id' => 666);
-        $shared_field_outside_template = array('id' => 567, 'original_field_id' => 555);
-        $copied_shared_fields = array($shared_field_in_template, $shared_field_outside_template);
-        $dao = mock('Tracker_FormElement_FieldDao');
-        stub($dao)->searchProjectSharedFieldsTargets($to_project_id)  ->returns($copied_shared_fields);        
-        stub($dao)->searchProjectSharedFieldsOriginals($from_project_id)->returns(array($shared_field_in_template));        
-        $dao->expectOnce('updateOriginalFieldId', array(234, 777));
-        stub($this->form_element_factory)->getDao()->returns($dao);
-        $field_mapping = array(999 => 234,
-                               103 => 567,
-                               555 => 888,
-                               666 => 777);
-        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
+        $template_project_fields    = array(array('id' => 999),
+                                            array('id' => 103),
+                                            array('id' => 666));
+        
+        $new_project_internal_shared_field = array('id' => 234, 'original_field_id' => 666);
+        $new_project_external_shared_field = array('id' => 567, 'original_field_id' => 555);
+        $new_project_shared_fields         = array($new_project_internal_shared_field, $new_project_external_shared_field);
+        
+        $field_mapping        = array(array('from' => 999, 'to' => 234),
+                                      array('from' => 103, 'to' => 567),
+                                      array('from' => 666, 'to' => 777));
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
+        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        
+        $this->dao->expectOnce('updateOriginalFieldId', array(234, 777));
+        
+        $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id, $field_mapping);
     }
 }
 ?>

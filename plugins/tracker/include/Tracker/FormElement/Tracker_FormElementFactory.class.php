@@ -699,20 +699,32 @@ class Tracker_FormElementFactory {
      * @param array $field_mapping 
      */
     public function fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, array $field_mapping) {
-        $project_target_shared_fields  = $this->getDao()->searchProjectSharedFieldsTargets($to_project_id);
-        $originals_of_template_project = $this->getDao()->searchProjectSharedFieldsOriginals($from_project_id);
-        $originals_shared_field_ids    = $this->extractIdFromDar($originals_of_template_project);
+        $new_project_shared_fields  = $this->getDao()->searchProjectSharedFieldsTargets($to_project_id);
+        $template_project_fields    = $this->getDao()->searchByGroupId($from_project_id);
+        $template_project_field_ids = $this->extractIdFromDar($template_project_fields);
         
-        foreach ($project_target_shared_fields as $shared_field_row) {
-            if ($this->isASharedFieldOfDuplicatedProject($shared_field_row['id'], $originals_shared_field_ids)) {
-                $new_source_field_id = $field_mapping[$shared_field_row['original_field_id']];
-                $this->getDao()->updateOriginalFieldId($shared_field_row['id'], $new_source_field_id);
+        foreach ($new_project_shared_fields as $new_project_shared_field) {
+            if ($this->originalFieldIsInTemplateProject($new_project_shared_field, $template_project_field_ids)) {
+                
+                $field_id              = $new_project_shared_field['id'];
+                $old_original_field_id = $new_project_shared_field['original_field_id'];
+                $new_original_field_id = $this->getNewOriginalFieldIdFromMapping($old_original_field_id, $field_mapping);
+                
+                $this->getDao()->updateOriginalFieldId($field_id, $new_original_field_id);
+            }
+        }
+    }
+    
+    private function getNewOriginalFieldIdFromMapping($old_field_id, array $field_mapping) {
+        foreach($field_mapping as $row) {
+            if($row['from'] == $old_field_id) {
+                return $row['to'];
             }
         }
     }
 
-    private function isASharedFieldOfDuplicatedProject($shared_field_row_id, $original_shared_field_ids) {
-        return in_array($shared_field_row_id, $original_shared_field_ids);
+    private function originalFieldIsInTemplateProject(array $shared_field, array $original_shared_field_ids) {
+        return in_array($shared_field['original_field_id'], $original_shared_field_ids);
     }
     
     private function extractIdFromDar($dar) {
