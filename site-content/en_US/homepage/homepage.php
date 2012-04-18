@@ -154,104 +154,102 @@ $login_form_url .= '/account/login.php';
     </div>
         <div class="span4">
         <h2>It happens on <?= $GLOBALS['sys_name']?>!</h2>
-        <dl compact="">
-            <span class="news_summary">
-                <a href="/forum/forum.php?forum_id=242">Milestone 1.0.3.4 is available</a>
-            </span>
-            <blockquote>Dolibarr 3.2 is needed
-                        <br />New: possibility to define a page break
-                        <br />Fix: compatibility with latest 3.2 development
-                        <small>
-                            <span class="news_author">
-                                <a href="/users/hregis">Régis Houssin (hregis)</a>
-                    </span>
-                    <span class="news_date">
-                        <span title="2012-04-12 21:22">19 hours ago</span>
-                    </span>
-                </small>
-            </blockquote>
-            <span class="news_summary">
-                <a href="/forum/forum.php?forum_id=238">New POS module</a>
-            </span>
-            <blockquote>The DoliPOS module is available on <a target="_blank" href="http://www.dolistore.com">http://www.dolistore.com</a>
-                <small>
-                    <span class="news_author">
-                        <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
-                    </span>
-                    <span class="news_date">
-                        <span title="2012-03-17 10:18">27 days ago</span>
-                    </span>
-                </small>
-            </blockquote>
-            <span class="news_summary">
-                <a href="/forum/forum.php?forum_id=237">Multi-Company 3.1.2 maintenance release</a>
-            </span>
-            <blockquote>Fix: invalid path if you do not use the custom directory
-                        <small>
-                            <span class="news_author">
-                                <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
-                    </span>
-                    <span class="news_date">
-                        <span title="2012-03-17 10:18">27 days ago</span>
-                    </span>
-                </small>
-            </blockquote>
-            <span class="news_summary">
-                <a href="/forum/forum.php?forum_id=238">Release of Paypal+ 1.1.0 is available</a>
-            </span>
-            <blockquote>New: multicurrency module connector with exchange rate <br />
-                        Qual: best automatic creation capability <br />
-                        Fix: missing customer country
-                        <small>
-                            <span class="news_author">
-                                <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
-                    </span>
-                    <span class="news_date">
-                        <span title="2012-03-17 10:18">27 days ago</span>
-                    </span>
-                </small>
-            </blockquote>
-            <span class="news_summary">
-                <a href="/forum/forum.php?forum_id=238">New POS module</a>
-            </span>
-            <blockquote>The DoliPOS module is available on <a target="_blank" href="http://www.dolistore.com">http://www.dolistore.com</a>
-                <small>
-                    <span class="news_author">
-                        <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
-                    </span>
-                    <span class="news_date">
-                        <span title="2012-03-17 10:18">27 days ago</span>
-                    </span>
-                </small>
-            </blockquote>
-            <ul class="unstyled">
-                <li>
-                    <span class="news_summary">
-                        <a href="/forum/forum.php?forum_id=215">Release of Belgium module 0.2.3</a>
-                    </span>
-                </li>
-                <li>
-                    <span class="news_summary">
-                        <a href="/forum/forum.php?forum_id=213">Release of Multi-Company 3.2.0-alpha1 is available</a>
-                    </span>
-                </li>
-                <li>
-                    <span class="news_summary">
-                        <a href="/forum/forum.php?forum_id=206">Dolibarr Proxmox Appliance 3.1.0-1 is available</a>
-                    </span>
-                </li>
-                <li>
-                    <span class="news_summary">
-                        <a href="/forum/forum.php?forum_id=193">Release of Joomla Authentication 1.1.0 is available</a>
-                    </span>
-                </li>
-                <li>
-                    <span class="news_summary">
-                        <a href="/forum/forum.php?forum_id=192">Release of Multi-Company 3.1.1 is available</a>
-                    </span>
-                </li>
-            </ul>
-        </dl>
+        <span class="news_summary">
+            <a href="/forum/forum.php?forum_id=242">Milestone 1.0.3.4 is available</a>
+        </span>
+        <blockquote>Dolibarr 3.2 is needed
+                    <br />New: possibility to define a page break
+                    <br />Fix: compatibility with latest 3.2 development
+                    <small>
+                        <span class="news_author">
+                            <a href="/users/hregis">Régis Houssin (hregis)</a>
+                </span>
+                <span class="news_date">
+                    <span title="2012-04-12 21:22">19 hours ago</span>
+                </span>
+            </small>
+        </blockquote>
+        <span class="news_summary">
+            <a href="/forum/forum.php?forum_id=238">New POS module</a>
+        </span>
+        <blockquote>The DoliPOS module is available on <a target="_blank" href="http://www.dolistore.com">http://www.dolistore.com</a>
+            <small>
+                <span class="news_author">
+                    <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
+                </span>
+                <span class="news_date">
+                    <span title="2012-03-17 10:18">27 days ago</span>
+                </span>
+            </small>
+        </blockquote>
+        <span class="news_summary">
+            <a href="/forum/forum.php?forum_id=237">Multi-Company 3.1.2 maintenance release</a>
+        </span>
+        <blockquote>Fix: invalid path if you do not use the custom directory
+                    <small>
+                        <span class="news_author">
+                            <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
+                </span>
+                <span class="news_date">
+                    <span title="2012-03-17 10:18">27 days ago</span>
+                </span>
+            </small>
+        </blockquote>
+        <span class="news_summary">
+            <a href="/forum/forum.php?forum_id=238">Release of Paypal+ 1.1.0 is available</a>
+        </span>
+        <blockquote>New: multicurrency module connector with exchange rate <br />
+                    Qual: best automatic creation capability <br />
+                    Fix: missing customer country
+                    <small>
+                        <span class="news_author">
+                            <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
+                </span>
+                <span class="news_date">
+                    <span title="2012-03-17 10:18">27 days ago</span>
+                </span>
+            </small>
+        </blockquote>
+        <span class="news_summary">
+            <a href="/forum/forum.php?forum_id=238">New POS module</a>
+        </span>
+        <blockquote>The DoliPOS module is available on <a target="_blank" href="http://www.dolistore.com">http://www.dolistore.com</a>
+            <small>
+                <span class="news_author">
+                    <a href="/users/simnandez">Juanjo Menent (simnandez)</a>
+                </span>
+                <span class="news_date">
+                    <span title="2012-03-17 10:18">27 days ago</span>
+                </span>
+            </small>
+        </blockquote>
+        <ul class="unstyled">
+            <li>
+                <span class="news_summary">
+                    <a href="/forum/forum.php?forum_id=215">Release of Belgium module 0.2.3</a>
+                </span>
+            </li>
+            <li>
+                <span class="news_summary">
+                    <a href="/forum/forum.php?forum_id=213">Release of Multi-Company 3.2.0-alpha1 is available</a>
+                </span>
+            </li>
+            <li>
+                <span class="news_summary">
+                    <a href="/forum/forum.php?forum_id=206">Dolibarr Proxmox Appliance 3.1.0-1 is available</a>
+                </span>
+            </li>
+            <li>
+                <span class="news_summary">
+                    <a href="/forum/forum.php?forum_id=193">Release of Joomla Authentication 1.1.0 is available</a>
+                </span>
+            </li>
+            <li>
+                <span class="news_summary">
+                    <a href="/forum/forum.php?forum_id=192">Release of Multi-Company 3.1.1 is available</a>
+                </span>
+            </li>
+        </ul>
     </div>
 </div>
 

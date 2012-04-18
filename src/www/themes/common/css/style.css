@@ -2287,6 +2287,47 @@ h3.toggler-hide-noajax {
 .container-fluid:after {
   clear: both;
 }
+ul.unstyled,
+ol.unstyled {
+  margin-left: 0;
+  list-style: none;
+}
+input.span12, textarea.span12, .uneditable-input.span12 {
+  width: 930px;
+}
+input.span11, textarea.span11, .uneditable-input.span11 {
+  width: 850px;
+}
+input.span10, textarea.span10, .uneditable-input.span10 {
+  width: 770px;
+}
+input.span9, textarea.span9, .uneditable-input.span9 {
+  width: 690px;
+}
+input.span8, textarea.span8, .uneditable-input.span8 {
+  width: 610px;
+}
+input.span7, textarea.span7, .uneditable-input.span7 {
+  width: 530px;
+}
+input.span6, textarea.span6, .uneditable-input.span6 {
+  width: 450px;
+}
+input.span5, textarea.span5, .uneditable-input.span5 {
+  width: 370px;
+}
+input.span4, textarea.span4, .uneditable-input.span4 {
+  width: 290px;
+}
+input.span3, textarea.span3, .uneditable-input.span3 {
+  width: 210px;
+}
+input.span2, textarea.span2, .uneditable-input.span2 {
+  width: 130px;
+}
+input.span1, textarea.span1, .uneditable-input.span1 {
+  width: 50px;
+}
 .hero-unit {
   padding: 60px;
   margin-bottom: 30px;
@@ -2317,5 +2358,72 @@ h3.toggler-hide-noajax {
 .hero-unit {
     background: #f3f4f6 url(../images/homepage/image-homepage-tuleap.png) no-repeat;
     min-height:220px;
+}
+#homepage img {
+    vertical-align: middle;
+}
+#homepage blockquote {
+  padding: 0 0 0 15px;
+  margin: 0 0 18px;
+  border-left: 5px solid #eeeeee;
+}
+#homepage blockquote p {
+  margin-bottom: 0;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 22.5px;
+}
+#homepage blockquote small {
+  display: block;
+  line-height: 18px;
+  color: #999999;
+}
+#homepage blockquote small:before {
+  content: '\2014 \00A0';
+}
+#homepage blockquote.pull-right {
+  float: right;
+  padding-left: 0;
+  padding-right: 15px;
+  border-left: 0;
+  border-right: 5px solid #eeeeee;
+}
+#homepage blockquote.pull-right p,
+#homepage blockquote.pull-right small {
+  text-align: right;
+}
+#homepage q:before,
+#homepage q:after,
+#homepage blockquote:before,
+#homepage blockquote:after {
+  content: "";
+}
+
+#homepage .news_summary {
+    font-weight: normal;
+}
+
+#homepage .news_summary a {
+    font-size: 1em;
+}
+
+#homepage .news_date {
+    font-style: normal;
+}
+
+#homepage .news_author {
+    font-style: normal;
+}
+
+#homepage hr {
+  margin: 18px 0;
+  border: 0;
+  border-top: 1px solid #eeeeee;
+  border-bottom: 1px solid #ffffff;
+}
+
+#homepage ul {
+  padding: 0;
+  margin: 0 0 9px 25px;
 }
 /* }}} */
