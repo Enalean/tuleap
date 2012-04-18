@@ -37,7 +37,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
         $effort_field         = $form_element_factory->getFormElementById($this->chart->getFieldId());
         $type                 = $form_element_factory->getType($effort_field);
         
-        if ($this->isValidEffortField($effort_field) && $this->isValidType($type)) {
+        if ($this->isValidEffortField($effort_field, $type) && $this->isValidType($type)) {
             $engine->data    = $this->getBurnDownData($effort_field->getId(), $type);
         }
         
