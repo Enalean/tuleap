@@ -1,5 +1,14 @@
 (function() {
-	
+	/**
+	 * Add expand/collapse behaviour on a table element given by this ID in constructor.
+	 * The table element must have :
+	 *  - the firsts TD of each row of class .first-column
+	 *  - inside the first TD :
+	 *  	* spans with nbsp; foreach indent (used by getLevel to know the level of a tr)
+	 *  	* spans of classes node-tree to fire the expand/collapse event. 
+	 *  	* a div of class node-content that contains the "normal" content of the TD 
+	 *  		+ eventually a span of class node-child if it has children 
+	 */
 	var treeTable = Class.create({
 		/**
 		 * Called when object is constructed
