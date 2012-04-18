@@ -136,8 +136,8 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
                 
                 
                 if (!$limit) {
-                    $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span>';
-                    $return .= '<span class="news_date">'. html_time_ago($data['date']) .'</span></li>';
+                    $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span> ';
+                    $return .= '<small><span class="news_date">'. html_time_ago($data['date']) .'</span></small></li>';
                 } else {
                     $comments_txt = '';
                     if (! $hide_nb_comments) {

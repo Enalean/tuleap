@@ -2387,6 +2387,10 @@ input.span1, textarea.span1, .uneditable-input.span1 {
 /* }}} */
 
 /* {{{ News */
+.news_date {
+    color: #999;
+}
+
 .news blockquote {
   padding: 0 0 0 15px;
   margin: 0 0 18px;

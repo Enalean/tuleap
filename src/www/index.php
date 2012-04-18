@@ -54,7 +54,7 @@ if ($display_homepage_boxes) {
 // HTML is sad, we need to keep this div to clear the "float:right/left" that might exists before
 // Yet another dead kitten somewhere :'(
 echo '<div id="homepage_news">';
-if (1 || $display_homepage_news) {
+if ($display_homepage_news) {
     $w = new Widget_Static($Language->getText('homepage', 'news_title'));
     $w->setContent(news_show_latest($GLOBALS['sys_news_group'],5,true,false,true,5));
     $w->setRssUrl('/export/rss_sfnews.php');
