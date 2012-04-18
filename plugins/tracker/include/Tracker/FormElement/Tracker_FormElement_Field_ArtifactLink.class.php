@@ -1018,6 +1018,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     /**
+     * Retrieve linked artifacts according to user's permissions
+     * 
+     * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
+     * @param User                       $user      The user who will see the artifacts
+     * 
      * @return array of Tracker_Artifact
      */
     public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, User $user) {

@@ -1564,8 +1564,9 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         
         $changeset = new MockTracker_Artifact_Changeset();
         
-        $field = new MockTracker_FormElement_Field_ArtifactLink();
-        $field->setReturnValue('getLinkedArtifacts', $expected_list, array($changeset, $user));
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->getLinkedArtifacts($changeset, $user)->returns($expected_list);
+        stub($field)->userCanRead($user)->returns(true);
         
         $tracker = aTracker()->build();
         $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
@@ -1579,8 +1580,28 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $this->assertEqual($expected_list, $artifact->getLinkedArtifacts($user));
     }
 
+    public function itReturnsEmptyArrayIfUserCannotSeeArtifactLinkField() {
+        $current_user = aUser()->build();
+        
+        $field        = new MockTracker_FormElement_Field_ArtifactLink();
+        stub($field)->userCanRead($current_user)->returns(false);
+        
+        $tracker      = aTracker()->build();
+        $factory      = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
+        $artifact     = anArtifact()
+                        ->withTracker($tracker)
+                        ->withFormElementFactory($factory)
+                        ->build();
+
+        $this->assertEqual($artifact->getAnArtifactLinkField($current_user), null);
+    }
+
     private function GivenAFactoryThatReturns($artifactLinkFields) {
         return new FormElementFactory_PendingMock($artifactLinkFields);
     }
+    
+    
 }
+
+
 ?>
