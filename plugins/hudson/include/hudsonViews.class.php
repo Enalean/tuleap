@@ -337,6 +337,7 @@ class hudsonViews extends Views {
             $cpt = 1;
             while ($dar->valid()) {
                 $row = $dar->current();
+                $job_id = $row['job_id'];
 
                 echo ' <tr class="'. util_get_alt_row_color($cpt) .'">';
                 
@@ -374,7 +375,7 @@ class hudsonViews extends Views {
                     }
                     if (!empty($services)) {
                         foreach ($services as $service) {
-                            if ($service['used'][$row['job_id']] == true) {
+                            if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
                                 echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$service['title'].'" title="'.$service['title'].'"></td>';
                             } else {
                                 echo '  <td>&nbsp;</td>';
@@ -396,13 +397,13 @@ class hudsonViews extends Views {
                     echo '  <td>';
                     // edit job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png', 
+                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$GLOBALS['HTML']->getimage('ic/edit.png', 
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'),
                                                                   'title' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'))).'</a>';
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'" onclick="return confirm(';
+                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$job_id.'" onclick="return confirm(';
                     echo "'" . $GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName())) . "'";
                     echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png', 
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'),
