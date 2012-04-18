@@ -107,17 +107,12 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
 	$return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
 	$return .= db_error();
     } else {
-        $dl_compact_displayed   = false;
-        $no_news_item_displayed = true;
+        $news_item_displayed = false;
         for ($i=0; $i<$rows; $i++) {
             //check if the news is private (project members) or public (registered users)
             $forum_id=db_result($result,$i,'forum_id');
             if (news_check_permission($forum_id,$group_id)) {
-                if (!$dl_compact_displayed) {
-                    $return .=  '<dl compact>';
-                    $dl_compact_displayed = true;
-                    $no_news_item_displayed = false;
-                }
+                $news_item_displayed = true;
                 if ($show_summaries && $limit) {
                 //get the first paragraph of the story
                 $arr=explode("\n",db_result($result,$i,'details'));
@@ -178,8 +173,8 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
                 }
             }    
         }
-        if ($no_news_item_displayed) {
-            $return .= '<H3>'.$Language->getText('news_utils','no_news_item_found').'</H3>';
+        if (! $news_item_displayed) {
+            $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';
             $return .= db_error();
         }
     }
