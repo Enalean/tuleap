@@ -19,7 +19,11 @@
  */
 
 require_once 'GetStateVisitor.class.php';
-
+/**
+ * Extends GetStateVisitor to display a table as a tree 
+ * with expand/collapse and indentation.
+ *
+ */
 class TreeNode_InjectSpanPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
 
     /**
