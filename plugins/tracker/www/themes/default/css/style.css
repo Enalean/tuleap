@@ -1005,18 +1005,17 @@ ul.plugin_tracker_my_artifacts_list {
 }
 
 .tree-view td {
-    margin-left:2px;
-    margin-right:2px;
     padding:0px;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    border-left: 1px white solid;
+    
 }
 
-.first-column {
+td.first-column {
     white-space:nowrap;
     height:100%;
-}
-
-.first-column + td {
-    padding-left:10px;
+    border: none;
 }
 
 .node-indent {
