@@ -380,27 +380,6 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
-/* {{{ Home Page */
-#homepage {
-    margin: auto;
-    margin-top: 1em;
-    width: 960px;
-}
-
-#homepage_speech {
-    float: none;
-}
-
-#homepage_boxes {
-    float: none;
-    display: none;
-}
-
-#homepage_news {
-    clear: both;
-}
-/* }}} */
-
 /*
  * Tabs
  *
