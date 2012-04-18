@@ -151,11 +151,11 @@ if ($display_homepage_news) {
             <a href="/forum/forum.php?forum_id=242">Milestone 1.0.3.4 is available</a>
         </span>
         <blockquote>Dolibarr 3.2 is needed
-                    <br />New: possibility to define a page break
-                    <br />Fix: compatibility with latest 3.2 development
-                    <small>
-                        <span class="news_author">
-                            <a href="/users/hregis">Régis Houssin (hregis)</a>
+            <br />New: possibility to define a page break
+            <br />Fix: compatibility with latest 3.2 development
+            <small>
+                <span class="news_author">
+                    <a href="/users/hregis">Régis Houssin (hregis)</a>
                 </span>
                 <span class="news_date">
                     <span title="2012-04-12 21:22">19 hours ago</span>
