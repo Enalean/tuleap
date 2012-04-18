@@ -17,8 +17,14 @@ echo '<div id="homepage">';
 $display_homepage_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
 $display_homepage_news  = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
 
-echo '<div id="homepage_speech" '. ($display_homepage_boxes ? '' : 'style="width:100%;"') .'>';
+// go fetch le content that may have its own logic to decide if the boxes should be displayed or not
+ob_start();
 include ($Language->getContent('homepage/homepage', null, null, '.php'));
+$homepage_content = ob_get_contents();
+ob_end_clean();
+
+echo '<div id="homepage_speech" '. ($display_homepage_boxes ? '' : 'style="width:100%;"') .'>';
+echo $homepage_content;
 echo '</div>';
 
 if ($display_homepage_boxes) {

@@ -30,9 +30,6 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
     $exchangePolicyUrl = "/plugins/docman/?group_id=1";
 }
 
-$display_homepage_boxes = false;
-$display_homepage_news  = false;
-
 $current_user = UserManager::instance()->getCurrentUser();
 
 if (Config::get('sys_https_host')) {
@@ -41,6 +38,13 @@ if (Config::get('sys_https_host')) {
     $login_form_url = 'http://'. Config::get('sys_default_domain');
 }
 $login_form_url .= '/account/login.php';
+
+$main_content_span = 'span12';
+$login_input_span  = 'span3';
+if ($display_homepage_news) {
+    $main_content_span = 'span8';
+    $login_input_span  = 'span2';
+}
 
 ?>
 
@@ -52,7 +56,7 @@ $login_form_url .= '/account/login.php';
 </div>
 
 <div class="row-fluid">
-    <div class="span8">
+    <div class="<?= $main_content_span ?>">
         <div class="row-fluid">
             <div class="span6">
                 <h2><?= $GLOBALS['HTML']->getImage('homepage/tuleap-logo-small.png', array('alt' => "What's Tuleap", 'width' => '48px')) ?> What's <?= $GLOBALS['sys_name']?>?</h2>
@@ -88,8 +92,8 @@ $login_form_url .= '/account/login.php';
                         allows you to participate fully in all we have to offer.
                         </p>
                         <form action="<?= $login_form_url ?>" method="POST">
-                            <input type="text" name="form_loginname" class="span2" placeholder="Username" />
-                            <input type="password" name="form_pw" class="span2" placeholder="Password" />
+                            <input type="text" name="form_loginname" class="<?= $login_input_span ?>" placeholder="Username" />
+                            <input type="password" name="form_pw" class="<?= $login_input_span ?>" placeholder="Password" />
                             <input type="submit" class="btn" name="login" value="<?= $GLOBALS['Language']->getText('account_login', 'login_btn') ?>" />
                             Or <a href="/account/register.php">create an account</a>
                         </form>
@@ -104,6 +108,7 @@ $login_form_url .= '/account/login.php';
                 </div>
             </div>
         </div>
+        <?php if ($display_homepage_news) { ?>
         
         <hr />
         
@@ -151,8 +156,10 @@ $login_form_url .= '/account/login.php';
                 </p>
             </div>
         </div>
+        <?php } ?>
     </div>
-        <div class="span4">
+    <?php if ($display_homepage_news) { ?>
+    <div class="span4">
         <h2>It happens on <?= $GLOBALS['sys_name']?>!</h2>
         <span class="news_summary">
             <a href="/forum/forum.php?forum_id=242">Milestone 1.0.3.4 is available</a>
@@ -251,8 +258,13 @@ $login_form_url .= '/account/login.php';
             </li>
         </ul>
     </div>
+    <?php } ?>
 </div>
 
 <?php
-// Because of to aggressive continuous integration check on closing tags...
+
+//tell the upper script that it should'nt display boxes
+$display_homepage_boxes = false;
+$display_homepage_news  = false;
+
 ?>

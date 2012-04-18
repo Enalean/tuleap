@@ -2287,10 +2287,12 @@ h3.toggler-hide-noajax {
 .container-fluid:after {
   clear: both;
 }
-ul.unstyled,
-ol.unstyled {
+input[class*="span"],
+select[class*="span"],
+textarea[class*="span"],
+.uneditable-input {
+  float: none;
   margin-left: 0;
-  list-style: none;
 }
 input.span12, textarea.span12, .uneditable-input.span12 {
   width: 930px;
@@ -2425,5 +2427,9 @@ input.span1, textarea.span1, .uneditable-input.span1 {
 #homepage ul {
   padding: 0;
   margin: 0 0 9px 25px;
+}
+#homepage ul.unstyled {
+  margin-left: 0;
+  list-style: none;
 }
 /* }}} */
