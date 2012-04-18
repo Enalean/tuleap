@@ -4,7 +4,7 @@
             <h3>About</h3>
             <ul class="unstyled">
                 <li>Powered by <a href="https://tuleap.net/" target="_blank">Tuleap</a> version <?= $version ?>.</li>
-                <li>Copyright © 2011-2012 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.</li>
+                <li>Copyright &copy; 2011-2012 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.</li>
                 <li>Tuleap is free software licensed under GPL License<br />
                     <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
                 </li>
@@ -41,7 +41,7 @@
                 <li>Ask your questions in the <a href="/plugins/forumml/message.php?group_id=101&list=1">forums</a> or <a href="/mail/?group_id=101">mailing lists</a>
                 </li>
                 <li>
-                    <a href="">Contact us</a>
+                    <a href="/contact.php">Contact us</a>
                 </li>
             </ul>
             <h3>CLI</h3>
@@ -50,7 +50,7 @@
                     to access it through a command line client. You can download the 
                     <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its 
                     <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
-            </li>
+                </li>
             </ul>
         </div>
     </div>
