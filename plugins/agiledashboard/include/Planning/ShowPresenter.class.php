@@ -106,7 +106,13 @@ class Planning_ShowPresenter {
     }
     
     public function canDrop() {
-        return $this->artifact && $this->artifact->getAnArtifactLinkField($this->current_user);
+        if ($this->artifact) {
+            $art_link_field = $this->artifact->getAnArtifactLinkField($this->current_user);
+            if ($art_link_field && $art_link_field->userCanUpdate($this->current_user)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public function errorCantDrop() {
