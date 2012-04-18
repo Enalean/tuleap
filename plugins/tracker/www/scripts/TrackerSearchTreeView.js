@@ -22,8 +22,8 @@
 					Event.stop(event);
 				};
 				this.collapseAll();
-				$A(this.root.getElementsByClassName('node-tree')).invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
-				$A(this.root.getElementsByClassName('node-content')).invoke('observe', 'dblclick', _eventOnNode.bindAsEventListener(this));
+				this.root.select('.node-tree').invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
+				this.root.select('.node-content').invoke('observe', 'dblclick', _eventOnNode.bindAsEventListener(this));
 				this.expandAll();
 			}
 		},
@@ -45,12 +45,12 @@
 		},
 		
 		hasChildren: function(TRElement) {
-			return TRElement.getElementsByClassName('node-child').length > 0;
+			return TRElement.select('.node-child').length > 0;
 		},
 		
 		getNodeChild: function(TRElement) {
 			if(TRElement) {
-				var nodeChild = TRElement.getElementsByClassName('node-child');
+				var nodeChild = TRElement.select('.node-child');
 				if (nodeChild[0]) {
 					return nodeChild[0];
 				}
@@ -100,7 +100,7 @@
 		},
 		
 		setNodeTreeImage: function(TRElement, NodeTreeImage) {
-			var nodeTree = TRElement.getElementsByClassName('node-tree');
+			var nodeTree = TRElement.select('.node-tree');
 			if (nodeTree.length > 0) {
 				nodeTree[0].setStyle({backgroundImage:'url(' + codendi.imgroot + NodeTreeImage + ')'});
 			}
