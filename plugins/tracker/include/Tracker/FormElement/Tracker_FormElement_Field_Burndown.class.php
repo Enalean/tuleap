@@ -197,7 +197,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             $burndown         = $this->getBurndown($linked_artifacts, $user);
             $burndown->setStartDate($this->getBurndownStartDate($artifact, $user));
             $burndown->setDuration($this->getBurndownDuration($artifact, $user));
-            $burndown->setDescription($this->getDescription());
             $burndown->display();
         } else {
             throw new Tracker_FormElement_Field_BurndownException('burndown_permission_denied');
