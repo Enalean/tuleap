@@ -53,7 +53,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $planning = $this->getPlanning();
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
         $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
-        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
+        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact, $this->current_user);
         $this->render('show', $presenter);
     }
 

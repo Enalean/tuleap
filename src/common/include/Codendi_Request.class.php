@@ -37,6 +37,11 @@
     var $params;
     
     /**
+     * @var UserManager
+     */
+    private $current_user;
+    
+    /**
      * Constructor
      */
     function Codendi_Request($params) {
@@ -272,7 +277,19 @@
      * @return User
      */
     public function getCurrentUser() {
-        return UserManager::instance()->getCurrentUser();
+        if (!$this->current_user) {
+            $this->current_user = UserManager::instance()->getCurrentUser();
+        }
+        return $this->current_user;
+    }
+    
+    /**
+     * Set a current user (should be used only for tests)
+     * 
+     * @param User $user 
+     */
+    public function setCurrentUser(User $user) {
+        $this->current_user = $user;
     }
     
     /**

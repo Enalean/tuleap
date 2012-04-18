@@ -109,11 +109,13 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
-        
-        $request = mock('Codendi_Request');
-        stub($request)->get('aid')->returns($id);
-        stub($request)->get('planning_id')->returns($this->planning->getId());
-        stub($request)->getCurrentUser()->returns(aUser()->build());
+        $request = new Codendi_Request(
+            array(
+                'aid'         => $id,
+                'planning_id' => $this->planning->getId(),
+            )
+        );
+        $request->setCurrentUser(aUser()->build());
 
         $content = $this->WhenICaptureTheOutputOfShowAction($request, $factory);
         $this->assertPattern('/Tutu/', $content);
@@ -185,20 +187,22 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
 
     private function buildRequest($aid, $project_id, $shared_field_criteria, $semantic_criteria) {
-        $request = mock('Codendi_Request');
-        stub($request)->get('aid')->returns($aid);
-        stub($request)->get('planning_id')->returns($this->planning->getId());
-        stub($request)->get('group_id')->returns($project_id);
-        stub($request)->getCurrentUser()->returns(aUser()->build());
-        
+        $request_params = array(
+            'aid'         => $aid,
+            'planning_id' => $this->planning->getId(),
+            'group_id'    => $project_id,
+        );
+
         if ($shared_field_criteria !== null) {
-            stub($request)->get('criteria')->returns($shared_field_criteria);
+            $request_params['criteria'] = $shared_field_criteria;
         }
 
         if ($semantic_criteria !== null) {
-            stub($request)->get('semantic_criteria')->returns($semantic_criteria);
+            $request_params['semantic_criteria'] = $semantic_criteria;
         }
 
+        $request = new Codendi_Request($request_params);
+        $request->setCurrentUser(aUser()->build());
         return $request;
     }
 
@@ -243,33 +247,24 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
         $id       = 987;
         $title    = 'Coin';
-        
-        $request  = mock('Codendi_Request');
-        stub($request)->get('aid')->returns($id);
-        stub($request)->get('planning_id')->returns($this->planning->getId());
-        stub($request)->getCurrentUser()->returns(aUser()->build());
-        
+        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifact($id, $title, array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $request  = mock('Codendi_Request');
-        stub($request)->get('aid')->returns($id);
-        stub($request)->get('planning_id')->returns($this->planning->getId());
-        stub($request)->getCurrentUser()->returns(aUser()->build());
-        
+        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $request  = mock('Codendi_Request');
-        stub($request)->get('planning_id')->returns($this->planning->getId());
-        stub($request)->getCurrentUser()->returns(aUser()->build());
-        
+        $request = new Codendi_Request(array('planning_id' => $this->planning->getId()));
+        $request->setCurrentUser(aUser()->build());
         $factory = $this->GivenAnArtifactFactory();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }

@@ -1031,7 +1031,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
-        return array_filter($artifacts);
+        return $artifacts;
     }
     
 }

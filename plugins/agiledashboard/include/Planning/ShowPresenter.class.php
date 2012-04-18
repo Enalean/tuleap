@@ -30,8 +30,9 @@ class Planning_ShowPresenter {
     private $artifacts_to_select;
     private $artifact;
     private $content_view;
+    private $current_user;
     
-    public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null) {
+    public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null, User $user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->planning_id   = $planning->getId();
         $this->planning_name = $planning->getName();
@@ -45,6 +46,7 @@ class Planning_ShowPresenter {
         $this->artifacts_to_select = $artifacts_to_select;
         $this->content_view        = $content_view;
         $this->group_id            = $planning->getGroupId();
+        $this->current_user        = $user;
     }
     
     public function hasArtifact() {
@@ -52,7 +54,7 @@ class Planning_ShowPresenter {
     }
     
     public function getLinkedItems() {
-        $linked_items = $this->artifact->getLinkedArtifacts(UserManager::instance()->getCurrentUser());
+        $linked_items = $this->artifact->getLinkedArtifacts($this->current_user);
         if (! $linked_items) {
             $linked_items = array();
             return false;
