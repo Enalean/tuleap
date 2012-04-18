@@ -118,14 +118,14 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
         $return .= db_error();
     } else {
         $news_item_displayed = false;
-        for ($i = 0 ; $i < $rows ; $i++) {
+        while ($data = db_fetch_array($result)) {
             //check if the news is private (project members) or public (registered users)
-            $forum_id = db_result($result, $i, 'forum_id');
+            $forum_id = $data['forum_id'];
             if (news_check_permission($forum_id, $group_id)) {
                 $news_item_displayed = true;
                 if ($show_summaries && $limit) {
                     //get the first paragraph of the story
-                    $arr = explode("\n", db_result($result, $i, 'details'));
+                    $arr = explode("\n", $data['details']);
                     
                     //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
                     if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
@@ -134,7 +134,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
                         $summ_txt = '<BR>'. util_make_links( $arr[0], $group_id );
                     }
                     //show the project name 
-                    $proj_name = ' &nbsp; - &nbsp; <A HREF="/projects/'. strtolower(db_result($result,$i,'unix_group_name')) .'/">'. db_result($result,$i,'group_name') .'</A>';
+                    $proj_name = ' &nbsp; - &nbsp; <A HREF="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</A>';
                 } else {
                     $proj_name = '';
                     $summ_txt  = '';
@@ -142,26 +142,26 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
                 
                 
                 if (!$limit) {
-                    $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">'. db_result($result, $i, 'summary') . '</a></span>';
-                    $return .= '<span class="news_date">'. html_time_ago(db_result($result, $i, 'date')) .'</span><br>';
+                    $return .= '<li><span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span>';
+                    $return .= '<span class="news_date">'. html_time_ago($data['date']) .'</span><br>';
                 } else {
-                    $return .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. db_result($result, $i, 'forum_id') .'">'. db_result($result, $i, 'summary') . '</a></span>';
+                    $return .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span>';
                     
                     if (!$flat) {
                         $return .= '<BR>&nbsp;';
                     }
-                    $return .= '<span class="news_author">'.$uh->getLinkOnUserFromUserId(db_result($result, $i, 'submitted_by')).'</span>
-                                <span class="news_date">'.html_time_ago(db_result($result,$i,'date')).'</span>'.
+                    $return .= '<span class="news_author">'.$uh->getLinkOnUserFromUserId($data['submitted_by']).'</span>
+                                <span class="news_date">'.html_time_ago($data['date']).'</span>'.
                                 $proj_name . $summ_txt;
                     
-                    $num_comments = (int)db_result($result, $i, 'num_comments');
+                    $num_comments = (int)$data['num_comments'];
                     if ($num_comments == 1) {
                         $comments_txt = ' '. $Language->getText('news_utils', 'comment');
                     } else {
                         $comments_txt = ' '. $Language->getText('news_utils', 'comments');
                     }
                     
-                    $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <a href="/forum/forum.php?forum_id='. db_result($result,$i,'forum_id') .'">['.$Language->getText('news_utils','read_more_comments').']</a>';
+                    $return .= '<div align="center">(' . $num_comments . $comments_txt . ') <a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">['.$Language->getText('news_utils','read_more_comments').']</a>';
                     $return .= '</div>';
                     $return .= '<hr width="100%" size="1" noshade>';
                     
