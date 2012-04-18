@@ -71,7 +71,9 @@ if ($display_homepage_news) {
                 <div class="row-fluid">
                     <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participate</h2>
                     <?php if ($current_user->isLoggedIn()) { ?>
-                        <p>Welcome <?= UserHelper::instance()->getDisplayNameFromUser($current_user) ?>. You can now get the most out of <?= $GLOBALS['sys_name']?>. Join a project or create a new one below.</p>
+                        <p>Welcome <?= UserHelper::instance()->getDisplayNameFromUser($current_user) ?>. 
+                        You can now get the most out of <?= $GLOBALS['sys_name']?>. 
+                        <a href="/softwaremap/">Join a project</a> or create a new one below.</p>
                     <?php } else { ?>
                         <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
                         register as a site user. It's easy and fast and it 
@@ -88,7 +90,13 @@ if ($display_homepage_news) {
                 <hr />
                 <div class="row-fluid">
                     <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Create a new project</h2>
-                    <p>It's very easy to <a href="/project/register.php">create your own project</a>. Login, 
+                    <?php 
+                        $create_your_own_project = 'create your own project';
+                        if ($current_user->isLoggedIn()) {
+                            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
+                        }
+                    ?>
+                    <p>It's very easy to <?= $create_your_own_project ?>. Login, 
                     leverage project templates and customize your 
                     workspace in the administration interface.</p>
                 </div>
@@ -148,7 +156,7 @@ if ($display_homepage_news) {
     <div class="span4">
         <h2>It happens on <?= $GLOBALS['sys_name']?>!</h2>
         <span class="news_summary">
-            <a href="/forum/forum.php?forum_id=242">Milestone 1.0.3.4 is available</a>
+            <a href="/forum/forum.php?forum_id=242"><h3>Milestone 1.0.3.4 is available</h3></a>
         </span>
         <blockquote>Dolibarr 3.2 is needed
             <br />New: possibility to define a page break
@@ -158,7 +166,7 @@ if ($display_homepage_news) {
                     <a href="/users/hregis">Régis Houssin (hregis)</a>
                 </span>
                 <span class="news_date">
-                    <span title="2012-04-12 21:22">19 hours ago</span>
+                    <span title="2012-04-12 21:22">19 hours ago</span> in <a href="#">ProjectName</a>
                 </span>
             </small>
         </blockquote>

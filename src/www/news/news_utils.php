@@ -122,17 +122,15 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
             //check if the news is private (project members) or public (registered users)
             $forum_id = $data['forum_id'];
             if (news_check_permission($forum_id, $group_id)) {
-                $news_item_displayed = true;
                 if ($show_summaries && $limit) {
                     //get the first paragraph of the story
                     $arr = explode("\n", $data['details']);
-                    
-                    //if the first paragraph is short, and so are following paragraphs, add the next paragraph on
-                    if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
-                        $summ_txt = '<BR>'. util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
-                    } else {
-                        $summ_txt = '<BR>'. util_make_links( $arr[0], $group_id );
+                    $hp = Codendi_HTMLPurifier::instance();
+                    $summ_txt = '<BR>'. $hp->purify(substr($data['details'], 0, 500), CODENDI_PURIFIER_BASIC, $group_id );
+                    if (strlen($data['details']) > 500) {
+                        $summ_txt .= '...';
                     }
+                    
                     //show the project name 
                     $proj_name = ' &nbsp; - &nbsp; <A HREF="/projects/'. strtolower($data['unix_group_name']) .'/">'. $data['group_name'] .'</A>';
                 } else {
@@ -173,7 +171,8 @@ function news_show_latest($group_id = '', $limit = 10, $show_summaries = true, $
                 if ($limit) {
                     $limit--;
                 }
-            }    
+                $news_item_displayed = true;
+            }
         }
         if (! $news_item_displayed) {
             $return .= '<b>'.$Language->getText('news_utils','no_news_item_found').'</b>';

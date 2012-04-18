@@ -72,10 +72,10 @@ if ($display_homepage_news) {
     
             <div class="span6">
                 <div class="row-fluid">
-                    <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participer</h2>
+                    <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participez</h2>
                     <?php if ($current_user->isLoggedIn()) { ?>
                         <p>Bienvenue <?= UserHelper::instance()->getDisplayNameFromUser($current_user) ?>. Vous pouvez profiter du meilleur de <?= $GLOBALS['sys_name']?>. 
-                        Rejoignez un projet ou créez en un nouveau.</p>
+                        <a href="/softwaremap/">Rejoignez un projet</a> ou créez en un nouveau.</p>
                     <?php } else { ?>
                         <p>Pour vous permettre d'utiliser toute la puissance de 
                             <?= $GLOBALS['sys_name']?>, vous devez vous enregistrer 
@@ -93,8 +93,14 @@ if ($display_homepage_news) {
                 </div>
                 <hr />
                 <div class="row-fluid">
-                    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Create a new project</h2>
-                    <p>C'est très simple de <a href="/project/register.php">créer votre propre projet</a>.
+                    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Créer un nouveau projet</h2>
+                    <?php 
+                        $create_your_own_project = 'créer votre propre projet';
+                        if ($current_user->isLoggedIn()) {
+                            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
+                        }
+                    ?>
+                    <p>C'est très simple de <?= $create_your_own_project ?>.
                         Enregistrez-vous, profitez des modèles de projets et 
                         adaptez votre espace de travail avec l'interface d'adminsitration.</p>
                 </div>
@@ -154,7 +160,7 @@ if ($display_homepage_news) {
     <div class="span4">
         <h2>Ça se passe sur <?= $GLOBALS['sys_name']?> !</h2>
         <span class="news_summary">
-            <a href="/forum/forum.php?forum_id=242">Milestone 1.0.3.4 is available</a>
+            <a href="/forum/forum.php?forum_id=242"><h3>Milestone 1.0.3.4 is available</h3></a>
         </span>
         <blockquote>Dolibarr 3.2 is needed
                     <br />New: possibility to define a page break
@@ -164,7 +170,7 @@ if ($display_homepage_news) {
                             <a href="/users/hregis">Régis Houssin (hregis)</a>
                 </span>
                 <span class="news_date">
-                    <span title="2012-04-12 21:22">19 hours ago</span>
+                    <span title="2012-04-12 21:22">19 hours ago</span> in <a href="#">ProjectName</a>
                 </span>
             </small>
         </blockquote>
