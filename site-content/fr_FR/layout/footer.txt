@@ -1,5 +1,58 @@
-<div class="footer">
-Propulsé par <a href="https://tuleap.net/" target="_blank">Tuleap&trade;</a> version <?php echo $version; ?>. Copyright &copy; 2011 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.
-&nbsp;/&nbsp;
-<a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
+<div class="footer container">
+    <div class="row-fluid">
+        <div class="span4">
+            <h3>About</h3>
+            <ul class="unstyled">
+                <li>Propulsé par <a href="https://tuleap.net/" target="_blank">Tuleap&trade;</a> version <?php echo $version; ?>.</li>
+                <li>Copyright &copy; 2011-2012 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.</li>
+                <li>Tuleap est un logiciel libre sous licence GPL<br />
+                    <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
+                </li>
+            </ul>
+        </div>
+        <div class="span4">
+            <h3>Liens Tuleap</h3>
+            <ul class="unstyled">
+                <li>
+                    <a href="http://www.tuleap.com">Site web</a>
+                </li>
+                <li>
+                    <a href="http://www.tuleap.net">Communauté</a>
+                </li>
+                <li>
+                    <a href="http://tuleap.com/blog">Blog</a>
+                </li>
+                <li>
+                    <a href="http://demo.tuleap.net">Démo</a>
+                </li>
+                <li>
+                    <a href="http://tuleap.com/support">Obtenir du Support Enterprise</a>
+                </li>
+                <li><a href="https://twitter.com/TuleapEnalean" class="twitter-follow-button" data-show-count="false" data-lang="fr">Suivre @TuleapEnalean</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                </li>
+            </ul>
+        </div>
+        <div class="span4">
+            <h3>Besoin d'aide?</h3>
+            <ul class="unstyled">
+                <li>Consulter la <a href="/plugins/docman/?group_id=101">documentation</a>
+                </li>
+                <li>Poser vos questions dans les <a href="/plugins/forumml/message.php?group_id=101&list=1">forums</a> ou les <a href="/mail/?group_id=101">listes de diffusion</a>
+                </li>
+                <li>
+                    <a href="/contact.php">Contact-nous</a>
+                </li>
+            </ul>
+            <h3>CLI</h3>
+            <ul class="unstyled">
+                <li><?= $GLOBALS['sys_name']?> vous fournit un Client en Ligne de 
+                commande (CLI) basé sur <a href="/soap/index.php">l'API SOAP</a> 
+                pour automatiser vos accès à nos services. Vous pouvez télécharger 
+                le <a href="/downloads/Codendi_CLI.zip">Client en Ligne de Commande</a> 
+                ainsi que sa <a href="documentation/cli/pdf/fr_FR/Codendi_CLI.pdf">documentation</a>.
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
