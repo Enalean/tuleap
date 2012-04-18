@@ -33,7 +33,7 @@ class trackerPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
         
         $this->_addHook('cssfile',                             'cssFile',                           false);
-        $this->_addHook('javascript_file',                     'hierarchicalViewJS',                false);
+        $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
@@ -64,7 +64,7 @@ class trackerPlugin extends Plugin {
         return $this->pluginInfo;
     }
     
-    public function hierarchicalViewJS() {        
+    public function javascript_file() {        
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
         }
@@ -95,7 +95,6 @@ class trackerPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
-//                 '/plugins/tracker/scripts/TrackerSearchTreeView.js',
                 '/plugins/tracker/scripts/TrackerReports.js',
                 '/plugins/tracker/scripts/TrackerBinds.js',
                 '/plugins/tracker/scripts/ReorderColumns.js',
