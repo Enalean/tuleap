@@ -33,7 +33,7 @@ $display_homepage_news  = !isset($GLOBALS['sys_display_homepage_news'])  || (iss
 
 $HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 
-echo '<div id="homepage">';
+echo '<div id="homepage" class="container">';
 
 // go fetch le content that may have its own logic to decide if the boxes should be displayed or not
 ob_start();
