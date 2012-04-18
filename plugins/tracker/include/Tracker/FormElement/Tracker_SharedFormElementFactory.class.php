@@ -38,7 +38,11 @@ class Tracker_SharedFormElementFactory {
     }
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
-        $field = $this->getRootOriginalField($this->factory->getFormElementById($formElement_data['field_id']));
+        $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
+        if (!$formElement) {
+            throw new Exception("Given Id Not Exists");
+        }
+        $field = $this->getRootOriginalField($formElement);
         $this->assertFieldCanBeCopied($field, $user);
         
         $data = $this->populateFormElementDataForASharedField($field);
