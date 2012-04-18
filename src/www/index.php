@@ -10,12 +10,30 @@ require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-$HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 
-echo '<div id="homepage">';
+
+if (isset($GLOBALS['sys_exchange_policy_url'])) {
+    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
+} else {
+    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+}
+
+$current_user = UserManager::instance()->getCurrentUser();
+
+if (Config::get('sys_https_host')) {
+    $login_form_url = 'https://'. Config::get('sys_https_host');
+} else {
+    $login_form_url = 'http://'. Config::get('sys_default_domain');
+}
+$login_form_url .= '/account/login.php';
 
 $display_homepage_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
 $display_homepage_news  = !isset($GLOBALS['sys_display_homepage_news'])  || (isset($GLOBALS['sys_display_homepage_news'])  && $GLOBALS['sys_display_homepage_news']  == 1);
+
+
+$HTML->header(array('title'=>$Language->getText('homepage', 'title')));
+
+echo '<div id="homepage">';
 
 // go fetch le content that may have its own logic to decide if the boxes should be displayed or not
 ob_start();

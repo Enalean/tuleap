@@ -24,21 +24,6 @@ if ($Language->hasText('homepage', 'introduction')) {
     return;
 }
 
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
-}
-
-$current_user = UserManager::instance()->getCurrentUser();
-
-if (Config::get('sys_https_host')) {
-    $login_form_url = 'https://'. Config::get('sys_https_host');
-} else {
-    $login_form_url = 'http://'. Config::get('sys_default_domain');
-}
-$login_form_url .= '/account/login.php';
-
 $main_content_span = 'span12';
 $login_input_span  = 'span3';
 if ($display_homepage_news) {
@@ -62,7 +47,8 @@ if ($display_homepage_news) {
                 <h2><?= $GLOBALS['HTML']->getImage('homepage/tuleap-logo-small.png', array('alt' => "What's Tuleap", 'width' => '48px')) ?> What's <?= $GLOBALS['sys_name']?>?</h2>
                 <p>
                     <b><?= $GLOBALS['sys_name']?> is based on Tuleap. It is all about helping you manage your software projects and connect with your team members.</b>
-                    <br />
+                </p>
+                <p>
                       It is a free and Open-Source Suite for Application Lifecycle Management. 
                       Tuleap provides tools for managing projects, tasks, changes, defects, documents as well as version control, continuous integration 
                       and social collaboration. 
@@ -71,7 +57,7 @@ if ($display_homepage_news) {
                 <h3>With <?= $GLOBALS['sys_name']?> you'll be able to:</h3>
                 <ul>
                     <li>plan and monitor projects,</li>
-                    <li>manage software development lifecycle: code versions, builds...</li>
+                    <li>manage software development lifecycle: code versions, builds, etc.,</li>
                     <li>track requirements, tasks, incidents, etc.,</li>
                     <li>produce documents and releases,</li>
                     <li>favour collaboration between project members.</li>
