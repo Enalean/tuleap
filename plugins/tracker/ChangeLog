@@ -1,3 +1,6 @@
+Version 5.6.3 - Tuleap 5.0
+    * Fix display of tree table on various screen configuration
+
 Version 5.6.1 - Tuleap 5.0
     * In cross search:
       * List only shared fields that belongs to an active tracker

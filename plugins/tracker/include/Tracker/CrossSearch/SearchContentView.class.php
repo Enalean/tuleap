@@ -59,19 +59,17 @@ class Tracker_CrossSearch_SearchContentView {
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
         $this->factory           = $factory;
-        
-        $tree_visitor = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->tree_of_artifacts->accept($tree_visitor);
+        $collapsable             = true;
+        $treeVisitor             = new TreeNode_InjectSpanPaddingInTreeNodeVisitor($collapsable);
+        $this->tree_of_artifacts->accept($treeVisitor);
     }
     
     public function fetch() {
         $report_can_be_modified = false;
         
         $html  = '';
-        $html .= '<table cellpadding="0" cellspacing="0"><tr valign="top"><td>';
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         $html .= $this->fetchResults();
-        $html .= '</td></tr></table>';
         
         return $html;
     }
@@ -91,7 +89,7 @@ class Tracker_CrossSearch_SearchContentView {
     
     protected function fetchTable() {
         $html  = '';
-        $html .= '<table cellspacing="1">';
+        $html .= '<table id="treeTable" class="tree-view">';
         $html .= $this->fetchTHead();
         $html .= $this->fetchTBody();
         $html .= '</table>';
@@ -104,10 +102,10 @@ class Tracker_CrossSearch_SearchContentView {
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         
         if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
-            $html .= '<td nowrap>';
+            $html .= '<tr id="tree-node-' . $row['id'] . '" class="' . html_get_alt_row_color($this->current_index++) . '" >';
+            $html .= '<td class="first-column">';
             $html .= $row['tree-padding'];
-            $html .= $artifact->fetchDirectLinkToArtifact();
+            $html .= sprintf($row['content-template'], $artifact->fetchDirectLinkToArtifact());
             $html .= '</td>';
             $html .= $this->fetchColumnsValues($artifact, $row);
             $html .= '</tr>';

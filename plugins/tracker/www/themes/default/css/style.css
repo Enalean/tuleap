@@ -987,3 +987,126 @@ ul.plugin_tracker_my_artifacts_list {
     font-weight: bold;
     color: #0676B9;
 }
+
+/** Tree Node **/
+
+.tree-view, .tree-view tr, .tree-view td, .tree-view tbody {
+    height:100%;
+    vertical-align:top;
+    border:0px;
+    margin:0px;
+    border-collapse:collapse;
+    border-spacing: 0px;
+    zoom:1;
+}
+
+.tree-view, .tree-view tbody {
+    overflow:auto;
+}
+
+.tree-view td {
+    padding:0px;
+    padding-left:0.5em;
+    padding-right:0.5em;
+    border-left: 1px white solid;
+    
+}
+
+td.first-column {
+    white-space:nowrap;
+    height:100%;
+    border: none;
+}
+
+.node-indent {
+    display:inline-block;
+    vertical-align:top;
+    height:8px;
+    width:8px;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    zoom: 1; 
+}
+
+.node-last-left {
+    overflow:visible;
+    border-right:1px gray dotted;
+    /* 8px - 1px of border*/
+    width:7px;
+    
+}
+.node-last-right {
+    overflow:hidden;
+    border-bottom:1px gray dotted;
+    /* 8px - 1px of border*/
+    height:7px;
+    margin-left:-4px;
+    
+}
+
+.node-blank {
+    vertical-align:top;
+    overflow:hidden;
+    display:inline-block;
+    width:8px;
+    height:8px;
+}
+
+.node-pipe {
+    vertical-align:top;
+    display:inline-block;
+    /* 8px - 1px of border*/
+    width:7px;
+    height:inherit;
+    border-right:1px gray dotted;
+}
+
+.node-minus {
+    vertical-align:top;
+    overflow:hidden;
+    border-bottom:1px gray dotted;
+    /* 8px - 1px of border*/
+    height:7px;
+    margin-left:-4px;
+}
+
+.node-content {
+    vertical-align:top;
+    overflow:hidden;
+    cursor:pointer;
+    display:inline-block;
+    height:100%;
+    width:auto;
+    padding-left:1px;
+    
+}
+
+.node-child {
+    vertical-align:top;
+    overflow:hidden;
+    display:block;
+    width:8px;
+    padding: 0px;
+    margin:0px;
+    margin-left:4px;
+    height: 100%;
+    border-right:1px gray dotted;
+}
+
+.node-tree {
+    display: inline-block;
+    width:16px;
+    height:16px;
+    background-image:url(/themes/common/images/ic/toggle-small-expand.png);
+    background-repeat:no-repeat;
+    cursor:pointer;
+}
+
+.node-minus-tree {
+    overflow:hidden;
+    border-bottom:1px gray dotted;
+    width:4px;
+    margin-right:1px;
+    margin-left:1px;
+}
