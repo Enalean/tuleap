@@ -18,40 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/plugin/Plugin.class.php';
-require_once('CodeReview.class.php');
+require_once('mvc/PluginView.class.php');
+require_once('common/include/HTTPRequest.class.php');
 
 /**
- * CodeReviewPlugin
+ * RequestHelpViews
  */
-class CodeReviewPlugin extends Plugin {
+class CodeReviewViews extends PluginView {
 
     /**
-     * Plugin constructor
+     * Display footer
      *
-     * @return Void
+     * @return void
      */
-    function __construct($id) {
-        parent::__construct($id);
-        $this->setScope(self::SCOPE_PROJECT);
+    function footer() {
+        $GLOBALS['HTML']->footer(array());
     }
 
-    public function process(Codendi_Request $request) {
-        $controler = new CodeReview();
-        $controler->process();
-    }
-
+    // {{{ Views
     /**
-     * Obtain plugin info
-     *
-     * @return CodeReviewPluginInfo
-     */
-    public function getPluginInfo() {
-        if (!$this->pluginInfo) {
-            include_once 'CodeReviewPluginInfo.class.php';
-            $this->pluginInfo = new CodeReviewPluginInfo($this);
-        }
-        return $this->pluginInfo;
+    * Displays Review board frame
+    *
+    * @return void
+    */
+    function displayFrame() {
+        $GLOBALS['HTML']->header(array('title'=>'codereview','group' => $this->getController()->getRequest()->get('group_id'), 'toptab' => 'codereview'));
+        echo '<iframe src="http://localhost/reviews/" width="900" height="500"
+              frameborder="0" scrolling="auto" name="reviewboard">
+              TEXT FOR NON-COMPATIBLE BROWSERS HERE</iframe>';
     }
 }
 
