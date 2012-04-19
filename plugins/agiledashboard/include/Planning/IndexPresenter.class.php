@@ -21,10 +21,11 @@
 class Planning_IndexPresenter {
     public $group_id;
     
-    function __construct(PlanningFactory $planning_factory, $group_id) {
+    public function __construct(PlanningFactory $planning_factory, $group_id) {
         $this->group_id = $group_id;
         $this->plannings = $planning_factory->getPlannings($this->group_id);
     }
+    
     public function getPlannings() {
         return $this->plannings;
     }
