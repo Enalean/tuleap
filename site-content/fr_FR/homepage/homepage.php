@@ -108,7 +108,7 @@ if ($display_homepage_news) {
                 </div>
             </div>
         </div>
-        <?php if ($display_homepage_news) { ?>
+        <?php if ($display_homepage_boxes) { ?>
         
         <hr />
         
