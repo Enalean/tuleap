@@ -91,10 +91,10 @@ class Git_LogDao extends DataAccessObject {
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
                 WHERE l.user_id = ".$this->da->escapeInt($userId)."
-                AND r.repository_deletion_date  = '0000-00-00 00:00:00'
-                AND g.status = 'A'
-                AND l.push_date > ".$this->da->escapeInt($date)."
-                ".$condition."
+                  AND r.repository_deletion_date  = '0000-00-00 00:00:00'
+                  AND g.status = 'A'
+                  AND l.push_date > ".$this->da->escapeInt($date)."
+                  ".$condition."
                 GROUP BY l.push_date
                 ORDER BY g.group_name, r.repository_name, l.push_date DESC
                 ".$limit;
@@ -115,9 +115,9 @@ class Git_LogDao extends DataAccessObject {
                 JOIN plugin_git r ON l.repository_id = r.repository_id
                 JOIN groups g ON g.group_id = r.project_id
                 WHERE l.user_id = ".$this->da->escapeInt($userId)."
-                AND r.repository_deletion_date  = '0000-00-00 00:00:00'
-                AND g.status = 'A'
-                AND l.push_date > ".$this->da->escapeInt($date)."
+                  AND r.repository_deletion_date  = '0000-00-00 00:00:00'
+                  AND g.status = 'A'
+                  AND l.push_date > ".$this->da->escapeInt($date)."
                 ORDER BY g.group_id, r.repository_id, l.push_date DESC";
         return $this->retrieve($sql);
     }
@@ -132,13 +132,13 @@ class Git_LogDao extends DataAccessObject {
      */
     function getSqlStatementForLogsDaily($groupId, $logsCond) {
         return "SELECT log.push_date AS time,
-                user.user_name AS user_name,
-                user.realname AS realname, user.email AS email,
-                r.repository_name AS title
+                    user.user_name AS user_name,
+                    user.realname AS realname, user.email AS email,
+                    r.repository_name AS title
                 FROM (SELECT *, push_date AS time from plugin_git_log) AS log, user, plugin_git AS r
                 WHERE ".$logsCond."
-                AND r.project_id = ".$this->da->quoteSmart($groupId)."
-                AND log.repository_id = r.repository_id
+                  AND r.project_id = ".$this->da->quoteSmart($groupId)."
+                  AND log.repository_id = r.repository_id
                 ORDER BY time DESC";
     }
 
