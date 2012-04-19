@@ -1,45 +1,16 @@
 <div class="footer container">
     <div class="row-fluid">
         <div class="span3">
-            <h3>About</h3>
-            <ul class="unstyled">
-                <li>Propulsé par <a href="https://tuleap.com/" target="_blank">Tuleap&trade;</a> version <?php echo $version; ?>.</li>
-                <li>Copyright &copy; 2011-2012 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.</li>
-            </ul>
+            <?php include($Language->getContent('layout/footer_about', null, null, '.php')); ?>
         </div>
         <div class="span3">
-            <h3>Liens Tuleap</h3>
-            <ul class="unstyled">
-                <li>
-                    <a href="http://tuleap.com">Site web</a>
-                </li>
-                <li>
-                    <a href="http://tuleap.net">Communauté</a>
-                </li>
-                <li>
-                    <a href="http://tuleap.com/blog">Blog</a>
-                </li>
-                <li><a href="https://twitter.com/TuleapEnalean" class="twitter-follow-button" data-show-count="false" data-lang="fr">Suivre @TuleapEnalean</a>
-                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                </li>
-            </ul>
+            <?php include($Language->getContent('layout/footer_links', null, null, '.php')); ?>
         </div>
         <div class="span3">
-            <h3>CLI</h3>
-            <ul class="unstyled">
-                <li><?= $GLOBALS['sys_name']?> vous fournit un Client en Ligne de 
-                Commande (CLI) basé sur <a href="/soap/index.php">l'API SOAP</a>.<br />
-                <a href="/downloads/Codendi_CLI.zip">Télécharger</a> &mdash; <a href="documentation/cli/html/fr_FR/">Documentation</a>
-                </li>
-            </ul>
+            <?php include($Language->getContent('layout/footer_cli', null, null, '.php')); ?>
         </div>
         <div class="span3">
-            <h3>Besoin d'aide?</h3>
-            <ul class="unstyled">
-                <li>Consulter la <a href="/site/">documentation</a>
-                </li>
-                <li><a href="/contact.php">Contact-nous</a></li>
-            </ul>
+            <?php include($Language->getContent('layout/footer_help', null, null, '.php')); ?>
         </div>
     </div>
 </div>

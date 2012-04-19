@@ -122,7 +122,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
                 $return .= news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments);
                 
                 if ($limit == 1 && $tail_headlines) {
-                    $return .= '<ul>';
+                    $return .= '<ul class="unstyled">';
                 }
                 if ($limit) {
                     $limit--;
