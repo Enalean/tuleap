@@ -130,7 +130,7 @@ if ($display_homepage_news) {
     </div>
     <?php if ($display_homepage_news) { ?>
     <div class="span4">
-        <h2>Ça se passe sur <?= $GLOBALS['sys_name']?> !</h2>
+        <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
         <?= news_show_latest($GLOBALS['sys_news_group'], 3, true, false, true, 3) ?>
     </div>
     <?php } ?>
