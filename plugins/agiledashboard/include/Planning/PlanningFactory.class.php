@@ -34,9 +34,17 @@ class PlanningFactory {
      */
     private $tracker_factory;
     
-    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory) {
+    /**
+     * User used to access plannings
+     *  
+     * @var User
+     */
+    private $user;
+    
+    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory, User $user) {
         $this->dao             = $dao;
         $this->tracker_factory = $tracker_factory;
+        $this->user            = $user;
     }
     
     /**
@@ -49,7 +57,10 @@ class PlanningFactory {
     public function getPlannings($group_id) {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
-            $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
+            $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
+            if($tracker->userCanView($this->user)) {
+                $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
+            }
         }
         return $plannings;
     }

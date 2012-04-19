@@ -26,9 +26,11 @@
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningDao.class.php';
 require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
+require_once('common/user/User.class.php');
 
 Mock::generate('PlanningDao');
 Mock::generate('TrackerFactory');
+Mock::generate('User');
 
 function aPlanningFactory() {
     return new TestPlanningFactoryBuilder();
@@ -36,12 +38,14 @@ function aPlanningFactory() {
 
 class TestPlanningFactoryBuilder {
     
-    private $dao;
-    private $tracker_factory;
+    public $dao;
+    public $tracker_factory;
+    public $user;
     
     public function __construct() {
         $this->dao             = new MockPlanningDao();
         $this->tracker_factory = new MockTrackerFactory();
+        $this->user            = new MockUser();
     }
     
     public function withDao(DataAccessObject $dao) {
@@ -49,8 +53,13 @@ class TestPlanningFactoryBuilder {
         return $this;
     }
     
+    public function withUser(User $user) {
+        $this->user = $user;
+        return $this;
+    }
+    
     public function build() {
-        return new PlanningFactory($this->dao, $this->tracker_factory);
+        return new PlanningFactory($this->dao, $this->tracker_factory, $this->user);
     }
 }
 

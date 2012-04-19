@@ -98,7 +98,7 @@ class AgileDashboardRouter {
     }
     
     private function buildController(Codendi_Request $request) {
-        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance(), $request->getCurrentUser());
         
         return new Planning_Controller($request, $planning_factory);
     }
