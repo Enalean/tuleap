@@ -1093,6 +1093,10 @@ plugin_tracker_formelement_property	cols	Columns
 plugin_tracker_formelement_property	static_value	Static value
 plugin_tracker_formelement_property	default_value_today	Today
 
+plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
+plugin_tracker_formelement_exception	permission_denied	Permission Denied
+plugin_tracker_formelement_exception	field_must_be_static	Can only share static selectbox fields
+
 plugin_tracker_widget_my	no_artifacts	No artifact found.
 
 plugin_tracker	no_artifacts	No artifact found.
@@ -1328,6 +1332,7 @@ plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	List artifacts you have submitted or assigned to you, by project.
 plugin_tracker_widget_myartifacts	no_artifacts	No artifacts founds.
 
+<<<<<<< .working
 plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field or you have not the permission to modify it, please reconfigure your tracker
 plugin_tracker	burndown_missing_start_date_warning	The tracker doesn't have a "start_date" Date field or you don't have the permission to access it.
 plugin_tracker	burndown_missing_duration_warning	The tracker doesn't have a "duration" Integer field or you don't have the permission to access it.
@@ -1338,3 +1343,4 @@ plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or tho
 plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
 plugin_tracker	unable_to_render_the_chart	Unable to render the chart
 plugin_tracker	burndown_permission_denied	You are not allowed to access this field.
+plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field, please reconfigure your tracker

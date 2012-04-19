@@ -1,3 +1,7 @@
+1.8 - Tuleal 5.0
+    * Introduce possibility for other plugins to interact with hudson plugin.
+      Used by git to trigger build on push. (Contrib STMicroelectronics).
+
 1.7 - Tuleap 4.0.26
     * Export Hudson Statistics to CSV
     

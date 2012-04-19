@@ -58,13 +58,41 @@ class hudsonViews extends Views {
     
     // {{{ Views
     function projectOverview() {
-        $request =& HTTPRequest::instance();
+        $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $user = UserManager::instance()->getCurrentUser();
-        
-        $this->_display_jobs_table($group_id);       
+        $user     = UserManager::instance()->getCurrentUser();
+        $em       = EventManager::instance();
+        $services = array();
+        $params   = array('group_id' => $group_id, 'services' => &$services);
+        /* $services will contain an array of details of all plugins that will trigger CI builds
+           Example of what $services may contain:
+            Array(
+                [0] => Array(
+                        [service] => plugin1
+                        [title] => title1
+                        [used] => Array(
+                                [job_id_11] => true
+                                [job_id_12] => true
+                            )
+                        [add_form]  => "html form"
+                        [edit_form] => "html form"
+                    )
+                [1] => Array(
+                        [service] => plugin2
+                        [title] => title2
+                        [used] => Array(
+                                [job_id_21] => true
+                                [job_id_22] => true
+                            )
+                        [add_form]  => "html form"
+                        [edit_form] => "html form"
+                    )
+            )
+        */
+        $em->processEvent('collect_ci_triggers', $params);
+        $this->_display_jobs_table($group_id, $services);
         if ($user->isMember($request->get('group_id'), 'A')) {
-            $this->_display_add_job_form($group_id);
+            $this->_display_add_job_form($group_id, $services);
         }
         $this->_display_iframe();
         $this->_hide_iframe();
@@ -237,7 +265,18 @@ class hudsonViews extends Views {
                     echo '   <input id="new_hudson_use_cvs_trigger" name="new_hudson_use_cvs_trigger" type="checkbox" '.$checked.' />';
                     echo '  </p>';
                 }
-                if ($project->usesSVN() || $project->usesCVS()) {
+                $em       = EventManager::instance();
+                $services = array();
+                $params   = array('group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services);
+                $em->processEvent('collect_ci_triggers', $params);
+                if (!empty($services)) {
+                    foreach ($services as $service) {
+                        echo '  <p>';
+                        echo $service['edit_form'];
+                        echo '  </p>';
+                    }
+                }
+                if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
                     echo '  <p>';
                     echo '   <label for="new_hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
                     echo '   <input id="new_hudson_trigger_token" name="new_hudson_trigger_token" type="text" value="'.$row['token'].'" size="32" />';
@@ -260,7 +299,7 @@ class hudsonViews extends Views {
     }
     // }}}
     
-    function _display_jobs_table($group_id) {
+    function _display_jobs_table($group_id, $services) {
         $request =& HTTPRequest::instance();
         $group_id = $request->get('group_id');
         $user = UserManager::instance()->getCurrentUser();
@@ -285,6 +324,11 @@ class hudsonViews extends Views {
             if ($project->usesCVS()) {
                 echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
             }
+            if (!empty($services)) {
+                foreach ($services as $service) {
+                    echo '  <th class="boxtitle">'.$service['title'].'</th>';
+                }
+            }
             if ($user->isMember($request->get('group_id'), 'A')) {
                 echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
             }
@@ -293,6 +337,7 @@ class hudsonViews extends Views {
             $cpt = 1;
             while ($dar->valid()) {
                 $row = $dar->current();
+                $job_id = $row['job_id'];
 
                 echo ' <tr class="'. util_get_alt_row_color($cpt) .'">';
                 
@@ -328,12 +373,23 @@ class hudsonViews extends Views {
                             echo '  <td>&nbsp;</td>';
                         }
                     }
-                                
+                    if (!empty($services)) {
+                        foreach ($services as $service) {
+                            if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
+                                echo '  <td align="center"><img src="'.$this->getControler()->getIconsPath().'server_lightning.png" alt="'.$service['title'].'" title="'.$service['title'].'"></td>';
+                            } else {
+                                echo '  <td>&nbsp;</td>';
+                            }
+                        }
+                    }
                 } catch (Exception $e) {
                     echo '  <td><img src="'.$this->getControler()->getIconsPath().'link_error.png" alt="'.$e->getMessage().'" title="'.$e->getMessage().'" /></td>';
                     $nb_columns = 4;
                     if ($project->usesSVN()) { $nb_columns++; }
                     if ($project->usesCVS()) { $nb_columns++; }
+                    foreach ($services as $service) {
+                            $nb_columns++;
+                    }
                     echo '  <td colspan="'.$nb_columns.'"><span class="error">'.$e->getMessage().'</span></td>';
                 }
                 
@@ -341,13 +397,13 @@ class hudsonViews extends Views {
                     echo '  <td>';
                     // edit job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$row['job_id'].'">'.$GLOBALS['HTML']->getimage('ic/edit.png', 
+                    echo '    <a href="?action=edit_job&group_id='.$group_id.'&job_id='.$job_id.'">'.$GLOBALS['HTML']->getimage('ic/edit.png', 
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'),
                                                                   'title' => $GLOBALS['Language']->getText('plugin_hudson','edit_job'))).'</a>';
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$row['job_id'].'" onclick="return confirm(';
+                    echo '    <a href="?action=delete_job&group_id='.$group_id.'&job_id='.$job_id.'" onclick="return confirm(';
                     echo "'" . $GLOBALS['Language']->getText('plugin_hudson','delete_job_confirmation', array($row['name'], $project->getUnixName())) . "'";
                     echo ');">'.$GLOBALS['HTML']->getimage('ic/cross.png', 
                                                             array('alt' => $GLOBALS['Language']->getText('plugin_hudson','delete_job'),
@@ -367,7 +423,7 @@ class hudsonViews extends Views {
         }
     }
     
-    function _display_add_job_form($group_id) {
+    function _display_add_job_form($group_id, $services) {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($group_id);
         
@@ -384,15 +440,22 @@ class hudsonViews extends Views {
         echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
         echo '   <br />';
         //echo '  <p>';
-        if ($project->usesSVN() || $project->usesCVS()) {
+        if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
             echo $GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger');
             if ($project->usesSVN()) {
+                echo '  <p>';
                 echo '   <label for="hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn').'</label>';
                 echo '   <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" />';
+                echo '  </p>';
             }
             if ($project->usesCVS()) {
+                echo '  <p>';
                 echo '   <label for="hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs').'</label>';
                 echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
+                echo '  </p>';
+            }
+            foreach ($services as $service) {
+                echo $service['add_form'];
             }
             //echo '  </p>';
             //echo '  <p>';

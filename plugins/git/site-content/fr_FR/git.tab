@@ -164,3 +164,11 @@ plugin_git	fork_repository_exists	Le dépot $1 existe déjà sur la cible. Dépo
 plugin_git	fork_repository_invalid_namespace	Le chemin contient des caractères invalides. Seuls les caractères alphanumeriques sont autorisés.
 plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
 plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
+
+plugin_git	ci_trigger	Evénement Git
+plugin_git	ci_repo_id	Id du dépot Git 
+plugin_git	ci_field_description	Déclencher un build après un push Git dans le dépot 
+plugin_git	ci_trigger_not_saved	L'evénement Git n'a pas été sauvegardé
+plugin_git	ci_bad_repo_id	Id du dépot Git non valide
+plugin_git	ci_repository_not_in_project	Le dépot Git n'appartient pas au projet
+plugin_git	ci_trigger_not_deleted	L'evénement Git n'a pas été supprimé

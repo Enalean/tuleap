@@ -1,3 +1,6 @@
+Version 2.2 (Tuleap 5.0)
+    * Link Git and Continuous Integration plugins. On git push, Tuleap can trigger a build on an hudson/jenkins CI server (contrib STMicroelectronics).
+
 Version 2.1.7 (Tuleap 4.0.28)
     * Display meaningful info when fork fails due to already exiting repo
     * Prevent usage of non alphanum characters in fork namespace
