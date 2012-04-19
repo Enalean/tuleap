@@ -27,6 +27,16 @@ require_once('common/include/HTTPRequest.class.php');
 class CodeReviewViews extends PluginView {
 
     /**
+     * Display header
+     *
+     * @return void
+     */
+    function header() {
+        $title = 'codereview';
+        $GLOBALS['HTML']->header(array('title'=>'codereview','group' => $this->getController()->getRequest()->get('group_id'), 'toptab' => 'my'));
+    }
+
+    /**
      * Display footer
      *
      * @return void
@@ -42,7 +52,6 @@ class CodeReviewViews extends PluginView {
     * @return void
     */
     function displayFrame() {
-        $GLOBALS['HTML']->header(array('title'=>'codereview','group' => $this->getController()->getRequest()->get('group_id'), 'toptab' => 'codereview'));
         echo '<iframe src="http://localhost/reviews/" width="900" height="500"
               frameborder="0" scrolling="auto" name="reviewboard">
               TEXT FOR NON-COMPATIBLE BROWSERS HERE</iframe>';
