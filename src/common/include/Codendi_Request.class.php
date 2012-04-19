@@ -76,7 +76,7 @@ class Codendi_Request {
      *
      * @return string
      */
-    function _getCallTrace() {
+    protected function _getCallTrace() {
         $backtrace = debug_backtrace();
         $files = explode('/', $backtrace[1]['file']);
         return $files[count($files) - 4] . '/'.
@@ -161,7 +161,7 @@ class Codendi_Request {
      * @param string $variable Name of the parameter.
      * @return boolean
      */
-    function _exist($variable, $array) {
+    protected function _exist($variable, $array) {
         return isset($array[$variable]);
     }
     
