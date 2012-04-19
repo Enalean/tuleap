@@ -13,10 +13,12 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
 "/usr/share/tuleap_dev/documentation/lib/docbook-dtd/docbookx.dtd"
 [
+
 <!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
 %ParametersDefault;
 
 <!-- Entities for inclusion of document chapters -->
+<!ENTITY BookInfo SYSTEM "BookInfo.xml">
 <!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
 <!ENTITY ChapterSiteOverview SYSTEM "SiteOverview.xml">
 <!ENTITY ChapterBecomingACitizen SYSTEM "BecomingACitizen.xml">
@@ -49,6 +51,8 @@ an entity cannot be redefined. Hence this particular order  -->
   <title>&SYS_PRODUCT_NAME; User Guide</title>
 
   <subtitle>&#34;Open Source suite for Application Lifecycle Management&#34;</subtitle>
+
+  &BookInfo;
 
   &ChapterIntroduction;
   &ChapterSiteOverview;
