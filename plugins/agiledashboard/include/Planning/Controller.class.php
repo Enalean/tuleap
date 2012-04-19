@@ -50,7 +50,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function index() {
-        $plannings = $planning_factory->getPlannings($this->group_id);
+        $plannings = $this->planning_factory->getPlannings($this->group_id);
         $presenter = new Planning_IndexPresenter($plannings, $this->group_id);
         $this->render('index', $presenter);
     }
@@ -76,7 +76,7 @@ class Planning_Controller extends MVC2_Controller {
             $this->redirect(array('group_id' => $group_id));
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
-            $this->redirect(array('group_id' => $group_id, 'action' => 'new'));
+            $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
     }
     
