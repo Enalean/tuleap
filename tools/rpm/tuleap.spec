@@ -657,6 +657,13 @@ fi
 %post plugin-tracker
 %{__rm} -f %{APP_DIR}/src/www/scripts/combined/*.js
 
+
+#
+# Post install of codereview plugin 
+%post plugin-codereview
+%{__install} %{APP_DIR}/plugins/codereview/bin/install.sh
+
+
 ##
 ## On package un-install
 ##
