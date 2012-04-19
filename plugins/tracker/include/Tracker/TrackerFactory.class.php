@@ -509,7 +509,7 @@ class TrackerFactory {
         
         foreach($this->getTrackersByGroupId($from_project_id) as $t) {
             if ($t->mustBeInstantiatedForNewProjects()) {
-                $this->duplicateTracker($tracker_mapping, $field_mapping, $t, $from_project_id, $to_project_id, $ugroup_mapping);
+                list($tracker_mapping, $field_mapping) = $this->duplicateTracker($tracker_mapping, $field_mapping, $t, $from_project_id, $to_project_id, $ugroup_mapping);
             }
         }
        
@@ -527,7 +527,7 @@ class TrackerFactory {
         ));
     }
     
-    private function duplicateTracker(&$tracker_mapping, &$field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
+    private function duplicateTracker($tracker_mapping, $field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
         $creation_result = $this->create($to_project_id,
                 $from_project_id,
                 $tracker->getId(),
@@ -538,14 +538,12 @@ class TrackerFactory {
         
         if ($creation_result) {
             $tracker_mapping[$tracker->getId()] = $creation_result['tracker']->getId();
-            $field_mapping = $this->mergeAssociativeArrayWithNumericKeys($field_mapping, $creation_result['field_mapping']);
+            $field_mapping = array_merge($field_mapping, $creation_result['field_mapping']);
         } else {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($tracker->getName())));
         }
-    }
-    
-    private function mergeAssociativeArrayWithNumericKeys ($array1, $array2) {
-        return $array1 + $array2;
+        
+        return array($tracker_mapping, $field_mapping);
     }
     
     /**

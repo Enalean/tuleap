@@ -265,8 +265,11 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         $t_new1 = stub('Tracker')->getId()->returns(1234);        
         $t_new2 = stub('Tracker')->getId()->returns(5678);
         
-        $t_new1_field_mapping = array('11' => '111', '22'=>'222');
-        $t_new2_field_mapping = array('33' => '333', '44'=>'444');
+        $t_new1_field_mapping = array(array('from' => '11', 'to' => '111'),
+                                      array('from' => '22', 'to' => '222'));
+        $t_new2_field_mapping = array(array('from' => '33', 'to' => '333'),
+                                      array('from' => '44', 'to' => '444'));
+        $full_field_mapping = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
         $to_project_id   = 999;
         $from_project_id = 100;
         $this->tracker_factory->setReturnValue('create', 
@@ -276,17 +279,8 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
                                                 array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), 
                                                 array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
         
-        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, array('11' => '111', 
-                                                                                                             '22' => '222', 
-                                                                                                             '33' => '333', 
-                                                                                                             '44' => '444')));
+        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
         $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
-    }
-    
-    public function testMergesAssociativeArrayWithNumericKeys() {
-        $t_new1_field_mapping = array('11' => '111', '22'=>'222');
-        $t_new2_field_mapping = array('33' => '333', '44'=>'444');
-        $this->assertEqual(array('11' => '111', '22'=>'222', '33' => '333', '44'=>'444'), ($t_new1_field_mapping + $t_new2_field_mapping));
     }
     
     public function testDuplicate_ignoresNonDuplicatableTrackers() {
