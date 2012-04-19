@@ -71,11 +71,6 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
     
-    public function withOriginalField(Test_Tracker_FormElement_Builder $fieldBuilder) {
-        $this->originalField = $fieldBuilder->build();
-        return $this;
-    }
-    
     /**
      * @return Tracker_FormElement
      */
