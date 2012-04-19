@@ -4,8 +4,10 @@ Version 5.0 (Not released yet)
 
    == Plugins ==
    * AgileDashoard 0.12
-   * Tracker 5.7
+   * Tracker 5.7.1
    * GraphOnTrackerv5 5.0.1
+   * Git v2.2
+   * Hudson v1.8
 
    == Development ==
    * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:

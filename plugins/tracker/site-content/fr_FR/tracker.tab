@@ -1329,7 +1329,6 @@ plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	Affiche la liste des artefacts par projet que vous avez soumis ou qui vous ont été assignés.
 plugin_tracker_widget_myartifacts	no_artifacts	Pas d'artefact.
 
-<<<<<<< .working
 plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez pas la permission de le modifier, merci de reconfigurer l'outil de suivi
 plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y acceder.
 plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier ou bien vous n'avez pas la permission d'y acceder.
@@ -1340,4 +1339,3 @@ plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouv�
 plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
 plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
 plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
-plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact, merci de reconfigurer l'outil de suivi
