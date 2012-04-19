@@ -23,13 +23,13 @@ class Codendi_Request {
      * @var array
      * @access protected
      */
-    public $_validated_input;
+    protected $_validated_input;
     
     /**
      * @var array
      * @access protected
      */
-    public $_last_access_to_input;
+    protected $_last_access_to_input;
     
     /**
      * @var array
@@ -76,7 +76,7 @@ class Codendi_Request {
      *
      * @return string
      */
-    public function _getCallTrace() {
+    function _getCallTrace() {
         $backtrace = debug_backtrace();
         $files = explode('/', $backtrace[1]['file']);
         return $files[count($files) - 4] . '/'.
@@ -136,7 +136,7 @@ class Codendi_Request {
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
-    public function _get($variable, $array) {
+    function _get($variable, $array) {
         if ($this->_exist($variable, $array)) {
             return $array[$variable];
         } else {
@@ -161,7 +161,7 @@ class Codendi_Request {
      * @param string $variable Name of the parameter.
      * @return boolean
      */
-    public function _exist($variable, $array) {
+    function _exist($variable, $array) {
         return isset($array[$variable]);
     }
     
