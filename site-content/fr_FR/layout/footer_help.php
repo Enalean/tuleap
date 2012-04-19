@@ -4,4 +4,5 @@
     </li>
     <li><a href="/contact.php">Contact-nous</a></li>
 </ul>
-
+<?php
+?>

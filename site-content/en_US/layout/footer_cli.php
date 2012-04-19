@@ -5,4 +5,5 @@
         <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
     </li>
 </ul>
-
+<?php
+?>

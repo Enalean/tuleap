@@ -195,7 +195,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
         }
         
         $html .= '<div class="news">';
-        $html .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'">'. $data['summary'] . '</a></span>';
+        $html .= '<span class="news_summary"><a href="/forum/forum.php?forum_id='. $data['forum_id'] .'"><h4>'. $data['summary'] . '</h4></a></span>';
         
         $html .= '<blockquote>';
         $html .= $details;

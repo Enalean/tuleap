@@ -5,4 +5,5 @@
     <a href="/downloads/Codendi_CLI.zip">Télécharger</a> &mdash; <a href="documentation/cli/html/fr_FR/">Documentation</a>
     </li>
 </ul>
-
+<?php
+?>
