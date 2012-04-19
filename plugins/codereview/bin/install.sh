@@ -12,14 +12,13 @@ CHOWN='/bin/chown'
 
 APP_USER='codendiadm'
 APP_DIR='/usr/share/codendi/plugins/codereview/reviewboard'
-
+APP_PWD=`/bin/grep sys_dbpasswd /etc/codendi/conf/database.inc | cut -d\" -f2`
 
 ##############################################
 # Installing the ReviewBoard database
 #
 db_install() {
 # Get the mysql password from the install
-    APP_PWD=`/bin/grep sys_dbpasswd /etc/codendi/conf/database.inc | cut -d\" -f2`
     $CAT <<EOF | $MYSQL -u$APP_USER -p$APP_PWD
 CREATE DATABASE IF NOT EXISTS reviewboard;
 GRANT ALL PRIVILEGES on reviewboard.* to '$APP_USER'@'localhost' identified by '$APP_PWD';
@@ -27,6 +26,11 @@ FLUSH PRIVILEGES;
 EOF
 }
 
+# Install plugin
+
+    $CAT <<EOF | $MYSQL -u$APP_USER codendi -p$APP_PWD
+INSERT INTO plugin (name, available) VALUES ('codereview', '1');
+EOF
 
 ##############################################
 # Installing the ReviewBoard Site
