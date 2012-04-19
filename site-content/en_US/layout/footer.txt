@@ -1,56 +1,44 @@
 <div class="footer container">
     <div class="row-fluid">
-        <div class="span4">
+        <div class="span3">
             <h3>About</h3>
             <ul class="unstyled">
-                <li>Powered by <a href="https://tuleap.net/" target="_blank">Tuleap</a> version <?= $version ?>.</li>
+                <li>Powered by <a href="https://tuleap.com/" target="_blank">Tuleap</a> version <?= $version ?>.</li>
                 <li>Copyright &copy; 2011-2012 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.</li>
-                <li>Tuleap is free software licensed under GPL License<br />
-                    <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
-                </li>
             </ul>
         </div>
-        <div class="span4">
+        <div class="span3">
             <h3>Tuleap Links</h3>
             <ul class="unstyled">
                 <li>
-                    <a href="http://www.tuleap.com">Website</a>
+                    <a href="http://tuleap.com/">Website</a>
                 </li>
                 <li>
-                    <a href="http://www.tuleap.net">Community</a>
+                    <a href="http://tuleap.net">Community</a>
                 </li>
                 <li>
                     <a href="http://tuleap.com/blog">Blog</a>
-                </li>
-                <li>
-                    <a href="http://demo.tuleap.net">Demo</a>
-                </li>
-                <li>
-                    <a href="http://tuleap.com/support">Get Enterprise Support</a>
                 </li>
                 <li><a href="https://twitter.com/TuleapEnalean" class="twitter-follow-button" data-show-count="false">Follow @TuleapEnalean</a>
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                 </li>
             </ul>
         </div>
-        <div class="span4">
-            <h3>Need help?</h3>
-            <ul class="unstyled">
-                <li>Access <a href="/plugins/docman/?group_id=101">documentation</a>
-                </li>
-                <li>Ask your questions in the <a href="/plugins/forumml/message.php?group_id=101&list=1">forums</a> or <a href="/mail/?group_id=101">mailing lists</a>
-                </li>
-                <li>
-                    <a href="/contact.php">Contact us</a>
-                </li>
-            </ul>
+        <div class="span3">
             <h3>CLI</h3>
             <ul class="unstyled">
-                <li>This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> 
-                    to access it through a command line client. You can download the 
-                    <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its 
+                <li><?= $GLOBALS['sys_name']?> provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a>.<br />
+                    <a href="/downloads/Codendi_CLI.zip">Download</a> and its 
                     <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
                 </li>
+            </ul>
+        </div>
+        <div class="span3">
+            <h3>Need help?</h3>
+            <ul class="unstyled">
+                <li>Access <a href="/site/">documentation</a>
+                </li>
+                <li><a href="/contact.php">Contact us</a></li>
             </ul>
         </div>
     </div>
