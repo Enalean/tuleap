@@ -1,15 +1,24 @@
 <?php
 
+
+stub
 /**
- * Returns a DSL like mockgenerator : <br>
- *   stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult); <br>
- * that is an alternative to 
+ * Returns a DSL like mockgenerator
  * 
- * Mock::generate('SomeClass');<br>
- * $mock = new MockSomeClass();<br>
- * $mock->setReturnValue('someMethod', $someResult, array($arg1, $arg2, ...);<br>
+ * <code>
+ * stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult);
+ * </code>
+ * 
+ * that is an alternative to :
+ * 
+ * <code>
+ * Mock::generate('SomeClass');
+ * $mock = new MockSomeClass();
+ * $mock->setReturnValue('someMethod', $someResult, array($arg1, $arg2, ...);
+ * </code>
  * 
  * @param a class name or a simpletest mock
+ * 
  * @return \OngoingIntelligentStub 
  */
 function stub($classname_or_simpletest_mock) {
@@ -26,10 +35,13 @@ function stub($classname_or_simpletest_mock) {
  * 
  * is exactly the same as
  * 
- * Mock::generate('SomeClass');<br>
+ * <code>
+ * Mock::generate('SomeClass');
  * $mock = new MockSomeClass();
-
+ * </code>
+ * 
  * @param type $classname
+ * 
  * @return a simpletest mock 
  */
 function mock($classname) {
