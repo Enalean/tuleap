@@ -1085,6 +1085,10 @@ plugin_tracker_formelement_property	cols	Colonnes
 plugin_tracker_formelement_property	static_value	Valeur statique
 plugin_tracker_formelement_property	default_value_today	Date du jour
 
+plugin_tracker_formelement_exception	wrong_field_id	Aucun champ avec l'ID:$1
+plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
+plugin_tracker_formelement_exception	field_must_be_static	Il n'est pas possible de partager d'autres champs que des boites de sélection statiques
+
 plugin_tracker_widget_my	no_artifacts	Aucun artefact trouvé.
 
 plugin_tracker	no_artifacts	Aucun artefact trouvé.
