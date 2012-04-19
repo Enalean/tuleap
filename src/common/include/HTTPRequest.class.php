@@ -106,7 +106,7 @@ class HTTPRequest extends Codendi_Request {
      * @param mixed $value
      * @return mixed
      */
-    protected function _stripslashes($value) {
+    public function _stripslashes($value) {
         if (is_string($value)) {
             $value = stripslashes($value);
         } else if (is_array($value)) {
@@ -125,7 +125,7 @@ class HTTPRequest extends Codendi_Request {
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
-    protected function _get($variable, $array) {
+    public function _get($variable, $array) {
         if ($this->_exist($variable, $array)) {
             return (get_magic_quotes_gpc() ? $this->_stripslashes($array[$variable]) : $array[$variable]);
         } else {

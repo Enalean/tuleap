@@ -45,7 +45,7 @@ class RequestHelp extends PluginControler {
      *
      * @return void
      */
-    function __construct($plugin) {
+    public function __construct($plugin) {
         parent::__construct();
         $this->plugin = $plugin;
     }
@@ -55,7 +55,7 @@ class RequestHelp extends PluginControler {
      *
      * @return requesthelpPlugin
      */
-    function getPlugin() {
+    public function getPlugin() {
         return $this->plugin;
     }
 
@@ -64,7 +64,7 @@ class RequestHelp extends PluginControler {
      *
      * @return void
      */
-    function request() {
+    public function request() {
         $request = $this->getRequest();
 
         if ($request->exist('action') && $this->getUser()->isLoggedIn()) {
