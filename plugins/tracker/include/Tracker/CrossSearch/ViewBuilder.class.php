@@ -85,10 +85,10 @@ class Tracker_CrossSearch_ViewBuilder {
                                              $tracker_ids);
     }
     
-    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
+    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excluded_artifact_ids, array $tracker_ids) {
         $report    = $this->getReport();
         $criteria  = $this->getCriteria($project, $request_criteria);
-        $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
+        $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excluded_artifact_ids);
         
         return $this->getContentView($classname, $report, $criteria, $artifacts);
     }
