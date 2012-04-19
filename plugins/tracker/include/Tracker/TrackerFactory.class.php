@@ -371,7 +371,7 @@ class TrackerFactory {
      * @param string  $itemname            the itemname of the new tracker
      * @param Array   $ugroup_mapping the ugroup mapping
      *
-     * @return int id on success, false on failure.
+     * @return mixed array(Tracker object, field_mapping array) or false on failure.
      */
     function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false) {
         
