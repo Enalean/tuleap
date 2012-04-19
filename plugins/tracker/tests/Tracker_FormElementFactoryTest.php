@@ -306,10 +306,12 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $this->new_project_id      = 3;
         $this->template_project_id = 29;
         
-        $this->dao                  = mock('Tracker_FormElement_FieldDao');
-        $this->form_element_factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao'));
+        $this->field_dao            = mock('Tracker_FormElement_FieldDao');
+        $this->value_dao            = mock('Tracker_FormElement_Field_List_Bind_Static_ValueDao');
+        $this->form_element_factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao', 'getListBindStaticValueDao'));
         
-        stub($this->form_element_factory)->getDao()->returns($this->dao);
+        stub($this->form_element_factory)->getDao()->returns($this->field_dao);
+        stub($this->form_element_factory)->getListBindStaticValueDao()->returns($this->value_dao);
     }
     
     public function itDoesNothingWhenFieldMappingIsEmpty() {
@@ -317,10 +319,10 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $new_project_shared_fields = array();
         $field_mapping             = array();
         
-        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
-        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        stub($this->field_dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
+        stub($this->field_dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
         
-        $this->dao->expectNever('updateOriginalFieldId');
+        $this->field_dao->expectNever('updateOriginalFieldId');
         
         $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id, $field_mapping);
     }
@@ -330,10 +332,10 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $new_project_shared_fields = array();
         $field_mapping             = array(array('from' => 321, 'to' => 101));
         
-        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
-        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        stub($this->field_dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
+        stub($this->field_dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
         
-        $this->dao->expectNever('updateOriginalFieldId');
+        $this->field_dao->expectNever('updateOriginalFieldId');
         
         $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id,   $field_mapping);
     }
@@ -353,15 +355,15 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
                                             array('from' => 555, 'to' => 888, 'values' => array(1 => 2)),
                                             array('from' => 666, 'to' => 777, 'values' => array(3 => 4, 5 => 6)));
         
-        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);        
-        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        stub($this->field_dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);        
+        stub($this->field_dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
         
-        $this->dao->expectAt(0, 'updateOriginalFieldId', array(234, 777));
-        $this->dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
+        $this->field_dao->expectAt(0, 'updateOriginalFieldId', array(234, 777));
+        $this->field_dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
         
-        $this->dao->expectAt(0, 'updateOriginalValueId', array(234, 3, 4));
-        $this->dao->expectAt(1, 'updateOriginalValueId', array(234, 5, 6));
-        $this->dao->expectAt(2, 'updateOriginalValueId', array(567, 1, 2));
+        $this->value_dao->expectAt(0, 'updateOriginalValueId', array(234, 3, 4));
+        $this->value_dao->expectAt(1, 'updateOriginalValueId', array(234, 5, 6));
+        $this->value_dao->expectAt(2, 'updateOriginalValueId', array(567, 1, 2));
         
         $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id, $field_mapping);
     }
@@ -379,13 +381,13 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
                                       array('from' => 103, 'to' => 567),
                                       array('from' => 666, 'to' => 777, 'values' => array(1 => 2, 3 => 4)));
         
-        stub($this->dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
-        stub($this->dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
+        stub($this->field_dao)->searchProjectSharedFieldsTargets($this->new_project_id)->returns($new_project_shared_fields);
+        stub($this->field_dao)->searchByGroupId($this->template_project_id)->returns($template_project_fields);
         
-        $this->dao->expectOnce('updateOriginalFieldId', array(234, 777));
+        $this->field_dao->expectOnce('updateOriginalFieldId', array(234, 777));
         
-        $this->dao->expectAt(0, 'updateOriginalValueId', array(234, 1, 2));
-        $this->dao->expectAt(1, 'updateOriginalValueId', array(234, 3, 4));
+        $this->value_dao->expectAt(0, 'updateOriginalValueId', array(234, 1, 2));
+        $this->value_dao->expectAt(1, 'updateOriginalValueId', array(234, 3, 4));
         
         $this->form_element_factory->fixOriginalFieldIdsAfterDuplication($this->new_project_id, $this->template_project_id, $field_mapping);
     }

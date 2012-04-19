@@ -196,5 +196,20 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 ";
         return $this->canValueBeHidden($field_id, $value_id) && count($this->retrieve($sql)) == 0;
     }
+    
+    public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
+        $field_id              = $this->da->escapeInt($field_id);
+        $old_original_value_id = $this->da->escapeInt($old_original_value_id);
+        $new_original_value_id = $this->da->escapeInt($new_original_value_id);
+        
+        $sql = "
+            UPDATE $this->table_name
+            SET   original_value_id = $new_original_value_id
+            WHERE field_id          = $field_id
+            AND   original_value_id = $old_original_value_id
+        ";
+        
+        return $this->update($sql);
+    }
 }
 ?>

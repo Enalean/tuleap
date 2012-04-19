@@ -481,23 +481,11 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     public function updateOriginalFieldId($id, $original_field_id) {
         $original_field_id = $this->da->escapeInt($original_field_id);
         $id                = $this->da->escapeInt($id);
-        $sql = "UPDATE $this->table_name  
-                SET original_field_id = $original_field_id 
-                WHERE id = $id";
-        return $this->update($sql);
-        
-    }
-    
-    public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
-        $field_id              = $this->da->escapeInt($field_id);
-        $old_original_value_id = $this->da->escapeInt($old_original_value_id);
-        $new_original_value_id = $this->da->escapeInt($new_original_value_id);
         
         $sql = "
-            UPDATE tracker_field_list_bind_static_value
-            SET   original_value_id = $new_original_value_id
-            WHERE field_id          = $field_id
-            AND   original_value_id = $old_original_value_id
+            UPDATE $this->table_name  
+            SET   original_field_id = $original_field_id 
+            WHERE id                = $id
         ";
         
         return $this->update($sql);

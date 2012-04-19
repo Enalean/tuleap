@@ -699,10 +699,11 @@ class Tracker_FormElementFactory {
      * @param array $field_mapping 
      */
     public function fixOriginalFieldIdsAfterDuplication($new_project_id, $template_project_id, array $field_mapping) {
-        $dao = $this->getDao();
+        $field_dao = $this->getDao();
+        $value_dao = $this->getListBindStaticValueDao();
         
-        $new_project_shared_fields  = $dao->searchProjectSharedFieldsTargets($new_project_id);
-        $template_project_fields    = $dao->searchByGroupId($template_project_id);
+        $new_project_shared_fields  = $field_dao->searchProjectSharedFieldsTargets($new_project_id);
+        $template_project_fields    = $field_dao->searchByGroupId($template_project_id);
         $template_project_field_ids = $this->extractIdFromDar($template_project_fields);
         
         foreach ($new_project_shared_fields as $new_project_shared_field) {
@@ -712,15 +713,19 @@ class Tracker_FormElementFactory {
                 $old_original_field_id = $new_project_shared_field['original_field_id'];
                 $new_original_field_id = $this->getNewOriginalFieldIdFromMapping($old_original_field_id, $field_mapping);
                 
-                $dao->updateOriginalFieldId($field_id, $new_original_field_id);
+                $field_dao->updateOriginalFieldId($field_id, $new_original_field_id);
                 
                 $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
                 
                 foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
-                    $dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
+                    $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
                 }
             }
         }
+    }
+    
+    private function getListBindStaticValueDao() {
+        return new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
     }
     
     private function getValueMappingFromFieldMapping($original_field_id, $field_mapping) {
