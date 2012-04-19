@@ -125,7 +125,7 @@ class HTTPRequest extends Codendi_Request {
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
      */
-    protected function _get($variable, $array) {
+    function _get($variable, $array) {
         if ($this->_exist($variable, $array)) {
             return (get_magic_quotes_gpc() ? $this->_stripslashes($array[$variable]) : $array[$variable]);
         } else {
