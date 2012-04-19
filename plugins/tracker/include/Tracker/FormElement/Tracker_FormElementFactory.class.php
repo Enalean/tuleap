@@ -694,15 +694,15 @@ class Tracker_FormElementFactory {
     /**
      * Fixes the original field id of the shared fields originating from the duplicated project
      * 
-     * @param int $to_project_id
-     * @param int $from_project_id
+     * @param int $new_project_id
+     * @param int $template_project_id
      * @param array $field_mapping 
      */
-    public function fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, array $field_mapping) {
+    public function fixOriginalFieldIdsAfterDuplication($new_project_id, $template_project_id, array $field_mapping) {
         $dao = $this->getDao();
         
-        $new_project_shared_fields  = $dao->searchProjectSharedFieldsTargets($to_project_id);
-        $template_project_fields    = $dao->searchByGroupId($from_project_id);
+        $new_project_shared_fields  = $dao->searchProjectSharedFieldsTargets($new_project_id);
+        $template_project_fields    = $dao->searchByGroupId($template_project_id);
         $template_project_field_ids = $this->extractIdFromDar($template_project_fields);
         
         foreach ($new_project_shared_fields as $new_project_shared_field) {
