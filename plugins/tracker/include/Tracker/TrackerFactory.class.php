@@ -528,7 +528,7 @@ class TrackerFactory {
     }
     
     private function duplicateTracker($tracker_mapping, $field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
-        $creation_result = $this->create($to_project_id,
+        $tracker_and_field_mapping = $this->create($to_project_id,
                 $from_project_id,
                 $tracker->getId(),
                 $tracker->getName(),
@@ -536,9 +536,9 @@ class TrackerFactory {
                 $tracker->getItemName(),
                 $ugroup_mapping);
         
-        if ($creation_result) {
-            $tracker_mapping[$tracker->getId()] = $creation_result['tracker']->getId();
-            $field_mapping = array_merge($field_mapping, $creation_result['field_mapping']);
+        if ($tracker_and_field_mapping) {
+            $tracker_mapping[$tracker->getId()] = $tracker_and_field_mapping['tracker']->getId();
+            $field_mapping = array_merge($field_mapping, $tracker_and_field_mapping['field_mapping']);
         } else {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($tracker->getName())));
         }
