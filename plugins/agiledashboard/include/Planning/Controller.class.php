@@ -45,13 +45,13 @@ class Planning_Controller extends MVC2_Controller {
     public function __construct(Codendi_Request $request, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
-        $aid                    = $request->get('aid');
         $this->group_id         = $request->get('group_id');
         $this->planning_factory = $planning_factory;
     }
     
     public function index() {
-        $presenter = new Planning_IndexPresenter($this->planning_factory, $this->group_id);
+        $plannings = $planning_factory->getPlannings($this->group_id);
+        $presenter = new Planning_IndexPresenter($plannings, $this->group_id);
         $this->render('index', $presenter);
     }
     
@@ -66,17 +66,17 @@ class Planning_Controller extends MVC2_Controller {
         $validator = new Planning_RequestValidator();
         
         if ($validator->isValid($this->request)) {
+            $planning_name       = $this->request->get('planning_name');
+            $group_id            = $this->group_id;
+            $backlog_tracker_ids = $this->request->get('backlog_tracker_ids');
+            $planning_tracker_id = $this->request->get('planning_tracker_id');
             
-            $this->planning_factory->createPlanning($this->request->get('planning_name'),
-                                                    $this->group_id,
-                                                    $this->request->get('backlog_tracker_ids'),
-                                                    $this->request->get('planning_tracker_id'));
+            $this->planning_factory->createPlanning($planning_name , $group_id, $backlog_tracker_ids, $planning_tracker_id);
             
-            $this->redirect(array('group_id' => $this->group_id));
+            $this->redirect(array('group_id' => $group_id));
         } else {
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
-            $this->redirect(array('group_id' => $this->group_id,
-                                  'action'   => 'new'));
+            $this->redirect(array('group_id' => $group_id, 'action' => 'new'));
         }
     }
     

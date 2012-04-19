@@ -21,9 +21,9 @@
 class Planning_IndexPresenter {
     public $group_id;
     
-    public function __construct(PlanningFactory $planning_factory, $group_id) {
+    public function __construct(array $plannings, $group_id) {
         $this->group_id = $group_id;
-        $this->plannings = $planning_factory->getPlannings($this->group_id);
+        $this->plannings = $plannings;
     }
     
     public function getPlannings() {
