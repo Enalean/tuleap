@@ -67,14 +67,14 @@ class Chart {
             'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
         );
         //Fix margin
-        $this->jpgraph_instance->img->SetMargin(70,160,30,70);
+        $this->jpgraph_instance->img->SetMargin(70, 160, 30, 70);
         
         $this->jpgraph_instance->legend->SetShadow(false);
         $this->jpgraph_instance->legend->SetColor($this->getMainColor());
         $this->jpgraph_instance->legend->SetFillColor($GLOBALS['HTML']->getChartBackgroundColor());
         $this->jpgraph_instance->legend->SetFont($this->getFont(), FS_NORMAL, 8);
         $this->jpgraph_instance->legend->SetVColMargin(5);
-        $this->jpgraph_instance->legend->SetPos(0.05,0.5,'right','center');
+        $this->jpgraph_instance->legend->SetPos(0.05, 0.5, 'right', 'center');
         $this->jpgraph_instance->legend->SetLineSpacing(10); 
         
         $this->jpgraph_instance->title->SetFont($this->getFont(), FS_BOLD, 12);
@@ -214,6 +214,43 @@ class Chart {
      */
     public function getTopMargin() {
         return 20 + $this->jpgraph_instance->title->getTextHeight($this->jpgraph_instance->img) + $this->jpgraph_instance->subtitle->getTextHeight($this->jpgraph_instance->img);
+    }
+
+    /**
+     * Diplay a given message as png image 
+     *
+     * @param String $msg Message to display
+     *
+     * @return Void
+     */
+    public function displayMessage($msg) {
+        //ttf from jpgraph
+        $ttf = new TTF();
+        $ttf->SetUserFont(
+            'dejavu-lgc/DejaVuLGCSans.ttf',
+            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
+            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
+            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
+        );
+        //Calculate the baseline
+        // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
+        //this should be above baseline
+        $test2    = "H";
+        //some of these additional letters should go below it
+        $test3    ="Hjgqp";
+        //get the dimension for these two:
+        $box2     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test2);
+        $box3     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $test3);
+        $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
+        $bbox     = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
+        if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
+            $backgroundColor  = imagecolorallocate($im, 255, 255, 255);
+            $textColor        = imagecolorallocate($im, 64, 64, 64);
+            imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $textColor, $ttf->File(FF_USERFONT), $msg);
+            header("Content-type: image/png");
+            imagepng($im);
+            imagedestroy($im);
+        }
     }
 }
 ?>

@@ -155,9 +155,12 @@ plugin_git	fork_choose_destination_project	Copy to another project
 plugin_git	fork_choose_destination_personal	Create personal repositories in this project
 plugin_git	successfully_forked	Successfully forked
 
+plugin_git	tree_view_project	Project
 plugin_git	tree_view_repository	Repository
 plugin_git	tree_view_description	Description
 plugin_git	tree_view_last_push	Last push
+plugin_git	tree_view_date	Date
+plugin_git	tree_view_commits	Commits
 plugin_git	tree_view_by	$1 by $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
@@ -175,3 +178,18 @@ plugin_git	ci_trigger_not_saved	Git trigger not saved
 plugin_git	ci_bad_repo_id	Bad repository id
 plugin_git	ci_repository_not_in_project	Git repository does not belong to the project
 plugin_git	ci_trigger_not_deleted	Git trigger not deleted
+
+plugin_git	widget_user_pushes_title	My last Git pushes
+plugin_git	widget_project_pushes_title	Last Git pushes
+plugin_git	widget_project_pushes_label	Pushes
+plugin_git	widget_user_pushes_description	Display last Git pushes performed by the user
+plugin_git	widget_project_pushes_description	Display last Git pushes of the project.
+plugin_git	widget_user_pushes_no_content	No pushes to display
+plugin_git	widget_user_pushes_offset	Maximum number of push by repository
+plugin_git	widget_user_pushes_past_days	Maximum number of days ago
+plugin_git	widget_user_pushes_details	Details
+plugin_git	widget_project_pushes_max_weeks	For chart readability considerations, the maximum weeks numbers is 25.
+plugin_git	widget_project_pushes_error	There is no logged pushes in the last $1 week(s)
+
+plugin_git	logsdaily_field	Repository name
+plugin_git	logsdaily_title	Git pushes

@@ -18,6 +18,11 @@
 
 class b201201251529_update_push_date extends ForgeUpgrade_Bucket {
 
+    /**
+     * Description of the bucket
+     *
+     * @return String;
+     */
     public function description() {
         return <<<EOT
 Replace the column push_date in the table plugin_git_log which type is date by another one with type int(11)

@@ -66,11 +66,17 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
         $this->_addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
         $this->_addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
+
         $this->_addHook('statistics_collector',                            'statistics_collector',                         false);
+
         $this->_addHook('collect_ci_triggers',                             'collect_ci_triggers',                          false);
         $this->_addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
         $this->_addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
         $this->_addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
+
+        $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
+        $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
+        $this->_addHook('widgets',                                          'widgets',                                     false);
     }
 
     public function getPluginInfo() {
@@ -84,7 +90,8 @@ class GitPlugin extends Plugin {
     public function cssFile($params) {
         // Only show the stylesheet if we're actually in the Git pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/gitphp.css" />';
         }
@@ -480,6 +487,67 @@ class GitPlugin extends Plugin {
         }
     }
 
+    /**
+     * Add log access for git pushs
+     * 
+     * @param Array $params parameters of the event
+     *
+     * @return Void
+     */
+    function logsDaily($params) {
+        $pm      = ProjectManager::instance();
+        $project = $pm->getProject($params['group_id']);
+        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            require_once('Git.class.php');
+            $controler = new Git($this);
+            $controler->logsDaily($params);
+        }
+    }
+
+    /**
+     * Instanciate the corresponding widget
+     *
+     * @param Array $params Name and instance of the widget
+     *
+     * @return Void
+     */
+    function myPageBox($params) {
+        switch ($params['widget']) {
+            case 'plugin_git_user_pushes':
+                require_once('Git_Widget_UserPushes.class.php');
+                $params['instance'] = new Git_Widget_UserPushes($this->getPluginPath());
+                break;
+            case 'plugin_git_project_pushes':
+                require_once('Git_Widget_ProjectPushes.class.php');
+                $params['instance'] = new Git_Widget_ProjectPushes($this->getPluginPath());
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * List plugin's widgets in customize menu
+     *
+     * @param Array $params List of widgets
+     *
+     * @return Void
+     */
+    function widgets($params) {
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+            $params['codendi_widgets'][] = 'plugin_git_user_pushes';
+        }
+        $request = HTTPRequest::instance();
+        $groupId = $request->get('group_id');
+        $pm      = ProjectManager::instance();
+        $project = $pm->getProject($groupId);
+        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+                $params['codendi_widgets'][] = 'plugin_git_project_pushes';
+            }
+        }
+    }
 }
 
 ?>

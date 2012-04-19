@@ -1,3 +1,6 @@
+Version 2.3 (Tuleap 5.0)
+    * Add widgets for both project page (display graph with push on repositories) and personal page. (contrib STMicroelectronics).
+
 Version 2.2 (Tuleap 5.0)
     * Link Git and Continuous Integration plugins. On git push, Tuleap can trigger a build on an hudson/jenkins CI server (contrib STMicroelectronics).
 
