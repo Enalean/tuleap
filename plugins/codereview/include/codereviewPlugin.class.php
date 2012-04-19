@@ -35,19 +35,26 @@ class CodeReviewPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
     }
 
+    public function process(Codendi_Request $request) {
+        $GLOBALS['HTML']->header(array('title'=>'codereview','group' => $request->get('group_id'), 'toptab' => 'codereview'));
+        echo '<iframe src="http://localhost/reviews/" width="900" height="500"
+              frameborder="0" scrolling="auto" name="reviewboard">
+              TEXT FOR NON-COMPATIBLE BROWSERS HERE</iframe>';
+        $GLOBALS['HTML']->footer(array());
+    }
+
     /**
      * Obtain plugin info
      *
      * @return CodeReviewPluginInfo
      */
-    function getPluginInfo() {
+    public function getPluginInfo() {
         if (!$this->pluginInfo) {
             include_once 'CodeReviewPluginInfo.class.php';
             $this->pluginInfo = new CodeReviewPluginInfo($this);
         }
         return $this->pluginInfo;
     }
-
 }
 
 ?>
