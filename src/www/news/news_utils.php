@@ -162,9 +162,10 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
 }
 
 function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_projectname, $hide_nb_comments) {
-    $uh = new UserHelper();
+    global $Language;
+    $uh   = new UserHelper();
     $html = '';
-    $arr = explode("\n", $data['details']);
+    $arr  = explode("\n", $data['details']);
     if ((strlen($arr[0]) < 200) && isset($arr[1]) && isset($arr[2]) && (strlen($arr[1].$arr[2]) < 300) && (strlen($arr[2]) > 5)) {
         $details = util_make_links( $arr[0].'<BR>'.$arr[1].'<BR>'.$arr[2], $group_id );
     } else {
