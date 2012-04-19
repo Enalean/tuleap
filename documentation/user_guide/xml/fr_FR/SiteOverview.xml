@@ -10,66 +10,32 @@
   <chapter id="SiteOverview">
     <title>Vue d'ensemble de &SYS_PRODUCT_NAME;</title>
 
-    <para>&SYS_PRODUCT_NAME; est un site Web de &SYS_ORG_NAME; accessible à l'URL
-    <ulink
-    url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/</ulink>. Pour
-    utiliser le site &SYS_PRODUCT_NAME; vous pouvez utiliser votre navigateur
-    favori<footnote><para>&SYS_PRODUCT_NAME; utilise du HTML standard et très peu
-    de Javascript. Il est supporté sur Netscape 6/7, IE 5/6, Mozilla
-    et Firefox. D'autres navigateurs comme Opera ou Konqueror
-    fonctionnent également. &SYS_PRODUCT_NAME; utilise peu de graphisme et il est
-    donc utilisable par des navigateurs spécialisés comme ceux destinés
-    aux personnes malvoyantes.</para></footnote>. &SYS_PRODUCT_NAME; est un site
-    riche et ce guide de l'utilisateur va vous accompagner dans la
-    découverte de l'ensemble des services disponibles. Pour vous aider
-    à retrouver votre chemin dans cette panoplie de services, la <xref
-    linkend="FigureCodendiWebPageFlowChart" /> vous en donne une vue
-    d'ensemble et le chemin à emprunter pour accéder à un service
-    particulier.</para>
-
-    <section id="HomePage">
+        <section id="HomePage">
       <title>Page d'accueil &SYS_PRODUCT_NAME;</title>
 
-      <para>La page d'accueil est divisée en quatre parties (voir la <xref
-      linkend="FigureTheCodendiHomePage" />) :</para>
+      <para>La Page d'accueil de Tuleap est la page générale d'accueil de la forge. Elle permet aux nouveaux utilisateurs de se créer un compte, de rejoindre un projet ou d'en crééer un nouveau. Elle permet également de suivre l'activité sur la forge et les actualités des projets. Vous pouvez personnaliser certains espaces tel que le logo par exemple. </para>
+ 
+ <figure id="FigureTheCodendiHomePage">
+      <title>La page d'accueil de &SYS_PRODUCT_NAME;</title>
 
-      <procedure>
-        <step>
-          <para><emphasis role="bold">Le menu principal de
-          &SYS_PRODUCT_NAME;</emphasis> : sur la partie gauche de l'écran ou au
-          sommet selon le thème graphique employé.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Une courte introduction à
-          &SYS_PRODUCT_NAME;</emphasis> : la partie centrale supérieure présente le
-          site &SYS_PRODUCT_NAME; en quelques points clés et fournit des pointeurs
-          vers des documents ou des services importants.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">Les dernières nouvelles de
-          &SYS_PRODUCT_NAME;</emphasis> : la partie centrale inférieure montre en
-          permanence les dix nouvelles les plus récentes concernant la
-          vie des projets hébergés ou du site &SYS_PRODUCT_NAME;.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">La page d'accueil
-          &SYS_PRODUCT_NAME;</emphasis> : La partie droite de la page d'accueil
-          montre une série d'indicateurs statistiques concernant
-          l'activité globale du site &SYS_PRODUCT_NAME;.</para>
-        </step>
-      </procedure>
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/fr_FR/sc_homepage.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+	
     </section>
 
     <section id="TheMainMenu">
-      <title>Le menu principal de &SYS_PRODUCT_NAME;</title>
+      <title>Menu principal</title>
 
       <para>Le menu principal de &SYS_PRODUCT_NAME; est présent sur l'ensemble des
       pages du site. Son contenu peut varier selon les pages visitées
       et suivant les droits qui vous sont octroyés. En d'autres termes
       il dépend du contexte. En voici deux exemples :</para>
+	  
 
       <itemizedlist mark="bullet"
                     spacing="compact">
@@ -576,11 +542,9 @@
     </section>
 
     <section id="ThePlateformDashboard">
-      <title>Le tableau de bord de &SYS_PRODUCT_NAME;</title>
+      <title>Activité de la forge</title>
 
-      <para>Par défaut, le tableau de bord de &SYS_PRODUCT_NAME; se trouve sur la
-      partie droite de la page d'accueil du site. Il donne une vue
-      d'ensemble de l'activité du site à travers plusieurs
+      <para>La page d'accueil donne une vue d'ensemble de l'activité de la forge à travers plusieurs
       indicateurs :</para>
 
       <itemizedlist mark="bullet"
@@ -595,15 +559,12 @@
           l'ouverture du site.</para>
         </listitem>
 
-        <listitem>
-          <para><emphasis role="bold">Top Téléchargements
-          hier</emphasis> : donne la liste des projets qui ont fait
-          l'objet d'un téléchargement la veille et en quelle
-          quantité.</para>
+		<listitem>
+          <para><emphasis role="bold">Dernières annonces</emphasis>: se sont les dernières actualités des projets hébergés sur la forge. Les membres de projets ont souhaité partager avec vous leur travail et vous tenir informé. N'hésitez pas à faire pareil!</para>
         </listitem>
-
+        
         <listitem>
-          <para><emphasis role="bold">Versions récentes</emphasis> :
+          <para><emphasis role="bold">Dernières Versions</emphasis> :
           donne une liste des versions de logiciels les plus récentes
           postées sur le site par les différents projets. Si vous
           souhaitez connaître les dernières versions disponibles vous
@@ -622,27 +583,16 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Projets récents</emphasis> : les
+          <para><emphasis role="bold">Derniers Projets</emphasis> : les
           10 derniers projets enregistrés. En affichant cette liste de
           façon régulière vous pouvez être tenu informé de la création
           de tout nouveau projet &SYS_PRODUCT_NAME;.</para>
         </listitem>
 
-        <listitem>
-          <para><emphasis role="bold">Les plus actifs cette
-          semaine</emphasis> : les 20 projets les plus actifs sur la
-          semaine écoulée de 0 à 100%. La formule magique utilisée
-          pour ce calcul est une somme pondérée de l'activité observée
-          dans chacun des services utilisés par les projets. Elle
-          prend en compte de nombreux indicateurs : le nombre de
-          transactions CVS/Subversion, le nombre d'artefacts (bugs,
-          tâches...) soumis ou modifiés, le nombre de versions de
-          logiciel postées, etc&hellip; En consultant cette liste vous
-          aurez une bonne idée du degré d'activité des projets.</para>
-        </listitem>
+        
       </itemizedlist>
 
-      <para>En conclusion, nous vous recommandons vivement de visiter
+      <para>Nous vous recommandons vivement de visiter
       la page d'accueil de &SYS_PRODUCT_NAME; de façon régulière. Ce faisant vous
       aurez un excellent aperçu de ce qui se passe en matière de
       développement logiciel chez &SYS_ORG_NAME;.</para>

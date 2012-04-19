@@ -44,16 +44,7 @@
 	
 	<para>L'Equipe &SYS_PRODUCT_NAME;!</para>
 
-    <figure id="FigureTheCodendiHomePage">
-      <title>La page d'accueil de &SYS_PRODUCT_NAME;</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata format="PNG"
-                     fileref="../../screenshots/fr_FR/sc_homepage.png" width="15.5cm"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    
 
     
   </chapter>

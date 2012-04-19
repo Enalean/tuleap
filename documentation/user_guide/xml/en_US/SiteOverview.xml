@@ -7,56 +7,29 @@
   <chapter id="SiteOverview">
     <title>&SYS_PRODUCT_NAME; Overview</title>
 
-    <para>&SYS_PRODUCT_NAME; is a &SYS_ORG_NAME; Web
-    Site available at <ulink url="http://&SYS_DEFAULT_DOMAIN;">http://&SYS_DEFAULT_DOMAIN;/</ulink>.
-    To browse the &SYS_PRODUCT_NAME; site use your favorite Web Browser
-    <footnote><para>&SYS_PRODUCT_NAME; uses standard HTML and only a little bit of
-    Javascript. It is known to work well with Netscape 6.x and 7.x,
-    Mozilla/Firefox as well as IE 5 or 6. Other Web Browsers like Opera or Konqueror
-    work as well. &SYS_PRODUCT_NAME; uses very little graphic material and is therefore
-    browsable by specific text only browser like those used by visually
-    impaired people.</para></footnote>. &SYS_PRODUCT_NAME; is a rich site and the &SYS_PRODUCT_NAME;
-    User Guide is going to guide you through all the services that the &SYS_PRODUCT_NAME;
-    site has to offer. In order to help you find your way in the &SYS_PRODUCT_NAME;
-    services gallery, <xref linkend="FigureCodendiWebPageFlowChart" /> gives a
-    broad overview of the services available as well as a flow chart showing
-    how to access a given service.</para>
+    
 
     <section id="HomePage">
       <title>&SYS_PRODUCT_NAME; Home Page</title>
 
-      <para>The Home Page is divided in 4 parts (see <xref
-      linkend="FigureTheCodendiHomePage" />):</para>
+      <para>Tuleap Homepage is the global welcome page of the forge. It aims at helping new users to create an account, join or create a project. It gives also activity streams and news of the hosted projects. You can customize some areas with your own logo for example</para>
 
-      <procedure>
-        <step>
-          <para><emphasis role="bold">The &SYS_PRODUCT_NAME; Main Menu</emphasis>:
-          on the left hand side of the screen or at the top depending
-          on the graphical theme in use.</para>
-        </step>
+        
+	  <figure id="FigureTheCodendiHomePage">
+      <title>The &SYS_PRODUCT_NAME; HomePage</title>
 
-        <step>
-          <para><emphasis role="bold">&SYS_PRODUCT_NAME; Short Introduction</emphasis>: the
-          upper central part gives you a brief but pivotal introduction to the
-          &SYS_PRODUCT_NAME; initiative and a series of links to must read documents</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">&SYS_PRODUCT_NAME; Latest News</emphasis>: The lower
-          central part shows the last 10 pieces of news related to &SYS_PRODUCT_NAME;
-          hosted projects or to the &SYS_PRODUCT_NAME; site.</para>
-        </step>
-
-        <step>
-          <para><emphasis role="bold">The &SYS_PRODUCT_NAME; Dashboard</emphasis>: The
-          right hand side of the home page shows a series of statistics about
-          the overall activity of the &SYS_PRODUCT_NAME; Site.</para>
-        </step>
-      </procedure>
+      <mediaobject>
+        <imageobject>
+          <imagedata format="PNG"
+                     fileref="../../screenshots/en_US/sc_homepage.png" width="15.5cm"/>
+        </imageobject>
+      </mediaobject>
+    </figure>
+	
     </section>
 
     <section id="TheMainMenu">
-      <title>The &SYS_PRODUCT_NAME; Main Menu</title>
+      <title>Main Menu</title>
 
       <para>The &SYS_PRODUCT_NAME; main menu is a permanent piece of information that
       you&#39;ll always see on your screen wherever you are in the &SYS_PRODUCT_NAME; site.
@@ -515,16 +488,15 @@
     </section>
 
     <section id="ThePlateformDashboard">
-      <title>The &SYS_PRODUCT_NAME; Platform Homepage</title>
+      <title>News and activity streams</title>
 
-      <para>The &SYS_PRODUCT_NAME; Platform Homepage resides on the right hand side of the &SYS_PRODUCT_NAME;
-      Home Page. It is a sort of a fish-eye view of the global &SYS_PRODUCT_NAME; activity.
+      <para>&SYS_PRODUCT_NAME; homepage is a sort of a fish-eye view of the global &SYS_PRODUCT_NAME; activity.
       Several indicators are available:</para>
 
       <itemizedlist mark="bullet"
                     spacing="compact">
         <listitem>
-          <para><emphasis role="bold">&SYS_PRODUCT_NAME; Statistics</emphasis>: give the
+          <para><emphasis role="bold">Statistics</emphasis>: give the
           total number of hosted projects (excluding those that have a private
           status, as well as template and test projects), the total number 
 	  of registered users, the total number of
@@ -532,12 +504,15 @@
           browsed by &SYS_PRODUCT_NAME; users since the site opening.</para>
         </listitem>
 
+		
+		
         <listitem>
-          <para><emphasis role="bold">Top Project
-          Downloads</emphasis>: shows which software projects were
-          downloaded the day before and how many times.</para>
+          <para><emphasis role="bold">Latest News</emphasis>: these are the last news of the hosted projects on the forge. Project members wants to share with you their work and keep you informed. Don't hesitate to do so!</para>
         </listitem>
 
+		
+		
+		
         <listitem>
           <para><emphasis role="bold">Newest Releases</emphasis>: shows
           a list of the most recent software releases (also known as
@@ -563,20 +538,9 @@
           hosted on &SYS_PRODUCT_NAME;.</para>
         </listitem>
 
-        <listitem>
-          <para><emphasis role="bold">Most Active This Week</emphasis>: the 20
-          most active projects over the past 7 days on a scale from 0 to 100%.
-          The magic formula that we use behind the scene to compute this
-          ranking is a weighted sum of the activity observed in the various
-          projects services. It takes many things into account: the number of
-          CVS/Subversion transactions, the number of bugs and tasks
-          submitted or modified, the number of file releases, etc. Looking at
-          this list is an excellent way to see which projects are actively
-          working on &SYS_PRODUCT_NAME;.</para>
-        </listitem>
-      </itemizedlist>
+        </itemizedlist>
 
-      <para>As a conclusion, we strongly advise you to visit the &SYS_PRODUCT_NAME; Home
+      <para>We  advise you to visit the &SYS_PRODUCT_NAME; Home
       Page on a regular basis for it gives you an excellent idea of what is
       going on in terms of software development across &SYS_ORG_NAME;.</para>
 

@@ -39,16 +39,7 @@
 
     <para>The &SYS_PRODUCT_NAME; Team</para>
 
-    <figure id="FigureTheCodendiHomePage">
-      <title>The &SYS_PRODUCT_NAME; HomePage</title>
-
-      <mediaobject>
-        <imageobject>
-          <imagedata format="PNG"
-                     fileref="../../screenshots/en_US/sc_homepage.png" width="15.5cm"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
+    
 
     
   </chapter>
