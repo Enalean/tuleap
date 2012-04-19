@@ -661,7 +661,7 @@ fi
 #
 # Post install of codereview plugin 
 %post plugin-codereview
-%{__install} %{APP_DIR}/plugins/codereview/bin/install.sh
+sh %{APP_DIR}/plugins/codereview/bin/install.sh
 
 
 ##
