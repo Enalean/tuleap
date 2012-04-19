@@ -48,7 +48,7 @@ class AgileDashboardRouter {
         switch($request->get('action')) {
             case 'show':
                 $object_god   = new TrackerManager();
-                $view_builder = $object_god->getCrossSearchViewBuilder($request->get('group_id'));
+                $view_builder = $object_god->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser());
                 
                 $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
                 
@@ -105,7 +105,7 @@ class AgileDashboardRouter {
 
     private function buildArtifactPlannificationController(Codendi_Request $request) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance(), $request->getCurrentUser());
         
         return new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory);
     }
