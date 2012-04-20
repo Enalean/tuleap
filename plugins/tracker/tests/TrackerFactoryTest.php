@@ -20,7 +20,12 @@
 
 //require_once('common/dao/include/DataAccessObject.class.php');
 //require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
+require_once('Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Hierarchy/HierarchyFactory.class.php');
+Mock::generate('Tracker_HierarchyFactory');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
+Mock::generate('Tracker_SharedFormElementFactory');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
@@ -40,12 +45,6 @@ Mock::generatePartial('TrackerFactory',
                             'isNameExists',
                             'isShortNameExists',
                             'getReferenceManager'
-                      )
-);
-Mock::generatePartial('TrackerFactory',
-                      'TrackerFactoryTestVersion3',
-                      array('create',
-                            'getTrackersByGroupId'
                       )
 );
 
@@ -71,6 +70,7 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class TrackerFactoryTest extends UnitTestCase {
+
 
     public function setUp() {
         $GLOBALS['Response'] = new MockResponse();
@@ -193,31 +193,7 @@ class TrackerFactoryTest extends UnitTestCase {
         $itemname = 'MyNewTracker';
         $this->assertFalse($tracker_factory->create($project_id,$group_id_template,$id_template,$name,$description,$itemname));
     }
-    
-    public function testDuplicate() {
-        $tracker_factory = new TrackerFactoryTestVersion3();
-        $t1 = new MockTracker();
-        $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
-        $t1->setReturnValue('getId', 1234);
-        $t1->setReturnValue('getName', 'Bugs');
-        $t1->setReturnValue('getDescription', 'Bug Tracker');
-        $t1->setReturnValue('getItemname', 'bug');
-        $t2 = new MockTracker();
-        $t2->setReturnValue('mustBeInstantiatedForNewProjects', false);
-        $t2->setReturnValue('getId', 5678);
-        $trackers = array($t1, $t2);
-        $tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
-        
-        $t_new = new MockTracker();
-        $t_new->setReturnValue('getId', 555);
-        
-        $tracker_factory->setReturnReferenceAt(0, 'create', $t_new);
-        
-        // only one call is expected with following arguments:
-        $tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
-        
-        $tracker_factory->duplicate(100, 999, null);
-    }
+
     
     public function testGetPossibleChildrenShouldNotContainSelf() {
         $current_tracker   = aTracker()->withId(1)->withName('Stories')->build();
@@ -235,5 +211,97 @@ class TrackerFactoryTest extends UnitTestCase {
         
         $this->assertEqual($possible_children, $expected_children);
     }
+
+}
+
+class TrackerFactoryDuplicationTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_factory   = TestHelper::getPartialMock('TrackerFactory',
+                      array('create',
+                            'getTrackersByGroupId',
+                            'getHierarchyFactory',
+                            'getFormElementFactory'
+                      ));
+        $this->hierarchy_factory = new MockTracker_HierarchyFactory();
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+
+        $this->tracker_factory->setReturnValue('getHierarchyFactory', $this->hierarchy_factory);
+        $this->tracker_factory->setReturnValue('getFormElementFactory', $this->formelement_factory);
+        
+    }
+    
+    
+    public function testDuplicate_duplicatesAllTrackers_withHierarchy() {
+        
+        $t1 = $this->GivenADuplicatableTracker(1234);
+        stub($t1)->getName()->returns('Bugs');
+        stub($t1)->getDescription()->returns('Bug Tracker');
+        stub($t1)->getItemname()->returns('bug');
+        
+        $trackers = array($t1);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+
+        $t_new = stub('Tracker')->getId()->returns(555); 
+        
+        $this->tracker_factory->setReturnValue('create', array('tracker' => $t_new, 'field_mapping' => array())) ;
+        
+        $this->tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); 
+        
+        $this->hierarchy_factory->expectOnce('duplicate');
+        
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+    
+    public function testDuplicate_duplicatesSharedFields() {
+
+        $t1 = $this->GivenADuplicatableTracker(123);
+        $t2 = $this->GivenADuplicatableTracker(567);
+       
+        $trackers = array($t1, $t2);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+        
+        $t_new1 = stub('Tracker')->getId()->returns(1234);        
+        $t_new2 = stub('Tracker')->getId()->returns(5678);
+        
+        $t_new1_field_mapping = array(array('from' => '11', 'to' => '111'),
+                                      array('from' => '22', 'to' => '222'));
+        $t_new2_field_mapping = array(array('from' => '33', 'to' => '333'),
+                                      array('from' => '44', 'to' => '444'));
+        $full_field_mapping = array_merge($t_new1_field_mapping, $t_new2_field_mapping);
+        $to_project_id   = 999;
+        $from_project_id = 100;
+        $this->tracker_factory->setReturnValue('create', 
+                                                array('tracker' => $t_new1, 'field_mapping' => $t_new1_field_mapping), 
+                                                array($to_project_id, $from_project_id, 123, '*', '*', '*', null));
+        $this->tracker_factory->setReturnValue('create', 
+                                                array('tracker' => $t_new2, 'field_mapping' => $t_new2_field_mapping), 
+                                                array($to_project_id, $from_project_id, 567, '*', '*', '*', null)) ;
+        
+        $this->formelement_factory->expectOnce('fixOriginalFieldIdsAfterDuplication', array($to_project_id, $from_project_id, $full_field_mapping));
+        $this->tracker_factory->duplicate($from_project_id, $to_project_id, null);
+    }
+    
+    public function testDuplicate_ignoresNonDuplicatableTrackers() {
+        $t1 = new MockTracker();
+        $t1->setReturnValue('mustBeInstantiatedForNewProjects', false);
+        $t1->setReturnValue('getId', 5678);
+        $trackers = array($t1);
+        $this->tracker_factory->setReturnReference('getTrackersByGroupId', $trackers, array(100));
+        
+        $this->tracker_factory->expectNever('create');
+        
+        $this->tracker_factory->duplicate(100, 999, null);
+    }
+        
+    private function GivenADuplicatableTracker($tracker_id) {
+        $t1 = new MockTracker();
+        $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
+        $t1->setReturnValue('getId', $tracker_id);
+        return $t1;
+    }
+
+    
 }
 ?>

@@ -26,6 +26,57 @@ Mock::generate('PlanningDao');
 
 class PlanningFactoryTest extends TuleapTestCase {
     
+    function itDuplicatesPlannings() {
+        $dao     = new MockPlanningDao();
+        $factory = aPlanningFactory()->withDao($dao)->build();
+        
+        $group_id = 123;
+        
+        $sprint_tracker_id      = 1;
+        $story_tracker_id       = 2;
+        $bug_tracker_id         = 3;
+        $faq_tracker_id         = 4;
+        $sprint_tracker_copy_id = 5;
+        $story_tracker_copy_id  = 6;
+        $bug_tracker_copy_id    = 7;
+        $faq_tracker_copy_id    = 8;
+        
+        $tracker_mapping = array($sprint_tracker_id => $sprint_tracker_copy_id,
+                                 $story_tracker_id  => $story_tracker_copy_id,
+                                 $bug_tracker_id    => $bug_tracker_copy_id,
+                                 $faq_tracker_id    => $faq_tracker_copy_id);
+        
+        $sprint_planning_name = 'Sprint Planning';
+        
+        $rows = TestHelper::arrayToDar(
+            array('id'                  => 1,
+                  'name'                => $sprint_planning_name,
+                  'group_id'            => 101,
+                  'planning_tracker_id' => $sprint_tracker_id,
+                  'backlog_tracker_ids' => "$story_tracker_id,$bug_tracker_id")
+        );
+        
+        stub($dao)->searchByPlanningTrackerIds(array_keys($tracker_mapping))->returns($rows);
+        
+        $dao->expectOnce('createPlanning', array($sprint_planning_name,
+                                                 $group_id,
+                                                 array($story_tracker_copy_id, $bug_tracker_copy_id),
+                                                 $sprint_tracker_copy_id));
+        
+        $factory->duplicatePlannings($group_id, $tracker_mapping);
+    }
+    
+    function itDoesNothingIfThereAreNoTrackerMappings() {
+        $dao     = new MockPlanningDao();
+        $factory = aPlanningFactory()->withDao($dao)->build();
+        $group_id = 123;
+        $empty_tracker_mapping = array();
+        
+        $dao->expectNever('createPlanning');
+        
+        $factory->duplicatePlannings($group_id, $empty_tracker_mapping);
+    }
+    
     function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $dao          = new MockPlanningDao();
         $factory      = aPlanningFactory()->withDao($dao)->build();

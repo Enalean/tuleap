@@ -19,6 +19,7 @@
  */
 
 require_once('Tracker_FormElement_Field.class.php');
+require_once 'Tracker_FormElement_Field_Shareable.class.php';
 require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_List.class.php');
 require_once('Tracker_FormElement_Field_List_BindFactory.class.php');
 require_once('dao/Tracker_FormElement_Field_ListDao.class.php');
@@ -26,7 +27,7 @@ require_once('dao/Tracker_FormElement_Field_Value_ListDao.class.php');
 require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_List_ValueDao.class.php');
 require_once(dirname(__FILE__).'/../../workflow/TransitionFactory.class.php');
 
-abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field {
+abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
     
     protected $bind;
     /**
@@ -359,9 +360,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->fetchRawValueFromChangeset($changeset);
     }
     
+    /**
+     * @return Tracker_FormElement_Field_Value_ListDao 
+     */
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_ListDao();
-        //return $this->getBind()->getValueDao();
     }
     
     /**
@@ -1021,6 +1024,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $this->has_errors = !$this->validate($artifact, $value);
         }
         return !$this->has_errors;
+    }
+    
+    /**
+     * @see Tracker_FormElement_Field_Shareable
+     */
+    public function fixOriginalValueIds(array $value_mapping) {
+        $this->getBind()->fixOriginalValueIds($value_mapping);
     }
 }
 ?>

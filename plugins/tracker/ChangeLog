@@ -1,3 +1,6 @@
+Version 5.7.2 - Tuleap 5.0
+    * Inherit shared fields and hierarchy from project templates
+
 Version 5.7.1 - Tuleap 5.0
     * Fix bug when trying to add a shared field on a non existant field id + i18n.
 

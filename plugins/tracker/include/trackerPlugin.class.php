@@ -18,10 +18,7 @@
  */
 
 require_once('common/plugin/Plugin.class.php');
-
-define('TRACKER_BASE_URL', '/plugins/tracker');
-define('TRACKER_BASE_DIR', dirname(__FILE__));
-define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
+require_once 'constants.php';
 
 /**
  * trackerPlugin

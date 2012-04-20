@@ -1,3 +1,6 @@
+Version 0.13 - Tuleap 5.0
+    * Inherit planning definition from project templates
+
 Version 0.12 - Tuleap 5.0
     * Adapt code after Tracker v5.7 update
     * Planning view now takes into account user permissions on planning tracker and artifact_link field on planning tracker.

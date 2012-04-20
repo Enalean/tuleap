@@ -79,10 +79,9 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     }
     
     public function searchTrackerHierarchy(array $tracker_ids) {
-        $tracker_ids = array_map(array($this->da, 'escapeInt'), $tracker_ids);
-        $tracker_ids = implode(',', $tracker_ids);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
         $sql = "SELECT parent_id, child_id
-                FROM tracker_hierarchy 
+                FROM tracker_hierarchy
                 WHERE parent_id IN ($tracker_ids) 
                    OR child_id  IN ($tracker_ids)";
         return $this->retrieve($sql);
@@ -95,6 +94,18 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
                 WHERE t.group_id = $group_id";
         
         return $this->retrieve($sql);
+    }
+    
+    public function duplicate($parent_id, $child_id, $tracker_mapping){
+        if (isset($tracker_mapping[$parent_id]) && isset($tracker_mapping[$child_id])) {
+            $parent_id = $this->da->escapeInt($tracker_mapping[$parent_id]);
+            $child_id  = $this->da->escapeInt($tracker_mapping[$child_id]);
+            
+            $sql = "INSERT INTO tracker_hierarchy (parent_id, child_id)
+                    VALUES ($parent_id, $child_id)";
+            
+            return $this->update($sql);
+        }
     }
 }
 

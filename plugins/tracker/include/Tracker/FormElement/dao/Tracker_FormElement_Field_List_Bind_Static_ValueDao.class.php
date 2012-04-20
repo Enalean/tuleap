@@ -53,8 +53,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
             
         } else {
-            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
-                    SELECT $to_field_id, label, description, rank, is_hidden";
+            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+                    SELECT $to_field_id, label, description, rank, is_hidden, original_value_id";
         }
         $sql = $insert . "
                 FROM $this->table_name
@@ -195,6 +195,21 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id AND cv.field_id = $field_id)
                 ";
         return $this->canValueBeHidden($field_id, $value_id) && count($this->retrieve($sql)) == 0;
+    }
+    
+    public function updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id) {
+        $field_id              = $this->da->escapeInt($field_id);
+        $old_original_value_id = $this->da->escapeInt($old_original_value_id);
+        $new_original_value_id = $this->da->escapeInt($new_original_value_id);
+        
+        $sql = "
+            UPDATE $this->table_name
+            SET   original_value_id = $new_original_value_id
+            WHERE field_id          = $field_id
+            AND   original_value_id = $old_original_value_id
+        ";
+        
+        return $this->update($sql);
     }
 }
 ?>

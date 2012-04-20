@@ -241,7 +241,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
         } else {
             // Otherwise tries duplicate
-            $new_tracker = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $new_tracker = $duplicate['tracker'];
         }
 
         if ($new_tracker) {

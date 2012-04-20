@@ -296,4 +296,104 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
     }
 }
 
+
+
+class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
+
+    private $project_id;
+    private $template_id;
+    private $dao;
+    private $factory;
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $this->project_id  = 3;
+        $this->template_id = 29;
+        
+        $this->dao     = mock('Tracker_FormElement_FieldDao');
+        $this->factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao', 'getShareableFieldById'));
+        
+        stub($this->factory)->getDao()->returns($this->dao);
+    }
+    
+    public function itDoesNothingWhenFieldMappingIsEmpty() {
+        $template_project_field_ids = array();
+        $new_project_shared_fields  = array();
+        $field_mapping              = array();
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->project_id)->returns($new_project_shared_fields);
+        stub($this->dao)->searchFieldIdsByGroupId($this->template_id)->returns($template_project_field_ids);
+        
+        $this->dao->expectNever('updateOriginalFieldId');
+        
+        $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
+    }
+    
+    public function itDoesNothingWhenThereIsNoSharedFieldInTheFieldMapping() {
+        $template_project_field_ids = array(321);
+        $new_project_shared_fields  = array();
+        $field_mapping              = array(array('from' => 321, 'to' => 101));
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->project_id)->returns($new_project_shared_fields);
+        stub($this->dao)->searchFieldIdsByGroupId($this->template_id)->returns($template_project_field_ids);
+        
+        $this->dao->expectNever('updateOriginalFieldId');
+        
+        $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id,   $field_mapping);
+    }
+    
+    public function itUpdatesTheOrginalFieldIdForEverySharedField() {
+        $template_project_field_ids = array(999, 103, 555, 666);
+        
+        $new_project_shared_field_1 = array('id' => 234, 'original_field_id' => 666);
+        $new_project_shared_field_2 = array('id' => 567, 'original_field_id' => 555);
+        $new_project_shared_fields  = array($new_project_shared_field_1, $new_project_shared_field_2);
+        
+        $field_mapping              = array(array('from' => 999, 'to' => 234),
+                                            array('from' => 103, 'to' => 567),
+                                            array('from' => 555, 'to' => 888, 'values' => array(1 => 2)),
+                                            array('from' => 666, 'to' => 777, 'values' => array(3 => 4, 5 => 6)));
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->project_id)->returns($new_project_shared_fields);        
+        stub($this->dao)->searchFieldIdsByGroupId($this->template_id)->returns($template_project_field_ids);
+        
+        $this->dao->expectAt(0, 'updateOriginalFieldId', array(234, 777));
+        $this->dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
+        
+        $field_234 = mock('Tracker_FormElement_Field_Shareable');
+        stub($this->factory)->getShareableFieldById(234)->returns($field_234);
+        
+        $field_567 = mock('Tracker_FormElement_Field_Shareable');
+        stub($this->factory)->getShareableFieldById(567)->returns($field_567);
+        
+        $field_234->expectAt(0, 'fixOriginalValueIds', array(array(3 => 4, 5 => 6)));
+        $field_567->expectAt(1, 'fixOriginalValueIds', array(array(1 => 2)));
+        
+        $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
+    }
+
+    public function itDoesntUpdateWhenTheOriginalFieldIdRefersToAfieldOutsideTheTemplateProject() {
+        $template_project_field_ids = array(999, 103, 666);
+        
+        $new_project_internal_shared_field = array('id' => 234, 'original_field_id' => 666);
+        $new_project_external_shared_field = array('id' => 567, 'original_field_id' => 555);
+        $new_project_shared_fields         = array($new_project_internal_shared_field, $new_project_external_shared_field);
+        
+        $field_mapping        = array(array('from' => 999, 'to' => 234),
+                                      array('from' => 103, 'to' => 567),
+                                      array('from' => 666, 'to' => 777, 'values' => array(1 => 2, 3 => 4)));
+        
+        stub($this->dao)->searchProjectSharedFieldsTargets($this->project_id)->returns($new_project_shared_fields);
+        stub($this->dao)->searchFieldIdsByGroupId($this->template_id)->returns($template_project_field_ids);
+        
+        $field_234 = mock('Tracker_FormElement_Field_Shareable');
+        stub($this->factory)->getShareableFieldById(234)->returns($field_234);
+        
+        $this->dao->expectOnce('updateOriginalFieldId', array(234, 777));
+        $field_234->expectOnce('fixOriginalValueIds', array(array(1 => 2, 3 => 4)));
+        
+        $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
+    }
+}
 ?>

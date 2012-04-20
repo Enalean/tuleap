@@ -23,6 +23,7 @@ require_once('dao/Tracker_FormElement_FieldDao.class.php');
 require_once('View/Admin/CreateVisitor.class.php');
 require_once('View/Admin/CreateSharedVisitor.class.php');
 
+require_once 'Tracker_FormElement_Field_Shareable.class.php';
 require_once('Tracker_FormElement_Shared.class.php');
 require_once('Tracker_FormElement_Field_Integer.class.php');
 require_once('Tracker_FormElement_Field_Float.class.php');
@@ -325,6 +326,16 @@ class Tracker_FormElementFactory {
             $field = null;
         }
         return $field;
+    }
+    
+    /**
+     * @return Tracker_FormElement_Field_Shareable or null
+     */
+    public function getShareableFieldById($id) {
+        $field = $this->getFieldById($id);
+        if (is_a($field, 'Tracker_FormElement_Field_Shareable')) {
+            return $field;
+        }
     }
     
     /**
@@ -726,6 +737,62 @@ class Tracker_FormElementFactory {
     public function getProjectSharedFields(Project $project) {
         $dar = $this->getDao()->searchProjectSharedFieldsOriginals($project->getId());
         return $this->getInstancesFromRows($dar);
+    }
+    
+    /**
+     * Fixes the original field id of the shared fields originating from the duplicated project
+     * 
+     * @param int $new_project_id
+     * @param int $template_project_id
+     * @param array $field_mapping 
+     */
+    public function fixOriginalFieldIdsAfterDuplication($new_project_id, $template_project_id, array $field_mapping) {
+        $field_dao             = $this->getDao();
+        $project_shared_fields = $field_dao->searchProjectSharedFieldsTargets($new_project_id);
+        $template_field_ids    = $field_dao->searchFieldIdsByGroupId($template_project_id);
+        
+        foreach ($project_shared_fields as $project_shared_field) {
+            if ($this->originalFieldIsInTemplateProject($project_shared_field, $template_field_ids)) {
+                $id                = $project_shared_field['id'];
+                $original_field_id = $project_shared_field['original_field_id'];
+                
+                $this->fixSharedFieldOriginalId($id, $original_field_id, $field_mapping);
+                $this->fixSharedFieldOriginalValueIds($id, $original_field_id, $field_mapping);
+            }
+        }
+    }
+    
+    private function fixSharedFieldOriginalId($field_id, $old_original_field_id, $field_mapping) {
+        $new_original_field_id = $this->getNewOriginalFieldIdFromMapping($old_original_field_id, $field_mapping);
+        $this->getDao()->updateOriginalFieldId($field_id, $new_original_field_id);
+    }
+    
+    private function fixSharedFieldOriginalValueIds($field_id, $old_original_field_id, $field_mapping) {
+        $field         = $this->getShareableFieldById($field_id);
+        $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
+
+        $field->fixOriginalValueIds($value_mapping);
+    }
+    
+    private function getValueMappingFromFieldMapping($original_field_id, $field_mapping) {
+        foreach($field_mapping as $row) {
+            if($row['from'] == $original_field_id) {
+                return $row['values'];
+            }
+        }
+        return array();
+    }
+    
+    private function getNewOriginalFieldIdFromMapping($old_field_id, array $field_mapping) {
+        foreach($field_mapping as $row) {
+            if($row['from'] == $old_field_id) {
+                return $row['to'];
+            }
+        }
+    }
+
+    private function originalFieldIsInTemplateProject(array $shared_field, array $original_shared_field_ids) {
+        return in_array($shared_field['original_field_id'], $original_shared_field_ids);
     }
 
     public function updateFormElement($formElement, $formElement_data) {
@@ -1220,6 +1287,7 @@ class Tracker_FormElementFactory {
         }
         return null;        
     }
+
 
 }
 ?>

@@ -70,6 +70,20 @@ class Tracker_HierarchyFactory {
         return $hierarchy;
     }
     
+    /*
+     * Duplicate a tracker hierarchy
+     * 
+     * @param Array   $tracker_mapping the trackers mapping during project creation based on a template
+     */
+    public function duplicate($tracker_mapping) {
+        $search_tracker_ids = array_keys($tracker_mapping);
+        $hierarchy_dar     = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
+        
+        foreach ($hierarchy_dar as $row) {
+            $this->hierarchy_dao->duplicate($row['parent_id'], $row['child_id'], $tracker_mapping);
+        }
+    }
+    
     private function getHierarchyFromTrackers(Tracker_Hierarchy $hierarchy, &$search_tracker_ids, &$processed_tracker_ids) {
         $processed_tracker_ids   = array_merge($processed_tracker_ids, $search_tracker_ids);
         $added_relationships_ids = $this->addRelationships($hierarchy, $search_tracker_ids);
