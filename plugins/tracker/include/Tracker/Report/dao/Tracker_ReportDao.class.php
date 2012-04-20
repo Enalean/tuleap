@@ -162,7 +162,10 @@ class Tracker_ReportDao extends DataAccessObject {
         
         if(!$user_is_superuser) {
             //artifact permissions
-            $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(c.artifact_id AS CHAR) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') ";
+            $from   .= " LEFT JOIN permissions 
+                            ON (permissions.object_id = CAST(c.artifact_id AS CHAR) 
+                                AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') 
+                       ";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". implode(', ', $ugroups) .")))";
         }
         
@@ -177,134 +180,9 @@ class Tracker_ReportDao extends DataAccessObject {
         $sqls = array();
         //Does the user member of at least one group which has ACCESS_FULL or is super user?
         if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
-            
             $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
-            
         } else {
-            //Does the user member of at least one group which has ACCESS_SUBMITTER ?
-            if (isset($permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) > 0) {
-                // {{{ The static ugroups
-                if (count(array_intersect($static_ugroups, $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) > 0) {
-                    $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                           $from ." INNER JOIN ugroup_user uu ON (
-                                artifact.submitted_by = uu.user_id
-                                AND uu.ugroup_id IN (". $this->da->quoteSmart(implode(', ', $static_ugroups)).")
-                           ) ".
-                           $where;
-                }
-                // }}}
-                
-                // {{{ tracker_admins
-                if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) 
-                {
-                    $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                           $from ." INNER JOIN tracker_perm AS p ON (
-                                artifact.submitted_by = p.user_id
-                                AND p.tracker_id = ". $this->da->escapeInt($tracker_id) ."
-                                AND p.perm_level >= 2 
-                           ) ".
-                           $where;
-                }
-                //}}}
-                // {{{ project_members
-                if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) 
-                {
-                    $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                           $from ." INNER JOIN user_group AS ug ON ( 
-                                artifact.submitted_by = ug.user_id 
-                                AND ug.group_id = ". $this->da->escapeInt($group_id) ."
-                           ) ".
-                           $where;
-                }
-                //}}}
-                // {{{ project_admins
-                if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) 
-                {
-                    $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                           $from ." INNER JOIN user_group ug ON (
-                                artifact.submitted_by = ug.user_id 
-                                AND ug.group_id = ". $this->da->escapeInt($group_id) ." 
-                                AND ug.admin_flags = 'A'
-                           ) ".
-                           $where;
-                }
-                //}}}
-            }
-            
-            //Does the user member of at least one group which has ACCESS_ASSIGNEE ?
-            if (isset($permissions['TRACKER_ACCESS_ASSIGNEE']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) > 0) {
-                if ($contributor_field_id) {
-                    // {{{ The static ugroups
-                    if (count(array_intersect($static_ugroups, $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) > 0) {
-                        $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                               $from ." INNER JOIN tracker_changeset_value AS tcv ON (
-                                    tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
-                                    AND tcv.changeset_id = c.id
-                               ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                                    tcvl.changeset_value_id = tcv.id
-                               ) INNER JOIN ugroup_user AS uu ON (
-                                    uu.user_id = tcvl.bindvalue_id
-                                    AND uu.ugroup_id IN (". $this->da->quoteSmart(implode(', ', $static_ugroups)) .")
-                               ) ".
-                               $where;
-                    }
-                    // }}}
-                    
-                    // {{{ tracker_admins
-                    if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
-                        $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                               $from ." INNER JOIN tracker_changeset_value AS tcv ON (
-                                    tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
-                                    AND tcv.changeset_id = c.id
-                               ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                                    tcvl.changeset_value_id = tcv.id
-                               ) INNER JOIN tracker_perm AS p ON (
-                                    p.user_id = tcvl.bindvalue_id
-                                    AND p.tracker_id = ". $this->da->escapeInt($tracker_id) ." 
-                                    AND p.perm_level >= 2
-                               ) ".
-                               $where;
-                    }
-                    //}}}
-                    // {{{ project_members
-                    if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
-                        $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                               $from ." INNER JOIN tracker_changeset_value AS tcv ON (
-                                    tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
-                                    AND tcv.changeset_id = c.id
-                               ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                                    tcvl.changeset_value_id = tcv.id
-                               ) INNER JOIN user_group AS ug ON (
-                                    ug.user_id = tcvl.bindvalue_id
-                                    AND ug.group_id = ". $this->da->escapeInt($group_id) ."
-                               ) ".
-                               $where;
-                    }
-                    //}}}
-                    // {{{ project_admins
-                    if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
-                        $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                               $from ." INNER JOIN tracker_changeset_value AS tcv ON (
-                                    tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
-                                    AND tcv.changeset_id = c.id
-                               ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                                    tcvl.changeset_value_id = tcv.id
-                               ) INNER JOIN user_group AS ug ON (
-                                    ug.user_id = tcvl.bindvalue_id
-                                    AND ug.group_id = ". $this->da->escapeInt($group_id) ."
-                                    AND ug.admin_flags = 'A'
-                               ) ".
-                               $where;
-                    }
-                    //}}}
-                }
-            }
+            $sqls = $this->getSqlFragmentAccordingToPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
         }
         
         ////optimize the query execution by using GROUP_CONCAT
@@ -317,8 +195,173 @@ class Tracker_ReportDao extends DataAccessObject {
         
         $sql = " SELECT GROUP_CONCAT(DISTINCT id) AS id, GROUP_CONCAT(DISTINCT last_changeset_id) AS last_changeset_id ";
         $sql .= " FROM (". implode(' UNION ', $sqls) .") AS R ";
+
+        var_dump($sql);
         
         return $this->retrieve($sql);
+    }
+    
+    function getSqlFragmentAccordingToPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+        $sqls = array();
+        
+        //Does the user member of at least one group which has ACCESS_SUBMITTER ?
+        if ($this->hasPermissionFor('PLUGIN_TRACKER_ACCESS_SUBMITTER', $permissions, $ugroups)) {
+            $sqls = array_merge($sqls, $this->getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'], $static_ugroups, $dynamic_ugroups));
+        }
+
+        //Does the user member of at least one group which has ACCESS_ASSIGNEE ?
+        if ($contributor_field_id && $this->hasPermissionFor('PLUGIN_TRACKER_ACCESS_ASSIGNEE', $permissions, $ugroups)) {
+            $sqls = array_merge($sqls, $this->getSqlFragmentForAccessToArtifactAssignedToGroup($from, $where, $group_id, $tracker_id, $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'], $static_ugroups, $dynamic_ugroups, $contributor_field_id));
+        }
+        
+        return $sqls;
+    }
+    
+    private function hasPermissionFor($permission_type, $permissions, $ugroups) {
+        return isset($permissions[$permission_type]) && count(array_intersect($ugroups, $permissions[$permission_type])) > 0;
+    }
+    
+    function getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups) {
+        $sqls = array();
+        
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $group_id   = $this->da->escapeInt($group_id);
+        
+        // {{{ The static ugroups
+        if ($this->hasPermissionForStaticUgroup($static_ugroups, $allowed_ugroups)) {
+            $static_ugroups = $this->da->quoteSmartImplode(',', $static_ugroups);
+            
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN ugroup_user uu ON (
+                        artifact.submitted_by = uu.user_id
+                        AND uu.ugroup_id IN ($static_ugroups)
+                    ) ".
+                    $where;
+        }
+        // }}}
+
+        // {{{ tracker_admins
+        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN tracker_perm AS p ON (
+                        artifact.submitted_by = p.user_id
+                        AND p.tracker_id = $tracker_id
+                        AND p.perm_level >= 2 
+                    ) ".
+                    $where;
+        }
+        //}}}
+        
+        // {{{ project_members
+        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups, $allowed_ugroups)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN user_group AS ug ON ( 
+                        artifact.submitted_by = ug.user_id 
+                        AND ug.group_id = $group_id
+                    ) ".
+                    $where;
+        }
+        //}}}
+        
+        // {{{ project_admins
+        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN user_group ug ON (
+                        artifact.submitted_by = ug.user_id 
+                        AND ug.group_id = $group_id
+                        AND ug.admin_flags = 'A'
+                    ) ".
+                    $where;
+        }
+        //}}}
+        
+        return $sqls;
+    }
+        
+    function getSqlFragmentForAccessToArtifactAssignedToGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+        $sqls = array();
+        
+        $tracker_id           = $this->da->escapeInt($tracker_id);
+        $group_id             = $this->da->escapeInt($group_id);
+        $contributor_field_id = $this->da->escapeInt($contributor_field_id);
+        
+        // {{{ The static ugroups
+        if ($this->hasPermissionForStaticUgroup($static_ugroups, $allowed_ugroups)) {
+            $static_ugroups = $this->da->quoteSmartImplode(',', $static_ugroups);
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN tracker_changeset_value AS tcv ON (
+                        tcv.field_id = $contributor_field_id
+                        AND tcv.changeset_id = c.id
+                    ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
+                        tcvl.changeset_value_id = tcv.id
+                    ) INNER JOIN ugroup_user AS uu ON (
+                        uu.user_id = tcvl.bindvalue_id
+                        AND uu.ugroup_id IN ($static_ugroups)
+                    ) ".
+                    $where;
+        }
+        // }}}
+
+        // {{{ tracker_admins
+        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN tracker_changeset_value AS tcv ON (
+                        tcv.field_id = $contributor_field_id
+                        AND tcv.changeset_id = c.id
+                    ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
+                        tcvl.changeset_value_id = tcv.id
+                    ) INNER JOIN tracker_perm AS p ON (
+                        p.user_id = tcvl.bindvalue_id
+                        AND p.tracker_id = $tracker_id
+                        AND p.perm_level >= 2
+                    ) ".
+                    $where;
+        }
+        //}}}
+        
+        // {{{ project_members
+        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups, $allowed_ugroups)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN tracker_changeset_value AS tcv ON (
+                        tcv.field_id = $contributor_field_id
+                        AND tcv.changeset_id = c.id
+                    ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
+                        tcvl.changeset_value_id = tcv.id
+                    ) INNER JOIN user_group AS ug ON (
+                        ug.user_id = tcvl.bindvalue_id
+                        AND ug.group_id = $group_id
+                    ) ".
+                    $where;
+        }
+        //}}}
+        
+        // {{{ project_admins
+        if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
+                    $from ." INNER JOIN tracker_changeset_value AS tcv ON (
+                        tcv.field_id = $contributor_field_id
+                        AND tcv.changeset_id = c.id
+                    ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
+                        tcvl.changeset_value_id = tcv.id
+                    ) INNER JOIN user_group AS ug ON (
+                        ug.user_id = tcvl.bindvalue_id
+                        AND ug.group_id = $group_id
+                        AND ug.admin_flags = 'A'
+                    ) ".
+                    $where;
+        }
+        //}}}
+        
+        return $sqls;
+    }
+    
+    private function hasPermissionForStaticUgroup($static_ugroups, $allowed_ugroups) {
+        return count(array_intersect($static_ugroups, $allowed_ugroups)) > 0;
+    }
+    
+    private function hasPermissionForDynamicUgroup($ugroupId, $dynamic_ugroups, $allowed_groups) {
+        return in_array($ugroupId, $dynamic_ugroups) &&
+               in_array($ugroupId, $allowed_groups);
     }
 }
 ?>

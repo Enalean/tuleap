@@ -23,10 +23,10 @@
  */
 class DataAccessObject {
     /**
-    * Private
-    * $da stores data access object
+     * Private
+     * $da stores data access object
      * @var DataAccess
-    */
+     */
     var $da;
 
     //! A constructor
