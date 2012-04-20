@@ -25,7 +25,6 @@ require_once('View/Admin/CreateSharedVisitor.class.php');
 
 require_once 'Tracker_FormElement_Field_Shareable.class.php';
 require_once('Tracker_FormElement_Shared.class.php');
-require_once 'Tracker_FormElement_Field_Shareable.class.php';
 require_once('Tracker_FormElement_Field_Integer.class.php');
 require_once('Tracker_FormElement_Field_Float.class.php');
 require_once('Tracker_FormElement_Field_Text.class.php');
