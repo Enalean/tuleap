@@ -699,33 +699,31 @@ class Tracker_FormElementFactory {
      * @param array $field_mapping 
      */
     public function fixOriginalFieldIdsAfterDuplication($new_project_id, $template_project_id, array $field_mapping) {
-        $field_dao = $this->getDao();
-        $value_dao = $this->getListBindStaticValueDao();
+        $field_dao             = $this->getDao();
+        $project_shared_fields = $field_dao->searchProjectSharedFieldsTargets($new_project_id);
+        $template_field_ids    = $field_dao->searchFieldIdsByGroupId($template_project_id);
         
-        $new_project_shared_fields  = $field_dao->searchProjectSharedFieldsTargets($new_project_id);
-        $template_project_fields    = $field_dao->searchByGroupId($template_project_id);
-        $template_project_field_ids = $this->extractIdFromDar($template_project_fields);
-        
-        foreach ($new_project_shared_fields as $new_project_shared_field) {
-            if ($this->originalFieldIsInTemplateProject($new_project_shared_field, $template_project_field_ids)) {
+        foreach ($project_shared_fields as $project_shared_field) {
+            if ($this->originalFieldIsInTemplateProject($project_shared_field, $template_field_ids)) {
+                $id                = $project_shared_field['id'];
+                $original_field_id = $project_shared_field['original_field_id'];
                 
-                $field_id              = $new_project_shared_field['id'];
-                $old_original_field_id = $new_project_shared_field['original_field_id'];
-                $new_original_field_id = $this->getNewOriginalFieldIdFromMapping($old_original_field_id, $field_mapping);
-                
-                $field_dao->updateOriginalFieldId($field_id, $new_original_field_id);
-                
-                $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
-                
-                foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
-                    $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
-                }
+                $this->fixSharedFieldOriginalId($id, $original_field_id, $field_mapping);
+                $this->fixSharedFieldOriginalValueIds($id, $original_field_id, $field_mapping);
             }
         }
     }
     
-    private function getListBindStaticValueDao() {
-        return new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
+    private function fixSharedFieldOriginalId($field_id, $old_original_field_id, $field_mapping) {
+        $new_original_field_id = $this->getNewOriginalFieldIdFromMapping($old_original_field_id, $field_mapping);
+        $this->getDao()->updateOriginalFieldId($field_id, $new_original_field_id);
+    }
+    
+    private function fixSharedFieldOriginalValueIds($field_id, $old_original_field_id, $field_mapping) {
+        $field         = $this->getFieldById($field_id);
+        $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
+
+        $field->fixOriginalValueIds($value_mapping);
     }
     
     private function getValueMappingFromFieldMapping($original_field_id, $field_mapping) {
@@ -747,14 +745,6 @@ class Tracker_FormElementFactory {
 
     private function originalFieldIsInTemplateProject(array $shared_field, array $original_shared_field_ids) {
         return in_array($shared_field['original_field_id'], $original_shared_field_ids);
-    }
-    
-    private function extractIdFromDar($dar) {
-        $ids = array();
-        foreach ($dar as $row) { 
-            $ids[] = $row['id'];
-        }
-        return $ids;
     }
 
     public function updateFormElement($formElement, $formElement_data) {

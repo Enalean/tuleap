@@ -359,9 +359,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->fetchRawValueFromChangeset($changeset);
     }
     
+    /**
+     * @return Tracker_FormElement_Field_Value_ListDao 
+     */
     protected function getValueDao() {
         return new Tracker_FormElement_Field_Value_ListDao();
-        //return $this->getBind()->getValueDao();
     }
     
     /**
@@ -1021,6 +1023,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $this->has_errors = !$this->validate($artifact, $value);
         }
         return !$this->has_errors;
+    }
+    
+    public function fixOriginalValueIds($value_mapping) {
+        $this->getBind()->fixOriginalValueIds($value_mapping);
     }
 }
 ?>

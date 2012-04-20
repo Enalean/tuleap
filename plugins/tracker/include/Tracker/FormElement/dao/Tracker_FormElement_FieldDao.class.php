@@ -374,7 +374,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchByGroupId($group_id) {
+    public function searchFieldIdsByGroupId($group_id) {
         $group_id  = $this->da->escapeInt($group_id);
         
         $sql = "
@@ -388,7 +388,19 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
             AND   t.deletion_date IS NULL
         ";
         
-        return $this->retrieve($sql);
+        return $this->retrieveIds($sql);
+    }
+    
+    private function retrieveIds($sql) {
+        return $this->extractIds($this->retrieve($sql));
+    }
+    
+    private function extractIds($dar) {
+        $ids = array();
+        foreach ($dar as $row) { 
+            $ids[] = $row['id'];
+        }
+        return $ids;
     }
 
     /**

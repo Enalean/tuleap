@@ -745,5 +745,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function isValid($value) {
         return true;
     }
+    
+    public function fixOriginalValueIds($value_mapping) {
+        $value_dao = $this->getValueDao();
+        $field_id  = $this->getField()->getId();
+        
+        foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
+            $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
+        }
+    }
 }
 ?>
