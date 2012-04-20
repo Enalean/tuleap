@@ -23,7 +23,9 @@ require_once('dao/Tracker_FormElement_FieldDao.class.php');
 require_once('View/Admin/CreateVisitor.class.php');
 require_once('View/Admin/CreateSharedVisitor.class.php');
 
+require_once 'Tracker_FormElement_Field_Shareable.class.php';
 require_once('Tracker_FormElement_Shared.class.php');
+require_once 'Tracker_FormElement_Field_Shareable.class.php';
 require_once('Tracker_FormElement_Field_Integer.class.php');
 require_once('Tracker_FormElement_Field_Float.class.php');
 require_once('Tracker_FormElement_Field_Text.class.php');
@@ -291,12 +293,11 @@ class Tracker_FormElementFactory {
     }
     
     /**
-     * @todo Extract a Tracker_ShareableField interface from Tracker_FormElement_Field_List
-     * @return Tracker_FormElement_Field_List or null
+     * @return Tracker_FormElement_Field_Shareable or null
      */
     public function getShareableFieldById($id) {
         $field = $this->getFieldById($id);
-        if (is_a($field, 'Tracker_FormElement_Field_List')) {
+        if (is_a($field, 'Tracker_FormElement_Field_Shareable')) {
             return $field;
         }
     }
