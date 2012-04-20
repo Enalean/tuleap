@@ -84,13 +84,15 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     }
     
     public function duplicate($parent_id, $child_id, $tracker_mapping){
-        $parent_id = $this->da->escapeInt($tracker_mapping[$parent_id]);
-        $child_id  = $this->da->escapeInt($tracker_mapping[$child_id]);
-        
-        $sql = "INSERT INTO tracker_hierarchy (parent_id, child_id)
-                VALUES ($parent_id, $child_id)";
-        
-        return $this->update($sql);
+        if (isset($tracker_mapping[$parent_id]) && isset($tracker_mapping[$child_id])) {
+            $parent_id = $this->da->escapeInt($tracker_mapping[$parent_id]);
+            $child_id  = $this->da->escapeInt($tracker_mapping[$child_id]);
+            
+            $sql = "INSERT INTO tracker_hierarchy (parent_id, child_id)
+                    VALUES ($parent_id, $child_id)";
+            
+            return $this->update($sql);
+        }
     }
 }
 
