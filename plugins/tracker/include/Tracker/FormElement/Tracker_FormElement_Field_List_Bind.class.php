@@ -391,5 +391,7 @@ abstract class Tracker_FormElement_Field_List_Bind {
         }
         return $values;
     }
+    
+    public abstract function fixOriginalValueIds(array $value_mapping);
 }
 ?>

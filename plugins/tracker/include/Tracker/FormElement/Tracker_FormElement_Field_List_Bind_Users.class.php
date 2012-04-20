@@ -716,5 +716,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
         return $is_valid;
     }
+    
+    public function fixOriginalValueIds(array $value_mapping) {
+        // Nothing to do: user value ids stay the same accross projects.
+    }
 }
 ?>
