@@ -1,6 +1,0 @@
-<?php
-
-// Add review board site
-$reviewboard_site = 'http://localhost/reviews/';
-
-?>
