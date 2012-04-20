@@ -2,3 +2,5 @@ plugin_codereview	descriptor_description	C'est un outil permettant de faciliter 
 plugin_codereview	descriptor_name	Revue de code
 
 plugin_codereview	title	Revue de code
+plugin_codereview	service_lbl_key	Code review
+plugin_codereview	service_desc_key	Code review
