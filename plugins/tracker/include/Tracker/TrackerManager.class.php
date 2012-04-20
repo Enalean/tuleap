@@ -783,7 +783,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     private function getCrossSearch(array $art_link_column_field_ids) {
-        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance());
+        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory());
         $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                  = new Tracker_CrossSearch_SearchDao();
         $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
