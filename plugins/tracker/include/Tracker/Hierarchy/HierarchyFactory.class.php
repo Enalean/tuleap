@@ -25,8 +25,39 @@ class Tracker_HierarchyFactory {
     
     protected $hierarchy_dao;
     
-    public function __construct(Tracker_Hierarchy_Dao $hierarchy_dao) {
-        $this->hierarchy_dao = $hierarchy_dao;
+    /**
+     * Used to instanciate some related trackers according to their hierarchy,
+     * without the need of a tree structure (e.g. retrieve direct children of a
+     * given Tracker).
+     * 
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    
+    public function __construct(Tracker_Hierarchy_Dao $hierarchy_dao, TrackerFactory $tracker_factory) {
+        $this->hierarchy_dao   = $hierarchy_dao;
+        $this->tracker_factory = $tracker_factory;
+    }
+    
+    /**
+     * Returns a new instance of Tracker_HierarchyFactory.
+     * 
+     * We should usually prefer dependency injection over static methods, but
+     * there are some cases in Tuleap legacy code where injection would require
+     * a lot of refactoring (e.g. Tracker/FormElement).
+     */
+    public static function build() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance());
+    }
+    
+    public function getChildren($tracker_id) {
+        $children = array();
+        
+        foreach($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
+            $children[] = $this->tracker_factory->getTrackerById($row['id']);
+        }
+        
+        return $children;
     }
     
     public function getHierarchy($tracker_ids = array()) {

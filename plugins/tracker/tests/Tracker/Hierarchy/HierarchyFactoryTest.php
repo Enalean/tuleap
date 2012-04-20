@@ -22,7 +22,28 @@ require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/HierarchyFa
 
 Mock::generate('Tracker_Hierarchy_Dao');
 
-class Tracker_HierarchyFactoryTest extends UnitTestCase {
+class Tracker_HierarchyFactoryTest extends TuleapTestCase {
+    
+    public function itRetrievesTheChildrenOfAGivenTracker() {
+        $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
+        $tracker_factory   = mock('TrackerFactory');
+        $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory);
+        
+        $tracker_id = 1;
+        $child_ids  = array(array('id' => 11), array('id' => 12));
+        
+        $child_1 = mock('Tracker');
+        $child_2 = mock('Tracker');
+        
+        stub($hierarchy_dao)->searchChildTrackerIds($tracker_id)->returns($child_ids);
+        stub($tracker_factory)->getTrackerById(11)->returns($child_1);
+        stub($tracker_factory)->getTrackerById(12)->returns($child_2);
+        
+        $expected_children = array($child_1, $child_2);
+        $actual_children   = $hierarchy_factory->getChildren($tracker_id);
+        
+        $this->assertEqual($actual_children, $expected_children);
+    }
 
     public function testFactoryShouldCreateAHierarchy() {
         $factory = $this->GivenAHierarchyFactory();
@@ -121,7 +142,7 @@ class Tracker_HierarchyFactoryTest extends UnitTestCase {
             $dao = new MockTracker_Hierarchy_Dao();
             $dao->setReturnValue('searchTrackerHierarchy', array());
         }
-        return new Tracker_HierarchyFactory($dao);
+        return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'));
     }
 }
 ?>

@@ -67,6 +67,8 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
             $this->visitArtifactId($element);
         } elseif ($element instanceof Tracker_FormElement_Field_CrossReferences) {
             $this->visitCrossReferences($element);
+        } elseif ($element instanceof Tracker_FormElement_Field_Burndown) {
+            $this->visitBurndown($element);
         } elseif ($element instanceof Tracker_FormElement_Field_LastUpdateDate) {
             $this->visitLastUpdateDate($element);
         } elseif ($element instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
@@ -103,6 +105,11 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     private function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $element) {
         include_once 'Field/CrossReferences.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_CrossReferences($element, $this->allUsedElements);
+    }
+    
+    private function visitBurndown(Tracker_FormElement_Field_Burndown $element) {
+        include_once 'Field/Burndown.class.php';
+        $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);
     }
     
     private function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $element) {

@@ -23,6 +23,8 @@ require_once('mvc/PluginController.class.php');
 require_once('GitViews.class.php');
 require_once('GitActions.class.php');
 require_once('GitRepository.class.php');
+require_once('GitLog.class.php');
+require_once 'Git_LastPushesGraph.class.php';
 
 require_once('common/valid/ValidFactory.class.php');
 
@@ -176,6 +178,7 @@ class Git extends PluginController {
                                             'confirm_private',
                                             'fork_repositories',
                                             'do_fork_repositories',
+                                            'view_last_git_pushes',
             );
         } else {
             $this->addPermittedAction('index');
@@ -400,6 +403,22 @@ class Git extends PluginController {
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
+            case "view_last_git_pushes":
+                $vGroupId = new Valid_GroupId();
+                $vGroupId->required();
+                if ($this->request->valid($vGroupId)) {
+                    $groupId = $this->request->get('group_id');
+                }
+                $vWeeksNumber = new Valid_UInt('weeks_number');
+                if ($this->request->valid($vWeeksNumber)) {
+                    $weeksNumber = $this->request->get('weeks_number');
+                }
+                if (empty($weeksNumber) || $weeksNumber > Git_LastPushesGraph::MAX_WEEKSNUMBER) {
+                    $weeksNumber = 12;
+                }
+                $imageRenderer = new Git_LastPushesGraph($groupId, $weeksNumber);
+                $imageRenderer->display();
+                break;
             #LIST
             default:
                 
@@ -525,6 +544,19 @@ class Git extends PluginController {
         }
         return $repos;
     }
+    
+    /**
+     * Add pushes' logs stuff
+     *
+     * @param Array $params
+     *
+     * @return Void
+     */
+    public function logsDaily($params) {
+        $logger  = new GitLog();
+        $logger->logsDaily($params);
+    }
+
 }
 
 ?>

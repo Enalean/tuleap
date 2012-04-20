@@ -221,6 +221,8 @@ class GitDao extends DataAccessObject {
      * @param Boolean $onlyGitShell If true list will contain only git repositories no gitolite
      * @param Integer $userId       User id
      *
+     * @TODO: Add a way to obtain all project repositories including both project scope & user scope
+     *
      * @return Array
      */
     public function getProjectRepositoryList($projectId, $onlyGitShell = false, $userId = null) {
@@ -249,7 +251,7 @@ class GitDao extends DataAccessObject {
                   
         $rs = $this->retrieve($sql);
         $list = array();
-        if ($rs && $rs->rowCount() > 0 ) {        
+        if ($rs && $rs->rowCount() > 0 ) {
             foreach ($rs as $row) {
                 $repoId        = $row[self::REPOSITORY_ID];
                 $list[$repoId] = $row;
@@ -257,7 +259,7 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
-    
+
     /**
      * Return the list of users that owns repositories in the project $projectId
      *

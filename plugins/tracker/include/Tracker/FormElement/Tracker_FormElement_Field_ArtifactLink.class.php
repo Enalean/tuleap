@@ -110,7 +110,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html = implode(',', $arr);
         return $html;
     }
-    
+
     /**
      * Fetch the value
      * @param mixed $value the value of the field
@@ -1018,17 +1018,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     /**
+     * Retrieve linked artifacts according to user's permissions
+     * 
+     * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
+     * @param User                       $user      The user who will see the artifacts
+     * 
      * @return array of Tracker_Artifact
      */
-    public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset) {
+    public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, User $user) {
         $artifacts = array();
         $changeset_value = $changeset->getValue($this);
         if ($changeset_value) {
             foreach ($changeset_value->getArtifactIds() as $id) {
-                $artifacts[] = $this->getArtifactFactory()->getArtifactById($id);
+                $artifact = $this->getArtifactFactory()->getArtifactById($id);
+                if ($artifact && $artifact->userCanView($user)) {
+                    $artifacts[] = $artifact;
+                }
             }
         }
-        return array_filter($artifacts);
+        return $artifacts;
     }
+    
 }
 ?>

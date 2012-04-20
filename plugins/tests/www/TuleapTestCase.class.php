@@ -28,6 +28,8 @@ Mock::generate('Response');
 require_once 'common/layout/Layout.class.php';
 Mock::generate('Layout');
 
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/user/UserTestBuilder.php';
+
 require_once 'MockBuilder.php';
 
 /**

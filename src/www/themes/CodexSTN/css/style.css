@@ -334,26 +334,6 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
-/* {{{ Home Page */
-#homepage {
-    margin-top: 1em;
-}
-
-#homepage_speech {
-    float: left;
-    width: 70%;
-}
-
-#homepage_boxes {
-    float: right;
-    width: 250px;
-}
-
-#homepage_news {
-    clear: both;
-}
-/* }}} */
-
 /*
  * Tabs
  *

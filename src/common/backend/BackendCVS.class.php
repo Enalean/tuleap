@@ -192,11 +192,11 @@ class BackendCVS extends Backend {
         if (!$this->useCVSNT()) {
             $lockdir=$GLOBALS['cvslock_prefix']."/".$project->getUnixName(false);
             if (! is_dir($lockdir)) {
-                if (!mkdir("$lockdir",2777)) {
+                if (!mkdir("$lockdir",02777)) {
                     $this->log("Can't create project CVS lock dir: $lockdir", Backend::LOG_ERROR);
                     return false;
                 }
-                $this->system("chmod 2777 $lockdir"); // overwrite umask value
+                $this->system("chmod 02777 $lockdir"); // overwrite umask value
             }
         }
         return true;
@@ -528,7 +528,7 @@ class BackendCVS extends Backend {
      * @return boolean true if success
      */
     public function setCVSPrivacy($project, $is_private) {
-        $perms = $is_private ? 2770 : 2775;
+        $perms = $is_private ? 02770 : 02775;
         $cvsroot = $GLOBALS['cvs_prefix'] . '/' . $project->getUnixName(false);
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }

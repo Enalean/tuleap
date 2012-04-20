@@ -101,7 +101,7 @@ plugin_git	project_service_not_available	Le service n'est pas disponible pour vo
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
 
-plugin_git	admin_repo_management	Gestion du dépot GIT
+plugin_git	admin_repo_management	Gestion du dépôt GIT
 
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
 plugin_git	mail_prefix	Nouveau Préfixe
@@ -134,8 +134,8 @@ plugin_git	feedback_event_fork	Un événement est en attente pour le fork ($1) d
 plugin_git	feedback_event_delete	Un événement est en attente pour la suppression d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 
-plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépots Git
-plugin_git	gitolite_lab_feature_description	Permet de positionner des permissions distinctes en lecture ou écriture sur chaque dépot
+plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépôts Git
+plugin_git	gitolite_lab_feature_description	Permet de positionner des permissions distinctes en lecture ou écriture sur chaque dépôt
 
 plugin_git	perm_R	Lecture
 plugin_git	perm_W	Ecriture
@@ -152,15 +152,41 @@ plugin_git	fork_choose_destination_project	Copier vers un autre projet
 plugin_git	fork_choose_destination_personal	Créer les dépôts personnels dans ce projet
 plugin_git	successfully_forked	Fork créé avec succès
 
+plugin_git	tree_view_project	Projet
 plugin_git	tree_view_repository	Dépôt
 plugin_git	tree_view_description	Description
 plugin_git	tree_view_last_push	Dernier push
+plugin_git	tree_view_date	Date
+plugin_git	tree_view_commits	Commits
 plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
 
-plugin_git	fork_repository_exists	Le dépot $1 existe déjà sur la cible. Dépot ignoré.
+plugin_git	fork_repository_exists	Le dépôt $1 existe déjà sur la cible. Dépôt ignoré.
 plugin_git	fork_repository_invalid_namespace	Le chemin contient des caractères invalides. Seuls les caractères alphanumeriques sont autorisés.
 plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
 plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
+
+plugin_git	ci_trigger	Evénement Git
+plugin_git	ci_repo_id	Id du dépot Git 
+plugin_git	ci_field_description	Déclencher un build après un push Git dans le dépot 
+plugin_git	ci_trigger_not_saved	L'evénement Git n'a pas été sauvegardé
+plugin_git	ci_bad_repo_id	Id du dépot Git non valide
+plugin_git	ci_repository_not_in_project	Le dépot Git n'appartient pas au projet
+plugin_git	ci_trigger_not_deleted	L'evénement Git n'a pas été supprimé
+
+plugin_git	widget_user_pushes_title	Mes derniers push Git
+plugin_git	widget_project_pushes_title	Derniers push Git
+plugin_git	widget_project_pushes_label	Push
+plugin_git	widget_user_pushes_description	Affiche les derniers push Git faits par l'utilisateur
+plugin_git	widget_project_pushes_description	Affiche les derniers push Git du projet.
+plugin_git	widget_user_pushes_no_content	Pas de push a afficher
+plugin_git	widget_user_pushes_offset	Nombre maximum de push par dépôt
+plugin_git	widget_user_pushes_past_days	Nombre maximum de jours dans le passé
+plugin_git	widget_user_pushes_details	Détails
+plugin_git	widget_project_pushes_max_weeks	Pour garantir la lisibilité du graphique, le nombre de semaines ne doit pas dépasser 25.
+plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 semaine(s)
+
+plugin_git	logsdaily_field	Nom du répertoire
+plugin_git	logsdaily_title	Les Git push

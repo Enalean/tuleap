@@ -899,9 +899,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     foreach($columns as $column) {
                         if($column['field']->isUsed()) {
-                            $html .= '<td class="tracker_report_table_column_'. $column['field']->id .'">';
-                            $html .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $row[$column['field']->name], $from_aid);
-                            $html .= '</td>';
+                            $field_name = $column['field']->name;
+                            $value      = isset($row[$field_name]) ? $row[$field_name] : null;
+                            $html      .= '<td class="tracker_report_table_column_'. $column['field']->id .'">';
+                            $html      .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $value, $from_aid);
+                            $html      .= '</td>';
                         }
                     }
                     $html .= '</tr>';

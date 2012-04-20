@@ -1170,25 +1170,31 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get the latest artifacts linked to the current artifact
      * 
-     * @return array of Linked Artifacts
+     * @param User $user The user who should see the artifacts
+     * 
+     * @return Array of Tracker_Artifact
      */
-    public function getLinkedArtifacts() {
+    public function getLinkedArtifacts(User $user) {
         $artifact_links       = array();
-        $artifact_link_field = $this->getAnArtifactLinkField();
+        $artifact_link_field = $this->getAnArtifactLinkField($user);
         if ($artifact_link_field) {
             $changeset      = $this->getLastChangeset();
-            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset);
+            $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset, $user);
         }
         return $artifact_links;
     }
     
-    public function getAnArtifactLinkField() {
-        $field = null;
+    /**
+     * Return the first (and only one) ArtifactLink field (if any)
+     * 
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getAnArtifactLinkField(User $user) {
         $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
-        if ($artifact_link_fields) {
-            $field = $artifact_link_fields[0];
+        if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
+            return $artifact_link_fields[0];
         }
-        return $field;
+        return null;
     }
 
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {

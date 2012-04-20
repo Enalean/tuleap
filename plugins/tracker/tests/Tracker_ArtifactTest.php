@@ -1543,6 +1543,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
     public function itReturnsAnEmptyListWhenThereIsNoArtifactLinkField() {
         $tracker = aTracker()->withId('101')->build();
+        $user    = aUser()->build();
 
         $factory = $this->GivenAFactoryThatReturns(array())->whenCalledWith($tracker);
         $artifact = anArtifact()
@@ -1550,20 +1551,22 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
                     ->withFormElementFactory($factory)
                     ->build();
 
-        $links = $artifact->getLinkedArtifacts();
+        $links = $artifact->getLinkedArtifacts($user);
         $this->assertEqual(array(), $links);
     }
     
     public function itReturnsAlistOfTheLinkedArtifacts() {
+        $user          = aUser()->build();
         $expected_list = array(
             new Tracker_Artifact(111, null, null, null, null),
             new Tracker_Artifact(222, null, null, null, null)
         );
         
-        $changesets = array(new MockTracker_Artifact_Changeset());
+        $changeset = new MockTracker_Artifact_Changeset();
         
-        $field = new MockTracker_FormElement_Field_ArtifactLink();
-        $field->setReturnValue('getLinkedArtifacts', $expected_list, $changesets);
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->getLinkedArtifacts($changeset, $user)->returns($expected_list);
+        stub($field)->userCanRead($user)->returns(true);
         
         $tracker = aTracker()->build();
         $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
@@ -1571,14 +1574,34 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $artifact = anArtifact()
                     ->withTracker($tracker)
                     ->withFormElementFactory($factory)
-                    ->withChangesets($changesets)
+                    ->withChangesets(array($changeset))
                     ->build();
         
-        $this->assertEqual($expected_list, $artifact->getLinkedArtifacts());
+        $this->assertEqual($expected_list, $artifact->getLinkedArtifacts($user));
+    }
+
+    public function itReturnsEmptyArrayIfUserCannotSeeArtifactLinkField() {
+        $current_user = aUser()->build();
+        
+        $field        = new MockTracker_FormElement_Field_ArtifactLink();
+        stub($field)->userCanRead($current_user)->returns(false);
+        
+        $tracker      = aTracker()->build();
+        $factory      = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
+        $artifact     = anArtifact()
+                        ->withTracker($tracker)
+                        ->withFormElementFactory($factory)
+                        ->build();
+
+        $this->assertEqual($artifact->getAnArtifactLinkField($current_user), null);
     }
 
     private function GivenAFactoryThatReturns($artifactLinkFields) {
         return new FormElementFactory_PendingMock($artifactLinkFields);
     }
+    
+    
 }
+
+
 ?>

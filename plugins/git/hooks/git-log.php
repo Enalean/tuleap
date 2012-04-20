@@ -23,8 +23,8 @@
  * Usage: php gitLog.php --repo_location="/data/lib/tuleap/gitolite/repositories/gpig/u/disciplus_simplex/repo.git" --login="disciplus_simplex" --type="git_commit" --commits_number="12"
  */
 
-require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 require_once('pre.php');
+require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 
 // Check script parameters
 if ($argc != 6) {

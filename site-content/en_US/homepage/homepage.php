@@ -24,35 +24,118 @@ if ($Language->hasText('homepage', 'introduction')) {
     return;
 }
 
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+$main_content_span = 'span12';
+$login_input_span  = 'span3';
+if ($display_homepage_news) {
+    $main_content_span = 'span8';
+    $login_input_span  = 'span2';
 }
+
 ?>
 
-<div class="slogan">Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></div>
 
-<br><?= $GLOBALS['sys_name']?> is a <B>service to all <?= $GLOBALS['sys_org_name']?> software development teams</B>. <A href="/docs/site/about_codendi.php">[&nbsp;More about <?= $GLOBALS['sys_name']?>&nbsp;]</A>
+<div class="hero-unit">
+    <?= $GLOBALS['HTML']->getImage('organization_logo.png'); ?>
+    <h2><?= $GLOBALS['sys_name']?>, the Collaborative Application <br />
+    where <?= $GLOBALS['sys_org_name']?> runs Smart &amp; Quality software projects</h2>
+</div>
 
-<P><?= $GLOBALS['sys_name']?> offers an easy access to a full featured and totally web-based project management environment.
-Using <?= $GLOBALS['sys_name']?> project teams can better focus on software development while making their community of users
-and developers grow. <A href="/plugins/docman/?group_id=1">[&nbsp;More on <?= $GLOBALS['sys_name']?> Services&nbsp;]</a><P>
-
-<u><B>Site Participation</B></u>
-
-<BR>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should
-<A href="/account/register.php">register as a site user</A>. It's easy and fast and it allows you to participate fully in all we have to offer.
-Also make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>"><?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.
-
-<P><u><B>Set Up Your Own Project</B></u><BR>After you <A href="/account/register.php">register as a site user</A>, you can <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
-It only takes a couple of minutes to get a fully working environment to share your code.
-
-<P><B><U>CLI</U></B><BR />This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> to access it through a command line client.
-You can download the <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
-
-<p>Thanks... and enjoy the site.</p>
+<div class="row-fluid">
+    <div class="<?= $main_content_span ?>">
+        <div class="row-fluid">
+            <div class="span6">
+                <h2><?= $GLOBALS['HTML']->getImage('homepage/tuleap-logo-small.png', array('alt' => "What's Tuleap", 'width' => '48px')) ?> What's <?= $GLOBALS['sys_name']?>?</h2>
+                <p>
+                    <b><?= $GLOBALS['sys_name']?> is based on Tuleap. It is all about helping you manage your software projects and connect with your team members.</b>
+                </p>
+                <p>
+                      It is a free and Open-Source Suite for Application Lifecycle Management. 
+                      Tuleap provides tools for managing projects, tasks, changes, defects, documents as well as version control, continuous integration 
+                      and social collaboration. 
+                      Through a single web-based solution, everyone can monitor, develop and collaborate on software projects.
+                </p>
+                <h3>With <?= $GLOBALS['sys_name']?> you'll be able to:</h3>
+                <p>
+                    <ul>
+                        <li>plan and monitor projects,</li>
+                        <li>manage software development lifecycle: code versions, builds, etc.,</li>
+                        <li>track requirements, tasks, incidents, etc.,</li>
+                        <li>produce documents and releases,</li>
+                        <li>favour collaboration between project members.</li>
+                    </ul>
+                </p>
+                <p>
+                    <a href="http://www.tuleap.com" target="_blank">More info on Tuleap</a>
+                </p>
+            </div>
+    
+            <div class="span6">
+                <div class="row-fluid">
+                    <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participate</h2>
+                    <?php if ($current_user->isLoggedIn()) { ?>
+                        <p>Welcome <?= UserHelper::instance()->getDisplayNameFromUser($current_user) ?>. 
+                        You can now get the most out of <?= $GLOBALS['sys_name']?>. 
+                        <a href="/softwaremap/">Join a project</a> or create a new one below.</p>
+                    <?php } else { ?>
+                        <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
+                        register as a site user. It's easy and fast and it 
+                        allows you to participate fully in all we have to offer.
+                        </p>
+                        <form action="<?= $login_form_url ?>" method="POST">
+                            <input type="text" name="form_loginname" class="<?= $login_input_span ?>" placeholder="Username" />
+                            <input type="password" name="form_pw" class="<?= $login_input_span ?>" placeholder="Password" />
+                            <input type="submit" class="btn" name="login" value="<?= $GLOBALS['Language']->getText('account_login', 'login_btn') ?>" />
+                            Or <a href="/account/register.php">create an account</a>
+                        </form>
+                    <?php } ?>
+                </div>
+                <hr />
+                <div class="row-fluid">
+                    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Create a new project</h2>
+                    <?php 
+                        $create_your_own_project = 'create your own project';
+                        if ($current_user->isLoggedIn()) {
+                            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
+                        }
+                    ?>
+                    <p>It's very easy to <?= $create_your_own_project ?>. Login, 
+                    leverage project templates and customize your 
+                    workspace in the administration interface.</p>
+                </div>
+            </div>
+        </div>
+        <?php if ($display_homepage_news) { ?>
+        
+        <hr />
+        
+        <div class="row-fluid">
+            <div class="span3">
+                <h3><?= $GLOBALS['sys_name']?> Statistics</h3>
+                <p><?= show_sitestats() ?></p>
+            </div>
+            <div class="span5">
+                <h3>Newest projects</h3>
+                <p><?= show_newest_projects() ?></p>
+            </div>
+            <div class="span4">
+                <h3>Newest Releases</h3>
+                <p><?= show_newest_releases() ?></p>
+            </div>
+        </div>
+        <?php } ?>
+    </div>
+    <?php if ($display_homepage_news) { ?>
+    <div class="span4">
+        <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
+        <?= news_show_latest($GLOBALS['sys_news_group'], 3, true, false, true, 3) ?>
+    </div>
+    <?php } ?>
+</div>
 
 <?php
-// Because of to aggressive continuous integration check on closing tags...
+
+//tell the upper script that it should'nt display boxes
+$display_homepage_boxes = false;
+$display_homepage_news  = false;
+
 ?>

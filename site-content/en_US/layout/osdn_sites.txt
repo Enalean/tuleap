@@ -11,7 +11,6 @@
 // on the Codendi pages
 
 /*
-$osdn_sites[] = array('Codendi.com' => 'http://www.codendi.com/');
 $osdn_sites[] = array('Slashdot.org' => 'http://www.slashdot.com/');
 $osdn_sites[] = array('SourceForge' => 'http://www.sourceforge.net/');
 $osdn_sites[] = array('Freshmeat' => 'http://www.freshmeat.net/');
