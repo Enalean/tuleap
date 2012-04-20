@@ -32,7 +32,7 @@ class CodeReviewPluginInfo extends PluginInfo {
      * @return Void
      */
     function __construct($plugin) {
-        parent::__construct($plugin);
+        parent::__construct($plugin, 'config');  
         $this->setPluginDescriptor(new CodeReviewPluginDescriptor());
     }
 
