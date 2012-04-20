@@ -66,7 +66,7 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     }
     
     public function searchTrackerHierarchy(array $tracker_ids) {
-        $tracker_ids = $this->da->escapeIntImplode(',', $tracker_ids);
+        $tracker_ids = $this->da->escapeIntImplode($tracker_ids);
         $sql = "SELECT parent_id, child_id
                 FROM tracker_hierarchy
                 WHERE parent_id IN ($tracker_ids) 
