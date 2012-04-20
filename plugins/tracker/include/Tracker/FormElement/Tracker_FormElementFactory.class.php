@@ -291,6 +291,17 @@ class Tracker_FormElementFactory {
     }
     
     /**
+     * @todo Extract a Tracker_ShareableField interface from Tracker_FormElement_Field_List
+     * @return Tracker_FormElement_Field_List or null
+     */
+    public function getShareableFieldById($id) {
+        $field = $this->getFieldById($id);
+        if (is_a($field, 'Tracker_FormElement_Field_List')) {
+            return $field;
+        }
+    }
+    
+    /**
      * @param Tracker $tracker
      * @return array of Tracker_FormElement - All fields used by the tracker
      */
@@ -720,7 +731,7 @@ class Tracker_FormElementFactory {
     }
     
     private function fixSharedFieldOriginalValueIds($field_id, $old_original_field_id, $field_mapping) {
-        $field         = $this->getFieldById($field_id);
+        $field         = $this->getShareableFieldById($field_id);
         $value_mapping = $this->getValueMappingFromFieldMapping($old_original_field_id, $field_mapping);
 
         $field->fixOriginalValueIds($value_mapping);

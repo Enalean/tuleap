@@ -312,7 +312,7 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $this->template_id = 29;
         
         $this->dao     = mock('Tracker_FormElement_FieldDao');
-        $this->factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao', 'getFieldById'));
+        $this->factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getDao', 'getShareableFieldById'));
         
         stub($this->factory)->getDao()->returns($this->dao);
     }
@@ -362,10 +362,10 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $this->dao->expectAt(1, 'updateOriginalFieldId', array(567, 888));
         
         $field_234 = mock('Tracker_FormElement_Field_List');
-        stub($this->factory)->getFieldById(234)->returns($field_234);
+        stub($this->factory)->getShareableFieldById(234)->returns($field_234);
         
         $field_567 = mock('Tracker_FormElement_Field_List');
-        stub($this->factory)->getFieldById(567)->returns($field_567);
+        stub($this->factory)->getShareableFieldById(567)->returns($field_567);
         
         $field_234->expectAt(0, 'fixOriginalValueIds', array(array(3 => 4, 5 => 6)));
         $field_567->expectAt(1, 'fixOriginalValueIds', array(array(1 => 2)));
@@ -388,7 +388,7 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         stub($this->dao)->searchFieldIdsByGroupId($this->template_id)->returns($template_project_field_ids);
         
         $field_234 = mock('Tracker_FormElement_Field_List');
-        stub($this->factory)->getFieldById(234)->returns($field_234);
+        stub($this->factory)->getShareableFieldById(234)->returns($field_234);
         
         $this->dao->expectOnce('updateOriginalFieldId', array(234, 777));
         $field_234->expectOnce('fixOriginalValueIds', array(array(1 => 2, 3 => 4)));
