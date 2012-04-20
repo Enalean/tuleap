@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/plugin/PluginInfo.class.php';
+require_once 'common/plugin/PluginFileInfo.class.php';
 require_once 'CodeReviewPluginDescriptor.class.php';
 
 /**
  * CodeReviewPluginInfo
  */
-class CodeReviewPluginInfo extends PluginInfo {
+class CodeReviewPluginInfo extends PluginFileInfo {
 
     /**
      * Class constructor
@@ -32,7 +32,7 @@ class CodeReviewPluginInfo extends PluginInfo {
      * @return Void
      */
     function __construct($plugin) {
-        parent::__construct($plugin, 'config');  
+        parent::__construct($plugin, 'codereview');  
         $this->setPluginDescriptor(new CodeReviewPluginDescriptor());
     }
 

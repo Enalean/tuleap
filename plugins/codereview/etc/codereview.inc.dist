@@ -1,7 +1,7 @@
 <?php
 
 // Add review board site
-$reviewboard_site = 'http://localhost/plugins/codereview/reviewboard/';
+$reviewboard_site = "http://localhost/reviews/";
 $domain_name = "localhost/plugins/codereview/reviewboard/";
 $site_root = "/plugins/codereview/reviewboard/";
 $media_url = "/";

@@ -46,13 +46,12 @@ class CodeReviewPlugin extends Plugin {
      *
      * @return CodeReviewPluginInfo
      */
-    public function getPluginInfo() {
-        if (!$this->pluginInfo) {
-            include_once 'CodeReviewPluginInfo.class.php';
+    function getPluginInfo() {
+        if (!$this->pluginInfo instanceof CodeReviewPluginInfo) {
+            include_once('CodeReviewPluginInfo.class.php');
             $this->pluginInfo = new CodeReviewPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 }
-
 ?>

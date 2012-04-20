@@ -25,9 +25,11 @@ require_once('CodeReviewViews.class.php');
  * codereview */
 class CodeReview extends PluginControler {
 
+    protected $plugin;
+
     function CodeReview() {
         parent::__construct();
-        $p = PluginFactory::instance()->getPluginByName('codereview');
+        $this->plugin = PluginFactory::instance()->getPluginByName('codereview');
     }
 
     /**
