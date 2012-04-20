@@ -746,6 +746,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return true;
     }
     
+    /**
+     * @see Tracker_FormElement_Field_Shareable
+     */
     public function fixOriginalValueIds(array $value_mapping) {
         $value_dao = $this->getValueDao();
         $field_id  = $this->getField()->getId();

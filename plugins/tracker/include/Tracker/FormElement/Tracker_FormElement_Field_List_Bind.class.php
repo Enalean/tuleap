@@ -18,7 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_FormElement_Field_List_Bind {
+require_once 'Tracker_FormElement_Field_Shareable.class.php';
+
+abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
     
     protected $default_values;
     protected $decorators;
@@ -391,7 +393,5 @@ abstract class Tracker_FormElement_Field_List_Bind {
         }
         return $values;
     }
-    
-    public abstract function fixOriginalValueIds(array $value_mapping);
 }
 ?>
