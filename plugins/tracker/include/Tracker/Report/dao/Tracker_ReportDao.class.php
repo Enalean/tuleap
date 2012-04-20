@@ -196,7 +196,7 @@ class Tracker_ReportDao extends DataAccessObject {
         $sql = " SELECT GROUP_CONCAT(DISTINCT id) AS id, GROUP_CONCAT(DISTINCT last_changeset_id) AS last_changeset_id ";
         $sql .= " FROM (". implode(' UNION ', $sqls) .") AS R ";
 
-        var_dump($sql);
+        //var_dump($sql);
         
         return $this->retrieve($sql);
     }
