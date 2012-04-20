@@ -53,7 +53,7 @@ class Tracker_CrossSearch_SearchController {
         $this->view_builder    = $view_builder;
     }
 
-    public function search() {
+    public function search($user) {
         try {
             $cross_search_criteria = $this->getCrossSearchCriteriaFromRequest();
             
@@ -61,7 +61,7 @@ class Tracker_CrossSearch_SearchController {
             $project               = $this->getProject($project_id, $this->project_manager);
 
             $view                  = $this->view_builder->buildView($project, $cross_search_criteria);
-            $view->render();
+            $view->render($user);
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());

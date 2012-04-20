@@ -173,7 +173,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 break;
                             case 'cross-search':
                                 $controller = $this->getCrossSearchController($request);
-                                $controller->search();
+                                $controller->search($user);
                                 break;
                             default:
                                 $this->displayAllTrackers($project, $user);

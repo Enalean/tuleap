@@ -68,7 +68,7 @@ class Tracker_CrossSearch_SearchView {
         $this->content_view      = $content_view;
     }
     
-    public function render() {
+    public function render($user) {
         $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
@@ -90,7 +90,7 @@ class Tracker_CrossSearch_SearchView {
         
         if ($this->criteria) {
             $html .= $this->content_view->fetch();
-            $html .= $this->fetchTrackerList();
+            $html .= $this->fetchTrackerList($user);
         } else {
             $html .= '<em>'. 'There is no shared field to query across your trackers' .'</em>';
         }
@@ -107,16 +107,18 @@ class Tracker_CrossSearch_SearchView {
     }
 
     
-    private function fetchTrackerList() {
+    private function fetchTrackerList($user) {
         $html  = '';
         $html .= '<div class="tracker_homenav_list">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_title');
         if (count($this->trackers) > 0) {
             $html .= '<ul>';
             foreach($this->trackers as $tracker) {
-                $html .= '<li>';
-                $html .= $tracker->getName().' ('.$tracker->getProject()->getPublicName().')';
-                $html .= '</li>';
+                if ($tracker->userCanView($user)) {
+                    $html .= '<li>';
+                    $html .= $tracker->getName().' ('.$tracker->getProject()->getPublicName().')';
+                    $html .= '</li>';
+                }
             }
             $html .= '</ul>';
         } else {
