@@ -390,18 +390,6 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         
         return $this->retrieveIds($sql);
     }
-    
-    private function retrieveIds($sql) {
-        return $this->extractIds($this->retrieve($sql));
-    }
-    
-    private function extractIds($dar) {
-        $ids = array();
-        foreach ($dar as $row) { 
-            $ids[] = $row['id'];
-        }
-        return $ids;
-    }
 
     /**
      * Returns:

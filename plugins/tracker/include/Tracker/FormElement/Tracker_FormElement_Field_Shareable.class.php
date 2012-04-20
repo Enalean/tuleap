@@ -18,6 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * A tracker field that can be shared with other trackers.
+ * 
+ * For now, only select boxes and multi-select boxes can be shared. 
+ */
 interface Tracker_FormElement_Field_Shareable {
     
     /**
