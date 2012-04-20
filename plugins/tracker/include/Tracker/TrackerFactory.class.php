@@ -501,7 +501,13 @@ class TrackerFactory {
 
     /**
      * Duplicate all trackers from a project to another one
-     * Duplicate the hierarchy, the shared fields
+     *
+     * Duplicate among others:
+     * - the trackers definition
+     * - the hierarchy
+     * - the shared fields
+     * - etc.
+     *
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping = array();
