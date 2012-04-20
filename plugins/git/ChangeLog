@@ -1,5 +1,5 @@
 Version 2.4 (Tuleap 5.0)
-    * Fix issues with gitphp: 'plain' commitdiff output & FRS Fixture filename (for Windows workstation users)
+    * Fix issues with gitphp: 'plain' commitdiff output & FRS Fixture filename (for Windows workstation users). (contrib STMicroelectronics).
 
 Version 2.3 (Tuleap 5.0)
     * Add widgets for both project page (display graph with push on repositories) and personal page. (contrib STMicroelectronics).
