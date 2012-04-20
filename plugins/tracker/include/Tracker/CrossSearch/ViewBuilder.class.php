@@ -61,12 +61,12 @@ class Tracker_CrossSearch_ViewBuilder {
     /**
      * @return Tracker_CrossSearch_SearchView 
      */
-    public function buildView(Project $project, Tracker_CrossSearch_Query $request_criteria) {
+    public function buildView(User $user, Project $project, Tracker_CrossSearch_Query $request_criteria) {
         $service      = $this->getService($project);
         
         $criteria     = $this->getCriteria($project, $request_criteria);
         $trackers     = $this->getTrackers($project);
-        $content_view = $this->buildContentView($project, $request_criteria);
+        $content_view = $this->buildContentView($user, $project, $request_criteria);
         
         return $this->getView($project, $service, $criteria, $trackers, $content_view);
    
@@ -75,20 +75,21 @@ class Tracker_CrossSearch_ViewBuilder {
     /**
      * @return type Tracker_CrossSearch_SearchContentView
      */
-    public function buildContentView(Project $project, Tracker_CrossSearch_Query $cross_search_criteria) {
+    public function buildContentView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_criteria) {
         $tracker_ids = $this->getTrackersIds($project);
         
         return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView',
+                                             $user,
                                              $project,
                                              $cross_search_criteria,
                                              array(),
                                              $tracker_ids);
     }
     
-    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excluded_artifact_ids, array $tracker_ids) {
+    public function buildCustomContentView($classname, User $user, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excluded_artifact_ids, array $tracker_ids) {
         $report    = $this->getReport();
         $criteria  = $this->getCriteria($project, $request_criteria);
-        $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excluded_artifact_ids);
+        $artifacts = $this->search->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $request_criteria, $excluded_artifact_ids);
         
         return $this->getContentView($classname, $report, $criteria, $artifacts);
     }

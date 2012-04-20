@@ -160,14 +160,9 @@ class Tracker_ReportDao extends DataAccessObject {
                  INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)";
         $where  = " WHERE artifact.tracker_id = $tracker_id ";
         
-        if(!$user_is_superuser) {
-            //artifact permissions
-            $from   .= " LEFT JOIN permissions 
-                            ON (permissions.object_id = CAST(c.artifact_id AS CHAR) 
-                                AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') 
-                       ";
-            $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". implode(', ', $ugroups) .")))";
-        }
+        $artifact_perms = $this->getSqlFragmentForArtifactPermissions($user_is_superuser, $ugroups);
+        $from  .= $artifact_perms['from'];
+        $where .= $artifact_perms['where'];
         
         if (count($additional_from)) {
             $from  .= implode("\n", $additional_from);
@@ -199,6 +194,21 @@ class Tracker_ReportDao extends DataAccessObject {
         //var_dump($sql);
         
         return $this->retrieve($sql);
+    }
+    
+    public function getSqlFragmentForArtifactPermissions($user_is_superuser, array $ugroups) {
+        $res = array('from' => '', 'where' => '');
+        if(!$user_is_superuser) {
+            $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
+            $res['from']  = " LEFT JOIN permissions 
+                              ON (permissions.object_id = CAST(c.artifact_id AS CHAR) 
+                                  AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') 
+                            ";
+            $res['where'] = " AND (artifact.use_artifact_permissions = 0 
+                                   OR (permissions.ugroup_id IN ($ugroups)))
+                       ";
+        }
+        return $res;
     }
     
     function getSqlFragmentAccordingToPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {

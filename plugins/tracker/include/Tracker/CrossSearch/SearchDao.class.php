@@ -20,10 +20,13 @@
 
 require_once 'common/dao/include/DataAccessObject.class.php';
 require_once 'SharedField.class.php';
+require_once dirname(__FILE__).'/../Report/dao/Tracker_ReportDao.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(Tracker_CrossSearch_Query $query,
+    public function searchMatchingArtifacts(User $user,
+                                            $group_id,
+                                            Tracker_CrossSearch_Query $query,
                                             array $tracker_ids, 
                                             array $shared_fields, 
                                             array $semantic_fields, 
@@ -31,6 +34,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                                             array $excluded_artifact_ids = array()) {
         $tracker_ids               = $this->da->quoteSmartImplode(',', $tracker_ids);
         $excluded_artifact_ids     = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
+        
         $shared_fields_constraints = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint          = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint         = $this->getStatusSqlFragment($semantic_fields['status']);
@@ -39,6 +43,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
         $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display);
+        
+        $reportDao = new Tracker_ReportDao();
+        $artifact_permissions = $reportDao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $user->getUgroups($group_id, array()));
+        $artifact_permissions_join  = $artifact_permissions['from'];
+        $artifact_permissions_where = $artifact_permissions['where'];
+        
         
         $sql = "
             SELECT artifact.id,
@@ -77,7 +87,9 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
 
             $artifact_link_columns_join
         
-            WHERE artifact.use_artifact_permissions = 0
+            $artifact_permissions_join
+        
+            WHERE 1=1 $artifact_permissions_where
             $tracker_constraint
             $title_constraint
             $status_constraint

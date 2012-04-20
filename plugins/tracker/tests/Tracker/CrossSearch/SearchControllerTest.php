@@ -103,7 +103,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
                 
         $controller = $this->getController();        
         $this->view_builder->setReturnValue('buildView', $view);
-        $this->view_builder->expectOnce('buildView', array($this->project, $this->cross_search_criteria));
+        $this->view_builder->expectOnce('buildView', array($this->user, $this->project, $this->cross_search_criteria));
         
         $controller->search($this->user);
     }
@@ -111,7 +111,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
         $no_criteria = aCrossSearchCriteria()->build();
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $this->view_builder->expectOnce('buildView', array('*', $no_criteria));
+        $this->view_builder->expectOnce('buildView', array($this->user, $this->project, $no_criteria));
         $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
         $this->request = new Codendi_Request(array(
             'group_id' => '66',
