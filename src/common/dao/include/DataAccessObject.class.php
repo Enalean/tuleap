@@ -59,6 +59,30 @@ class DataAccessObject {
         }
         return $result;
     }
+    
+    /**
+     * Like retrieve, but returns only the ids.
+     * 
+     * @param string $sql the query string
+     * @return array of string
+     */
+    protected function retrieveIds($sql) {
+        return $this->extractIds($this->retrieve($sql));
+    }
+    
+    /**
+     * Extracts ids from a DataAccessResult.
+     * 
+     * @param DataAccessResult $dar
+     * @return array of string
+     */
+    private function extractIds(DataAccessResult $dar) {
+        $ids = array();
+        foreach ($dar as $row) { 
+            $ids[] = $row['id'];
+        }
+        return $ids;
+    }
 
     //! An accessor
     /**
