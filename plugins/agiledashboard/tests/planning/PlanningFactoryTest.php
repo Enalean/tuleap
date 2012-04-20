@@ -27,13 +27,19 @@ Mock::generate('Tracker');
 
 class PlanningFactoryTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        
+        $this->user = aUser()->build();
+    }
+    
     public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $dao          = new MockPlanningDao();
         $factory      = aPlanningFactory()->withDao($dao)->build();
         $empty_result = TestHelper::arrayToDar();
         $dao->setReturnValue('searchPlannings', $empty_result);
         
-        $this->assertEqual(array(), $factory->getPlannings(123));
+        $this->assertEqual(array(), $factory->getPlannings($this->user, 123));
     }
     
     public function itReturnAllDefinedPlanningsForAProject() {
@@ -43,41 +49,41 @@ class PlanningFactoryTest extends TuleapTestCase {
         $factoryBuilder = aPlanningFactory();
         $factoryBuilder->tracker_factory->setReturnValue('getTrackerById', $tracker);
         
-        $empty_result   = TestHelper::arrayToDar(
+        $result_set   = TestHelper::arrayToDar(
             array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 'planning_tracker_id'=>103),
             array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102, 'planning_tracker_id'=>103)
         );
         
-        $factoryBuilder->dao->setReturnValue('searchPlannings', $empty_result);
+        $factoryBuilder->dao->setReturnValue('searchPlannings', $result_set);
         
         $expected = array(
             new Planning(1, 'Release Backlog', 102),
             new Planning(2, 'Product Backlog', 102),
         );
-        $this->assertEqual($expected, $factoryBuilder->build()->getPlannings(123));
+        $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
     
-    public function itReturnOnlyPlanningsWhereTheUserCanViewTrackers() {
+    public function itReturnOnlyPlanningsWhereTheUserCanViewTrackers() {        
         $tracker1        = new MockTracker();
-        $tracker1->setReturnValue('userCanView', true);
+        stub($tracker1)->userCanView($this->user)->returns(true);
         $tracker2        = new MockTracker();
-        $tracker2->setReturnValue('userCanView', false);
+        stub($tracker2)->userCanView($this->user)->returns(false);
         
         $factoryBuilder = aPlanningFactory();
         $factoryBuilder->tracker_factory->setReturnValue('getTrackerById', $tracker1, array(103));
         $factoryBuilder->tracker_factory->setReturnValue('getTrackerById', $tracker2, array(104));
                 
-        $empty_result   = TestHelper::arrayToDar(
+        $result_set   = TestHelper::arrayToDar(
             array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 'planning_tracker_id'=>103),
             array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102, 'planning_tracker_id'=>104)
         );
         
-        $factoryBuilder->dao->setReturnValue('searchPlannings', $empty_result);
+        $factoryBuilder->dao->setReturnValue('searchPlannings', $result_set);
         
         $expected = array(
             new Planning(1, 'Release Backlog', 102),
         );
-        $this->assertEqual($expected, $factoryBuilder->build()->getPlannings(123));
+        $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
 }
 

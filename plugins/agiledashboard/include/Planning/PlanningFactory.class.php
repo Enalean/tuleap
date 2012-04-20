@@ -41,24 +41,24 @@ class PlanningFactory {
      */
     private $user;
     
-    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory, User $user) {
+    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory) {
         $this->dao             = $dao;
         $this->tracker_factory = $tracker_factory;
-        $this->user            = $user;
     }
     
     /**
      * Get a list of planning defined in a group_id
      * 
-     * @param int $group_id
+     * @param User $user     The user who will see the planning
+     * @param int  $group_id
      *
      * @return array of Planning
      */
-    public function getPlannings($group_id) {
+    public function getPlannings(User $user, $group_id) {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
-            if($tracker->userCanView($this->user)) {
+            if($tracker->userCanView($user)) {
                 $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
             }
         }

@@ -40,12 +40,10 @@ class TestPlanningFactoryBuilder {
     
     public $dao;
     public $tracker_factory;
-    public $user;
     
     public function __construct() {
         $this->dao             = new MockPlanningDao();
         $this->tracker_factory = new MockTrackerFactory();
-        $this->user            = new MockUser();
     }
     
     public function withDao(DataAccessObject $dao) {
@@ -53,13 +51,8 @@ class TestPlanningFactoryBuilder {
         return $this;
     }
     
-    public function withUser(User $user) {
-        $this->user = $user;
-        return $this;
-    }
-    
     public function build() {
-        return new PlanningFactory($this->dao, $this->tracker_factory, $this->user);
+        return new PlanningFactory($this->dao, $this->tracker_factory);
     }
 }
 
