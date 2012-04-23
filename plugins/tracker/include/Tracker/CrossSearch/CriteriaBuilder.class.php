@@ -83,14 +83,14 @@ class Tracker_CrossSearch_CriteriaBuilder {
      * @return array of \Tracker_Report_Criteria 
      */
     public function getSemanticFieldsCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_criteria) {
-        $field        = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle(), $this->semantic_value_factory);
+        $title_field  = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle(), $this->semantic_value_factory);
         $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus(), $this->semantic_value_factory);
         $id           = null;
         $rank         = 0;
         $is_advanced  = true;
         
         return array(
-            new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced), 
+            new Tracker_Report_Criteria($id, $report, $title_field,  $rank, $is_advanced), 
             new Tracker_Report_Criteria($id, $report, $status_field, $rank, $is_advanced)
         );
     }
