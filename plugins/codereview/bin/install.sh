@@ -30,9 +30,9 @@ EOF
 db_install
 
 # Install plugin
-    $CAT <<EOF | $MYSQL -u$APP_USER codendi -p$APP_PWD
-INSERT INTO plugin (name, available) VALUES ('plugin_codereview', '1');
-EOF
+#    $CAT <<EOF | $MYSQL -u$APP_USER codendi -p$APP_PWD
+#INSERT INTO plugin (name, available) VALUES ('plugin_codereview', '1');
+#EOF
 ##############################################
 # Installing the ReviewBoard Site
 #
@@ -48,5 +48,8 @@ $CHOWN -R $APP_USER:$APP_USER $APP_DIR/data
 ##############################################
 # Updating conf
 #
+# Add wsgi module to httpd.conf 
+sed -i '/^LoadModule version_module modules\/mod_version.so/i\
+#LoadModule wsgi_module modules\/mod_wsgi.so'  /etc/httpd/conf/httpd.conf
 # httpd.conf append with wsgi conf
-
+cat $APP_DIR/conf/apache-wsgi.conf >> /etc/httpd/conf/httpd.conf
