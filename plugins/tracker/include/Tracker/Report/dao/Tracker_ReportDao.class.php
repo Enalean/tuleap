@@ -296,8 +296,10 @@ class Tracker_ReportDao extends DataAccessObject {
     function getSqlFilterForContributorGroup($from, $where, $contributor_field_id, $join_user_constraint) {
         $sql = "SELECT c.artifact_id AS id, c.id AS last_changeset_id 
                 $from 
+                  INNER JOIN tracker_changeset_value      AS CV           ON (CV.changeset_id = c.id)
+                  INNER JOIN tracker_semantic_contributor AS SEM_CONTRIB  ON (SEM_CONTRIB.field_id = CV.field_id)
                   INNER JOIN tracker_changeset_value AS tcv ON (
-                    tcv.field_id = $contributor_field_id
+                    tcv.field_id = SEM_CONTRIB.field_id
                     AND tcv.changeset_id = c.id) 
                   INNER JOIN tracker_changeset_value_list AS tcvl ON (
                     tcvl.changeset_value_id = tcv.id) 
