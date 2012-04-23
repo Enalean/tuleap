@@ -89,7 +89,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         
             $artifact_permissions_join
         
-            WHERE 1=1 $artifact_permissions_where
+            WHERE 1=1 
+            $artifact_permissions_where
             $tracker_constraint
             $title_constraint
             $status_constraint
