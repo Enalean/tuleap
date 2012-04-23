@@ -174,8 +174,9 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
         $tracker_ids  = array();
+        $user         = '*';
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
+        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $user, $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
         $view_builder->setReturnValue('buildCustomContentView', $content_view);
 
         return $view_builder;
