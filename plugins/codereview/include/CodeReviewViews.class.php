@@ -22,7 +22,7 @@ require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 /**
- * RequestHelpViews
+ * CodeReviewViews
  */
 class CodeReviewViews extends Views {
 
@@ -31,8 +31,18 @@ class CodeReviewViews extends Views {
      * @var PluginController
      */
     protected $controller;
+
+    /**
+     *
+     * @var HTTPRequest
+     */
     protected $request;
 
+    /**
+     * Class constructor
+     *
+     * @return Void
+     */
     public function __construct($controller) {
         $this->controller = $controller;
         $this->request    = $controller->getRequest();
@@ -45,7 +55,7 @@ class CodeReviewViews extends Views {
      */
     function header() {
         $title = 'codereview';
-        $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $this->request->get('group_id'), 'toptab' => 'my'));
+        $GLOBALS['HTML']->header(array('title' => $this->_getTitle(), 'group' => $this->request->get('group_id'), 'toptab' => 'my'));
     }
 
     /**
@@ -57,8 +67,13 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->footer(array());
     }
 
+    /**
+     * Retrieve plugin title
+     *
+     * @return string
+     */
     function _getTitle() {
-        return $GLOBALS['Language']->getText('plugin_codereview','title');
+        return $GLOBALS['Language']->getText('plugin_codereview', 'title');
     }
 
     // {{{ Views

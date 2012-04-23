@@ -27,16 +27,31 @@ class CodeReview extends Controler {
 
     protected $plugin;
 
+    /**
+     * Class constructor
+     *
+     * @return Void
+     */
     function CodeReview() {
         $this->plugin  = PluginFactory::instance()->getPluginByName('codereview');
         $this->request = HTTPRequest::instance();
         $this->user    = UserManager::instance()->getCurrentUser();
     }
 
+    /**
+     * Retrieve request
+     *
+     * @return HTTPRequest
+     */
     public function getRequest() {
         return $this->request;
     }
 
+    /**
+     * Retrieve current user
+     *
+     * @return User
+     */
     public function getUser() {
         return $this->user;
     }
@@ -53,13 +68,13 @@ class CodeReview extends Controler {
             $vAction->required();
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {
-                case 'add_review':
-                    //put some actions here
-                    $this->view = 'reviewSubmission';
-                    break;
-                default:
-                    $this->view = 'displayFrame';
-                    break;
+            case 'add_review':
+                //put some actions here
+                $this->view = 'reviewSubmission';
+                break;
+            default:
+                $this->view = 'displayFrame';
+                break;
             }
         } else {
             $this->addview('displayFrame');
