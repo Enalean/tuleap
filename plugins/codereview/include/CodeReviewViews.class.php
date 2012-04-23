@@ -26,10 +26,16 @@ require_once('common/include/HTTPRequest.class.php');
  */
 class CodeReviewViews extends Views {
 
+    /**
+     *
+     * @var PluginController
+     */
     protected $controller;
+    protected $request;
 
     public function __construct($controller) {
-        $this->controller   = $controller;
+        $this->controller = $controller;
+        $this->request    = $controller->getRequest();
     }
 
     /**
@@ -39,11 +45,7 @@ class CodeReviewViews extends Views {
      */
     function header() {
         $title = 'codereview';
-        $GLOBALS['HTML']->header(array('title'=>'codereview','group' => $this->getController()->getRequest()->get('group_id'), 'toptab' => 'my'));
-    }
-
-    public function getController() {
-        return $this->controller;
+        $GLOBALS['HTML']->header(array('title'=>$this->_getTitle(),'group' => $this->request->get('group_id'), 'toptab' => 'my'));
     }
 
     /**
@@ -53,6 +55,10 @@ class CodeReviewViews extends Views {
      */
     function footer() {
         $GLOBALS['HTML']->footer(array());
+    }
+
+    function _getTitle() {
+        return $GLOBALS['Language']->getText('plugin_codereview','title');
     }
 
     // {{{ Views
