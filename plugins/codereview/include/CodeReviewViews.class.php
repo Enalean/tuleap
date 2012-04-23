@@ -18,13 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('mvc/PluginView.class.php');
+require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 /**
  * RequestHelpViews
  */
-class CodeReviewViews extends PluginView {
+class CodeReviewViews extends Views {
+
+    protected $controller;
+
+    public function __construct($controller) {
+        $this->controller   = $controller;
+    }
 
     /**
      * Display header
@@ -34,6 +40,10 @@ class CodeReviewViews extends PluginView {
     function header() {
         $title = 'codereview';
         $GLOBALS['HTML']->header(array('title'=>'codereview','group' => $this->getController()->getRequest()->get('group_id'), 'toptab' => 'my'));
+    }
+
+    public function getController() {
+        return $this->controller;
     }
 
     /**

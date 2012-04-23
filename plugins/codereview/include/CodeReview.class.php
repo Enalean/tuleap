@@ -18,18 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('mvc/PluginControler.class.php');
+require_once('common/mvc/Controler.class.php');
 require_once('CodeReviewViews.class.php');
 
 /**
  * codereview */
-class CodeReview extends PluginControler {
+class CodeReview extends Controler {
 
     protected $plugin;
 
     function CodeReview() {
-        parent::__construct();
-        $this->plugin = PluginFactory::instance()->getPluginByName('codereview');
+        $this->plugin  = PluginFactory::instance()->getPluginByName('codereview');
+        $this->request = HTTPRequest::instance();
+        $this->user    = UserManager::instance()->getCurrentUser();
+    }
+
+    public function getRequest() {
+        return $this->request;
+    }
+
+    public function getUser() {
+        return $this->user;
     }
 
     /**
@@ -46,10 +55,10 @@ class CodeReview extends PluginControler {
             switch ($action) {
                 case 'add_review':
                     //put some actions here
-                    $this->addview('reviewSubmission');
+                    $this->view = 'reviewSubmission';
                     break;
                 default:
-                    $this->addview('displayFrame');
+                    $this->view = 'displayFrame';
                     break;
             }
         } else {
