@@ -52,10 +52,10 @@ class Tracker_CrossSearch_CriteriaBuilder {
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    public function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $cross_search_query);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $cross_search_query);
-        $artifact_fields = $this->getArtifactLinkCriteria($report, $cross_search_query);
+        $artifact_fields = $this->getArtifactLinkCriteria($user, $report, $cross_search_query);
         
         return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
@@ -95,14 +95,16 @@ class Tracker_CrossSearch_CriteriaBuilder {
         );
     }
 
-    public function getArtifactLinkCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    public function getArtifactLinkCriteria(User $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $criteria = array();
         foreach ($this->planning_trackers as $tracker) {
             $tracker_id        = $tracker->getId();
-            $tracker_artifacts = $cross_search_query->setSelectedArtifacts($tracker_id, $this->getArtifactByTracker($tracker_id));
-            
-            $field      = new Tracker_CrossSearch_ArtifactReportField($tracker, $tracker_artifacts);
-            $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
+            $tracker_artifacts = Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($user, $tracker_id);
+            if (is_array($tracker_artifacts)) {
+                $tracker_artifacts = $cross_search_query->setSelectedArtifacts($tracker_id, $tracker_artifacts);
+                $field      = new Tracker_CrossSearch_ArtifactReportField($tracker, $tracker_artifacts);
+                $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
+            }
         }
         return $criteria;
     }

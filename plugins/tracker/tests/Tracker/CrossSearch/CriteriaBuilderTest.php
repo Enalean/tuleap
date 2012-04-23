@@ -22,35 +22,46 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'Test_CriteriaBuilder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 
-Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
-Mock::generate('TrackerFactory');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
+// Factories
+Mock::generate('Tracker_FormElementFactory');
+Mock::generate('TrackerFactory');
+Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
 
 class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
     public $planning_trackers;
-    public $formElementFactory;
+    public $form_element_factory;
     public $semantic_factory;
+    public $artifact_factory;
+    protected $criteria_builder;
     
     public function setUp() {
         parent::setUp();
-        $this->formElementFactory = new MockTracker_FormElementFactory();
-        $this->semantic_factory   = new MockTracker_CrossSearch_SemanticValueFactory();
-        $this->planning_trackers  = array();
+        $this->form_element_factory = new MockTracker_FormElementFactory();
+        $this->semantic_factory     = new MockTracker_CrossSearch_SemanticValueFactory();
+        $this->planning_trackers    = array();
+        $this->artifact_factory     = new MockTracker_ArtifactFactory();
+        
+        Tracker_ArtifactFactory::setInstance($this->artifact_factory);
+        
+    }
+    
+    public function tearDown() {
+        Tracker_ArtifactFactory::clearInstance();
     }
     
     public function getPartiallyMockedCriteriaBuilder($returnValue) {
-        $builder  = TestHelper::getPartialMock('Tracker_CrossSearch_CriteriaBuilder', array('getArtifactByTracker'));
-        $builder->__construct($this->formElementFactory, $this->semantic_factory, $this->planning_trackers);
-        $builder->setReturnValue('getArtifactByTracker', $returnValue);
-        return $builder;
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', $returnValue);
+        return new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, $this->planning_trackers);
     }
 }
 
@@ -61,7 +72,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
@@ -71,7 +82,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array('220' => array('values' => array('350')));
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
@@ -83,7 +94,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         
         $fields = array(aTextField()->withId(220)->build(),
                         aTextField()->withId(221)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual(count($criteria), 2);
@@ -92,7 +103,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
     }    
     
     private function getSharedFieldsCriteria($returnValue = array()) {
-        $criteria_builder      = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, array());
+        $criteria_builder      = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $cross_search_criteria = aCrossSearchCriteria()->withSharedFieldsCriteria($this->shared_field_criteria)->build();
     
         $project               = new MockProject();
@@ -129,7 +140,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $release_tracker    = aTracker()->withId($release_tracker_id)->build();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
         
         $this->shared_field_criteria = array('220' => array('values' => array('350', '351')));
         $this->semantic_criteria     = array('title' => 'Foo', 'status' => '');
@@ -152,7 +163,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
                                 ->build();
         $project               = new MockProject();
         $report                = new MockTracker_Report();
-        return $criteria_builder->getCriteria($project, $report, $cross_search_criteria);
+        $user                  = new MockUser();
+        return $criteria_builder->getCriteria($user, $project, $report, $cross_search_criteria);
     }
     
 }
@@ -185,7 +197,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
     }
     
     protected function getSemanticCriteria($cross_search_criteria) {
-        $builder = new Tracker_CrossSearch_CriteriaBuilder($this->formElementFactory, $this->semantic_factory, array());
+        $builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $report  = new MockTracker_Report();
         return $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
     }
@@ -198,7 +210,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
         $report   = new MockTracker_Report();
         
         $builder  = $this->getPartiallyMockedCriteriaBuilder(array());
-        $artifact_criteria = $builder->getArtifactLinkCriteria($report, $criteria);
+        $user     = new MockUser();
+        $artifact_criteria = $builder->getArtifactLinkCriteria($user, $report, $criteria);
         
         $this->assertEqual(array(), $artifact_criteria);
     }       
@@ -207,7 +220,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
         $criteria = aCrossSearchCriteria()->withArtifactIds(array())->build();
         $report   = new MockTracker_Report();
         $builder  = $this->getPartiallyMockedCriteriaBuilder(array());
-        $artifact_criteria = $builder->getArtifactLinkCriteria($report, $criteria);
+        $user     = new MockUser();
+        $artifact_criteria = $builder->getArtifactLinkCriteria($user, $report, $criteria);
         
         $this->assertEqual(array(), $artifact_criteria);
     }       
@@ -224,7 +238,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
         $artifact                = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
         $this->planning_trackers = array($release_tracker);
         $builder                 = $this->getPartiallyMockedCriteriaBuilder(array($artifact));
-        $artifact_criteria       = $builder->getArtifactLinkCriteria($report, $criteria);
+        $user                    = new MockUser();
+        $artifact_criteria       = $builder->getArtifactLinkCriteria($user, $report, $criteria);
 
         $expected_criterion      = new Tracker_CrossSearch_ArtifactReportField($release_tracker, array($artifact));
         $this->assertEqual(count($artifact_criteria), 1);
@@ -237,6 +252,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
 class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     
     public function itCreatesSeveralArtifactIdCriteria() {
+        $user                    = new MockUser();
         $release_tracker_id      = 999;
         $release_tracker         = aTracker()->withId($release_tracker_id)->build();
         
@@ -251,14 +267,14 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         $artifact512             = new Tracker_Artifact(512, $release_tracker_id, null, null, null);
         $artifact33              = new Tracker_Artifact(33, $sprint_tracker_id, null, null, null);
         
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact1, $artifact512), array($user, $release_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact33), array($user, $sprint_tracker_id));
+        
         $this->planning_trackers = array($release_tracker, $sprint_tracker);
         
-        $builder  = TestHelper::getPartialMock('Tracker_CrossSearch_CriteriaBuilder', array('getArtifactByTracker'));
-        $builder->__construct($this->formElementFactory, $this->semantic_factory, $this->planning_trackers);
-        $builder->setReturnValue('getArtifactByTracker', array($artifact1, $artifact512), array($release_tracker_id));
-        $builder->setReturnValue('getArtifactByTracker', array($artifact33), array($sprint_tracker_id));
-                        
-        $artifact_criteria       = $builder->getArtifactLinkCriteria($report, $criteria);
+        $builder                 = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, $this->planning_trackers);
+        
+        $artifact_criteria       = $builder->getArtifactLinkCriteria($user, $report, $criteria);
 
         $expected_criterion1     = new Tracker_CrossSearch_ArtifactReportField($release_tracker, array($artifact1, $artifact512));
         $expected_criterion2     = new Tracker_CrossSearch_ArtifactReportField($sprint_tracker, array($artifact33));
