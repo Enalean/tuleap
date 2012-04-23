@@ -63,9 +63,10 @@ class CodeReviewViews extends Views {
     */
     function displayFrame() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        echo '<iframe src="'.$pluginInfo->getPropertyValueForName('reviewboard_site').'" width="900" height="500"
-              frameborder="0" scrolling="auto" name="reviewboard">
-              TEXT FOR NON-COMPATIBLE BROWSERS HERE</iframe>';
+        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site');
+        echo '<div id="codereview_iframe_div">';
+        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
+        echo '</div>';
     }
 }
 
