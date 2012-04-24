@@ -16,21 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ($display_homepage_boxes) { 
 ?>
-    <hr />
-    
-    <div class="row-fluid">
-        <div class="span4">
-            <?php include($Language->getContent('homepage/homepage_boxes_statistics', null, null, '.php')); ?>
-        </div>
-        <div class="span4">
-            <?php include($Language->getContent('homepage/homepage_boxes_latestprojects', null, null, '.php')); ?>
-        </div>
-        <div class="span4">
-            <?php include($Language->getContent('homepage/homepage_boxes_latestreleases', null, null, '.php')); ?>
-        </div>
-    </div>
+    <h3>Dernières versions</h3>
+    <p><?= show_newest_releases() ?></p>
 <?php 
-}
 ?>

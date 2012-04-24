@@ -16,24 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ($display_homepage_boxes) { 
 ?>
-    <hr />
-    
-    <div class="row-fluid">
-        <div class="span4">
-            <h3>Statistiques <?= $GLOBALS['sys_name']?></h3>
-            <p><?= show_sitestats() ?></p>
-        </div>
-        <div class="span4">
-            <h3>Derniers projets</h3>
-            <p><?= show_newest_projects() ?></p>
-        </div>
-        <div class="span4">
-            <h3>Dernières versions</h3>
-            <p><?= show_newest_releases() ?></p>
-        </div>
-    </div>
+    <h3>Derniers projets</h3>
+    <p><?= show_newest_projects() ?></p>
 <?php 
-}
 ?>
