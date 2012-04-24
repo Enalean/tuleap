@@ -35,9 +35,7 @@ if ($display_homepage_news) {
 
 
 <div class="hero-unit">
-    <?= $GLOBALS['HTML']->getImage('organization_logo.png'); ?>
-    <h2><?= $GLOBALS['sys_name']?>, the Collaborative Application <br />
-    where <?= $GLOBALS['sys_org_name']?> runs Smart &amp; Quality software projects</h2>
+    <?php include($Language->getContent('homepage/homepage_herounit', null, null, '.php')); ?>
 </div>
 
 <div class="row-fluid">
