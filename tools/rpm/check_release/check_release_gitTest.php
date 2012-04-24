@@ -87,14 +87,14 @@ class GitChangeDetectorTest extends TuleapTestCase {
     }
 }
 
-class VersionIncrementFilterTest extends TuleapTestCase {
+class NonIncrementedPathFinderTest extends TuleapTestCase {
 
     public function itFiltersPathsThatHaveBeenIncremented() {
 
         $last_release_tag = 'refs/tags/4.0.29';
         $current_version  = 'HEAD';
         $changed_paths = array('src/www/soap', 'plugins/mailman');
-        $not_incremented_paths = array('plugins/mailman');
+        $expected_paths = array('plugins/mailman');
         $gitExec = new MockGitExec();
         $gitExec->setReturnValue('fileContent', '1.1', array('src/www/soap/VERSION', $last_release_tag));
         $gitExec->setReturnValue('fileContent', '1.2', array('src/www/soap/VERSION', $current_version));
@@ -106,7 +106,7 @@ class VersionIncrementFilterTest extends TuleapTestCase {
         
         $version_increment_filter = new NonIncrementedPathFinder($gitExec, $last_release_tag, $change_detector);
         $actual_non_incremented_paths = $version_increment_filter->find($current_version);
-        $this->assertEqual($not_incremented_paths, $actual_non_incremented_paths);
+        $this->assertEqual($expected_paths, $actual_non_incremented_paths);
     }
     
 }

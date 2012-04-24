@@ -82,17 +82,16 @@ class NonIncrementedPathFinder {
         $changed_paths = $this->change_detector->findPathsThatChangedSince($this->old_revision);
         $non_incremented_paths = array();
         foreach ($changed_paths as $path) {
-            $this->appendIfNotIncremented($non_incremented_paths, $changed_path);
+            $this->appendIfNotIncremented($non_incremented_paths, $path);
         }
         return $non_incremented_paths;
     }
 
-    private function appendIfNotIncremented(&$non_incremented_paths, $changed_path) {
+    private function appendIfNotIncremented(&$non_incremented_paths, $path) {
         $last_declared_version    = $this->getContentOfVERSIONFileAt($path, $this->old_revision);
         $current_declared_version = $this->getContentOfVERSIONFileAt($path, 'HEAD');
 
         echo("$path : old revision $last_declared_version new revision $current_declared_version".PHP_EOL);
-
         if (version_compare($last_declared_version, $current_declared_version, '>=')) {
             $non_incremented_paths[] = $path;
         }
