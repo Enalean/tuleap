@@ -20,7 +20,7 @@
 // customized in etc/site-content homepage.tab, we display him
 // instead of following text.
 if ($Language->hasText('homepage', 'introduction')) {
-    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
+    echo stripcslashes($Language->getText('homepage', 'introduction', array($GLOBALS['sys_org_name'], $GLOBALS['sys_name'])));
     return;
 }
 

@@ -44,7 +44,6 @@ if ($display_homepage_news) {
             <div class="span6">
                 <?php include($Language->getContent('homepage/homepage_about', null, null, '.php')); ?>
             </div>
-    
             <div class="span6">
                 <?php include($Language->getContent('homepage/homepage_interactions', null, null, '.php')); ?>
             </div>
