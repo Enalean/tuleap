@@ -47,38 +47,7 @@ if ($display_homepage_news) {
                 <?php include($Language->getContent('homepage/homepage_about', null, null, '.php')); ?>
             </div>
             <div class="span6">
-                <div class="row-fluid">
-                    <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participate</h2>
-                    <?php if ($current_user->isLoggedIn()) { ?>
-                        <p>Welcome <?= $current_user_display_name ?>. 
-                        You can now get the most out of <?= $GLOBALS['sys_name']?>. 
-                        <a href="/softwaremap/">Join a project</a> or create a new one below.</p>
-                    <?php } else { ?>
-                        <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
-                        register as a site user. It's easy and fast and it 
-                        allows you to participate fully in all we have to offer.
-                        </p>
-                        <form action="<?= $login_form_url ?>" method="POST">
-                            <input type="text" name="form_loginname" class="<?= $login_input_span ?>" placeholder="Username" />
-                            <input type="password" name="form_pw" class="<?= $login_input_span ?>" placeholder="Password" />
-                            <input type="submit" class="btn" name="login" value="<?= $GLOBALS['Language']->getText('account_login', 'login_btn') ?>" />
-                            Or <a href="/account/register.php">create an account</a>
-                        </form>
-                    <?php } ?>
-                </div>
-                <hr />
-                <div class="row-fluid">
-                    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Create a new project</h2>
-                    <?php 
-                        $create_your_own_project = 'create your own project';
-                        if ($current_user->isLoggedIn()) {
-                            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
-                        }
-                    ?>
-                    <p>It's very easy to <?= $create_your_own_project ?>. Login, 
-                    leverage project templates and customize your 
-                    workspace in the administration interface.</p>
-                </div>
+                <?php include($Language->getContent('homepage/homepage_interactions', null, null, '.php')); ?>
             </div>
         </div>
         <?php if ($display_homepage_boxes) { ?>
