@@ -19,6 +19,7 @@
  */
 
 require_once('Git_CiDao.class.php');
+require_once('GitDao.class.php');
 
 /**
  * Continuous integration for Git
@@ -77,10 +78,26 @@ class Git_Ci {
                         }
                     }
                 }
+                $dao          = new GitDao();
+                $repositories = $dao->getAllProjectRepositoryList($params['group_id']);
+                $selectBox    = '<select id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger">';
+                foreach ($repositories as $repository) {
+                    $namaSpace = '';
+                    if (!empty($repository['repository_namespace'])) {
+                        $namaSpace = $repository['repository_namespace']."/";
+                    }
+                    $selectBox .= '<option value="'.$repository['repository_id'].'" ';
+                    if ($repositoryId == $repository['repository_id']) {
+                        $selectBox .= 'selected="selected"';
+                    }
+                    $selectBox .= '>'.$namaSpace.$repository['repository_name'].'</option>';
+                }
+                $selectBox .= '</select>';
+
                 $addForm  = '<p>
                                  <div id="hudson_use_plugin_git_trigger_form">
                                      <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
-                                     <input id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />
+                                     '.$selectBox.'
                                  </div>
                                  <div id="hudson_use_plugin_git_trigger_checkbox">
                                      Git 
@@ -94,7 +111,7 @@ class Git_Ci {
                                      Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
                                  </script>
                              </p>';
-                $editForm = '<label for="new_hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label><input id="new_hudson_use_plugin_git_trigger" name="new_hudson_use_plugin_git_trigger" value="'.$repositoryId.'" />';
+                $editForm = '<label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label>'.$selectBox;
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
                              'title'         => $GLOBALS['Language']->getText('plugin_git', 'ci_trigger'),
                              'used'          => $used,

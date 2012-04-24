@@ -440,13 +440,13 @@ class GitPlugin extends Plugin {
     public function update_ci_triggers($params) {
         if (isset($params['request']) && !empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
-            $repositoryId = $params['request']->get('new_hudson_use_plugin_git_trigger');
+            $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
             if ($jobId) {
                 $vJobId = new Valid_Uint('job_id');
                 $vJobId->required();
                 if($params['request']->valid($vJobId)) {
                     $ci = new Git_Ci();
-                    $vRepoId = new Valid_Uint('new_hudson_use_plugin_git_trigger');
+                    $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
                     if ($params['request']->valid($vRepoId)) {
                         if (!$ci->saveTrigger($jobId, $repositoryId)) {

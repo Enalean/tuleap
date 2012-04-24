@@ -257,7 +257,36 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
-    
+
+    /**
+     * Obtain all project's list of git repositories
+     *
+     * @param Integre $projectId Project id
+     *
+     * @return Array
+     */
+    public function getAllProjectRepositoryList($projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        if ( empty($projectId) ) {
+            return false;
+        }
+
+        $sql = "SELECT * FROM $this->tableName
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
+
+        $rs = $this->retrieve($sql);
+        $list = array();
+        if ($rs && $rs->rowCount() > 0 ) {        
+            foreach ($rs as $row) {
+                $repoId        = $row[self::REPOSITORY_ID];
+                $list[$repoId] = $row;
+            }
+        }
+        return $list;
+    }
+
     /**
      * Return the list of users that owns repositories in the project $projectId
      *
@@ -480,5 +509,7 @@ class GitDao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 }
+
+
 
 ?>
