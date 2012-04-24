@@ -44,31 +44,8 @@ if ($display_homepage_news) {
     <div class="<?= $main_content_span ?>">
         <div class="row-fluid">
             <div class="span6">
-                <h2><?= $GLOBALS['HTML']->getImage('homepage/tuleap-logo-small.png', array('alt' => "What's Tuleap", 'width' => '48px')) ?> What's <?= $GLOBALS['sys_name']?>?</h2>
-                <p>
-                    <b><?= $GLOBALS['sys_name']?> is based on Tuleap. It is all about helping you manage your software projects and connect with your team members.</b>
-                </p>
-                <p>
-                      It is a free and Open-Source Suite for Application Lifecycle Management. 
-                      Tuleap provides tools for managing projects, tasks, changes, defects, documents as well as version control, continuous integration 
-                      and social collaboration. 
-                      Through a single web-based solution, everyone can monitor, develop and collaborate on software projects.
-                </p>
-                <h3>With <?= $GLOBALS['sys_name']?> you'll be able to:</h3>
-                <p>
-                    <ul>
-                        <li>plan and monitor projects,</li>
-                        <li>manage software development lifecycle: code versions, builds, etc.,</li>
-                        <li>track requirements, tasks, incidents, etc.,</li>
-                        <li>produce documents and releases,</li>
-                        <li>favour collaboration between project members.</li>
-                    </ul>
-                </p>
-                <p>
-                    <a href="http://www.tuleap.com" target="_blank">More info on Tuleap</a>
-                </p>
+                <?php include($Language->getContent('homepage/homepage_about', null, null, '.php')); ?>
             </div>
-    
             <div class="span6">
                 <div class="row-fluid">
                     <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participate</h2>
@@ -104,7 +81,7 @@ if ($display_homepage_news) {
                 </div>
             </div>
         </div>
-        <?php if ($display_homepage_news) { ?>
+        <?php if ($display_homepage_boxes) { ?>
         
         <hr />
         
