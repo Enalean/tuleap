@@ -51,25 +51,7 @@ if ($display_homepage_news) {
                 <?php include($Language->getContent('homepage/homepage_interactions', null, null, '.php')); ?>
             </div>
         </div>
-        <?php if ($display_homepage_boxes) { ?>
-        
-        <hr />
-        
-        <div class="row-fluid">
-            <div class="span4">
-                <h3>Statistiques <?= $GLOBALS['sys_name']?></h3>
-                <p><?= show_sitestats() ?></p>
-            </div>
-            <div class="span4">
-                <h3>Derniers projets</h3>
-                <p><?= show_newest_projects() ?></p>
-            </div>
-            <div class="span4">
-                <h3>Dernières versions</h3>
-                <p><?= show_newest_releases() ?></p>
-            </div>
-        </div>
-        <?php } ?>
+        <?php include($Language->getContent('homepage/homepage_boxes', null, null, '.php')); ?>
     </div>
     <?php if ($display_homepage_news) { ?>
     <div class="span4">
