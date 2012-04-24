@@ -17,12 +17,15 @@
  */
 
 ?>
-<div class="row-fluid">
-    <?php include($Language->getContent('homepage/homepage_interactions_user', null, null, '.php')); ?>
-</div>
-<hr />
-<div class="row-fluid">
-    <?php include($Language->getContent('homepage/homepage_interactions_project', null, null, '.php')); ?>
-</div>
+    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Create a new project</h2>
+    <?php 
+        $create_your_own_project = 'create your own project';
+        if ($current_user->isLoggedIn()) {
+            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
+        }
+    ?>
+    <p>It's very easy to <?= $create_your_own_project ?>. Login, 
+    leverage project templates and customize your 
+    workspace in the administration interface.</p>
 <?php
 ?>

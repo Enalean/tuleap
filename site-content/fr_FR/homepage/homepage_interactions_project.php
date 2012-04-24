@@ -17,12 +17,15 @@
  */
 
 ?>
-<div class="row-fluid">
-    <?php include($Language->getContent('homepage/homepage_interactions_user', null, null, '.php')); ?>
-</div>
-<hr />
-<div class="row-fluid">
-    <?php include($Language->getContent('homepage/homepage_interactions_project', null, null, '.php')); ?>
-</div>
+    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Créer un nouveau projet</h2>
+    <?php 
+        $create_your_own_project = 'créer votre propre projet';
+        if ($current_user->isLoggedIn()) {
+            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
+        }
+    ?>
+    <p>C'est très simple de <?= $create_your_own_project ?>.
+        Enregistrez-vous, profitez des modèles de projets et 
+        adaptez votre espace de travail avec l'interface d'adminsitration.</p>
 <?php
 ?>
