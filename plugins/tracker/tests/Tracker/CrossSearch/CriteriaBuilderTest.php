@@ -163,7 +163,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
                                 ->build();
         $project               = new MockProject();
         $report                = new MockTracker_Report();
-        $user                  = new MockUser();
+        $user                  = mock('User');
         return $criteria_builder->getCriteria($user, $project, $report, $cross_search_criteria);
     }
     
@@ -267,8 +267,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         $artifact512             = new Tracker_Artifact(512, $release_tracker_id, null, null, null);
         $artifact33              = new Tracker_Artifact(33, $sprint_tracker_id, null, null, null);
         
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact1, $artifact512), array($user, $release_tracker_id));
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact33), array($user, $sprint_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact1, $artifact512), array($release_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact33), array($sprint_tracker_id));
         
         $this->planning_trackers = array($release_tracker, $sprint_tracker);
         
