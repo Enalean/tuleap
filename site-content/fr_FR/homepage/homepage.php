@@ -53,12 +53,7 @@ if ($display_homepage_news) {
         </div>
         <?php include($Language->getContent('homepage/homepage_boxes', null, null, '.php')); ?>
     </div>
-    <?php if ($display_homepage_news) { ?>
-    <div class="span4">
-        <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
-        <?= news_show_latest($GLOBALS['sys_news_group'], 3, true, false, true, 3) ?>
-    </div>
-    <?php } ?>
+    <?php include($Language->getContent('homepage/homepage_news', null, null, '.php')); ?>
 </div>
 
 <?php
