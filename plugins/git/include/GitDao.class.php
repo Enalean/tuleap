@@ -510,6 +510,4 @@ class GitDao extends DataAccessObject {
     }
 }
 
-
-
 ?>
