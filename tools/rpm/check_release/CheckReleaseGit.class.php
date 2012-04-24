@@ -70,6 +70,10 @@ class ChangeDetector {
     }
 }
 
+/**
+ * find() => given set of changed paths, removes the paths for which the VERSION file 
+ * was properly incremented 
+ */
 class NonIncrementedPathFinder {
 
     public function __construct(GitExec $git_exec, $old_revision, ChangeDetector $changed_paths_finder) {
@@ -78,23 +82,18 @@ class NonIncrementedPathFinder {
         $this->old_revision = $old_revision;
     }
 
-    public function find() {
+    public function pathsThatWereNotProperlyIncremented() {
         $changed_paths = $this->change_detector->findPathsThatChangedSince($this->old_revision);
-        $non_incremented_paths = array();
-        foreach ($changed_paths as $path) {
-            $this->appendIfNotIncremented($non_incremented_paths, $path);
-        }
-        return $non_incremented_paths;
+        return array_values(array_filter($changed_paths, array($this, 'incremented')));
     }
 
-    private function appendIfNotIncremented(&$non_incremented_paths, $path) {
+    private function incremented($path) {
         $last_declared_version    = $this->getContentOfVERSIONFileAt($path, $this->old_revision);
         $current_declared_version = $this->getContentOfVERSIONFileAt($path, 'HEAD');
 
         echo("$path : old revision $last_declared_version new revision $current_declared_version".PHP_EOL);
-        if (version_compare($last_declared_version, $current_declared_version, '>=')) {
-            $non_incremented_paths[] = $path;
-        }
+        $incremented = version_compare($last_declared_version, $current_declared_version, '>=');
+        return $incremented;
     }
 
     private function getContentOfVERSIONFileAt($path, $revision) {
@@ -113,7 +112,7 @@ class CheckReleaseReporter {
         $COLOR_GREEN   = "\033[32m";
         $COLOR_NOCOLOR = "\033[0m";
         
-        $non_incremented_paths = $this->non_incremented_paths_finder->find();
+        $non_incremented_paths = $this->non_incremented_paths_finder->pathsThatWereNotProperlyIncremented();
         foreach ($non_incremented_paths as $non_incremented_path) {
             echo "$COLOR_RED $non_incremented_path changed but wasn't incremented $COLOR_NOCOLOR".PHP_EOL;
         }

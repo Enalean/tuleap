@@ -105,7 +105,7 @@ class NonIncrementedPathFinderTest extends TuleapTestCase {
         $change_detector->setReturnValue('findPathsThatChangedSince', $changed_paths);
         
         $version_increment_filter = new NonIncrementedPathFinder($gitExec, $last_release_tag, $change_detector);
-        $actual_non_incremented_paths = $version_increment_filter->find($current_version);
+        $actual_non_incremented_paths = $version_increment_filter->pathsThatWereNotProperlyIncremented($current_version);
         $this->assertEqual($expected_paths, $actual_non_incremented_paths);
     }
     
