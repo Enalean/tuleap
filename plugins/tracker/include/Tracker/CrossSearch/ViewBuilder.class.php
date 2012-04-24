@@ -63,8 +63,6 @@ class Tracker_CrossSearch_ViewBuilder {
      */
     public function buildView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query) {
         $service      = $this->getService($project);
-        
-        //$criteria     = $this->getCriteria($project, $cross_search_query);
         $criteria     = $this->criteria_builder->getCriteria($project, $this->getReport(), $cross_search_query);
         $trackers     = $this->getTrackers($project);
         $content_view = $this->buildContentView($user, $project, $cross_search_query);
