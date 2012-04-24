@@ -81,6 +81,7 @@ class Git_Ci {
                 $dao          = new GitDao();
                 $repositories = $dao->getAllProjectRepositoryList($params['group_id']);
                 $selectBox    = '<select id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger">';
+                $selectBox    .= '<option>'.$GLOBALS['Language']->getText('global', 'none').'</option>';
                 foreach ($repositories as $repository) {
                     $namaSpace = '';
                     if (!empty($repository['repository_namespace'])) {
