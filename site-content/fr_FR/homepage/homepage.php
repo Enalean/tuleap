@@ -76,7 +76,7 @@ if ($display_homepage_news) {
                 <div class="row-fluid">
                     <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participez</h2>
                     <?php if ($current_user->isLoggedIn()) { ?>
-                        <p>Bienvenue <?= UserHelper::instance()->getDisplayNameFromUser($current_user) ?>. Vous pouvez profiter du meilleur de <?= $GLOBALS['sys_name']?>. 
+                        <p>Bienvenue <?= $current_user_display_name ?>. 
                         <a href="/softwaremap/">Rejoignez un projet</a> ou créez en un nouveau.</p>
                     <?php } else { ?>
                         <p>Pour vous permettre d'utiliser toute la puissance de 
