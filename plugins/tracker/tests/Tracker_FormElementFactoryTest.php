@@ -57,7 +57,17 @@ if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/coin');
 }
 
-class Tracker_FormElementFactoryTest extends TuleapTestCase {
+abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
+
+    protected function GivenAFormElementFactory() {
+        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager', 'getDao'));
+        $factory->setReturnValue('getUsedFormElementForTracker', array());
+        $factory->setReturnValue('getEventManager', new MockEventManager());
+        return $factory;
+    }
+}
+
+class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract {
 
     public function test_saveObject() {
         $user          = new MockUser();
@@ -196,13 +206,6 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         $this->assertPattern('%</form>%', $content);
     }
     
-    private function GivenAFormElementFactory() {
-        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager', 'getDao'));
-        $factory->setReturnValue('getUsedFormElementForTracker', array());
-        $factory->setReturnValue('getEventManager', new MockEventManager());
-        return $factory;
-    }
-    
     private function WhenIDisplayCreateFormElement($factory) {
         $GLOBALS['Language']->setReturnValue('getText', 'Separator', array('plugin_tracker_formelement_admin','separator_label'));
         
@@ -219,16 +222,22 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         return $content;
     }
     
-    public function testGetAllSharedFieldsOfATrackerShouldReturnsEmptyArrayWhenNoSharedFields() {
+}
+class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracker_FormElementFactoryAbstract {
+
+    public function itReturnsEmptyArrayWhenNoSharedFields() {
         $project_id = 1;
         $dar = TestHelper::arrayToDar();
         
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
 
-        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array());
+        $project = new MockProject();
+        $project->setReturnValue('getId', $project_id);
+        
+        $this->assertEqual($factory->getProjectSharedFields(mock('User'), $project), array());
     }
     
-    public function testGetAllSharedFieldsOfATrackerReturnsAllSharedFieldsThatTheTrackerExports() {
+    public function itReturnsAllSharedFieldsThatTheTrackerExports() {
         $project_id = 1;
         $user       = mock('User');
         
@@ -256,7 +265,7 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         $this->assertEqual($factory->getProjectSharedFields($user, $project), array($sharedField1, $sharedField2));
     }
     
-    public function testGetAllSharedFieldsOfATrackerReturnsAllSharedFieldsThatAUserCanRead() {
+    public function itReturnsTheFieldsIfUserCanReadTheOriginal() {
         $project_id = 1;
         $user       = mock('User');
         
@@ -282,7 +291,39 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         $project->setReturnValue('getId', $project_id);
         $this->assertEqual($factory->getProjectSharedFields($user, $project), array($readableField));
     }
+//    
+//    public function itReturnsTheFieldsIfUserCannotReadTheOriginalButAtleastOneOfTheTargets() {
+//        $project_id = 1;
+//        $user       = mock('User');
+//        
+//        $unReadableRow = $this->createRow(666, 'sb');
+//        $dar = TestHelper::arrayToDar(
+//                $readableRow,
+//                $unReadableRow
+//        );
+//        
+//        $dao = mock('Tracker_FormElement_FieldDao');
+//        stub($dao)->searchProjectSharedFieldsOriginals($project_id)->returns($dar);
+//        
+//        $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+//        
+//        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getInstanceFromRow', 'getDao'));
+//        $factory->setReturnValue('getDao', $dao);        
+//        $factory->setReturnValue('getInstanceFromRow', $unReadableField, array($unReadableRow));
+//        
+//        $targetsOfUnReadableField = array(stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false),
+//                                          stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true),
+//                                    );
+//        stub($dao)->searchSharedTargets($unReadableField)->returns($targetsOfUnReadableField);
+//        $project = new MockProject();
+//        $project->setReturnValue('getId', $project_id);
+//        $this->assertEqual($factory->getProjectSharedFields($user, $project), array($unReadableField));
+//    }
     
+    public function itReturnsACollectionOfUniqueOriginals() {
+        
+    }
+
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {
         $dao = new MockTracker_FormElement_FieldDao();
         $dao->setReturnValue('searchProjectSharedFieldsOriginals', $dar, array($project_id));
@@ -291,13 +332,6 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         $factory->setReturnValue('getDao', $dao);
         
         return $factory;
-    }
-    
-    private function ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, $expectedResult) {
-        $project = new MockProject();
-        $project->setReturnValue('getId', $project_id);
-        
-        $this->assertEqual($factory->getProjectSharedFields(mock('User'), $project), $expectedResult);
     }
     
     private function createRow($id, $type) {
