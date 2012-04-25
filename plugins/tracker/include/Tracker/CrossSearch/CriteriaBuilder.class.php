@@ -77,19 +77,6 @@ class Tracker_CrossSearch_CriteriaBuilder {
         return $criteria;
     }
     
-    private function isAtLeastOneSharedFieldReadableByUser($field, $user) {
-        if (!$field->userCanRead($user)) {
-            $shared_targets = $this->form_element_factory->getSharedTargets($field);
-            foreach ($shared_targets as $shared_target) {
-                if ($shared_target->userCanRead($user)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
-    }
-    
     /**
      * @return array of \Tracker_Report_Criteria 
      */

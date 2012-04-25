@@ -73,8 +73,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         parent::setUp();
         $this->project               = new MockProject();
         $this->report                = new MockTracker_Report();
-        $this->user                  = mock('User');
-        
+        $this->user                  = mock('User');        
     }
     
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {

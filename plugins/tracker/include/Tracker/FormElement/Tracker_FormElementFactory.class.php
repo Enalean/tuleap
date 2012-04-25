@@ -724,10 +724,30 @@ class Tracker_FormElementFactory {
      * @return Array of Tracker_FormElement_Field
      */
     public function getProjectSharedFields(User $user, Project $project) {
-        $dar = $this->getDao()->searchProjectSharedFieldsOriginals($project->getId());
-        return $this->getInstancesFromRows($dar);
+        $dar           = $this->getDao()->searchProjectSharedFieldsOriginals($project->getId());
+        $fields        = $this->getInstancesFromRows($dar);
+        $shared_fields = array();
+        foreach ($fields as $field) {
+            if ($field->userCanRead($user)) {
+                $shared_fields[] = $field;
+            }
+        }
+        return $shared_fields;
     }
-
+    
+    /*private function isAtLeastOneSharedFieldReadableByUser($field, $user) {
+        if (!$field->userCanRead($user)) {
+            $shared_targets = $this->form_element_factory->getSharedTargets($field);
+            foreach ($shared_targets as $shared_target) {
+                if ($shared_target->userCanRead($user)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }*/
+    
     public function updateFormElement($formElement, $formElement_data) {
         
         //check that the new name is not already used
