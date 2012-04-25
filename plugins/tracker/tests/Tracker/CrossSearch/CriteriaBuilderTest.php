@@ -61,8 +61,8 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
         Tracker_ArtifactFactory::clearInstance();
     }
     
-    public function getPartiallyMockedCriteriaBuilder($returnValue) {
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', $returnValue);
+    public function givenACriteriaBuilderForArtifacts($artifacts) {
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanRead', $artifacts);
         return new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, $this->planning_trackers);
     }
 }
@@ -164,8 +164,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
     }
 
     
-    private function getCriteria($returnValue) {
-        $criteria_builder      = $this->getPartiallyMockedCriteriaBuilder($returnValue);
+    private function getCriteria($artifacts) {
+        $criteria_builder      = $this->givenACriteriaBuilderForArtifacts($artifacts);
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->withSharedFieldsCriteria($this->shared_field_criteria)
                                 ->withSemanticCriteria($this->semantic_criteria)
@@ -220,7 +220,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
         $criteria = aCrossSearchCriteria()->build();
         $report   = new MockTracker_Report();
         
-        $builder  = $this->getPartiallyMockedCriteriaBuilder(array());
+        $builder  = $this->givenACriteriaBuilderForArtifacts(array());
         $user     = new MockUser();
         $artifact_criteria = $builder->getArtifactLinkCriteria($user, $report, $criteria);
         
@@ -230,7 +230,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithNoArtifactIDTest extends Tracker_C
     public function itDoesntCreateACriteriaAtAllWhenArtifactIdsAreEmpty() {
         $criteria = aCrossSearchCriteria()->withArtifactIds(array())->build();
         $report   = new MockTracker_Report();
-        $builder  = $this->getPartiallyMockedCriteriaBuilder(array());
+        $builder  = $this->givenACriteriaBuilderForArtifacts(array());
         $user     = new MockUser();
         $artifact_criteria = $builder->getArtifactLinkCriteria($user, $report, $criteria);
         
@@ -248,7 +248,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
         
         $artifact                = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
         $this->planning_trackers = array($release_tracker);
-        $builder                 = $this->getPartiallyMockedCriteriaBuilder(array($artifact));
+        $builder                 = $this->givenACriteriaBuilderForArtifacts(array($artifact));
         $user                    = new MockUser();
         $artifact_criteria       = $builder->getArtifactLinkCriteria($user, $report, $criteria);
 
@@ -278,8 +278,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         $artifact512             = new Tracker_Artifact(512, $release_tracker_id, null, null, null);
         $artifact33              = new Tracker_Artifact(33, $sprint_tracker_id, null, null, null);
         
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact1, $artifact512), array($release_tracker_id));
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerId', array($artifact33), array($sprint_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanRead', array($artifact1, $artifact512), array($user, $release_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanRead', array($artifact33), array($user, $sprint_tracker_id));
         
         $this->planning_trackers = array($release_tracker, $sprint_tracker);
         
