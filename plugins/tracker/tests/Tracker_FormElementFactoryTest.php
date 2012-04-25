@@ -272,7 +272,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $factory->setReturnValue('getProjectSharedFields', array($readableField, $unReadableField), array($project));
         $factory->setReturnValue('getSharedTargets', array(), array($unReadableField));
         
-        $this->assertEqual($factory->getProjectUserSharedFields($user, $project), array($readableField));
+        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($readableField));
     }
     
     public function itReturnsTheFieldsIfUserCannotReadTheOriginalButAtleastOneOfTheTargets() {
@@ -287,7 +287,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $factory->setReturnValue('getProjectSharedFields', array($unReadableField), array($project));
         $factory->setReturnValue('getSharedTargets', array($targetOfUnReadableField1, $targetOfUnReadableField2), array($unReadableField));
         
-        $this->assertEqual($factory->getProjectUserSharedFields($user, $project), array($unReadableField));
+        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($unReadableField));
     }
     
     public function itReturnsACollectionOfUniqueOriginals() {
@@ -302,7 +302,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $factory->setReturnValue('getProjectSharedFields', array($unReadableField), array($project));
         $factory->setReturnValue('getSharedTargets', array($targetOfUnReadableField1, $targetOfUnReadableField2), array($unReadableField));
         
-        $this->assertEqual($factory->getProjectUserSharedFields($user, $project), array($unReadableField));
+        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($unReadableField));
     }
 
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {

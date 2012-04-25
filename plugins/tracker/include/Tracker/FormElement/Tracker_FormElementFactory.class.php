@@ -734,7 +734,7 @@ class Tracker_FormElementFactory {
      * 
      * @return Array of Tracker_FormElement_Field
      */
-    public function getProjectUserSharedFields(User $user, Project $project) {
+    public function getSharedFieldsReadableBy(User $user, Project $project) {
         $fields        = $this->getProjectSharedFields($project);
         $this->user    = $user;
         return array_filter($fields, array($this, 'canReadSourceOrTarget'));

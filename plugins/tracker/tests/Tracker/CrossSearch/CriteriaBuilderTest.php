@@ -80,7 +80,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields, array($this->user, $this->project));
+        stub($this->form_element_factory)->getSharedFieldsReadableBy($this->user, $this->project)->returns($fields);
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
@@ -90,7 +90,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array('220' => array('values' => array('350')));
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields, array($this->user, $this->project));
+        stub($this->form_element_factory)->getSharedFieldsReadableBy($this->user, $this->project)->returns($fields);
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
@@ -102,7 +102,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         
         $fields = array(aTextField()->withId(220)->build(),
                         aTextField()->withId(221)->build());
-        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields, array($this->user, $this->project));
+        stub($this->form_element_factory)->getSharedFieldsReadableBy($this->user, $this->project)->returns($fields);
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual(count($criteria), 2);
@@ -146,7 +146,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $release_tracker    = aTracker()->withId($release_tracker_id)->build();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields);
+        stub($this->form_element_factory)->getSharedFieldsReadableBy()->returns($fields);
         
         $this->shared_field_criteria = array('220' => array('values' => array('350', '351')));
         $this->semantic_criteria     = array('title' => 'Foo', 'status' => '');
