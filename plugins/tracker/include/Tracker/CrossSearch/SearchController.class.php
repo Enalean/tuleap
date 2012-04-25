@@ -59,7 +59,6 @@ class Tracker_CrossSearch_SearchController {
             
             $project_id            = $this->request->get('group_id');
             $project               = $this->getProject($project_id, $this->project_manager);
-
             $view                  = $this->view_builder->buildView($user, $project, $cross_search_criteria);
             $view->render($user);
         }

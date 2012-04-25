@@ -258,7 +258,7 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         $project = new MockProject();
         $project->setReturnValue('getId', $project_id);
         
-        $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
+        $this->assertEqual($factory->getProjectSharedFields(mock('User'), $project), $expectedResult);
     }
     
     private function createDar($id, $type) {

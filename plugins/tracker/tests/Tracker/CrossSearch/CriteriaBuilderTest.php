@@ -26,6 +26,7 @@ require_once dirname(__FILE__) . '/../../../include/Tracker/Artifact/Tracker_Art
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'Test_CriteriaBuilder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/CriteriaBuilder.class.php';
 
 Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
@@ -36,6 +37,7 @@ Mock::generate('Tracker_FormElementFactory');
 Mock::generate('TrackerFactory');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
+Mock::generate('Tracker_CrossSearch_CriteriaBuilder');
 
 class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
     public $planning_trackers;
@@ -66,13 +68,20 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
 }
 
 class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tracker_CrossSearch_CriteriaBuilderTest {
-
-
+        
+    public function setUp() {
+        parent::setUp();
+        $this->project               = new MockProject();
+        $this->report                = new MockTracker_Report();
+        $this->user                  = mock('User');
+        
+    }
+    
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
         $this->shared_field_criteria = array();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields, array($this->user, $this->project));
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
@@ -82,7 +91,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array('220' => array('values' => array('350')));
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields, array($this->user, $this->project));
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
@@ -94,7 +103,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         
         $fields = array(aTextField()->withId(220)->build(),
                         aTextField()->withId(221)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields, array($this->user, $this->project));
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual(count($criteria), 2);
@@ -105,10 +114,11 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
     private function getSharedFieldsCriteria($returnValue = array()) {
         $criteria_builder      = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $cross_search_criteria = aCrossSearchCriteria()->withSharedFieldsCriteria($this->shared_field_criteria)->build();
-    
-        $project               = new MockProject();
-        $report                = new MockTracker_Report();
-        return $criteria_builder->getSharedFieldsCriteria($project, $report, $cross_search_criteria);
+        /*$cross_search_criteria = mock('Tracker_CrossSearch_CriteriaBuilder');
+        stub($cross_search_criteria)->getSharedFieldsCriteria()->returns($this->shared_field_criteria);
+        stub($cross_search_criteria)->isAtLeastOneSharedFieldReadableByUser()->returns(true);*/
+        
+        return $criteria_builder->getSharedFieldsCriteria($this->user, $this->project, $this->report, $cross_search_criteria);
     }
 
 }
@@ -163,6 +173,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
                                 ->build();
         $project               = new MockProject();
         $report                = new MockTracker_Report();
+
         $user                  = mock('User');
         return $criteria_builder->getCriteria($user, $project, $report, $cross_search_criteria);
     }

@@ -723,7 +723,7 @@ class Tracker_FormElementFactory {
      * 
      * @return Array of Tracker_FormElement_Field
      */
-    public function getProjectSharedFields(Project $project) {
+    public function getProjectSharedFields(User $user, Project $project) {
         $dar = $this->getDao()->searchProjectSharedFieldsOriginals($project->getId());
         return $this->getInstancesFromRows($dar);
     }

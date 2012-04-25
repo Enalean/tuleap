@@ -53,32 +53,43 @@ class Tracker_CrossSearch_CriteriaBuilder {
      * @return array of \Tracker_Report_Criteria 
      */
     public function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
-        $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $cross_search_query);
+        $shared_fields   = $this->getSharedFieldsCriteria($user, $project, $report, $cross_search_query);
         $semantic_fields = $this->getSemanticFieldsCriteria($report, $cross_search_query);
         $artifact_fields = $this->getArtifactLinkCriteria($user, $report, $cross_search_query);
-        
         return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
 
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
-        $fields   = $this->form_element_factory->getProjectSharedFields($project);
+    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        $fields   = $this->form_element_factory->getProjectSharedFields($user, $project);
         $criteria = array();
         
         foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
-            
-            $id          = null;
-            $rank        = 0;
-            $is_advanced = true;
-            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+                $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
+                $id          = null;
+                $rank        = 0;
+                $is_advanced = true;
+                $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
         }
         
         return $criteria;
     }
-
+    
+    private function isAtLeastOneSharedFieldReadableByUser($field, $user) {
+        if (!$field->userCanRead($user)) {
+            $shared_targets = $this->form_element_factory->getSharedTargets($field);
+            foreach ($shared_targets as $shared_target) {
+                if ($shared_target->userCanRead($user)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+    
     /**
      * @return array of \Tracker_Report_Criteria 
      */
