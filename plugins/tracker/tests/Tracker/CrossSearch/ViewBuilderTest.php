@@ -57,9 +57,10 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
         
         $builder            = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
-        $view               = $builder->buildContentView($user, $project, $cross_search_criteria);
+        $content_view_class = 'Tracker_CrossSearch_SearchContentView';
+        $view               = $builder->buildCustomContentView($content_view_class, $user, $project, $cross_search_criteria, array(), $tracker_ids);
         
-        $this->assertIsA($view, 'Tracker_CrossSearch_SearchContentView');
+        $this->assertIsA($view, $content_view_class);
     }
 }
 
