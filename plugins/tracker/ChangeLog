@@ -1,3 +1,6 @@
+Version 5.7.5 - Tuleap 5.0
+    * Fix burndown bug when remaining_effort fall to 0.
+
 Version 5.7.4 - Tuleap 5.0
     * Inherit shared fields and hierarchy from project templates
 
