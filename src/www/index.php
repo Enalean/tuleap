@@ -10,7 +10,7 @@ require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-
+$hp = Codendi_HTMLPurifier::instance();
 
 if (isset($GLOBALS['sys_exchange_policy_url'])) {
     $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
@@ -18,7 +18,11 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
     $exchangePolicyUrl = "/plugins/docman/?group_id=1";
 }
 
-$current_user = UserManager::instance()->getCurrentUser();
+$current_user              = UserManager::instance()->getCurrentUser();
+$current_user_display_name = '';
+if ($current_user->isLoggedIn()) {
+    $current_user_display_name = $hp->purify(UserHelper::instance()->getDisplayNameFromUser($current_user));
+}
 
 if (Config::get('sys_https_host')) {
     $login_form_url = 'https://'. Config::get('sys_https_host');

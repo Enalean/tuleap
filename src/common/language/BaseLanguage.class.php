@@ -386,7 +386,7 @@ class BaseLanguage {
                     return $GLOBALS['sys_incdir']."/".$lang_code."/others/empty.txt";
                 } else {
                     // else try to find the file in the en_US directory
-                    return $this->getContent($file, "en_US");
+                    return $this->getContent($file, "en_US", $plugin_name, $ext);
                 }
             }
         }

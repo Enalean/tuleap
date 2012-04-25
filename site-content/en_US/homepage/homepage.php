@@ -20,7 +20,7 @@
 // customized in etc/site-content homepage.tab, we display him
 // instead of following text.
 if ($Language->hasText('homepage', 'introduction')) {
-    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
+    echo stripcslashes($Language->getText('homepage', 'introduction', array($GLOBALS['sys_org_name'], $GLOBALS['sys_name'])));
     return;
 }
 
@@ -35,101 +35,22 @@ if ($display_homepage_news) {
 
 
 <div class="hero-unit">
-    <?= $GLOBALS['HTML']->getImage('organization_logo.png'); ?>
-    <h2><?= $GLOBALS['sys_name']?>, the Collaborative Application <br />
-    where <?= $GLOBALS['sys_org_name']?> runs Smart &amp; Quality software projects</h2>
+    <?php include($Language->getContent('homepage/homepage_herounit', null, null, '.php')); ?>
 </div>
 
 <div class="row-fluid">
     <div class="<?= $main_content_span ?>">
         <div class="row-fluid">
             <div class="span6">
-                <h2><?= $GLOBALS['HTML']->getImage('homepage/tuleap-logo-small.png', array('alt' => "What's Tuleap", 'width' => '48px')) ?> What's <?= $GLOBALS['sys_name']?>?</h2>
-                <p>
-                    <b><?= $GLOBALS['sys_name']?> is based on Tuleap. It is all about helping you manage your software projects and connect with your team members.</b>
-                </p>
-                <p>
-                      It is a free and Open-Source Suite for Application Lifecycle Management. 
-                      Tuleap provides tools for managing projects, tasks, changes, defects, documents as well as version control, continuous integration 
-                      and social collaboration. 
-                      Through a single web-based solution, everyone can monitor, develop and collaborate on software projects.
-                </p>
-                <h3>With <?= $GLOBALS['sys_name']?> you'll be able to:</h3>
-                <p>
-                    <ul>
-                        <li>plan and monitor projects,</li>
-                        <li>manage software development lifecycle: code versions, builds, etc.,</li>
-                        <li>track requirements, tasks, incidents, etc.,</li>
-                        <li>produce documents and releases,</li>
-                        <li>favour collaboration between project members.</li>
-                    </ul>
-                </p>
-                <p>
-                    <a href="http://www.tuleap.com" target="_blank">More info on Tuleap</a>
-                </p>
+                <?php include($Language->getContent('homepage/homepage_about', null, null, '.php')); ?>
             </div>
-    
             <div class="span6">
-                <div class="row-fluid">
-                    <h2><?= $GLOBALS['HTML']->getImage('homepage/user.png', array('alt' => "New user", 'width' => '48px')) ?> Participate</h2>
-                    <?php if ($current_user->isLoggedIn()) { ?>
-                        <p>Welcome <?= UserHelper::instance()->getDisplayNameFromUser($current_user) ?>. 
-                        You can now get the most out of <?= $GLOBALS['sys_name']?>. 
-                        <a href="/softwaremap/">Join a project</a> or create a new one below.</p>
-                    <?php } else { ?>
-                        <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
-                        register as a site user. It's easy and fast and it 
-                        allows you to participate fully in all we have to offer.
-                        </p>
-                        <form action="<?= $login_form_url ?>" method="POST">
-                            <input type="text" name="form_loginname" class="<?= $login_input_span ?>" placeholder="Username" />
-                            <input type="password" name="form_pw" class="<?= $login_input_span ?>" placeholder="Password" />
-                            <input type="submit" class="btn" name="login" value="<?= $GLOBALS['Language']->getText('account_login', 'login_btn') ?>" />
-                            Or <a href="/account/register.php">create an account</a>
-                        </form>
-                    <?php } ?>
-                </div>
-                <hr />
-                <div class="row-fluid">
-                    <h2><?= $GLOBALS['HTML']->getImage('homepage/join.png', array('alt' => "Join a project", 'width' => '48px')) ?> Create a new project</h2>
-                    <?php 
-                        $create_your_own_project = 'create your own project';
-                        if ($current_user->isLoggedIn()) {
-                            $create_your_own_project = '<a href="/project/register.php">'. $create_your_own_project .'</a>';
-                        }
-                    ?>
-                    <p>It's very easy to <?= $create_your_own_project ?>. Login, 
-                    leverage project templates and customize your 
-                    workspace in the administration interface.</p>
-                </div>
+                <?php include($Language->getContent('homepage/homepage_interactions', null, null, '.php')); ?>
             </div>
         </div>
-        <?php if ($display_homepage_news) { ?>
-        
-        <hr />
-        
-        <div class="row-fluid">
-            <div class="span3">
-                <h3><?= $GLOBALS['sys_name']?> Statistics</h3>
-                <p><?= show_sitestats() ?></p>
-            </div>
-            <div class="span5">
-                <h3>Newest projects</h3>
-                <p><?= show_newest_projects() ?></p>
-            </div>
-            <div class="span4">
-                <h3>Newest Releases</h3>
-                <p><?= show_newest_releases() ?></p>
-            </div>
-        </div>
-        <?php } ?>
+        <?php include($Language->getContent('homepage/homepage_boxes', null, null, '.php')); ?>
     </div>
-    <?php if ($display_homepage_news) { ?>
-    <div class="span4">
-        <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
-        <?= news_show_latest($GLOBALS['sys_news_group'], 3, true, false, true, 3) ?>
-    </div>
-    <?php } ?>
+    <?php include($Language->getContent('homepage/homepage_news', null, null, '.php')); ?>
 </div>
 
 <?php
