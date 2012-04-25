@@ -231,94 +231,64 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
 
-        $project = new MockProject();
-        $project->setReturnValue('getId', $project_id);
-        
-        $this->assertEqual($factory->getProjectSharedFields(mock('User'), $project), array());
+        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array());
     }
     
     public function itReturnsAllSharedFieldsThatTheTrackerExports() {
         $project_id = 1;
-        $user       = mock('User');
         
-        $sharedRow1 = $this->createRow(999, 'sb');
-        $sharedRow2 = $this->createRow(666, 'sb');
+        $sharedRow1 = $this->createRow(999, 'text');
+        $sharedRow2 = $this->createRow(666, 'date');
         
         $dar = TestHelper::arrayToDar(
                 $sharedRow1,
                 $sharedRow2
         );
         
-        $dao = new MockTracker_FormElement_FieldDao();
-        $dao->setReturnValue('searchProjectSharedFieldsOriginals', $dar, array($project_id));
+        $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
+        
+        $textField = aTextField()->withId(999)->build();
+        $dateField = aDateField()->withId(666)->build();
 
-        $sharedField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
-        $sharedField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
-        
-        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getInstanceFromRow', 'getDao'));
-        $factory->setReturnValue('getDao', $dao);
-        $factory->setReturnValue('getInstanceFromRow', $sharedField1, array($sharedRow1));
-        $factory->setReturnValue('getInstanceFromRow', $sharedField2, array($sharedRow2));
-        
+        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array($textField, $dateField));
+    }
+
+    
+    private function ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, $expectedResult) {
         $project = new MockProject();
         $project->setReturnValue('getId', $project_id);
-        $this->assertEqual($factory->getProjectSharedFields($user, $project), array($sharedField1, $sharedField2));
+        
+        $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
     }
-    
-    public function itReturnsTheFieldsIfUserCanReadTheOriginal() {
-        $project_id = 1;
-        $user       = mock('User');
-        
-        $readableRow = $this->createRow(999, 'sb');
-        $unReadableRow = $this->createRow(666, 'sb');
-        $dar = TestHelper::arrayToDar(
-                $readableRow,
-                $unReadableRow
-        );
-        
-        $dao = new MockTracker_FormElement_FieldDao();
-        $dao->setReturnValue('searchProjectSharedFieldsOriginals', $dar, array($project_id));
 
+    public function itReturnsTheFieldsIfUserCanReadTheOriginal() {
+        $user       = mock('User');
+        $project = new MockProject();
+        
         $readableField   = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
         $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
         
-        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getInstanceFromRow', 'getDao'));
-        $factory->setReturnValue('getDao', $dao);
-        $factory->setReturnValue('getInstanceFromRow', $readableField, array($readableRow));
-        $factory->setReturnValue('getInstanceFromRow', $unReadableField, array($unReadableRow));
+        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
+        $factory->setReturnValue('getProjectSharedFields', array($readableField, $unReadableField), array($project));
+        $factory->setReturnValue('getSharedTargets', array(), array($unReadableField));
         
-        $project = new MockProject();
-        $project->setReturnValue('getId', $project_id);
-        $this->assertEqual($factory->getProjectSharedFields($user, $project), array($readableField));
+        $this->assertEqual($factory->getProjectUserSharedFields($user, $project), array($readableField));
     }
-//    
-//    public function itReturnsTheFieldsIfUserCannotReadTheOriginalButAtleastOneOfTheTargets() {
-//        $project_id = 1;
-//        $user       = mock('User');
-//        
-//        $unReadableRow = $this->createRow(666, 'sb');
-//        $dar = TestHelper::arrayToDar(
-//                $readableRow,
-//                $unReadableRow
-//        );
-//        
-//        $dao = mock('Tracker_FormElement_FieldDao');
-//        stub($dao)->searchProjectSharedFieldsOriginals($project_id)->returns($dar);
-//        
-//        $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
-//        
-//        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getInstanceFromRow', 'getDao'));
-//        $factory->setReturnValue('getDao', $dao);        
-//        $factory->setReturnValue('getInstanceFromRow', $unReadableField, array($unReadableRow));
-//        
-//        $targetsOfUnReadableField = array(stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false),
-//                                          stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true),
-//                                    );
-//        stub($dao)->searchSharedTargets($unReadableField)->returns($targetsOfUnReadableField);
-//        $project = new MockProject();
-//        $project->setReturnValue('getId', $project_id);
-//        $this->assertEqual($factory->getProjectSharedFields($user, $project), array($unReadableField));
-//    }
+    
+    public function itReturnsTheFieldsIfUserCannotReadTheOriginalButAtleastOneOfTheTargets() {
+        $user       = mock('User');
+        $project = new MockProject();
+        
+        $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+        $targetOfUnReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+        $targetOfUnReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+                
+        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
+        $factory->setReturnValue('getProjectSharedFields', array($unReadableField), array($project));
+        $factory->setReturnValue('getSharedTargets', array($targetOfUnReadableField1, $targetOfUnReadableField2), array($unReadableField));
+        
+        $this->assertEqual($factory->getProjectUserSharedFields($user, $project), array($unReadableField));
+    }
     
     public function itReturnsACollectionOfUniqueOriginals() {
         
