@@ -252,6 +252,41 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
     }
     
+    protected function issetArtifactValue($artifact, $submitted_values) {
+        return (
+            isset($submitted_values[0]) 
+            && is_array($submitted_values[0])
+            && isset($submitted_values[0][$this->getId()])
+        );
+    }
+    
+    protected function isCheckedArtifactValue($artifact, $artifact_value) {
+        return (
+            (isset($artifact_value['use_artifact_permissions']) && $artifact_value['use_artifact_permissions']) 
+            || $artifact->useArtifactPermissions()
+        );
+    }
+    
+    protected function getArtifactValueHTML($selected_values, $field_id, $artifact_id, $is_checked, $is_read_only) {
+        $checked           = $is_checked   ? ' checked="checked"'   : '';
+        $readonly          = $is_read_only ? ' disabled="disabled"' : '';
+        $permissions_label = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
+        $element_name      = 'artifact['.$field_id.'][u_groups][]';
+        
+        $html  = '';
+        $html .= '<p class="tracker_field_permissionsonartifact">';
+        $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
+        $html .= '<input type="checkbox"
+                                 name="artifact[' . $field_id . '][use_artifact_permissions]"
+                                 id="artifact_' . $field_id . '_use_artifact_permissions" 
+                                 value="1"' . $checked . $readonly . '/>';
+        $html .= '<label for="artifact_' . $field_id . '_use_artifact_permissions">' . $permissions_label . '</label>';
+        $html .= '</p>';
+                
+        $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact_id, $this->getTracker()->getGroupId(),$element_name , $is_read_only, $selected_values);
+        return $html;
+    }
+    
     /**
      * Fetch the html code to display the field value in artifact 
      * @see fetchArtifactValueReadOnly
@@ -265,49 +300,17 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return string
      */
     protected function fetchArtifactValueCommon($is_read_only, Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';
-        $value = array();
-        if (is_array($submitted_values[0])) {
-            if (isset($submitted_values[0][$this->getId()])) {
-                    $value = $submitted_values[0][$this->getId()];
+        $field_id        = $this->getId();
+        $value           = array();
+        $selected_values = array();
+        if ($this->issetArtifactValue($artifact, $submitted_values)) {
+            $value = $submitted_values[0][$field_id];
+            if (isset($value['u_groups'])) {
+                $selected_values = $value['u_groups'];
             }
         }
-
-       $checked = '';
-       if ( !empty($value) ) {
-            if (isset($value['use_artifact_permissions']) && $value['use_artifact_permissions']) {
-                $checked = 'checked="checked"';
-            }
-       } else if ($artifact->useArtifactPermissions()) {
-            $checked = 'checked="checked"';
-        }
-        
-        $readonly = '';
-        if ($is_read_only) {
-            $readonly = 'disabled="disabled"';
-        }
-        
-        $html = '';
-        $html .= '<p class="tracker_field_permissionsonartifact">';
-        $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
-        $html .= '<input type="checkbox" 
-                         name="artifact['.$this->getId().'][use_artifact_permissions]"
-                         id="artifact_'.$this->getId().'_use_artifact_permissions" 
-                         value="1" '.
-                         $checked.' '.
-                         $readonly .'/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
-        $html .= '</p>';
-
-        if ($value == null) {
-            $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only, $value);
-        } else if (is_array($value)) {
-            $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only, $value['u_groups']);
-
-        } else {
-            $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only);
-        }
-        return $html;
+                
+        return $this->getArtifactValueHTML($selected_values, $field_id, $artifact->getId(), $this->isCheckedArtifactValue($artifact, $value), $is_read_only);
     }
     
     /**
