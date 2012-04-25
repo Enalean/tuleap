@@ -291,7 +291,18 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
     
     public function itReturnsACollectionOfUniqueOriginals() {
+        $user       = mock('User');
+        $project = new MockProject();
         
+        $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+        $targetOfUnReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $targetOfUnReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+                
+        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
+        $factory->setReturnValue('getProjectSharedFields', array($unReadableField), array($project));
+        $factory->setReturnValue('getSharedTargets', array($targetOfUnReadableField1, $targetOfUnReadableField2), array($unReadableField));
+        
+        $this->assertEqual($factory->getProjectUserSharedFields($user, $project), array($unReadableField));
     }
 
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {

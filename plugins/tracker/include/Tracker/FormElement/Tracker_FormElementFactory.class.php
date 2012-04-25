@@ -736,38 +736,25 @@ class Tracker_FormElementFactory {
      */
     public function getProjectUserSharedFields(User $user, Project $project) {
         $fields        = $this->getProjectSharedFields($project);
-        $shared_fields = array();
-        foreach ($fields as $field) {
-            if ($field->userCanRead($user)) {
-                $shared_fields[] = $field;
-            } else {
-                $targetFields = $this->getSharedTargets($field);
-                foreach ($targetFields as $targetField) {
-                    if ($targetField->userCanRead($user)) {
-                        $shared_fields[] = $field;
-                        break;
-                    }
-                }
-            }
-        }
-        return $shared_fields;
+        $this->user    = $user;
+        return array_filter($fields, array($this, 'canReadSourceOrTarget'));
     }
     
-    /*private function isAtLeastOneSharedFieldReadableByUser($field, $user) {
-        if (!$field->userCanRead($user)) {
-            $shared_targets = $this->form_element_factory->getSharedTargets($field);
-            foreach ($shared_targets as $shared_target) {
-                if ($shared_target->userCanRead($user)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return true;
-    }*/
+    private function canReadSourceOrTarget($field) {
+        return $field->userCanRead($this->user) || $this->canReadAtleastOneTarget($field);
+    }
     
-    public function updateFormElement($formElement, $formElement_data) {
-        
+    private function canReadAtleastOneTarget($field) {
+        $targetFields = $this->getSharedTargets($field);
+        foreach ($targetFields as $targetField) {
+            if ($targetField->userCanRead($this->user)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public function updateFormElement($formElement, $formElement_data) {        
         //check that the new name is not already used
         if (isset($formElement_data['name'])) {
             if (trim($formElement_data['name'])) {

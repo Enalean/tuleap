@@ -63,7 +63,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
      * @return array of \Tracker_Report_Criteria 
      */
     public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
-        $fields   = $this->form_element_factory->getProjectSharedFields($user, $project);
+        $fields   = $this->form_element_factory->getProjectUserSharedFields($user, $project);
         $criteria = array();
         
         foreach ($fields as $field) {

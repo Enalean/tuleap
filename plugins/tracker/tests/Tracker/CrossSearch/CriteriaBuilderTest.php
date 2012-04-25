@@ -80,7 +80,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields, array($this->user, $this->project));
+        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields, array($this->user, $this->project));
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
@@ -90,7 +90,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         $this->shared_field_criteria = array('220' => array('values' => array('350')));
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields, array($this->user, $this->project));
+        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields, array($this->user, $this->project));
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
@@ -102,7 +102,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         
         $fields = array(aTextField()->withId(220)->build(),
                         aTextField()->withId(221)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields, array($this->user, $this->project));
+        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields, array($this->user, $this->project));
         
         $criteria = $this->getSharedFieldsCriteria();
         $this->assertEqual(count($criteria), 2);
@@ -113,9 +113,6 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
     private function getSharedFieldsCriteria($returnValue = array()) {
         $criteria_builder      = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $cross_search_criteria = aCrossSearchCriteria()->withSharedFieldsCriteria($this->shared_field_criteria)->build();
-        /*$cross_search_criteria = mock('Tracker_CrossSearch_CriteriaBuilder');
-        stub($cross_search_criteria)->getSharedFieldsCriteria()->returns($this->shared_field_criteria);
-        stub($cross_search_criteria)->isAtLeastOneSharedFieldReadableByUser()->returns(true);*/
         
         return $criteria_builder->getSharedFieldsCriteria($this->user, $this->project, $this->report, $cross_search_criteria);
     }
@@ -149,7 +146,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $release_tracker    = aTracker()->withId($release_tracker_id)->build();
         
         $fields = array(aTextField()->withId(220)->build());
-        $this->form_element_factory->setReturnValue('getProjectSharedFields', $fields);
+        $this->form_element_factory->setReturnValue('getProjectUserSharedFields', $fields);
         
         $this->shared_field_criteria = array('220' => array('values' => array('350', '351')));
         $this->semantic_criteria     = array('title' => 'Foo', 'status' => '');
