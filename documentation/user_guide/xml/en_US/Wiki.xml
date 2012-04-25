@@ -8,7 +8,7 @@
 -->
 
   <chapter id="WikiService">
-  <title>Wiki Service</title>
+  <title>Wiki</title>
 
   <para>&SYS_PRODUCT_NAME; offers a Wiki service to each project. The wiki
   available in &SYS_PRODUCT_NAME; is based on a popular wiki tool called <ulink
@@ -104,7 +104,7 @@
     </section>
   </section>
 
-  <section id="CodendiWikis">
+  <section id="Wikis">
     <title>&SYS_PRODUCT_NAME; Wikis</title>
 
     <para>&SYS_PRODUCT_NAME; wikis are project-specific. So two different projects may use the same page names without conflict.</para>
@@ -134,10 +134,9 @@
 
       <para>While this is usually the best policy, some wikis should
       not be public. For those cases, &SYS_PRODUCT_NAME; offers a permission
-      mechanism based on user groups, as for file releases and
-      documents (see <xref linkend="UserGroups"/>, <xref
-      linkend="PackageModification"/> and <xref
-      linkend="DocAccessPermissions"/>). Permissions may be set at
+      mechanism based on user groups, as for file releases 
+      (see <xref linkend="UserGroups"/> and <xref
+      linkend="PackageModification"/>). Permissions may be set at
       the wiki level, and apply to all pages, or at the page level, so
       that only selected pages are protected.</para>
     </section>
@@ -187,7 +186,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

@@ -7,7 +7,7 @@
 -->
 
   <chapter id="FileRelease">
-    <title>Publication de fichiers</title>
+    <title>Gestionnaire de livrables</title>
 
     <section id="SourceCodeReleaseGuidelines">
       <title>Publication du code source : conseils</title>
@@ -15,7 +15,7 @@
       <para>Il existe deux façons pour un administrateur de projet de
       donner accès au code source d'un projet hébergé sur &SYS_PRODUCT_NAME; : le
       système de contrôle de version (CVS ou Subversion) et le système
-      de publication de fichiers. A première vue, le fait d'avoir deux
+      de gestionnaire de livrables. A première vue, le fait d'avoir deux
       systèmes de livraison du code source peut paraître
       redondant. Cependant les deux outils ont été développés avec des
       objectifs différents et pour des cibles d'utilisateurs
@@ -37,20 +37,18 @@
           proposer des modifications à l'équipe de projet. A noter que
           certains projets n'autorisent pas l'accès de leur SCV aux
           personnes qui n'appartiennent pas à l'équipe. D'où
-          l'importance du mécanisme de publication de fichiers.</para>
+          l'importance du Gestionnaire de livrables.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Le mécanisme de publication de
-          fichiers</emphasis> permet de livrer le logiciel (source,
+          <para><emphasis role="bold">Le gestionnaire de livrables</emphasis> permet de publier le logiciel (source,
           binaire ou documentation) sous forme de fichiers d'archive
           (zip, tar, jar...) qu'un utilisateur autorisé peut
           facilement télécharger depuis le site Web de &SYS_PRODUCT_NAME;. Aucun
           outil ni connaissance particulière n'est nécessaire. En
           complément de la fourniture éventuelle du code source,
           fournir des versions binaires prêtes à utiliser de vos
-          logiciels est une excellente pratique. Le service de
-          publication de fichiers est particulièrement adapté aux
+          logiciels est une excellente pratique. Le Gestionnaire de livrables est particulièrement adapté aux
           utilisateurs qui souhaitent utiliser rapidement votre logiciel
           sans attendre.</para>
         </listitem>
@@ -66,17 +64,16 @@
     </section>
 
     <section id="FileReleaseJargon">
-      <title>Jargon du service de publication de fichiers</title>
+      <title>Jargon du Gestionnaire de Livrables</title>
 
-      <para>Avant d'aller plus avant dans la description du service de
-      publication de fichiers nous allons définir quelques termes clés
+      <para>Avant d'aller plus avant dans la description du Gestionnaire de livrables nous allons définir quelques termes clés
       utilisés dans cette section. Ces termes sont clés pour la
       compréhension de ce service aussi bien pour les administrateurs
       que pour les utilisateurs. (voir <xref
       linkend="FigureTheFileReleaseStructure" />).</para>
 
       <figure id="FigureTheFileReleaseStructure">
-        <title>Structure du service de publication de fichiers</title>
+        <title>Structure du Gestionnaire de livrables</title>
 
         <mediaobject>
           <imageobject>
@@ -89,8 +86,7 @@
       <itemizedlist mark="bullet">
         <listitem>
           <para><emphasis role="bold">Paquets</emphasis> : les paquets
-          sont les conteneurs de plus haut niveau du service de
-          publication de fichiers. Un paquet peut contenir une ou
+          sont les conteneurs de plus haut niveau. Un paquet peut contenir une ou
           plusieurs version d'un logiciel. En général un paquet
           correspond à un délivrable de haut niveau de votre
           projet. Supposons que votre équipe travaille sur un moteur
@@ -135,8 +131,7 @@
         </listitem>
       </itemizedlist>
 
-      <note><para>A première vue cette structure peut paraître un peu
-      complexe. Néanmoins c'est véritablement le genre de structure
+      <note><para>Voici véritablement le genre de structure
       qu'une équipe de projet doit adopter pour rendre ses livraisons
       faciles à comprendre et à télécharger. Réfléchir à la structure
       de vos délivrables logiciels et documentation peut vous aider
@@ -150,7 +145,7 @@
       <title>Navigation dans les fichiers publiés et téléchargement</title>
 
       <para>La version la plus récente de chaque paquet d'un projet
-      est toujours visible sur la page de sommaire (voir <xref
+      peut être visible sur le Tableau de bord Projet (voir <xref
       linkend="FigureASampleProjectSummaryPage" />). Cette version
       peut être immédiatement téléchargée en cliquant sur le lien
       &#34;Téléchargement&#34; ou en visitant la liste complète des
@@ -158,7 +153,7 @@
       fichiers du projet&#34;.</para>
 
       <figure id="FigureTheFileReleaseScreenOfTheCodendiProject">
-        <title>L'écran de publication des fichiers du projet &SYS_PRODUCT_NAME; Administration Project</title>
+        <title>Exemple de Gestionnaire de livrables</title>
 
         <mediaobject>
           <imageobject>
@@ -168,20 +163,12 @@
         </mediaobject>
       </figure>
 
-      <para>Le premier exemple illustré sur la <xref
-      linkend="FigureTheFileReleaseScreenOfTheCodendiProject" /> 
-      montre l'écran de publication des fichiers du projet
-      &#34;&SYS_PRODUCT_NAME; Administration Project.&#34;
-      </para>
-      
+           
       <section id="FileReleaseBrowsingPackages">
         <title>Navigation dans les paquets</title>
         <para>
         Comme expliqué dans la <xref linkend="FileReleaseJargon" />, les projets 
-        peuvent contenir plusieurs paquets. Dans l'exemple, 
-        le projet comporte trois paquets, nommés &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34;,
-        &#34;&SYS_PRODUCT_NAME; specifics themes&#34; et &#34;&SYS_PRODUCT_NAME; CLI&#34;.
-        </para>
+        peuvent contenir plusieurs paquets.   </para>
         <para>
         Le contenu de chaque paquet peut être caché en cliquant sur l'icône 
         <emphasis>moins</emphasis> située juste avant le nom du paquet.
@@ -207,9 +194,7 @@
       <section id="FileReleaseBrowsingReleases">
         <title>Navigation dans les versions</title>
         <para>
-        Un paquet peut contenir plusieurs versions. Dans l'exemple, 
-        le paquet &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34; contient 8 versions 
-        de 2.4 à 3.0.1, listées dans l'ordre chronologique. Chaque version 
+        Un paquet peut contenir plusieurs versions listées dans l'ordre chronologique. Chaque version 
         contient un certain nombre de fichiers.
         </para>
         <para>
@@ -230,12 +215,7 @@
         <title>Téléchargement de fichiers</title>
         <para>
         Chaque version contient un certain nombre de fichiers qui peuvent être 
-        téléchargés. Dans le cas de notre exemple, la version 3.0.1 contient 
-        deux archives d'images ISO pouvant être téléchargées.
-        Les fichiers appartenant aux autres versions ne sont pas visibles dans 
-        cet exemple. Pour les rendre visible, il suffit de cliquer sur l'icône 
-        <emphasis>plus</emphasis> qui se trouve avant le nom des versions.
-        Certaines informations sur les fichiers sont également affichées, comme 
+        téléchargés. Certaines informations sur les fichiers sont également affichées, comme 
         la taille du fichier, son type, son architecture (le cas échéant) 
         la date et le nombre de fois qu'il a été téléchargé.
         Pour télécharger un fichier, il suffit de cliquer sur le nom du fichier 
@@ -248,8 +228,8 @@
     <section id="FileReleaseDelivery">
       <title>Administration et Livraison de fichiers</title>
 
-      <para>Cette section s'adresse uniquement aux administrateur de 
-      projet ou aux administrateurs du service fichier. Elle explique par 
+      <para>Cette section s'adresse uniquement aux administrateurs de 
+      projet ou aux administrateurs du Gestionnaire de livrables. Elle explique par 
       le menu le processus de livraison de fichiers. 
       Il se décompose en deux étapes :</para>
 
@@ -280,7 +260,7 @@
       réaliser les actions d'administration sur le service Fichier (Voir 
       <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodendiProject" />
           <figure id="FigureTheFileReleaseAdminScreenOfTheCodendiProject">
-            <title>L'écran du service Fichier du projet &#34;&SYS_PRODUCT_NAME; Administration project&#34;, si vous êtes administrateur</title>
+            <title>La vue du Gestionnaire de livrables si vous êtes administrateur</title>
     
             <mediaobject>
               <imageobject>
@@ -345,7 +325,7 @@
         <xref linkend="FigureAPartOfThePackageAdministrationScreenCodendiProject" />).
         </para>
         <figure id="FigureAPartOfThePackageAdministrationScreenCodendiProject">
-          <title>Ecran de modification du paquet CLI du projet &#34;&SYS_PRODUCT_NAME; Administration&#34;</title>
+          <title>Ecran de modification d'un paquet</title>
     
           <mediaobject>
             <imageobject>
@@ -394,7 +374,7 @@
         </para>
         
         <figure id="FigureTheReleaseModificationScreenOfTheCodendiProject">
-          <title>Ecran de modification d'une version du projet &SYS_PRODUCT_NAME;</title>
+          <title>Ecran de modification d'une version</title>
 
           <mediaobject>
             <imageobject>
@@ -613,7 +593,7 @@
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

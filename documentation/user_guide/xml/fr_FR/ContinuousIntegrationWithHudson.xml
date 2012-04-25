@@ -3,7 +3,7 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 -->
 <chapter id="ContinuousIntegrationWithHudson">
-  <title>Intégration Continue avec Hudson</title>
+  <title>Intégration Continue avec Hudson/Jenkins</title>
   
   <section id="ContinuousIntegrationIntroduction">
     <title>Introduction à l'intégration continue</title>
@@ -55,8 +55,9 @@
     
     <para>
         Nous avons choisi d'intégrer à &SYS_PRODUCT_NAME; l'outil d'intégration
-        continue <emphasis role="bold">Hudson</emphasis>, qui est l'un des outils 
-        les plus en vogue actuellement. Le paramétrage d'Hudson se réalise de 
+        continue <emphasis role="bold">Hudson/Jenkins</emphasis>, qui est l'un des meilleurs outils 
+        actuellement. Jenkins est un fork d'Hudson. Ainsi dans ce chapitre nous employerons le nom d'Hudson pour les 2 outils.
+		Le paramétrage d'Hudson se réalise de 
         manière assez simple dans une interface web et bénéficie d'une aide 
         contextuelle en ligne très appréciable.
     </para>
@@ -561,7 +562,7 @@
   </section>
   
   
-  <section id="HudsonInCodendi">
+  <section id="HudsonIntegration">
     <title>Intégration dans &SYS_PRODUCT_NAME;</title>
     <para>
         Parce que l'intégration continue fait partie des bonnes pratiques de
@@ -595,12 +596,12 @@
             de votre projet, puis cliquez sur le lien 'Ajouter un job'.
             Vous devez alors entrer l'URL du job Hudson que vous souhaitez associer
             à votre projet (par exemple : http://[mon_serveur_ic]:8080/hudson/job/[mon_job]).
-            <figure id="HudsonAddJobInCodendi">
+            <figure id="HudsonAddJob">
               <title>Lier un job Hudson à votre projet</title>
               <mediaobject>
                 <imageobject>
                   <imagedata format="PNG"
-                    fileref="../../screenshots/fr_FR/sc_hudsonaddjobincodendi.png" width="14.5cm" />
+                    fileref="../../screenshots/fr_FR/sc_hudsonaddjob.png" width="14.5cm" />
                 </imageobject>
               </mediaobject>
             </figure>
@@ -628,7 +629,7 @@
             Lorsque vous cliquez sur l'onglet Build de votre projet, vous voyez
             un tableau qui vous présente l'ensemble des jobs associés à votre
             projet.
-            <figure id="HudsonBrowseJobsInCodendi">
+            <figure id="HudsonBrowseJobs">
               <title>Visualiser les jobs Hudson associés à votre projet</title>
               <mediaobject>
                 <imageobject>

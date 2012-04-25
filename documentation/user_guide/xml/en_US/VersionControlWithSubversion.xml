@@ -193,7 +193,7 @@
 	those graphical clients.</para>
       </section>
 
-      <section id="SettingUprapidSVNforCodendi">
+      <section id="SettingUprapidSVN">
 	<title>Setting up rapidSVN for &SYS_PRODUCT_NAME;</title>
 
         <para>As mentioned above, rapidSVN is the graphical user
@@ -287,7 +287,7 @@
     </section>
   </section>
 
-  <section id="SubversionIntegrationinCodendi">
+  <section id="SubversionIntegration">
     <title>Subversion Integration in &SYS_PRODUCT_NAME;</title>
 
     <section id="TheSubversionRepository">
@@ -1367,7 +1367,7 @@ http://svn.projectname.&SYS_DEFAULT_DOMAIN;/svnroot/projectname/tags/myproject-1
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

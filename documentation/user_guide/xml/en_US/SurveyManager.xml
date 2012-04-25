@@ -27,7 +27,7 @@
 
       <listitem>
         <para>from the feedback received when you post a piece of news on your
-        Project Summary page</para>
+        Project Dashboard</para>
       </listitem>
 
       <listitem>
@@ -88,7 +88,7 @@
           <para><emphasis role="bold">Through the Survey Manager itself</emphasis>:
           as soon as a survey is created it is visible in your Survey Manager
           Welcome screen (see <xref linkend="FigureSurveyManagerWelcomeScreen" />).
-          So any &SYS_PRODUCT_NAME; user visiting your Project Summary page will see that
+          So any &SYS_PRODUCT_NAME; user visiting your Project Dashboard will see that
           surveys are available in the &#34;Public Area&#34; (survey count not
           null) and by clicking on &#34;Surveys&#34; she will be able to take
           whatever survey is available.</para>
@@ -174,7 +174,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
       </itemizedlist>
 
       <para>To access administrative functions of the Survey , go to your
-      Project Summary page and click on the &#34;Survey&#34; item in the
+      Project Dashboard and click on the &#34;Survey&#34; item in the
       Project Main menu at the top of the screen, then select the
       &#34;Admin&#34; item in the Survey Manager menu (see <xref
       linkend="FigureSurveyManagerWelcomeScreen" />). From there you have
@@ -417,7 +417,7 @@ http://&SYS_DEFAULT_DOMAIN;/survey/survey.php?group_id=N&#38;survey_id=X
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

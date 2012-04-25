@@ -9,20 +9,19 @@
 -->
       
 <chapter id="TrackerV5Service">
-  <title>Service outils de suivi</title>
+  <title>Outil de suivi (Tracker) et Rapports en temps réel</title>
 
   <para><emphasis role="bold">Attention :</emphasis> ce chapitre couvre les fonctionnalités de la nouvelle
-  version du moteur de suivi (v5). Pour la documentation du moteur de suivi de l'ancienne génération (v3), se référer à  <xref linkend="TrackerService" />.</para>
+  version du système de suivi ou tracker(v5). Pour la documentation de l'outil de suivi de l'ancienne génération (v3), se référer à  <xref linkend="TrackerService" />.</para>
 
-  <para>Les outils de suivi (de l'anglais trackers) représentent l'un
+  <para>Les outils de suivi (tracker en anglais) représentent l'un
   des services les plus puissants et les plus flexibles mis à la
   disposition des projets hébergés sur &SYS_PRODUCT_NAME;. Ils assurent le suivi
   d'artefacts aussi variés que des bugs, des tâches, des fiches
-  d'assistance, etc... et un projet peut créer autant d'outils de
+  d'assistance, etc... Un projet peut créer autant d'outils de
   suivi que nécessaire.</para>
 
-  <para>Tous les outils de suivi, qu'ils soient prédéfinis au niveau du
-  site ou bien créés par chaque projet sont entièrement
+  <para>Tous les outils de suivi, qu'ils soient prédéfinis au niveau de l'ensemble de la plateforme ou bien créés par chaque projet sont entièrement
   personnalisables.</para>
 
   <section id="TrackerV5TrackerPrinciples">
@@ -37,10 +36,10 @@
     le suivi de toutes sortes d'items, le terme générique
     &#34;artefact&#34; est utilisé dans ce document pour désigner tout
     type d'item faisant l'objet d'un suivi. Il peut s'agir
-    d'anomalies, de tâches, de demandes de nouvelles fonctionnalités
+    d'exigences, de risques, d'anomalies, de tâches, de demandes de nouvelles fonctionnalités
     ou autres.</para>
 
-    <para>Pour définir un nouvel outil de suivi il suffit juste de lui donner un
+    <para>Pour définir un nouvel outil de suivi, il suffit juste de lui donner un
     nom, de choisir les champs à utiliser et les valeurs autorisées
     pour ces champs.</para>
 
@@ -56,11 +55,11 @@
     <title>Accéder à un outil de suivi</title>
 
     <para>Pour accéder au service outil de suivi d'un projet, rendez
-    vous d'abord sur la page de sommaire du projet (voir <xref
+    vous d'abord sur le Tableau de bord du Projet (voir <xref
     linkend="AccessingAProjectSummaryPage" />) et cliquez soit sur
     l'entrée &#34;Suivi&#34; de la barre de services ou directement
     sur l'outil de suivi qui vous intéresse dans la section Zones
-    Publiques de la page de sommaire.</para>
+    Publiques du Tableau de bord.</para>
 
     <para>Dans le premier cas, une page récapitulant l'ensemble des
     outils de suivi disponibles pour ce projet vous est présentée
@@ -73,7 +72,7 @@
     
     
     <figure id="TrackerV5WelcomeScreen">
-      <title>Page d'accueil de l'outil de suivi</title>
+      <title>Page d'accueil des outils de suivi</title>
 
       <mediaobject>
 	<imageobject>
@@ -458,10 +457,10 @@
 	<section id="TrackerV5ArtifactCharts">
 	 <title>Visualisation Graphique</title>
 	 <para>Il est également possible de visualiser les résultats d'une requête sous forme graphique en ajoutant 
-     un onglet de type "Graphique(s)"..
-     Il y a quatre types de graphiques disponibles : le camembert, le graphique en bâton, 
-     le diagramme de Gantt, et le diagramme de type Burndown utilisé dans la méthodologie Scrum.
-     Comme pour la liste des artefacts (onglet de type "Table"), la vue graphique répond aux critères 
+     un onglet de type "Graphique(s)".
+     Il y a cinq types de graphiques disponibles : le camembert, le graphique en bâton, 
+     le diagramme de Gantt, le diagramme de type Burndown (reste-à-faire) et la vue sous forme de tableau de post-it, utilisés dans les méthodes agiles.
+     Comme pour la liste des artefacts (onglet de type "Table"), les vues graphiques affichent les artefacts répondant aux critères 
      de sélection.
      Pour plus de détails, voir <xref linkend="TrackerV5ReportRendererCharts" />.
 	 </para>
@@ -471,18 +470,17 @@
     <section id="TrackerV5Reports">
 	<title>Gestion des rapports</title>
 
-	<para>Les rapports des outils de suivi permettent de choisir quels champs l'utilisateur
-    souhaite utiliser en tant que critère de recherche et de définir ses outils de restitution (aussi appelés "renderers"), qui affichent le résultat de la recherche.
-    &SYS_PRODUCT_NAME; propose deux types d'outils de restitution : "Table" et "Graphiques".
+	<para>Les rapports des outils de suivi permettent de choisir les critères de recherche et créer différentes représentations des résultats (aussi appelés "renderers"), qui affichent le résultat de la recherche.
+    &SYS_PRODUCT_NAME; propose deux types de représentations: "Table" et "Graphiques".
     Le "renderer" de type "Table" présente la liste des artefacts correspondant 
     aux critères de recherche sous forme de tableau en utilisant des colonnes.
-    L'outil de restitution de type "Graphiques" offre une représentation graphique des résultats.
+    La représentation de type "Graphiques" offre une vue graphique des résultats.
     .</para>
 
      <para>
      Pour chaque outil de suivi auquel ils ont accès, les utilisateurs de &SYS_PRODUCT_NAME; peuvent définir leurs propres
-     rapports, en choisissant leurs propres critères de recherche et en ajoutant des outils de restitution.
-     Dans ce cas précis, le rapport est considéré comme personnel et n'est visible que par l'utilisateur l'ayant crée.
+     rapports, en choisissant leurs propres critères de recherche et en ajoutant des représentations.
+     Dans ce cas précis, le rapport est considéré comme personnel et n'est visible que par l'utilisateur l'ayant créée.
 	 A l'opposé, les administrateurs d'un outil de suivi peuvent définir des rapports de type "projet", qui seront visibles
      par tous les utilisateurs de l'outil de suivi.
 	 </para>
@@ -507,55 +505,55 @@
       </para>
      </section>
      <section id="TrackerV5ReportRendererAdd">
-      <title>Ajouter un outil de restitution</title>
+      <title>Ajouter une représentation des résultats de recherche</title>
       <para>
-      Vous pouvez ajouter autant d'outils de restitution que vous le souhaitez dans 
+      Vous pouvez ajouter autant de représentations que vous le souhaitez dans 
       chaque rapport.
-      Les outils de restitution sont affichés sous forme d'onglets.
-      Ajouter un outil de restitution est simple : sélectionnez l'onglet [+] à droite des
-      onglets des outils de restitution (see 
+      Les représentations sont affichées sous forme d'onglets.
+     Il est très simple d'ajouter une représentation : sélectionnez l'onglet [+] à droite des
+      autres onglets (see 
        <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).
-       Ensuite, sélectionnez le type d'outil de restitution à ajouter (table ou graphiques), donnez-lui un nom et
+       Ensuite, sélectionnez le type de représentation à ajouter (table ou graphiques), donnez-lui un nom et
        une description, et cliquez sur le bouton "Soumettre" : un nouvel onglet est crée!
       </para>
       <tip>
-        <title>Ordonner les outils de restitution</title>
+        <title>Ordonner les représentations des résultats de recherche</title>
           <para>
-          Ordonner les outils de restitution est simple : faites un glisser/déposer des onglets!
+          Pour classer vos représentations, il suffit de faire un glisser/déposer des onglets!
           </para>
       </tip>
      </section>
      
      <section id="TrackerV5ReportRendererTable">
-      <title>L'outil de restitution de type "Table"</title>
+      <title>La représentation de type "Table"</title>
        <para>
-        L'outil de restitution de type "Table" est textuel, et se présente sous forme de
-        tableau. Les colonnes du tableaux sont les champs de l'outil de suivi et les lignes représent les artefacts. La figure
-        (<xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />) présente un exemple de 'outil de restitution de type "Table".
+        La représentation de type "Table" se présente sous forme de
+        tableau. Les colonnes du tableau sont les champs de l'outil de suivi et les lignes représent les artefacts. L'exemple
+        (<xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />) présente une représentation de type "Table".
        </para>
        <para>
-       Vous pouvez modifier les champs de l'outil de restitution (en utilisant le lien "Modifier les colonnes"),
+       Vous pouvez modifier les champs du tableau que vous souhaitez afficher,
        réordonner les champs en utilisant le glisser/déposer, trier la liste des artefacts (en cliquant sur le nom du champ),
        naviguer dans la liste d'artefacts en sélectionnant le nombre d'artefacts à afficher.       
        </para>
        <para>
-       Il est possible d'ajouter des fonctions de groupement sur certains champs de l'outil de restitution de type "Table".
+       Il est possible d'ajouter des fonctions de calcul sur certains champs du tableau.
        Pour les entiers, les flottants, les boîtes de sélection et les boîtes de sélection multiple, une icône 
        <inlinemediaobject><imageobject><imagedata format="PNG"
           fileref="../../icons/sum--plus.png"/></imageobject></inlinemediaobject> s'affiche sous chaque colonne correspondante.
        </para>
        <para>
-          Cliquer simplement dessus pour ajouter une ou plusieurs fonctions de groupement.
-          Les fonctions de groupement disponibles sont:
+          Cliquer simplement dessus pour ajouter une ou plusieurs fonctions de calcul.
+          Les fonctions de gcalcul disponibles sont:
        <itemizedlist mark="bullet" spacing="compact">
         <listitem>
-            <para><emphasis role="bold">Count</emphasis> (seulement pour les entiers, les flottants, les boîtes de sélection et les boîtes de sélection multiple)</para>
+            <para><emphasis role="bold">Count</emphasis> (Total, seulement pour les entiers, les flottants, les boîtes de sélection et les boîtes de sélection multiple)</para>
         </listitem>
         <listitem>
-            <para><emphasis role="bold">Count Group By</emphasis> (seulement pour les entiers, les flottants, les boîtes de sélection et les boîtes de sélection multiple)</para>
+            <para><emphasis role="bold">Count Group By</emphasis> (Total par catégorie, seulement pour les entiers, les flottants, les boîtes de sélection et les boîtes de sélection multiple)</para>
         </listitem>
         <listitem>
-            <para><emphasis role="bold">Average</emphasis>  (seulement pour les entiers et les flottants)</para>
+            <para><emphasis role="bold">Average</emphasis>   (Moyenne, seulement pour les entiers et les flottants)</para>
         </listitem>
         <listitem>
             <para><emphasis role="bold">Maximum</emphasis>  (seulement pour les entiers et les flottants)</para>
@@ -564,7 +562,7 @@
             <para><emphasis role="bold">Minimum</emphasis>  (seulement pour les entiers et les flottants)</para>
         </listitem>
         <listitem>
-            <para><emphasis role="bold">Déviation Standard</emphasis>  (seulement pour les entiers et les flottants)</para>
+            <para><emphasis role="bold">Deviation Standard</emphasis>  (Ecart-type, seulement pour les entiers et les flottants)</para>
         </listitem>
         <listitem>
             <para><emphasis role="bold">Somme</emphasis>  (seulement pour les entiers et les flottants)</para>
@@ -572,15 +570,31 @@
        </itemizedlist>
        </para>
      </section>
+	 
+	 <section id="TrackerV5ReportRendererTable">
+        <title></title>
+        <para>Vous pouvez facilement ajouter, supprimer, déplacer les colonnes que vous souhaitez afficher sur votre tableau, ainsi 
+		que des calculs tout en bas.
+          <figure id="TrackerV5FigureTable">
+          <title>Tableau avec les fonctions de calculs</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackertable.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
      
      <section id="TrackerV5ReportRendererCharts">
-      <title>L'outil de restitution de type "Graphiques"</title>
+      <title>La représentation de type "Graphiques"</title>
        <para>
-       L'outil de restitution de type "Graphiques" permet d'ajouter des graphes à un rapport.
-        &SYS_PRODUCT_NAME; fournit quatre types de graphes : le camembert, le graphique en bâton, et le diagramme 
-		 de Gantt, mais aussi des diagrammes de type Burndown utilisés dans la méthodologie Scrum.
+       La représentation de type "Graphiques" permet d'ajouter différents graphiques à un rapport.
+        &SYS_PRODUCT_NAME; fournit cinq types de graphes : le camembert, le graphique en bâton, le diagramme 
+		 de Gantt, la vue sous forme de tableau de post-it et le diagramme de type Burndown utilisés dans les méthodes agiles.
         <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
-         <title>Exemple d'outil de restitution de type "Graphiques"</title>
+         <title>Rapport comprenant plusieurs graphiques</title>
             <mediaobject>
              <imageobject>
                <imagedata format="PNG"
@@ -589,11 +603,11 @@
             </mediaobject>
         </figure>
        </para>
+	   
        <para>
        Vous pouvez ajouter autant de graphes que vous le souhaitez au sein 
-       d'un outil de restitution de type "Graphiques".
-       Pour ajouter un graphe, cliquez sur l'icône du graphe de votre choix 
-       en haut de l'outil de restitution.
+       d'un onglet.
+       Pour ajouter un graphe, cliquez sur l'icône du graphe de votre choix. 
        Selon le type de graphe, vous devrez saisir un nom, une description et 
        renseigner certains champs nécessaires à la génération du graphe.
        </para>
@@ -601,7 +615,7 @@
         <title>Graphique de type Camembert</title>
         <para>
           <figure id="TrackerV5FigurePieChartEdition">
-          <title>Edition d'un graphique de type camembert</title>
+          <title>Edition d'un graphique camembert</title>
             <mediaobject>
                 <imageobject>
                     <imagedata format="PNG"
@@ -643,7 +657,7 @@
         <para>
         Attention! Si vous gérez de gros projets avec des dates s'étalant sur plusieurs 
         années, ne générez pas un diagramme de Gantt en utilsant les jours comme échelle
-        temporelle. Le diagramme serait trop grand. Merci d'utiliser semaine, mois ou année comme échelle de temps.
+        temporelle. Le diagramme serait trop grand. Il est préférable d'utiliser semaine, mois ou année comme échelle de temps.
        </para>
        </tip>
        </section>
@@ -651,7 +665,7 @@
         <title>Diagramme de type Burndown</title>
         <para>
           <figure id="TrackerV5FigureBurndownChartEdition">
-          <title>Edition d'un diagramme de type burndown</title>
+          <title>Edition d'un diagramme de type Burndown</title>
             <mediaobject>
                 <imageobject>
                     <imagedata format="PNG"
@@ -661,23 +675,41 @@
           </figure>
         </para>
        </section>
+	   
+	   <section id="TrackerV5ReportRendererCardwall">
+        <title>Tableau de post-it</title>
+        <para>Les tableaux de post-it, très utilisés dans les méthodes agiles, permettent d'avoir une vision globale 
+		et actualisés en temps réel, sur l'avancement du travail. Il suffit de cliquer sur un post-it et le glisser 
+		vers une autre colonne pour actualiser l'état de l'artefact.
+		 <figure id="TrackerV5FigureBurndownChartEdition">
+          <title>Tableau de post-it</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackercardwall.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+	   
      </section>
      
      <section id="TrackerV5ReportRendererUpdate">
-      <title>Modifier/supprimer un outil de restitution</title>
+      <title>Modifier/supprimer une représentation</title>
       <para>
-        Selon les permissions, vous pouvez modifier un outil de restitution, en  cliquant 
-        sur la flèche descendante près du nom de l'outil de restitution.        
+        Selon les permissions, vous pouvez modifier une représentation en  cliquant 
+        sur la flèche descendante près du nom de l'onglet.        
       </para>
       <para>
         Il est possible de modifier le titre et la description ou de supprimer 
-        l'outil de restitution.
+        la représentation.
       </para>
      </section>
      <tip>
-      <title>Ajouter des outils de restitution aux tableaux de bord</title>
+      <title>Ajouter des représentations aux tableaux de bord</title>
       <para>
-      Chaque outil de restitution peut s'afficher dans les tableaux de bord.
+      Chaque représentation graphique ou tableau, peut s'afficher dans les tableaux de bord.
       Pour cela, sélectionner "Ajouter à mon tableau de bord" ou "Ajouter au 
       tableau de bord du projet" dans le menu "Options".
       </para>
@@ -739,17 +771,17 @@
                   à cet artefact et provenant de n'importe quel artefact ou autre objet &SYS_PRODUCT_NAME;.
                   </para>
                   <para>Lorsque vous saisissez du texte dans n'importe quel champ texte ou commentaire
-                  d'un artefact, tout morceau de texte qui suit le patron &#34;XXX #NNN&#34; est 
+                  d'un artefact, tout morceau de texte qui suit le modèle &#34;XXX #NNN&#34; est 
                   interprété comme une référence à l'item XXX numéro NNN, où XXX est le nom court
                   de l'item (qui peut être un artefact, un commit cvs, une révision svn...) et NNN 
                   l'identifiant unique (ID) (exemple : &#34;bug #123&#34;, &#34;tache #321&#34;, 
                   &#34;req #12&#34;, etc...). Si vous ne connaissez pas le nom court de l'outil de 
                   suivi ou si vous souhaitez ne pas le spécifier vous pouvez utiliser le
-                  patron générique &#34;art #NNN&#34;. Lorsque &SYS_PRODUCT_NAME; affiche un commentaire contenant 
+                  modèle générique &#34;art #NNN&#34;. Lorsque &SYS_PRODUCT_NAME; affiche un commentaire contenant 
                   une référence, elle est automatiquement transformée en hyperlien vers la page de 
                   &SYS_PRODUCT_NAME; donnant toutes les informations sur cet artefact.</para>
                   
-                  <para>Les patrons de référence de &SYS_PRODUCT_NAME; peuvent etre utilisés pour référencer des artifacts,
+                  <para>Les modèles de référence de &SYS_PRODUCT_NAME; peuvent etre utilisés pour référencer des artifacts,
                    mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
                    <xref linkend="ReferenceOverview" /> pour plus d'information sur les Références.</para>
                    <para>De plus les références vers les outils de suivi, les révision SVN et les 
@@ -889,6 +921,8 @@
     est créé ou modifié - que ce soit avec un nouveau commentaire 
     ou un changement dans l'un des
     champs - un message est envoyé aux acteurs suivants :</para>
+	
+	
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem>
@@ -910,12 +944,22 @@
     A la suite se trouve un récapitulatif complet de l'artefact. Des pointeurs Web sont aussi
     présents dans le message pour vous permettre d'accéder facilement et rapidement à l'artefact sur
     &SYS_PRODUCT_NAME;.</para>
+	
+	<figure id="TrackerV5HowToLinkAnArtifact">
+                <title>Notification par email</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata format="PNG"
+                                fileref="../../screenshots/fr_FR/sc_emailnotification.png" width="15.3cm" />
+                        </imageobject>
+                    </mediaobject>
+             </figure>
 
   </section>
 <section id="TrackerV5ArtifactLinkTabs">
-        <title>Artifact Link</title>
+        <title>Champ "artifact link"</title>
         <para>
-        Le champ artifact link permet de créer des liens vers d'autres artefacts du même ou d'un autre tracker.
+        Le champ "artifact link" permet de créer des liens vers d'autres artefacts du même ou d'un autre tracker.
         Les artefacts sont affichés sous forme de tableau où chaque onglet correspond à un tracker. La présentation des artefacts dans chaque tabulation
         est non modifiable et correspond au rapport couramment utilisé par l'utilisateur et le renderer par defaut associé.
         </para>
@@ -926,11 +970,11 @@
             Une fois le bouton de mise à jour cliqué, la fenêtre modale est fermé et le id des artefacts selectionnés ajoutés (séparés par des virgules) dans le champs texte;
             et visibles (lignes jaunes) dans les onlgets correspondants.
             <figure id="TrackerV5HowToLinkAnArtifact">
-                <title>Comment lier un artefact ?</title>
+                <title>Comment lier des artefacts ?</title>
                     <mediaobject>
                         <imageobject>
                             <imagedata format="PNG"
-                                fileref="../../screenshots/en_US/sc_linkingartifact.png" width="15.3cm" />
+                                fileref="../../screenshots/fr_FR/sc_linkingartifact.png" width="15.3cm" />
                         </imageobject>
                     </mediaobject>
              </figure>
@@ -939,7 +983,7 @@
                     <mediaobject>
                         <imageobject>
                             <imagedata format="PNG"
-                                fileref="../../screenshots/en_US/sc_modalwindowlinkingartifact.png" width="15.3cm" />
+                                fileref="../../screenshots/fr_FR/sc_modalwindowlinkingartifact.png" width="15.3cm" />
                         </imageobject>
                     </mediaobject>
              </figure>
@@ -1327,7 +1371,7 @@
     </itemizedlist>
 
     <figure id="TrackerV5FigureCreateANewTracker">
-      <title>Création d'un nouvel outil de suivi (ici pour le anomalies)</title>
+      <title>Création d'un nouvel outil de suivi</title>
       
       <mediaobject>
 	<imageobject>
@@ -1341,34 +1385,32 @@
     les champs à utiliser dans l'outil de suivi. Pour vous éviter d'avoir à
     redéfinir sans cesse les outils de suivi les plus fréquemment
     utilisés (par exemple un outil de suivi d'anomalies, de tâches, de demandes
-    d'assistance, etc...) &SYS_PRODUCT_NAME; offre un certain nombre de patrons
+    d'assistance, etc...) &SYS_PRODUCT_NAME; offre un certain nombre de modèles
     d'outils de suivi prédéfinis à partir desquels vous pouvez créer
-    votre propre outil de suivi. Ces patrons sont définis soit au niveau du site
-    (patrons-site) soit au niveau du projet.</para>
+    votre propre outil de suivi. Ces modèles sont définis soit au niveau du site
+    (modèles-site) soit au niveau du projet.</para>
 
     <para><emphasis role="bold">Remarque</emphasis> : l'utilisation de
-    patrons ne signifie pas que vous deviez vous conformer strictement
+    modèles ne signifie pas que vous deviez vous conformer strictement
     aux champs proposés. Il est toujours possible d'ajouter, de
-    supprimer ou de modifier des champs en partant du patron
+    supprimer ou de modifier des champs en partant du modèle
     initial.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem id="TrackerV5CreationFromTemplate">
-        <para><emphasis role="bold">Patrons-site</emphasis> : il s'agit
-        de patrons définis par les administrateurs du site &SYS_PRODUCT_NAME; qui
+        <para><emphasis role="bold">Modèle-site</emphasis> : il s'agit
+        de modèles définis par les administrateurs du site &SYS_PRODUCT_NAME; qui
         sont en général utiles à de nombreux projets. C'est aussi un
-        moyen d'assurer une certaine harmonie d'un projet à l'autre
-        tout en facilitant la vie des équipes de projet. La liste des
-        patrons-site disponibles varie d'un site à l'autre mais vous y
-        trouverez typiquement des outils de suivi pour les anomalies, les tâches,
-        etc... Un patron particulier appelé &#34;Aucun&#34; permet de
+        moyen d'amroniser les processus d'un projet à l'autre
+        tout en facilitant la vie des équipes de projet. Vous rouverez des outils de suivi pour les anomalies, les tâches,
+        etc... Un modèle particulier appelé &#34;Aucun&#34; permet de
         créer un tracker vierge de tout champ sauf certains qui restent
         obligatoires. Voir <xref linkend="TrackerV5TrackerTemplates" />
-        pour plus d'information concernant ces patrons.</para>
+        pour plus d'information concernant ces modèles.</para>
       </listitem>
 
       <listitem id="TrackerV5CreationFromProjectTemplate">
-        <para><emphasis role="bold">Patrons-projet</emphasis> : si vous
+        <para><emphasis role="bold">Modèle-projet</emphasis> : si vous
         avez déjà défini un outil de suivi qui répond à vos besoins et
         que vous souhaitez le réutiliser, il suffit de spécifier
         l'identifiant du projet et celui de l'outil de suivi soit manuellement
@@ -1376,7 +1418,7 @@
         cliquer sur le bouton de création. Vous allez ainsi créer un
         nouvel outil de suivi strictement identique au précédent. (<emphasis
         role="bold">Note</emphasis> : cette opération ne copie pas les
-        artefacts mais uniquement la configuration des champs)</para>
+        artefacts mais uniquement la configuration des champs et la structure du formulaire des artefacts)</para>
       </listitem>
 
     </itemizedlist>
@@ -1385,9 +1427,9 @@
 
 
   <section id="TrackerV5TrackerTemplates">
-    <title>Patrons d'outils de suivi de &SYS_PRODUCT_NAME;</title>
+    <title>Modèles d'outils de suivi de &SYS_PRODUCT_NAME;</title>
 
-    <para>Les outils de suivi standards fournis pour chaque projet sont :
+    <para>Les outils de suivi standards fournis par défaut sont :
 	<itemizedlist mark="bullet" spacing="compact">
 	<listitem><para>Bugs</para></listitem>
 	<listitem><para>Tasks</para></listitem>
@@ -1402,7 +1444,7 @@
         suivent, nous donnons une présentation très générale de ces
         processus de travail. Pour chaque outil de suivi, l'équipe &SYS_PRODUCT_NAME; a essayé
         de maintenir un équilibre entre sophistication et facilité
-        d'utilisation. En conséquence, les patrons proposés aux
+        d'utilisation. En conséquence, les modèles proposés aux
         projets hébergés sur &SYS_PRODUCT_NAME; sont simples. Les membres du projet
         sont ensuite libres de décider par eux-mêmes des informations
         qu'un artefact doit comporter et de personnaliser la
@@ -1432,16 +1474,12 @@
 
       <para>L'outil de suivi de tâches de &SYS_PRODUCT_NAME; est un gestionnaire de tâches et
       pas un logiciel de gestion de projet comme CA-SuperProject,
-      MS-Project ou d'autres logiciels puissants et complexes qu'on
-      peut trouver sur le marché. L'outil de suivi de tâches n'est pas capable de
-      construire un diagramme de Pert et il n'a pas non
-      plus de fonction de planification. Il s'agit plutôt d'un outil
-      qui permet aux membres du projet de suivre l'évolution de leur
-      tâche et le temps qu'ils y consacrent ou bien encore de suivre
+      MS-Project ou d'autres logiciels plus complexes. Iic, il s'agit d'un outil simple
+      qui permet aux membres du projet de suivre l'évolution de leurs
+      tâches et le temps qu'ils y consacrent ou bien encore de suivre
       au quotidien la liste des choses à faire.</para>
 
-      <para>Malgré sa simplicité, l'outil de suivi de tâches offre un certain
-      nombre de fonctionnalités qui en font un outil très
+      <para>L'outil de suivi de tâches offre des fonctionnalités qui en font un outil
       complémentaire des logiciels de gestion et de planification de
       projets :</para>
 
@@ -1722,8 +1760,8 @@
         
        <listitem id="TrackerV5GeneralSettingsInstantiateForNewProjects">
 	  <para><emphasis role="bold">Instancier dans les nouveaux projets</emphasis>: 
-          Ce paramètre n'est affiché que lorsque le projet courant est du type &#34;patron de projet&#34; (voir <xref linkend="ProjectType" />).
-          Si ce paramètre est sélectionné, alors les projets créés depuis ce patron de projet auront cet outil de suivi.
+          Ce paramètre n'est affiché que lorsque le projet courant est du type &#34;modèle de projet&#34; (voir <xref linkend="ProjectType" />).
+          Si ce paramètre est sélectionné, alors les projets créés depuis ce modèle de projet auront cet outil de suivi.
           S'il n'est pas sélectionné, cet outil de suivi ne sera pas disponible dans le nouveau projet.</para>
 	</listitem>
 
@@ -1919,16 +1957,16 @@
       <title>Gestion de l'utilisation des champs</title>
 
       <para>Lorsqu'un outil de suivi est créé, il comprend un ensemble de
-      champs préconfigurés qui proviennent du patron utilisé pour sa
+      champs préconfigurés qui proviennent du modèle utilisé pour sa
       création. Pour la majorité des projets hébergés sur &SYS_PRODUCT_NAME; il est
-      très probable que les patrons standards (bugs, tâches, demandes
+      très probable que les modèles standards (bugs, tâches, demandes
       d'assistance) répondent à la plupart des besoins.</para>
 
       <para>Toutefois &SYS_PRODUCT_NAME; vous permet de personnaliser les champs
       utilisés par vos outils de suivi. Il peut s'agir d'une
-      variation autour d'un patron standard comprenant l'ajout ou la
+      variation autour d'un modèle standard comprenant l'ajout ou la
       suppression de quelques champs mais cela peut aussi être une
-      définition complète à partir d'un patron vierge.</para>
+      définition complète à partir d'un modèle vierge.</para>
       
       <para>Le gestionnaire de création d'un outil de suivi est divisé en deux parties:
       une palette de champs (à gauche) et la visualisation de l'outil de suivi (à droite)(voir la 
@@ -1980,9 +2018,9 @@
                     Vous pourrez le réutiliser plus facilement.
                     Si vous souhaitez le supprimer définitivement, supprimez le directement 
                     dans la partie "Elements Inutilisés" de la palette.
-                    Les éléments inutilisés sont également utilsés dans les patrons d'outils de suivi.
+                    Les éléments inutilisés sont également utilsés dans les modèles d'outils de suivi.
                     Vous pouvez donc rencontrer des champs que l'équipe n'a pas décidé d'inclure
-                    dans les patrons, mais qui peuvent avoir néanmoins du sens.
+                    dans les modèles, mais qui peuvent avoir néanmoins du sens.
                     Vous pouvez donc simplement les ajouter plutôt que de les créer.
                 </para>
             </listitem>
@@ -2513,7 +2551,7 @@
         </section>
         
         <section id="TrackerV5SemanticManagementContributor">
-            <title>Contributeurr / En charge</title>
+            <title>Contributeur/ En charge</title>
             <para>
                 Le contributeur d'un artéfact est la ou les personnes en charge 
                 de la résolution de cet artéfact.
@@ -2869,7 +2907,7 @@
      
      <para>
       &SYS_PRODUCT_NAME; permet d'exporter la structure d'un outil de suivi
-      dans un fichier XML. Les patrons d'outils de suivi &SYS_PRODUCT_NAME; sont
+      dans un fichier XML. Les modèles d'outils de suivi &SYS_PRODUCT_NAME; sont
       fournis au format XML.
       Cette fonctionnalité est également très utile pour copier un outil de suivi d'un
       serveur &SYS_PRODUCT_NAME; à un autre.

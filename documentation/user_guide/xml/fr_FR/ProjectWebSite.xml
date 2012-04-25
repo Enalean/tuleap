@@ -535,7 +535,7 @@ scp -r * nom_utilisateur&SYS_SHELL_HOST;:/home/groups/nom_projet/htdocs/
       </section>
     </section>
 
-    <section id="ReferencingtheCodendiSite">
+    <section id="ReferencingtheSite">
       <title>Référencer le site &SYS_PRODUCT_NAME;</title>
 
 		<para>L'équipe &SYS_PRODUCT_NAME; demande à ce que tous les sites Web des projets affichent le logo
@@ -593,7 +593,7 @@ d'un des services de votre projet et en cherchant la valeur du paramètre group_
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

@@ -1,0 +1,32 @@
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+-->
+<chapter id="LegalNotice">
+    <title>Legal Notice</title>
+
+    <para>This document is licensed under the GNU General Public License version 2.</para>
+    <para>Tuleap and Enalean names remain registred trademarks of Enalean.</para>
+	 
+    <para>Copyright protection claimed includes all forms and matters of
+    copyrightable material and information now allowed by statutory or
+    judicial law or hereinafter granted, including without limitation,
+    material generated from the software programs which are displayed on the
+    screen such as icons, screen displays, looks, etc.</para>
+    
+    
+    <para>This document was formatted with the DocBook XML DTD. HTML
+    version rendered with DocBook HTML native renderer.</para>
+    
+    <para>Copyright &copy; 2011, 2012 Enalean SAS</para>
+    <para>Copyright &copy; 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 Xerox Corporation, Codendi.</para>
+    
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
+End:
+-->
+

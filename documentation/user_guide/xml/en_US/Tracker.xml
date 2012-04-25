@@ -9,7 +9,7 @@
 -->
       
 <chapter id="TrackerService">
-  <title>Tracker Service (Legacy)</title>
+  <title>Tracker (Legacy)</title>
 
   <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the legacy version (aka v3) of Tracker service.
   For documentation on the current tracker system (v5) see <xref linkend="TrackerV5Service" />.</para>
@@ -22,7 +22,7 @@
   <para>All trackers, whether predefined at the site level or created
   by a project can be fully customized. </para>
 
-  <section id="CodendiTrackerPrinciples">
+  <section id="TrackerPrinciples">
     <title>Terminology and common features</title>
 
     <para>Before we explain the features of the tracker service, it's
@@ -441,7 +441,7 @@
 	<mediaobject>
 	  <imageobject>
 	    <imagedata format="PNG"
-	      fileref="../../screenshots/en_US/sc_artifactbrowsing.png" width="15.3cm" />
+	      fileref="../../screenshots/en_US/sc_legacyartifactbrowsing.png" width="15.3cm" />
 	  </imageobject>
 	</mediaobject>
       </figure>
@@ -1471,7 +1471,7 @@ width="14.5cm" />
       <mediaobject>
 	<imageobject>
 	  <imagedata format="PNG"
-	    fileref="../../screenshots/en_US/sc_trackercreatenewtracker.png" width="13cm"/>
+	    fileref="../../screenshots/en_US/sc_legacytrackercreatenewtracker.png" width="13cm"/>
 	</imageobject>
       </mediaobject>
     </figure>
@@ -1502,7 +1502,7 @@ width="14.5cm" />
 	  specific tracker called &#34;Empty&#34; allows you to create a
 	  virgin tracker with no predefined fields other than the
 	  minimal set of required fields. See <xref
-          linkend="CodendiTrackerTemplates" /> for more explanations
+          linkend="TrackerTemplates" /> for more explanations
           on the semantic of those templates.</para>
       </listitem>
 
@@ -1524,7 +1524,7 @@ width="14.5cm" />
   </section>
 
 
-  <section id="CodendiTrackerTemplates">
+  <section id="TrackerTemplates">
     <title>&SYS_PRODUCT_NAME;-wide Tracker Templates</title>
 
     <para>The standard trackers provided for each new &SYS_PRODUCT_NAME; project are:
@@ -1753,6 +1753,7 @@ width="14.5cm" />
       search and browsing templates for the artifact search screen are
       defined here (search criteria et results table).</para>
       </listitem>
+	  
       <listitem><para><emphasis role="bold">Email Notification
 	Settings</emphasis>: fine tuning of the global and personal
 	email notification settings.</para>
@@ -2974,7 +2975,7 @@ width="14.5cm" />
 	<mediaobject>
 	  <imageobject>
 	    <imagedata format="PNG"
-	      fileref="../../screenshots/en_US/sc_trackercannedresponses.png" width="15.3cm" />
+	      fileref="../../screenshots/en_US/sc_legacytrackercannedresponses.png" width="15.3cm" />
 	  </imageobject>
 	</mediaobject>
       </figure>
@@ -3567,7 +3568,7 @@ width="14.5cm" />
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

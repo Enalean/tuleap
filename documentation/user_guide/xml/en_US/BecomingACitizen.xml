@@ -6,7 +6,7 @@
 //
 //
 -->
-<chapter id="BecomingACodendiCitizen">
+<chapter id="BecomingACitizen">
   <title>Becoming a &SYS_PRODUCT_NAME; Citizen</title>
 
   <section id="ClassesOfCitizens">
@@ -206,12 +206,12 @@
 								     url="http://&SYS_DEFAULT_DOMAIN;/">http://&SYS_DEFAULT_DOMAIN;</ulink> and click
       on the &#34;Login&#34; link. If
       you typed your login and password OK, &SYS_PRODUCT_NAME; presents you with your
-      Personal Page (<xref linkend="FigureThePersonalPageOfACodendiUser" />). At
+      Personal Page (or Personal Dashboard) (<xref linkend="FigureThePersonalPageOfACodendiUser" />). At
       any point in time you can return to your &SYS_PRODUCT_NAME; Personal Page by
       selecting the &#34;My Personal Page&#34; in the upper part of the &SYS_PRODUCT_NAME;
       Main Menu.</para>
 
-    <para>Your Personal Page is a crossroad from which you can quickly
+    <para>Your Personal Page is a dashboard from where you can quickly
     go to &SYS_PRODUCT_NAME; workplaces and information spaces. You'll see bugs and
     tasks assigned to you in the various projects you belong to. In
     addition the bug section also shows those bugs that you have
@@ -273,7 +273,7 @@
       </listitem>
       <listitem>
         <para><emphasis role="bold">My Projects</emphasis> lists the projects you belong to. Selecting any of these projects
-    brings you to the corresponding Project Summary page.
+    brings you to the corresponding Project Dashboard.
         </para>
       </listitem>
       <listitem>
@@ -377,7 +377,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 
