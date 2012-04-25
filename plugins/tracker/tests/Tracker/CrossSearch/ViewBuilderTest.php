@@ -40,7 +40,7 @@ class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_Sea
 
 class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
-    public function itBuildCustomContentView() {
+    public function itBuildPlanningContentView() {
         $formElementFactory = new MockTracker_FormElementFactory();
         $tracker_factory    = new MockTrackerFactory();
         $tracker_ids        = array();
@@ -57,10 +57,9 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
         
         $builder            = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
-        $content_view_class = 'Tracker_CrossSearch_SearchContentView';
-        $view               = $builder->buildCustomContentView($content_view_class, $user, $project, $cross_search_criteria, array(), $tracker_ids);
+        $view               = $builder->buildPlanningContentView($user, $project, $cross_search_criteria, array(), $tracker_ids);
         
-        $this->assertIsA($view, $content_view_class);
+        $this->assertIsA($view, 'Planning_SearchContentView');
     }
 }
 

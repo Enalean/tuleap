@@ -62,23 +62,25 @@ class Tracker_CrossSearch_ViewBuilder {
      * @return Tracker_CrossSearch_SearchView 
      */
     public function buildView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query) {
+        $report       = $this->getReport();
         $service      = $this->getService($project);
-        $criteria     = $this->criteria_builder->getCriteria($user, $project, $this->getReport(), $cross_search_query);
+        $criteria     = $this->criteria_builder->getCriteria($user, $project, $report, $cross_search_query);
         $trackers     = $this->tracker_factory->getTrackerByGroupIdUserCanView($project->getGroupId(), $user);
         $tracker_ids  = $this->getTrackersIds($trackers);
         
-        $content_view = $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $user, $project, $cross_search_query, array(), $tracker_ids);
+        $artifacts = $this->search->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, array());
+        $content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory);
         
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
     }
     
     
-    public function buildCustomContentView($classname, User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query, array $excluded_artifact_ids, array $tracker_ids) {
+    public function buildPlanningContentView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query, array $excluded_artifact_ids, array $tracker_ids) {
         $report    = $this->getReport();
         $criteria  = $this->criteria_builder->getCriteria($user, $project, $report, $cross_search_query);
         $artifacts = $this->search->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
         
-        return new $classname($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory);
+        return new Planning_SearchContentView($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory);
     }
 
     

@@ -54,8 +54,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
-        $id = 987;
-        $title = "screen hangs with macos";
+        $id      = 987;
+        $title   = "screen hangs with macos";
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
         $this->assertPattern('/No items yet/', $content);
         $this->assertPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
@@ -176,8 +176,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $tracker_ids  = array();
         $user         = '*';
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $user, $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
-        $view_builder->setReturnValue('buildCustomContentView', $content_view);
+        $view_builder->expectOnce('buildPlanningContentView', array($user, $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
+        $view_builder->setReturnValue('buildPlanningContentView', $content_view);
 
         return $view_builder;
     }
@@ -276,7 +276,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->setReturnValue('buildCustomContentView', $content_view);
+        $view_builder->setReturnValue('buildPlanningContentView', $content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, array(), new MockTracker_CrossSearch_Search());
     }
     
