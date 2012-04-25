@@ -58,9 +58,7 @@ class TrackerFactory {
     public function getTrackerById($id) {
         if (!isset($this->trackers[$id])) {
             $this->trackers[$id] = null;
-            $row = $this->getDao()
-                    ->searchById($id)
-                    ->getRow();
+            $row = $this->getDao()->searchById($id)->getRow();
             if ($row) {
                 $this->trackers[$id] = $this->getInstanceFromRow($row);
             }
@@ -76,11 +74,17 @@ class TrackerFactory {
     public function getTrackersByGroupId($group_id) {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
-            if (!isset($this->trackers[$row['id']])) {
-                $this->trackers[$row['id']] = $this->getInstanceFromRow($row);
-            }
-            if ($this->trackers[$row['id']]) {
-                $trackers[$row['id']] = $this->trackers[$row['id']];
+            $trackers[$row['id']] = $this->getInstanceFromRow($row);
+        }
+        return $trackers;
+    }
+    
+    public function getTrackerByGroupIdUserCanView($group_id, User $user) {
+        $trackers = array();
+        foreach($this->getDao()->searchByGroupId($group_id) as $row) {
+            $tracker = $this->getInstanceFromRow($row);
+            if($tracker->userCanView($user)) {
+                $trackers[$row['id']] = $tracker; 
             }
         }
         return $trackers;
@@ -115,20 +119,24 @@ class TrackerFactory {
      * @return Tracker
      */
     public function getInstanceFromRow($row) {
-        return new Tracker(
-                $row['id'],
-                $row['group_id'],
-                $row['name'],
-                $row['description'],
-                $row['item_name'],
-                $row['allow_copy'],
-                $row['submit_instructions'],
-                $row['browse_instructions'],
-                $row['status'],
-                $row['deletion_date'],
-                $row['instantiate_for_new_projects'],
-                $row['stop_notification']
-        );
+        $tracker_id = $row['id'];
+        if (!isset($this->trackers[$tracker_id])) {
+            $this->trackers[$tracker_id] = new Tracker(
+                    $row['id'],
+                    $row['group_id'],
+                    $row['name'],
+                    $row['description'],
+                    $row['item_name'],
+                    $row['allow_copy'],
+                    $row['submit_instructions'],
+                    $row['browse_instructions'],
+                    $row['status'],
+                    $row['deletion_date'],
+                    $row['instantiate_for_new_projects'],
+                    $row['stop_notification']
+            );
+        }
+        return $this->trackers[$tracker_id];
     }
 
     /**

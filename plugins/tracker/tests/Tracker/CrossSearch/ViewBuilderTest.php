@@ -44,7 +44,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $formElementFactory = new MockTracker_FormElementFactory();
         $tracker_factory    = new MockTrackerFactory();
         $tracker_ids        = array();
-        $tracker_factory->setReturnValue('getTrackersByGroupId', $tracker_ids);
+        $tracker_factory->setReturnValue('getTrackerByGroupIdUserCanView', $tracker_ids);
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
         $criteria_builder   = new MockTracker_CrossSearch_CriteriaBuilder();
