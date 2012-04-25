@@ -280,7 +280,7 @@ CREATE TABLE tracker_fileinfo(
     filesize BIGINT UNSIGNED NOT NULL,
     filetype TEXT NOT NULL,
     FULLTEXT fltxt (description, filename)
-)AUTO_INCREMENT=101;
+)AUTO_INCREMENT=101 ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS tracker_report;
 CREATE TABLE tracker_report(

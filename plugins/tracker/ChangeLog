@@ -1,3 +1,8 @@
+Version 5.7.6 - Tuleap 5.0
+    * Allow trackers to be installed on servers having default storage engine
+	set to InnoDB 
+    * Fix search on attachments
+
 Version 5.7.5 - Tuleap 5.0
     * Fix burndown bug when remaining_effort fall to 0.
 
