@@ -30,8 +30,8 @@
     <li>
         <a href="http://tuleap.com/blog?utm_source=forge&utm_medium=forge&utm_campaign=forge">Blog</a>
     </li>
-    <li><a href="https://twitter.com/TuleapEnalean" class="twitter-follow-button" data-show-count="false">Follow @TuleapEnalean</a>
-    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+    <li>
+        <a href="https://twitter.com/TuleapEnalean">Follow @TuleapEnalean</a>
     </li>
 </ul>
 <?php
