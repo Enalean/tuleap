@@ -139,6 +139,14 @@
         </revremark>
       </revision>
 
+      <revision>
+        <revnumber>5.0</revnumber>
+        <date>20-Apr-2012</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>
+            Rafraichissement de la documentation et des captures d'écran
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

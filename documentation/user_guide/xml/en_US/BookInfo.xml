@@ -653,6 +653,14 @@
         </revremark>
       </revision>
 
+      <revision>
+        <revnumber>5.0</revnumber>
+        <date>20-Apr-2012</date>
+        <authorinitials>Enalean Team</authorinitials>
+        <revremark>
+            Refresh documentation and its screenshots
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--
