@@ -62,7 +62,7 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
     }
     
     public function givenACriteriaBuilderForArtifacts($artifacts) {
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanRead', $artifacts);
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanView', $artifacts);
         return new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, $this->planning_trackers);
     }
 }
@@ -278,8 +278,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         $artifact512             = new Tracker_Artifact(512, $release_tracker_id, null, null, null);
         $artifact33              = new Tracker_Artifact(33, $sprint_tracker_id, null, null, null);
         
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanRead', array($artifact1, $artifact512), array($user, $release_tracker_id));
-        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanRead', array($artifact33), array($user, $sprint_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanView', array($artifact1, $artifact512), array($user, $release_tracker_id));
+        $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanView', array($artifact33), array($user, $sprint_tracker_id));
         
         $this->planning_trackers = array($release_tracker, $sprint_tracker);
         

@@ -109,7 +109,7 @@ class Tracker_ArtifactFactory {
      *
      * @return array of Tracker_Artifact identified by id (array() if not found)
      */
-    public function getArtifactsByTrackerIdUserCanRead(User $user, $tracker_id) {
+    public function getArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
