@@ -222,6 +222,7 @@ function get_history_entries() {
  * @return String
  */
 function convert_project_history_events($array, $subevents) {
+    $hp = Codendi_HTMLPurifier::instance();
     $output = '{ }';
     if (is_array($array)) {
         if (count($array)) {
@@ -232,15 +233,20 @@ function convert_project_history_events($array, $subevents) {
                 if ($subevents) {
                     if(list($key, $value) = each($array)) {
                         if (is_string($value) && !empty($value)) {
-                            $output .= $comma . "'" . $value . "'" . ': '. "'". $GLOBALS['Language']->getText('project_admin_utils', $value). "'";
+                            $value            = $hp->purify($value, CODENDI_PURIFIER_JS_QUOTE);
+                            $translated_value = $hp->purify($GLOBALS['Language']->getText('project_admin_utils', $value), CODENDI_PURIFIER_JS_QUOTE);
+                            
+                            $output .= $comma . "'$value': '$translated_value'";
                             $comma = ', ';
                         }
                     }
                 } else {
                     if(list($key, $value) = each($array)) {
                         if (is_string($key)) {
-                            $output .= $comma . "'" . $key . "'" .': '.convert_project_history_events($value, true);
-                            $comma = ', ';
+                            $key     = $hp->purify($key, CODENDI_PURIFIER_JS_QUOTE);
+                            $value   = convert_project_history_events($value, true);
+                            $output .= $comma . "'$key': $value";
+                            $comma   = ', ';
                         }
                     }
                 }

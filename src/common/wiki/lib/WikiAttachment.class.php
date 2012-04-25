@@ -49,56 +49,56 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access private
      * @var    int 
      */
-    var $gid;
+    public $gid;
 
     /**
      * Attachment name
      * @access private
      * @var    string
      */
-    var $filename;
+    public $filename;
 
     /**
      * Attachment name in the filesystem
      * @access private
      * @var    string
      */
-    var $filesystemName;
+    public $filesystemName;
 
     /**
      * Attachment location (directory)
      * @access private
      * @var    string
      */
-    var $basedir;
+    public $basedir;
 
     /**
      * Wanted attachment revision
      * @access private
      * @var    WikiAttachmentRevision
      */
-    var $revision;
+    public $revision;
 
-    var $id;
+    public $id;
 
-    var $revisionCounter;
+    public $revisionCounter;
 
     /**
      * @access public
      * @param  int $gid Project identifier
      */
-    function WikiAttachment($gid=0) {
+    public function __construct($gid=0) {
         $this->setGid($gid);
         $this->filetype = null;
         $this->filesize = null;
         $this->revisionCounter = null;
     }
 
-    function &getDao() {
+    public function &getDao() {
         static $_codendi_wikiattachmentdao_instance;
         
         if(!$_codendi_wikiattachmentdao_instance) {
-            $_codendi_wikiattachmentdao_instance =& new WikiAttachmentDao(CodendiDataAccess::instance());
+            $_codendi_wikiattachmentdao_instance = new WikiAttachmentDao(CodendiDataAccess::instance());
         }
 
         return $_codendi_wikiattachmentdao_instance;
@@ -108,7 +108,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      * @param  Iterator
      */
-    function getAttachmentIterator($gid=null) {
+    public function getAttachmentIterator($gid=null) {
         $waArray = array();
         if($gid !== null) {
             $gid = (int) $gid;
@@ -121,7 +121,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $dar =& $dao->getList($gid);
         
         while($row = $dar->getRow()) {
-            $wa =& new WikiAttachment($gid);
+            $wa = new WikiAttachment($gid);
             $wa->setFromRow($row);
             $waArray[] =& $wa;
             unset($wa);
@@ -130,11 +130,10 @@ class WikiAttachment /* implements UGroupPermission */ {
         return new ArrayIterator($waArray);
     }
 
-    function getListWithCounter($gid=null, $uid=null, $limit=null) {
+    public function getListWithCounter($gid=null, $uid=null, $limit=null) {
         if($gid !== null) {
             $gid = (int) $gid;
-        }
-        else {
+        } else {
             $gid = $this->gid;
         }
 
@@ -168,28 +167,17 @@ class WikiAttachment /* implements UGroupPermission */ {
         $waArray = array();
         $stop = false;
         while(($row = $dar->getRow()) && !$stop) {
-            if($max !== null) {
-                if($i >= $max) {
-                    $stop = true;
-                    break;
-                }
+            if($max !== null && $i >= $max) {
+                $stop = true;
+                break;
             }
 
-            $wa =& new WikiAttachment($gid);
+            $wa = new WikiAttachment($gid);
             $wa->setFromRow($row);
 
             // Check for user rights
             $isAllowedToSee = false;
-            if($wa->permissionExist()) {
-                if($wa->isAutorized($uid)) {
-                    $isAllowedToSee = true;
-                }
-            }
-            else {
-                $isAllowedToSee = true;
-            }
-
-            if($isAllowedToSee) {
+            if(! $wa->permissionExist() || $wa->isAutorized($uid)) {
                 if($j >= $offset) {
                     $wa->setRevisionCounter($row['nb']);
                     $waArray[] =& $wa;
@@ -208,7 +196,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      * @param  int $id Project identifier
      */
-    function setGid($id=0) {
+    public function setGid($id = 0) {
         $this->gid      = (int) $id;
         $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'].'/'.$this->gid;
     }
@@ -217,7 +205,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      * @param  string $name File name
      */
-    function setFilename($name="") {
+    public function setFilename($name = "") {
 
         if (preg_match("/[^._a-zA-Z0-9-\(\) &]/", $name)) {
 
@@ -234,12 +222,12 @@ class WikiAttachment /* implements UGroupPermission */ {
      *
      * @return Boolean
      */
-    function initFilesystemName() {
+    public function initFilesystemName() {
         $this->filesystemName = $this->filename.'_'.time();
         return true;
     }
   
-    function getFilename() {
+    public function getFilename() {
         return $this->filename;
     }
 
@@ -250,7 +238,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      *
      * @return String
      */
-    function getFilesystemName() {
+    public function getFilesystemName() {
         if ($this->filesystemName) {
             return $this->filesystemName;
         } else {
@@ -263,7 +251,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         }
     }
 
-    function setFile($basedir="") {
+    public function setFile($basedir="") {
     
     }
 
@@ -303,7 +291,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      * @param  string $uri Uri to access to attachment
      */
-    function setUri($uri="") {
+    public function setUri($uri="") {
         $uriExp = explode('/', $uri);
 
         $this->setGid($uriExp[3]);
@@ -319,8 +307,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             }
             $this->setFilename(urldecode($filename));
             $file = $this->basedir.'/'.$this->filename;
-        }
-        else {
+        } else {
             // Take care of possible arguments (if sth like '?' or '&' CUT!)
             if(preg_match('/([^&\?]*)(\?|&)/', $uriExp[4], $matches)){
                 $filename = $matches[1];
@@ -334,8 +321,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             // generical functions, in utils.php for instance.
             if(isset($uriExp[5]) && is_numeric($uriExp[5])) {
                 $rev = (int) $uriExp[5];
-            }
-            else {
+            } else {
                 $rev = $this->count();
             }
         }
@@ -343,7 +329,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $rev -= 1;
 
         //$this->revision = new WikiAttachmentRevision($this->gid);
-        $this->revision =& $this->_getNewWikiAttachmentRevision();
+        $this->revision = new WikiAttachmentRevision();
         $this->revision->setGid($this->gid);
         $this->revision->setAttachmentId($this->getId());
         $this->revision->setRevision($rev);
@@ -351,12 +337,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         $this->revision->log(user_getid());
     }
 
-	function &_getNewWikiAttachmentRevision() {
-		$r =& new WikiAttachmentRevision();
-		return $r;
-	}
-
-    function exist() {
+    public function exist() {
         return is_dir($this->basedir.'/'.$this->getFilesystemName());
     }
 
@@ -366,7 +347,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      *
      * @return Boolean
      */
-    function isActive() {
+    public function isActive() {
         $dao = WikiAttachment::getDao();
         $dar = $dao->read($this->id);
         if ($dar && !$dar->isError()) {
@@ -376,7 +357,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         return false;
     }
 
-    function dbadd() {
+    public function dbadd() {
         $dao =& WikiAttachment::getDao();
         $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
@@ -391,7 +372,7 @@ class WikiAttachment /* implements UGroupPermission */ {
         }
     }
 
-    function create() {
+    public function create() {
         // Create wiki attachment directory for current project
         if(!is_dir($this->basedir)){
             $res = mkdir($this->basedir, 0700);
@@ -410,11 +391,10 @@ class WikiAttachment /* implements UGroupPermission */ {
             }
         }
 
-        $res = $this->dbadd();
-        return $res;
+        return $this->dbadd();
     }
 
-    function getId() {
+    public function getId() {
         if(!is_numeric($this->id)) {
             $dao =& WikiAttachment::getDao();
             $dar =& $dao->getIdFromFilename($this->gid, $this->getFilename());
@@ -422,8 +402,7 @@ class WikiAttachment /* implements UGroupPermission */ {
             if($dar->rowCount() > 1) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_multi_id'), E_USER_ERROR);
                 return -1;
-            }
-            else {
+            } else {
                 $row =& $dar->getRow();
                 $this->id = $row['id'];
             }
@@ -533,33 +512,25 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      * @access public
      */
-    function permissionExist() {
+    public function permissionExist() {
         require_once('www/project/admin/permissions.php');
-        if (permission_exist('WIKIATTACHMENT_READ', $this->id))
-            return true;
-        else
-            return false;
+        return (permission_exist('WIKIATTACHMENT_READ', $this->id));
     }
 
 
     /**
      * @access public
      */
-    function isAutorized($uid) {            
+    public function isAutorized($uid) {            
         require_once('www/project/admin/permissions.php');
-        if($this->permissionExist()) {
-            if (!permission_is_authorized('WIKIATTACHMENT_READ', $this->id, $uid, $this->gid)) {
-                return false;
-            }
-        }
-        return true;
+        return ($this->permissionExist() == false || permission_is_authorized('WIKIATTACHMENT_READ', $this->id, $uid, $this->gid));
     }
 
   
     /**
      *@access public
      */
-    function setPermissions($groups) {
+    public function setPermissions($groups) {
         global $feedback;
 
         list ($ret, $feedback) = permission_process_selection_form($this->gid, 
@@ -572,7 +543,7 @@ class WikiAttachment /* implements UGroupPermission */ {
     /**
      *@access public
      */
-    function resetPermissions() {
+    public function resetPermissions() {
         return permission_clear_all($this->gid, 
                                     'WIKIATTACHMENT_READ', 
                                     $this->id);
@@ -583,7 +554,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      *
      * @return Boolean
      */
-    function deleteAttachment() {
+    public function deleteAttachment() {
         if ($this->isActive()) {
             $dao = $this->getDao();
             return $dao->delete($this->id);
@@ -598,7 +569,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      *
      * @return Boolean
      */
-    function deleteProjectAttachments($groupId = null) {
+    public function deleteProjectAttachments($groupId = null) {
         $deleteStatus = true;
         if($groupId !== null) {
             $groupId = (int) $groupId;
@@ -694,11 +665,11 @@ class WikiAttachment /* implements UGroupPermission */ {
     public function restoreDeletedAttachment($id) {
         $dao = $this->getDao();
         $this->initWithId($id);
-        if($this->exist()&& !$this->isActive()) {
-        return $dao->restoreAttachment($id);
-        } else {
-            return false;
+        if($this->exist() && !$this->isActive()) {
+            return $dao->restoreAttachment($id);
         }
+        
+        return false;
     }
 }
 

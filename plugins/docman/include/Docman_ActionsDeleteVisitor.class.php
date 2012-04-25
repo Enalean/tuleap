@@ -25,7 +25,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     protected $user;
     protected $response;
 
-    function __construct() {
+    public function __construct() {
         //More coherent to have only one delete date for a whole hierarchy.
         $this->deleteDate = time();
         $this->response   = $GLOBALS['Response'];
@@ -38,7 +38,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      * @param Docman_Folder $item
      * @param $params
      */
-    function visitFolder(&$item, $params = array()) {
+    public function visitFolder(&$item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
         if (isset($params['parent'])) {
@@ -68,7 +68,8 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             return $this->_deleteItem($item, $params);
         }
     }
-    function visitDocument($item, $params = array()) {
+    
+    public function visitDocument($item, $params = array()) {
         //Mark the document as deleted
         return $this->_deleteItem($item, $params);
     }
@@ -83,7 +84,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     *
     * @return boolean $deleted. True if there is no error.  False otherwise.
     */
-    function visitWiki(&$item, $params = array()) {
+    public function visitWiki(&$item, $params = array()) {
         // delete the document.
         $deleted = $this->visitDocument($item, $params);
 
@@ -102,11 +103,12 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         }
         return $deleted;
     }
-    function visitLink(&$item, $params = array()) {
+    
+    public function visitLink(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
 
-    function visitFile($item, $params = array()) {
+    public function visitFile($item, $params = array()) {
         if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             if (isset($params['version']) && $params['version'] !== false) {
                 return $this->_deleteVersion($item, $params['version'], $params['user']);
@@ -119,17 +121,17 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         }
     }
 
-    function visitEmbeddedFile(&$item, $params = array()) {
+    public function visitEmbeddedFile(&$item, $params = array()) {
         return $this->visitFile($item, $params);
     }
 
-    function visitEmpty(&$item, $params = array()) {
+    public function visitEmpty(&$item, $params = array()) {
         return $this->visitDocument($item, $params);
     }
 
-    function restrictAccess($item, $params = array()) {
+    public function restrictAccess($item, $params = array()) {
         // Check whether there is other references to this wiki page.
-        $dao =& $this->_getItemDao();
+        $dao = $this->_getItemDao();
         $referenced = $dao->isWikiPageReferenced($item->getPageName(), $item->getGroupId());
         if(!$referenced) {
             $dIF =& $this->_getItemFactory();
@@ -191,38 +193,42 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());
     }
 
-    function &_getEventManager() {
+    function _getEventManager() {
         return EventManager::instance();
     }
+    
     var $version_factory;
-    function &_getVersionFactory() {
+    function _getVersionFactory() {
         if (!$this->version_factory) {
-        $this->version_factory = new Docman_VersionFactory();
+            $this->version_factory = new Docman_VersionFactory();
         }
         return $this->version_factory;
     }
+    
     var $item_factory;
-    function &_getItemFactory() {
+    function _getItemFactory() {
         if (!$this->item_factory) {
-            $this->item_factory =& new Docman_ItemFactory();
+            $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;
     }
+    
     var $lock_factory;
-    function &_getLockFactory() {
+    function _getLockFactory() {
         if (!$this->lock_factory) {
-            $this->lock_factory =& new Docman_LockFactory();
+            $this->lock_factory = new Docman_LockFactory();
         }
         return $this->lock_factory;
-    }    
-    function &_getFileStorage() {
-        $fs = new Docman_FileStorage();
-        return $fs;
+    }   
+     
+    function _getFileStorage() {
+        return new Docman_FileStorage();
     }
-    function &_getItemDao() {
-        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
-        return $dao;
+    
+    function _getItemDao() {
+        return new Docman_ItemDao(CodendiDataAccess::instance());
     }
+    
     function getPermissionManager($groupId) {
         return Docman_PermissionsManager::instance($groupId);
     }
