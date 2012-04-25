@@ -235,6 +235,14 @@ class Tracker_ReportDao extends DataAccessObject {
         return isset($permissions[$permission_type]) && count(array_intersect($ugroups, $permissions[$permission_type])) > 0;
     }
     
+    private function getSqlFilterForSubmittedByGroup($from, $where, $join_user_constraint) {
+        $sql = "SELECT c.artifact_id AS id, c.id AS last_changeset_id
+                $from
+                  $join_user_constraint
+                $where";
+        return $sql;
+    }
+    
     function getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups) {
         $sqls = array();
         
@@ -243,49 +251,40 @@ class Tracker_ReportDao extends DataAccessObject {
         
         // {{{ The static ugroups
         if ($this->hasPermissionForStaticUgroup($static_ugroups, $allowed_ugroups)) {
-            $static_ugroups = $this->da->quoteSmartImplode(',', $static_ugroups);
-            
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                    $from ." INNER JOIN ugroup_user uu ON (
-                        artifact.submitted_by = uu.user_id
-                        AND uu.ugroup_id IN ($static_ugroups)
-                    ) ".
-                    $where;
+            $static_ugroups       = $this->da->quoteSmartImplode(',', $static_ugroups);
+            $join_user_constraint = " INNER JOIN ugroup_user uu ON (
+                                          artifact.submitted_by = uu.user_id
+                                          AND uu.ugroup_id IN ($static_ugroups)) ";
+            $sqls[] = $this->getSqlFilterForSubmittedByGroup($from, $where, $join_user_constraint);
         }
         // }}}
 
         // {{{ tracker_admins
         if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                    $from ." INNER JOIN tracker_perm AS p ON (
-                        artifact.submitted_by = p.user_id
-                        AND p.tracker_id = $tracker_id
-                        AND p.perm_level >= 2 
-                    ) ".
-                    $where;
+            $join_user_constraint = " INNER JOIN tracker_perm AS p ON (
+                                          artifact.submitted_by = p.user_id
+                                          AND p.tracker_id = $tracker_id
+                                          AND p.perm_level >= 2) ";
+            $sqls[] = $this->getSqlFilterForSubmittedByGroup($from, $where, $join_user_constraint);
         }
         //}}}
         
         // {{{ project_members
         if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups, $allowed_ugroups)) {
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                    $from ." INNER JOIN user_group AS ug ON ( 
-                        artifact.submitted_by = ug.user_id 
-                        AND ug.group_id = $group_id
-                    ) ".
-                    $where;
+            $join_user_constraint = " INNER JOIN user_group AS ug ON ( 
+                                          artifact.submitted_by = ug.user_id 
+                                          AND ug.group_id = $group_id) ";
+            $sqls[] = $this->getSqlFilterForSubmittedByGroup($from, $where, $join_user_constraint);
         }
         //}}}
         
         // {{{ project_admins
         if ($this->hasPermissionForDynamicUgroup($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups, $allowed_ugroups)) {
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                    $from ." INNER JOIN user_group ug ON (
-                        artifact.submitted_by = ug.user_id 
-                        AND ug.group_id = $group_id
-                        AND ug.admin_flags = 'A'
-                    ) ".
-                    $where;
+            $join_user_constraint = " INNER JOIN user_group ug ON (
+                                          artifact.submitted_by = ug.user_id 
+                                          AND ug.group_id = $group_id
+                                          AND ug.admin_flags = 'A') ";
+            $sqls[] = $this->getSqlFilterForSubmittedByGroup($from, $where, $join_user_constraint);
         }
         //}}}
         
@@ -293,7 +292,7 @@ class Tracker_ReportDao extends DataAccessObject {
     }
 
     
-    function getSqlFilterForContributorGroup($from, $where, $contributor_field_id, $join_user_constraint) {
+    private function getSqlFilterForContributorGroup($from, $where, $contributor_field_id, $join_user_constraint) {
         $sql = "SELECT c.artifact_id AS id, c.id AS last_changeset_id 
                 $from 
                   INNER JOIN tracker_semantic_contributor AS SEM_CONTRIB  ON (SEM_CONTRIB.tracker_id = artifact.tracker_id)
