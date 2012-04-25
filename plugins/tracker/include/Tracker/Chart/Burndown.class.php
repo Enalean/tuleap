@@ -107,7 +107,7 @@ class Tracker_Chart_Burndown {
                     $current_day = $this->start_date;   
                 } else {
                     $current_day = $day;
-                    if ($dbdata_of_the_day == 0 && isset($data[$day - 1][$aid])) {
+                    if ($dbdata_of_the_day === 0 && isset($data[$day - 1][$aid])) {
                         $dbdata_of_the_day = $data[$day - 1][$aid];
                     }
                 }

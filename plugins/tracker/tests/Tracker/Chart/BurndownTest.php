@@ -138,6 +138,35 @@ class Tracker_Chart_BurndownTest extends TuleapTestCase {
         // No notices should be thrown
         $burndown->getComputedData();
     }
+    
+    public function itShouldTakeIntoAccountWhenValueFallToZero() {
+        $data = new Tracker_Chart_BurndownTest_FakeData();
+        $data->remaining_effort = array(
+            15441 => array(
+                5215 => '2.0000',
+                5217 => '0.0000',
+                5239 => '0.5000',
+                5241 => '14.0000'),
+            15443 => array(
+                5215 => '0.0000',
+                5217 => null,
+                5239 => null,
+                5241 => '13.0000'
+            ),
+        );
+        $data->min_day = 15441;
+        $data->max_day = 15443;
+        $data->artifact_ids = array(5215, 5217, 5239, 5241);
+        
+        $burndown = new Tracker_Chart_Burndown($data);
+        $burndown->setStartDateInDays(15441);
+        
+        $prepared_data = $burndown->getComputedData();
+        $this->assertEqual($prepared_data[15443][5215], 0, "When the last value is 0, returns 0 (".$prepared_data[15443][5215]." returned)");
+        $this->assertEqual($prepared_data[15443][5217], 0, "When value is null, keep previous value");
+        $this->assertEqual($prepared_data[15443][5239], 0.5, "When value is null, keep previous value");
+        $this->assertEqual($prepared_data[15443][5241], 13.0, "When value decrease, keep value");
+    }
 }
 
 class Tracker_Chart_Burndown_FormatDataForDisplayPerDay extends TuleapTestCase {
