@@ -266,11 +266,14 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $project = new MockProject();
         
         $readableField   = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $targetOfReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+        $targetOfReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
         $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
         
         $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
         $factory->setReturnValue('getProjectSharedFields', array($readableField, $unReadableField), array($project));
         $factory->setReturnValue('getSharedTargets', array(), array($unReadableField));
+        $factory->setReturnValue('getSharedTargets', array($targetOfReadableField1, $targetOfReadableField2), array($readableField));
         
         $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($readableField));
     }

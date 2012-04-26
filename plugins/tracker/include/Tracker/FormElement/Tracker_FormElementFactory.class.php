@@ -746,6 +746,7 @@ class Tracker_FormElementFactory {
     
     private function canReadAtleastOneTarget($field) {
         $targetFields = $this->getSharedTargets($field);
+        
         foreach ($targetFields as $targetField) {
             if ($targetField->userCanRead($this->user)) {
                 return true;

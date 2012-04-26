@@ -331,39 +331,25 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    private function getSqlForAllSharedTargetsOfProject($project_id) {
-        $project_id  = $this->da->escapeInt($project_id);
-        $sql = "SELECT f_target.*
-                FROM tracker_field f_target 
-                  JOIN tracker_field f_src ON (f_target.original_field_id = f_src.id) 
-                  JOIN tracker ON (f_src.tracker_id = tracker.id)
-                WHERE tracker.group_id = $project_id
-                  AND f_target.use_it = 1
-                  AND tracker.deletion_date IS NULL";
-        return $sql;
-    }
-    
-    private function getSqlForAllSharedSourcesOfProject($project_id) {
-        $project_id  = $this->da->escapeInt($project_id);
-        $sql = "SELECT tracker_field.*
-                FROM tracker_field 
-                INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
-                WHERE tracker.group_id = $project_id 
-                  AND tracker_field.original_field_id != 0
-                  AND tracker_field.use_it = 1
-                  AND tracker.deletion_date IS NULL";
-        return $sql;
-    }
-    
+    /**
+     * Returns all the original shared fields of a project
+     * 
+     * @param int $project_id
+     * @return DataAccessResult 
+     */
     public function searchProjectSharedFieldsOriginals($project_id) {
-        $source_sql = $this->getSqlForAllSharedSourcesOfProject($project_id);
-        $target_sql = $this->getSqlForAllSharedTargetsOfProject($project_id);
-        
-        $sql = "SELECT * FROM (($source_sql) UNION ($target_sql)) AS combined
-                GROUP BY original_field_id";
+        $project_id  = $this->da->escapeInt($project_id);
+        $sql = "SELECT *
+                FROM tracker_field                   
+                WHERE id IN (SELECT original_field_id
+                             FROM tracker_field 
+                             INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
+                             WHERE tracker.group_id = $project_id
+                                AND tracker_field.original_field_id != 0
+                                AND tracker_field.use_it = 1
+                                AND tracker.deletion_date IS NULL)";
         return $this->retrieve($sql);
     }
-
     /**
      * Returns:
      * - all the fields that are a copy of fields defined in the project
