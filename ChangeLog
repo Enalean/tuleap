@@ -1,3 +1,7 @@
+Version 5.0.1 (Thursday, April 26th 2012)
+   == Bug fix ==
+   * Fix link to cli documentation in footer
+
 Version 5.0 (Thursday, April 26th 2012)
    == Enhancement ==
    * Improve default tuleap homepage and footer
