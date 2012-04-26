@@ -20,6 +20,7 @@
 
 require_once('common/mvc/Controler.class.php');
 require_once('CodeReviewViews.class.php');
+require_once('RepositoryManager.class.php');
 
 /**
  * codereview
@@ -35,7 +36,7 @@ class CodeReview extends Controler {
      *
      * @return Void
      */
-    function CodeReview($plugin) {
+    function __construct($plugin) {
         $this->plugin  = $plugin;
         $this->request = HTTPRequest::instance();
         $this->user    = UserManager::instance()->getCurrentUser();
@@ -67,6 +68,8 @@ class CodeReview extends Controler {
     function request() {
         $request = $this->getRequest();
         if ($this->getUser()->isLoggedIn()) {
+            $repositoryManager = new RepositoryManager($this->plugin);
+            $repositoryManager->addRepository($request);
             $vAction = new Valid_WhiteList('action', array('add_review'));
             $vAction->required();
             $action = $request->getValidated('action', $vAction, false);
