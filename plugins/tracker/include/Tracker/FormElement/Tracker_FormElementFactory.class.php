@@ -111,8 +111,8 @@ class Tracker_FormElementFactory {
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::setInstance(new $c);
+            $FormElementFactory_class = __CLASS__;
+            self::setInstance(new $FormElementFactory_class);
         }
         return self::$_instance;
     }
@@ -142,25 +142,28 @@ class Tracker_FormElementFactory {
      * @return string 
      */
     public function getType($form_element) {
-        return array_search(get_class($form_element), array_merge($this->classnames,
-                                                                 $this->special_classnames, 
-                                                                 $this->group_classnames, 
-                                                                 $this->staticfield_classnames));
+        $all_classnames = array_merge(
+            $this->classnames,
+            $this->special_classnames, 
+            $this->group_classnames, 
+            $this->staticfield_classnames
+        );
+        return array_search(get_class($form_element), $all_classnames);
     }
     
     /**
-     * Return the prefix for field name
+     * Return if type is a prefix
      *
      * @param the type of the field
      *
      * @return string the name
      */
-    protected function getPrefixNameForType($type) {
-        $prefix = 'field_';
-        if (isset($this->group_classnames[$type]) || isset($this->special_classnames[$type]) || isset($this->staticfield_classnames[$type])) {
-            $prefix = $type;
-        }
-        return $prefix;
+    protected function isTypeAPrefix($type) {
+        return (
+            isset($this->group_classnames[$type]) 
+            || isset($this->special_classnames[$type]) 
+            || isset($this->staticfield_classnames[$type])
+        );
     }
     
     /**
@@ -168,14 +171,14 @@ class Tracker_FormElementFactory {
      * @param int $id the id of the formElement to retrieve
      * @return Tracker_FormElement_Field
      */
-    function getFormElementById($id) {
-        if (!isset($this->formElements[$id])) {
-            if ($row = $this->getDao()->searchById($id)->getRow()) {
+    function getFormElementById($form_element_id) {
+        if (!isset($this->formElements[$form_element_id])) {
+            if ($row = $this->getDao()->searchById($form_element_id)->getRow()) {
                 return $this->getCachedInstanceFromRow($row);
             }
-            $this->formElements[$id] = null;
+            $this->formElements[$form_element_id] = null;
         }
-        return $this->formElements[$id];
+        return $this->formElements[$form_element_id];
     }
     
     /**
@@ -537,8 +540,8 @@ class Tracker_FormElementFactory {
         if (!isset($this->used[$tracker_id])) {
             $this->used[$tracker_id] = array();
             foreach($this->getDao()->searchUsedByTrackerId($tracker_id) as $row) {
-                $form_element_id = $row['id'];
                 $form_element    = $this->getCachedInstanceFromRow($row);
+                $form_element_id = $row['id'];
                 
                 $this->used[$tracker_id][$form_element_id] = $form_element;
                 $this->used_formElements[$form_element_id] = $form_element;
@@ -597,8 +600,8 @@ class Tracker_FormElementFactory {
         } else {
             $event_parameters = array(
             	'instance' => &$form_element,
-            	'type'     => $form_element_type,
-            	'row'      => $row
+            	'type' => $form_element_type,
+            	'row' => $row
             );
             EventManager::instance()->processEvent('tracker_formElement_instance', $event_parameters);
         }
@@ -996,20 +999,25 @@ class Tracker_FormElementFactory {
         return EventManager::instance();
     }
     
+    protected function typeIsValid($type) {
+        return (
+            isset($this->classnames[$type])
+            || isset($this->special_classnames[$type])
+            || isset($this->group_classnames[$type])
+            || isset($this->staticfield_classnames[$type])
+        );
+    }
+    
     public function createFormElement($tracker, $type, $form_element_data) {
         //Check that the label has been submitted
         if (isset($form_element_data['label']) && trim($form_element_data['label'])) {
             $label       = trim($form_element_data['label']);
-            $description = isset($form_element_data['description'])?trim($form_element_data['description']):'';
+            $description = isset($form_element_data['description']) ? trim($form_element_data['description']) : '';
             
             $rank = isset($form_element_data['rank']) ? $form_element_data['rank'] : 'end';
                 
             //Check that the type is valid
-            if (isset($this->classnames[$type]) 
-                || isset($this->special_classnames[$type]) 
-                || isset($this->group_classnames[$type]) 
-                || isset($this->staticfield_classnames[$type])
-            ) {
+            if ($this->typeIsValid($type)) {
                 //extract the parent_id from rank if needed
                 //rank = <parent_id>:<rank> | <rank>
                 $parent_id = isset($form_element_data['parent_id']) ? $form_element_data['parent_id'] : 0;
@@ -1037,20 +1045,30 @@ class Tracker_FormElementFactory {
                         }
                     }
                     
+                    if ($this->isTypeAPrefix($type)) {
+                        $prefix = $type;
+                    } else {
+                        $prefix = 'field_';
+                    }
+                    
+                    $is_required       = isset($form_element_data['required']) ? (bool) $form_element_data['required'] : false;
+                    $notify            = isset($form_element_data['notifications']) ? (bool) $form_element_data['notifications'] : false;
+                    $original_field_id = isset($form_element_data['original_field_id']) ? $form_element_data['original_field_id'] : null;
+                    
                     //Create the element
                     if($id = $this->getDao()->create($type,
                                                      $tracker->id, 
                                                      $parent_id,
                                                      $name,
-                                                     $this->getPrefixNameForType($type),
+                                                     $prefix,
                                                      $label,
                                                      $description,
                                                      $form_element_data['use_it'],
                                                      'P',
-                                                     isset($form_element_data['required']) && $form_element_data['required'] ? 1 : 0,
-                                                     isset($form_element_data['notifications']) && $form_element_data['notifications'] ? 1 : 0,
+                                                     $is_required,
+                                                     $notify,
                                                      $rank,
-                                                     isset($form_element_data['original_field_id']) ? $form_element_data['original_field_id'] : null)) {
+                                                     $original_field_id)) {
                         //Set permissions
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
                             $ugroups_permissions = $this->getPermissionsFromFormElementData($id, $form_element_data);
