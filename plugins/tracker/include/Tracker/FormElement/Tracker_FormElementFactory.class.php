@@ -538,8 +538,10 @@ class Tracker_FormElementFactory {
             $this->used[$tracker_id] = array();
             foreach($this->getDao()->searchUsedByTrackerId($tracker_id) as $row) {
                 $form_element_id = $row['id'];
-                $this->used[$tracker_id][$form_element_id] = 
-                $this->used_formElements[$form_element_id] = $this->getCachedInstanceFromRow($row);
+                $form_element    = $this->getCachedInstanceFromRow($row);
+                
+                $this->used[$tracker_id][$form_element_id] = $form_element;
+                $this->used_formElements[$form_element_id] = $form_element;
             }
         }
         return $this->used[$tracker_id];
