@@ -252,7 +252,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
     }
     
-    protected function isSetArtifactValue($artifact, $submitted_values) {
+    private function isSetArtifactValue($artifact, $submitted_values) {
         return (
             isset($submitted_values[0]) 
             && is_array($submitted_values[0])
@@ -260,14 +260,14 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         );
     }
     
-    protected function isCheckedArtifactValue($artifact, $artifact_value) {
+    private function isCheckedArtifactValue($artifact, $artifact_value) {
         return (
             (isset($artifact_value['use_artifact_permissions']) && $artifact_value['use_artifact_permissions']) 
             || $artifact->useArtifactPermissions()
         );
     }
     
-    protected function getArtifactValueHTML($selected_values, $field_id, $artifact_id, $is_checked, $is_read_only) {
+    private function getArtifactValueHTML($selected_values, $field_id, $artifact_id, $is_checked, $is_read_only) {
         $checked           = $is_checked   ? ' checked="checked"'   : '';
         $readonly          = $is_read_only ? ' disabled="disabled"' : '';
         $permissions_label = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
