@@ -76,12 +76,11 @@ class CodeReviewViews extends Views {
         return $GLOBALS['Language']->getText('plugin_codereview', 'title');
     }
 
-    // {{{ Views
     /**
-    * Displays Review board frame
-    *
-    * @return void
-    */
+     * Displays Review board frame
+     *
+     * @return void
+     */
     function displayFrame() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        = $pluginInfo->getPropertyValueForName('reviewboard_site');

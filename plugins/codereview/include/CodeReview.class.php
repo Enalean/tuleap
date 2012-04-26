@@ -22,7 +22,8 @@ require_once('common/mvc/Controler.class.php');
 require_once('CodeReviewViews.class.php');
 
 /**
- * codereview */
+ * codereview
+ */
 class CodeReview extends Controler {
 
     protected $plugin;
@@ -30,10 +31,12 @@ class CodeReview extends Controler {
     /**
      * Class constructor
      *
+     * @param codeReviewPlugin $plugin Instance of the plugin
+     *
      * @return Void
      */
-    function CodeReview() {
-        $this->plugin  = PluginFactory::instance()->getPluginByName('codereview');
+    function CodeReview($plugin) {
+        $this->plugin  = $plugin;
         $this->request = HTTPRequest::instance();
         $this->user    = UserManager::instance()->getCurrentUser();
     }
@@ -69,7 +72,7 @@ class CodeReview extends Controler {
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {
             case 'add_review':
-                //put some actions here
+                // TODO: put some actions here
                 $this->view = 'reviewSubmission';
                 break;
             default:
@@ -77,7 +80,7 @@ class CodeReview extends Controler {
                 break;
             }
         } else {
-            $this->addview('displayFrame');
+            $this->view = 'displayFrame';
         }
     }
 }

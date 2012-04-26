@@ -32,7 +32,7 @@ class CodeReviewPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
-        $controler = new CodeReview();
+        $controler = new CodeReview($this);
         $controler->process();
     }
 
