@@ -1,3 +1,6 @@
+Version 3.13 - Tuleap 5.0
+    * Fix unit tests
+
 Version 3.12 - Tuleap 4.0.27
     * Add 2 new variables for fine grain LDAP plugin behaviour:
       * $sys_ldap_user_management: Enable usage of LDAP for people management. For instance autocompletion on  user list, automatic creation of users not already referenced in the forge.

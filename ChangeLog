@@ -9,14 +9,15 @@ Version 5.0 (Not released yet)
    * Fix sla #711 - Can't commit in CVS when the project is private.
    
    == Plugins ==
-   * Cardwall v0.4
    * AgileDashoard 0.13
-   * Tracker 5.7.7
-   * GraphOnTrackerv5 5.0.1
-   * Git v2.4
-   * Hudson v1.8
-   * RequestHelp v1.3.1
+   * Cardwall v0.4
    * Docman v2.25.3
+   * Git v2.4
+   * GraphOnTrackerv5 5.0.1
+   * Hudson v1.8
+   * IM v1.5.2
+   * RequestHelp v1.3.1
+   * Tracker 5.7.7
 
    == Development ==
    * Unit Tests: Add DSL like mock generator that allows to ease the readability of the tests:
