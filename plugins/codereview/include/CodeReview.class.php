@@ -68,7 +68,7 @@ class CodeReview extends Controler {
     function request() {
         $request = $this->getRequest();
         if ($this->getUser()->isLoggedIn()) {
-            $repositoryManager = new RepositoryManager($this->plugin);
+            $repositoryManager = new RepositoryManager($this->plugin, $request);
             $repositoryManager->addRepository($request);
             $vAction = new Valid_WhiteList('action', array('add_review'));
             $vAction->required();

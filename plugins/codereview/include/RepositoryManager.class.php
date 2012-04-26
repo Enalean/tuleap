@@ -19,57 +19,56 @@
  */
 
 /**
- * codereview
+ * Manager of RB repositories
  */
 class RepositoryManager {
 
     public $plugin;
+    public $repoName;
+    public $tuleapUser;
+    public $tuleapPassword;
+    public $rbPath;
+    public $rbUser;
+    public $rbPassword;
 
     /**
      * Class constructor
      *
-     * @param codeReviewPlugin $plugin Instance of the plugin
+     * @param codeReviewPlugin $plugin  Instance of the plugin
+     * @param HTTPRequest      $request HTTP request
      *
      * @return Void
      */
-    function __construct($plugin) {
+    function __construct($plugin, $request) {
         $this->plugin  = $plugin;
+        $project = ProjectManager::instance()->getProject($request->get('group_id'));
+        // TODO: set project name as name for the repo
+        $this->repoName       = $project->getUnixName();
+        // TODO: set svn path as the path of project's repo
+        $this->svnPath        = "http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc";
+        // TODO: Choose the correct username to access svn repo
+        $this->tuleapUser     = "user";
+        // TODO: we may not use another alternative to authenticate through svn
+        $this->tuleapPassword = "password";
+        // TODO: Get this path, username & pass dinamically from plugin setup
+        $this->rbPath         = "http://10.157.15.85";
+        $this->rbUser         = "admin";
+        $this->rbPassword     = "siteadmin";
     }
 
     /**
      * Add the reference to svn repository of the project
      *
-     * @param HTTPRequest $request HTTP request
-     *
      * @return Boolean
      */
-    public function AddRepository($request) {
+    public function AddRepository() {
         // TODO: check if user have read permission on svn repo
-        // TODO: set project name as name for the repo
-        $repoName       = "ProjectName";
-        // TODO: set svn path as the path of project's repo
-        $svnPath        = "http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc";
-        // TODO: Choose the correct username to access svn repo
-        $tuleapUser     = "user";
-        // TODO: we may not use another alternative to authenticate through svn
-        $tuleapPassword = "password";
-        // TODO: Get this path, username & pass dinamically from plugin setup
-        $rbPath         = "10.157.15.85";
-        $rbUser         = "admin";
-        $rbPassword     = "siteadmin";
-        $data           = array("name"     => $repoName,
-                                "path"     => $svnPath,
-                                "tool"     => "subversion",
-                                "username" => $tuleapUser,
-                                "password" => $tuleapPassword);
-        $post           = http_build_query($data, "", "&");
-
         // Test if the repository already exist in RB
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
-        curl_setopt($ch, CURLOPT_USERPWD, $rbUser.":".$rbPassword); 
+        curl_setopt($ch, CURLOPT_USERPWD, $this->rbUser.":".$this->rbPassword); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, "http://".$rbPath."/api/repositories/");
+        curl_setopt($ch, CURLOPT_URL, $this->rbPath."/api/repositories/");
         $result = json_decode(curl_exec($ch), true);
         // TODO: handle errors
         $error = curl_error($ch);
@@ -77,7 +76,7 @@ class RepositoryManager {
         if ($result) {
             $exist = false;
             foreach($result['repositories'] as $repository) {
-                if ($repository['path'] == $svnPath) {
+                if ($repository['path'] == $this->svnPath) {
                     $exist = true;
                     break;
                 }
@@ -85,14 +84,20 @@ class RepositoryManager {
         }
 
         if (!$exist) {
+            $data = array("name"     => $this->repoName,
+                          "path"     => $this->svnPath,
+                          "tool"     => "subversion",
+                          "username" => $this->tuleapUser,
+                          "password" => $this->tuleapPassword);
+            $post = http_build_query($data, "", "&");
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_HEADER, true);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
-            curl_setopt($ch, CURLOPT_USERPWD, $rbUser.":".$rbPassword); 
+            curl_setopt($ch, CURLOPT_USERPWD, $this->rbUser.":".$this->rbPassword); 
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-            curl_setopt($ch, CURLOPT_URL, "http://".$rbPath."/api/repositories/");
+            curl_setopt($ch, CURLOPT_URL, $this->rbPath."/api/repositories/");
             curl_exec($ch);
             // TODO: handle errors
             $error = curl_error($ch);
