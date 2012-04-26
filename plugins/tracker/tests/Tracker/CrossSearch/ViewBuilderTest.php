@@ -25,6 +25,7 @@ require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'Test_CriteriaBuilder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_CrossSearch_Search');
@@ -39,28 +40,44 @@ class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_Sea
 }
 
 class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $this->formElementFactory = mock('Tracker_FormElementFactory');
+        $this->tracker_factory    = mock('TrackerFactory');
+        $this->search             = mock('Tracker_CrossSearch_Search');
+        $this->criteria_builder   = mock('Tracker_CrossSearch_CriteriaBuilder');
+    }
 
     public function itBuildPlanningContentView() {
-        $formElementFactory = new MockTracker_FormElementFactory();
-        $tracker_factory    = new MockTrackerFactory();
-        $tracker_ids        = array();
-        $tracker_factory->setReturnValue('getTrackerByGroupIdUserCanView', $tracker_ids);
-        $search             = new MockTracker_CrossSearch_Search();
-        $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-        $criteria_builder   = new MockTracker_CrossSearch_CriteriaBuilder();
-        $criteria_builder->setReturnValue('getCriteria', array());
-        $user               = aUser()->build();
-        $project            = new MockProject();
+        $tracker_ids = array();
+        $this->tracker_factory->setReturnValue('getTrackerByGroupIdUserCanView', $tracker_ids);
+        
+        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
+        
+        $this->criteria_builder->setReturnValue('getCriteria', array());
+        
+        $user    = aUser()->build();
+        $project = new MockProject();
         
         $cross_search_criteria = aCrossSearchCriteria()->build();
         
-        $search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
+        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
         
-        $builder            = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
+        $builder            = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, $this->tracker_factory, $this->search, $this->criteria_builder);
         $expected_class     = 'Planning_SearchContentView';
         $view               = $builder->buildCustomContentView($expected_class, $user, $project, $cross_search_criteria, array(), $tracker_ids);
         
-        $this->assertIsA($view, 'Planning_SearchContentView');
+        $this->assertIsA($view, $expected_class);
+    }
+    
+    public function itRetrievesIdsOfTrackers() {
+        $builder  = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, $this->tracker_factory, $this->search, $this->criteria_builder);
+        $trackers = array(aTracker()->withId(12)->build(),
+                          aTracker()->withId(34)->build());
+        
+        $this->assertEqual($builder->getTrackersIds($trackers), array(12, 34));
     }
 }
 

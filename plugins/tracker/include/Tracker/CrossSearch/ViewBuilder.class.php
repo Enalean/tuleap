@@ -141,11 +141,11 @@ class Tracker_CrossSearch_ViewBuilder {
     }
     
     public function getTrackersIds(array $trackers) {
-        $tracker_ids = array();
-        foreach ($trackers as $tracker) {
-            $tracker_ids[] = $tracker->getId();
-        }
-        return $tracker_ids;
+        return array_map(array($this, 'getTrackerId'), $trackers);
+    }
+    
+    public function getTrackerId(Tracker $tracker) {
+        return $tracker->getId();
     }
 }
 ?>
