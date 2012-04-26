@@ -168,14 +168,14 @@ class Tracker_FormElementFactory {
      * @param int $id the id of the formElement to retrieve
      * @return Tracker_FormElement_Field
      */
-    function getFormElementById($form_element_id) {
-        if (!isset($this->formElements[$form_element_id])) {
-            if ($row = $this->getDao()->searchById($form_element_id)->getRow()) {
+    function getFormElementById($id) {
+        if (!isset($this->formElements[$id])) {
+            if ($row = $this->getDao()->searchById($id)->getRow()) {
                 return $this->getCachedInstanceFromRow($row);
             }
-            $this->formElements[$form_element_id] = null;
+            $this->formElements[$id] = null;
         }
-        return $this->formElements[$form_element_id];
+        return $this->formElements[$id];
     }
     
     /**
