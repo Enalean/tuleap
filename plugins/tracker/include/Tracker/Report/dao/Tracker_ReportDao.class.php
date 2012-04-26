@@ -215,7 +215,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $res;
     }
     
-    function getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+    private function getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         
         //Does the user member of at least one group which has ACCESS_SUBMITTER ?
@@ -243,7 +243,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $sql;
     }
     
-    function getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups) {
+    private function getSqlFragmentForAccessToArtifactSubmittedByGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups) {
         $sqls = array();
         
         $tracker_id = $this->da->escapeInt($tracker_id);
@@ -295,9 +295,8 @@ class Tracker_ReportDao extends DataAccessObject {
     private function getSqlFilterForContributorGroup($from, $where, $contributor_field_id, $join_user_constraint) {
         $sql = "SELECT c.artifact_id AS id, c.id AS last_changeset_id 
                 $from 
-                  INNER JOIN tracker_semantic_contributor AS SEM_CONTRIB  ON (SEM_CONTRIB.tracker_id = artifact.tracker_id)
                   INNER JOIN tracker_changeset_value AS tcv ON (
-                    tcv.field_id = SEM_CONTRIB.field_id
+                    tcv.field_id = $contributor_field_id
                     AND tcv.changeset_id = c.id) 
                   INNER JOIN tracker_changeset_value_list AS tcvl ON (
                     tcvl.changeset_value_id = tcv.id) 
@@ -306,7 +305,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $sql;
     }
     
-    function getSqlFragmentForAccessToArtifactAssignedToGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+    private function getSqlFragmentForAccessToArtifactAssignedToGroup($from, $where, $group_id, $tracker_id, $allowed_ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         
         $tracker_id           = $this->da->escapeInt($tracker_id);
