@@ -33,6 +33,11 @@
   width:8em;
   vertical-align:top;
 }
+
+.widget .tracker_renderer_board ul li {
+    cursor: auto;
+}
+
 .tracker_renderer_board.nifty ul li {
   float:left;
   border:none;

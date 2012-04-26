@@ -54,6 +54,21 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $this->report_session->set("{$this->id}.field_id",   $this->field_id);
     }
     
+    private function getFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
+    }
+    
+    private function getField() {
+        $field = $this->getFormElementFactory()->getFormElementById($this->field_id);
+        if ($field) {
+            $used  = array($this->field_id => $field);
+            if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
+                $field = null;
+            }
+        }
+        return $field;
+    }
+    
     /**
      * Fetch content of the renderer
      *
@@ -67,36 +82,22 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $hp = Codendi_HTMLPurifier::instance();
         
-        $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
-        if (!$total_rows) {
-            return $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts');
-        }
         
-        $fact = Tracker_FormElementFactory::instance();
+        $form  = '';
+        $form .= '<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0">';
         
-        $field = $fact->getFormElementById($this->field_id);
-        if ($field) {
-            $used  = array($this->field_id => $field);
-            if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
-                $field = null;
-            }
-        }
-        
-        
-        $html .= '<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0">';
-        
-        $html .= '<form id="tracker_report_cardwall_settings" action="" method="POST">';
-        $html .= '<input type="hidden" value="'. (int)$this->report->id .'" name="report">';
-        $html .= '<input type="hidden" value="'. (int)$this->id .'" name="renderer">';
+        $form .= '<form id="tracker_report_cardwall_settings" action="" method="POST">';
+        $form .= '<input type="hidden" value="'. (int)$this->report->id .'" name="report">';
+        $form .= '<input type="hidden" value="'. (int)$this->id .'" name="renderer">';
         if ($request->existAndNonEmpty('pv')) {
-            $html .= '<input type="hidden" value="'. (int)$request->get('pv') .'" name="pv">';
+            $form .= '<input type="hidden" value="'. (int)$request->get('pv') .'" name="pv">';
         }
-        $html .= '<input type="hidden" value="renderer" name="func">';
-        $html .= '<p>'. 'Columns:';
+        $form .= '<input type="hidden" value="renderer" name="func">';
+        $form .= '<p>'. 'Columns:';
         $options  = '';
         $selected = '';
         $one_selected = false;
-        foreach($fact->getUsedFormElementsByType($this->report->getTracker(), array('sb')) as $formElement) {
+        foreach($this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb')) as $formElement) {
             if ($formElement->userCanRead() && count($formElement->getAllValues())) {
                 $selected = '';
                 if (isset($used[$formElement->getId()])) {
@@ -107,16 +108,50 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             }
         }
         if ($options) {
-            $html .= '<select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">';
+            $form .= '<select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">';
             if (!$one_selected) {
-                $html .= '<option selected="selected" value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+                $form .= '<option selected="selected" value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
             }
-            $html .= $options;
-            $html .= '</select>';
+            $form .= $options;
+            $form .= '</select>';
         }
-        $html .= ' <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html .= '</p>';
-        $html .= '</form>';
+        $form .= ' <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $form .= '</p>';
+        $form .= '</form>';
+        
+        $display_choose  = '';
+        $display_choose .= '<div class="alert-message block-message warning">';
+        $display_choose .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
+        $display_choose .= '</div>';
+        
+        $html .= $this->fetchCards($matching_ids, $display_choose, $form);
+        
+        $proto = Config::get('sys_force_ssl') ? 'https' : 'http';
+        $url   = $proto .'://'. Config::get('sys_default_domain') . TRACKER_BASE_URL .'/?'. http_build_query(
+            array(
+                'report'   => $this->report->id,
+                'renderer' => $this->id,
+                'pv'       => 2,
+            )
+        );
+        
+        if ($this->enable_qr_code) {
+            $html .= $this->getHTMLQRCode($url);
+        }
+        return $html;
+    }
+    
+    private function fetchCards($matching_ids, $display_choose = '', $form = '') {
+        $html  = '';
+        $hp    = Codendi_HTMLPurifier::instance();
+        $field = $this->getField();
+        
+        $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
+        if (!$total_rows) {
+            return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
+        }
+        
+        $html .= $form;
         
         $nb_columns        = 1;
         $column_sql_select = '';
@@ -147,9 +182,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 $html .= '</div>';
             }
         } else {
-            $html .= '<div class="alert-message block-message warning">';
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
-            $html .= '</div>';
+            $html .= $display_choose;
         }
         
         // Build a small sql query to fetch artifact titles (depends on tracker semantic)
@@ -165,6 +198,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         ";
         //echo $sql;
         $dao = new DataAccessObject();
+        
         $nifty = Toggler::getClassname('tracker_renderer_board-nifty') == 'toggler' ? 'nifty' : false;
         $html .= '<div class="tracker_renderer_board '. $nifty .'">';
         
@@ -234,20 +268,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '</td>';
         }
         
-        $html .= '</tr></tbody></table></div>';
-        
-        $proto = Config::get('sys_force_ssl') ? 'https' : 'http';
-        $url   = $proto .'://'. Config::get('sys_default_domain') . TRACKER_BASE_URL .'/?'. http_build_query(
-            array(
-                'report'   => $this->report->id,
-                'renderer' => $this->id,
-                'pv'       => 2,
-            )
-        );
-        
-        if ($this->enable_qr_code) {
-            $html .= $this->getHTMLQRCode($url);
-        }
+        $html .= '</tr></tbody></table>';
+        $html .= '</div>';
         return $html;
     }
 
@@ -291,9 +313,15 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             
         }
     }
-
+    
+    /**
+     * Fetch content to be displayed in widget
+     */
     public function fetchWidget() {
-        return '';
+        $html  = '';
+        $html .= $this->fetchCards($this->report->getMatchingIds());
+        $html .= $this->fetchWidgetGoToReport();
+        return $html;
     }
     
     /**

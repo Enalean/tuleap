@@ -97,8 +97,9 @@ class Tracker_RulesManager {
         $values = array();
         reset($value_field_list);
         while (list($field_id,$value) = each($value_field_list)) {
-            $field = $ff->getFormElementById($field_id);
-            $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
+            if ($field = $ff->getFormElementById($field_id)) {
+                $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
+            }
         }
         // construction of $dependencies array : dependcies defined rules
         // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
