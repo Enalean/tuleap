@@ -844,4 +844,30 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
 
     return array($result, $totalrows);
 }
+
+/**
+ *
+ *
+ */
+function svn_utils_get_svn_path($project) {
+    $host = $GLOBALS['sys_default_domain'];
+    if ($project && $project->usesService('svn')) {
+       $sf = new ServerFactory();
+       if ($server = $sf->getServerById($project->services['svn']->getServerId())) {
+           $host = URL::getHost($server->getUrl(session_issecure()));
+       }
+    }
+    if ($GLOBALS['sys_force_ssl']) {
+       $svnUrl = 'https://'. $host;
+    } elseif (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
+      $svnUrl = 'http://'.$host;
+    } else {
+       $svnUrl = 'http://svn.'.$project->getUnixName().'.'.$host;
+    }
+    // Domain name must be lowercase (issue with some SVN clients)
+    $svnUrl = strtolower($svnUrl);
+    $svnUrl .= '/svnroot/'.$project->getUnixName();
+    return $svnUrl;
+}
+
 ?>

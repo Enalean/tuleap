@@ -40,23 +40,7 @@ $p = $pm->getProject($group_id);
 if ($row_grp['svn_preamble'] != '') {
     echo $hp->purify(util_unconvert_htmlspecialchars($row_grp['svn_preamble']), CODENDI_PURIFIER_FULL);
 } else {
-    $host = $GLOBALS['sys_default_domain'];
-    if ($p && $p->usesService('svn')) {
-       $sf =& new ServerFactory();
-       if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
-           $host = URL::getHost($server->getUrl(session_issecure()));
-       }
-    }
-    if ($GLOBALS['sys_force_ssl']) {
-       $svn_url = 'https://'. $host;
-    } else if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
-      $svn_url = 'http://'.$host;
-    } else {
-       $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
-    }
-    // Domain name must be lowercase (issue with some SVN clients)
-    $svn_url = strtolower($svn_url);
-    $svn_url .= '/svnroot/'. $row_grp['unix_group_name'];
+    $svn_url = svn_utils_get_svn_path($p);
 
     // Hook to replace the default information about subversion
     // If no plugin set '$svn_intro_in_plugin' to true, the default message is

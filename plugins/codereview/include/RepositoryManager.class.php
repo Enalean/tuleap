@@ -42,10 +42,8 @@ class RepositoryManager {
     function __construct($plugin, $request) {
         $this->plugin  = $plugin;
         $project = ProjectManager::instance()->getProject($request->get('group_id'));
-        // TODO: set project name as name for the repo
         $this->repoName       = $project->getUnixName();
-        // TODO: set svn path as the path of project's repo
-        $this->svnPath        = "http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc";
+        $this->svnPath        = svn_utils_get_svn_path($project);
         // TODO: Choose the correct username to access svn repo
         $this->tuleapUser     = "user";
         // TODO: we may not use another alternative to authenticate through svn
