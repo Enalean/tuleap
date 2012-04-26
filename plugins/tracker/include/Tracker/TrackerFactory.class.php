@@ -55,15 +55,14 @@ class TrackerFactory {
      * @param int $id the id of the tracker to retrieve
      * @return Tracker identified by id (null if not found)
      */
-    public function getTrackerById($id) {
-        if (!isset($this->trackers[$id])) {
-            $this->trackers[$id] = null;
-            $row = $this->getDao()->searchById($id)->getRow();
-            if ($row) {
-                $this->trackers[$id] = $this->getInstanceFromRow($row);
+    public function getTrackerById($tracker_id) {
+        if (!isset($this->trackers[$tracker_id])) {
+            $this->trackers[$tracker_id] = null;
+            if ($row = $this->getDao()->searchById($tracker_id)->getRow()) {
+                $this->getCachedInstanceFromRow($row);
             }
         }
-        return $this->trackers[$id];
+        return $this->trackers[$tracker_id];
     }
 
     /**
@@ -74,7 +73,8 @@ class TrackerFactory {
     public function getTrackersByGroupId($group_id) {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
-            $trackers[$row['id']] = $this->getInstanceFromRow($row);
+            $tracker_id = $row['id'];
+            $trackers[$tracker_id] = $this->getCachedInstanceFromRow($row);
         }
         return $trackers;
     }
@@ -82,9 +82,10 @@ class TrackerFactory {
     public function getTrackerByGroupIdUserCanView($group_id, User $user) {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
-            $tracker = $this->getInstanceFromRow($row);
+            $tracker_id = $row['id'];
+            $tracker    = $this->getCachedInstanceFromRow($row);
             if($tracker->userCanView($user)) {
-                $trackers[$row['id']] = $tracker; 
+                $trackers[$tracker_id] = $tracker; 
             }
         }
         return $trackers;
@@ -113,15 +114,21 @@ class TrackerFactory {
         }
         return $this->dao;
     }
+    
+    public function getCachedInstanceFromRow($row) {
+        $tracker_id = $row['id'];
+        if (!isset($this->trackers[$tracker_id])) {
+            $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);
+        }
+        return $this->trackers[$tracker_id];
+    }
 
     /**
      * @param array the row identifing a tracker
      * @return Tracker
      */
     public function getInstanceFromRow($row) {
-        $tracker_id = $row['id'];
-        if (!isset($this->trackers[$tracker_id])) {
-            $this->trackers[$tracker_id] = new Tracker(
+        return new Tracker(
                     $row['id'],
                     $row['group_id'],
                     $row['name'],
@@ -134,9 +141,7 @@ class TrackerFactory {
                     $row['deletion_date'],
                     $row['instantiate_for_new_projects'],
                     $row['stop_notification']
-            );
-        }
-        return $this->trackers[$tracker_id];
+        );
     }
 
     /**
