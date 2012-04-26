@@ -1083,8 +1083,10 @@ fi
 
 #todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
 todo "Customize /etc/codendi/site-content information for your site."
-todo "  For instance: contact/contact.txt cvs/intro.txt"
-todo "  svn/intro.txt include/new_project_email.txt, etc."
+todo "  For instance: contact/contact.txt "
+todo ""
+todo "Default admin credentials are login: admin / password: siteadmin"
+todo "CHANGE DEFAULT CREDENTIALS BEFORE FIRST USAGE"
 
 ##############################################
 # Crontab configuration
