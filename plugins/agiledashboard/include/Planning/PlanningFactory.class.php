@@ -34,13 +34,6 @@ class PlanningFactory {
      */
     private $tracker_factory;
     
-    /**
-     * User used to access plannings
-     *  
-     * @var User
-     */
-    private $user;
-    
     public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory) {
         $this->dao             = $dao;
         $this->tracker_factory = $tracker_factory;
