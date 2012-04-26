@@ -62,24 +62,27 @@ class Tracker_CrossSearch_ViewBuilder {
      * @return Tracker_CrossSearch_SearchView 
      */
     public function buildView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query) {
-        $report           = $this->getReport();
-        $service          = $this->getService($project);
-        $criteria         = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $trackers         = $this->tracker_factory->getTrackerByGroupIdUserCanView($project->getGroupId(), $user);
-        $tracker_ids      = $this->getTrackersIds($trackers);
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        
+        $report       = $this->getReport();
+        $service      = $this->getService($project);
+        $criteria     = $this->getCriteria($user, $project, $report, $cross_search_query);
+        $trackers     = $this->tracker_factory->getTrackerByGroupIdUserCanView($project->getGroupId(), $user);
+        $tracker_ids  = $this->getTrackersIds($trackers);
         $artifacts    = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query);
-        $content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $this->form_element_factory);
+        
+        $content_view = $this->getContentViewInstance('Tracker_CrossSearch_SearchContentView', $report, $criteria, $artifacts);
         
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
     }
     
     public function buildCustomContentView($class_name, User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query, $excluded_artifact_ids, $tracker_ids) {
-        $report                = $this->getReport();
-        $criteria              = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $artifacts             = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
+        $report    = $this->getReport();
+        $criteria  = $this->getCriteria($user, $project, $report, $cross_search_query);
+        $artifacts = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
         
+        return $this->getContentViewInstance($class_name, $report, $criteria, $artifacts);
+    }
+    
+    private function getContentViewInstance($class_name, $report, $criteria, $artifacts) {
         return new $class_name($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory);
     }
     
