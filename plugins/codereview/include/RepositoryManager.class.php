@@ -57,13 +57,12 @@ class RepositoryManager {
     }
 
     /**
-     * Add the reference to svn repository of the project
+     * Check if the repository already exist in RB
      *
      * @return Boolean
      */
-    public function AddRepository() {
-        // TODO: check if user have read permission on svn repo
-        // Test if the repository already exist in RB
+    public function isRepositoryAlreadyThere() {
+        $exist = false;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
         curl_setopt($ch, CURLOPT_USERPWD, $this->rbUser.":".$this->rbPassword); 
@@ -74,7 +73,6 @@ class RepositoryManager {
         $error = curl_error($ch);
         curl_close($ch);
         if ($result) {
-            $exist = false;
             foreach($result['repositories'] as $repository) {
                 if ($repository['path'] == $this->svnPath) {
                     $exist = true;
@@ -82,8 +80,17 @@ class RepositoryManager {
                 }
             }
         }
+        return $exist;
+    }
 
-        if (!$exist) {
+    /**
+     * Add the reference to svn repository of the project
+     *
+     * @return Boolean
+     */
+    public function AddRepository() {
+        // TODO: check if user have read permission on svn repo
+        if (!$this->isRepositoryAlreadyThere()) {
             $data = array("name"     => $this->repoName,
                           "path"     => $this->svnPath,
                           "tool"     => "subversion",
