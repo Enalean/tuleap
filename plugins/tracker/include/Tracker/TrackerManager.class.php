@@ -801,16 +801,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
     
     public function getCrossSearchViewBuilder($group_id, User $user) {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $planning_trackers  = $this->getPlanningTrackers($group_id, $user);
-        $art_link_field_ids = $this->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
-
-        $artifact_factory        = $this->getArtifactFactory();
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
         $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
         $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
         $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
 
-        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory, $planning_trackers);
+        $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
+        $art_link_field_ids      = $this->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
+        $criteria_builder        = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory, $planning_trackers);
         return new Tracker_CrossSearch_ViewBuilder(
             $form_element_factory, 
             $this->getTrackerFactory(), 

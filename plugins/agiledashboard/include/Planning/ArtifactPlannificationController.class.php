@@ -74,8 +74,8 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $tracker_linked_items  = $this->getTrackerLinkedItems($artifacts_to_select);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
-        
-        return $view_builder->buildPlanningContentView($this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
+        return $view_builder->buildCustomContentView('Planning_SearchContentView', $this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
+       
     }
     
     private function getArrayFromRequest($parameter_name) {
