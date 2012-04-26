@@ -85,7 +85,17 @@ class Tracker_CrossSearch_Query {
         }
         return $artifacts;
     }
-    
+    /**
+     * add the public property isSelected on each artifact of $artifact_list
+     * A selected artifact must be shwn as selected in the html select box of the view.
+     * An artifact is selected if it exists in this $artifacts_ids
+     * ///TODO: find a better to do this.
+     *  
+     * @param int   $tracker_id    the tracker id of artifacts 
+     * @param array $artifact_list an artifact list
+     * 
+     * @return array the artifact list 
+     */
     public function setSelectedArtifacts($tracker_id, array $artifact_list) {
         $selected = isset($this->artifact_ids[$tracker_id]);
         foreach($artifact_list as $artifact) {
