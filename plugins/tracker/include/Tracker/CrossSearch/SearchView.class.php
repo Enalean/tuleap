@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/user/User.class.php';
 require_once 'common/project/Service.class.php';
 require_once 'SearchContentView.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report.class.php';
@@ -68,7 +69,7 @@ class Tracker_CrossSearch_SearchView {
         $this->content_view      = $content_view;
     }
     
-    public function render($user) {
+    public function render(User $user) {
         $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
@@ -106,8 +107,7 @@ class Tracker_CrossSearch_SearchView {
         return $renderer->render('tracker-home-nav', $presenter);
     }
 
-    
-    private function fetchTrackerList($user) {
+    private function fetchTrackerList(User $user) {
         $html  = '';
         $html .= '<div class="tracker_homenav_list">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_title');
@@ -128,6 +128,5 @@ class Tracker_CrossSearch_SearchView {
         
         return $html;
     }
-
 }
 ?>
