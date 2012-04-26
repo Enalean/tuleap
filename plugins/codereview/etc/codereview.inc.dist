@@ -24,4 +24,10 @@ $admin_pwd = "siteadmin";
 // ???
 $admin_mail = "admin@root";
 
+// Tuleap user to perform svn operations
+$tuleap_user = "user";
+
+// Password of Tuleap user
+$tuleap_pw = "password";
+
 ?>
