@@ -107,6 +107,10 @@ class PlanningFactory {
         return $backlog_tracker_ids;
     }
     
+    public function getPlanningTrackerIdsByGroupId($group_id) {
+        return $this->dao->searchPlanningTrackerIdsByGroupId($group_id);
+    }
+    
     /**
      * Create a new planning
      * 

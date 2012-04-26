@@ -69,7 +69,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function create() {
-        $validator = new Planning_RequestValidator();
+        $validator = new Planning_RequestValidator($this->planning_factory);
         
         if ($validator->isValid($this->request)) {
             $planning_name       = $this->request->get('planning_name');
@@ -81,6 +81,7 @@ class Planning_Controller extends MVC2_Controller {
             
             $this->redirect(array('group_id' => $group_id));
         } else {
+            // TODO: Error message should reflect validation detail
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }

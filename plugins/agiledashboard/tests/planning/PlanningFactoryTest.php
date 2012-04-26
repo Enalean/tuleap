@@ -85,6 +85,18 @@ class PlanningFactoryTest extends TuleapTestCase {
         );
         $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
+    
+    public function itDelegatesRetrievalOfPlanningTrackerIdsByGroupIdToDao() {
+        $group_id     = 456;
+        $expected_ids = array(1, 2, 3);
+        $dao          = mock('PlanningDao');
+        $factory      = aPlanningFactory()->withDao($dao)->build();
+        
+        stub($dao)->searchPlanningTrackerIdsByGroupId($group_id)->returns($expected_ids);
+        
+        $actual_ids = $factory->getPlanningTrackerIdsByGroupId($group_id);
+        $this->assertEqual($actual_ids, $expected_ids);
+    }
 }
 
 ?>

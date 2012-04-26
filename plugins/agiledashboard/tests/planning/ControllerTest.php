@@ -165,6 +165,7 @@ abstract class Planning_ControllerCreateTest extends TuleapTestCase {
         $this->planning_factory = new MockPlanningFactory();
         
         $this->planning_factory->setReturnValue('getAvailableTrackers', array());
+        $this->planning_factory->setReturnValue('getPlanningTrackerIdsByGroupId', array());
     }
     
     protected function create() {
