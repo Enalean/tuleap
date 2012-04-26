@@ -40,8 +40,9 @@ class RepositoryManager {
      * @return Void
      */
     function __construct($plugin, $request) {
-        $this->plugin  = $plugin;
-        $project = ProjectManager::instance()->getProject($request->get('group_id'));
+        $this->plugin         = $plugin;
+        $pluginInfo           = $this->plugin->getPluginInfo();
+        $project              = ProjectManager::instance()->getProject($request->get('group_id'));
         $this->repoName       = $project->getUnixName();
         // TODO: Decide whether to go on or not if project doesn't use svn
         $this->svnPath        = svn_utils_get_svn_path($project);
@@ -49,10 +50,9 @@ class RepositoryManager {
         $this->tuleapUser     = "user";
         // TODO: we may not use another alternative to authenticate through svn
         $this->tuleapPassword = "password";
-        // TODO: Get this path, username & pass dinamically from plugin setup
-        $this->rbPath         = "http://10.157.15.85";
-        $this->rbUser         = "admin";
-        $this->rbPassword     = "siteadmin";
+        $this->rbPath         = $pluginInfo->getPropertyValueForName('reviewboard_site');
+        $this->rbUser         = $pluginInfo->getPropertyValueForName('admin_user');
+        $this->rbPassword     = $pluginInfo->getPropertyValueForName('admin_pwd');
     }
 
     /**

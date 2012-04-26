@@ -1,13 +1,27 @@
 <?php
 
-// Add review board site
-$reviewboard_site = "http://localhost/reviews/";
+// ReviewBoard url
+$reviewboard_site = "http://localhost";
+
+// ???
 $domain_name = "localhost/plugins/codereview/reviewboard/";
+
+// ???
 $site_root = "/plugins/codereview/reviewboard/";
+
+// ???
 $media_url = "/";
+
+// ???
 $cache_info = "memcached://localhost:11211/";
+
+// Login of ReviewBoard administrator
 $admin_user = "admin";
+
+// Password of ReviewBoard administrator
 $admin_pwd = "siteadmin";
+
+// ???
 $admin_mail = "admin@root";
 
 ?>
