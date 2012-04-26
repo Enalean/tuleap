@@ -64,18 +64,23 @@ class RepositoryManager {
                                 "password" => $tuleapPassword);
         $post           = http_build_query($data, "", "&");
 
-        // test if the repository already exist in RB
+        // Test if the repository already exist in RB
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
         curl_setopt($ch, CURLOPT_USERPWD, $rbUser.":".$rbPassword); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, "http://".$rbPath."/api/repositories/");
         $result = json_decode(curl_exec($ch), true);
-        $exist = false;
-        foreach($result['repositories'] as $repository) {
-            if ($repository['path'] == $svnPath) {
-                $exist = true;
-                break;
+        // TODO: handle errors
+        $error = curl_error($ch);
+        curl_close($ch);
+        if ($result) {
+            $exist = false;
+            foreach($result['repositories'] as $repository) {
+                if ($repository['path'] == $svnPath) {
+                    $exist = true;
+                    break;
+                }
             }
         }
 
