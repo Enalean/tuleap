@@ -51,6 +51,11 @@ class TestPlanningFactoryBuilder {
         return $this;
     }
     
+    public function withTrackerFactory(TrackerFactory $tracker_factory) {
+        $this->tracker_factory = $tracker_factory;
+        return $this;
+    }
+    
     public function build() {
         return new PlanningFactory($this->dao, $this->tracker_factory);
     }

@@ -33,6 +33,7 @@ class TrackerDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->retrieve($sql);
     }
+    
     function searchByGroupId($group_id) {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT *
@@ -40,6 +41,22 @@ class TrackerDao extends DataAccessObject {
                 WHERE group_id = $group_id 
                   AND deletion_date IS NULL
                 ORDER BY name";
+        return $this->retrieve($sql);
+    }
+    
+    public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids) {
+        $group_id             = $this->da->escapeInt($group_id);
+        $excluded_tracker_ids = implode(',', $excluded_tracker_ids);
+        
+        // TODO: escape $excluded_tracker_ids ?
+        
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE group_id = $group_id 
+                  AND deletion_date IS NULL
+                  AND id NOT IN ($excluded_tracker_ids)
+                ORDER BY name";
+        
         return $this->retrieve($sql);
     }
     

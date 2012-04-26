@@ -150,6 +150,23 @@ class PlanningFactory {
     }
     
     /**
+     * Retrieve the project trackers that can be used as planning trackers.
+     * 
+     * @param int $group_id the project id the trackers to retrieve belong to
+     * 
+     * @return Array of Tracker
+     */
+    public function getAvailablePlanningTrackers($group_id) {
+        $planning_trackers = array();
+        
+        foreach($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
+            $planning_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
+        }
+        
+        return $planning_trackers;
+    }
+    
+    /**
      * @return TrackerFactory
      */
     public function getTrackerFactory() {

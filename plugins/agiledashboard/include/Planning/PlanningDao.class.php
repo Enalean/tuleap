@@ -19,9 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
+require_once 'common/dao/include/DataAccessObject.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/dao/TrackerDao.class.php';
 
 class PlanningDao extends DataAccessObject {
+    
+    private function getTrackerDao() {
+        return new TrackerDao();
+    }
     
     function createPlanning($planning_name, $group_id, $planning_backlog_ids, $planning_tracker_id){
         $planning_name       = $this->da->quoteSmart($planning_name);
@@ -88,6 +93,13 @@ class PlanningDao extends DataAccessObject {
             $ids[] = $row['id'];
         }
         return $ids;
+    }
+    
+    public function searchNonPlanningTrackersByGroupId($group_id) {
+        $planning_tracker_ids = $this->searchPlanningTrackerIdsByGroupId($group_id);
+        $tracker_dao          = $this->getTrackerDao();
+        
+        return $tracker_dao->searchByGroupIdWithExcludedIds($group_id, $planning_tracker_ids);
     }
     
     function updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id) {

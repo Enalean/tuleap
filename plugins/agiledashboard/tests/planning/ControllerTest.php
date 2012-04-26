@@ -110,26 +110,36 @@ class MockBaseLanguage_Planning_ControllerNewTest extends MockBaseLanguage {
 }
 class Planning_ControllerNewTest extends TuleapTestCase {
     
+    private $available_backlog_trackers;
+    
     function setUp() {
         parent::setUp();
         $this->group_id         = '123';
         $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
         $this->request->setCurrentUser(aUser()->build());
-        $this->planning_factory = aPlanningFactory()->build();
+        $this->dao              = mock('PlanningDao');
+        $this->planning_factory = aPlanningFactory()->withDao($this->dao)->build();
+        $this->tracker_factory  = $this->planning_factory->getTrackerFactory();
         $this->controller       = new Planning_Controller($this->request, $this->planning_factory);
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
         
-        $this->trackers = array(
-            101 => aTracker()->withId(101)->withName('Epics')->build(),
-            102 => aTracker()->withId(102)->withName('Stories')->build(),
+        $this->available_backlog_trackers = array(
+            101 => aTracker()->withId(101)->withName('Stories')->build(),
+            102 => aTracker()->withId(102)->withName('Releases')->build(),
+            103 => aTracker()->withId(103)->withName('Sprints')->build()
+        );
+        
+        $this->available_planning_trackers = array(
+            101 => aTracker()->withId(101)->withName('Stories')->build(),
+            103 => aTracker()->withId(103)->withName('Sprints')->build()
         );
         
         $this->renderNew();
     }
     
     protected function renderNew() {
-        $this->planning_factory->getTrackerFactory()->expectOnce('getTrackersByGroupId', array($this->group_id));
-        $this->planning_factory->getTrackerFactory()->setReturnValue('getTrackersByGroupId', $this->trackers);
+        stub($this->tracker_factory)->getTrackersByGroupId($this->group_id)->returns($this->available_backlog_trackers);
+        stub($this->dao)->searchNonPlanningTrackersByGroupId($this->group_id)->returns(array());
         
         ob_start();
         $this->controller->new_();
@@ -140,17 +150,17 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->assertPattern('/<input type="text" name="planning_name"/', $this->output);
     }
     
-    public function itHasAMultiSelectBoxListingTrackers() {
+    public function itHasAMultiSelectBoxListingBacklogTrackers() {
         
         $this->assertPattern('/\<select multiple="multiple" name="backlog_tracker_ids\[\]"/', $this->output);
-        foreach ($this->trackers as $tracker) {
+        foreach ($this->available_backlog_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
         }
     }
     
-    public function itHasASelectBoxListingTrackers() {
+    public function itHasASelectBoxListingPlanningTrackers() {
         $this->assertPattern('/\<select name="planning_tracker_id"/', $this->output);
-        foreach ($this->trackers as $tracker) {
+        foreach ($this->available_planning_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
         }
     }

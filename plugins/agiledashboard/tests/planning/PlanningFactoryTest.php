@@ -97,6 +97,35 @@ class PlanningFactoryTest extends TuleapTestCase {
         $actual_ids = $factory->getPlanningTrackerIdsByGroupId($group_id);
         $this->assertEqual($actual_ids, $expected_ids);
     }
+    
+    public function itRetrievesAvailablePlanningTrackers() {
+        $group_id         = 789;
+        $planning_dao     = mock('PlanningDao');
+        $tracker_factory  = mock('TrackerFactory');
+        $planning_factory = aPlanningFactory()->withDao($planning_dao)
+                                              ->withTrackerFactory($tracker_factory)
+                                              ->build();
+        
+        $sprints_tracker_row = array('id' => 1, 'name' => 'Sprints');
+        $stories_tracker_row = array('id' => 2, 'name' => 'Stories');
+        
+        $tracker_rows = array($sprints_tracker_row, $stories_tracker_row);
+        
+        $sprints_tracker = aTracker()->withId(1)->withName('Sprints')->build();
+        $stories_tracker = aTracker()->withId(2)->withName('Stories')->build();
+        
+        stub($tracker_factory)->getInstanceFromRow($sprints_tracker_row)->returns($sprints_tracker);
+        stub($tracker_factory)->getInstanceFromRow($stories_tracker_row)->returns($stories_tracker);
+        stub($planning_dao)->searchNonPlanningTrackersByGroupId($group_id)->returns($tracker_rows);
+        
+        $actual_trackers = $planning_factory->getAvailablePlanningTrackers($group_id);
+        $this->assertEqual(count($actual_trackers), 2);
+        list($sprints_tracker, $stories_tracker) = $actual_trackers;
+        $this->assertEqual($sprints_tracker->getId(), 1);
+        $this->assertEqual($stories_tracker->getId(), 2);
+        $this->assertEqual($sprints_tracker->getName(), 'Sprints');
+        $this->assertEqual($stories_tracker->getName(), 'Stories');
+    }
 }
 
 ?>
