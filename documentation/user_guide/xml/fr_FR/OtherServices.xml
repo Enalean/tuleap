@@ -140,7 +140,7 @@ newgrp nom_projet
         en copie CC ou une dependance à un artefact), et la notification par mail n'est pas active.
       </para>
       <para>La documentation du client en ligne de commande est disponible à l'adresse : 
-        <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/Codendi_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/Codendi_CLI.pdf</ulink>
+        <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/html/fr_FR/">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/html/fr_FR/</ulink>
       </para>
     </section>
 

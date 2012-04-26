@@ -2,11 +2,12 @@ Version 5.0 (Not released yet)
    == Enhancement ==
    * Improve default tuleap homepage and footer
    * Overall documentation update (replace screenshot, update archeological references, add new stuff).
+   * Display site admin credentials at the end of the setup script
 
    == Bug fix ==
    * Ensure NSCD and internal FS cache are properly flushed before doing something related to filesystem. Fix bugs related to directory ownership of users.
    * Fix sla #711 - Can't commit in CVS when the project is private.
-
+   
    == Plugins ==
    * AgileDashoard 0.13
    * Tracker 5.7.6
