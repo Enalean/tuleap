@@ -379,10 +379,9 @@ class Tracker_FormElementFactory {
         $form_elements = array();
         $tracker_id    = $tracker->getId();
         foreach($this->getDao()->searchUsedUserListFieldByTrackerId($tracker_id) as $row) {
-            $form_element_id                 = $row['id'];
-            $form_elements[$form_element_id] = $this->getCachedInstanceFromRow($row);
+            $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
-        return array_values($form_elements);
+        return $form_elements;
     }
     
     public function getUsedUserListFieldById($tracker, $field_id) {
@@ -403,10 +402,9 @@ class Tracker_FormElementFactory {
     public function getUsedUserSbFields($tracker) {
         $form_elements = array();
         foreach($this->getDao()->searchUsedUserSbFieldByTrackerId($tracker->getId()) as $row) {
-            $form_element_id = $row['id'];
-            $form_elements[$form_element_id] = $this->getCachedInstanceFromRow($row);
+            $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
-        return array_values($form_elements);
+        return $form_elements;
     }
     
     public function getUsedUserSbFieldById($tracker, $field_id) {
@@ -507,10 +505,9 @@ class Tracker_FormElementFactory {
     protected function getCachedInstancesFromDAR(DataAccessResult $dar) {
         $form_elements = array();
         foreach($dar as $row) {
-            $form_elements_id                 = $row['id'];
-            $form_elements[$form_elements_id] = $this->getCachedInstanceFromRow($row);
+            $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
-        return array_values($form_elements);
+        return $form_elements;
     }
     
     /**
@@ -1160,10 +1157,9 @@ class Tracker_FormElementFactory {
     public function getGroupsByTrackerId($tracker_id) {
         $form_elements = array();
         foreach($this->getDao()->searchByTrackerIdAndType($tracker_id, array_keys($this->group_classnames)) as $row) {
-            $form_element_id                 = $row['id'];
-            $form_elements[$form_element_id] = $this->getCachedInstanceFromRow($row);
+            $form_elements[] = $this->getCachedInstanceFromRow($row);
         }
-        return array_values($form_elements);
+        return $form_elements;
     }
     
     /**
