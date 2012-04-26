@@ -128,13 +128,13 @@ include_layout	template_warning	Beware this project is a template project
 # Script: SF/www/include/license.php
 #
 include_license	cannot_open_acc	Cannot open license acceptance in file: $1 
-include_license	license_accepted	Codendi License accepted on 
+include_license	license_accepted	License accepted on 
 include_license	cannot_write_acc	Cannot write license acceptance in file: $1
 include_license	cannot_open_decl	Cannot open license declination file: $1
-include_license	license_declined	Codendi License declined on 
+include_license	license_declined	License declined on 
 include_license	cannot_write_decl	Cannot write license declination in file: $1
-include_license	msg_accept	Thanks for accepting the terms and conditions of the Codendi \nlicense. You can now enjoy the Codendi site
-include_license	msg_declined	You have chosen to decline the terms and conditions of the \nCodendi License. You must return all the Codendi Software and \nDocumentation to Xerox and remove it from all your machines
+include_license	msg_accept	Thanks for accepting the terms and conditions of the License. You can now enjoy the site
+include_license	msg_declined	You have chosen to decline the terms and conditions of the License.
 #
 #-----------------------------------------------
 # Script: SF/www/include/logger.php
@@ -200,7 +200,7 @@ include_menu	auth_nb_failure	Number of bad attempts:
 #-----------------------------------------------
 # Script: SF/www/include/pre.php
 #
-include_pre	site_admin_declines_license	Your site administrator declined the Codendi License. \nThe Codendi site has been shut down. For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
+include_pre	site_admin_declines_license	Your site administrator declined the Site License. \nThe Site has been shut down. For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
 include_pre	zend_path_not_set	The path to the zend library is not defined.For more information contact your  \n<a href="mailto:$1">Site Administrator</a>.
 #
 #-----------------------------------------------
