@@ -64,7 +64,7 @@ class CodeReview extends Controler {
     function request() {
         $request = $this->getRequest();
         if ($this->getUser()->isLoggedIn()) {
-            $vAction = new Valid_WhiteList('action', array('submit_ticket'));
+            $vAction = new Valid_WhiteList('action', array('add_review'));
             $vAction->required();
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {

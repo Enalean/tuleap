@@ -26,11 +26,6 @@ require_once('CodeReview.class.php');
  */
 class CodeReviewPlugin extends Plugin {
 
-    /**
-     * Plugin constructor
-     *
-     * @return Void
-     */
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
