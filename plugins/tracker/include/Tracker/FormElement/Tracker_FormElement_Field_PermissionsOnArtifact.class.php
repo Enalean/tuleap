@@ -252,7 +252,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
     }
     
-    protected function issetArtifactValue($artifact, $submitted_values) {
+    protected function isSetArtifactValue($artifact, $submitted_values) {
         return (
             isset($submitted_values[0]) 
             && is_array($submitted_values[0])
@@ -303,7 +303,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $field_id        = $this->getId();
         $value           = array();
         $selected_values = array();
-        if ($this->issetArtifactValue($artifact, $submitted_values)) {
+        if ($this->isSetArtifactValue($artifact, $submitted_values)) {
             $value = $submitted_values[0][$field_id];
             if (isset($value['u_groups'])) {
                 $selected_values = $value['u_groups'];
