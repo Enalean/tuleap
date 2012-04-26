@@ -136,7 +136,7 @@ newgrp projectname
         a CC address or a dependency to an artifact), and the mail notification is 
         not active with the CLI.
       </para>
-      <para>The full CLI documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/Codendi_CLI.pdf">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/pdf/en_US/Codendi_CLI.pdf</ulink>
+      <para>The full CLI documentation is available at <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/cli/html/en_US/">http://&SYS_DEFAULT_DOMAIN;/documentation/cli/html/en_US/</ulink>
       </para>
     </section>
   </chapter>
