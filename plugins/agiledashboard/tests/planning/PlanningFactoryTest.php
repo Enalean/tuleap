@@ -18,6 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+if (!defined('TRACKER_BASE_URL')) {                                             //
+    define('TRACKER_BASE_URL', '/plugins/tracker');                             //
+}                                                                               // TODO: use constants.php instead
+if (!defined('TRACKER_BASE_DIR')) {                                             //       (available only in trunk)
+    define('TRACKER_BASE_DIR', dirname(__FILE__) .'/../../../tracker/include'); //
+}
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../builders/planning_factory.php';
 
