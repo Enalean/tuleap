@@ -71,7 +71,7 @@ class RepositoryManager {
         $error = curl_error($ch);
         curl_close($ch);
         if ($result) {
-            foreach($result['repositories'] as $repository) {
+            foreach ($result['repositories'] as $repository) {
                 if ($repository['path'] == $this->svnPath) {
                     $exist = true;
                     break;
@@ -86,7 +86,7 @@ class RepositoryManager {
      *
      * @return Boolean
      */
-    public function AddRepository() {
+    public function addRepository() {
         // TODO: check if user have read permission on svn repo
         if (!$this->isRepositoryAlreadyThere()) {
             $data = array("name"     => $this->repoName,

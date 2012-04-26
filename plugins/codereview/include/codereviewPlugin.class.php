@@ -26,11 +26,25 @@ require_once('CodeReview.class.php');
  */
 class CodeReviewPlugin extends Plugin {
 
+    /**
+     * Constructor of the class
+     *
+     * @param Integer $id Id of the plugin
+     *
+     * @return Void
+     */
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
     }
 
+    /**
+     * Do what the plugin is meant to do
+     *
+     * @param Codendi_Request $request HTTP request
+     *
+     * @return Void
+     */
     public function process(Codendi_Request $request) {
         $controler = new CodeReview($this);
         $controler->process();
@@ -49,4 +63,5 @@ class CodeReviewPlugin extends Plugin {
         return $this->pluginInfo;
     }
 }
+
 ?>
