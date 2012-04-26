@@ -1,3 +1,6 @@
+Version 5.7.7 - Tuleap 5.0
+    * Fix fatal error when field does not exist
+
 Version 5.7.6 - Tuleap 5.0
     * Allow trackers to be installed on servers having default storage engine
 	set to InnoDB 
