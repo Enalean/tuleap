@@ -101,8 +101,7 @@ class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
         $cross_search_query = mock('Tracker_CrossSearch_Query');
         
         $view_builder = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('buildContentView', 'getService'));
-        //var_dump($view_builder);
-        //stub($view_builder)->getService()->returns(true);
+        
         $view_builder->expectOnce('buildContentView', array($user, $project, $cross_search_query));
         $view_builder->buildView($user, $project, $cross_search_query);
     }
