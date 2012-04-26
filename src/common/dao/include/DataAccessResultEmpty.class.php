@@ -30,10 +30,10 @@ class DataAccessResultEmpty implements IProvideDataAccessResult {
 
     /**
      * @see IProvideDataAccessResult
-     * @return Array
+     * @return Boolean
      */
     public function getRow() {
-        return array();
+        return false;
     }
 
     /**
