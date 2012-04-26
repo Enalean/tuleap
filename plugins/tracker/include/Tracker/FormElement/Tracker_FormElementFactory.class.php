@@ -597,8 +597,8 @@ class Tracker_FormElementFactory {
         } else {
             $event_parameters = array(
             	'instance' => &$form_element,
-            	'type' => $form_element_type,
-            	'row' => $row
+            	'type'     => $form_element_type,
+            	'row'      => $row
             );
             EventManager::instance()->processEvent('tracker_formElement_instance', $event_parameters);
         }
