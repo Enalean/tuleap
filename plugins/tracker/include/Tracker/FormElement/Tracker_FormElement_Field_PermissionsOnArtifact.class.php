@@ -252,7 +252,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return $this->fetchArtifactValueCommon($is_read_only, $artifact, $value);
     }
     
-    private function isSetArtifactValue($artifact, $submitted_values) {
+    private function isValidSubmittedValues($submitted_values) {
         return (
             isset($submitted_values[0]) 
             && is_array($submitted_values[0])
@@ -260,11 +260,8 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         );
     }
     
-    private function isCheckedArtifactValue($artifact, $artifact_value) {
-        return (
-            (isset($artifact_value['use_artifact_permissions']) && $artifact_value['use_artifact_permissions']) 
-            || $artifact->useArtifactPermissions()
-        );
+    private function isCheckedArtifactValue($artifact_value) {
+        return(isset ($artifact_value['use_artifact_permissions']) && $artifact_value['use_artifact_permissions']);
     }
     
     private function getArtifactValueHTML($selected_values, $artifact_id, $is_checked, $is_read_only) {
@@ -302,15 +299,18 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return string html
      */
     protected function fetchArtifactValueCommon($is_read_only, Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $value           = array();
         $selected_values = array();
-        if ($this->isSetArtifactValue($artifact, $submitted_values)) {
+        if ($this->isValidSubmittedValues($submitted_values)) {
             $value = $submitted_values[0][$field_id];
             if (isset($value['u_groups'])) {
                 $selected_values = $value['u_groups'];
             }
+            $is_checked = $this->isCheckedArtifactValue($value) || $artifact->useArtifactPermissions();
+        } else {
+            $is_checked = $artifact->useArtifactPermissions();
         }
-        return $this->getArtifactValueHTML($selected_values, $artifact->getId(), $this->isCheckedArtifactValue($artifact, $value), $is_read_only);
+                
+        return $this->getArtifactValueHTML($selected_values, $artifact->getId(), $is_checked, $is_read_only);
     }
     
     /**
