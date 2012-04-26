@@ -43,6 +43,7 @@ class RepositoryManager {
         $this->plugin  = $plugin;
         $project = ProjectManager::instance()->getProject($request->get('group_id'));
         $this->repoName       = $project->getUnixName();
+        // TODO: Decide whether to go on or not if project doesn't use svn
         $this->svnPath        = svn_utils_get_svn_path($project);
         // TODO: Choose the correct username to access svn repo
         $this->tuleapUser     = "user";

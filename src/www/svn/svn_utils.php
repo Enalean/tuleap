@@ -846,8 +846,11 @@ function svn_get_revisions(&$project, $offset, $chunksz, $_rev_id = '', $_commit
 }
 
 /**
+ * Get svn path of the given project
  *
+ * @params Project $project The project for which path will be extracted
  *
+ * @return String
  */
 function svn_utils_get_svn_path($project) {
     $host = $GLOBALS['sys_default_domain'];
