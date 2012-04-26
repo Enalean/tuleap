@@ -334,20 +334,35 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     /**
      * Returns all the original shared fields of a project
      * 
+     * Given:
+     * Project A
+     * |-- Tracker Release
+     *     |-- Field #334 Customer <-------------------------|
+     *                                                       |
+     * Project B (id: 104)                                   |
+     * |-- Tracker Release                                   |
+     *     |-- Field #543 Customer (original_field_id = 334)-'
+     *     |-- Field #600 Confidentiality <-------------------------|
+     * |-- Tracker Sprint                                           |
+     *     |-- Field #650 Confidnetiality (original_field_id = 600)-'
+     * 
+     * This method returns rows of field 334 and 600
+     * 
      * @param int $project_id
+     * 
      * @return DataAccessResult 
      */
     public function searchProjectSharedFieldsOriginals($project_id) {
-        $project_id  = $this->da->escapeInt($project_id);
-        $sql = "SELECT *
-                FROM tracker_field                   
-                WHERE id IN (SELECT original_field_id
-                             FROM tracker_field 
-                             INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
-                             WHERE tracker.group_id = $project_id
-                                AND tracker_field.original_field_id != 0
-                                AND tracker_field.use_it = 1
-                                AND tracker.deletion_date IS NULL)";
+        $project_id = $this->da->escapeInt($project_id);
+        $sql = "SELECT original_field.*
+                FROM tracker_field AS original_field
+                    INNER JOIN tracker_field AS used_field ON (original_field.id = used_field.original_field_id)
+                    INNER JOIN tracker ON (tracker.id = used_field.tracker_id)
+                WHERE tracker.group_id = $project_id
+                    AND used_field.original_field_id != 0
+                    AND used_field.use_it = 1
+                    AND tracker.deletion_date IS NULL
+                GROUP BY original_field.id";
         return $this->retrieve($sql);
     }
     /**
