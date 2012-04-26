@@ -41,6 +41,8 @@ class CodeReviewViews extends Views {
     /**
      * Class constructor
      *
+     * @param CodeReview $controller Plugin controller
+     *
      * @return Void
      */
     public function __construct($controller) {
@@ -51,7 +53,7 @@ class CodeReviewViews extends Views {
     /**
      * Display header
      *
-     * @return void
+     * @return Void
      */
     function header() {
         $title = 'codereview';
@@ -61,7 +63,7 @@ class CodeReviewViews extends Views {
     /**
      * Display footer
      *
-     * @return void
+     * @return Void
      */
     function footer() {
         $GLOBALS['HTML']->footer(array());
@@ -70,7 +72,7 @@ class CodeReviewViews extends Views {
     /**
      * Retrieve plugin title
      *
-     * @return string
+     * @return String
      */
     function _getTitle() {
         return $GLOBALS['Language']->getText('plugin_codereview', 'title');
@@ -79,7 +81,7 @@ class CodeReviewViews extends Views {
     /**
      * Displays Review board frame
      *
-     * @return void
+     * @return Void
      */
     function displayFrame() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
@@ -89,6 +91,11 @@ class CodeReviewViews extends Views {
         echo '</div>';
     }
 
+    /**
+     * Display review request creation form
+     *
+     * @return Void
+     */
     function reviewSubmission() {
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($this->request->get('group_id'));

@@ -29,7 +29,7 @@ class CodeReviewPluginInfo extends PluginFileInfo {
     /**
      * Class constructor
      *
-     * Plugin $plugin Instance of the plugin
+     * @param Plugin $plugin Instance of the plugin
      *
      * @return Void
      */
