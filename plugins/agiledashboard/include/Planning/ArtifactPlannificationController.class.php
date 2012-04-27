@@ -43,12 +43,20 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
         $this->current_user     = $request->getCurrentUser();
+        $this->current_uri      = $request->getUri();
     }
 
     private function getArtifactId(Tracker_Artifact $artifact) {
         return $artifact->getId();
     }
 
+    public function getShowPresenter(Planning $planning,
+                                     Tracker_CrossSearch_SearchContentView $content_view,
+                                     array $artifacts_to_select,
+                                     Tracker_Artifact $artifact = null) {
+        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->current_user, $this->current_uri);
+    }
+    
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning            = $this->getPlanning();
         $project_id          = $this->request->get('group_id');
@@ -57,8 +65,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         
         $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select);
         
-        
-        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact, $this->current_user);
+        $presenter           = $this->getShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
     }
 

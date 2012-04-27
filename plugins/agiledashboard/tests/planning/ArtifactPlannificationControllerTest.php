@@ -150,6 +150,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
     
+
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
         $project_id                = 1111;
         $id                        = 987;
@@ -306,5 +307,25 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         }
         return $project_manager;
     }
+}
+
+class ArtifactPlannificationController_UriTest extends TuleapTestCase {
+    
+    public function itPassesTheCurrentUriToThePresenter() {
+        $expected_uri = '/plugins/agiledashboard/?blabla';
+        $request = mock('Codendi_Request');
+        stub($request)->getUri()->returns($expected_uri);
+        stub($request)->getCurrentUser()->returns(mock('User'));
+        
+        $planning_factory = mock('PlanningFactory');
+        $artifact_factory = mock('Tracker_ArtifactFactory');
+        $tracker_factory  = mock('TrackerFactory');
+        
+        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
+        
+        $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
+        $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
+    }
+    
 }
 ?>

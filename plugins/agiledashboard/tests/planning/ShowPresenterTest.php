@@ -32,14 +32,19 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $artifact            = null;
         $user                = mock('User');
         
+        $origin_url = '/plugins/agiledashboard/?group_id=104&action=show&planning_id=5&aid=17';
         $presenter = new Planning_ShowPresenter($planning,
                                                 $content_view,
                                                 $artifacts_to_select,
                                                 $artifact,
-                                                $user);
+                                                $user,
+                                                $origin_url);
         
         $url = $presenter->getPlanningTrackerArtifactCreationUrl();
-        $this->assertEqual($url, '/plugins/tracker/?tracker=191&func=new-artifact');
+        
+        $expected_return_to = urlencode($origin_url);
+        $this->assertEqual($url, "/plugins/tracker/?tracker=191&func=new-artifact&return_to=$expected_return_to");
     }
+    
 }
 ?>

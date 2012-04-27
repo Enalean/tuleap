@@ -31,8 +31,14 @@ class Planning_ShowPresenter {
     private $artifact;
     private $content_view;
     private $current_user;
+    private $current_uri;
     
-    public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null, User $user) {
+    public function __construct(Planning $planning,
+                                Tracker_CrossSearch_SearchContentView $content_view,
+                                array $artifacts_to_select,
+                                Tracker_Artifact $artifact = null, 
+                                User $user,
+                                $current_uri) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->planning_id         = $planning->getId();
         $this->planning_name       = $planning->getName();
@@ -48,6 +54,7 @@ class Planning_ShowPresenter {
         $this->content_view        = $content_view;
         $this->group_id            = $planning->getGroupId();
         $this->current_user        = $user;
+        $this->current_uri         = $current_uri;
     }
     
     public function hasArtifact() {
@@ -117,7 +124,7 @@ class Planning_ShowPresenter {
     }
     
     public function getPlanningTrackerArtifactCreationUrl() {
-        return TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact";
+        return TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&return_to=".urlencode($this->getCurrentUri());
     }
     
     public function canDrop() {
@@ -135,6 +142,10 @@ class Planning_ShowPresenter {
             return false;
         }
         return '<div class="feedback_warning">'. $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field') .'</div>';
+    }
+    
+    public function getCurrentUri() {
+        return $this->current_uri;
     }
 }
 
