@@ -19,13 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('TRACKER_BASE_URL')) {                                             // 
-    define('TRACKER_BASE_URL', '/plugins/tracker');                             // 
-}                                                                               // TODO: use constants.php instead
-if (!defined('TRACKER_BASE_DIR')) {                                             //       (available only in trunk)
-    define('TRACKER_BASE_DIR', dirname(__FILE__) .'/../../../tracker/include'); // 
-}
-
+require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once(dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
