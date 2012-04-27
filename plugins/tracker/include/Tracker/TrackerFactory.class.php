@@ -115,7 +115,12 @@ class TrackerFactory {
         return $this->dao;
     }
     
-    public function getCachedInstanceFromRow($row) {
+    /**
+     * @param array $row Raw data (typically from the db) of the tracker
+     *
+     * @return Tracker
+     */
+    private function getCachedInstanceFromRow($row) {
         $tracker_id = $row['id'];
         if (!isset($this->trackers[$tracker_id])) {
             $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);

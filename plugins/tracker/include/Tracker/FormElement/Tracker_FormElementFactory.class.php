@@ -558,15 +558,21 @@ class Tracker_FormElementFactory {
                 return $classes[$form_element_type];
             }
         }
-    } 
-    public function getCachedInstanceFromRow($row) {
-        $form_element_id   = $row['id'];
+    }
+    
+    /**
+     * @param array $row Raw data (typically from the db) of the form element
+     *
+     * @return Tracker_FormElement
+     */
+    private function getCachedInstanceFromRow($row) {
+        $form_element_id = $row['id'];
         if (!isset($this->formElements[$form_element_id])) {
             $this->formElements[$form_element_id] = $this->getInstanceFromRow($row);
         }
         return $this->formElements[$form_element_id];
-        
     }
+    
     /**
      * @param array the row allowing the construction of a Tracker_FormElement
      * 
