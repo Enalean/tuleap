@@ -25,6 +25,7 @@ require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'Test_CriteriaBuilder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_CrossSearch_Search');
@@ -39,31 +40,50 @@ class Fake_Tracker_CrossSearch_SearchContentView extends Tracker_CrossSearch_Sea
 }
 
 class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
-
+    
     public function setUp() {
         parent::setUp();
-        $this->formElementFactory = new MockTracker_FormElementFactory();
+        
+        $this->formElementFactory = mock('Tracker_FormElementFactory');
+        $this->tracker_factory    = mock('TrackerFactory');
+        $this->search             = mock('Tracker_CrossSearch_Search');
+        $this->criteria_builder   = mock('Tracker_CrossSearch_CriteriaBuilder');
     }
 
-    public function itBuildCustomContentView() {
-        $formElementFactory = new MockTracker_FormElementFactory();
-        $tracker_factory    = new MockTrackerFactory();
-        $tracker_factory->setReturnValue('getTrackersByGroupId', array());
-        $search             = new MockTracker_CrossSearch_Search();
-        $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-        $criteria_builder   = new MockTracker_CrossSearch_CriteriaBuilder();
-        $criteria_builder->setReturnValue('getCriteria', array());
-        $project            = new MockProject();
+    public function itBuildPlanningContentView() {
+        $tracker_ids = array();
+        $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $tracker_ids);
         
-        $builder            = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search, $criteria_builder);
-        $view               = $builder->buildContentView($project, aCrossSearchCriteria()->build());
+        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
         
-        $this->assertIsA($view, 'Tracker_CrossSearch_SearchContentView');
+        $this->criteria_builder->setReturnValue('getCriteria', array());
+        
+        $user    = aUser()->build();
+        $project = new MockProject();
+        
+        $cross_search_criteria = aCrossSearchCriteria()->build();
+        
+        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
+        
+        $builder            = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, $this->tracker_factory, $this->search, $this->criteria_builder);
+        $expected_class     = 'Planning_SearchContentView';
+        $view               = $builder->buildCustomContentView($expected_class, $user, $project, $cross_search_criteria, array(), $tracker_ids);
+        
+        $this->assertIsA($view, $expected_class);
+    }
+    
+    public function itRetrievesIdsOfTrackers() {
+        $builder  = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, $this->tracker_factory, $this->search, $this->criteria_builder);
+        $trackers = array(aTracker()->withId(12)->build(),
+                          aTracker()->withId(34)->build());
+        
+        $this->assertEqual($builder->getTrackersIds($trackers), array(12, 34));
     }
 }
 
 class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
     public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
+        $user    = aUser()->build();
         $project = new MockProject();
         $builder = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search(), new MockTracker_CrossSearch_CriteriaBuilder());
         
@@ -72,7 +92,18 @@ class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
                                 ->forOpenItems()
                                 ->build();
 
-        $builder->buildView($project, $cross_search_criteria);
+        $builder->buildView($user, $project, $cross_search_criteria);
+    }
+    
+    public function _itReturnsCrossSearchViewIncludingTheContentView() {
+        $user               = aUser()->build();
+        $project            = mock('Project');
+        $cross_search_query = mock('Tracker_CrossSearch_Query');
+        
+        $view_builder = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('buildContentView', 'getService'));
+        
+        $view_builder->expectOnce('buildContentView', array($user, $project, $cross_search_query));
+        $view_builder->buildView($user, $project, $cross_search_query);
     }
 }
 

@@ -51,6 +51,8 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->service               = new MockService();
         $this->project               = new MockProject();
         $this->manager               = new MockProjectManager();
+        $this->user                  = aUser()->build();
+        
         $criteria                    = array('124' => array('stuff'));
         $empty_title                 = 'toto';
         $semantic_criteria           = array('title' => $empty_title, 'status' => 'Closed');
@@ -77,9 +79,9 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/'));
         
-        $controller = $this->getController();
+        $controller = $this->getController($this->user);
         
-        $controller->search();
+        $controller->search($this->user);
     }
 
     public function itRedirectsWithErrorMessageIfServiceIsNotUsed() {
@@ -92,7 +94,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
 
-        $controller->search();
+        $controller->search($this->user);
     }
         
     public function itRendersViewUsingTheGivenProjectAndCriteria() {
@@ -101,15 +103,15 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
                 
         $controller = $this->getController();        
         $this->view_builder->setReturnValue('buildView', $view);
-        $this->view_builder->expectOnce('buildView', array($this->project, $this->cross_search_criteria));
+        $this->view_builder->expectOnce('buildView', array($this->user, $this->project, $this->cross_search_criteria));
         
-        $controller->search();
+        $controller->search($this->user);
     }
     
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
         $no_criteria = aCrossSearchCriteria()->build();
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $this->view_builder->expectOnce('buildView', array('*', $no_criteria));
+        $this->view_builder->expectOnce('buildView', array($this->user, $this->project, $no_criteria));
         $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
         $this->request = new Codendi_Request(array(
             'group_id' => '66',
@@ -117,7 +119,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
 
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         $controller = $this->getController();
-        $controller->search();
+        $controller->search($this->user);
     }
 
     private function getController() {

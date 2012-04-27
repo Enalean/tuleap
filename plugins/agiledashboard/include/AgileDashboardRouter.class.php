@@ -48,7 +48,7 @@ class AgileDashboardRouter {
         switch($request->get('action')) {
             case 'show':
                 $object_god   = new TrackerManager();
-                $view_builder = $object_god->getCrossSearchViewBuilder($request->get('group_id'));
+                $view_builder = $object_god->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser());
                 
                 $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
                 

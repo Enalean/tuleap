@@ -48,7 +48,7 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
-    function __construct(Tracker_Report                   $report, 
+    public function __construct(Tracker_Report                   $report, 
                          array                            $criteria, 
                          TreeNode                         $tree_of_artifacts, 
                          Tracker_ArtifactFactory          $artifact_factory, 

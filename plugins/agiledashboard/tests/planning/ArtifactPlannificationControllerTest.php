@@ -18,6 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+if (!defined('TRACKER_BASE_URL')) {                                             // 
+    define('TRACKER_BASE_URL', '/plugins/tracker');                             // 
+}                                                                               // TODO: use constants.php instead
+if (!defined('TRACKER_BASE_DIR')) {                                             //       (available only in trunk)
+    define('TRACKER_BASE_DIR', dirname(__FILE__) .'/../../../tracker/include'); // 
+}
+
 require_once(dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
@@ -27,9 +35,6 @@ require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
 Mock::generate('TrackerFactory');
@@ -54,8 +59,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
-        $id = 987;
-        $title = "screen hangs with macos";
+        $id      = 987;
+        $title   = "screen hangs with macos";
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
         $this->assertPattern('/No items yet/', $content);
         $this->assertPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
@@ -175,7 +180,15 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $content_view = $this->GivenAContentViewThatFetch($content);
         $tracker_ids  = array();
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, new EqualExpectation($expected_criteria), $already_linked_items, $tracker_ids));
+        $expected_arguments = array(
+        	'Planning_SearchContentView', 
+        	'*', 
+            $project, 
+            new EqualExpectation($expected_criteria), 
+            $already_linked_items, 
+            $tracker_ids
+        );
+        $view_builder->expectOnce('buildCustomContentView', $expected_arguments);
         $view_builder->setReturnValue('buildCustomContentView', $content_view);
 
         return $view_builder;

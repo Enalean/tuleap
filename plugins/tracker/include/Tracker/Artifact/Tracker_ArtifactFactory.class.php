@@ -100,6 +100,26 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
+    
+    /**
+     * Returns all the artifacts of the tracker with id $tracker_id the User $user can read
+     *
+     * @param User $user       User who want to access to artifacts
+     * @param int  $tracker_id the id of the tracker
+     *
+     * @return array of Tracker_Artifact identified by id (array() if not found)
+     */
+    public function getArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
+        $artifacts = array();
+        foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
+            $artifact = $this->getInstanceFromRow($row);
+            if ($artifact->userCanView($user)) {
+                $artifacts[$row['id']] = $artifact; 
+            }
+        }
+        return $artifacts;
+    }
+    
     public function getOpenArtifactsByTrackerId($tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {

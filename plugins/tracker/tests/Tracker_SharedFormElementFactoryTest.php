@@ -34,7 +34,7 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Users');
 Mock::generate('Tracker_FormElement_FieldDao');
 
-class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
+class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
 
     public function testCreateFormElementExtractsDataFromOriginalFieldThenForwardsToFactory() {
         $originField = $this->GivenAFieldSelectbox(321, null);

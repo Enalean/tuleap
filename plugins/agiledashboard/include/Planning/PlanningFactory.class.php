@@ -97,14 +97,18 @@ class PlanningFactory {
     /**
      * Get a list of planning defined in a group_id
      * 
-     * @param int $group_id
+     * @param User $user     The user who will see the planning
+     * @param int  $group_id
      *
      * @return array of Planning
      */
-    public function getPlannings($group_id) {
+    public function getPlannings(User $user, $group_id) {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
-            $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
+            $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
+            if($tracker->userCanView($user)) {
+                $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
+            }
         }
         return $plannings;
     }
@@ -151,6 +155,10 @@ class PlanningFactory {
         return $backlog_tracker_ids;
     }
     
+    public function getPlanningTrackerIdsByGroupId($group_id) {
+        return $this->dao->searchPlanningTrackerIdsByGroupId($group_id);
+    }
+    
     /**
      * Create a new planning
      * 
@@ -187,6 +195,23 @@ class PlanningFactory {
      */
     public function getAvailableTrackers($group_id) {
         return array_values($this->tracker_factory->getTrackersByGroupId($group_id));
+    }
+    
+    /**
+     * Retrieve the project trackers that can be used as planning trackers.
+     * 
+     * @param int $group_id the project id the trackers to retrieve belong to
+     * 
+     * @return Array of Tracker
+     */
+    public function getAvailablePlanningTrackers($group_id) {
+        $planning_trackers = array();
+        
+        foreach($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
+            $planning_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
+        }
+        
+        return $planning_trackers;
     }
     
     /**

@@ -45,6 +45,10 @@ function anArtifactLinkField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_ArtifactLink');
 }
 
+function aSelectBoxField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
+}
+
 class Test_Tracker_FormElement_Builder {
     private $name;
     private $id;

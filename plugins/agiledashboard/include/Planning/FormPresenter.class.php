@@ -39,10 +39,16 @@ class Planning_FormPresenter {
      */
     public $available_trackers;
     
-    public function __construct(Planning $planning, array $available_trackers) {
-        $this->group_id           = $planning->getGroupId();
-        $this->planning           = $planning;
-        $this->available_trackers = array_map(array($this, 'getPlanningTrackerPresenter'), $available_trackers);
+    /**
+     * @var Array of Tracker
+     */
+    public $available_planning_trackers;
+    
+    public function __construct(Planning $planning, array $available_trackers, array $available_planning_trackers) {
+        $this->group_id                    = $planning->getGroupId();
+        $this->planning                    = $planning;
+        $this->available_trackers          = $this->getPlanningTrackerPresenters($available_trackers);
+        $this->available_planning_trackers = $this->getPlanningTrackerPresenters($available_planning_trackers);
     }
     
     public function getPlanningName() {
@@ -51,6 +57,10 @@ class Planning_FormPresenter {
     
     public function getPlanningId() {
         return $this->planning->getId();
+    }
+    
+    public function getPlanningTrackerPresenters(array $trackers) {
+        return array_map(array($this, 'getPlanningTrackerPresenter'), $trackers);
     }
     
     public function getPlanningTrackerPresenter(Tracker $tracker) {

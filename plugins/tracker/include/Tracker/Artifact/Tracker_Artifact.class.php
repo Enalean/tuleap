@@ -86,7 +86,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * useArtifactPermissions
      * @return bool true if the artifact has individual permissions set
      */
-    function useArtifactPermissions() {
+    public function useArtifactPermissions() {
         return $this->use_artifact_permissions;
     }
     
@@ -97,7 +97,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return boolean user can view the artifact
      */
-    function userCanView(User $user = null) {
+    public function userCanView(User $user = null) {
         $um = $this->getUserManager();
         if (!$user) {
             $user = $um->getCurrentUser();

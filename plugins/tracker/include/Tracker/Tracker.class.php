@@ -1923,7 +1923,7 @@ EOS;
      *
      * @return boolean true if the user can view the tracker.
      */
-    function userCanView($user = 0) {
+    public function userCanView($user = 0) {
         if (!is_a($user, 'User')) {
             $um = UserManager::instance();
             if (!$user) {

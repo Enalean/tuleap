@@ -52,69 +52,57 @@ class Tracker_CrossSearch_CriteriaBuilder {
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $request_criteria) {
-        $shared_fields   = $this->getSharedFieldsCriteria($project, $report, $request_criteria);
-        $semantic_fields = $this->getSemanticFieldsCriteria($report, $request_criteria);
-        $artifact_fields = $this->getArtifactLinkCriteria($report, $request_criteria);
-        
+    public function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        $shared_fields   = $this->getSharedFieldsCriteria($user, $project, $report, $cross_search_query);
+        $semantic_fields = $this->getSemanticFieldsCriteria($report, $cross_search_query);
+        $artifact_fields = $this->getArtifactLinkCriteria($user, $report, $cross_search_query);
         return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
 
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSharedFieldsCriteria(Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $request_criteria) {
-        $fields   = $this->form_element_factory->getProjectSharedFields($project);
+    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        $fields   = $this->form_element_factory->getSharedFieldsReadableBy($user, $project);
         $criteria = array();
         
         foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria->getSharedFields()));
-            
-            $id          = null;
-            $rank        = 0;
-            $is_advanced = true;
-            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+                $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
+                $id          = null;
+                $rank        = 0;
+                $is_advanced = true;
+                $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
         }
         
         return $criteria;
     }
-
+    
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSemanticFieldsCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_criteria) {
-        $field        = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_criteria->getTitle(), $this->semantic_value_factory);
-        $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_criteria->getStatus(), $this->semantic_value_factory);
+    public function getSemanticFieldsCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        $title_field  = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_query->getTitle(), $this->semantic_value_factory);
+        $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_query->getStatus(), $this->semantic_value_factory);
         $id           = null;
         $rank         = 0;
         $is_advanced  = true;
         
         return array(
-            new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced), 
+            new Tracker_Report_Criteria($id, $report, $title_field,  $rank, $is_advanced), 
             new Tracker_Report_Criteria($id, $report, $status_field, $rank, $is_advanced)
         );
     }
 
-    public function getArtifactLinkCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_criteria) {
+    public function getArtifactLinkCriteria(User $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $criteria = array();
         foreach ($this->planning_trackers as $tracker) {
-            $trackerId        = $tracker->getId();
-            $AllArtifactsIds = $cross_search_criteria->listArtifactIds();
-            $artifactsOfTracker = $this->setSelectedArtifact($this->getArtifactByTracker($trackerId), $AllArtifactsIds);
-            
-            $field = new Tracker_CrossSearch_ArtifactReportField($tracker, $artifactsOfTracker);
+            $tracker_id        = $tracker->getId();
+            $tracker_artifacts = Tracker_ArtifactFactory::instance()->getArtifactsByTrackerIdUserCanView($user, $tracker_id);
+            $tracker_artifacts = $cross_search_query->setSelectedArtifacts($tracker_id, $tracker_artifacts);
+            $field      = new Tracker_CrossSearch_ArtifactReportField($tracker, $tracker_artifacts);
             $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
         }
         return $criteria;
-    }
-    protected function setSelectedArtifact($artifacts, $cross_search_criteria) {
-        foreach($artifacts as $artifact) {
-            $artifact->isSelected = in_array($artifact->getId(), $cross_search_criteria);
-        }
-        return $artifacts;
-    }
-    public function getArtifactByTracker($tracker_id) {
-        return Tracker_ArtifactFactory::instance()->getArtifactsByTrackerId($tracker_id);
     }
     
     private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {

@@ -50,22 +50,32 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     }
 
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
-        $planning = $this->getPlanning();
+        $planning            = $this->getPlanning();
+        $project_id          = $this->request->get('group_id');
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
-        $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
+        $tracker_ids         = $planning->getBacklogTrackerIds();
+        
+        $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select);
+        
+        
         $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact, $this->current_user);
         $this->render('show', $presenter);
     }
 
-    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Planning $planning, $artifacts_to_select) {
-        $project  = $manager->getProject($this->request->get('group_id'));
-        $excludedArtifactIds   = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
-        $tracker_ids           = $planning->getBacklogTrackerIds();
+    private function getCrossSearchQuery() {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
         $artifact_criteria     = $this->getArrayFromRequest('artifact_criteria');
-        $cross_search_criteria = new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
-        return $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $cross_search_criteria, $excludedArtifactIds, $tracker_ids);
+        return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
+    }
+    
+    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select) {
+        
+        $tracker_linked_items  = $this->getTrackerLinkedItems($artifacts_to_select);
+        $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
+        $cross_search_query    = $this->getCrossSearchQuery();
+        return $view_builder->buildCustomContentView('Planning_SearchContentView', $this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
+       
     }
     
     private function getArrayFromRequest($parameter_name) {

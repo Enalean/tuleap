@@ -19,9 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('common/dao/include/DataAccessObject.class.php');
+require_once 'common/dao/include/DataAccessObject.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/dao/TrackerDao.class.php';
 
 class PlanningDao extends DataAccessObject {
+    
+    private function getTrackerDao() {
+        return new TrackerDao();
+    }
     
     function createPlanning($planning_name, $group_id, $planning_backlog_ids, $planning_tracker_id) {
         $planning_name       = $this->da->quoteSmart($planning_name);
@@ -87,6 +92,31 @@ class PlanningDao extends DataAccessObject {
                 FROM plugin_agiledashboard_planning_backlog_tracker
                 WHERE planning_id = $planning_id";
         return $this->retrieve($sql);
+    }
+    
+    function searchPlanningTrackerIdsByGroupId($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+        
+        $sql = "SELECT planning_tracker_id AS id
+                FROM plugin_agiledashboard_planning
+                WHERE group_id = $group_id";
+        
+        /* TODO:
+         *   return $this->retrieveIds($sql);
+         *   (needs trunk merge)
+         */
+        $ids = array();
+        foreach($this->retrieve($sql) as $row) {
+            $ids[] = $row['id'];
+        }
+        return $ids;
+    }
+    
+    public function searchNonPlanningTrackersByGroupId($group_id) {
+        $planning_tracker_ids = $this->searchPlanningTrackerIdsByGroupId($group_id);
+        $tracker_dao          = $this->getTrackerDao();
+        
+        return $tracker_dao->searchByGroupIdWithExcludedIds($group_id, $planning_tracker_ids);
     }
     
     function updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id) {

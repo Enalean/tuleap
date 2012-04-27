@@ -164,8 +164,15 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $project            = new MockProject();
         $project->setReturnValue('getID', 110);
         $project->setReturnValue('getPublicName', 'gpig');
-        $tracker1           = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
+        
+        $tracker1 = mock('Tracker');
+        stub($tracker1)->userCanView()->returns(true);
+        stub($tracker1)->getId()->returns(101);
+        stub($tracker1)->getName()->returns('Stories');
+        stub($tracker1)->getProject()->returns($project);
+        
         $trackers           = array($tracker1);
+        
         
         $this->setContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
         $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $this->content_view);
@@ -225,7 +232,8 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     private function renderAndGetContent($view) {
         ob_start();
-        $view->render();
+        $user = aUser()->build();
+        $view->render($user);
         $output = ob_get_clean();
         return $output;
     }

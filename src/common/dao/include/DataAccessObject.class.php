@@ -18,15 +18,18 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'DataAccessResult.class.php';
+require_once 'DataAccessResultEmpty.class.php';
+
 /**
  *  Base class for data access objects
  */
 class DataAccessObject {
     /**
-    * Private
-    * $da stores data access object
+     * Private
+     * $da stores data access object
      * @var DataAccess
-    */
+     */
     var $da;
 
     //! A constructor
