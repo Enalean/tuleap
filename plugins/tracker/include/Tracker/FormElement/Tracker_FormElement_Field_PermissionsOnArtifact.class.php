@@ -261,7 +261,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
     
     private function isCheckedArtifactValue($artifact_value) {
-        return(isset ($artifact_value['use_artifact_permissions']) && $artifact_value['use_artifact_permissions']);
+        return isset($artifact_value['use_artifact_permissions']) && $artifact_value['use_artifact_permissions'];
     }
     
     private function getArtifactValueHTML($selected_values, $artifact_id, $is_checked, $is_read_only) {
@@ -301,7 +301,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     protected function fetchArtifactValueCommon($is_read_only, Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $selected_values = array();
         if ($this->isValidSubmittedValues($submitted_values)) {
-            $value = $submitted_values[0][$field_id];
+            $value = $submitted_values[0][$this->getId()];
             if (isset($value['u_groups'])) {
                 $selected_values = $value['u_groups'];
             }
@@ -309,7 +309,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         } else {
             $is_checked = $artifact->useArtifactPermissions();
         }
-                
         return $this->getArtifactValueHTML($selected_values, $artifact->getId(), $is_checked, $is_read_only);
     }
     
@@ -319,7 +318,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @param array $from the value(s) *before*
      * @param array $to   the value(s) *after*
      */
-    public function fetchFollowUp($artifact, $from, $to) {        
+    public function fetchFollowUp($artifact, $from, $to) {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
