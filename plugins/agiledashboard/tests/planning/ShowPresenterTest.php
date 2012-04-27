@@ -18,15 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (! defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
-
-if (! defined('TRACKER_BASE_DIR')) {
-    define('TRACKER_BASE_DIR', dirname(__FILE__).'/../../../tracker/include');
-}
-
 require_once 'common/user/User.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/ShowPresenter.class.php';
