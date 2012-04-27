@@ -39,7 +39,7 @@ Mock::generate('Tracker_CrossSearch_SemanticValueFactory');
 
 class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
-    /*function testRenderShouldDisplayServiceHeaderAndFooter() {
+    function testRenderShouldDisplayServiceHeaderAndFooter() {
         $service = new MockService();
         $service->expectOnce('displayHeader');
         $service->expectOnce('displayFooter');
@@ -48,7 +48,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $view = $this->GivenASearchView($service, $criteria, array(), new TreeNode());
         
         $output = $this->renderAndGetContent($view);
-    }*/
+    }
     
     function itRendersTheTrackerHomeNav() {
         $service  = new MockService();
