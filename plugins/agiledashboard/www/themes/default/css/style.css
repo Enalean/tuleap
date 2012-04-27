@@ -27,10 +27,15 @@
 }
 
 .cards {
-    list-style-type: none;
-    padding-left: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cards .cards {
+  margin-left: 2em;
 }
 .card {
+    padding: 0.25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
     margin-bottom: 1em;
@@ -42,19 +47,6 @@
 .card-actions {
     float:right;
 }
-/* Clearfix */
-.card {
-  *zoom: 1;
-}
-.card:before,
-.card:after {
-  display: table;
-  content: "";⋅
-}
-.card:after {
-  clear: both;
-}
-/* end clearfix */
 
 .release_planner {
     background: white;
