@@ -44,6 +44,9 @@ class TrackerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    /**
+     * searches trackers by group_id, excluding some given trackers
+     */
     public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids) {
         $group_id             = $this->da->escapeInt($group_id);
         $excluded_tracker_ids = implode(',', $excluded_tracker_ids);
