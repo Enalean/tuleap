@@ -49,6 +49,8 @@ $description     = $params['description'];
 $reviewRequestId = postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter);
 if (!empty($reviewRequestId)) {
     updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
+    publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password);
+    //CreateNewDiff($reviewRequestId, $rb_user, $rb_password);
 } else {
     error("Crate review request Failure");
 }
@@ -119,6 +121,33 @@ function updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_do
     $request = json_decode(curl_exec($ch), true);
     $error = curl_error($ch);
     curl_close($ch);
-
 }
+
+function publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "public=true");
+    curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/");
+    $request = json_decode(curl_exec($ch), true);
+    $error = curl_error($ch);
+    curl_close($ch);
+}
+
+function CreateNewDiff($reviewRequestId, $rb_user, $rb_password) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);  
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, "path=/root/Desktop/diff.diff");
+    curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/diffs/");
+    $request = json_decode(curl_exec($ch), true);
+    var_dump($request);
+    $error = curl_error($ch);
+    curl_close($ch);
+}
+
 ?>
