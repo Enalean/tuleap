@@ -3,6 +3,9 @@ Version 5.1 (Not released yet)
    * AgileDashboard v0.14
    * Tracker v5.7.8
 
+  == Development ==
+  * Check release with git
+
 Version 5.0.1 (Thursday, April 26th 2012)
    == Bug fix ==
    * Fix link to cli documentation in footer
