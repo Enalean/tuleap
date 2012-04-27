@@ -23,7 +23,7 @@ class Planning_ShowPresenter {
     
     public $planning_id;
     public $planning_name;
-    public $planning_tracker_id; // Is it used somewhere ?
+    public $planning_tracker_id;
     public $group_id;
     public $destination_id;
     public $destination_title;
@@ -34,8 +34,9 @@ class Planning_ShowPresenter {
     
     public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null, User $user) {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->planning_id   = $planning->getId();
-        $this->planning_name = $planning->getName();
+        $this->planning_id         = $planning->getId();
+        $this->planning_name       = $planning->getName();
+        $this->planning_tracker_id = $planning->getPlanningTrackerId();
         
         if ($artifact) {
             $this->destination_id    = $artifact->getId();
@@ -103,6 +104,10 @@ class Planning_ShowPresenter {
             return 'planning-droppable';
         }
         return false;
+    }
+    
+    public function getPlanningTrackerArtifactCreationUrl() {
+        return TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact";
     }
     
     public function canDrop() {
