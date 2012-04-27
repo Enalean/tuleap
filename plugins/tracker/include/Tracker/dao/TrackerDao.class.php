@@ -234,13 +234,12 @@ class TrackerDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function restrict($restriction_clause, $excluded_tracker_ids) {
-        if ($excluded_tracker_ids) {
-            $clause = "$restriction_clause (".implode(',', $excluded_tracker_ids);
-        } else {
-            $clause = "";
-        }
-        return $clause;
+    private function restrict($restriction_clause, $excluded_tracker_ids) {
+        if (!$excluded_tracker_ids) {
+            return "";
+        } 
+        $id_enumeration = implode(',', $excluded_tracker_ids);
+        return "$restriction_clause ($id_enumeration)";
     }
 }
 ?>
