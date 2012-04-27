@@ -49,7 +49,7 @@ class TrackerDao extends DataAccessObject {
      */
     public function searchByGroupIdWithExcludedIds($group_id, array $excluded_tracker_ids) {
         $group_id             = $this->da->escapeInt($group_id);
-        $excluded_tracker_ids = implode(',', $excluded_tracker_ids);
+        $excluded_clause = $this->restrict("AND id NOT IN", $excluded_tracker_ids);
         
         // TODO: escape $excluded_tracker_ids ?
         
@@ -57,7 +57,7 @@ class TrackerDao extends DataAccessObject {
                 FROM $this->table_name
                 WHERE group_id = $group_id 
                   AND deletion_date IS NULL
-                  AND id NOT IN ($excluded_tracker_ids)
+                  $excluded_clause
                 ORDER BY name";
         
         return $this->retrieve($sql);
@@ -232,6 +232,15 @@ class TrackerDao extends DataAccessObject {
 			item_name=$itemname
             WHERE item_name=$oldItemname AND group_id=$group_id";
         return $this->update($sql);
+    }
+
+    public function restrict($restriction_clause, $excluded_tracker_ids) {
+        if ($excluded_tracker_ids) {
+            $clause = "$restriction_clause (".implode(',', $excluded_tracker_ids);
+        } else {
+            $clause = "";
+        }
+        return $clause;
     }
 }
 ?>
