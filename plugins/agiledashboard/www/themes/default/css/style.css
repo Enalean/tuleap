@@ -13,7 +13,7 @@
     padding: 0 0.5em;
 }
 
-.planning-draggable {
+.planning-draggable > .card {
     cursor: move;
 }
 
@@ -31,36 +31,30 @@
     padding-left: 0;
 }
 .card {
-    padding: 0.5em 1em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
     margin-bottom: 1em;
-    border: 1px solid gray;
-    box-shadow: 1px 1px 2px 1px lightgray;
+    border:1px solid #B2B39D;
     background: #ffe;
     min-width: 200px;
 }
-.card > .cards > .card {
-    background: #ffd;
-}
 
-.card > .cards > .card > .cards > .card {
-    background: #ffc;
+.card-actions {
+    float:right;
 }
-
-.card > .cards > .card > .cards > .card > .cards > .card {
-    background: #ffb;
+/* Clearfix */
+.card {
+  *zoom: 1;
 }
-
-.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card {
-    background: #ffa;
+.card:before,
+.card:after {
+  display: table;
+  content: "";⋅
 }
-
-.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card  > .cards > .card {
-    background: #ff9;
+.card:after {
+  clear: both;
 }
-
-.card-link {
-    text-align:right;
-}
+/* end clearfix */
 
 .release_planner {
     background: white;
