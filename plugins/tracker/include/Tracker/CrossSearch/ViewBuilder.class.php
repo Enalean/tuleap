@@ -65,7 +65,7 @@ class Tracker_CrossSearch_ViewBuilder {
         $report       = $this->getReport();
         $service      = $this->getService($project);
         $criteria     = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $trackers     = $this->tracker_factory->getTrackerByGroupIdUserCanView($project->getGroupId(), $user);
+        $trackers     = $this->tracker_factory->getTrackersByGroupIdUserCanView($project->getGroupId(), $user);
         $tracker_ids  = $this->getTrackersIds($trackers);
         $artifacts    = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query);
         

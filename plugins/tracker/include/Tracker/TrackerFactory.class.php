@@ -79,7 +79,10 @@ class TrackerFactory {
         return $trackers;
     }
     
-    public function getTrackerByGroupIdUserCanView($group_id, User $user) {
+    /**
+     * @return array of Tracker
+     */
+    public function getTrackersByGroupIdUserCanView($group_id, User $user) {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];

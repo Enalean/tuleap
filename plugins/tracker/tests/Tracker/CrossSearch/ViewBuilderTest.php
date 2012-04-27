@@ -52,7 +52,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
     public function itBuildPlanningContentView() {
         $tracker_ids = array();
-        $this->tracker_factory->setReturnValue('getTrackerByGroupIdUserCanView', $tracker_ids);
+        $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $tracker_ids);
         
         $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
         
