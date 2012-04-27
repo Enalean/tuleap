@@ -54,25 +54,35 @@ class Planning_ShowPresenter {
         return $this->artifact !== null;
     }
     
-    public function getLinkedItems() {
-        $linked_items = $this->artifact->getLinkedArtifacts($this->current_user);
+    public function getLinkedItems($child_depth = 1) {
+        return $this->addChildItem($this->artifact, new TreeNode(), $child_depth);
+    }
+    
+    private function addChildItem($artifact, $parent_node, $child_depth = 0) {
+        $linked_items = $artifact->getLinkedArtifacts($this->current_user);
         if (! $linked_items) {
             $linked_items = array();
             return false;
         }
-        $root = new TreeNode();
         foreach ($linked_items as $item) {
-            $node = new TreeNode(array('id'    => $item->getId(),
-                                       'title' => $item->getTitle(),
-                                       'link'  => $item->fetchDirectLinkToArtifact(),
-                                       'class' => 'planning-draggable-alreadyplanned',
-                                       ));
+            $node = new TreeNode(
+                array(
+						'id'    => $item->getId(),
+						'title' => $item->getTitle(),
+                        'link'  => $item->fetchDirectLinkToArtifact(),
+						'class' => 'planning-draggable-alreadyplanned',
+                )
+            );
             $node->setId($item->getId());
-            $root->addChild($node);
-        }
-        return $root;
+            if ($level > 0 ) {
+                $this->addChildItem($item, $node, $child_depth - 1);
+            }
 
+            $parent_node->addChild($node);
+        }
+        return $parent_node;
     }
+    
     
     public function fetchSearchContent() {
         return $this->content_view->fetch();
