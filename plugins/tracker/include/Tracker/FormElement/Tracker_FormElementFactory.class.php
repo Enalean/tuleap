@@ -628,7 +628,7 @@ class Tracker_FormElementFactory {
      * 
      * @return Array of Tracker_FormElement
      */
-    private function getInstancesFromRows($rows) {
+    private function getCachedInstancesFromRows($rows) {
         $fields = array();
         foreach ($rows as $row) {
             $fields[] = $this->getCachedInstanceFromRow($row);
@@ -705,7 +705,7 @@ class Tracker_FormElementFactory {
      */
     public function getSharedTargets(Tracker_FormElement $element) {
         $dar = $this->getDao()->searchSharedTargets($element->getId());
-        return $this->getInstancesFromRows($dar);
+        return $this->getCachedInstancesFromRows($dar);
     }
     
     /**
@@ -715,7 +715,7 @@ class Tracker_FormElementFactory {
      */
     public function getProjectSharedFields(Project $project) {
         $dar = $this->getDao()->searchProjectSharedFieldsOriginals($project->getId());
-        return $this->getInstancesFromRows($dar);
+        return $this->getCachedInstancesFromRows($dar);
     }
     
     /**
