@@ -60,7 +60,7 @@ if (!defined('TRACKER_BASE_URL')) {
 abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
 
     protected function GivenAFormElementFactory() {
-        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager', 'getDao'));
+        $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager', 'getDao'));
         $factory->setReturnValue('getUsedFormElementForTracker', array());
         $factory->setReturnValue('getEventManager', new MockEventManager());
         return $factory;
@@ -131,6 +131,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $this->assertReference($f, $a_formelement);
         $this->assertReference($mapping['F0'], $a_formelement);
     }
+    
     //WARNING : READ/UPDATE is actual when last is READ, UPDATE liste (weird case, but good to know)
     function test_getPermissionFromFormElementData() {
       $formElementData = array('permissions'=> array( 
