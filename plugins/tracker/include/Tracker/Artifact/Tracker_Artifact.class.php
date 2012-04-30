@@ -1215,8 +1215,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function getRedirectUrlAfterArtifactUpdate($request, $tracker_id, $artifact_id) {
+        $url_redirection = TRACKER_BASE_URL.'/?';
         if ($request->get('submit_and_stay')) {
-            $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact_id;
+            $url_redirection .= 'aid=' . $artifact_id;
             if ($request->get('from_aid')) {
                 $url_redirection .= '&from_aid=' . $request->get('from_aid');
             }
@@ -1224,12 +1225,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $url_redirection .= 'return_to_uri='.$request->get('return_to_uri');
             }
         } else if ($request->get('from_aid')) {
-            $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
+            $url_redirection .= 'aid=' . $request->get('from_aid');
         } else if ($request->get('return_to_uri')) {
             $url_redirection = urldecode($request->get('return_to_uri'));
         }
         else {
-            $url_redirection = TRACKER_BASE_URL.'/?tracker='. $tracker_id;
+            $url_redirection .= 'tracker='. $tracker_id;
         }
         return $url_redirection;
 
