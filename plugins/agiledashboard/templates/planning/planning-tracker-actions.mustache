@@ -1,9 +1,13 @@
-<div class="planning-tracker-actions">
-    <a id="planning-tracker-actions-menu_handle" href="#">Add new...</a>
-    <ul class="dropdown_panel" id="planning-tracker-actions-menu">
+<div class="card-actions">
+    <a id="card-actions-menu_handle" class="direct-link-to-artifact" href="{{{destination_link}}}">{{destination_xref}}</a>
+    <ul class="dropdown_panel" id="card-actions-menu">
+        <!-- li>
+            <a href="{{{destination_link}}}">Edit</a>
+            <hr style="border:0px; border-top:1px solid #ccc;"/>
+        </li -->
         {{#backlogArtifactTypes}}
-            <li class="planning-tracker-artifact-type">
-                <a href="{{creationUrl}}">{{name}}</a>
+            <li>
+                <a href="{{creationUrl}}">Add {{name}}</a>
             </li>
         {{/backlogArtifactTypes}}
     </ul>

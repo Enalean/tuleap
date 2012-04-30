@@ -66,11 +66,7 @@
 .planning-artifact-chooser > option {
 }
 
-.planning-tracker-actions {
-    float: right;
-}
-
-.planning-tracker-actions ul {
+.card-actions ul {
     list-style: none;
     padding: 0.25em 0.5em;
 }

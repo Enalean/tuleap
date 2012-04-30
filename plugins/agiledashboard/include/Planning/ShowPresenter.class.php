@@ -26,6 +26,7 @@ class Planning_ShowPresenter {
     public $group_id;
     public $destination_id;
     public $destination_title;
+    public $destination_xref;
     private $artifacts_to_select;
     private $artifact;
     private $content_view;
@@ -49,9 +50,10 @@ class Planning_ShowPresenter {
         $this->planning_tracker = $planning->getPlanningTracker();
         
         if ($artifact) {
-            $this->destination_id    = $artifact->getId();
-            $this->destination_title = $hp->purify($artifact->getTitle());
-            $this->destination_link  = $artifact->fetchDirectLinkToArtifact();
+            $this->destination_id     = $artifact->getId();
+            $this->destination_title  = $hp->purify($artifact->getTitle());
+            $this->destination_link   = $artifact->getUri();
+            $this->destination_xref   = $artifact->getXRef();
         }
         $this->artifact            = $artifact;
         $this->artifacts_to_select = $artifacts_to_select;

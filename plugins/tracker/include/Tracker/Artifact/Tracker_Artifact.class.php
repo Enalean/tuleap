@@ -682,7 +682,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string html
      */
     public function fetchDirectLinkToArtifact() {
-        return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUri() {
+        return TRACKER_BASE_URL .'/?aid=' . $this->getId();
+    }
+    
+    /**
+    * @return string the cross reference text: bug #42
+    */
+    public function getXRef() {
+        return $this->getTracker()->getItemName() . ' #' . $this->getId();
     }
     
     /**
