@@ -21,6 +21,8 @@
 
 class Planning_ShowPresenter {
     
+    public $__ = array(__CLASS__, '__trans');
+    
     public $planning_id;
     public $planning_name;
     public $group_id;
@@ -205,6 +207,20 @@ class Planning_ShowPresenter {
     
     public function createNewItemToPlan() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan');
+    }
+    
+    public function editLabel() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
+    }
+    
+    public function addNew() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
+    }
+    
+    public function __trans($text) {
+        $args = explode('|', $text);
+        $secondary_key = array_shift($args);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', $secondary_key, $args);
     }
 }
 
