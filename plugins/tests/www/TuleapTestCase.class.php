@@ -146,5 +146,15 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertPattern("/$substring/", $string);
     }
     
+
+    /**
+     * assert that uri has the specified parameters, no matter the possition in the uri
+     * @param type $uri
+     * @param type $param
+     * @param type $value 
+     */
+    protected function assertUriHasArgument($uri, $param, $value) {
+        $this->assertPattern("/[?&]$param=$value/", $uri);
+    }    
 }
 ?>
