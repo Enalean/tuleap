@@ -1222,7 +1222,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         } else if ($request->get('from_aid')) {
             $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
-        } else {
+        } elseif ($request->get('return_to_uri')) {
+            $url_redirection = urldecode($request->get('return_to_uri'));
+        }
+        else {
             $url_redirection = TRACKER_BASE_URL.'/?tracker='. $tracker_id;
         }
         return $url_redirection;

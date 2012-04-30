@@ -1635,6 +1635,14 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
         $this->assertStringContains($result, "from_aid=$from_aid");
     }
 
+    public function itUsesThe_returnToUri_whenPresent() {
+        $return_to_uri = "/plugins/some_plugin/?some_arg=some_value";
+        $request_data = array('return_to_uri' => urlencode($return_to_uri));
+        $artifact_id = 66;
+        $result = $this->getRedirectUrlFor($request_data, null, $artifact_id);
+        $this->assertEqual($return_to_uri, $result);
+    }
+    
     public function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
         $request = new Codendi_Request($request_data);
         $artifact = new Tracker_Artifact($tracker_id, $artifact_id, null, null, false);
