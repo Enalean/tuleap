@@ -14,5 +14,6 @@ plugin_agiledashboard	planning_index	Plannings
 plugin_agiledashboard	planning_new	New Planning
 plugin_agiledashboard	planning_show	View Planning
 plugin_agiledashboard	planning_artifact_new	New
+plugin_agiledashboard	create_new_item_to_plan	Create new...
 
 

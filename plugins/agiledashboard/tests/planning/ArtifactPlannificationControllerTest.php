@@ -47,7 +47,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), 66);
+        $this->planning_tracker_id = 66;
+        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
     }
@@ -92,6 +93,20 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
         $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
+    }
+    
+    public function itRedirectsToArtifactCreationForm() {
+        $request = new Codendi_Request(array(
+            'planning_id' => $this->planning->getId(),
+            'aid'         => -1,
+        ));
+        $request->setCurrentUser(aUser()->build());
+        $factory = $this->GivenAnArtifactFactory();
+        
+        $return_url = urlencode($request->getUri());
+        
+        $GLOBALS['Response']->expectOnce('redirect', array(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&return_to=$return_url"));
+        $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {

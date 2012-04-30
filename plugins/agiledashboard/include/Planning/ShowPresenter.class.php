@@ -78,10 +78,10 @@ class Planning_ShowPresenter {
         foreach ($linked_items as $item) {
             $node = new TreeNode(
                 array(
-						'id'    => $item->getId(),
-						'title' => $item->getTitle(),
-                        'link'  => $item->fetchDirectLinkToArtifact(),
-						'class' => 'planning-draggable-alreadyplanned',
+                    'id'    => $item->getId(),
+                    'title' => $item->getTitle(),
+                    'link'  => $item->fetchDirectLinkToArtifact(),
+                    'class' => 'planning-draggable-alreadyplanned',
                 )
             );
             $node->setId($item->getId());
@@ -164,6 +164,10 @@ class Planning_ShowPresenter {
     
     public function getCurrentUri() {
         return $this->current_uri;
+    }
+    
+    public function createNewItemToPlan() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan');
     }
 }
 

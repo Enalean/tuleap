@@ -24,6 +24,7 @@ require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
+    
     /**
      * @var Tracker_Artifact
      */
@@ -58,7 +59,14 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     }
     
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
-        $planning            = $this->getPlanning();
+        $planning = $this->getPlanning();
+        if ($this->request->get('aid') == -1) {
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL .'/?'. http_build_query(array(
+                'tracker'   => $planning->getPlanningTrackerId(),
+                'func'      => 'new-artifact',
+                'return_to' => $this->current_uri,
+                )));
+        }
         $project_id          = $this->request->get('group_id');
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
         $tracker_ids         = $planning->getBacklogTrackerIds();
