@@ -90,6 +90,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
+    
+    public function getSubmitUrl() {
+        return TRACKER_BASE_URL .'/?tracker='. $this->getId() .'&func=new-artifact';
+    }
 
     /**
      * getGroupId - get this Tracker Group ID.

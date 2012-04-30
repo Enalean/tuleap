@@ -2,13 +2,17 @@
 <li class="planning-draggable {{class}}" id="art-{{id}}">
     <div class="card">
         <div class="card-actions">
-            <a id="card-{{id}}-actions-menu_handle" class="direct-link-to-artifact" href="{{uri}}">{{xref}}</a>
+            <a id="card-{{id}}-actions-menu_handle" href="{{uri}}">{{xref}}</a>
             <ul class="dropdown_panel" id="card-{{id}}-actions-menu">
                 <li>
                     <a href="{{uri}}">Edit</a><!-- FIXME: i18n -->
                     <hr style="border:0px; border-top:1px solid #ccc;"/>
                 </li>
-                
+                {{#allowedChildrenTypes}}
+                    <li>
+                        <a href="{{getSubmitUrl}}">Add {{getItemName}}</a><!-- FIXME: i18n -->
+                    </li>
+                {{/allowedChildrenTypes}}
             </ul>
         </div>
         {{title}}
