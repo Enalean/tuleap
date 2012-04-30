@@ -1215,24 +1215,28 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function getRedirectUrlAfterArtifactUpdate($request, $tracker_id, $artifact_id) {
-        $url_redirection = TRACKER_BASE_URL.'/?';
-        if ($request->get('submit_and_stay')) {
-            $url_redirection .= 'aid=' . $artifact_id;
-            if ($request->get('from_aid')) {
-                $url_redirection .= '&from_aid=' . $request->get('from_aid');
-            }
-            if ($request->get('return_to_uri')) {
-                $url_redirection .= '&return_to_uri='.$request->get('return_to_uri');
-            }
-        } else if ($request->get('from_aid')) {
-            $url_redirection .= 'aid=' . $request->get('from_aid');
-        } else if ($request->get('return_to_uri')) {
-            $url_redirection = urldecode($request->get('return_to_uri'));
+        $return_to_uri = urldecode($request->get('return_to_uri'));
+        $stay = $request->get('submit_and_stay') ;
+        if (! $stay && $return_to_uri) {
+            return $return_to_uri;
         }
-        else {
-            $url_redirection .= 'tracker='. $tracker_id;
+        
+        $redirect_params = array();
+        $from_aid = $request->get('from_aid');
+        if ($stay) {
+           $redirect_params['aid'] = $artifact_id;
+            if ($from_aid) {
+                $redirect_params['from_aid'] = $from_aid;
+            }
+            if ($return_to_uri) {
+                $redirect_params['return_to_uri'] = $return_to_uri;
+            }
+        } else if ($from_aid) {
+            $redirect_params['aid'] = $from_aid;
+        } else {
+            $redirect_params['tracker'] = $tracker_id;
         }
-        return $url_redirection;
+        return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
 
     }
 }

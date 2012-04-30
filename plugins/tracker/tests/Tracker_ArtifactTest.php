@@ -1617,7 +1617,7 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
         $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri);
     }
     
-    public function itReturnsToThePreviousArtifactWhenA_fromAid_isGiven() {
+    public function itReturnsToThePreviousArtifactWhen_fromAid_isGiven() {
         $from_aid = 33;
         $request_data = array('from_aid' => $from_aid);
         $artifact_id = 66;
