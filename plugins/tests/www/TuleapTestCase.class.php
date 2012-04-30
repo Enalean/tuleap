@@ -146,7 +146,6 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertPattern("/$substring/", $string);
     }
     
-
     /**
      * assert that uri has the specified parameters, no matter the possition in the uri
      * @param type $uri
@@ -155,6 +154,15 @@ abstract class TuleapTestCase extends UnitTestCase {
      */
     protected function assertUriHasArgument($uri, $param, $value) {
         $this->assertPattern("/[?&]$param=$value/", $uri);
-    }    
+    }
+    
+    /**
+     * asserts that $string starts with the $start_sequence
+     * @param type $string
+     * @param type $start_sequence 
+     */
+    protected function assertStringBeginsWith($string, $start_sequence) {
+        $this->assertPattern("%^$start_sequence%", $string);
+    }
 }
 ?>

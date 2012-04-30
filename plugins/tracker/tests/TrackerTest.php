@@ -1731,14 +1731,6 @@ class Tracker_ArtifactSubmit_RedirectUrlTest extends TuleapTestCase {
         
     }
 
-    /**
-     * asserts that $string starts with the $start_sequence
-     * @param type $string
-     * @param type $start_sequence 
-     */
-    public function assertStringBeginsWith($string, $start_sequence) {
-        $this->assertPattern("%^$start_sequence%", $string);
-    }
 
 }
 
