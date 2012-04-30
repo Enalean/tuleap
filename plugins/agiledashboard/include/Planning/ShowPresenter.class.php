@@ -28,6 +28,7 @@ class Planning_ShowPresenter {
     public $destination_title;
     public $destination_link;
     public $destination_xref;
+    
     private $artifacts_to_select;
     private $artifact;
     private $content_view;
