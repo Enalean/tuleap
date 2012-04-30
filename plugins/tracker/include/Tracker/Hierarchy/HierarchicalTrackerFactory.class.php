@@ -29,6 +29,13 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
      * @return Tracker_Hierarchy_HierarchicalTracker
      */
     public function getWithChildren(Tracker $tracker) {
+        return new Tracker_Hierarchy_HierarchicalTracker($tracker, $this->getChildren($tracker));
+    }
+    
+    /**
+     * @return array of Tracker
+     */
+    public function getChildren(Tracker $tracker) {
         $dar      = $this->dao->getChildren($tracker->getId());
         $children = array();
         
@@ -36,7 +43,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
             $children[] = $this->tracker_factory->getTrackerById($row['child_id']);
         }
         
-        return new Tracker_Hierarchy_HierarchicalTracker($tracker, $children);
+        return $children;
     }
     
     /**
@@ -67,7 +74,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     public function getHierarchy(Tracker $tracker) {
         $project_trackers = $this->getProjectTrackers($tracker->getProject());
         $parent_child_dar = $this->dao->searchParentChildAssociations($tracker->getGroupId());
-        $children_map     = $this->getChildrenMapFromDar($parent_child_dar , $project_trackers);
+        $children_map     = $this->getChildrenMapFromDar($parent_child_dar, $project_trackers);
         
         $root = new TreeNode();
         $root->setId('root');
