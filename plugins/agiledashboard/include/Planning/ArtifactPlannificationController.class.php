@@ -22,6 +22,7 @@ require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
+require_once 'SearchContentView.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     

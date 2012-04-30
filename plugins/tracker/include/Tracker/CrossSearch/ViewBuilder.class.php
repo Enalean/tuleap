@@ -23,7 +23,6 @@ require_once 'Query.class.php';
 require_once 'SemanticStatusReportField.class.php';
 require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
-require_once dirname(__FILE__).'/../Planning/SearchContentView.class.php';
 
 class Tracker_CrossSearch_ViewBuilder {
     /**
