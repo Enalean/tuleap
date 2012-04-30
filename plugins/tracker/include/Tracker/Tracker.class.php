@@ -2985,12 +2985,21 @@ EOS;
     }
 
     public function redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id) {
+        $stay = $request->get('submit_and_stay');
+        $return_to = $request->get('return_to');
+        if (! $stay && $return_to) {
+            return urldecode($return_to);
+        }
+        
         $url_redirection = TRACKER_BASE_URL.'/?tracker='. $tracker_id;
         if ($request->get('submit_and_continue')) {
             $url_redirection .= '&func=new-artifact';
         }
-        if ($request->get('submit_and_stay')) {
+        if ($stay) {
             $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact_id;
+            if ($return_to) {
+                $url_redirection .= '&return_to='.$return_to;
+            }
         }
         return $url_redirection;
     }
