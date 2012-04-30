@@ -53,6 +53,10 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
     }
     
+    public function tearDown() {
+        //Tracker_ArtifactFactory::clearInstance();
+    }
+    
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
         $id      = 987;
         $title   = "screen hangs with macos";
@@ -120,11 +124,11 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $id = 987;
         $linked_items = array(
             $this->GivenAnArtifactWithNoLinkedItem(123, 'Tutu'),
-            $this->GivenAnArtifactWithNoLinkedItem(123, 'Tata')
+            $this->GivenAnArtifactWithNoLinkedItem(124, 'Tata')
         );
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $factory  = $this->GivenAnArtifactFactory(array_merge(array($artifact), $linked_items));
         $request = new Codendi_Request(
             array(
                 'aid'         => $id,
@@ -260,6 +264,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         );
 
         $factory  = new MockTracker_ArtifactFactory();
+        Tracker_ArtifactFactory::setInstance($factory);
         foreach ($artifacts as $artifact) {
             $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
             $open_artifacts[] = $artifact;
@@ -341,6 +346,8 @@ class ArtifactPlannificationController_UriTest extends TuleapTestCase {
         $planning_factory = mock('PlanningFactory');
         $artifact_factory = mock('Tracker_ArtifactFactory');
         $tracker_factory  = mock('TrackerFactory');
+        
+        Tracker_ArtifactFactory::setInstance($artifact_factory);
         
         $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
         

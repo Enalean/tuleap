@@ -39,6 +39,17 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->artifacts_to_select = array();
         $this->artifact            = null;
         
+        $factory = mock('Tracker_ArtifactFactory');
+        Tracker_ArtifactFactory::setInstance($factory);
+        for ($i = 30 ; $i < 40 ; ++$i) {
+            $artifact = mock('Tracker_Artifact');
+            stub($artifact)->getId()->returns($i);
+            stub($artifact)->getTitle()->returns('Artifact '. $i);
+            stub($artifact)->getUri()->returns('/bar');
+            stub($artifact)->getXRef()->returns('art #'. $i);
+            stub($factory)->getArtifactById($i)->returns($artifact);
+        }
+        
         stub($this->planning)->getPlanningTrackerId()->returns($this->planning_tracker_id);
         stub($this->planning)->getPlanningTracker()->returns($this->planning_tracker);
         stub($this->planning_tracker)->getId()->returns($this->planning_tracker_id);
@@ -56,14 +67,14 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         );
     }
     
-    protected function getATreeNode($tree_node_id, $artifact_links = array(), $class = "planning-draggable-alreadyplanned") {
+    protected function getATreeNode($tree_node_id, $artifact_links = array(), $classname = "planning-draggable-alreadyplanned") {
         $node = new TreeNode(array(
                         'id'                   => $tree_node_id,
                         'title'                => 'Artifact '.$tree_node_id,
-                        'uri'                  => '',
-                        'xref'                 => '',
+                        'class'                => $classname,
+                        'uri'                  => '/bar',
+                        'xref'                 => 'art #'. $tree_node_id,
                         'allowedChildrenTypes' => array(),
-                        'class'                => $class,
         ));
         $node->setId($tree_node_id);
         foreach($artifact_links as $node_child) {

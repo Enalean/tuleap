@@ -82,44 +82,36 @@ class Planning_ShowPresenter {
     
     public function getLinkedItems($child_depth = 1) {
         $parent_node = new TreeNode(
-                array(
-                        'id'    => $this->destination_id,
-                        'title' => $this->destination_title,
-                        'uri'   => $this->destination_link,
-                        'xref'  => $this->destination_xref,
-                        'allowedChildrenTypes' => array(),
-                        'class' => 'planning-draggable-alreadyplanned',
-                )
+            array(
+                'id' => $this->destination_id,
+            )
         );
         $parent_node->setId($this->destination_id);
-        return $this->addChildItem($this->artifact, $parent_node, $child_depth);
+        $this->addChildItem($this->artifact, $parent_node, $child_depth);
+        
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, 'planning-draggable-alreadyplanned');
+        $visitor->visit($parent_node);
+        return $parent_node;
     }
     
     private function addChildItem($artifact, $parent_node, $child_depth = 0) {
         $linked_items = $artifact->getLinkedArtifacts($this->current_user);
         if (! $linked_items) {
-            $linked_items = array();
             return false;
         }
         foreach ($linked_items as $item) {
             $node = new TreeNode(
                 array(
-                    'id'    => $item->getId(),
-                    'title' => $item->getTitle(),
-                    'uri'   => $item->getUri(),
-                    'xref'  => $item->getXRef(),
-                    'allowedChildrenTypes' => array(),
-                    'class' => 'planning-draggable-alreadyplanned',
+                    'id' => $item->getId(),
                 )
             );
             $node->setId($item->getId());
             if ($child_depth > 0 ) {
                 $this->addChildItem($item, $node, $child_depth - 1);
             }
-
             $parent_node->addChild($node);
         }
-        return $parent_node;
     }
     
     
