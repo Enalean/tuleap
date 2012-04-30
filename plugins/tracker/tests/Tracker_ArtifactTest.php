@@ -1603,7 +1603,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 }
 
 class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
-    public function itRedirectsTheTrackerHomePageByDefault() {
+    public function itRedirectsToTheTrackerHomePageByDefault() {
         $request_data = array();
         $tracker_id = 20;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, null);
