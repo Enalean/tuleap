@@ -100,7 +100,9 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             'planning_id' => $this->planning->getId(),
             'aid'         => -1,
         ));
+        $_SERVER['REQUEST_URI'] = '/someplugin/someaction/?somearg=toto';
         $request->setCurrentUser(aUser()->build());
+        
         $factory = $this->GivenAnArtifactFactory();
         
         $return_url = urlencode($request->getUri());
