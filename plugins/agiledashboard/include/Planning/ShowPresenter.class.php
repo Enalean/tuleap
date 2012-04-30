@@ -127,6 +127,13 @@ class Planning_ShowPresenter {
         return false;
     }
     
+    public function backlogArtifactTypes() {
+        return array(
+            array('name' => 'Story', 'creationUrl' => '#create_story'),
+            array('name' => 'Bug',   'creationUrl' => '#create_bug'),
+        );
+    }
+    
     private function getArtifactCreationLabel(Tracker $tracker) {
         $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
         $item_name = $tracker->getItemName();
