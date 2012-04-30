@@ -85,7 +85,7 @@ class Planning_ShowPresenter {
                 )
             );
             $node->setId($item->getId());
-            if ($level > 0 ) {
+            if ($child_depth > 0 ) {
                 $this->addChildItem($item, $node, $child_depth - 1);
             }
 
