@@ -1626,11 +1626,11 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
     }
     
     public function itUsesThe_returnToUri_whenPresent() {
-        $return_to_uri = "/plugins/some_plugin/?some_arg=some_value";
-        $request_data = array('return_to_uri' => urlencode($return_to_uri));
+        $return_to = "/plugins/some_plugin/?some_arg=some_value";
+        $request_data = array('return_to' => urlencode($return_to));
         $artifact_id = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertEqual($return_to_uri, $redirect_uri);
+        $this->assertEqual($return_to, $redirect_uri);
     }
 
     public function testSubmitAndStayHasPrecedenceOver_fromAid() {
@@ -1645,11 +1645,11 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
 
     public function testSubmitAndStayHasPrecedenceOver_returnToAid() {
         $encoded_return_uri = urlencode("/plugins/some_plugin/?some_arg=some_value");
-        $request_data = array('return_to_uri' => $encoded_return_uri,
+        $request_data = array('return_to' => $encoded_return_uri,
                               'submit_and_stay' => true);
         $artifact_id = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertUriHasArgument($redirect_uri, "return_to_uri", $encoded_return_uri);
+        $this->assertUriHasArgument($redirect_uri, "return_to", $encoded_return_uri);
         $this->assertUriHasArgument($redirect_uri, "aid", $artifact_id);
     }
     
