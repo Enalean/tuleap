@@ -1600,7 +1600,51 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         return new FormElementFactory_PendingMock($artifactLinkFields);
     }
     
+}
+
+class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
+    public function itRedirectsTheTrackerHomePageByDefault() {
+        $request_data = array();
+        $tracker_id = 20;
+        $result = $this->getRedirectUrlFor($request_data, $tracker_id, null);
+        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $result);
+    }
     
+    public function itRedirectsToTheCurrentPageIfWeDo_SubmitAndStay() {
+        $request_data = array('submit_and_stay' => true);
+        $artifact_id = 66;
+        $result = $this->getRedirectUrlFor($request_data, null, $artifact_id);
+        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $result);
+    }
+    
+    public function itReturnsToThePreviousArtifactWhen_fromAid_isGiven() {
+        $from_aid = 33;
+        $request_data = array('from_aid' => $from_aid);
+        $artifact_id = 66;
+        $result = $this->getRedirectUrlFor($request_data, null, $artifact_id);
+        $this->assertEqual(TRACKER_BASE_URL."/?aid=$from_aid", $result);
+    }
+    
+    public function testSubmitAndStayHasPrecedenceOverFromAid() {
+        $from_aid = 33;
+        $artifact_id = 66;
+        $request_data = array('from_aid' => $from_aid,
+                              'submit_and_stay' => true);
+        $result = $this->getRedirectUrlFor($request_data, null, $artifact_id);
+        $this->assertPattern("/aid=$artifact_id/", $result);
+        $this->assertPattern("/from_aid=$from_aid/", $result);
+//        $this->assertStringContains("aid=$artifact_id", $result);
+//        $this->assertStringContains("from_aid=$from_aid", $result);
+    }
+    
+    
+
+    public function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
+        $request = new Codendi_Request($request_data);
+        $artifact = new Tracker_Artifact($tracker_id, $artifact_id, null, null, false);
+        return $artifact->getRedirectUrlAfterArtifactUpdate($request, $tracker_id, $artifact_id);
+        
+    }
 }
 
 

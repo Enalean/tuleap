@@ -635,15 +635,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
-                    $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->tracker_id;
-                    if ($request->get('submit_and_stay')) {
-                        $url_redirection = TRACKER_BASE_URL.'/?aid=' . $this->getId();
-                    }
                     
-                    if ($request->get('from_aid')) {
-                        $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
-                    }
-                    $GLOBALS['Response']->redirect($url_redirection);
+                    $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
                 } else {
                     $this->display($layout, $request, $current_user);
                 }
@@ -1219,6 +1212,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $fields_data[$artlink_field->getId()]['new_values'] = '';
         $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
         $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+    }
+
+    public function getRedirectUrlAfterArtifactUpdate($request, $tracker_id, $artifact_id) {
+        if ($request->get('submit_and_stay')) {
+            $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact_id;
+            if ($request->get('from_aid')) {
+                $url_redirection .= '&from_aid=' . $request->get('from_aid');
+            }
+        } else if ($request->get('from_aid')) {
+            $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
+        } else {
+            $url_redirection = TRACKER_BASE_URL.'/?tracker='. $tracker_id;
+        }
+        return $url_redirection;
+
     }
 }
 
