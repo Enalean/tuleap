@@ -62,6 +62,10 @@ class Planning_ShowPresenter {
             $this->destination_title  = $hp->purify($artifact->getTitle());
             $this->destination_link   = $artifact->getUri();
             $this->destination_xref   = $artifact->getXRef();
+            
+            // FIXME
+            if ($this->destination_link == null) { $this->destination_link = ''; }
+            if ($this->destination_xref == null) { $this->destination_xref = ''; }
         }
         $this->artifact            = $artifact;
         $this->artifacts_to_select = $artifacts_to_select;
