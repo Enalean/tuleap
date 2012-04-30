@@ -539,13 +539,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                             $art_link = '<a href="'.TRACKER_BASE_URL.'/?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                             
-                            $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->getId();
-                            if ($request->get('submit_and_continue')) {
-                                $url_redirection .= '&func=new-artifact';
-                            }
-                            if ($request->get('submit_and_stay')) {
-                                $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact->getId();
-                            }
+                            $url_redirection = $this->redirectUrlAfterArtifactSubmission($request, $this->getId(), $artifact->getId());
                             $GLOBALS['Response']->redirect($url_redirection);
                         }
                     }
@@ -2988,6 +2982,17 @@ EOS;
     
     public function setSharedFormElementFactory(Tracker_SharedFormElementFactory $factory) {
         $this->sharedFormElementFactory = $factory;
+    }
+
+    public function redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id) {
+        $url_redirection = TRACKER_BASE_URL.'/?tracker='. $tracker_id;
+        if ($request->get('submit_and_continue')) {
+            $url_redirection .= '&func=new-artifact';
+        }
+        if ($request->get('submit_and_stay')) {
+            $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact_id;
+        }
+        return $url_redirection;
     }
 
 }

@@ -56,6 +56,9 @@ class Test_Tracker_Builder {
         return $this;
     }
         
+    /**
+     * @return \Tracker 
+     */
     public function build() {
         $tracker = new Tracker($this->id, $this->project_id, $this->name, null, null, null, null, null, null, null, null, null);
         if ($this->project) {
