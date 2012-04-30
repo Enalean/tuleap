@@ -18,23 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__) .'/../../include/Planning/ArtifactTreeNodeVisitor.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 
 class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
     public function itWrapsAnArtifactInATreeNode() {
-        $artifact = mock('Tracker_Artifact');
+        $tracker           = mock('Tracker');
+        $children_trackers = array(mock('Tracker'), mock('Tracker'));
         
+        $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
+        stub($hierarchy_factory)->getChildren($tracker)->returns($children_trackers);
+        
+        $artifact = mock('Tracker_Artifact');
         stub($artifact)->getId()->returns(123);
         stub($artifact)->getTitle()->returns('Foo');
         stub($artifact)->getUri()->returns('/bar');
         stub($artifact)->getXRef()->returns('art #123');
-        
-        $node = new TreeNode(array('id' => 123));
+        stub($artifact)->getTracker()->returns($tracker);
         
         $artifact_factory = mock('Tracker_ArtifactFactory');
         stub($artifact_factory)->getArtifactById(123)->returns($artifact);
         
-        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, 'baz');
+        $node    = new TreeNode(array('id' => 123));
+        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'baz');
+        
         $visitor->visit($node);
         
         $data = $node->getData();
@@ -43,7 +51,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $this->assertEqual($data['uri'],                  '/bar');
         $this->assertEqual($data['xref'],                 'art #123');
         $this->assertEqual($data['class'],                'baz');
-        $this->assertEqual($data['allowedChildrenTypes'], array());
+        $this->assertEqual($data['allowedChildrenTypes'], $children_trackers);
     }
 }
 

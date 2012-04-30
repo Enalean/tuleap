@@ -26,6 +26,40 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     }
     
     /**
+     * Holds an instance of the class
+     * @var Tracker_Hierarchy_HierarchicalTrackerFactory
+     */
+    private static $instance;
+    
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param Tracker_Hierarchy_HierarchicalTrackerFactory $factory 
+     */
+    public static function setInstance(Tracker_Hierarchy_HierarchicalTrackerFactory $instance) {
+        self::$instance = $instance;
+    }
+    
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstance() {
+        self::$instance = null;
+    }
+    
+    /**
+     * The singleton method
+     * 
+     * @return Tracker_Hierarchy_HierarchicalTrackerFactory
+     */
+    public static function instance() {
+        if (! self::$instance) {
+            self::$instance = new Tracker_Hierarchy_HierarchicalTrackerFactory(TrackerFactory::instance(), new Tracker_Hierarchy_Dao());
+        }
+        return self::$instance;
+    }
+    
+    /**
      * @return Tracker_Hierarchy_HierarchicalTracker
      */
     public function getWithChildren(Tracker $tracker) {

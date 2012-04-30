@@ -90,7 +90,8 @@ class Planning_ShowPresenter {
         $this->addChildItem($this->artifact, $parent_node, $child_depth);
         
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, 'planning-draggable-alreadyplanned');
+        $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
+        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'planning-draggable-alreadyplanned');
         $visitor->visit($parent_node);
         return $parent_node;
     }

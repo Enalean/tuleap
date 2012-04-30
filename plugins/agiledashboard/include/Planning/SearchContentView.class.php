@@ -26,33 +26,12 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     protected function fetchTable() {
-        //$this->injectArtifactInChildren($this->tree_of_artifacts);
-        $visitor = new Planning_ArtifactTreeNodeVisitor($this->artifact_factory, 'planning-draggable-toplan');
+        $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
+        $visitor = new Planning_ArtifactTreeNodeVisitor($this->artifact_factory, $hierarchy_factory, 'planning-draggable-toplan');
         $visitor->visit($this->tree_of_artifacts);
         $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
         return $renderer->render('cards', $this, true);
     }
-
-/*     private function injectArtifactInChildren(TreeNode $node) {
-        foreach ($node->getChildren() as $child) {
-            $child->accept($this);
-        }
-    }
-
-    public function visit(TreeNode $node) {
-        $row = $node->getData();
-        $artifact = $this->artifact_factory->getArtifactById($row['id']);
-        if ($artifact) {
-            $row['title'] = $artifact->getTitle();
-            $row['link']  = $artifact->fetchDirectLinkToArtifact();
-            $row['class'] = 'planning-draggable-toplan';
-            $row['uri']   = $artifact->getUri();
-            $row['xref']  = $artifact->getXRef();
-            $row['allowedChildrenTypes'] = array();
-            $node->setData($row);
-        }
-        $this->injectArtifactInChildren($node);
-    } */
 
     public function getChildren() {
         return $this->tree_of_artifacts->getChildren();

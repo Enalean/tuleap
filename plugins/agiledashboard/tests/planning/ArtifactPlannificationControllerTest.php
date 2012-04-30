@@ -51,10 +51,15 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
+        
+        $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
+        Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
     }
     
     public function tearDown() {
-        //Tracker_ArtifactFactory::clearInstance();
+        Tracker_ArtifactFactory::clearInstance();
+        Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
+        TrackerFactory::clearInstance();
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -319,6 +324,9 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
         $planning_factory->setReturnValue('getPlanningWithPlanningTracker', $this->planning, array($this->planning->getId()));
         
+        $tracker_factory = new MockTrackerFactory();
+        TrackerFactory::setInstance($tracker_factory);
+        
         ob_start();
         $controller = new Planning_ArtifactPlannificationController($request, $factory, $planning_factory, new MockTrackerFactory());
         $controller->show($view_builder, $project_manager, $search);
@@ -346,8 +354,6 @@ class ArtifactPlannificationController_UriTest extends TuleapTestCase {
         $planning_factory = mock('PlanningFactory');
         $artifact_factory = mock('Tracker_ArtifactFactory');
         $tracker_factory  = mock('TrackerFactory');
-        
-        Tracker_ArtifactFactory::setInstance($artifact_factory);
         
         $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
         

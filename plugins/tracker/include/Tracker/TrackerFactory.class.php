@@ -51,6 +51,22 @@ class TrackerFactory {
         }
         return self::$_instance;
     }
+    
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param TrackerFactory $factory 
+     */
+    public static function setInstance(TrackerFactory $factory) {
+        self::$_instance = $factory;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstance() {
+        self::$_instance = null;
+    }
 
     /**
      * @param int $id the id of the tracker to retrieve

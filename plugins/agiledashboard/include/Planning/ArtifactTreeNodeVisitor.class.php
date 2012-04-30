@@ -30,9 +30,15 @@ class Planning_ArtifactTreeNodeVisitor {
      */
     private $artifact_factory;
     
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, $classname) {
-        $this->artifact_factory = $artifact_factory;
-        $this->classname        = $classname;
+    /**
+     * @var Tracker_Hierarchy_HierarchicalTrackerFactory
+     */
+    private $hierarchy_factory;
+    
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_Hierarchy_HierarchicalTrackerFactory $hierarchy_factory, $classname) {
+        $this->artifact_factory  = $artifact_factory;
+        $this->classname         = $classname;
+        $this->hierarchy_factory = $hierarchy_factory;
     }
     
     private function injectArtifactInChildren(TreeNode $node) {
@@ -49,7 +55,7 @@ class Planning_ArtifactTreeNodeVisitor {
             $row['class'] = $this->classname;
             $row['uri']   = $artifact->getUri();
             $row['xref']  = $artifact->getXRef();
-            $row['allowedChildrenTypes'] = array();
+            $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
             $node->setData($row);
         }
         $this->injectArtifactInChildren($node);
