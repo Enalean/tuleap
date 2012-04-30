@@ -802,6 +802,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $html .= '<form action="?'. http_build_query(array(
             'tracker'  => $this->id,
             'func' => 'submit-artifact',
+            'return_to' => $request->get('return_to')
             )) .'" method="POST" enctype="multipart/form-data">';
         if ($link) {
             $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
