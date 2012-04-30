@@ -19,10 +19,6 @@
  */
  
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
-
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generatePartial(
     'Tracker_Artifact', 
@@ -143,13 +139,16 @@ require_once 'Test_Artifact_Builder.php';
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
-
 Mock::generate('Workflow');
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
     function before(&$fields_data, $submitter) {
         $fields_data[102] = '456';
         return parent::before($fields_data, $submitter);
     }
+}
+
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
 }
 
 class Tracker_ArtifactTest extends UnitTestCase {
@@ -1595,11 +1594,78 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
         $this->assertEqual($artifact->getAnArtifactLinkField($current_user), null);
     }
-
+    /**
+     * Tracker Hierarchy
+     * - tracker 22 ($artifact)
+     *   - tracker 33 ($artifactLinkFromHierarchy)
+     * 
+     * $artifact : 2 artifacts links  
+     *   - $artifactLinkFromHierarchy
+     *   - $artifactLinkNotFromHierarchy
+     * 
+     * result:
+     * - $artifactLinkFromHierarchy
+     */
+    public function itReturnsTheArtifactLinksOfTheHierarchy() {
+        $user          = aUser()->build();
+        
+        $changeset = new MockTracker_Artifact_Changeset();
+        
+        $parent_tracker = aTracker()->withId(22)->build();
+        $child_tracker  = aTracker()->withId(33)->build();
+        $non_child_tracker = aTracker()->withId(44)->build();
+        
+        $children_trackers = array($child_tracker);
+        $hierarchy_factory = stub('Tracker_HierarchyFactory')->getChildren($parent_tracker->getId())->returns($children_trackers);
+        $factory = new MockTracker_FormElementFactory();
+        $artifact = anArtifact()
+                    ->withTracker($parent_tracker)
+                    ->withFormElementFactory($factory)
+                    ->withChangesets(array($changeset))
+                    ->build();
+        
+        $artifact->setHierarchyFactory($hierarchy_factory);
+        
+        $artifactLinkFromHierarchy = anArtifact()
+                    ->withTracker($child_tracker)
+                    ->withFormElementFactory($factory)
+                    ->withChangesets(array($changeset))
+                    ->build();
+        
+        $artifactLinkNotFromHierarchy = anArtifact()
+                    ->withTracker($non_child_tracker)
+                    ->withFormElementFactory($factory)
+                    ->withChangesets(array($changeset))
+                    ->build();
+        
+        $expected_list = array(
+            $artifactLinkFromHierarchy,
+            $artifactLinkNotFromHierarchy
+        );
+        
+        $changeset = new MockTracker_Artifact_Changeset();
+        
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->getLinkedArtifacts($changeset, $user)->returns($expected_list);
+        stub($field)->userCanRead($user)->returns(true);
+        
+        $factory->setReturnValue('getUsedArtifactLinkFields', array($field));
+        
+        $expected_result = array($artifactLinkFromHierarchy);
+        $this->assertEqual($expected_result, $artifact->getLinkedArtifactsFromHierarchy($user));
+        $artifact->setHierarchyFactory();
+    }
+    
     private function GivenAFactoryThatReturns($artifactLinkFields) {
         return new FormElementFactory_PendingMock($artifactLinkFields);
     }
     
+    private function GivenAHierarchyFactory($dao = null) {
+        if (!$dao) {
+            $dao = new MockTracker_Hierarchy_Dao();
+        }
+        return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'));
+    }
 }
 
 class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {

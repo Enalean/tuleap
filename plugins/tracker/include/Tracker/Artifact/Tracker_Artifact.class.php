@@ -52,6 +52,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $formElementFactory;
     
     /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+    
+    /**
      * Constructor
      *
      * @param int     $id                       The Id of the artifact
@@ -1189,6 +1194,57 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset, $user);
         }
         return $artifact_links;
+    }
+    
+    /**
+     * Get the latest artifacts from the hierarchy linked to the current artifact
+     * 
+     * @param User $user The user who should see the artifacts
+     * 
+     * @return Array of Tracker_Artifact
+     */
+    public function getLinkedArtifactsFromHierarchy(User $user) {
+        $artifact_links = array();
+        $children_trackers_ids = $this->getChildTrackersIds();
+        foreach($this->getLinkedArtifacts($user) as $artifact_link) {
+            if (in_array($artifact_link->getTrackerId(), $children_trackers_ids)) {
+                $artifact_links[] = $artifact_link;
+            }
+        }
+        
+        return $artifact_links;
+    }
+    
+    /**
+     * Returns the previously injected factory (e.g. in tests), or a new
+     * instance (e.g. in production).
+     * 
+     * @return Tracker_HierarchyFactory
+     */
+    public function getHierarchyFactory() {
+        if ($this->hierarchy_factory == null) {
+            $this->hierarchy_factory = Tracker_HierarchyFactory::build();
+        }
+        return $this->hierarchy_factory;
+    }
+    
+
+    public function setHierarchyFactory($hierarchy = null) {
+        $this->hierarchy_factory = $hierarchy;
+    }    
+    
+    /**
+     * Returns the children of the burndown field tracker.
+     * 
+     * @return array of Tracker
+     */
+    protected function getChildTrackersIds() {
+        $children_trackers_ids = array();
+        $children_hierarchy_tracker = $this->getHierarchyFactory()->getChildren($this->getTrackerId());
+        foreach ($children_hierarchy_tracker as $tracker) {
+            $children_trackers_ids[] = $tracker->getId();
+        }
+        return $children_trackers_ids;
     }
     
     /**
