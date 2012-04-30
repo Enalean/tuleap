@@ -135,5 +135,16 @@ abstract class TuleapTestCase extends UnitTestCase {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
     }
+    
+    /**
+     * assert that $substring is present $string
+     * @param string $string
+     * @param string $substring
+     * @return boolean true if $substring is present in $string
+     */
+    protected function assertStringContains($string, $substring) {
+        return $this->assertPattern("/$substring/", $string);
+    }
+    
 }
 ?>

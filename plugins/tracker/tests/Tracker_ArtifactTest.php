@@ -1631,13 +1631,9 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
         $request_data = array('from_aid' => $from_aid,
                               'submit_and_stay' => true);
         $result = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertPattern("/aid=$artifact_id/", $result);
-        $this->assertPattern("/from_aid=$from_aid/", $result);
-//        $this->assertStringContains("aid=$artifact_id", $result);
-//        $this->assertStringContains("from_aid=$from_aid", $result);
+        $this->assertStringContains($result, "aid=$artifact_id");
+        $this->assertStringContains($result, "from_aid=$from_aid");
     }
-    
-    
 
     public function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
         $request = new Codendi_Request($request_data);
