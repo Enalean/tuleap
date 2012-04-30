@@ -87,6 +87,7 @@ class Planning_ShowPresenter {
                         'title' => $this->destination_title,
                         'uri'   => $this->destination_link,
                         'xref'  => $this->destination_xref,
+                        'allowedChildrenTypes' => array(),
                         'class' => 'planning-draggable-alreadyplanned',
                 )
         );
@@ -101,38 +102,13 @@ class Planning_ShowPresenter {
             return false;
         }
         foreach ($linked_items as $item) {
-            $id=
-            $group_id=
-            $name=
-            $description=
-            $item_name=
-            $allow_copy=
-            $submit_instructions=
-            $browse_instructions=
-            $status=
-            $deletion_date=
-            $instantiate_for_new_projects=
-            $stop_notification = null;
-            
-            $t = new Tracker($id,
-            $group_id,
-            $name,
-            $description,
-            'bug',
-            $allow_copy,
-            $submit_instructions,
-            $browse_instructions,
-            $status,
-            $deletion_date,
-            $instantiate_for_new_projects,
-            $stop_notification);
             $node = new TreeNode(
                 array(
                     'id'    => $item->getId(),
                     'title' => $item->getTitle(),
                     'uri'   => $item->getUri(),
                     'xref'  => $item->getXRef(),
-                    'allowedChildrenTypes' => array($t),
+                    'allowedChildrenTypes' => array(),
                     'class' => 'planning-draggable-alreadyplanned',
                 )
             );
