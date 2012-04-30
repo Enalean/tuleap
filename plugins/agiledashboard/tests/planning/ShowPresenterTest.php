@@ -21,6 +21,7 @@
 require_once 'common/user/User.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/ShowPresenter.class.php';
 
@@ -53,5 +54,33 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->assertEqual($url, "/plugins/tracker/?tracker=191&func=new-artifact&return_to=$expected_return_to");
     }
     
+    public function itProvidesBacklogArtifactTypeNamesAndCreationUrls() {
+        $stories_tracker     = aMockTracker()->withItemName('Story')->build();
+        $issues_tracker      = aMockTracker()->withItemName('Issue')->build();
+        $planning            = mock('Planning');
+        $content_view        = mock('Tracker_CrossSearch_SearchContentView');
+        $artifacts_to_select = array();
+        $artifact            = null;
+        $user                = mock('User');
+        $origin_url          = null;
+        
+        $presenter = new Planning_ShowPresenter($planning,
+                                                $content_view,
+                                                $artifacts_to_select,
+                                                $artifact,
+                                                $user,
+                                                $origin_url);
+        
+        $root_backlog_trackers = array($stories_tracker, $issues_tracker);
+        stub($planning)->getRootBacklogTrackers()->returns($root_backlog_trackers);
+        
+        $expected_artifact_types = array(
+            array('name' => 'Story', 'creationUrl' => null),
+            array('name' => 'Issue', 'creationUrl' => null),
+        );
+        
+        $actual_artifact_types = $presenter->backlogArtifactTypes();
+        $this->assertEqual($actual_artifact_types, $expected_artifact_types);
+    }
 }
 ?>

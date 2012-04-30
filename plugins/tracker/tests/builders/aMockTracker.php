@@ -33,6 +33,11 @@ class MockTrackerBuilder {
         return $this;
     }
     
+    public function withItemName($item_name) {
+        stub($this->tracker)->getItemName()->returns($item_name);
+        return $this;
+    }
+    
     public function havingFormElementWithNameAndType($name, $type_or_types) {
         stub($this->tracker)->hasFormElementWithNameAndType($name, $type_or_types)->returns(true);
         return $this;

@@ -113,6 +113,13 @@ class Planning {
     public function setPlanningTracker(Tracker $planning_tracker) {
         $this->planning_tracker = $planning_tracker;
     }
+    
+    /**
+     * @return array of Tracker
+     */
+    public function getRootBacklogTrackers() {
+        return array();
+    }
 }
 
 

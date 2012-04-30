@@ -34,6 +34,11 @@ class Planning_ShowPresenter {
     private $current_uri;
     
     /**
+     * @var Planning
+     */
+    private $planning;
+    
+    /**
      * @var Tracker
      */
     private $planning_tracker;
@@ -45,6 +50,8 @@ class Planning_ShowPresenter {
                                 User $user,
                                 $current_uri) {
         $hp = Codendi_HTMLPurifier::instance();
+        
+        $this->planning         = $planning;
         $this->planning_id      = $planning->getId();
         $this->planning_name    = $planning->getName();
         $this->planning_tracker = $planning->getPlanningTracker();
@@ -130,10 +137,19 @@ class Planning_ShowPresenter {
     }
     
     public function backlogArtifactTypes() {
-        return array(
-            array('name' => 'Story', 'creationUrl' => '#create_story'),
-            array('name' => 'Bug',   'creationUrl' => '#create_bug'),
-        );
+        $artifact_types = array();
+        
+        foreach($this->planning->getRootBacklogTrackers() as $tracker) {
+            $artifact_types[] = array('name'        => $tracker->getItemName(),
+                                      'creationUrl' => null);
+        }
+        
+        return $artifact_types;
+        
+//        return array(
+//            array('name' => 'Story', 'creationUrl' => '#create_story'),
+//            array('name' => 'Bug',   'creationUrl' => '#create_bug'),
+//        );
     }
     
     private function getArtifactCreationLabel(Tracker $tracker) {
