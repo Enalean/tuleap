@@ -8,11 +8,13 @@
     {{/canDrop}}
     {{#canDrop}}
     <div>
-        {{^getLinkedItems}}
-        No items yet
-        {{/getLinkedItems}}
         {{#getLinkedItems}}
-            {{> cards}}
+            {{^hasChildren}}
+                No items yet
+            {{/hasChildren}}
+            {{#hasChildren}}
+                {{> cards}}
+            {{/hasChildren}}
         {{/getLinkedItems}}
     </div>
     {{/canDrop}}
