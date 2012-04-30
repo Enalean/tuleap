@@ -23,7 +23,6 @@ class Planning_ShowPresenter {
     
     public $planning_id;
     public $planning_name;
-    public $planning_tracker_id;
     public $group_id;
     public $destination_id;
     public $destination_title;
@@ -33,6 +32,11 @@ class Planning_ShowPresenter {
     private $current_user;
     private $current_uri;
     
+    /**
+     * @var Tracker
+     */
+    private $planning_tracker;
+    
     public function __construct(Planning $planning,
                                 Tracker_CrossSearch_SearchContentView $content_view,
                                 array $artifacts_to_select,
@@ -40,9 +44,9 @@ class Planning_ShowPresenter {
                                 User $user,
                                 $current_uri) {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->planning_id         = $planning->getId();
-        $this->planning_name       = $planning->getName();
-        $this->planning_tracker_id = $planning->getPlanningTrackerId();
+        $this->planning_id      = $planning->getId();
+        $this->planning_name    = $planning->getName();
+        $this->planning_tracker = $planning->getPlanningTracker();
         
         if ($artifact) {
             $this->destination_id    = $artifact->getId();
@@ -123,8 +127,22 @@ class Planning_ShowPresenter {
         return false;
     }
     
+    private function getArtifactCreationLabel(Tracker $tracker) {
+        $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
+        $item_name = $tracker->getItemName();
+        
+        return "$new $item_name";
+    }
+    
+    public function getPlanningTrackerArtifactCreationLabel() {
+        return $this->getArtifactCreationLabel($this->planning_tracker);
+    }
+    
     public function getPlanningTrackerArtifactCreationUrl() {
-        return TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&return_to=".urlencode($this->getCurrentUri());
+        $tracker_id = $this->planning_tracker->getId();
+        $return_url = urlencode($this->getCurrentUri());
+        
+        return TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&return_to=$return_url";
     }
     
     public function canDrop() {

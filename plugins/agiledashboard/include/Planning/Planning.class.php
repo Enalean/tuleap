@@ -50,12 +50,17 @@ class Planning {
      */
     private $planning_tracker_id;
     
+    /**
+     * @var Tracker
+     */
+    private $planning_tracker;
+    
     function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
         $this->id                  = $id;
         $this->name                = $name;
         $this->group_id            = $group_id;
         $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->planning_tracker_id  = $planning_tracker_id;
+        $this->planning_tracker_id = $planning_tracker_id;
     }
     
     /**
@@ -87,10 +92,26 @@ class Planning {
     }
     
     /**
-     * @return int The tracker id, the artifacts of which are supposed to be planned
+     * @return int The id of the tracker used as planning destination
      */
     public function getPlanningTrackerId() {
         return $this->planning_tracker_id;
+    }
+    
+    /**
+     * @return Tracker The tracker used as planning destination
+     */
+    public function getPlanningTracker() {
+        return $this->planning_tracker;
+    }
+    
+    /**
+     * TODO: Pass the planning tracker at instanciation, and remove this setter.
+     * 
+     * @param Tracker $planning_tracker The tracker used as planning destination
+     */
+    public function setPlanningTracker(Tracker $planning_tracker) {
+        $this->planning_tracker = $planning_tracker;
     }
 }
 

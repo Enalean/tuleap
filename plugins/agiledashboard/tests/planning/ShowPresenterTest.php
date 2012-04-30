@@ -26,13 +26,20 @@ require_once dirname(__FILE__).'/../../include/Planning/ShowPresenter.class.php'
 
 class Planning_ShowPresenterTest extends TuleapTestCase {
     public function itProvidesThePlanningTrackerArtifactCreationUrl() {
-        $planning            = stub('Planning')->getPlanningTrackerId()->returns(191);
+        $planning_tracker_id = 191;
+        $planning_tracker    = mock('Tracker');
+        $planning            = mock('Planning');
         $content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $artifacts_to_select = array();
         $artifact            = null;
         $user                = mock('User');
         
         $origin_url = '/plugins/agiledashboard/?group_id=104&action=show&planning_id=5&aid=17';
+        
+        stub($planning)->getPlanningTrackerId()->returns($planning_tracker_id);
+        stub($planning)->getPlanningTracker()->returns($planning_tracker);
+        stub($planning_tracker)->getId()->returns($planning_tracker_id);
+        
         $presenter = new Planning_ShowPresenter($planning,
                                                 $content_view,
                                                 $artifacts_to_select,

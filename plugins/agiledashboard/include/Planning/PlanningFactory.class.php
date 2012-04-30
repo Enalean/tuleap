@@ -129,6 +129,18 @@ class PlanningFactory {
         return null;
     }
     
+    public function getPlanningWithPlanningTracker($planning_id) {
+        $planning = $this->getPlanning($planning_id);
+        if (! $planning) return;
+        
+        $planning_tracker_id = $planning->getPlanningTrackerId();
+        $planning_tracker    = $this->tracker_factory->getTrackerById($planning_tracker_id);
+        
+        // TODO: do not use a setter...
+        $planning->setPlanningTracker($planning_tracker);
+        return $planning;
+    }
+    
     /**
      * Build a new planning in a project
      * 
