@@ -2985,9 +2985,9 @@ EOS;
     }
 
     public function redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id) {
-        $stay = $request->get('submit_and_stay');
-        $return_to = $request->get('return_to');
+        $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
+        $return_to = $request->get('return_to');
         if ((! $stay && !$continue) && $return_to) {
             return urldecode($return_to);
         }
@@ -2995,15 +2995,12 @@ EOS;
         $url_redirection = TRACKER_BASE_URL.'/?tracker='. $tracker_id;
         if ($continue) {
             $url_redirection .= '&func=new-artifact';
-            if ($return_to) {
-                $url_redirection .= '&return_to='.$return_to;
-            }
         }
         if ($stay) {
             $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact_id;
-            if ($return_to) {
-                $url_redirection .= '&return_to='.$return_to;
-            }
+        }
+        if ($return_to) {
+            $url_redirection .= '&return_to='.$return_to;
         }
         return $url_redirection;
     }
