@@ -132,6 +132,31 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->assertEqualTreeNodes($node_parent, $result);
     }
     
+    /**
+    * artifacct parent 30
+    * 	- artifact 36
+    * 		- artifact 37
+    * 		- artifact 38
+    * 	      - artifact 39
+    */
+    public function itReturnsOnlyOneLevelOnLinkedItems() {
+        $artifact39 = $this->getAnArtifact(39);
+        $artifact37 = $this->getAnArtifact(37);
+        $artifact38 = $this->getAnArtifact(38, array($artifact39));
+        $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
+    
+        $this->artifact = $this->getAnArtifact(30, array($artifact36));
+    
+    
+        $presenter = $this->getAPlanning('');
+    
+        $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
+        $node_parent = $this->getATreeNode(30, array($node36));
+    
+        $result = $presenter->getLinkedItems();
+        $this->assertEqualTreeNodes($node_parent, $result);
+    }
+    
     public function itProvidesBacklogArtifactTypeNamesAndCreationUrls() {
         $stories_tracker     = aMockTracker()->withItemName('Story')->build();
         $issues_tracker      = aMockTracker()->withItemName('Issue')->build();
