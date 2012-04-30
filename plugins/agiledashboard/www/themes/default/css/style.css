@@ -70,20 +70,7 @@
     float: right;
 }
 
-.planning-tracker-action {
-    display: inline-block;
-}
-
-.planning-tracker-artifact-types {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background-color: white;
-    border: 1px solid #B2B39D;
-    position: relative;
-}
-
-.planning-tracker-multi-action-name,
-.planning-tracker-artifact-type {
-    padding: 2px 5px;
+.planning-tracker-actions ul {
+    list-style: none;
+    padding: 0.25em 0.5em;
 }

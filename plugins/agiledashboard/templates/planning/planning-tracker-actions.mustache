@@ -1,12 +1,10 @@
 <div class="planning-tracker-actions">
-    <div class="planning-tracker-action planning-tracker-multi-action">
-        <a class="planning-tracker-multi-action-name" href="#">Add new...</a>
-        <ul class="planning-tracker-artifact-types">
-            {{#backlogArtifactTypes}}
-                <li class="planning-tracker-artifact-type">
-                    <a href="{{creationUrl}}">{{name}}</a>
-                </li>
-            {{/backlogArtifactTypes}}
-        </ul>
-    </div>
+    <a id="planning-tracker-actions-menu_handle" href="#">Add new...</a>
+    <ul class="dropdown_panel" id="planning-tracker-actions-menu">
+        {{#backlogArtifactTypes}}
+            <li class="planning-tracker-artifact-type">
+                <a href="{{creationUrl}}">{{name}}</a>
+            </li>
+        {{/backlogArtifactTypes}}
+    </ul>
 </div>
