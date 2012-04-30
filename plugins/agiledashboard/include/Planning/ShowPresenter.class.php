@@ -81,7 +81,16 @@ class Planning_ShowPresenter {
     }
     
     public function getLinkedItems($child_depth = 1) {
-        return $this->addChildItem($this->artifact, new TreeNode(), $child_depth);
+        $parent_node = new TreeNode(
+                array(
+						'id'    => $this->destination_id,
+						'title' => $this->destination_title,
+                        'link'  => $this->destination_link,
+						'class' => 'planning-draggable-alreadyplanned',
+                )
+        );
+        $parent_node->setId($this->destination_id);
+        return $this->addChildItem($this->artifact, $parent_node, $child_depth);
     }
     
     private function addChildItem($artifact, $parent_node, $child_depth = 0) {
