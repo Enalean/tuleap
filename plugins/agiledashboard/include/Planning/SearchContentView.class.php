@@ -20,6 +20,7 @@
  */
 
 require_once 'common/mustache/MustacheRenderer.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/SearchContentView.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
