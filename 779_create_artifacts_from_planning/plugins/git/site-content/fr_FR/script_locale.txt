@@ -1,0 +1,5 @@
+codendi.locales['git'] = {
+    preview: 'Aperçu',
+    path_placeholder_disabled: 'Chemin disponible uniquement en copie personnelle',
+    path_placeholder_enabled: 'Entrer un chemin ou laissez vide' 
+};

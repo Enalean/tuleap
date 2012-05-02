@@ -1,0 +1,114 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8a)
+X-Rcs-Id: $Id: RichTablePlugin,v 1.3 2004/07/04 08:44:08 rurban Exp $ 
+Content-Type: application/x-phpwiki;
+  pagename=RichTablePlugin;
+  flags="";
+  author=ReiniUrban;
+  version=1;
+  lastmodified=1075205974;
+  author_id=ReiniUrban;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+RichTablePlugin is a plugin that takes off from the OldStyleTablePlugin. It allows a user to specify arbitrary properties of <tt><table></tt>, <tt><tr></tt> and <tt><td></tt> with a very simple markup.
+
+NEW: The plugin is now fixed so that the contents of each cell are individually processed by the ~BlockParser. This means that if everything works correctly,  you can do interesting things like put *invoke plugins*, use *enumerated lists* etc within each cell!
+
+*A <tt>"-"</tt> (dash) at the start of a new line represents a new row in the table.
+*A <tt>"|"</tt> (vertical bar or pipe) at the start of a new line represents a cell.
+*Attributes for the tags
+  *A line that starts with a <tt>"*"</tt> (star or asterisk) after a <tt>"|"</tt> is parsed for attributes for the corresponding cell.
+  *Attributes for the table are given on line that starts with a <tt>"*"</tt>, only if the line appears before any other line except whitespace.
+  *A line that starts with a <tt>-</tt> is always parsed for attributes since it can't have any content, unlike a cell.
+*Cell contents
+  *Cell contents are processed by the ~BlockParser.
+  *Any line that starts with a <tt>"*"</tt> anywhere other than the table attribute line is treated as normal content.
+  *Any line that starts with whitespace is also treated as content.
+  *Any cell line that does not have a <tt>"*"</tt> after the <tt>"|"</tt> is treated as normal content.
+  *All content lines that follow a cell line are added to that cell. They can contain arbitrary text except the above cases.
+  *If there is no cell in the current row, content lines are dropped silently.
+*The two special characters <tt>"~~"</tt> and <tt>"?>"</tt> should be escaped as <tt>"\~~"</tt> and <tt>"?\>"</tt>. I havn't discovered any other characters yet that might need to be escaped. This is required for the block parser to work.
+
+Bugs:
+* The source code sucks
+* The plugin can't nest itself yet. Thus nested tables are currently not possible.
+
+Example:
+
+<?plugin RichTable
+
+*border=1, cellpadding=5, bgcolor=#f0f8f8, width=75%, align=center
+-
+|* colspan=3, align=center
+HomePage
+-
+|* colspan=2
+[http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+|* rowspan=2
+This cell actually has a plugin invocation inside it!
+<?plugin
+BackLinks
+?\>
+- bgcolor=white
+|
+#One
+#Two
+|
+*Foo
+*Bar
+- bgcolor=cyan
+This line gets dropped ... no cell to contain it!
+|* bgcolor=#f0f0ff, align=center
+One paragraph
+
+Another paragraph?
+|* align=left
+This cell uses the row color
+| I wish this cell had a nested table inside it! :(
+?>
+
+The above table is rendered from:
+
+<verbatim>
+<?plugin RichTable
+
+*border=1, cellpadding=5, bgcolor=#f0f8f8, width=75%, align=center
+-
+|* colspan=3, align=center
+HomePage
+-
+|* colspan=2
+[http://phpwiki.sourceforge.net/demo/themes/default/images/png.png]
+|* rowspan=2
+This cell actually has a plugin invocation inside it!
+<?plugin
+BackLinks
+?\>
+- bgcolor=white
+|
+#One
+#Two
+|
+*Foo
+*Bar
+- bgcolor=cyan
+This line gets dropped ... no cell to contain it!
+|* bgcolor=#f0f0ff, align=center
+One paragraph.
+
+Another paragraph?
+|* align=left
+This cell uses the row color
+| I wish this cell had a nested table inside it! :(
+?>
+</verbatim>
+
+;__Author__: Sameer D. Sahasrabuddhe
+;__Url__: http://www.it.iitb.ac.in/~sameerds/phpwiki/index.php/RichTablePlugin
+
+
+-------------
+
+PhpWikiDocumentation WikiPlugin

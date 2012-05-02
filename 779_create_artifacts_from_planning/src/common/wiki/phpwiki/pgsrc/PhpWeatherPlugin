@@ -1,0 +1,73 @@
+Date: Sun, 4 Jul 2004 01:31:02 -0700
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.4)
+X-Rcs-Id: $Id: PhpWeatherPlugin,v 1.7 2004/07/04 08:44:08 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PhpWeatherPlugin;
+  pgsrc_version="2 $Revision: 1.7 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! Synopsis
+
+The ~PhpWeatherPlugin is a WikiPlugin that uses PhpWeather to display
+a block of text with the current weather for some airport in the
+world. It looks like this:
+
+<?plugin PhpWeather menu=true ?>
+
+!!! Plugin Arguments
+
+__menu__:
+  Set this to =true= to have the plugin generate a menu after the
+  report. The user will able to select a country from this menu, and
+  after that, an airport and a language. The default value is
+  <tt>false</tt>.
+
+__icao__:
+  Use this to pre-select a specific airport instead of using the
+  default one which is <tt>EKAH</tt>. If you want the user to be able
+  to change the station using the menu, then you have to use this as
+  <verbatim>
+  <?plugin PhpWeather menu=true icao||=EKYT ?>
+  </verbatim>
+  so that the value can be overwritten when the user submits the
+  form. If you just use
+  <verbatim>
+  <?plugin PhpWeather menu=true icao=EKYT ?>
+  </verbatim>
+  then nothing will happen when the user selects another station from
+  the list.
+
+__cc__:
+  Specify the country code. You can use this if you want pre-select a
+  different country than the one specified in the ICAO. So using
+  <verbatim>
+  <?plugin PhpWeather menu=true cc||=GB icao||=KTTS ?>
+  </verbatim>
+  will show the current weather at the NASA Shuttle Facility, United
+  States (<tt>KTTS</tt>) and at the same time give the user a list of
+  stations in the United Kingdom. As the example shows, then you
+  should use <tt>cc||=XX</tt> when combining it with __menu__ set to
+  <tt>true</tt>.
+
+__language__:
+  The default language. When combining __language__ with __menu__ set
+  to <tt>true</tt> then remember to use the <code>language||=xx</code>
+  form.
+
+__units__:
+  You can specify the way the units are printed. The choice is between
+  having both metric and imperial units printed, or just one of
+  them. Setting __units__ to =both_metric= will print the metric value
+  first and then the imperial value in parenthesis. Using
+  =both_imperial= instead will do the opposite.
+
+  If you only need the metric or imperial units to be shown, then
+  setting __units__ to =only_metric= or =only_imperial= will do just
+  that.
+
+----
+
+PhpWikiDocumentation WikiPlugin

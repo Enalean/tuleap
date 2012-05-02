@@ -1,0 +1,52 @@
+#/**
+#  *
+#  * Top level scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#-----------------------------------------------
+# Script: SF/www/contact.php
+#
+contact	title	Contact Us
+#
+#-----------------------------------------------
+# Script: SF/www/404.php
+#
+404	title	Requested Page not Found (Error 404)
+404	no_archive	No messages archived
+404	no_page	PAGE NOT FOUND
+#
+#-----------------------------------------------
+# Script: SF/www/index.php
+#
+homepage	title	Welcome
+homepage	news_title	Latest News
+homepage	news_title2	Latest News - RSS Format
+#
+#-----------------------------------------------
+# Script: SF/www/sendmessage.php
+#
+sendmessage	title	Send a Message to $1
+sendmessage	message	Fill it out accurately and completely or the receiver may not be able to respond.<P><span class="highlight"><B>IF YOU ARE WRITING FOR HELP:</B> Did you read the site documentation? Did you include your <B>user_name?</B> If you are writing about a project, include your <B>project id</B> (<B>group_id</B>) and <B>Project Name</B>.</span>
+sendmessage	err_nouser	That user does not exist.
+sendmessage	err_host	You can only send to addresses @$1.
+sendmessage	err_noparam	Some variables were not provided (user ID or email address)
+sendmessage	title_sent	Message to $1 Sent
+sendmessage	email	Your Email Address
+sendmessage	name	Your Name
+sendmessage	subject	Subject
+sendmessage	message_body	Message
+sendmessage	send_btn	Send Message
+sendmessage	invalid_msg	Your message is not valid, you can not send the default message or an empty one.
+#
+#-----------------------------------------------
+# Script: SF/www/sflogo.php
+#
+sflogo	err_logger	An error occurred in the logger.	
+sflogo	err_nogroup	xxxxx NO GROUP ID SPECIFIED xxxxxxx	
+

@@ -1,0 +1,51 @@
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+//
+//
+-->
+  <chapter id="Introduction">
+    <title>Introduction</title>
+
+    <para>&SYS_PRODUCT_NAME; is a free and Open Source Suite to improve management 
+	of software projects and connect with team members. 
+	With a single web-based solution, CTO, project managers, developers, quality managers 
+	and other users can easily build, deploy smart and quality projects.</para>
+
+    <para>&SYS_PRODUCT_NAME; provides tools for managing projects, tasks, changes, defects, 
+	documents as well as version control, continuous integration and social collaboration. </para>
+
+    <para>With &SYS_PRODUCT_NAME;, you will be able to:</para>
+	<itemizedlist mark="bullet"
+                    spacing="compact">
+        <listitem><para>plan and monitor projects,</para></listitem>
+		<listitem><para>manage software development lifecycle: source code, builds...,</para></listitem>
+		<listitem><para>track requirements, tasks, incidents, etc.</para></listitem>
+		<listitem><para>produce documents and releases,</para></listitem>
+		<listitem><para>favour collaboration between project members.</para></listitem>
+	</itemizedlist>
+	
+    <para>&SYS_PRODUCT_NAME; 's high customization capability enables you to tailor each tool to your processes and business requirements. More info on &SYS_PRODUCT_NAME; features</para>
+	
+	<para>We want you to experience the full power of &SYS_PRODUCT_NAME; technology. So we do not distinguish between a Enterprise version and 
+	a Community version. In the same idea, we provide you in this guide all useful information and good practices to get the most of Tuleap Suite.</para>
+    
+	<para>&SYS_PRODUCT_NAME; Team makes great work to make this guide updated to every new release. Do not hesitate to help us improve it, 
+	share your experience and tips: write to the mailing list tuleap-devel</para> 
+	
+	<para>Enjoy &SYS_PRODUCT_NAME; capabilities and let us know how you use it!</para>
+
+    <para>The &SYS_PRODUCT_NAME; Team</para>
+
+    
+
+    
+  </chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
+End:
+-->
+

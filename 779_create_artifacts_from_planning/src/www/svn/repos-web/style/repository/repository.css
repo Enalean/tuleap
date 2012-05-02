@@ -1,0 +1,79 @@
+/**
+ * Repos Style (c) 2007 www.reposstyle.com
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.actions {
+	vertical-align: inherit;
+	display: inline;
+}
+/* directory listing */
+.file {
+	background-image: url('16x16/file.png');
+	background-position: left;
+	background-repeat: no-repeat;
+	padding-left: 30px;
+	margin-left: 10px;
+}
+.folder {
+	background-image: url('16x16/folder.png');
+	background-position: left;
+	background-repeat: no-repeat;
+	padding-left: 30px;
+	margin-left: 10px;
+}
+/* svn special folders */
+.tool {
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-left: 17px;
+}
+.tool-trunk {
+	background-image: url('16x16/folder_trunk.png');
+}
+.tool-branches {
+	background-image: url('16x16/folder_branches.png');
+}
+.tool-tags {
+	background-image: url('16x16/folder_tags.png');
+}
+/* filetype icons */
+.file-zip { background-image: url('filetypes/16x16/zip.png');}
+.file-gz { background-image: url('filetypes/16x16/gz.png');}
+.file-sit { background-image: url('filetypes/16x16/sit.png');}
+.file-chm { background-image: url('filetypes/16x16/chm.png');}
+.file-exe { background-image: url('filetypes/16x16/exe.png');}
+.file-html { background-image: url('filetypes/16x16/html.png');}
+.file-htm { background-image: url('filetypes/16x16/htm.png');}
+.file-doc { background-image: url('filetypes/16x16/doc.png');}
+.file-ai { background-image: url('filetypes/16x16/ai.png');}
+.file-bmp { background-image: url('filetypes/16x16/bmp.png');}
+.file-gif { background-image: url('filetypes/16x16/gif.png');}
+.file-jpg { background-image: url('filetypes/16x16/jpg.png');}
+.file-png { background-image: url('filetypes/16x16/png.png');}
+.file-psd { background-image: url('filetypes/16x16/psd.png');}
+.file-tif { background-image: url('filetypes/16x16/tif.png');}
+.file-jar { background-image: url('filetypes/16x16/jar.png');}
+.file-log { background-image: url('filetypes/16x16/log.png');}
+.file-pdf { background-image: url('filetypes/16x16/pdf.png');}
+.file-ps { background-image: url('filetypes/16x16/ps.png');}
+.file-qt { background-image: url('filetypes/16x16/qt.png');}
+.file-sh { background-image: url('filetypes/16x16/sh.png');}
+.file-java { background-image: url('filetypes/16x16/java.png');}
+.file-php { background-image: url('filetypes/16x16/php.png');}
+.file-tmp { background-image: url('filetypes/16x16/tmp.png');}
+.file-txt { background-image: url('filetypes/16x16/txt.png');}
+.file-ics { background-image: url('filetypes/16x16/ics.png');}
+.file-vcf { background-image: url('filetypes/16x16/vcf.png');}
+.file-mpg { background-image: url('filetypes/16x16/mpg.png');}
+.file-sxw { background-image: url('filetypes/16x16/sxw.png');}

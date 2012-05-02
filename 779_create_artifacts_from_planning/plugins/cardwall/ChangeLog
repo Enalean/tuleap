@@ -1,0 +1,14 @@
+Version 0.5  - Tuleap 4.0.26
+    * Display cardwall in dashboard
+
+Version 0.4  - Tuleap 4.0.26
+    * Fix require_once issue
+
+Version 0.3  - Tuleap 4.0.26
+    * Import font and make display of QR code configurable.
+
+Version 0.2
+    * Can now export a Cardwall (import is still not possible)
+
+Version 0.1
+    * First version of the plugin

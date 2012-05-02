@@ -1,0 +1,50 @@
+#
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# http://www.codendi.com
+#
+# 
+#
+
+Codendi is the Xerox solution for enterprise-wide software sharing and
+reuse. Codendi has been patiently crafted by the Xerox Codendi Team and
+has been constantly improved since January 2001 when the CodeX
+initiative was launched internally at Xerox. Codendi offers an easy and
+fully integrated access to the best in CVS, mailing lists, bug
+tracking, message boards/forums, task management, site hosting,
+permanent file archival, full backups, and total web-based
+administration.
+
+For more information on Codendi please visit our websites:
+http://www.codendi.com
+
+
+LICENSE
+=======
+Codendi is distributed under the GPL v2 Licence. See the file COPYING 
+for details. Please check out the AUTHORS file to see who helped
+make this possible.
+
+INSTALLATION
+============
+For information on how to install this package please read the Codendi
+Installation Guide provided.
+
+SUPPORT
+=======
+If you need assistance or want to ask questions about the Codendi software,
+contact us on http://www.codendi.com
+
+BUG REPORT
+==========
+If you find any bugs please feel free to use our bug tracker on
+http://www.codendi.org
+
+
+CONTRIBUTING CODE
+=================
+See the Codendi Contributor Guide on http://www.codendi.org
+
+
+If you have any questions please feel free to contact us.
+
+- The Codendi Team

@@ -1,0 +1,12 @@
+Date: Wed, 2 Jun 2004 21:09:39 +0200 
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: PhpWikiAdministration%2FReplace,v 1.4 2004/06/03 22:27:09 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PhpWikiAdministration%2FReplace;
+  pgsrc_version="2 $Revision: 1.4 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin WikiAdminSearchReplace ?>

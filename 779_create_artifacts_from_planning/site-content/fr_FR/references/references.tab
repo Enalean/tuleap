@@ -1,0 +1,19 @@
+#
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# This file is licensed under the GNU General Public License version 2. See the file COPYING.
+#
+#-----------------------------------------------
+# Script: SF/src/common/include/CrossReferenceFactory.php
+#
+cross_ref_fact_include	references	Références
+
+cross_ref_fact_include	artifact	Artefact
+cross_ref_fact_include	svn_revision	Revision SVN
+cross_ref_fact_include	cvs_commit	Commit CVS
+cross_ref_fact_include	legend	Liste des objets étant référencés par cet objet ou le référençant.
+cross_ref_fact_include	legend_referenced_by	Liste des objets référençant cet objet.
+cross_ref_fact_include	cross_referenced	Références bidirectionnelles :
+cross_ref_fact_include	referenced_in	Cet objet est référencé par :
+cross_ref_fact_include	reference_to	Cet objet référence :
+cross_ref_fact_include	confirm_delete	Supprimer la référence?
+cross_ref_fact_include	delete	Supprimer

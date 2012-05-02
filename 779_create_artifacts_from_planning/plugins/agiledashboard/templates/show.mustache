@@ -1,0 +1,28 @@
+<div class="agiledashboard">
+    <h2>{{planning_name}}</h2>
+
+    <table cellspacing="5">
+        <tbody>
+            <tr valign="top">
+                <td width="50%">
+
+                    <div class="planning-backlog">
+                        {{{fetchSearchContent}}}
+                    </div>
+
+                </td><td>
+                    {{^hasArtifact}}
+                        {{> select-destination}}
+                    {{/hasArtifact}}
+                    {{#hasArtifact}}
+                        {{> show-destination}}
+                    {{/hasArtifact}}
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+

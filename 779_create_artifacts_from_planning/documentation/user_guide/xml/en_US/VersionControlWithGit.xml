@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+-->
+<chapter id="VersionControlWithGit">
+  <title>Version Control with Git</title>
+
+  <para>This chapter is not a Git Tutorial. It focuses on the
+  integration of Git with &SYS_PRODUCT_NAME; and how to use it in an optimal
+  way in this context. If you are not familiar with Git we
+  warmly advise you to first read some of the documents listed in the
+  references section (see <xref linkend="GitReferences" />).</para>
+
+  <para>
+    Git support has been designed to support multiple repositories for a given project as well as "Personal repositories" for each developer.
+    This is consistent with the Distributed Version Control System philosophy which allows to delegate project features to be developped in separated repositories.
+  </para>
+
+  <para>Git access (for both read and write operations) requires a valid SSH key to be configured in user account preference. See <xref linkend="AccountMaintenance" /> for details.
+  </para>
+
+  <para>
+    Two types of repositories are available:
+    <itemizedlist mark="bullet">
+      <listitem><para>Project References: the default, aims to catch the official version of project repositories. There might be several repositories and they can be organized into folders for grouping.</para></listitem>
+      <listitem><para>Personal Fork (clone): each project member can clone References in order to publish it's personal work. It aims to support the publish/integrator development model.</para></listitem>
+    </itemizedlist>
+  </para>
+  
+  <section id="GitRepositoryReference">
+    <title>Reference</title>
+
+    <para>A reference can be created by project admin from the Git service home page, a reference name can be like reference-project_1.</para>
+
+    <para>A reference must be initialized: 
+    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+    cd mysources
+    git init
+    git add .
+    git commit -m 'initial commit'
+    git push gitolite@&SYS_DEFAULT_DOMAIN;:&lt;project_shortname&gt;/&lt;repo_name&gt;.git master
+    </programlisting>
+    </para>
+
+    <para>If you have an existing repository with branches and tags you want to push, as an alternative you can run:
+    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+    git push --mirror gitolite@&SYS_DEFAULT_DOMAIN;:&lt;project_shortname&gt;/&lt;repo_name&gt;.git
+    </programlisting>
+    </para>
+  </section>
+
+  <section id="GitRepositoryFork">
+    <title>Fork</title>
+    <para>Personal forks allow to support a fully decentralized development model where "References" are maintained by integrators and represent the official repositories of the project.</para>
+    <para>In this context, developments should happen in developers repositories (on developer's computer) and are regularly pushed into a public repositories for sharing with other developers.</para>
+    <para>&SYS_PRODUCT_NAME; "Personal Fork" are those public repositories.</para>
+    <para>If you ever need to group the selected repositories into a common namespace, you can give a specific path the repositories will be created in.</para>
+    
+    <figure id="FigureGitPersonalFork">
+        <title>Git repositories fork screen</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_git_personal_fork.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
+    </figure>
+    
+    <para>This screen also allows to fork across projects. Given you are administrator of a project with Git service activated, 
+    you can choose to create the forks in this project instead of into the personal area of the current project.
+    </para>
+    <para>In this case, the forked repositories become "References" into the target project.</para>
+    
+  </section>
+
+  <section id="GitRepositorySettings">
+    <title>Repository settings</title>
+    <para>As a project admin, you are allowed to modify the configuration of any project repositories. This includes:
+      <itemizedlist mark="bullet">
+        <listitem><para>textual description of the repository,</para></listitem>
+        <listitem><para>access control,</para></listitem>
+        <listitem><para>and "Email notification on push"</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <section id="GitRepositorySettingsAccessControlGitShell">
+      <title>Access control</title>
+      <para>Project administrators can control permissions details of each repository. By default a repository is readable by all active users of the platform but only project member can modify it.</para>
+      <para>In "Git repository management" screen, project administrator can select the User Groups allowed to:
+        <itemizedlist mark="bullet">
+            <listitem><para>READ: access the repository</para></listitem>
+            <listitem><para>WRITE: push content into the repository (commits, new branches, deletion of branches, etc)</para></listitem>
+            <listitem><para>REWIND: go behind git barriers and play with repo history. This is highly un-advised to activate it if you don't know exactly what you are doing, you can erase your whole repository. You are warned!</para></listitem>
+        </itemizedlist>
+      </para>
+
+      <figure id="FigureGitPermissions">
+        <title>Control Git repository permissions</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_git_permissions.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+    </section>
+    
+    <section id="GitRepositorySettingsEmail">
+      <title>Email notification</title>
+      <para>It's often a good idea to notify the whole team when someone pushes some new content into a repository.
+        You can configure your repository to send an email a list of addresses (or even better a mailing list) upon pushes.</para>
+      <para>The content of the mail will depend on the push but you can modify:
+        <itemizedlist mark="bullet">
+          <listitem><para>the email subject prefix</para></listitem>
+          <listitem><para>the list of recipients</para></listitem>
+        </itemizedlist>
+      </para>
+      <para>When you add a new recipient, the autocompletion is done with the list of valid users. You are not mandated to use them, you can force any address, like a mailing list one.</para>
+      <para>Once configured, any subsequent push will send an email to the selected addresses.
+        Emails will contain:
+        <itemizedlist mark="bullet">
+          <listitem><para>the list of commit pushed in the repository,</para></listitem>
+          <listitem><para>the modified files (+diffstats)</para></listitem>
+          <listitem><para>for each commit, the link to the diff in &SYS_PRODUCT_NAME; gitweb interface</para></listitem>
+          <listitem><para>for each reference (in commit description for instance), the corresponding automagic link</para></listitem>
+        </itemizedlist>
+        Please note that cross-reference extraction will not work if email notification is not configured.
+      </para>
+    </section>
+  </section>
+
+  <section id="GitRepositoryDeletion">
+    <title>Repository deletion</title>
+    <para>
+      A repository can be deleted, this will create a backup named after {PROJECT_SHORT_NAME}_{REPOSITORY_NAME}_{DEL_TIMESTAMP}.tar.bz2 
+      and move it into Git Plugin backup directory defined in plugin configuration.
+      See import repository section <xref linkend="GitRepositoryImport" /> for backup reactivation.
+    </para>
+  </section>
+
+  <section id="GitRepositoryImport">
+    <title>Importing an existing Git Repository</title>
+    <para>There is no automatic procedure to perform repository import. Read administration guide related section.</para>
+  </section>
+
+  <section id="GitReferences">
+    <title>Git References</title>
+    <itemizedlist mark="bullet">
+      <listitem><para>The Official Git Web Site. See <ulink url="http://git-scm.com/">http://git-scm.com/</ulink></para></listitem>
+      <listitem><para>Pro Git book <ulink  url="http://progit.org/book/ch1-1.html">http://progit.org/book/ch1-1.html</ulink>.</para></listitem>
+    </itemizedlist>
+  </section>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
+End:
+-->
+

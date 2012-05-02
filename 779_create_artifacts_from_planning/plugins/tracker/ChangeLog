@@ -1,0 +1,217 @@
+Version 5.7.8 - Tuleap 5.1
+    * Check permissions
+
+Version 5.7.7 - Tuleap 5.0
+    * Fix fatal error when field does not exist
+
+Version 5.7.6 - Tuleap 5.0
+    * Allow trackers to be installed on servers having default storage engine
+	set to InnoDB 
+    * Fix search on attachments
+
+Version 5.7.5 - Tuleap 5.0
+    * Fix burndown bug when remaining_effort fall to 0.
+
+Version 5.7.4 - Tuleap 5.0
+    * Inherit shared fields and hierarchy from project templates
+
+Version 5.7.1 - Tuleap 5.0
+    * Fix bug when trying to add a shared field on a non existant field id + i18n.
+
+Version 5.7 - Tuleap 5.0
+    * Add a new field type "Burndown"
+      It displays a Burndown as a field. It takes its configuration from the
+      artifact itself (start_date and duration) and will pick-up data from
+      linked artifact (remaining_effort).
+      Its useful when you want to define a "Sprint" tracker in an Agile process.
+
+Version 5.6.3 - Tuleap 5.0
+    * Fix display of tree table on various screen configuration
+
+Version 5.6.1 - Tuleap 5.0
+    * In cross search:
+      * List only shared fields that belongs to an active tracker
+      * List artifact link criteria only once per tracker
+      * Display each artifact link only once in results
+
+Version 5.6 - Tuleap 5.0
+    * Cross tracker search allows to search based on artifact link.
+
+Version 5.5 - Tuleap 5.0
+    * Cross tracker search allows to search on "Status" and "Title" semantics.
+
+Version 5.4.9 - Tuleap 5.0
+    * Add API to remove an artifact link association in REST mode.
+
+Version 5.4.8 - Tuleap 5.0
+    * Refactoring.
+    
+Version 5.4.8 - Tuleap 4.0.28.1
+  * Fix sla #656 - Not able to create Tracker from the template
+  
+Version 5.4.7 - Tuleap 4.0.28
+  * Fix notice during install
+
+Version 5.4.6 - Tuleap 4.0.28
+  * Cross Tracker search as an experimental feature (lab mode)
+
+Version 5.4.5 - Tuleap 4.0.28
+  * Fix sla #580 - Issue in SOAP function "getTrackerFields" in Trackers
+  * Rename tracker in plugin_tracker in soap
+  
+Version 5.4.4 - Tuleap 4.0.28
+  * Fix gotoid after removal of legacy trackers (aka tracker v1).
+
+Version 5.4.3 - Tuleap 4.0.28
+  * Update soap functions in wsdl
+
+Version 5.4.2 - Tuleap 4.0.28
+  * Refactoring of CrossSearch
+  * Enhance tracker internal api to ease the the link between
+    artifacts (used by the agiledashboard plugin)
+
+Version 5.4.1 - Tuleap 4.0.28
+  * Fix upgrade script for tracker_hierarchy table.
+
+Version 5.4 - Tuleap 4.0.28
+  * Allow to do cross tracker search based on shared fields.
+
+Version 5.3.1 - Tuleap 4.0.28
+  * Fix bug on hierarchy definition
+
+Version 5.3 - Tuleap 4.0.28
+  * Allow to define a hierarchy of trackers:
+    Epics
+    `-- Stories
+        |-- Tasks
+        `-- Bugs
+   * Introduce usage of 'mustache' as a templating library.
+
+Version 5.1.2 - Tuleap 4.0.27
+  * Fix unit test with php 5.3
+
+Version 5.1.1 - Tuleap 4.0.27
+  * Fix inclusion of files.
+
+Version 5.1 - Tuleap 4.0.27
+  * Fix issue with permissions while cloning trackers
+
+Version 5.0 - Tuleap 4.0.27
+  * Change version number
+  * Reduce memory consumption by not loading all plugin's class for each hit.
+
+Version 0.9.1 - Tuleap 4.0.27
+  * Fix issue: float fields and number > 1000
+
+Version 0.9.1 - Tuleap 4.0.27
+  * Refactoring: better naming
+  * Fix issue: label should not contain input elements
+
+Version 0.9.0 - Tuleap 4.0.27
+  * Add shared field: a tracker can re-use a field (select box or multi selectbox) defined in another tracker.
+
+Version 0.8.12 - Tuleap 4.0.26
+  * Add tests for workflow postactions
+
+Version 0.8.11 - Tuleap 4.0.26
+  * Cucumberize the features
+
+Version 0.8.10 - Tuleap 4.0.26
+  * Fix performance issue on tracker report display.
+
+Version 0.8.9 - Tuleap 4.0.26
+  * HTML email notifications (in collaboration with STMicroelectronics)
+
+Version 0.8.8 - Tuleap 4.0.26
+  * Fix sla #160: fatal error on artifact link when the field is mandatory
+
+Version 0.8.7 - Tuleap 4.0.25
+  * Fix bug with JS declaration of tracker namespace
+
+Version 0.8.6 - Tuleap 4.0.24.1
+  * Update tracker XML definition (rnc + rng)
+
+Version 0.8.5 - Tuleap 4.0.24
+  * Fix IE7 issue on renderer options menu.
+
+Version 0.8.4 - Tuleap 4.0.24
+  * Updates following new cardwall plugin (renderer tweaking)
+  * Better printer version management
+
+Version 0.8.3 - Tuleap 4.0.24
+  * Fix bug in permission computation
+
+Version 0.8.2 - Tuleap 4.0.24
+  * backlog #259. Simplify tracker creation with duplication of existing trackers on demand or at project creation.
+
+Version 0.8.1 - Tuleap 4.0.24
+  * factorization in SOAP api of tracker v5 (Contrib STMicroelectronics)
+
+Version 0.8 - Tuleap 4.0.24
+  * Fix user realname output
+  * Workflow postactions import/export
+  * Postactions bypass field permissions
+  * A field cannot be deleted if a postaction is associated to it.
+  * A "select box" field cannot be transformed into a multi one if workflow on it.
+  * no overlap between tracker v3 ids and tracker v5 ids.
+
+Version 0.6 - (Tuleap 4.0.23)
+  * Fix bug on artifact submission when there is no workflow
+
+Version 0.5 - (Tuleap 4.0.23)
+  * Fix sla #156. Mail now contains all the submitted fields.
+  * Introduce post actions on workflow transition: set or clear a date field when the artifact change its state.
+
+Version 0.4 - (Tuleap 4.0.22)
+  * Fix bug on permissions on artifact field upon update.
+
+Version 0.3 - (Tuleap 4.0.22)
+  * Improve tracker templates
+
+Version 0.2 - (Tuleap 4.0.22)
+  * Report renderers (tables & charts) can be put in a personal or project dashboard.
+  * Add a widget "MyArtifact" to display the open artifacts the user is belonging to.
+  * Display tracker entries in PublicAreas widget.
+  * Add SOAP api.
+
+  * Fix issue with project templates initialisation.
+
+Version 0.1 - (Tuleap 4.0.21)
+  Import (and improve) fifth generation trackers:
+
+  * New tracker user interface
+    - Artifact and report views, administration interface: the whole interface has been redesign to provide easier and faster usage.
+
+  * Workflow
+    - It is now possible to define artifact state transitions, with associated permissions.
+
+  * Tracker Reports:
+    - Construct reports interactively: add, move, resize columns with drag'n drop.
+    - Add and remove query filters interactively
+    - Report contains query filter value: replay a complex query with a single click.
+    - A single report may now contain several tables
+
+  * Tracker administration
+    - Build your tracker interactively: add new fields and values in a new comfortable way.
+    - Define tracker semantics: what is an "open" artifact, what is a "title". Customize artifact tooltip for each tracker.
+
+  * New Tracker fields
+    - File (ie. attachments): you may now use file fields anywhere in the tracker form.
+    - Open lists: text field with auto-completion feature based on list.
+    - Reference: reference to another artifacts.
+
+  * New Artifact layout
+    - In addition to new fields, structure your artifacts as you wish
+    - Available elements: columns, fieldsets, labels, free text, separators
+    - You can mix any of them as needed (eg. multi-columns in fieldset, etc)
+
+  * Artifact history
+    - Artifact changes are now stored in "snapshots", improving historical information.
+
+  * Import/export of tracker structure in XML format.
+    - Provides a way to exchange trackers between Tuleap instances
+    - Export format contains the whole tracker definition: fields, layout, reports, workflow, etc.
+
+  * Tracker templates
+    - New tracker templates are provided for: Bugs, Change Request, Patches, Requirements, Risks, Support Request, Tasks, User Stories.
+    - Templates provided in XML format.

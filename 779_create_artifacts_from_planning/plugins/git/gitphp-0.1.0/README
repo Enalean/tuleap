@@ -1,0 +1,124 @@
+Installing GitPHP
+
+Minimum requirements:
+git
+diff
+Apache (or other php-compatible webserver)
+PHP
+Smarty (smarty.net)
+
+
+To begin, you need to have your git repositories set up in a directory that the
+webserver can access.  They can be in subdirectories within that, but you will
+need a base directory to tell GitPHP where to look for repositories.  These
+must be bare repositories - for those who don't know, the directory of source
+code you have is your working copy, and the .git hidden directory inside of that
+is the actual repository, which is what GitPHP reads.  There are files in here
+like HEAD, COMMIT_EDITMSG, description, etc.
+
+You can make a copy of your bare repository by running:
+
+cd myproject
+cp -r .git /gitprojects/myproject.git
+
+Or, a new bare repository can be initialized with:
+
+mkdir mybareproject
+cd mybareproject
+git-init --bare
+
+Once you have your projects in a directory, something like:
+
+/gitprojects/project1.git
+/gitprojects/project2.git
+/gitprojects/subdir/project3.git
+
+You can begin setting up GitPHP.  Put the GitPHP files in a place
+readable by your webserver.  You will need to change the permissions of the
+templates_c directory to be writable by your webserver.  This can be done
+by either:
+
+chown apache:apache templates_c
+(assuming your webserver runs as user/group apache - this is the better way)
+
+or:
+
+chmod 777 templates_c
+
+Then, you will need to set up your config file.  In the config directory,
+copy the example config file, gitphp.conf.php.example, to gitphp.conf.php.
+
+(Note for upgrades: updated versions will not overwrite your old
+gitphp.conf.php, but they will update gitphp.conf.php.example.  When you
+upgrade, you may want to check for new config options in the example file
+and copy them to your config file)
+
+Now read through the config file and set up the options appropriately.
+Every config option is explained in the comments.  Many GitPHP features
+are disabled by default since they require setting config options a
+certain way, so if you don't look through the config file you won't
+get many of the features.
+
+The most important setting is the 'projectroot' setting, which specifies
+where your git repositories are - following the previous example, it would
+be set up as "/gitprojects/".
+
+If you installed Smarty in a nonstandard directory (ie not in a standard
+php include directory, and not as a subdirectory inside your GitPHP
+directory), then you will need to set the 'smarty_prefix' config item.
+
+If you want to set up categories for your projects, you need to set up the
+$git_projects array - the definition and structure of this is explained in
+the config file.
+
+If you want to use syntax highlighting with GeSHi (http://qbnz.com/highlighter/),
+you will need to change the config key 'geshi' to true and set up the
+'geshiroot' key to point to the geshi directory if it's not in a standard php
+include directory or a subdirectory of GitPHP, same as with smarty.
+
+If you want to edit the text header that appears above the project list on the
+home page, edit templates/hometext.tpl.
+
+
+[Caching]
+
+To turn on caching, set the 'cache' config item to true.  Gitphp will cache
+every page's output, including plaintext output and binary output such as
+blobs and snapshots, for the number of seconds specified in the
+'cachelifetime' config key.
+The 'cacheexpire' key is recommended for most users.  With this option on,
+gitphp will attempt to keep the cache in sync by automatically expiring any
+cached pages that are older than the most recent commit, on any branch.
+It is a slight performance hit to make this check, but the performance hit
+is tiny compared to the gain you get from turning on caching.  It will
+avoid situations where users are getting a cached version of a page that
+isn't up to date and doesn't reflect the most recent commit, or worse,
+pages that have been cached at different times and show data from both
+before and after a commit (eg page 1 of the shortlog shows the most recent
+commit but page 1 of the log was cached a while ago and doesn't show the
+most recent commit).
+However, if your project is so active that commits are constantly coming in
+and invalidating the cache, rendering it useless, it would be better to
+turn cache expiration off and just set a really short cache lifetime of
+a few seconds.  In other words:
+
+Most users:
+* Set 'cacheexpire' to TRUE
+* Set 'cachelifetime' high, 3600 seconds (1 hour) or more.  -1 means
+  cache forever
+
+Extremely active projects, with commits every few seconds, or advanced
+users that know exactly how often commits come in and want to save
+the performance of the expiration check:
+* Set 'cacheexpire' to FALSE
+* Set 'cachelifetime' low, between 5-10 seconds.
+
+If you ever run into problems with your cache not syncing correctly, or
+showing out of date information, you can use the 'expire' action to force
+expiration of all cache.  This action is not linked anywhere because it
+is not supposed to be run by users, it's more of an administrative function.
+To use it, you want to set a=expire.  So, for example, you would visit this
+address in a browser (obviously with the correct path to your gitphp
+index.php):
+
+http://yourserver.com/gitphp/index.php?a=expire

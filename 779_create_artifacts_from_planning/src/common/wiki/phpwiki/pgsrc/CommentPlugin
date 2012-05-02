@@ -1,0 +1,48 @@
+Date: Tue, 28 Jan 2003 11:26:41 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.4)
+X-Rcs-Id: $Id: CommentPlugin,v 1.1 2003/01/28 17:57:24 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=CommentPlugin;
+  pgsrc_version="2 $Revision: 1.1 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!!! Synopsis
+
+The CommentPlugin lets you hide parts of a Wiki page without actually
+deleting the text. Comments will only be visible in the Wiki markup
+when editing or viewing the source.
+
+!!! Usage
+
+Simply place the text to be commented out between =<?plugin Comment=
+and =?>=:
+
+<verbatim>
+<?plugin Comment
+
+!!! A Hidden Section
+
+This text will not show up in the generated HTML page, but it is still
+visible when editing the WikiMarkup.
+
+?>
+</verbatim>
+
+!!! Author
+
+Martin Geisler mailto:gimpster@gimpster.com.
+
+<?plugin Comment
+
+!!! "Fuzzy" Logic
+Theorem: a cat has nine tails.
+Proof:
+    No cat has eight tails. A cat has one tail more than no cat.
+    Therefore, a cat has nine tails.
+
+?>
+----
+WikiPlugin

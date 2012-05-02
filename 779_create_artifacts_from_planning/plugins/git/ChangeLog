@@ -1,0 +1,117 @@
+Version 2.4 (Tuleap 5.0)
+    * Fix issues with gitphp: 'plain' commitdiff output & FRS Fixture filename (for Windows workstation users). (contrib STMicroelectronics).
+
+Version 2.3 (Tuleap 5.0)
+    * Add widgets for both project page (display graph with push on repositories) and personal page. (contrib STMicroelectronics).
+
+Version 2.2 (Tuleap 5.0)
+    * Link Git and Continuous Integration plugins. On git push, Tuleap can trigger a build on an hudson/jenkins CI server (contrib STMicroelectronics).
+
+Version 2.1.7 (Tuleap 4.0.28)
+    * Display meaningful info when fork fails due to already exiting repo
+    * Prevent usage of non alphanum characters in fork namespace
+    * Fix RPM installation due to new path in recent version of EPEL gitolite
+
+Version 2.1.6 (Tuleap 4.0.28)
+    * Fix display of html code in combobox
+
+Version 2.1.5 (Tuleap 4.0.28)
+    * Fix display bug on fork while changing from cross project to personal fork.
+
+Version 2.1.4 (Tuleap 4.0.27.3)
+    * Fix various bugs on git repository clone/delete/recreate senario.
+    * Fix git push logging (log for repositories outside project root works).
+    * Disable fork button while forking is actually happening).
+
+Version 2.1.3 (Tuleap 4.0.27.3)
+    * Fix include file for git formatter (regression due to memory consumption fix at version 2.0).
+    * Fix install (git service in double).
+
+Version 2.1.2 (Tuleap 4.0.27)
+    * Consistant naming of git service
+    * Improve description of fork feature
+    * Fix bug when there is nothing to fork
+
+Version 2.1.1 (Tuleap 4.0.27)
+    * Fix include of files (regression due to memory consumption fix at version 2.0).
+
+Version 2.1 (Tuleap 4.0.27)
+    * Allow to fork gitolite repositories from one project to another
+    * Fork inherit parent's permissions.
+    * Disable the ability to fork gitshell repositories.
+    * No longer load the all plugin's classes at each hit (reduce memory consumption).
+
+Version 1.25 (Tuleap 4.0.26)
+    * Do not display an mysterious error message when fail to find the repository for git push count.
+
+Version 1.24 (Tuleap 4.0.26)
+    * Disable management of description for gitolite repositories.
+    * Fix bug on new display of directories.
+
+Version 1.23 (Tuleap 4.0.26)
+    * Export Git Statistics to CSV
+
+Version 1.22 (Tuleap 4.0.26)
+    * Gitolite is new default. It's no longer possible to create gitshell based repositories (existing on are still available).
+    * Fix description escaping (contrib STMicroelectronics).
+    * Allow to log pushes in db  (contrib STMicroelectronics).
+
+Version 1.21 (Tuleap 4.0.26)
+    * Add unit test to verify behaviour of archive
+
+Version 1.20 (Tuleap 4.0.26)
+    * Remove useless code
+    * Allow some tests to be run in cli
+
+Version 1.19 (Tuleap 4.0.25)
+    * Improve resistence of project name extraction
+    * Fix issue with repositories name ending with a '/'
+
+Version 1.18 (Tuleap 4.0.25)
+    * Base of "Personal Repositories" implementation (ie. fork for gitolite).
+
+Version 1.17 (Tuleap 4.0.25)
+    * Add fundations for git push logging for stat purpose (contrib STMicroelectronics).
+
+Version 1.16 (Tuleap 4.0.23)
+    * Propagate deletion updates
+
+Version 1.15 (Tuleap 4.0.21)
+    * Gitolite repository can be deleted
+    * Fix issue when adding several mails in notifications
+    
+Version 1.14 (Tuleap 4.0.20)
+	* Fix Gitolite access violation in gitphp.
+	* Fix issue with perm_reset_for_git_repository missing on project admin > Project history
+	* Fix issue with site content: replace 'Write & Rewind' by 'Rewind'
+	* Fix missing git specific system events missing on Admin > System Event Monitor
+
+Version 1.13 (Tuleap 4.0.20)
+	* Fix issue when trying to set Private a empty git repo.
+	* Fix bug when system_check's dump ssh keys doesn't modify anything
+
+Version 1.12 (Tuleap 4.0.20)
+	* Fix gitolite behaviour when data dir is located in a symlinked path
+	* No longer possible to create 2 repositories with the same name
+
+Version 1.11 (Tuleap 4.0.20)
+	* backlog #22 : Gitolite integration
+
+Version 1.10 (Tuleap 4.0.19)
+	* Rewrite management of cross references extraction to improve performances
+
+Version 1.9 (Codendi_ST 4.0.17)
+
+	What Changed?
+	============
+        ** Activate post-receive hook repo/repo with configuration (destination email, prefix, etc)
+        ** Improve post-receive email readability
+            * Add list of authors
+            * Move texts
+            * Remove useless texts
+            * Change email subject
+            * Add gitweb diff links
+
+        ** Extract references from commit messages like subversion
+        ** Direct link to gitweb interface based on sha1 (i.e: git #repository_name/commit_sha1)i
+        ** Add hook for color used in plugin statistics.

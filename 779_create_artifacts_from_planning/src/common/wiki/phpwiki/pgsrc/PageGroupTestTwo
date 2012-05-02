@@ -1,0 +1,28 @@
+Date: Thu, 31 Jan 2002 02:53:30 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: PageGroupTestTwo,v 1.6 2004/12/05 11:15:41 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageGroupTestTwo;
+  flags="";
+  author=CarstenKlapp;
+  author_id=CarstenKlapp;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin PageGroup
+         parent=PageGroupTest
+         section="Table of Contents"
+?>
+
+----
+
+%%% %%% %%% %%% %%% %%% %%%
+
+Welcome to page two.
+
+It would be nice if this plugin would work together with BackLinks, so
+that it's presence on a page would be detected by the backlink plugin
+without having to actually add a link to the parent: PageGroupTest.
+
+Click Next.

@@ -1,0 +1,143 @@
+JSJaC v1.3.1
+============
+* changed licensing to Mozilla's tri-license model (MPL, GPL, LGPL)
+* some little bugfixes
+
+JSJaC v1.3
+==========
+* all handlers/callbacks now have their context set to the connection, 
+  thus you can refer to it using 'this'.
+* JSJaCConnection.unregisterHandler added
+* lots of bugfixes
+
+JSJaC v1.2.2
+============
+* added mootools packer to generate a packed version of jsjac 
+  (make target 'pack')
+* json routines: don't extend Object
+* fixed internal polling going wild when reconnecting
+* JSJaCJID.prototype.clone and JSJaCJID.prototype.isEntity added
+* Copyright and legelases statements added for code from external 
+  resources
+
+
+JSJaC v1.2.1
+============
+* fixed handlers for packets with empty childnodes (fixes #17)
+* updated docs
+
+JSJaC v1.2
+==========
+fixes:
+* JSJaCConnection.prototype.getChild: rewrite
+
+new:
+* JSJaCConstants.js: various XMPP Constants and error conditions
+* JSJaCPacket.prototype.errorReply: create an error reply to a packet
+* JSJaCIQ.prototype.reply: Create an iq reply with type 'result'
+* JSJaCConnection.prototype.registerHandler: allow to register tagnames, namespaces and packet types. make events bubble and allow handlers to cancel bubbling of the event.
+* JSJaCConnection.prototype.registerIQGet: here for your convenience
+* JSJaCConnection.prototype.registerIQSet: here for your convenience
+* JSJaCConnection.prototype.sendIQ: like send but with different callbacks for different types of iq replies ('error' & 'result') and default handlers
+
+stuff:
+* include JSDoc for your convenience
+
+JSJaC v1.1.1
+============
+* fixed jsjac.js not having XmlDocument.create defined
+
+JSJaC v1.1
+==========
+* fixed bug with empty JID giving null pointer exception when using getters
+* use prototype property to declare member methods
+* static methods for cookie retrieval/erase for convenience
+* moved config vars to own file 'src/JSJaCConfig.js'
+* fixed make process of single include file to not compress config vars 
+  and place them on top of 'jsjac.js'
+
+JSJaC v1.0
+==========
+* support for pausing sessions as described in http://www.xmpp.org/extensions/xep-0124.html#inactive
+* bosh compliance v1.6
+
+JSJaC v1.0beta1
+===============
+
+* JSJacJID.js: dedicated class for handling with JIDs
+* JSJaCPacket.js: getToJID(), getFromJID() return a JID object
+* JSJaCPacket.js: setTo and setFrom accept JID object too
+* jsextras.js: extends string with 'htmlEnc', extends Date with 'jabberDate',
+  'hrTime' (static)  and 'jab2date' (static)
+* fixed all occurrences of 'for .. in' to be compliant with having prototypes 
+  of objects (arrays) extended (like prototype.js does e.g.).
+* buildNode: build nodes using script.aculo.us famous DOM builder
+* appendNode: append nodes to root node, may also be used with DOM builder 
+  syntax
+* ConsoleLogger: debug logger using firebug's or safari's console
+* getChild(name, ns): get child node with given name (and namespace)
+* getChildVal(name, ns): get value of child node with given name 
+  (and namespace)
+* new API documentation using jsdoc
+* new build system using jsmin to create single minimized file (jsjac.js)
+* new events: onresume, packet_in/out, presence_in/out, message_in/out, 
+  iq_in/out
+* new status: resuming
+
+JSJaC v0.6
+==========
+
+* Support for Opera, Konqueror and Safari.
+* Support for suspend/resume (makes it possible to save the state between
+  page transitions.
+* Single include by JSJaC.js
+* Many bugfixes and improvements concerning reliability.
+* API change! Params to constructors and connect methods are now passed as
+  JSON objects.
+* New event 'status_changed' to signal if sth going on with the status of
+  the connection (like errors, retries and so on)
+* SASL Authentication (PLAIN, DIGEST-MD5, ANONYMOUS) 
+	
+JSJaC v0.5
+==========
+
+* lots of bug fixes and minor improvements
+* make use of asynchronous request wherever possible
+* fixed simpleclient
+* fixed API docs
+
+JSJaC v0.4
+==========
+
+* ...
+
+JSJaC v0.3.x
+============
+* Initial support for http binding (in polling mode though)
+
+* Initial support for safari (thanks to Matthew Hershberger)
+
+
+JSJaC v0.2
+==========
+
+* send always does asychronous send now as http polling doesn't
+  support this.
+
+  In detail: When sending a packet where we expect a reply to it
+  http polling doesn't make sure that this reply is contained
+  within the http body reply to the query sent. So we have to
+  setup a callback that handles the reply once it has been
+  delivered to us.
+
+* added a dedicated method syncedSend that sends in synchronous
+  mode
+
+  First read above, then understand that you can't expect any
+  response to this call. It's there to make sure, sending is
+  finished before windows get closed
+
+* added events 'onconnect', 'ondisconnect' and 'onerror'. see API
+  for details.
+
+* removed method process() as polling is started at connect() now.

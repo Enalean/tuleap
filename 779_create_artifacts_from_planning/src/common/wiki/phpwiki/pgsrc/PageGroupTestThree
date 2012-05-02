@@ -1,0 +1,25 @@
+Date: Thu, 31 Jan 2002 02:50:26 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: PageGroupTestThree,v 1.5 2004/12/05 11:15:41 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageGroupTestThree;
+  flags="";
+  author=CarstenKlapp;
+  author_id=CarstenKlapp;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+You're almost there!
+
+%%% %%% %%% %%% %%% %%% %%%
+
+<?plugin PageGroup
+         label="Go!"
+         parent=PageGroupTest
+         section="Table of Contents"
+?>
+
+Note that the navigation bar can be anywhere, it doesn't have to be at
+the bottom or even consistent from page to page. The label can also
+vary--not sure if this is a good thing. Click Next.

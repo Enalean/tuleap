@@ -1,0 +1,19 @@
+Date: Tue, 21 Dec 2004 16:30:02 +0100
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11pre-20041210)
+X-Rcs-Id: $Id: LinkDatabase,v 1.3 2004/12/22 18:51:18 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=LinkDatabase;
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin LinkDatabase ?>
+
+<?plugin Comment 
+  With ?format=text to be used by WikiBrowser at http://touchgraph.sourceforge.net/
+  Save the output as textfile.
+
+  Warning: format=text and format=xml pages will break HTML and ZIP dumps!
+  They must be excluded then.
+?>

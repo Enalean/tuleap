@@ -1,0 +1,4 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule http-poll/ http://127.0.0.1:5280/http-poll/ [P]
+</IfModule>

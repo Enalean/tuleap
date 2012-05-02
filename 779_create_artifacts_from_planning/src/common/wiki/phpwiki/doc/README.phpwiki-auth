@@ -1,0 +1,317 @@
+UserAuthentification
+
+!!! The new phpwiki user authentification and preferences settings
+
+A typical wiki needs no authentification, some wiki's support a so called 
+"Bogo" login, where the username is a wikiword and therefore any note on any page
+(typically ended with "--UserName") is automatically linked to the users homepage 
+on this wiki.
+PhpWiki supported anonymous edits from the beginning, 
+non-anonymous edits, with required BogoLogin since version ???
+and true user identification with required username and passwords since 1.3.4, 
+where the optional password was stored in the users HomePage metadata.
+Seperately PhpWiki could be hacked to be protected by HTTP Auth 
+(e.g. Apache's .htaccess <require>), the username would then be 
+$PHP_AUTH_USER and the password not needed.
+
+Since version 1.3.4 ReiniUrban was working on UserAuthentificationNew
+to support authentification against external sources also, such as a 
+mysql database, LDAP or IMAP or .htaccess like files.
+From version 1.3.4 to 1.3.7 only HTTP Auth, LDAP, and IMAP was supported,
+the configuration settings for the planned (and already written) DbAuth code 
+was in index.php, but it was never enabled (which probably lead to some confusion).
+Since version 1.3.8 UserAuthentificationNew is enabled.
+
+We have to seperate various storage methods for UserPreferences
+(cookie, PersonalPage and database), various retrieval methods for 
+username-password pairs (AuthMethods) and various AuthPolicies.
+
+!! New constants and variables:
+* ALLOW_ANON_USER         default: true
+* ALLOW_ANON_EDIT         default: true
+* ALLOW_BOGO_LOGIN        default: true
+* ALLOW_USER_PASSWORDS    default: true
+* PASSWORD_LENGTH_MINIMUM default: 6
+* $USER_AUTH_ORDER~[~]      default: ("PersonalPage","Db")
+* USER_AUTH_POLICY	  default: "old"
+* $DBAuthParams~[~]         see below
+
+Temporarily:
+; ENABLE_USER_NEW : This will be removed with the 1.3.9 release. 
+;: It's just to decide if ~WikiUserNew.php should be loaded instead of the old ~WikiUser.php
+
+! ALLOW_ANON_USER
+
+To establish a COMPLETELY private wiki, such as an internal corporate one
+set ALLOW_ANON_USER = false, and probably require user passwords as described below. 
+In this case the user will be prompted to login immediately upon accessing
+any page. This is similar to HttpAuth.
+
+! ALLOW_ANON_EDIT
+
+This feature was called REQUIRE_SIGNIN_BEFORE_EDIT before. To enable
+ALLOW_BOGO_LOGIN and/or ALLOW_USER_PASSWORDS, ALLOW_ANON_EDIT must be
+false, otherwise it will override ALLOW_BOGO_LOGIN and
+ALLOW_USER_PASSWORDS. This will go away, with true page permissions.
+
+! ALLOW_BOGO_LOGIN
+
+If ALLOW_BOGO_LOGIN is true, users are allowed to login (with 
+any/no password) using any userid which: 
+  1) is not the ADMIN_USER, and
+  2) is a valid WikiWord (matches $WikiNameRegexp.)
+
+If true, users may be created by themselves. Otherwise we need
+seperate ALLOW_USER_PASSWORDS auth. If such a user will create a so
+called HomePage named after his WikiWord userid, he will be able to
+store his preferences and password there.
+If ALLOW_ANON_EDIT = true, one may still sign in to be able to store 
+UserPreferences and named RecentChanges entries.
+PASSWORD_LENGTH_MINIMUM is ignored by bogo login attempts.
+If an empty password is used, any user can sign in with this userid.
+
+! REQUIRE_SIGNIN_BEFORE_EDIT (Legacy)
+
+If set, then if an anonymous user attempts to edit a page he will
+be required to sign in. This constant was replaced by ALLOW_ANON_EDIT in v1.3.8.
+If ALLOW_BOGO_LOGIN is true, of course, no password is required, but the user 
+must still sign in under some sort of WikiWord name. This will go away, 
+with true page permissions.
+
+! ALLOW_USER_PASSWORDS
+
+True User Authentification is used with Bogo Login and not-empty
+passwords or ALLOW_USER_PASSWORDS = true.
+
+To require user passwords set
+<verbatim>
+   ALLOW_ANON_EDIT  = false
+   ALLOW_BOGO_LOGIN = false
+   ALLOW_USER_PASSWORDS = true
+</verbatim>
+Otherwise any anon or bogo user might login without any or a wrong
+password. A login attempt with ALLOW_USER_PASSWORDS = true depends on
+the defined USER_AUTH_ORDER auth methods, the USER_AUTH_POLICY and
+PASSWORD_LENGTH_MINIMUM.
+
+!! FAQ - UPGRADE PROBLEMS:
+
+* ''Fatal error: The script tried to execute a method or access a
+  property of an incomplete object. Please ensure that the class
+  definition wikiuser of the object you are trying to operate on was
+  loaded _before_ the session was started in...''
+
+This error will appear you switch from old (or from new to old) in the
+same browser session. You have an old (or new) WikiUser object in your
+current session, which is incompatible with the new (or old) WikiUser
+object on session restauration.
+
+Workaround: Close and open your browser again. The session cookie
+should be destroyed, and you will get a fresh new WikiUser
+object. Your default WIKI_ID (your username) will not be lost.
+
+* ''lib\Template.php:22: Warning[2]: fopen("", "rb") - No such file or directory''
+
+PHPWIKI_DIR could not be determined automatically. You probably
+started from a different diretory.
+
+Workaround: Set PHPWIKI_DIR in index.php or in your start script. You
+most likely have to set DATA_PATH also, when your pages look like the
+ancient-style Wiki (Times-Roman, black-white), i.e. no CSS is loaded.
+
+
+Below we define which methods exists and in which order theys are used:
+
+!! USER_AUTH_ORDER auth methods
+
+$USER_AUTH_ORDER is an array of the following strings. You can
+en-/disable any and change the order.
+
+* __~BogoLogin__:  This will eventually replace the old ALLOW_BOGO_LOGIN constant, 
+                   but it will require PASSWORD_LENGTH_MINIMUM. So non-empty passwords can be disabled.
+* __~PersonalPage__:  Store passwords in the users homepage metadata (simple)
+* __Db__:        Use $DBAuthParams~[~] (see below) with PearDB or ADODB only. 
+                 If 'auth_dsn' is undefined, and wiki pages are stored via SQL or ADODB, 
+                 it uses the same database. (fastest)
+* __LDAP__:      Authenticate against LDAP_AUTH_HOST with the LDAP_AUTH_SEARCH settings
+* __IMAP__:      Authenticate against IMAP_AUTH_HOST (e.g. an existing email account)
+* __POP3__:      Authenticate against POP3_AUTH_HOST (e.g. an existing email account)
+* __File__:      Check username:crypted-passwords in .htaccess like files. 
+                 Use e.g. Apache's htpasswd program to manage this file.
+* __~HttpAuth__:  Use the protection by the webserver, either .htaccess or httpd.conf
+                  If no HTTP AUTH is enforced by the webserver (e.g no require valid-user), then
+                  this method will enforce error 401 to force the client to display a password 
+                  entry dialog.
+
+Each method is a WikiUser (in fact a ~_PassUser) class, which defines the checkPass() and 
+userExists() methods and optionally mayChangePass() and storePass().
+
+!! USER_AUTH_POLICY
+
+The available policies defines how and when each auth method from
+USER_AUTH_ORDER is tried, and what to do on failure. Some policies
+require to know it at advance at initialization time, some have to
+check if a valid user exists and some simply check valid username -
+password pairs.
+
+;__old__:   This policy checks all default USER_AUTH_ORDER methods, disables all not defined services (ldap, imap) and tries to use all available methods as in the previous PhpWiki releases with the stacked policy (slow).
+;__first-only__: use only the first method in USER_AUTH_ORDER
+;__strict__:    check if the user exists for all methods: on the first existing user, try the password. dont try the other methods on failure then
+;__stacked__:    check the given user - password combination for all methods and return true on the first success.
+
+! AUTH_FILE_* constants
+
+  ''ToDo''
+
+! $DBAuthParams~[~]
+
+Statements for seperate DB User Authentication.
+
+This array defines the database prepare statements to select and
+update the password and preferences.  This is typically used to
+interface with other applications or user databases in quasi secure
+wiki's.  (often so called "Content Management Systems").
+The database can be external like radius, phpnuke, courier authmysql,
+apache auth_mysql or just a simple user table within phpwiki.
+The most likely auth_dsn option is the same dsn as the wikipages, in
+fact if it's empty $DBParams~['dsn'~] is used.  If
+$DBParams~['db_type'~] is not ADODB, the Pear DB library is used
+(db_type = SQL).
+
+This is the list of the available options and some examples. For the statements we use the following symbolic variables:
+   $user_id   : loginname
+   $password  : plain or encrypted password
+   $pref_blob : serialized string of the PHP preferences array (may get large, but not too large. 128 - 1024. mysql TEXT is enough)
+   $groupname     : groupname
+
+Note: The symbolic variables (like "$password", ...) must be enclosed in double quotes!
+ADODB Warning: With ADODB we must currently define the correct alias names: SELECT db_column as name
+This requirement will go away when we switch to FETCH_ROW instead of the slower FETCH_ASSOC 
+(scheduled for 1.4.0)
+
+;auth_dsn:     'mysql://user@password:localhost/phpwiki'
+
+USER => PASSWORD
+
+;auth_crypt_method: 'crypt' (simple unix crypt, not md5 crypt, sha1 or else) or 'plain' (also for mysql md5)
+
+;auth_check:     needs "$password" and "$userid", returns ok with plain or the password with crypt
+
+'auth_crypt_method' = 'plain':
+  'SELECT IF(passwd="$password",1,0) as ok FROM user WHERE username="$userid"' or 
+  'SELECT IF(passwd=PASSWORD("$password"),1,0) as ok FROM user WHERE username="$userid"',
+
+'auth_crypt_method' = 'crypt':
+  'SELECT password as password FROM user WHERE username="$userid"',
+
+auth_user_exists is only needed with auth_crypt_method = plain and USER_AUTH_POLICY = stacked or old:
+;auth_user_exists:  'SELECT username as userid FROM user WHERE username="$userid"'
+
+;auth_update:  'UPDATE user SET password="$password" WHERE username="$userid"' or 
+               'UPDATE user SET password=PASSWORD("$password") WHERE username="$userid"'
+;user_create:  'INSERT INTO user SET username="$userid", password="$password", pref="$pref_blob"'
+
+If auth_update is not defined but auth_check is defined, the user
+cannot change his password. But then better crypt methods may be used
+also. $password is processed by the auth_crypt_method.
+For mysql md5-crypt use auth_crypt_method = plain and 'UPDATE user SET
+password=PASSWORD("$password") WHERE username="$userid"'
+
+user_create is typically undefined, but may be defined to get rid of
+PersonalPage users completely.
+
+auth_user_exists is only needed with auth_crypt_method = plain and
+USER_AUTH_POLICY = stacked or old or for certain plugins which want to
+list all users. With auth_crypt_method = crypt the auth_check
+statement is used for the userExists() check.
+
+USER => PREFERENCES
+
+This can be optionally defined in an external DB. The default is the
+users homepage.
+
+;pref_select: 'SELECT pref as pref FROM user WHERE username="$userid"',
+;pref_update: 'UPDATE user SET pref="$pref_blob" WHERE username="$userid"', or 
+  mysql-specific: 'REPLACE INTO user SET prefs="$pref_blob", userid="$userid"'
+  (only if the pref table uses these two fields only!)
+
+
+USERS <=> GROUPS
+
+DB methods for lib/WikiGroup.php. This can be optionally defined in a
+file (see AUTH_GROUP_FILE) or an external DB. The default storage
+location is a special locked wikipage named after the group and as
+content a list of all groupmembers.
+
+;is_member:     'SELECT 1 FROM groups WHERE user=$userid"" AND group="$groupname"',
+;group_members: ''All members of the group.'' 'SELECT username FROM grouptable WHERE groupname="$groupname"'
+;user_groups:   ''All groups this user belongs to.'' 'SELECT groupname FROM grouptable WHERE username="$userid"'
+
+----
+
+!! UserPreferences
+
+The preferences are stored as serialized hash of non-default values,
+at the following locations:
+
+# Session (volatile)
+# Cookie (only the userid as WIKI_ID)
+# PersonalPage 
+# Database
+
+~AnonUser uses Cookie alone. For signed in users (~BogoUser and
+higher) the PersonalPage and/or Database methods are tried. If these
+methods fail (no such page or user exists) only the userid will be
+stored in a Cookie.  For some short time a serialized array of
+_UserPreference objects was stored which was "not a good thing".
+There is code to detect these objects and convert them automatically.
+Also serialized arrays stored in a WIKI_PREFS2 or WIKI_NAME cookie are
+deprecated and are automatically converted and deleted.
+
+To use the "PersonalPage" location a page with the same name as the
+userid must exist, the so called "HomePage". This does not need be a
+WikiWord pagename but it sure helps.
+
+If $DBAuthParams~['pref_select'~] is defined, PersonalPage preferences
+are ignored and the preferences are read from the database. If
+$DBAuthParams~['pref_update'~] is defined, the preferences are stored
+back into the database.
+
+!! Groups
+
+Group membership information can be stored in 
+# group wikipage
+# database
+# file
+
+For the group wikipage you have to create for every group a page with
+a list of users and the master group page called "CategoryGroup".
+
+For the database setup you can define the following $DBAuthParams[] statements. 
+You can define 1:n or n:m user<=>group relations, as you wish.
+Note: Only the PearDB library may be used so far.
+
+Sample configurations
+
+<verbatim>
+only one group per user:
+  'is_member'     'SELECT 1 FROM user WHERE user=$userid"" AND group="$groupname"',
+  'group_members' 'SELECT user FROM user WHERE group="$groupname"'
+  'user_groups'   'SELECT group FROM user WHERE user="$userid"'
+
+or multiple groups per user (n:m):
+
+  'is_member'  'SELECT 1 FROM groups WHERE user=$userid"" AND group="$groupname"'
+  'group_members'  'SELECT DISTINCT user FROM groups WHERE group="$groupname"'
+  'user_groups'  'SELECT group FROM groups WHERE user="$userid"'
+</verbatim>
+
+Files are defined similar to unix /etc/groups, exactly like apache htgroup files:
+
+AUTH_GROUP_FILE = '<filename>'
+<verbatim>
+  group1: user1 user2 user3 ...
+  group2: ...
+</verbatim>
+
+--ReiniUrban

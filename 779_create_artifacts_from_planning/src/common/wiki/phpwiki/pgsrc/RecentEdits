@@ -1,0 +1,17 @@
+Date: Mon, 6 Dec 2004 02:20:43 -0800
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.11)
+X-Rcs-Id: $Id: RecentEdits,v 1.14 2004/12/06 19:53:23 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=RecentEdits;
+  pgsrc_version="2 $Revision: 1.14 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+Here's a list of recently edited pages on this wiki. All minor changes
+are shown also, not just the most recent ones. (See RecentChanges for the
+most recent non-minor changes).
+
+--------
+<?plugin RecentChanges days||=3 show_all||=1 show_minor=1 daylist=1,3,7,30,90,0 ?>

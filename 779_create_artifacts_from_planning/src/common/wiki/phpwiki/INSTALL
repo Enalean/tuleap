@@ -1,0 +1,153 @@
+REQUIREMENTS
+
+PhpWiki requires a web server with at least PHP version 4.0.6.
+PhpWiki was tested 4.0.4pl1 and 4.0.5 also, but several bugs in these 
+releases make them unstable for production sites.
+
+Due to a security issue found in all versions of PHP (including 3.x
+and 4.x), all users of PHP are strongly encouraged to either upgrade
+to at least PHP 4.2.2, or install a patch available for PHP 3.0.18, 
+4.0.6 and 4.1.0/4.1.1. Visit <http://www.php.net> for downloads and 
+information. 
+Larger phpwiki installations (big pages or > 500 pages) 
+with PHP <= 4.3.9 suffer from a PCRE memory problem and might not 
+work with the 8MB default PHP memory limit.
+
+You need the Perl regular expressions package compiled in; this is the
+default for PHP, so you probably have it. If you don't you'll see an
+error like "function preg_replace() not defined."
+
+PHP must also be compiled with support for the type of database you
+want to use, i.e. --with-gdbm, --with-db2, --with-db3, --with-msql,
+--with-pgsql. (With PHP4 MySQL support is always enabled. With PHP5 
+sqlite instead). Consult the PHP installation manual for specific 
+installation and configure options. 
+<http://www.php.net/manual/en/installation.php>
+
+Since version 1.3.0 PhpWiki uses the 'DB.php' from PEAR, a database
+abstraction layer which is part of PHP. PhpWiki version 1.3.3 and later
+includes the necessary PEAR libraries and will use it if your system 
+PEAR library can not be found. For more information about PEAR 
+see <http://pear.php.net/>.
+
+
+QUICK START INSTRUCTIONS
+
+Copy 'config/config-dist.ini' to 'config/config.ini' and edit the 
+settings in 'config/config.ini' to your liking.
+
+By default PhpWiki is configured to use a dba database. If there
+is no dba on your system, you will see an error like this the first
+time you try to use PhpWiki:
+ 
+    "Fatal error: Call to undefined function: dba_open() in 
+     phpwiki/lib/DbaDatabase.php on line 32"
+
+To correct this you will have to check the available dba handlers 
+(default: db3 for Windows, otherwise gdbm), install the dba extension 
+or preferably an sql-compatible database such as MySQL or PostgreSQL 
+and make the necessary configuration changes to 'lib/config/config.ini'.
+
+
+INSTRUCTIONS
+
+Below are the instructions for the "out of the box" installation,
+which uses DB files. If you are using a relational database like
+MySQL, see the INSTALL file for your database in the 'doc/' directory
+under the root of your PhpWiki installation.
+
+
+0. INSTALLATION
+
+Untar / gzip this file into the directory where you want it to
+live. That's it.
+
+bash$ gzip -d phpwiki-X.XX.tar.gz
+bash$ tar -xvf phpwiki-X.XX.tar
+
+In the config subdirectory copy 'config-dist.ini' to 'config.ini' and 
+edit the settings in 'config.ini' to your liking.
+
+
+1. CONFIGURATION
+
+The first time you run this Wiki it will load a set of basic pages
+from the 'pgsrc/' directory. These should be enough to get your Wiki
+started.
+
+PhpWiki will create some DBA files in '/tmp'. They contain the pages
+of the live site, archived pages, and some additional information.
+
+If you don't want the DBA files to live in '/tmp' you must make sure
+the web server can read/write to your chosen location.  It's probably
+a bad idea to leave it in '/tmp', so change it in 'config/config.ini'.
+
+WARNING: On many systems, files in '/tmp' are subject to periodic
+         removal. We very strongly advise you to move the files to
+         another directory.
+
+For example, create a subdirectory called 'pages' in the 'phpwiki'
+directory which was made when you untarred PhpWiki. Move the DBA files
+there. The files should already have proper rights and owners, as they
+were created by the web server. If not, change the permissions
+accordingly so your web server can read / write the DBA files. Note
+that you must be root to move files created by the web server.
+
+Next you must ensure that the web server can access the 'pages'
+directory and can create new files in it. For example, if your web
+server runs as user 'nobody', give the web server access like this:
+
+bash$ chown nobody:youraccount pages
+bash$ chmod 755 pages
+
+This is necessary so that the server can also create / set the
+database lock file (PHP has a built in locking mechanism for DBA file
+access).  Or if you're really lazy and don't worry much about
+security:
+
+bash$ chmod 777 pages
+
+Note: This is insecure. The proper way is to let the directory be
+      owned by the web servers GUID and give it read and write access.
+
+
+2. ALLOWING EMBEDDED HTML
+
+PhpWiki ships with this feature disabled by default. According to
+CERT, malicious users can embed HTML in your pages that allow pure
+evil to happen:
+
+    <http://www.cert.org/advisories/CA-2000-02.html>
+
+Set the ENABLE_RAW_HTML to true in ' config/config.ini' to allow
+embedded HTML, but you should NEVER do this if your Wiki is publicly
+accessible!
+
+3. ETC
+
+Installing PHP is beyond the scope of this document :-) You should
+visit <http://www.php.net/> if you don't have PHP. Note that you
+should have the web server configured to allow index.php as the root
+document of a directory.
+
+4. PATCHES
+
+Post patches to:
+    <http://sourceforge.net/tracker/?func=add&group_id=6121&atid=306121>
+
+5. BUGS
+
+Post bugs to:
+    <http://sourceforge.net/tracker/?func=add&group_id=6121&atid=106121>
+
+6. SUPPORT
+
+For support from the PhpWiki team and user community post to:
+    <phpwiki-talk@lists.sourceforge.net>
+
+You can join this list at:
+    <http://lists.sourceforge.net/lists/listinfo/phpwiki-talk>
+
+FIN
+
+$Id: INSTALL,v 1.25 2005/04/03 16:52:50 uckelman Exp $

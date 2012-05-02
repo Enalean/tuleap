@@ -1,0 +1,37 @@
+Version 5.0.1 - Tuleap 5.0
+    * As per Tracker v5.7, centralize burndown rendering code into tracker.
+      Slightly modify the burndown behaviour: now the graph rendering start with
+      the value of the first day of data instead of 0 when there are no data.
+
+Version 5.0 - Tuleap 4.0.27
+    * Increment version number
+
+Version 0.6.2 - Tuleap 4.0.26
+    * Burndown can now build charts based on float fields
+    
+Version 0.6.1 - Tuleap 4.0.25 
+    * Fix issue on valid data on burndown
+    
+Version 0.5.1 - Tuleap 4.0.24.1
+    * Fix XML import
+    * Fix "division by zero" issue on burndown
+
+Version 0.5 - Tuleap 4.0.24
+    * Fix renderer following cardwall rework.
+
+Version 0.4 - Tuleap 4.0.24
+    * Add Burndown chart style
+
+Version 0.3 - (Tuleap 4.0.23)
+    * Fix 'as of date' issue on gantt charts.
+
+Version 0.2 - (Tuleap 4.0.23)
+    * Clean all graphs
+    * Load only the bare minimum to instatiate the plugin even if the plugin "tracker" is not installed
+    * Backlog #179: Fix install & dependency on tracker.
+    * Fix 'as of date' issue on gantt charts.
+
+Version 0.1 - (Tuleap 4.0.21)
+    * Add Graph On Tracker for Tracker v5
+
+

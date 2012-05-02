@@ -1,0 +1,16 @@
+<!--
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+//
+// 
+//
+-->
+<p>We now need to know a little bit more about your project. All information typed here will be accessible to <?php print $GLOBALS['sys_name']; ?> users once your project is registered. So please be as accurate as possible.
+
+<P>If the <?php print $GLOBALS['sys_name']; ?> Team approves your project account, the account
+is to be used purely to meet the goals set forth in this statement.
+Shall the purpose and goals change in the future, you'll have to modify the statement below accordingly.
+
+<P>(<em>Remark</em>: Your text formatting (e.g. line breaks) will be preserved. URLs typed in the text will be automatically transformed into hyperlinks in the final text.)
+<p><font color="red">*</font>: Fields Required</p>

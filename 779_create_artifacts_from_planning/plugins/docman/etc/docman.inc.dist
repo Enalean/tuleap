@@ -1,0 +1,9 @@
+<?php
+
+// Where the documentation files are located
+$docman_root = '/var/lib/codendi/docman';
+
+// Are embedded files allowed ?
+$embedded_are_allowed = true;
+
+?>

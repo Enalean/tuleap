@@ -1,0 +1,47 @@
+plugin_admindelegation	descriptor_description	Delegation of site admin rights to mere mortals
+plugin_admindelegation	descriptor_name	AdminDelegation
+
+plugin_admindelegation	title	AdminDelegation
+
+# Service
+plugin_admindelegation	service_SHOW_PROJECT_ADMINS	See project administrators
+plugin_admindelegation	service_SHOW_PROJECTS	See all projects
+
+# Permissions
+plugin_admindelegation	permissions_page_title	Admin rights delegation / Permissions
+plugin_admindelegation	permissions_grant_user_title	Grant user
+plugin_admindelegation	permissions_grant	Grant 
+plugin_admindelegation	permissions_to_user	to user 
+plugin_admindelegation	permissions_autocomplete	Type user name (autcompletion)
+plugin_admindelegation	permissions_granted_users_title	Granted users
+plugin_admindelegation	permissions_user_col	User
+plugin_admindelegation	permissions_service_col	Service
+plugin_admindelegation	permissions_granted_users_service_title	Granted users per service: $1
+
+# All widgets
+plugin_admindelegation	widget_btn_search	Search
+
+# Widget admindelegation
+plugin_admindelegation	widget_admins_title	Admin delegation: search project admins
+plugin_admindelegation	widget_admins_description	Site admins can delegate view project admins
+plugin_admindelegation	widget_admins_label	Show administrators of project:
+plugin_admindelegation	widget_admins_name	Name
+plugin_admindelegation	widget_admins_email	Email
+plugin_admindelegation	widget_admins_mass_mail	Mail to all admins
+plugin_admindelegation	widget_admins_mass_mail_subject	[$1] Project $2:
+
+# Widget admindelegation_projects
+plugin_admindelegation	widget_projects_title	Admin delegation: search all projects
+plugin_admindelegation	widget_projects_description	Site admins can delegate view all projects to you
+plugin_admindelegation	widget_projects_label	Show all projects containing: 
+plugin_admindelegation	widget_projects_crit_group_name	Group Name
+plugin_admindelegation	widget_projects_crit_unix_group_name	Short Name
+plugin_admindelegation	widget_projects_crit_short_description	Description
+plugin_admindelegation	widget_projects_col_project_name	Project name
+plugin_admindelegation	widget_projects_col_project_id	Project id
+plugin_admindelegation	widget_projects_previous	Previous
+plugin_admindelegation	widget_projects_next	Next
+plugin_admindelegation	widget_projects_nb_projects_found	$1 project(s) found
+
+# Widget category
+widget_categ_label	plugin_admindelegation	Admin delegation

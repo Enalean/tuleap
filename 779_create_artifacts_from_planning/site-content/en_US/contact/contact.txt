@@ -1,0 +1,24 @@
+<!--
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+-->
+
+<!--
+Note: 
+if you use the generic trackers in the Admin project, instead of the legacy Bug and Service Request trackers, 
+you need to update the links below:
+SR link:  <A HREF="/tracker/?func=add&group_id=1&atid=XXX"> where XXX is the id of the SR tracker for the Admin project (103?)
+Bug link: <A HREF="/tracker/?func=add&group_id=1&atid=YYY"> where YYY is the id of the Bug tracker for the Admin project (101?)
+-->
+
+<h2>Contact Points</h2>
+
+<ul>
+<li><b>Other Requests</b>: all other inquiries should be directed to the 
+<A href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>">[ <?php print $GLOBALS['sys_name']; ?> contact ]</A><br><br>
+</ul>

@@ -1,0 +1,36 @@
+#!/bin/sh
+# updateinterwikimap
+currentfile=interwiki.map
+backupfile=/tmp/${currentfile}.bak
+downloadfile=/tmp/intermap.txt
+newfile=/tmp/${currentfile}
+tempfile=/tmp/intermap.tmp
+
+echo "Downloading latest InterWikiMap from PhpWiki CVS"
+cvs up ${currentfile}
+
+echo "Downloading latest InterWikiMap from Usemod"
+curl http://usemod.com/intermap.txt -o ${downloadfile}
+
+echo "Backing up current ${currentfile} to ${backupfile}"
+cp -p ${currentfile} ${backupfile}
+
+echo "merging ${downloadfile} with installed ${currentfile}"
+cat ${downloadfile} > ${tempfile}
+cat ${backupfile} >> ${tempfile}
+cat ${tempfile} | sort -f | uniq > ${newfile}
+
+echo "Installing updated InterWikiMap"
+install -m 0644 ${newfile} ${currentfile}
+rm ${downloadfile} ${tempfile} ${newfile}
+
+echo "The following new InterWikiMap entries were found:"
+diff -u0 ${backupfile} ${currentfile}
+
+echo "Comparing with PhpWiki CVS:"
+cvs diff ${currentfile}
+
+echo "*** You must check ${currentfile} for duplicates or other problems. ***"
+echo "*** The backup file is: ${backupfile}. ***"
+
+echo "Done."

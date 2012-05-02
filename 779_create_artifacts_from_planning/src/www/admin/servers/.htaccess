@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !index.php
+RewriteRule (.*) index.php?r=$1

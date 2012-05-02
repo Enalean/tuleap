@@ -1,0 +1,142 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: OldMarkupTestPage,v 1.2 2002/12/17 18:16:55 dairiki Exp $
+Content-Type: application/x-phpwiki;
+  pagename=OldMarkupTestPage;
+  flags=PAGE_LOCKED;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+ New lists: asterisks, hash marks, and ";text:def"
+* bullet
+* l1
+** l2
+** l2
+*** l3
+# one
+#two
+#three
+;Term1:definition1.1
+;: defintion1.2
+;Term2 :defintion2
+;; Term3:defintion3
+;;;Term4: definition4
+;;; : defintion4.2
+;;; Term5 : defintion5
+
+Mixed:
+*ul1
+*#ul1-ol1
+*#ul1-ol2
+*#*ul1-ol2-ul1
+*#*ul1-ol2-ul2
+*#**ul1-ol2-ul2-ul1
+*#**ul1-ol2-ul2-ul1
+
+*l1
+ preformatted text
+**    l2
+----
+ old lists
+	* level 1
+	* l1
+		*l2
+		*l2
+			*l3
+			*l3
+				*l4
+			*l3
+					*l5
+			*l3
+	#one
+	#two
+		#one
+		#two
+	*l1
+		#three
+		#four
+	*l1
+		*l2
+		# one
+		# two
+
+ preformatted text
+ some more text
+
+	*l1
+				*l4
+	# number
+	# number
+this is a plain paragraph
+	* bullet
+this is a plain paragraph again
+	# number
+----
+__Link tests__
+# normal: HomePage
+# in brackets: [HomePage] -- named: [the front page|HomePage]
+# Link in brackets: [http://phpwiki.sourceforge.net/]
+# Link outside brackets: http://phpwiki.sourceforge.net/
+# Link with Wiki word: http://phpwiki.sourceforge.net/phpwiki/index.php?HomePage
+# Two consecutive links: http://phpwiki.sourceforge.net/ http://phpwiki.sourceforge.net/phpwiki/
+# [PhpWiki on Sourceforge | http://phpwiki.sourceforge.net/]
+# [URL with a WikiWord | http://phpwiki.sourceforge.net/phpwiki/index.php?RecentChanges]
+# Javascript: [boo! | javascript:alert('oops') ]  (is now: named internal link)
+# A [[Link] produces a [Link]
+# A [Link] looks like this: [[Link]
+# This is a [%%%] line break link
+# Also this page is [[not linked to], and this one is !NotLinkedTo and this one neither !http://not.linked.to/.
+#* WikiName - WikiNameSameStem -- !!WikiName - !!WikiNameSameStem
+#* !!WikiName - !!WikiNameSameStem -- WikiName - WikiNameSameStem
+#* WikiNameSameStem - WikiName -- !!WikiNameSameStem - !!WikiName
+#* !!WikiNameSameStem - !!WikiName -- WikiNameSameStem - WikiName
+
+----
+Markup tests:
+
+__underscores for bold__
+
+'''quotes for bold'''
+
+''quotes for italic''
+
+__''underscores bold italic''__
+
+'''''five quotes bold italic'''''
+
+''''''six quotes''''''
+
+'''''Bold italic''' and italic'' (buggy)
+
+'''Bold and ''bold-italic''''' (also buggy)
+
+!!! h1
+
+!! h2
+
+! h3
+
+this is plain text with <br>%%%
+a line break
+
+look at the <a href="http://phpwiki.sourceforge.net/">markup language</a>
+
+you cannot use &, < or >
+
+----
+Usage in preformatted text:
+ 
+ __underscores for bold__
+ '''quotes for bold'''
+ ''quotes for italic''
+ __''underscores bold italic''__
+ '''''five quotes bold italic'''''
+ ''''''six quotes''''''
+ !!! h1
+ !! h2
+ ! h3
+ this is plain text with <br>%%%
+ a line break
+ look at the <a href="http://phpwiki.sourceforge.net/">markup language</a>
+ you cannot use &, < or >
+ 

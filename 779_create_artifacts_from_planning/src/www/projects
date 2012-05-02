@@ -1,0 +1,71 @@
+<?php
+//
+// SourceForge: Breaking Down the Barriers to Open Source Development
+// Copyright 1999-2000 (c) The SourceForge Crew
+// http://sourceforge.net
+//
+// 
+
+require_once('pre.php');
+
+$expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
+$project = ProjectManager::instance()->getProjectFromAutocompleter(urldecode($expl_pathinfo[2]));
+if ($project && !$project->isError()) {
+    $group_id = $project->getId();
+
+    //set up the group_id
+    $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
+    $request = HTTPRequest::instance();
+    $request->params['group_id'] = $_REQUEST['group_id'];
+    
+    if ($request->isAjax()) {
+        header('Content-type: application/json');
+        echo json_encode(
+            array(
+                'id'   => $group_id, 
+                'name' => $project->getPublicName(),
+            )
+        );
+        exit;
+    }
+	// if the summary service is active we display the dashboard of the project
+	// otherwise we display the first active service on the list
+	
+    if ($project->usesService('summary')){
+    	//now show the project page
+        include_once 'project_home.php';
+    } else {
+    	$serv = $project->services;
+    	$val = array_values($serv);
+    	foreach ($val as $containedSrv){
+    	   if ($containedSrv->isUsed()) {
+    	       $service = $containedSrv;
+    	       break;
+    	   } 
+    	}
+    	if ($service->isIFrame()){
+            $label = $service->getLabel();
+            if ($label == "service_". $service->getShortName() ."_lbl_key") {
+                $label = $Language->getText('project_admin_editservice',$label);
+            } elseif(preg_match('/(.*):(.*)/', $label, $matches)) {
+                $label = $Language->getText($matches[1], $matches[2]);
+            }
+            $title = $label .' - '. $project->getPublicName();
+            site_project_header(array('title' => $title, 'group' => $request->get('group_id'), 'toptab' => $service->getId()));
+            $GLOBALS['HTML']->iframe($service->getUrl(), array('class' => 'iframe_service'));
+            site_project_footer(array());
+        } else {
+            $GLOBALS['Response']->redirect($service->getUrl());
+    	}
+    }
+} else {
+    header("HTTP/1.0 404 Not Found");
+    if (!$request->isAjax()) {
+        exit_no_group();
+    }
+}
+
+// Local Variables:
+// mode: php
+// End:
+?>

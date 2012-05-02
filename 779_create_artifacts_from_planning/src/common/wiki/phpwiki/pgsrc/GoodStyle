@@ -1,0 +1,31 @@
+Date: Sun, 27 Jan 2002 17:28:55 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.2-jeffs-hacks)
+X-Rcs-Id: $Id: GoodStyle,v 1.7 2002/12/29 00:32:34 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=GoodStyle;
+  pgsrc_version="2 $Revision: 1.7 $";
+  flags="";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+"Young writers often suppose that style is a garnish for the meat of
+prose, a sauce by which a dull dish is made palatable. Style has no
+such separate entity; it is nondetachable, unfilterable. The beginner
+should approach style warily, realizing that it is himself he is
+approaching, no other; and he should begin by turning resolutely away
+from all devices that are popularly believed to indicate style--all
+mannerisms, tricks, adornments. The approach to style is by way of
+plainness, simplicity, orderliness, sincerity."
+
+--Strunk and White, "The Elements of Style"
+
+''And thus an American textbook, typical required reading for
+10th-grade English students, unknowingly extols some virtues of
+WabiSabi''
+
+--scummings
+
+----
+
+PhpWikiDocumentation

@@ -1,0 +1,29 @@
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+// Originally written by Laurent Julliard 2003, Codendi Team, Xerox
+//
+-->
+
+<!-- DO NOT MODIFY FILE - SEE BELOW!! -->
+
+<!-- This DTD file contains entities that are used to in the user
+guide content. If you want to customize the content for your own site
+do not modify this file. Use the 
+/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd file 
+instead and redefine your entities there. If this file doesn't exist create it.-->
+
+<!ENTITY SYS_PRODUCT_NAME "Tuleap">
+<!ENTITY SYS_DEFAULT_DOMAIN "tuleap.net">
+<!ENTITY SYS_CVS_HOST "tuleap.net">
+<!ENTITY SYS_SVN_HOST "tuleap.net">
+<!ENTITY SYS_DOWNLOAD_HOST "tuleap.net">
+<!ENTITY SYS_SHELL_HOST "tuleap.net">
+<!ENTITY SYS_LISTS_HOST "lists.tuleap.net">
+<!ENTITY SYS_DATA_DIR "/var/lib/codendi">
+<!ENTITY FTPINCOMING_DIR "/var/lib/codendi/ftp/incoming">
+<!ENTITY FTPFILES_DIR "/var/lib/codendi/ftp/codendi">
+<!ENTITY SYS_ORG_NAME "Example Company">
+<!ENTITY SYS_LONG_ORG_NAME "Example Corporation">

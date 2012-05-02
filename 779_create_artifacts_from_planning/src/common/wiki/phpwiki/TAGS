@@ -1,0 +1,4346 @@
+
+configurator.php,3906
+    function _http_user(_http_user72,3235
+    function _http_logout(_http_logout92,4111
+function update(update177,7485
+function validate(validate191,8045
+function validate_ereg(validate_ereg195,8157
+function validate_range(validate_range200,8304
+function toggle_group(toggle_group206,8517
+function do_init(do_init233,9144
+    function _variable(_variable1743,67148
+    function value(value1766,68109
+    function _config_format(_config_format1774,68338
+    function get_config_item_name(get_config_item_name1787,68747
+    function get_config_item_id(get_config_item_id1791,68832
+    function get_config_item_header(get_config_item_header1795,68938
+    function _get_description(_get_description1806,69343
+    function _get_config_line(_get_config_line1810,69419
+    function get_config(get_config1814,69533
+    function get_instructions(get_instructions1820,69742
+    function get_html(get_html1826,69991
+    function _config_format(_config_format1836,70446
+    function get_html(get_html1840,70554
+    function _get_config_line(_get_config_line1845,70700
+    function get_instructions(get_instructions1850,70852
+    function _get_config_line(_get_config_line1861,71369
+    function _config_format(_config_format1868,71615
+    function _config_format(_config_format1874,71798
+    function value(value1881,71910
+    function get_html(get_html1890,72204
+    function _config_format(_config_format1913,72987
+    function _get_config_line(_get_config_line1916,73109
+    function get_html(get_html1924,73385
+    function _get_config_line(_get_config_line1935,73867
+    function get_html(get_html1960,74607
+    function _get_config_line(_get_config_line1973,75160
+    function numeric_define(numeric_define1988,75601
+    function _config_format(_config_format1993,75972
+    function _get_config_line(_get_config_line1997,76176
+    function _get_config_line(_get_config_line2012,76569
+    function _config_format(_config_format2026,77025
+    function _get_config_line(_get_config_line2029,77143
+    function get_html(get_html2032,77253
+    function _get_config_line(_get_config_line2045,77549
+    function _define_password(_define_password2060,77992
+    function _get_config_line(_get_config_line2067,78424
+    function get_html(get_html2096,79757
+    function _define_password_optional(_define_password_optional2104,79900
+    function _get_config_line(_get_config_line2109,80167
+    function _variable_password(_variable_password2126,80582
+    function get_html(get_html2132,81013
+    function _get_config_line(_get_config_line2161,82366
+    function get_html(get_html2168,82733
+    function _get_config_line(_get_config_line2182,83287
+    function get_html(get_html2187,83533
+    function _config_format(_config_format2201,84092
+    function _get_config_line(_get_config_line2205,84277
+    function get_html(get_html2215,84769
+    function _config_format(_config_format2228,85288
+    function _get_config_line(_get_config_line2232,85475
+    function get_html(get_html2242,85959
+    function value(value2260,86683
+    function _config_format(_config_format2268,86901
+    function _get_config_line(_get_config_line2271,87032
+    function _get_config_line(_get_config_line2282,87349
+    function _config_format(_config_format2287,87519
+    function get_html(get_html2293,87762
+    function _get_config_line(_get_config_line2323,88842
+    function value value2341,89417
+    function get_config(get_config2342,89451
+    function get_instructions(get_instructions2347,89667
+    function get_html(get_html2355,90144
+function nl2p(nl2p2361,90224
+function text_from_dist(text_from_dist2376,90580
+function stripHtml(stripHtml2407,91382
+function random_good_password random_good_password2433,92401
+function printArray(printArray2457,93224
+  function is_a(is_a2468,93450
+
+getimg.php,0
+
+gforge.php,0
+
+index.php,0
+
+lib/ArchiveCleaner.php,348
+    function ArchiveCleaner ArchiveCleaner5,104
+    function isMergeable(isMergeable9,209
+    function cleanDatabase(cleanDatabase22,569
+    function cleanPageRevisions(cleanPageRevisions28,740
+    function ArchiveCleaner_Counter(ArchiveCleaner_Counter72,2090
+    function computeAge(computeAge100,2948
+    function keep(keep125,3987
+
+lib/ASCIIMathPHP/ASCIIMathPHP.cfg.php,17
+$symbol_arr 3,7
+
+lib/ASCIIMathPHP/ASCIIMathPHP.class.php,1926
+	function addChild(addChild63,1671
+	function addChildArr(addChildArr70,1817
+	function insertChildBefore(insertChildBefore81,2034
+	function insertChildAfter(insertChildAfter96,2381
+	function setId(setId111,2727
+	function setName(setName116,2776
+	function setNamepace(setNamepace121,2833
+	function setNamespaceAlias(setNamespaceAlias126,2897
+	function setContent(setContent131,2985
+	function setEmptyElem(setEmptyElem136,3054
+	function setAttr(setAttr141,3137
+	function setAttrArr(setAttrArr146,3225
+	function setParentId(setParentId151,3297
+	function setParentNode(setParentNode156,3359
+	function getId(getId161,3431
+	function getName(getName166,3479
+	function getNamespace(getNamespace171,3531
+	function getNamespaceAlias(getNamespaceAlias176,3589
+	function getContent(getContent181,3658
+	function getAttr(getAttr186,3716
+	function getAttrArr(getAttrArr195,3866
+	function getParentId(getParentId200,3925
+	function getNumChild(getNumChild254,4842
+	function removeChild(removeChild259,4910
+	function removeChildByIdx(removeChildByIdx264,4978
+	function removeFirstChild(removeFirstChild270,5107
+	function removeLastChild(removeLastChild276,5229
+	function dumpXML(dumpXML282,5366
+	function _dumpAttr(_dumpAttr311,6093
+	function _dumpName(_dumpName325,6361
+	function _dumpXmlns(_dumpXmlns335,6537
+	function _getCurrentLevel(_getCurrentLevel351,6825
+	function removeBrackets(removeBrackets371,7132
+	function isLeftBracket(isLeftBracket384,7436
+	function isRightBracket(isRightBracket396,7588
+	function ASCIIMathPHP(ASCIIMathPHP418,7868
+	function setExpr(setExpr426,8013
+	function genMathML(genMathML436,8186
+	function getMathML(getMathML912,20710
+	function getCurrExpr(getCurrExpr918,20800
+	function getExpr(getExpr923,20861
+	function getPrevExpr(getPrevExpr928,20913
+	function getSymbol(getSymbol942,21177
+	function chopExpr(chopExpr996,22849
+
+lib/BlockParser.php,3434
+    function AnchoredRegexpSet AnchoredRegexpSet86,2465
+    function match match98,2831
+    function nextMatch nextMatch130,3814
+    function BlockParser_Input BlockParser_Input155,4470
+    function skipSpace skipSpace174,5056
+    function currentLine currentLine189,5457
+    function nextLine nextLine196,5632
+    function advance advance204,5859
+    function getPos getPos209,5982
+    function setPos setPos213,6066
+    function getPrefix getPrefix217,6153
+    function getDepth getDepth221,6207
+    function where where225,6259
+    function _debug _debug232,6430
+    function BlockParser_InputSubBlock BlockParser_InputSubBlock245,6810
+    function skipSpace skipSpace265,7594
+    function currentLine currentLine278,8058
+    function nextLine nextLine282,8124
+    function advance advance299,8639
+    function getPos getPos303,8707
+    function setPos setPos307,8817
+    function getPrefix getPrefix313,8964
+    function getDepth getDepth320,9232
+    function where where324,9312
+    function Block_HtmlElement(Block_HtmlElement332,9435
+    function setTightness(setTightness336,9531
+    function ParsedBlock ParsedBlock345,9741
+    function _parse _parse351,9926
+    function _initBlockTypes _initBlockTypes370,10700
+    function _getBlock _getBlock393,11550
+    function WikiText WikiText428,12848
+    function SubBlock SubBlock435,13009
+    function TightSubBlock TightSubBlock453,13657
+    function _match _match471,14293
+    function _setTightness _setTightness475,14393
+    function merge merge479,14493
+    function finish finish483,14561
+    function _match _match493,14718
+    function merge merge501,15003
+    function _match _match524,15695
+    function _setTightness(_setTightness544,16343
+    function merge merge549,16469
+    function finish finish562,16946
+    function Block_dl Block_dl571,17114
+    function _match _match575,17209
+    function _setTightness(_setTightness586,17536
+    function _do_match _do_match594,17761
+    function Block_table_dl_defn Block_table_dl_defn623,18550
+    function setTightness(setTightness646,19225
+    function _addToRow _addToRow659,19662
+    function _flushRow _flushRow668,19936
+    function _addSubtable _addSubtable681,20346
+    function _setTerm _setTerm694,20728
+    function _ComputeNcols _ComputeNcols702,20960
+    function _IsASubtable _IsASubtable713,21258
+    function _FirstDefn _FirstDefn719,21443
+    function ncols ncols724,21554
+    function nrows nrows728,21615
+    function setWidth setWidth746,21992
+    function Block_table_dl(Block_table_dl769,22659
+    function _match _match773,22770
+    function _setTightness(_setTightness782,23020
+    function finish finish786,23126
+    function _match _match813,23904
+    function _setTightness(_setTightness848,24959
+    function _match _match915,27995
+    function _match _match954,29062
+    function _match _match976,29665
+    function _match _match989,30026
+    function _setTightness(_setTightness995,30172
+    function _match _match1004,30319
+    function _setTightness(_setTightness1014,30589
+    function _match _match1025,30768
+    function _setTightness _setTightness1031,30893
+    function merge merge1036,31010
+    function finish finish1046,31340
+function TransformTextPre TransformTextPre1060,31706
+function TransformText TransformText1083,32324
+
+lib/CachedMarkup.php,2323
+    function CacheableMarkup(CacheableMarkup25,988
+    function pack(pack35,1242
+    function unpack(unpack44,1517
+    function getWikiPageLinks(getWikiPageLinks83,2907
+    function getLinkInfo(getLinkInfo109,3633
+    function _append(_append120,3893
+    function _glean_description(_glean_description166,5119
+    function getDescription getDescription193,6052
+    function asXML asXML197,6166
+    function printXML printXML220,6817
+    function cache(cache252,7839
+    function expand(expand256,7895
+    function getWikiPageLinks(getWikiPageLinks260,7995
+    function XmlRpc_LinkInfo(XmlRpc_LinkInfo266,8093
+    function isInlineElement(isInlineElement276,8338
+    function getLinkInfo(getLinkInfo285,8585
+    function _getURL(_getURL291,8807
+    function Cached_WikiLink Cached_WikiLink298,8916
+    function _getType(_getType306,9153
+    function getPagename(getPagename310,9217
+    function getWikiPageLinks(getWikiPageLinks316,9377
+    function _getName(_getName322,9569
+    function _getURL(_getURL326,9650
+    function expand(expand331,9807
+    function asXml(asXml339,10142
+    function asString(asString347,10429
+    function Cached_WikiLinkIfKnown Cached_WikiLinkIfKnown356,10616
+    function expand(expand360,10698
+    function Cached_PhpwikiURL Cached_PhpwikiURL367,10865
+    function isInlineElement(isInlineElement373,10997
+    function expand(expand377,11051
+    function asXml(asXml382,11227
+    function asString(asString388,11404
+    function Cached_ExternalLink(Cached_ExternalLink397,11592
+    function _getType(_getType403,11749
+    function _getName(_getName407,11813
+    function expand(expand412,11974
+    function asString(asString428,12498
+    function Cached_InterwikiLink(Cached_InterwikiLink437,12691
+    function _getName(_getName443,12834
+    function _getURL(_getURL448,12993
+    function expand(expand453,13108
+    function asString(asString459,13293
+    function expand(expand470,13677
+    function Cached_PluginInvocation Cached_PluginInvocation484,14229
+    function setTightness(setTightness488,14300
+    function isInlineElement(isInlineElement494,14478
+    function expand(expand498,14533
+    function asString(asString523,15468
+    function getWikiPageLinks(getWikiPageLinks528,15529
+
+lib/Captcha.php,348
+    function Captcha(Captcha27,1037
+    function captchaword(captchaword36,1372
+    function Failed Failed43,1605
+    function getFormElements(getFormElements56,2067
+    function get_word get_word73,2891
+    function get_dictionary_word get_dictionary_word80,3092
+    function spiral(spiral100,3656
+    function image image121,4498
+
+lib/config.php,1235
+function isCGI(isCGI29,1080
+function browserAgent(browserAgent58,2146
+function browserDetect(browserDetect69,2596
+function browserVersion(browserVersion73,2754
+function isBrowserIE(isBrowserIE81,3084
+function isBrowserIE55(isBrowserIE5586,3224
+function isBrowserNetscape(isBrowserNetscape91,3381
+function isBrowserNS3(isBrowserNS399,3661
+function isBrowserNS4(isBrowserNS4103,3765
+function isBrowserKonqueror(isBrowserKonqueror108,4007
+function isBrowserSafari(isBrowserSafari114,4286
+function guessing_lang guessing_lang128,4737
+function guessing_setlocale guessing_setlocale209,7557
+function update_locale(update_locale270,10038
+function pcre_fix_posix_classes pcre_fix_posix_classes351,13402
+function deduce_script_name(deduce_script_name395,15521
+function IsProbablyRedirectToIndex IsProbablyRedirectToIndex407,15916
+    function array_key_exists(array_key_exists423,16565
+    function is_scalar(is_scalar430,16740
+    function is_a(is_a437,16954
+  function str_ireplace(str_ireplace445,17146
+    function clone(clone482,18366
+function safe_wordwrap(safe_wordwrap494,18711
+function getUploadFilePath(getUploadFilePath553,20772
+function getUploadDataPath(getUploadDataPath558,20933
+
+lib/DbaDatabase.php,696
+    function DbaDatabase(DbaDatabase9,182
+    function set_timeout(set_timeout26,841
+    function open(open30,925
+    function close(close85,3005
+    function exists(exists91,3125
+    function fetch(fetch95,3210
+    function insert(insert102,3387
+    function replace(replace107,3528
+    function firstkey(firstkey113,3677
+    function nextkey(nextkey117,3752
+    function delete(delete121,3825
+    function get(get126,3954
+    function set(set130,4031
+    function sync(sync148,4595
+    function optimize(optimize153,4704
+    function _error(_error159,4847
+    function _dump(_dump166,5043
+    function _dba_open_error_handler _dba_open_error_handler172,5240
+
+lib/DbaListSet.php,842
+    function DbaListSet(DbaListSet5,96
+    function create_sequence(create_sequence9,165
+    function delete_sequence(delete_sequence24,608
+    function firstkey(firstkey33,862
+    function lastkey(lastkey39,1035
+    function next(next46,1206
+    function prev(prev51,1343
+    function exists(exists56,1486
+    function fetch(fetch61,1590
+    function replace(replace66,1719
+    function insert_before(insert_before72,1913
+    function insert_after(insert_after77,2040
+    function append(append82,2169
+    function prepend(prepend87,2296
+    function _insert_before_nc(_insert_before_nc92,2427
+    function _insert_after_nc(_insert_after_nc100,2695
+    function delete(delete108,2962
+    function _new_key(_new_key116,3207
+    function _setprev(_setprev123,3385
+    function _setnext(_setnext130,3612
+
+lib/DbaPartition.php,498
+    function DbaPartition(DbaPartition5,100
+    function open(open10,207
+    function close(close14,278
+    function firstkey(firstkey18,348
+    function nextkey(nextkey29,678
+    function exists(exists40,1006
+    function fetch(fetch44,1097
+    function insert(insert48,1182
+    function replace(replace52,1281
+    function delete(delete56,1382
+    function get(get60,1469
+    function set(set64,1554
+    function sync(sync68,1647
+    function optimize(optimize72,1710
+
+lib/DbSession/ADODB.php,464
+    function DbSession_ADODB DbSession_ADODB32,989
+    function _connect(_connect48,1564
+    function query(query62,2171
+    function quote(quote66,2248
+    function _disconnect(_disconnect70,2328
+    function open open85,2779
+    function close(close99,3143
+    function read read111,3386
+    function write write149,4835
+    function destroy destroy197,6674
+    function gc gc215,7100
+    function currentSessions(currentSessions228,7454
+
+lib/DbSession/dba.php,453
+    function DbSession_dba DbSession_dba14,258
+    function quote(quote27,798
+    function query(query28,840
+    function _connect(_connect30,884
+    function _disconnect(_disconnect47,1357
+    function open open52,1459
+    function close(close57,1570
+    function read read62,1656
+    function write write78,2157
+    function destroy destroy91,2573
+    function gc gc98,2723
+    function currentSessions(currentSessions113,3221
+
+lib/DbSession/PDO.php,458
+    function DbSession_PDO DbSession_PDO13,230
+    function _connect(_connect29,803
+    function query(query40,1104
+    function quote(quote44,1183
+    function _disconnect(_disconnect48,1265
+    function open open63,1714
+    function close(close77,2078
+    function read read89,2321
+    function write write126,3795
+    function destroy destroy188,6444
+    function gc gc205,6917
+    function currentSessions(currentSessions218,7347
+
+lib/DbSession/SQL.php,419
+    function DbSession_SQL DbSession_SQL18,392
+    function query(query46,1336
+    function quote(quote50,1441
+    function _disconnect(_disconnect54,1522
+    function open open69,1984
+    function close(close83,2348
+    function read read95,2591
+    function write write135,4075
+    function destroy destroy184,5995
+    function gc gc202,6420
+    function currentSessions(currentSessions215,6770
+
+lib/DbSession.php,163
+    function DbSession(DbSession27,743
+    function currentSessions(currentSessions56,1969
+    function query(query59,2059
+    function quote(quote62,2137
+
+lib/diff.php,1177
+    function _HWLDF_WordAccumulator _HWLDF_WordAccumulator15,373
+    function _flushGroup _flushGroup22,547
+    function _flushLine _flushLine35,1017
+    function addWords addWords42,1200
+    function getLines(getLines60,1732
+    function WordLevelDiff WordLevelDiff68,1874
+    function _split(_split77,2202
+    function orig orig87,2551
+    function _final _final99,2883
+    function HtmlUnifiedDiffFormatter(HtmlUnifiedDiffFormatter124,3490
+    function _start_diff(_start_diff128,3610
+    function _end_diff(_end_diff131,3704
+    function _start_block(_start_block137,3815
+    function _end_block(_end_block142,3974
+    function _lines(_lines147,4088
+    function _context(_context162,4724
+    function _deleted(_deleted165,4804
+    function _added(_added169,4897
+    function _changed(_changed173,4986
+    function TableUnifiedDiffFormatter(TableUnifiedDiffFormatter192,5543
+    function _start_diff(_start_diff196,5668
+    function _start_block(_start_block204,5999
+    function _end_block(_end_block214,6501
+    function _lines(_lines219,6635
+function PageInfoRow PageInfoRow240,7447
+function showDiff showDiff271,8738
+
+lib/diff3.php,699
+    function _Diff3_Block _Diff3_Block16,350
+    function merged merged22,588
+    function is_conflict is_conflict36,1054
+    function _Diff3_CopyBlock _Diff3_CopyBlock45,1215
+    function merged(merged51,1396
+    function is_conflict is_conflict55,1459
+    function _Diff3_BlockBuilder _Diff3_BlockBuilder61,1548
+    function _init(_init65,1617
+    function _append _append70,1723
+    function input(input74,1832
+    function out1(out179,1937
+    function out2(out284,2043
+    function is_empty(is_empty89,2149
+    function finish(finish93,2251
+    function Diff3 Diff3106,2519
+    function __diff3(__diff3113,2798
+    function merged_output(merged_output183,5246
+
+lib/difflib.php,2003
+    function reverse(reverse22,477
+    function norig(norig26,562
+    function nfinal(nfinal30,646
+    function _DiffOp_Copy _DiffOp_Copy38,797
+    function reverse(reverse45,975
+    function _DiffOp_Delete _DiffOp_Delete53,1135
+    function reverse(reverse58,1241
+    function _DiffOp_Add _DiffOp_Add66,1380
+    function reverse(reverse71,1483
+    function _DiffOp_Change _DiffOp_Change79,1632
+    function reverse(reverse84,1745
+    function diff diff112,2566
+    function _diag _diag216,6554
+    function _lcs_pos _lcs_pos290,8808
+    function _compareseq _compareseq326,9791
+    function _shift_boundaries _shift_boundaries383,11629
+    function Diff(Diff506,15204
+    function reverse reverse522,15654
+    function isEmpty isEmpty536,15956
+    function lcs lcs551,16317
+    function orig(orig568,16715
+    function _final(_final586,17139
+    function _check _check601,17479
+    function MappedDiff(MappedDiff658,19303
+    function format(format717,21033
+    function _block(_block773,22868
+    function _start_diff(_start_diff790,23539
+    function _end_diff(_end_diff794,23595
+    function _block_header(_block_header800,23708
+    function _start_block(_start_block809,23983
+    function _end_block(_end_block813,24049
+    function _lines(_lines816,24084
+    function _context(_context821,24206
+    function _added(_added825,24276
+    function _deleted(_deleted828,24348
+    function _changed(_changed832,24423
+    function UnifiedDiffFormatter(UnifiedDiffFormatter846,24712
+    function _block_header(_block_header851,24886
+    function _added(_added859,25106
+    function _deleted(_deleted862,25178
+    function _changed(_changed865,25252
+    function BlockDiffFormatter(BlockDiffFormatter884,25831
+    function _lines(_lines888,26002
+    function _added(_added896,26232
+    function _deleted(_deleted899,26310
+    function _block_header(_block_header902,26390
+    function _changed(_changed905,26472
+
+lib/display.php,175
+function GleanKeywords GleanKeywords10,219
+function RedirectorLink(RedirectorLink32,1056
+function actionPage(actionPage40,1291
+function displayPage(displayPage84,3125
+
+lib/editpage.php,1287
+    function PageEditor PageEditor18,684
+    function editPage editPage75,2853
+    function output output167,6831
+    function viewSource viewSource192,7647
+    function updateLock(updateLock201,7961
+    function savePage savePage217,8485
+    function isConcurrentUpdate isConcurrentUpdate318,12218
+    function canEdit canEdit323,12405
+    function isInitialEdit isInitialEdit327,12508
+    function isUnchanged isUnchanged331,12583
+    function isSpam isSpam349,13235
+    function numLinks(numLinks410,15886
+    function getSpamMessage getSpamMessage416,16055
+    function getPreview getPreview425,16385
+    function getConvertedPreview getConvertedPreview431,16582
+    function getContent getContent440,16947
+    function getLockedMessage getLockedMessage450,17244
+    function getConflictMessage getConflictMessage458,17664
+    function getTextArea getTextArea490,19444
+    function getFormElements getFormElements518,20628
+    function _redirectToBrowsePage(_redirectToBrowsePage593,24420
+    function _restoreState _restoreState597,24545
+    function _initializeState _initializeState644,26304
+    function editPage editPage683,27704
+    function output output735,29988
+    function getConflictMessage getConflictMessage756,30597
+
+lib/EditToolbar.php,614
+    function EditToolbar(EditToolbar17,424
+function define_f(define_f31,1009
+function undo_enable(undo_enable38,1224
+function replace(replace54,1536
+function do_replace(do_replace70,2779
+function result(result88,3529
+function do_undo(do_undo97,3749
+function undo_save(undo_save112,4128
+    function getTokens getTokens152,5563
+    function _generate _generate156,5628
+    function categoriesPulldown(categoriesPulldown287,12727
+    function pluginPulldown(pluginPulldown315,14026
+    function pagesPulldown(pagesPulldown360,16200
+    function templatePulldown(templatePulldown384,17397
+
+lib/ErrorManager.php,1635
+function wiki_assert_handler wiki_assert_handler31,1041
+    function ErrorManager(ErrorManager51,1607
+    function getPostponedErrorMask(getPostponedErrorMask65,2017
+    function setPostponedErrorMask(setPostponedErrorMask80,2446
+    function flushPostponedErrors(flushPostponedErrors93,2780
+    function getPostponedErrorsAsHTML(getPostponedErrorsAsHTML107,3174
+    function pushErrorHandler(pushErrorHandler170,6001
+    function popErrorHandler(popErrorHandler178,6190
+    function setFatalHandler(setFatalHandler192,6585
+    function handleError(handleError205,6910
+    function warning(warning290,10167
+    function _die(_die297,10330
+    function _flush_errors(_flush_errors309,10610
+    function _noCacheHeaders(_noCacheHeaders326,11119
+function ErrorManager_errorHandler(ErrorManager_errorHandler353,11850
+    function PhpError(PhpError398,12820
+    function isFatal(isFatal409,13143
+    function isWarning(isWarning417,13350
+    function isNotice(isNotice425,13534
+    function getHtmlClass(getHtmlClass428,13621
+    function getDescription(getDescription438,13848
+    function _getDetail(_getDetail452,14200
+    function printXML(printXML491,15642
+    function asXML(asXML498,15780
+    function asString(asString505,15919
+    function printSimpleTrace(printSimpleTrace509,15998
+    function PhpWikiError(PhpWikiError535,16728
+    function _getDetail(_getDetail539,16832
+    function PhpErrorOnce(PhpErrorOnce553,17242
+    function _sameError(_sameError558,17403
+    function removeDoublettes(removeDoublettes566,17702
+    function _getDetail(_getDetail578,18070
+
+lib/ExternalReferrer.php,113
+  function isExternalReferrer(isExternalReferrer12,369
+    function parseSearchQuery(parseSearchQuery79,6451
+
+lib/FileFinder.php,1655
+    function FileFinder FileFinder23,689
+    function findFile findFile36,1097
+    function slashifyPath slashifyPath52,1630
+    function forcePathSlashes forcePathSlashes59,1795
+    function includeOnce includeOnce92,3013
+    function _isOtherPathsep(_isOtherPathsep105,3426
+    function _get_syspath_separator _get_syspath_separator118,3716
+    function _use_path_separator _use_path_separator139,4575
+    function _is_abs(_is_abs158,5127
+    function _strip_last_pathchar(_strip_last_pathchar171,5476
+    function _not_found(_not_found189,5988
+    function _search_path _search_path206,6462
+    function _get_ini_separator _get_ini_separator229,7252
+    function _get_include_path(_get_include_path240,7518
+    function _append_to_include_path _append_to_include_path261,8175
+    function _prepend_to_include_path _prepend_to_include_path288,9204
+    function locale_versions locale_versions302,9796
+    function _get_lang(_get_lang318,10256
+    function PearFileFinder PearFileFinder366,11561
+    function LocalizedFileFinder LocalizedFileFinder400,12712
+    function LocalizedButtonFinder LocalizedButtonFinder437,13795
+function FindFile FindFile462,14586
+function FindLocalizedFile FindLocalizedFile484,15433
+function FindLocalizedButtonFile FindLocalizedButtonFile492,15666
+function NormalizeLocalFileName(NormalizeLocalFileName509,16263
+function NormalizeWebFileName(NormalizeWebFileName530,16943
+function isWindows(isWindows547,17426
+function isWindows95(isWindows95555,17614
+function isWindowsNT(isWindowsNT562,17763
+function isMac(isMac580,18411
+function isCygwin(isCygwin585,18547
+
+lib/fortune.php,432
+    function quoteFromDir(quoteFromDir16,427
+    function getNumberOfQuotes(getNumberOfQuotes52,1440
+    function getExactQuote(getExactQuote62,1761
+    function getRandomQuote(getRandomQuote93,2499
+    function getQuote(getQuote104,2747
+    function getIndices(getIndices118,3104
+    function readLong(readLong129,3320
+    function createIndexFile(createIndexFile139,3534
+    function writeLong(writeLong192,4861
+
+lib/fpdf.php,3005
+    function FPDF FPDF79,4195
+    function SetMargins(SetMargins182,7445
+    function SetLeftMargin(SetLeftMargin191,7647
+    function SetTopMargin(SetTopMargin198,7807
+    function SetRightMargin(SetRightMargin203,7894
+    function SetAutoPageBreak(SetAutoPageBreak208,7985
+    function SetDisplayMode(SetDisplayMode215,8188
+    function SetCompression(SetCompression227,8696
+    function SetTitle(SetTitle235,8884
+    function SetSubject(SetSubject240,8966
+    function SetAuthor(SetAuthor245,9058
+    function SetKeywords(SetKeywords250,9145
+    function SetCreator(SetCreator255,9242
+    function SetProducer(SetProducer260,9334
+    function AliasNbPages(AliasNbPages265,9431
+    function Error(Error270,9555
+    function Open(Open275,9638
+    function Close(Close281,9739
+    function AddPage(AddPage297,10035
+    function Header(Header359,11594
+    function Footer(Footer363,11674
+    function PageNo(PageNo367,11754
+    function SetDrawColor(SetDrawColor372,11833
+    function SetFillColor(SetFillColor382,12173
+    function SetTextColor(SetTextColor393,12568
+    function GetStringWidth(GetStringWidth402,12882
+    function SetLineWidth(SetLineWidth413,13123
+    function Line(Line420,13290
+    function Rect(Rect425,13475
+    function AddFont(AddFont436,13787
+    function SetFont(SetFont478,15250
+    function SetFontSize(SetFontSize536,17410
+    function AddLink(AddLink546,17706
+    function SetLink(SetLink553,17837
+    function Link(Link562,18047
+    function Text(Text567,18225
+    function AcceptPageBreak(AcceptPageBreak577,18562
+    function Cell(Cell582,18670
+    function MultiCell(MultiCell653,21488
+    function Write(Write754,24442
+    function Image(Image826,26713
+    function Ln(Ln874,28520
+    function GetX(GetX883,28714
+    function SetX(SetX888,28779
+    function GetY(GetY896,28905
+    function SetY(SetY901,28970
+    function SetXY(SetXY910,29134
+    function Output(Output916,29230
+    function _dochecks(_dochecks982,31808
+    function _begindoc(_begindoc997,32322
+    function _putpages(_putpages1003,32417
+    function _putfonts(_putfonts1068,34876
+    function _putimages(_putimages1163,38641
+    function _putresources(_putresources1206,40486
+    function _putinfo(_putinfo1227,41133
+    function _putcatalog(_putcatalog1243,41847
+    function _puttrailer(_puttrailer1262,42625
+    function _enddoc(_enddoc1268,42782
+    function _beginpage(_beginpage1301,43504
+    function _endpage(_endpage1337,44584
+    function _newobj(_newobj1342,44658
+    function _dounderline(_dounderline1349,44807
+    function _parsegif _parsegif1357,45147
+    function _parsejpg(_parsejpg1411,46900
+    function _parsepng(_parsepng1434,47595
+    function _freadint(_freadint1510,50174
+    function _textstring(_textstring1519,50359
+    function _escape(_escape1524,50457
+    function _putstream(_putstream1529,50601
+    function _out(_out1535,50707
+
+lib/gif.php,1474
+function gif_loadFile(gif_loadFile17,576
+function gif_outputAsBmp(gif_outputAsBmp30,753
+function gif_outputAsPng(gif_outputAsPng52,1203
+function gif_outputAsJpeg(gif_outputAsJpeg74,1653
+function gif_getSize(gif_getSize94,2108
+    function CGIFLZW(CGIFLZW122,2772
+    function deCompress(deCompress135,3202
+    function LZWCommand(LZWCommand156,3644
+    function GetCode(GetCode268,7192
+    function CGIFCOLORTABLE(CGIFCOLORTABLE323,8561
+    function load(load329,8668
+    function toString(toString346,9102
+    function toRGBQuad(toRGBQuad359,9471
+    function colorIndex(colorIndex373,9865
+    function CGIFFILEHEADER(CGIFFILEHEADER410,10787
+    function load(load424,11170
+    function w2i(w2i458,12318
+    function CGIFIMAGEHEADER(CGIFIMAGEHEADER476,12654
+    function load(load488,12996
+    function w2i(w2i518,13981
+    function CGIFIMAGE(CGIFIMAGE535,14267
+    function load(load547,14604
+    function skipExt(skipExt591,15790
+    function w2i(w2i633,16896
+    function deInterlace(deInterlace637,17001
+    function CGIF(CGIF686,18076
+    function loadFile(loadFile693,18263
+	function getSize(getSize730,19349
+    function getBmp(getBmp750,19815
+    function getPng(getPng855,23275
+    function dword(dword956,26435
+    function ndword(ndword961,26617
+    function width(width966,26800
+    function height(height970,26869
+    function comment(comment974,26940
+    function loaded(loaded978,27011
+
+lib/Google.php,335
+    function GoogleSearchResults GoogleSearchResults91,3255
+    function GoogleSearchResult GoogleSearchResult145,5392
+    function Google(Google156,5625
+    function doGoogleSearch(doGoogleSearch220,8825
+    function doGetCachedPage(doGetCachedPage254,10472
+    function doSpellingSuggestion(doSpellingSuggestion269,11055
+
+lib/HtmlElement.php,2535
+    function __construct __construct20,454
+    function _init _init25,631
+    function _init2 _init248,1294
+    function addTooltip addTooltip66,1779
+    function emptyTag emptyTag78,2308
+    function hasInlineContent hasInlineContent85,2512
+    function isInlineElement isInlineElement89,2621
+function HTML HTML94,2724
+    function raw raw99,2842
+    function getTagProperties(getTagProperties103,2924
+    function _setTagProperty(_setTagProperty108,3074
+    function link link157,4542
+    function meta meta161,4662
+    function style style165,4782
+    function script script169,4904
+    function noscript noscript173,5028
+    function a a179,5204
+    function img img183,5318
+    function br br187,5436
+    function span span191,5552
+    function h1 h1197,5720
+    function h2 h2201,5836
+    function h3 h3205,5952
+    function h4 h4209,6068
+    function h5 h5213,6184
+    function h6 h6217,6300
+    function hr hr223,6464
+    function div div227,6580
+    function p p231,6698
+    function pre pre235,6812
+    function blockquote blockquote239,6930
+    function em em245,7110
+    function strong strong249,7226
+    function small small253,7350
+    function tt tt259,7520
+    function u u263,7636
+    function sup sup267,7750
+    function sub sub271,7868
+    function ul ul277,8034
+    function ol ol281,8150
+    function dl dl285,8266
+    function li li289,8382
+    function dt dt293,8498
+    function dd dd297,8614
+    function table table303,8778
+    function caption caption307,8900
+    function thead thead311,9026
+    function tbody tbody315,9148
+    function tfoot tfoot319,9270
+    function tr tr323,9392
+    function td td327,9508
+    function th th331,9624
+    function colgroup colgroup335,9740
+    function col col339,9868
+    function form form345,10034
+    function input input349,10154
+    function button button353,10276
+    function option option357,10400
+    function select select361,10524
+    function textarea textarea365,10648
+    function label label369,10776
+    function area area375,10946
+    function map map379,11066
+    function frame frame383,11184
+    function frameset frameset387,11306
+    function iframe iframe391,11434
+    function nobody nobody395,11558
+    function object object399,11682
+    function embed embed403,11806
+function HiddenInputs HiddenInputs466,14315
+function JavaScript JavaScript490,15181
+function IfJavaScript(IfJavaScript522,16549
+
+lib/HtmlParser.php,1086
+    function HtmlParser(HtmlParser52,1665
+    function tag_open(tag_open68,2324
+    function tag_close(tag_close70,2381
+    function cdata(cdata72,2439
+    function parse_url(parse_url74,2482
+    function output output77,2534
+    function wikify wikify84,2721
+    function elem_contents(elem_contents124,4241
+    function _elem_attr_str(_elem_attr_str147,5076
+    function _elem_has_ancestor(_elem_has_ancestor164,5621
+    function _elem_is_image_div(_elem_is_image_div183,6295
+    function wikify_default(wikify_default202,7121
+    function wikify_preserve(wikify_preserve208,7253
+    function log(log212,7329
+    function HtmlParser_PhpWiki2(HtmlParser_PhpWiki2219,7409
+    function wikify_table(wikify_table273,9419
+    function wikify_tr(wikify_tr277,9553
+    function wikify_th(wikify_th280,9646
+    function wikify_list_item(wikify_list_item290,9957
+    function wikify_link(wikify_link294,10122
+    function wikify_h(wikify_h316,10945
+    function wikify_verbatim(wikify_verbatim326,11228
+    function wikify_img(wikify_img331,11381
+
+lib/HttpClient.php,1221
+    function HttpClient(HttpClient48,1758
+    function get(get52,1865
+    function post(post60,2101
+    function buildQueryString(buildQueryString66,2292
+    function doRequest(doRequest85,2971
+    function buildRequest(buildRequest208,8284
+    function getStatus(getStatus241,9659
+    function getContent(getContent244,9722
+    function getHeaders(getHeaders247,9787
+    function getHeader(getHeader250,9852
+    function getError(getError258,10074
+    function getCookies(getCookies261,10138
+    function getRequestURL(getRequestURL264,10203
+    function setUserAgent(setUserAgent273,10442
+    function setAuthorization(setAuthorization276,10522
+    function setCookies(setCookies280,10656
+    function useGzip(useGzip284,10759
+    function setPersistCookies(setPersistCookies287,10834
+    function setPersistReferers(setPersistReferers290,10926
+    function setHandleRedirects(setHandleRedirects293,11020
+    function setMaxRedirects(setMaxRedirects296,11114
+    function setHeadersOnly(setHeadersOnly299,11194
+    function setDebug(setDebug302,11280
+    function quickGet(quickGet306,11383
+    function quickPost(quickPost321,11869
+    function debug(debug333,12283
+
+lib/imagecache.php,144
+function deducePagename deducePagename39,1380
+function deduceUsername(deduceUsername64,2093
+function mainImageCache(mainImageCache94,3267
+
+lib/IniConfig.php,279
+function save_dump(save_dump73,2911
+function IniConfig(IniConfig104,4268
+function fixup_static_configs(fixup_static_configs512,21067
+function fixup_dynamic_configs(fixup_dynamic_configs660,27758
+        function gettext gettext691,28873
+        function _ _697,29053
+
+lib/InlineParser.php,2104
+function WikiEscape(WikiEscape43,1352
+function UnWikiEscape(UnWikiEscape47,1439
+    function RegexpSet RegexpSet89,2379
+    function match match102,2804
+    function nextMatch nextMatch124,3525
+    function _match _match147,4345
+    function getMatchRegexp getMatchRegexp244,8168
+    function markup markup255,8454
+    function getStartRegexp getStartRegexp273,8811
+    function getEndRegexp getEndRegexp283,9072
+    function markup markup296,9447
+    function getMatchRegexp getMatchRegexp303,9591
+    function markup markup307,9689
+function isImageLink(isImageLink319,10022
+function LinkBracketLink(LinkBracketLink326,10286
+    function markup markup439,14747
+    function getMatchRegexp getMatchRegexp448,14932
+    function markup markup452,15075
+    function getMatchRegexp getMatchRegexp460,15224
+    function markup markup466,15415
+    function getMatchRegexp getMatchRegexp474,15599
+    function markup markup480,15773
+    function _isWikiUserPage _isWikiUserPage489,16109
+    function _UserLink(_UserLink499,16380
+    function markup markup512,16820
+    function getEndRegexp getEndRegexp521,16974
+    function markup markup525,17045
+    function getStartRegexp(getStartRegexp533,17241
+    function getEndRegexp getEndRegexp571,18402
+    function markup markup576,18580
+    function getEndRegexp getEndRegexp590,18986
+    function markup markup594,19077
+    function getEndRegexp getEndRegexp606,19404
+    function markup markup614,19588
+    function markup markup637,20311
+    function markup markup659,21174
+    function markup markup677,21664
+    function markup markup698,22430
+    function markup markup711,22860
+    function markup markup720,23081
+    function InlineTransformer InlineTransformer734,23395
+    function _addMarkup _addMarkup755,24324
+    function parse parse766,24651
+    function _parse_markup_body _parse_markup_body821,26761
+    function LinkTransformer LinkTransformer841,27563
+function TransformInline(TransformInline847,27743
+function TransformLinks(TransformLinks864,28119
+
+lib/install.php,85
+function init_install(init_install29,953
+function run_install(run_install44,1394
+
+lib/loadsave.php,1341
+function _dump_error_handler(_dump_error_handler30,980
+function StartLoadDump(StartLoadDump44,1331
+function EndLoadDump(EndLoadDump63,2087
+function MailifyPage MailifyPage130,4743
+function FilenameForPage FilenameForPage181,6574
+function MakeWikiZip MakeWikiZip194,6937
+function DumpToDir DumpToDir267,9315
+function _copyMsg(_copyMsg354,12323
+function DumpHtmlToDir DumpHtmlToDir375,13213
+function MakeWikiZipHtml MakeWikiZipHtml577,21145
+function SavePage SavePage716,26674
+function RevertPage RevertPage878,32594
+function _tryinsertInterWikiMap(_tryinsertInterWikiMap914,33889
+function ParseSerializedPage(ParseSerializedPage947,35078
+function SortByPageVersion SortByPageVersion1010,36885
+function LoadFile LoadFile1019,37200
+function LoadZip LoadZip1071,39250
+function LoadDir LoadDir1090,40000
+    function LimitedFileSet(LimitedFileSet1117,41030
+    function _filenameSelector(_filenameSelector1124,41247
+    function getSkippedFiles getSkippedFiles1137,41580
+function IsZipFile IsZipFile1143,41657
+function LoadAny LoadAny1163,42103
+function LoadFileOrDir LoadFileOrDir1213,43785
+function SetupWiki SetupWiki1237,44563
+function LoadPostFile LoadPostFile1298,46699
+ function SavePage SavePage1558,56508
+ function SavePage:SavePage1610,58397
+ function LoadAny:LoadAny1613,58520
+
+lib/main.php,2994
+function mayAccessPage mayAccessPage41,1306
+    function WikiRequest WikiRequest51,1563
+    function initializeLang initializeLang148,6085
+    function initializeTheme initializeTheme162,6680
+    function updateAuthAndPrefs updateAuthAndPrefs200,8262
+    function getPref getPref278,11206
+    function getPage getPage296,11726
+    function getPostURL getPostURL316,12440
+    function _handleAuthRequest _handleAuthRequest328,12892
+    function _signIn _signIn373,14401
+    function _setUser _setUser388,14950
+    function getLevelDescription(getLevelDescription410,15817
+    function _notAuthorized _notAuthorized427,16467
+    function getActionDescription(getActionDescription487,19439
+    function getDisallowedActionDescription(getDisallowedActionDescription527,21339
+    function requiredAuthority requiredAuthority558,22855
+    function requiredAuthorityForAction requiredAuthorityForAction579,23627
+    function possiblyDeflowerVirginWiki possiblyDeflowerVirginWiki654,26022
+    function handleAction handleAction671,26606
+    function finish finish716,28525
+    function _deducePagename _deducePagename752,29813
+    function _deduceAction _deduceAction801,31915
+    function _deduceUsername(_deduceUsername839,33317
+    function _isActionPage _isActionPage889,35323
+    function findActionPage findActionPage902,35822
+    function isActionPage isActionPage944,37295
+    function action_browse action_browse948,37391
+    function action_verify action_verify954,37531
+    function actionpage actionpage958,37602
+    function adminActionSubpage adminActionSubpage964,37754
+    function action_chown action_chown977,38221
+    function action_setacl action_setacl981,38306
+    function action_rename action_rename985,38393
+    function action_dump action_dump989,38480
+    function action_diff action_diff999,38801
+    function action_search action_search1005,38932
+    function action_edit action_edit1019,39447
+    function action_create action_create1026,39613
+    function action_viewsource action_viewsource1030,39686
+    function action_lock action_lock1037,39860
+    function action_unlock action_unlock1058,40742
+    function action_remove action_remove1065,40914
+    function action_xmlrpc action_xmlrpc1077,41284
+    function action_revert action_revert1083,41444
+    function action_zip action_zip1088,41551
+    function action_ziphtml action_ziphtml1096,41890
+    function action_dumpserial action_dumpserial1104,42233
+    function action_dumphtml action_dumphtml1109,42344
+    function action_upload action_upload1114,42457
+    function action_upgrade action_upgrade1119,42567
+    function action_loadfile action_loadfile1125,42716
+    function action_pdf action_pdf1130,42829
+    function action_captcha action_captcha1135,42933
+function is_safe_action is_safe_action1144,43153
+function validateSessionPath(validateSessionPath1149,43288
+function main main1181,44657
+
+lib/PageList.php,3930
+    function _PageList_Column_base _PageList_Column_base64,2312
+    function format format76,2679
+    function getHeading getHeading83,2958
+    function setHeading setHeading87,3026
+    function heading heading92,3131
+    function button_heading button_heading114,4265
+    function _compare(_compare182,7605
+    function _PageList_Column _PageList_Column196,8028
+    function _getValue _getValue210,8515
+    function _getSortableValue _getSortableValue222,8965
+    function _PageList_Column_custom(_PageList_Column_custom239,9593
+    function format format246,9811
+    function _getValue _getValue253,10106
+    function _getSortableValue _getSortableValue266,10750
+    function _getSize(_getSize273,11047
+    function _PageList_Column_bool _PageList_Column_bool281,11255
+    function _getValue _getValue287,11507
+    function _PageList_Column_checkbox _PageList_Column_checkbox295,11844
+    function _getValue _getValue306,12464
+    function format format323,13291
+    function button_heading button_heading330,13621
+    function _PageList_Column_time _PageList_Column_time338,13950
+    function _getValue _getValue344,14152
+    function _getValue _getValue351,14408
+    function _PageList_Column_content _PageList_Column_content362,14832
+    function _getValue _getValue378,15531
+    function _getSortableValue _getSortableValue422,18028
+    function _PageList_Column_author _PageList_Column_author428,18251
+    function _getValue _getValue433,18471
+    function _getValue _getValue443,18829
+    function _getValue _getValue453,19154
+    function _PageList_Column_pagename _PageList_Column_pagename465,19511
+    function _getValue _getValue471,19683
+    function _getSortableValue _getSortableValue478,19929
+    function _compare(_compare485,20132
+    function PageList PageList504,20633
+    function supportedArgs supportedArgs562,23291
+    function setCaption setCaption599,25385
+    function getCaption getCaption603,25479
+    function setMessageIfEmpty setMessageIfEmpty610,25736
+    function getTotal getTotal615,25823
+    function isEmpty isEmpty620,25975
+    function addPage(addPage624,26045
+    function pageNames(pageNames634,26396
+    function _getPageFromHandle(_getPageFromHandle642,26587
+    function _renderPageRow _renderPageRow655,27050
+    function addPages addPages689,28332
+    function addPageList addPageList696,28519
+    function maxLen(maxLen705,28794
+    function getContent(getContent721,29443
+    function printXML(printXML733,29823
+    function asXML(asXML737,29895
+    function sortby sortby754,30515
+    function explodePageList(explodePageList816,33215
+    function allPagesByAuthor(allPagesByAuthor846,34492
+    function allPagesByOwner(allPagesByOwner872,35535
+    function allPagesByCreator(allPagesByCreator897,36526
+    function _initAvailableColumns(_initAvailableColumns929,37773
+    function getOption(getOption1005,41407
+    function _addColumn _addColumn1030,42192
+    function addColumnObject(addColumnObject1068,43685
+    function _pageCompare(_pageCompare1086,44224
+    function _sortPages(_sortPages1123,45720
+    function limit(limit1137,46211
+    function pagingTokens(pagingTokens1145,46411
+    function _generateTable(_generateTable1198,48601
+    function _jsFlipAll(_jsFlipAll1266,51500
+function flipAll(flipAll1268,51554
+    function _saveOptions(_saveOptions1282,52004
+    function _restoreOptions(_restoreOptions1292,52339
+    function _generateList(_generateList1306,52847
+    function _generateCommaListAsString(_generateCommaListAsString1412,57594
+    function _generateCommaList(_generateCommaList1429,58207
+    function _emptyList(_emptyList1444,58750
+    function PageList_Selectable PageList_Selectable1462,59178
+    function addPageList addPageList1474,59618
+    function addPageSelected addPageSelected1481,59847
+
+lib/PagePerm.php,1415
+function pagePermissions(pagePermissions78,3169
+function pagePermissionsSimpleFormat(pagePermissionsSimpleFormat99,4048
+function pagePermissionsAcl(pagePermissionsAcl124,4983
+function pagePermissionsAclFormat(pagePermissionsAclFormat135,5246
+function requiredAuthorityForPage requiredAuthorityForPage150,5774
+function action2access action2access162,6171
+function _requiredAuthorityForPagename(_requiredAuthorityForPagename213,7399
+function getParentPage(getParentPage265,9688
+function getPagePermissions getPagePermissions276,9988
+function setPagePermissions setPagePermissions284,10200
+function getAccessDescription(getAccessDescription288,10272
+function array_diff_assoc_recursive(array_diff_assoc_recursive308,11200
+    function PagePermission(PagePermission339,12308
+    function isAuthorized(isAuthorized362,13230
+    function isMember(isMember377,13674
+    function defaultPerms(defaultPerms426,15704
+    function sanify(sanify467,17434
+    function equal(equal478,17707
+    function accessTypes(accessTypes486,17916
+    function dotPerms(dotPerms494,18121
+    function retrieve(retrieve507,18483
+    function store(store517,18758
+    function groupName groupName523,18902
+    function asTable(asTable529,19079
+    function asEditableTable(asEditableTable550,20098
+    function asAclLines(asAclLines665,26825
+    function asRwxString(asRwxString687,27518
+
+lib/PageType.php,1343
+    function TransformedText(TransformedText36,1326
+    function getType(getType47,1754
+    function GetPageType GetPageType76,2661
+    function getName(getName92,3121
+    function transform(transform106,3505
+function getInterwikiMap getInterwikiMap122,4049
+    function PageType_interwikimap(PageType_interwikimap131,4254
+    function GetMap GetMap155,5227
+    function getRegexp(getRegexp165,5512
+    function link link169,5577
+    function _parseMap _parseMap204,6715
+    function _getMapFromWikiText _getMapFromWikiText265,9339
+    function _getMapFromFile _getMapFromFile272,9529
+    function _getRegexp _getRegexp289,10152
+    function PageFormatter(PageFormatter308,10595
+    function _transform(_transform319,10998
+    function format(format329,11287
+    function format(format336,11432
+    function format(format344,11607
+    function _getHeader(_getHeader359,12129
+    function _getFooter(_getFooter363,12221
+    function _getMap(_getMap367,12327
+    function _formatMap(_formatMap372,12442
+    function FakePageRevision(FakePageRevision394,13178
+    function get(get398,13254
+    function format(format411,13561
+    function _transform(_transform452,15143
+    function format(format455,15197
+    function _transform(_transform466,15335
+    function format(format473,15540
+
+lib/pdf.php,377
+    function PDF PDF46,1625
+    function ConvertFromHTML(ConvertFromHTML52,1814
+    function Header(Header80,2808
+    function Footer(Footer93,3182
+    function OpenTag(OpenTag101,3368
+    function CloseTag(CloseTag110,3608
+    function SetStyle(SetStyle118,3831
+    function PutLink(PutLink127,4073
+function ConvertAndDisplayPdf ConvertAndDisplayPdf137,4339
+
+lib/plugin/AddComment.php,274
+    function getName getName38,1185
+    function getDescription getDescription42,1250
+    function getVersion(getVersion46,1362
+    function getDefaultArguments(getDefaultArguments65,2103
+    function run(run75,2496
+function togglecomments(togglecomments99,3502
+
+lib/plugin/AllPages.php,275
+    function getName getName33,1119
+    function getDescription getDescription37,1182
+    function getVersion(getVersion41,1272
+    function getDefaultArguments(getDefaultArguments46,1409
+    function run(run65,2164
+    function getmicrotime(getmicrotime132,5497
+
+lib/plugin/AllUsers.php,226
+    function getName getName36,1170
+    function getDescription(getDescription40,1233
+    function getVersion(getVersion44,1328
+    function getDefaultArguments(getDefaultArguments49,1465
+    function run(run67,2097
+
+lib/plugin/AnalyseAccessLogSql.php,558
+    function _getQueryString(_getQueryString56,2155
+    function _locale_dummy(_locale_dummy190,8794
+    function getDefaultArguments(getDefaultArguments209,9444
+    function getName getName222,10161
+    function getDescription getDescription226,10235
+    function getVersion(getVersion230,10348
+    function run(run235,10484
+    function _getQueryResults(_getQueryResults270,11863
+    function _setHeaders(_setHeaders290,12594
+    function _getWhereConditions(_getWhereConditions299,12843
+    function _getCaption(_getCaption339,14311
+
+lib/plugin/AppendText.php,268
+    function getName(getName34,1129
+    function getDescription(getDescription38,1193
+    function getVersion(getVersion42,1291
+    function getDefaultArguments(getDefaultArguments47,1427
+    function _fallback(_fallback56,1832
+    function run(run62,2087
+
+lib/plugin/AsciiMath.php,298
+    function getName(getName43,1471
+    function getDescription(getDescription47,1534
+    function getVersion(getVersion51,1622
+    function getDefaultArguments(getDefaultArguments56,1758
+    function handle_plugin_args_cruft(handle_plugin_args_cruft59,1825
+    function run(run63,1923
+
+lib/plugin/AuthorHistory.php,226
+    function getName(getName69,1890
+    function getDescription(getDescription73,1957
+    function getVersion(getVersion77,2158
+    function getDefaultArguments(getDefaultArguments82,2298
+    function run(run97,2950
+
+lib/plugin/BackLinks.php,268
+    function getName(getName30,955
+    function getDescription(getDescription34,1022
+    function getVersion(getVersion38,1142
+    function getDefaultArguments(getDefaultArguments43,1283
+    function run(run57,1786
+    function _getValue(_getValue141,5871
+
+lib/plugin/BlogArchives.php,253
+    function getName(getName23,659
+    function getDescription(getDescription27,721
+    function getVersion(getVersion31,834
+    function getDefaultArguments(getDefaultArguments36,970
+    function run(run48,1370
+    function box(box130,4943
+
+lib/plugin/BlogJournal.php,222
+    function getName(getName21,565
+    function getDescription(getDescription25,630
+    function getVersion(getVersion29,748
+    function getDefaultArguments(getDefaultArguments34,884
+    function run(run43,1177
+
+lib/plugin/CacheTest.php,532
+    function getPluginType(getPluginType40,1633
+    function getName(getName44,1714
+    function getDescription(getDescription48,1774
+    function getVersion(getVersion52,1880
+    function getDefaultArguments(getDefaultArguments57,2016
+    function getImage(getImage70,2434
+    function getImageType(getImageType79,2679
+    function getAlt(getAlt87,2886
+    function getExpire(getExpire93,3026
+    function produceGraphics(produceGraphics101,3215
+    function lazy_produceGraphics(lazy_produceGraphics139,4563
+
+lib/plugin/Calendar.php,405
+    function getName getName40,1282
+    function getDescription getDescription44,1345
+    function getVersion(getVersion48,1415
+    function getDefaultArguments(getDefaultArguments53,1552
+    function getWikiPageLinks getWikiPageLinks72,2286
+    function __header(__header82,2574
+    function __daynames(__daynames118,4208
+    function __date(__date138,4914
+    function run(run176,6372
+
+lib/plugin/CalendarList.php,271
+    function getName getName21,569
+    function getDescription getDescription25,636
+    function getDefaultArguments(getDefaultArguments29,710
+    function getWikiPageLinks getWikiPageLinks55,1772
+    function __date(__date65,2060
+    function run(run94,3228
+
+lib/plugin/CategoryPage.php,226
+    function getName getName43,1315
+    function getDescription getDescription47,1382
+    function getVersion(getVersion51,1463
+    function getDefaultArguments(getDefaultArguments56,1599
+    function run(run66,2047
+
+lib/plugin/Comment.php,221
+    function getName(getName21,367
+    function getDescription(getDescription25,428
+    function getVersion(getVersion30,525
+    function getDefaultArguments(getDefaultArguments36,687
+    function run(run40,755
+
+lib/plugin/CreatePage.php,226
+    function getName(getName38,1416
+    function getDescription(getDescription42,1480
+    function getVersion(getVersion46,1581
+    function getDefaultArguments(getDefaultArguments51,1717
+    function run(run62,2107
+
+lib/plugin/CreateToc.php,689
+    function getName(getName45,1450
+    function getDescription(getDescription49,1513
+    function getVersion(getVersion53,1611
+    function getDefaultArguments(getDefaultArguments58,1748
+    function _initTocCounter(_initTocCounter72,2514
+    function _tocCounter(_tocCounter78,2666
+    function _getCounter(_getCounter87,2903
+    function preg_quote preg_quote96,3125
+    function _getHeader(_getHeader102,3354
+    function _quote(_quote112,3593
+    function searchHeader searchHeader126,4029
+    function _nextAnchor(_nextAnchor183,5937
+    function extractHeaders extractHeaders197,6316
+    function run(run292,11523
+function toggletoc(toggletoc363,14529
+
+lib/plugin/DeadEndPages.php,37
+    function getName getName23,504
+
+lib/plugin/Diff.php,1396
+    function getName getName35,1135
+    function getDescription getDescription39,1194
+    function getVersion(getVersion43,1293
+    function getDefaultArguments(getDefaultArguments50,1544
+    function PageInfoRow PageInfoRow59,1862
+    function run(run82,2811
+    function _HWLDF_WordAccumulator _HWLDF_WordAccumulator203,7488
+    function _flushGroup _flushGroup210,7662
+    function _flushLine _flushLine223,8132
+    function addWords addWords230,8315
+    function getLines(getLines248,8873
+    function WordLevelDiff WordLevelDiff256,9015
+    function _split(_split265,9343
+    function orig orig275,9692
+    function _final _final287,10024
+    function HtmlUnifiedDiffFormatter(HtmlUnifiedDiffFormatter311,10630
+    function _start_diff(_start_diff315,10750
+    function _end_diff(_end_diff318,10844
+    function _start_block(_start_block324,10955
+    function _end_block(_end_block329,11114
+    function _lines(_lines334,11228
+    function _context(_context349,11864
+    function _deleted(_deleted352,11944
+    function _added(_added356,12037
+    function _changed(_changed360,12126
+    function TableUnifiedDiffFormatter(TableUnifiedDiffFormatter379,12683
+    function _start_diff(_start_diff383,12808
+    function _start_block(_start_block391,13139
+    function _end_block(_end_block401,13641
+    function _lines(_lines406,13775
+
+lib/plugin/EditMetaData.php,226
+    function getName getName44,1467
+    function getDescription getDescription48,1534
+    function getVersion(getVersion52,1639
+    function getDefaultArguments(getDefaultArguments62,1849
+    function run(run68,1967
+
+lib/plugin/ExternalSearch.php,282
+    function getName getName37,1269
+    function getDescription getDescription41,1338
+    function getVersion(getVersion46,1489
+    function _getInterWikiUrl(_getInterWikiUrl51,1626
+    function getDefaultArguments(getDefaultArguments64,2032
+    function run(run76,2429
+
+lib/plugin/FileInfo.php,614
+    function getName getName38,1298
+    function getDescription getDescription42,1361
+    function getVersion(getVersion46,1493
+    function getDefaultArguments(getDefaultArguments51,1629
+    function run(run60,2077
+    function magic(magic120,4105
+    function mime_type(mime_type133,4570
+    function _formatsize _formatsize137,4621
+    function phonysize phonysize144,4849
+    function exeversion(exeversion160,5345
+    function exeversion_showver(exeversion_showver171,5729
+    function exeversion_ffi(exeversion_ffi177,5849
+    function exeversion_resopen(exeversion_resopen232,7683
+
+lib/plugin/FoafViewer.php,325
+    function _error_handler(_error_handler43,1541
+    function getName(getName51,1810
+    function getDescription(getDescription55,1874
+    function getVersion(getVersion59,1999
+    function getDefaultArguments(getDefaultArguments64,2135
+    function run(run71,2370
+    function iterateHTML(iterateHTML185,8847
+
+lib/plugin/FrameInclude.php,226
+    function getName(getName51,1873
+    function getDescription(getDescription55,1939
+    function getVersion(getVersion59,2075
+    function getDefaultArguments(getDefaultArguments64,2212
+    function run(run80,3018
+
+lib/plugin/FullTextSearch.php,320
+    function getName(getName38,1336
+    function getDescription(getDescription42,1404
+    function getVersion(getVersion46,1510
+    function getDefaultArguments(getDefaultArguments51,1647
+    function run(run65,2169
+    function showhits(showhits119,4412
+    function highlight_line highlight_line131,4872
+
+lib/plugin/FuzzyPages.php,856
+    function getName(getName39,1362
+    function getDescription(getDescription43,1426
+    function getVersion(getVersion48,1570
+    function getDefaultArguments(getDefaultArguments53,1707
+    function spelling_similarity(spelling_similarity58,1830
+    function sound_similarity(sound_similarity65,2066
+    function averageSimilarities(averageSimilarities72,2311
+    function collectSimilarPages(collectSimilarPages77,2474
+    function sortCollectedPages(sortCollectedPages93,3019
+    function addTableCaption(addTableCaption97,3105
+    function addTableHead(addTableHead106,3471
+    function addTableBody(addTableBody115,3759
+    function formatTable(formatTable136,4548
+    function run(run149,4974
+    function _pushDebugHeadingTDinto(_pushDebugHeadingTDinto166,5418
+    function _pushDebugTDinto(_pushDebugTDinto172,5633
+
+lib/plugin/GoogleMaps.php,271
+    function getName(getName62,1935
+    function getDescription(getDescription66,1999
+    function getVersion(getVersion70,2131
+    function getDefaultArguments(getDefaultArguments75,2267
+    function run(run89,2666
+function createMarker(createMarker125,4111
+
+lib/plugin/GooglePlugin.php,226
+    function getName getName42,1494
+    function getDescription getDescription46,1561
+    function getVersion(getVersion50,1649
+    function getDefaultArguments(getDefaultArguments55,1785
+    function run(run66,2211
+
+lib/plugin/GoTo.php,178
+    function getName getName17,426
+    function getDescription getDescription21,485
+    function getDefaultArguments(getDefaultArguments25,572
+    function run(run29,652
+
+lib/plugin/GraphViz.php,848
+    function _mapTypes(_mapTypes84,3029
+    function getPluginType(getPluginType93,3295
+    function getName getName114,4166
+    function getDescription getDescription117,4228
+    function managesValidators(managesValidators120,4343
+    function getVersion(getVersion123,4405
+    function getDefaultArguments(getDefaultArguments127,4540
+    function handle_plugin_args_cruft(handle_plugin_args_cruft136,4887
+    function getExpire(getExpire144,5161
+    function getImageType(getImageType156,5543
+    function getAlt(getAlt164,5729
+    function helpImage(helpImage175,6078
+    function createDotFile(createDotFile205,7592
+    function getImage(getImage241,8885
+    function pngArg(pngArg281,10638
+    function getMap(getMap285,10696
+    function invokeDot(invokeDot303,11492
+    function execute(execute399,15669
+
+lib/plugin/HelloWorld.php,226
+    function getName getName45,1320
+    function getDescription getDescription49,1385
+    function getVersion(getVersion54,1468
+    function getDefaultArguments(getDefaultArguments60,1674
+    function run(run65,1812
+
+lib/plugin/HtmlConverter.php,345
+    function getName getName36,1277
+    function getDescription getDescription40,1342
+    function getDefaultArguments(getDefaultArguments44,1455
+    function run(run48,1523
+	function _processA(_processA94,3648
+	function _processIMG(_processIMG102,3968
+	function _processUL(_processUL109,4169
+	function _process(_process128,5085
+
+lib/plugin/Imdb.php,188
+    function getDescription getDescription55,2129
+    function getVersion(getVersion59,2218
+    function getDefaultArguments(getDefaultArguments64,2354
+    function run(run76,2968
+
+lib/plugin/IncludePage.php,282
+    function getName(getName33,1119
+    function getDescription(getDescription37,1184
+    function getVersion(getVersion41,1281
+    function getDefaultArguments(getDefaultArguments46,1418
+    function getWikiPageLinks(getWikiPageLinks57,2050
+    function run(run69,2395
+
+lib/plugin/IncludePages.php,226
+    function getName(getName34,1133
+    function getDescription(getDescription38,1199
+    function getVersion(getVersion42,1283
+    function getDefaultArguments(getDefaultArguments47,1419
+    function run(run55,1765
+
+lib/plugin/IncludeSiteMap.php,176
+  function getName getName51,2088
+  function getDescription getDescription55,2149
+  function getDefaultArguments(getDefaultArguments59,2285
+    function run(run74,2869
+
+lib/plugin/InterWikiSearch.php,355
+    function getName(getName30,981
+    function getDescription(getDescription34,1050
+    function getVersion(getVersion38,1170
+    function getDefaultArguments(getDefaultArguments43,1306
+    function run(run47,1374
+    function format(format77,2305
+    function _formatMap(_formatMap84,2513
+    function _arrayToTable _arrayToTable88,2625
+
+lib/plugin/JabberPresence.php,223
+    function getName getName22,674
+    function getDescription getDescription26,743
+    function getVersion(getVersion31,835
+    function getDefaultArguments(getDefaultArguments37,1040
+    function run(run44,1288
+
+lib/plugin/LdapSearch.php,226
+    function getName getName56,1956
+    function getDescription getDescription59,2020
+    function getVersion(getVersion63,2106
+    function getDefaultArguments(getDefaultArguments67,2241
+    function run(run77,2642
+
+lib/plugin/LikePages.php,262
+    function getName(getName31,996
+    function getDescription(getDescription35,1059
+    function getVersion(getVersion40,1235
+    function getDefaultArguments(getDefaultArguments45,1372
+    function run(run59,1862
+    function _quote(_quote116,3739
+
+lib/plugin/LinkDatabase.php,399
+    function getName getName40,1435
+    function getPluginType(getPluginType43,1501
+    function getDescription getDescription46,1573
+    function getVersion(getVersion49,1716
+    function getExpire(getExpire53,1851
+    function getDefaultArguments(getDefaultArguments57,1947
+    function getHtml(getHtml70,2363
+    function run(run74,2521
+    function _getValue(_getValue175,7768
+
+lib/plugin/ListPages.php,358
+    function getName(getName37,1210
+    function getDescription(getDescription41,1273
+    function getVersion(getVersion45,1393
+    function getDefaultArguments(getDefaultArguments50,1530
+    function run(run68,2159
+    function _PageList_Column_ListPages_count(_PageList_Column_ListPages_count137,5036
+    function _getValue(_getValue141,5236
+
+lib/plugin/ListSubpages.php,269
+    function getName(getName33,1128
+    function getDescription getDescription37,1194
+    function getVersion(getVersion41,1308
+    function getDefaultArguments(getDefaultArguments46,1444
+    function run(run62,2144
+    function _getValue(_getValue118,4236
+
+lib/plugin/ModeratedPage.php,669
+    function getName getName40,1371
+    function getDescription getDescription43,1438
+    function getVersion(getVersion46,1522
+    function getDefaultArguments(getDefaultArguments50,1657
+    function run(run60,2017
+    function resolve_argstr(resolve_argstr90,3283
+    function lock_check(lock_check136,5104
+    function lock_add(lock_add161,6284
+    function notice(notice179,7085
+    function generateId(generateId183,7184
+    function handler(handler198,7706
+    function approve(approve266,11243
+    function reject(reject277,11629
+    function _approval_form(_approval_form286,11939
+    function getSiteStatus(getSiteStatus317,13616
+
+lib/plugin/MostPopular.php,225
+    function getName getName31,959
+    function getDescription getDescription35,1025
+    function getVersion(getVersion39,1115
+    function getDefaultArguments(getDefaultArguments44,1252
+    function run(run63,1963
+
+lib/plugin/NoCache.php,226
+    function getName(getName38,1166
+    function getDescription(getDescription42,1227
+    function getVersion(getVersion46,1310
+    function getDefaultArguments(getDefaultArguments51,1446
+    function run(run55,1530
+
+lib/plugin/OldStyleTable.php,343
+    function getName(getName48,1606
+    function getDescription(getDescription52,1673
+    function getVersion(getVersion56,1773
+    function getDefaultArguments(getDefaultArguments61,1910
+    function handle_plugin_args_cruft(handle_plugin_args_cruft71,2213
+    function run(run75,2292
+    function _parse_row _parse_row121,4013
+
+lib/plugin/OrphanedPages.php,226
+    function getName getName35,1039
+    function getDescription getDescription39,1107
+    function getVersion(getVersion43,1222
+    function getDefaultArguments(getDefaultArguments48,1359
+    function run(run62,1936
+
+lib/plugin/PageDump.php,403
+    function getName(getName35,1133
+    function getDescription(getDescription38,1194
+    function getVersion(getVersion42,1286
+    function getDefaultArguments(getDefaultArguments47,1423
+    function run(run57,1850
+    function generateMessageId(generateMessageId210,9046
+    function fixup_headers(fixup_headers237,10430
+    function fixup_headers_forcvs(fixup_headers_forcvs250,10970
+
+lib/plugin/PageGroup.php,288
+    function getName(getName43,1339
+    function getDescription(getDescription47,1402
+    function getVersion(getVersion51,1501
+    function getDefaultArguments(getDefaultArguments56,1637
+    function extractGroupSection extractGroupSection67,1969
+    function run(run94,3320
+
+lib/plugin/PageHistory.php,1343
+    function _PageHistory_PageRevisionIter(_PageHistory_PageRevisionIter30,995
+    function next(next51,1564
+    function free(free75,2193
+    function include_versions_in_URLs(include_versions_in_URLs86,2387
+    function title(title90,2457
+    function empty_message empty_message97,2660
+    function description(description101,2739
+    function format format115,3271
+        function diffCkBox_onclick(diffCkBox_onclick143,4305
+    function diffLink diffLink159,4840
+    function pageLink pageLink165,5058
+    function format_revision format_revision170,5219
+    function include_versions_in_URLs(include_versions_in_URLs199,6165
+    function image_properties image_properties203,6235
+    function textinput_properties textinput_properties207,6299
+    function channel_properties channel_properties211,6367
+    function item_properties item_properties227,6884
+    function getName getName246,7636
+    function getDescription getDescription250,7702
+    function getVersion(getVersion254,7809
+    function getDefaultArguments(getDefaultArguments259,7946
+    function getDefaultFormArguments(getDefaultFormArguments268,8272
+    function getMostRecentParams getMostRecentParams274,8451
+    function getChanges getChanges280,8646
+    function format format287,8900
+    function run(run303,9364
+
+lib/plugin/PageInfo.php,226
+    function getName getName31,1099
+    function getDescription getDescription35,1162
+    function getVersion(getVersion40,1313
+    function getDefaultArguments(getDefaultArguments45,1449
+    function run(run50,1586
+
+lib/plugin/PageTrail.php,226
+    function getName getName44,1394
+    function getDescription getDescription48,1458
+    function getVersion(getVersion53,1537
+    function getDefaultArguments(getDefaultArguments59,1695
+    function run(run66,1915
+
+lib/plugin/PhotoAlbum.php,454
+    function image_tile image_tile72,2503
+    function getName getName93,3208
+    function getDescription getDescription97,3273
+    function getVersion(getVersion101,3408
+    function getDefaultArguments(getDefaultArguments112,3795
+    function run(run158,7000
+function display_slides(display_slides229,9364
+    function newSize(newSize514,23322
+    function fromLocation(fromLocation530,23811
+    function fromFile(fromFile550,24593
+
+lib/plugin/PhpHighlight.php,448
+    function getName getName60,1979
+    function getDescription getDescription64,2046
+    function getVersion(getVersion69,2132
+    function getDefaultArguments(getDefaultArguments75,2337
+    function run(run88,3023
+    function handle_plugin_args_cruft(handle_plugin_args_cruft134,4652
+    function sanify_colors(sanify_colors142,4867
+    function set_colors(set_colors168,6397
+    function restore_colors(restore_colors178,6894
+
+lib/plugin/PhpWeather.php,226
+    function getName getName62,2285
+    function getDescription getDescription66,2350
+    function getVersion(getVersion70,2477
+    function getDefaultArguments(getDefaultArguments75,2614
+    function run(run84,2887
+
+lib/plugin/Ploticus.php,725
+    function getPluginType(getPluginType68,2628
+    function getName getName92,3678
+    function getDescription getDescription95,3740
+    function managesValidators(managesValidators98,3824
+    function getVersion(getVersion101,3886
+    function getDefaultArguments(getDefaultArguments105,4022
+    function handle_plugin_args_cruft(handle_plugin_args_cruft115,4402
+    function getExpire(getExpire123,4676
+    function getImageType(getImageType139,5203
+    function getAlt(getAlt147,5388
+    function helpImage(helpImage158,5779
+    function withShellCommand(withShellCommand187,7166
+    function getImage(getImage195,7366
+    function pngArg(pngArg255,10106
+    function getMap(getMap259,10163
+
+lib/plugin/PluginManager.php,472
+    function getName getName30,1070
+    function getDescription getDescription34,1138
+    function getVersion(getVersion38,1253
+    function getDefaultArguments(getDefaultArguments43,1390
+    function run(run47,1474
+    function _generatePageheader(_generatePageheader71,2301
+    function _generateColgroups(_generateColgroups75,2421
+    function _generateColheadings(_generateColheadings87,2967
+    function _generateTableBody(_generateTableBody99,3367
+
+lib/plugin/PopularNearby.php,361
+    function getName getName43,1375
+    function getDescription getDescription47,1443
+    function getVersion(getVersion51,1540
+    function getDefaultArguments(getDefaultArguments56,1676
+    function run(run65,2004
+    function sortedLinks(sortedLinks112,3930
+    function sortByHits(sortByHits145,5333
+function cmp_by_hits(cmp_by_hits153,5529
+
+lib/plugin/PopUp.php,226
+    function getName getName48,1321
+    function getDescription getDescription51,1380
+    function getVersion(getVersion55,1480
+    function getDefaultArguments(getDefaultArguments59,1615
+    function run(run77,2120
+
+lib/plugin/PrevNext.php,226
+    function getName(getName31,1056
+    function getDescription(getDescription35,1118
+    function getVersion(getVersion39,1231
+    function getDefaultArguments(getDefaultArguments44,1367
+    function run(run60,1904
+
+lib/plugin/RandomPage.php,281
+    function getName getName32,1118
+    function getDescription getDescription36,1183
+    function getVersion(getVersion40,1316
+    function getDefaultArguments(getDefaultArguments45,1453
+    function run(run57,1911
+    function default_exclude(default_exclude100,3532
+
+lib/plugin/RateIt.php,712
+    function getName(getName89,3722
+    function getDescription(getDescription92,3781
+    function getVersion(getVersion95,3883
+    function RatingWidgetJavascript(RatingWidgetJavascript100,4020
+function displayRating(displayRating112,4594
+function click(click128,5107
+function submitRating(submitRating137,5418
+function deleteRating(deleteRating144,5974
+    function actionImgPath(actionImgPath155,6489
+    function _javascript_quote_string(_javascript_quote_string164,6737
+    function getDefaultArguments(getDefaultArguments168,6831
+    function head(head180,7287
+    function run(run187,7540
+    function box(box281,12038
+    function RatingWidgetHtml(RatingWidgetHtml311,13343
+
+lib/plugin/RawHtml.php,322
+    function getName getName52,1779
+    function getDescription getDescription56,1838
+    function getVersion(getVersion60,1951
+    function managesValidators(managesValidators65,2088
+    function run(run72,2342
+    function strip_attributes strip_attributes147,5686
+    function safe_html safe_html174,6558
+
+lib/plugin/RdfDefinition.php,298
+    function getName(getName41,1399
+    function getDescription(getDescription44,1465
+    function getVersion(getVersion47,1569
+    function getDefaultArguments(getDefaultArguments51,1704
+    function handle_plugin_args_cruft(handle_plugin_args_cruft56,1868
+    function run(run60,1966
+
+lib/plugin/RecentChanges.php,3306
+    function _RecentChanges_Formatter _RecentChanges_Formatter29,938
+    function include_versions_in_URLs(include_versions_in_URLs41,1349
+    function date date45,1446
+    function time time50,1562
+    function diffURL diffURL55,1682
+    function historyURL historyURL63,1950
+    function pageURL pageURL69,2131
+    function authorHasPage authorHasPage74,2296
+    function authorURL authorURL80,2484
+    function status status85,2593
+    function importance importance95,2887
+    function summary(summary99,2990
+    function setValidators(setValidators113,3329
+    function diffLink diffLink126,3750
+    function historyLink historyLink131,3907
+    function pageLink pageLink136,4070
+    function authorLink authorLink160,4897
+    function summaryAsHTML summaryAsHTML168,5104
+    function rss_icon rss_icon177,5453
+    function rss2_icon rss2_icon184,5764
+    function pre_description pre_description192,6079
+    function description(description263,9282
+    function title title268,9376
+    function empty_message empty_message276,9664
+    function sidebar_link(sidebar_link283,9906
+    function format format309,11129
+    function format_revision format_revision350,12408
+    function rss_icon rss_icon381,13281
+    function rss2_icon rss2_icon384,13337
+    function title title385,13367
+    function logo logo392,13690
+    function authorLink authorLink405,14202
+    function diffLink diffLink415,14541
+    function historyLink historyLink422,14862
+    function pageLink pageLink429,15192
+    function summaryAsHTML summaryAsHTML440,15677
+    function format format450,16018
+    function rss_icon rss_icon484,17474
+    function rss2_icon rss2_icon486,17507
+    function title title488,17541
+    function authorLink authorLink490,17571
+    function diffLink diffLink492,17610
+    function historyLink historyLink494,17647
+    function summaryAsHTML summaryAsHTML496,17687
+    function description description498,17729
+    function format format500,17765
+    function time time530,18737
+    function pageURI pageURI534,18823
+    function format format538,18904
+    function image_properties image_properties575,20125
+    function textinput_properties textinput_properties587,20462
+    function channel_properties channel_properties594,20722
+    function item_properties item_properties620,21516
+    function format format645,22538
+    function channel_properties channel_properties680,23832
+    function cloud_properties cloud_properties691,24409
+    function cloud_properties_test cloud_properties_test692,24509
+    function NonDeletedRevisionIterator NonDeletedRevisionIterator707,25072
+    function next next712,25272
+    function getName getName733,25777
+    function getVersion(getVersion737,25845
+    function managesValidators(managesValidators742,25983
+    function getDefaultArguments(getDefaultArguments760,26742
+    function getArgs getArgs775,27312
+    function getMostRecentParams getMostRecentParams794,28097
+    function getChanges getChanges811,28638
+    function format format824,29036
+    function run(run850,29983
+    function box(box863,30552
+    function DayButtonBar DayButtonBar881,31192
+    function _makeDayButton _makeDayButton910,32012
+
+lib/plugin/RecentChangesCached.php,326
+    function getPluginType(getPluginType45,1748
+    function getName(getName49,1821
+    function getDescription(getDescription53,1891
+    function getVersion(getVersion57,2010
+    function getDefaultArguments(getDefaultArguments62,2146
+    function getExpire(getExpire66,2254
+    function getHtml(getHtml70,2350
+
+lib/plugin/RecentComments.php,507
+    function getName getName16,389
+    function getVersion(getVersion19,457
+    function getDefaultArguments(getDefaultArguments23,592
+    function format format35,1036
+    function run(run40,1181
+    function getChanges getChanges48,1542
+    function empty_message empty_message64,2131
+    function title(title68,2209
+    function format_revision format_revision72,2255
+    function RecentCommentsRevisionIterator RecentCommentsRevisionIterator103,3344
+    function next next110,3567
+
+lib/plugin/RecentEdits.php,169
+    function getName getName9,202
+    function getVersion(getVersion13,268
+    function getDefaultArguments(getDefaultArguments18,404
+    function box(box27,729
+
+lib/plugin/RecentReferrers.php,170
+    function getName getName13,243
+    function getVersion(getVersion17,313
+    function getDefaultArguments(getDefaultArguments22,449
+    function run(run33,744
+
+lib/plugin/RedirectTo.php,226
+    function getName(getName46,1699
+    function getDescription(getDescription50,1763
+    function getVersion(getVersion54,1857
+    function getDefaultArguments(getDefaultArguments59,1994
+    function run(run66,2216
+
+lib/plugin/RelatedChanges.php,414
+    function description(description16,419
+    function getName getName26,651
+    function getVersion(getVersion30,717
+    function getDefaultArguments(getDefaultArguments35,853
+    function getChanges getChanges48,1334
+    function box(box64,2010
+    function format format77,2589
+    function RelatedChangesRevisionIterator RelatedChangesRevisionIterator110,3721
+    function next next122,4125
+
+lib/plugin/RichTable.php,273
+    function getName(getName35,1237
+    function getDescription(getDescription39,1300
+    function getDefaultArguments(getDefaultArguments43,1404
+    function getVersion(getVersion47,1472
+    function run(run52,1608
+    function _parse_attr(_parse_attr137,5050
+
+lib/plugin/RssFeed.php,256
+    function getName getName31,991
+    function getDescription getDescription35,1053
+    function getVersion(getVersion40,1149
+    function getDefaultArguments(getDefaultArguments46,1355
+    function run(run55,1667
+    function box(box110,4182
+
+lib/plugin/SearchHighlight.php,318
+    function getName(getName36,1327
+    function getDescription(getDescription40,1396
+    function getVersion(getVersion44,1487
+    function getDefaultArguments(getDefaultArguments49,1623
+    function run(run56,1863
+    function showhits(showhits71,2332
+    function highlight_line highlight_line83,2792
+
+lib/plugin/SiteMap.php,360
+    function getName getName50,1759
+    function getDescription getDescription54,1821
+    function getVersion(getVersion58,1917
+    function getDefaultArguments(getDefaultArguments63,2054
+    function recursivelyGetBackLinks(recursivelyGetBackLinks84,3014
+    function recursivelyGetLinks(recursivelyGetLinks109,4112
+    function run(run141,5504
+
+lib/plugin/SqlResult.php,335
+    function getName getName66,2100
+    function getDescription getDescription70,2164
+    function getVersion(getVersion74,2261
+    function getDefaultArguments(getDefaultArguments79,2397
+    function getDsn(getDsn90,2991
+    function handle_plugin_args_cruft(handle_plugin_args_cruft97,3187
+    function run(run102,3319
+
+lib/plugin/SyntaxHighlighter.php,482
+    function getName getName67,2291
+    function getDescription getDescription70,2362
+    function managesValidators(managesValidators73,2485
+    function getVersion(getVersion76,2547
+    function getDefaultArguments(getDefaultArguments80,2682
+    function handle_plugin_args_cruft(handle_plugin_args_cruft89,3075
+    function newFilterThroughCmd(newFilterThroughCmd93,3173
+    function OldFilterThroughCmd(OldFilterThroughCmd129,4630
+    function run(run150,5322
+
+lib/plugin/SystemInfo.php,1440
+    function getPluginType(getPluginType47,1760
+    function getName(getName50,1832
+    function getDescription(getDescription54,1896
+    function getVersion(getVersion58,2017
+    function managesValidators(managesValidators68,2444
+    function getExpire(getExpire71,2506
+    function getHtml(getHtml74,2602
+    function getDefaultArguments(getDefaultArguments81,2923
+    function database(database88,3081
+    function cachestats(cachestats120,4255
+    function ExpireParams(ExpireParams134,4790
+    function pagestats(pagestats150,5863
+    function linkstats(linkstats164,6538
+    function userstats(userstats173,6820
+    function accessstats(accessstats194,7749
+    function _stats(_stats200,7853
+    function hitstats(hitstats245,9596
+    function revisionstats(revisionstats272,10740
+    function discspace(discspace366,15931
+    function inlineimages inlineimages410,17732
+    function wikinameregexp wikinameregexp413,17827
+    function allowedprotocols allowedprotocols416,17909
+    function available_plugins available_plugins419,18012
+    function supported_languages supported_languages429,18458
+    function supported_themes supported_themes442,18990
+    function call call454,19477
+    function run(run466,20042
+function median(median536,23968
+function rsum(rsum547,24234
+function mean(mean551,24289
+function gensym(gensym557,24457
+function stddev(stddev564,24592
+
+lib/plugin/Template.php,282
+    function getName(getName60,2194
+    function getDescription(getDescription64,2256
+    function getVersion(getVersion68,2345
+    function getDefaultArguments(getDefaultArguments73,2481
+    function getWikiPageLinks(getWikiPageLinks83,2928
+    function run(run94,3272
+
+lib/plugin/TeX2png.php,453
+    function getName getName28,697
+    function getDescription getDescription32,763
+    function getVersion(getVersion37,918
+    function getDefaultArguments(getDefaultArguments41,1029
+    function parseArgStr(parseArgStr45,1145
+    function createTexFile(createTexFile98,3096
+    function createPngFile(createPngFile117,3731
+    function isMathExp(isMathExp142,4807
+    function tex2png(tex2png162,5471
+    function run(run204,7086
+
+lib/plugin/text2png.php,266
+    function getName getName41,1294
+    function getDescription(getDescription45,1354
+    function getVersion(getVersion49,1454
+    function getDefaultArguments(getDefaultArguments54,1591
+    function run(run60,1752
+    function text2png(text2png75,2363
+
+lib/plugin/TexToPng.php,710
+    function getPluginType(getPluginType94,4044
+    function getName(getName98,4126
+    function getDescription(getDescription102,4185
+    function getVersion(getVersion106,4317
+    function getDefaultArguments(getDefaultArguments111,4453
+    function getImage(getImage121,4889
+    function getExpire(getExpire127,5137
+    function getImageType(getImageType131,5216
+    function getAlt(getAlt136,5327
+    function embedImg(embedImg141,5434
+    function dbg(dbg153,5871
+    function helptext(helptext169,6364
+    function checkParams(checkParams186,7482
+    function execute(execute209,8164
+    function createTexFile(createTexFile230,8846
+    function TexToImg(TexToImg254,9708
+
+lib/plugin/TitleSearch.php,226
+    function getName getName42,1644
+    function getDescription getDescription46,1710
+    function getVersion(getVersion50,1816
+    function getDefaultArguments(getDefaultArguments55,1953
+    function run(run73,2653
+
+lib/plugin/Transclude.php,328
+    function getName(getName50,1736
+    function getDescription(getDescription54,1800
+    function getVersion(getVersion58,1919
+    function getDefaultArguments(getDefaultArguments63,2055
+    function run(run69,2253
+    function _js(_js122,4170
+          function adjust_iframe_height(adjust_iframe_height130,4315
+
+lib/plugin/TranslateText.php,226
+    function getName(getName43,1420
+    function getDescription(getDescription47,1487
+    function getVersion(getVersion51,1589
+    function getDefaultArguments(getDefaultArguments56,1725
+    function run(run64,1935
+
+lib/plugin/UnfoldSubpages.php,226
+    function getName(getName35,1344
+    function getDescription getDescription39,1412
+    function getVersion(getVersion43,1531
+    function getDefaultArguments(getDefaultArguments48,1668
+    function run(run74,3026
+
+lib/plugin/UpLoad.php,213
+    function getName getName41,1413
+    function getDescription getDescription45,1471
+    function getDefaultArguments(getDefaultArguments49,1586
+    function run(run58,1900
+    function log log205,7525
+
+lib/plugin/UserPreferences.php,174
+    function getName getName37,1266
+    function getVersion(getVersion41,1336
+    function getDefaultArguments(getDefaultArguments46,1473
+    function run(run65,2079
+
+lib/plugin/UserRatings.php,226
+    function getName getName46,1275
+    function getDescription getDescription50,1341
+    function getVersion(getVersion54,1427
+    function getDefaultArguments(getDefaultArguments59,1563
+    function run(run85,2877
+
+lib/plugin/VisualWiki.php,767
+    function getPluginType(getPluginType43,1423
+    function getName(getName52,1769
+    function getVersion(getVersion56,1830
+    function getDescription(getDescription64,2016
+    function defaultarguments(defaultarguments73,2358
+    function getDefaultArguments(getDefaultArguments102,3785
+    function checkArguments(checkArguments113,4089
+    function getMap(getMap152,5798
+    function helpImage(helpImage175,6688
+    function findbest(findbest222,9064
+    function extract_wikipages(extract_wikipages285,11726
+    function createDotFile(createDotFile420,16954
+    function embedImg(embedImg536,21419
+    function createColors(createColors562,22685
+    function getColor(getColor600,24190
+function interpolate(interpolate615,24552
+
+lib/plugin/WantedPages.php,364
+    function getName getName38,1402
+    function getDescription getDescription41,1467
+    function getVersion(getVersion44,1579
+    function getDefaultArguments(getDefaultArguments48,1715
+    function run(run62,2309
+    function _PageList_Column_WantedPages_wanted _PageList_Column_WantedPages_wanted128,5321
+    function _getValue(_getValue132,5496
+
+lib/plugin/WantedPagesOld.php,380
+    function getName getName32,992
+    function getDescription getDescription36,1058
+    function getVersion(getVersion40,1171
+    function getDefaultArguments(getDefaultArguments45,1307
+    function run(run58,1815
+    function _generateTable(_generateTable159,6238
+    function _generateList(_generateList193,7627
+    function _iterateLinks(_iterateLinks207,7985
+
+lib/plugin/WhoIsOnline.php,342
+    function getName getName37,1229
+    function getDescription getDescription41,1295
+    function getVersion(getVersion45,1411
+    function getDefaultArguments(getDefaultArguments50,1548
+    function run(run60,2011
+    function box(box79,2885
+    function getSessions(getSessions88,3352
+    function getStats(getStats94,3514
+
+lib/plugin/WikiAdminChmod.php,402
+    function getName(getName39,1319
+    function getDescription(getDescription43,1387
+    function getVersion(getVersion47,1480
+    function getDefaultArguments(getDefaultArguments52,1617
+    function chmodHelper(chmodHelper66,2073
+    function chmodPages(chmodPages71,2167
+    function run(run97,3142
+    function chmodForm(chmodForm175,6522
+    function _getValue _getValue199,7729
+
+lib/plugin/WikiAdminChown.php,313
+    function getName(getName36,1175
+    function getDescription(getDescription40,1243
+    function getVersion(getVersion44,1325
+    function getDefaultArguments(getDefaultArguments49,1461
+    function chownPages(chownPages61,1814
+    function run(run93,3213
+    function chownForm(chownForm182,7086
+
+lib/plugin/WikiAdminMarkup.php,326
+    function getName(getName36,1186
+    function getDescription(getDescription40,1255
+    function getVersion(getVersion44,1357
+    function getDefaultArguments(getDefaultArguments49,1493
+    function chmarkupPages(chmarkupPages61,1845
+    function run(run101,3752
+    function chmarkupForm(chmarkupForm178,7234
+
+lib/plugin/WikiAdminRemove.php,365
+    function getName(getName39,1278
+    function getDescription(getDescription43,1347
+    function getVersion(getVersion47,1446
+    function getDefaultArguments(getDefaultArguments52,1583
+    function collectPages(collectPages79,2566
+    function removePages(removePages109,3510
+    function run(run127,4244
+    function _getValue _getValue231,8664
+
+lib/plugin/WikiAdminRename.php,450
+    function getName(getName36,1173
+    function getDescription(getDescription40,1242
+    function getVersion(getVersion44,1324
+    function getDefaultArguments(getDefaultArguments49,1461
+    function renameHelper(renameHelper61,1817
+    function renamePages(renamePages70,2143
+    function run(run109,4055
+    function checkBox checkBox198,7995
+    function renameForm(renameForm207,8395
+    function _getValue _getValue230,9636
+
+lib/plugin/WikiAdminSearchReplace.php,430
+    function getName(getName36,1195
+    function getDescription(getDescription40,1271
+    function getVersion(getVersion44,1379
+    function getDefaultArguments(getDefaultArguments49,1516
+    function replaceHelper(replaceHelper60,1814
+    function searchReplacePages(searchReplacePages89,3064
+    function run(run117,4362
+    function replaceForm(replaceForm210,8486
+function stri_replace(stri_replace239,10134
+
+lib/plugin/WikiAdminSelect.php,319
+    function getName(getName39,1325
+    function getDescription(getDescription43,1394
+    function getVersion(getVersion47,1534
+    function getDefaultArguments(getDefaultArguments52,1671
+    function collectPages(collectPages71,2323
+    function preSelectS preSelectS88,3026
+    function run(run118,4412
+
+lib/plugin/WikiAdminSetAcl.php,406
+    function getName(getName38,1209
+    function getDescription(getDescription42,1278
+    function getVersion(getVersion46,1371
+    function getDefaultArguments(getDefaultArguments51,1508
+    function setaclPages(setaclPages63,1926
+    function run(run116,4113
+    function setaclForm(setaclForm205,8207
+    function _getValue _getValue265,11493
+    function _getValue _getValue272,11733
+
+lib/plugin/WikiAdminUtils.php,849
+    function getName getName35,1093
+    function getDescription getDescription39,1162
+    function getVersion(getVersion43,1278
+    function getDefaultArguments(getDefaultArguments48,1415
+    function run(run54,1567
+    function _makeButton(_makeButton82,2659
+    function do_action(do_action93,3242
+    function _getLabel(_getLabel107,3793
+    function _do_purge_cache(_do_purge_cache114,4114
+    function _do_purge_bad_pagenames(_do_purge_bad_pagenames123,4441
+    function _do_purge_empty_pages(_do_purge_empty_pages150,5495
+    function _do_convert_cached_html(_do_convert_cached_html181,6826
+    function _do_access_restrictions(_do_access_restrictions200,7374
+    function _do_email_verification(_do_email_verification205,7551
+    function _getValue _getValue273,10785
+    function _getValue _getValue280,10938
+
+lib/plugin/WikiBlog.php,677
+    function getName getName74,2632
+    function getDescription getDescription78,2695
+    function getVersion(getVersion82,2804
+    function getDefaultArguments(getDefaultArguments108,3771
+    function run(run116,4028
+    function add add152,5256
+    function showAll showAll273,10484
+    function _blogPrefix(_blogPrefix311,12024
+    function _transformOldFormatBlog(_transformOldFormatBlog321,12346
+    function findBlogs findBlogs333,12854
+    function cmp(cmp349,13454
+    function showForm showForm354,13574
+    function _monthTitle(_monthTitle361,13833
+    function _blog(_blog367,14064
+    function _nonDefaultArgs(_nonDefaultArgs381,14753
+
+lib/plugin/WikiForm.php,174
+    function getName getName33,1131
+    function getVersion(getVersion37,1194
+    function getDefaultArguments(getDefaultArguments42,1331
+    function run(run52,1670
+
+lib/plugin/WikiFormRich.php,300
+    function getName getName88,3422
+    function getDescription getDescription91,3485
+    function getVersion(getVersion94,3584
+    function getDefaultArguments(getDefaultArguments98,3720
+    function handle_plugin_args_cruft(handle_plugin_args_cruft110,4281
+    function run(run160,6973
+
+lib/plugin/WikiForum.php,271
+    function getName getName51,1758
+    function getDescription getDescription55,1822
+    function getVersion(getVersion59,1951
+    function getDefaultArguments(getDefaultArguments64,2087
+    function run(run73,2417
+    function showTopics(showTopics114,3990
+
+lib/plugin/WikiPoll.php,541
+    function getName getName58,2100
+    function getDescription getDescription62,2163
+    function getVersion(getVersion66,2250
+    function getDefaultArguments(getDefaultArguments71,2386
+    function getArgs(getArgs79,2696
+    function handle_plugin_args_cruft(handle_plugin_args_cruft121,4375
+    function str2array(str2array128,4632
+    function run(run141,5061
+    function bar(bar234,9328
+    function doPoll(doPoll246,9917
+    function getResult(getResult309,13142
+    function storeResult(storeResult317,13405
+
+lib/plugin/_AuthInfo.php,324
+    function getName getName34,1162
+    function getDescription getDescription38,1225
+    function getVersion(getVersion42,1338
+    function getDefaultArguments(getDefaultArguments47,1475
+    function run(run51,1557
+    function _showhash _showhash129,6186
+    function _buildConstHash(_buildConstHash189,9174
+
+lib/plugin/_BackendInfo.php,312
+    function getName getName29,960
+    function getDescription getDescription33,1024
+    function getVersion(getVersion37,1142
+    function getDefaultArguments(getDefaultArguments42,1279
+    function run(run46,1369
+    function _fixupData(_fixupData89,2919
+    function _showhash _showhash136,4886
+
+lib/plugin/_GroupInfo.php,224
+    function getName getName29,919
+    function getDescription getDescription33,988
+    function getVersion(getVersion37,1081
+    function getDefaultArguments(getDefaultArguments42,1217
+    function run(run46,1285
+
+lib/plugin/_PreferencesInfo.php,225
+    function getName getName29,998
+    function getDescription getDescription33,1068
+    function getVersion(getVersion38,1222
+    function getDefaultArguments(getDefaultArguments43,1358
+    function run(run48,1493
+
+lib/plugin/_WikiTranslation.php,553
+    function getName(getName131,4564
+    function getDescription(getDescription135,4634
+    function getVersion(getVersion139,4738
+    function getDefaultArguments(getDefaultArguments144,4875
+    function init_locale(init_locale167,5883
+    function translate_to_en(translate_to_en191,6973
+    function fast_translate(fast_translate217,7894
+    function translate(translate233,8553
+    function run(run261,9659
+    function _PageList_Column_customlang(_PageList_Column_customlang401,15600
+    function _getValue(_getValue416,16206
+
+lib/prepend.php,324
+function rcs_id rcs_id7,110
+function check_php_version check_php_version21,488
+    function DebugTimer(DebugTimer57,1898
+    function getTime(getTime67,2191
+    function getStats(getStats80,2580
+    function _CLK_TCK(_CLK_TCK92,3024
+    function microtime(microtime98,3181
+function ExitWiki(ExitWiki115,3683
+
+lib/removepage.php,38
+function RemovePage RemovePage5,112
+
+lib/Request.php,4200
+    function ob_clean(ob_clean25,936
+    function Request(Request33,1040
+    function get(get60,1802
+    function getArg(getArg81,2420
+    function getArgs getArgs87,2553
+    function setArg(setArg91,2618
+    function getURLtoSelf(getURLtoSelf99,2852
+    function isPost isPost127,3771
+    function isGetOrHead isGetOrHead131,3858
+    function httpVersion(httpVersion136,3996
+    function redirect(redirect145,4310
+              function redirect(redirect185,5960
+    function setValidators(setValidators222,7359
+    function appendValidators(appendValidators232,7740
+    function checkValidators(checkValidators250,8402
+    function cacheControl(cacheControl281,9471
+    function setStatus(setStatus298,10136
+    function buffer_output(buffer_output322,11082
+    function discardOutput(discardOutput398,14140
+    function chunkOutput(chunkOutput414,14722
+    function finish(finish426,15151
+    function getSessionVar(getSessionVar473,17064
+    function setSessionVar(setSessionVar476,17147
+    function deleteSessionVar(deleteSessionVar500,18052
+    function getCookieVar(getCookieVar504,18142
+    function setCookieVar(setCookieVar507,18224
+    function deleteCookieVar(deleteCookieVar510,18386
+    function getUploadedFile(getUploadedFile514,18479
+    function _fix_magic_quotes_gpc(_fix_magic_quotes_gpc519,18588
+    function _stripslashes(_stripslashes533,19047
+    function _fix_multipart_form_data _fix_multipart_form_data542,19299
+    function _strip_leading_nl(_strip_leading_nl547,19497
+    function Request_SessionVars(Request_SessionVars558,19800
+    function get(get568,20153
+    function set(set575,20323
+    function delete(delete587,20733
+    function get(get599,21092
+    function get_old(get_old612,21460
+    function set(set628,21926
+    function delete(delete652,22749
+    function getUploadedFile(getUploadedFile676,23508
+    function Request_UploadedFile(Request_UploadedFile742,26499
+    function getSize(getSize746,26587
+    function getName(getName750,26656
+    function getType(getType754,26725
+    function getTmpName(getTmpName758,26794
+    function open(open762,26870
+    function getContents(getContents788,27844
+    function Request_AccessLog Request_AccessLog805,28268
+    function _do(_do835,29594
+    function push(push840,29764
+    function setSize(setSize841,29828
+    function setStatus(setStatus842,29891
+    function setDuration(setDuration843,29956
+    function read(read850,30241
+    function get_referer(get_referer857,30430
+    function get_host(get_host891,31994
+    function read_file(read_file917,33036
+    function _read_sql_query(_read_sql_query936,33876
+    function read_sql(read_sql944,34321
+    function write_sql(write_sql951,34558
+    function write_file(write_file959,34834
+    function write(write967,35085
+    function Request_AccessLogEntry Request_AccessLogEntry995,35909
+    function push(push1006,36260
+    function setStatus setStatus1028,37089
+    function setSize setSize1037,37245
+    function setDuration setDuration1040,37313
+    function _zone_offset _zone_offset1052,37626
+    function _ncsa_time(_ncsa_time1074,38272
+    function write(write1081,38453
+    function write_file(write_file1089,38653
+    function write_sql(write_sql1111,39549
+function Request_AccessLogEntry_shutdown_function Request_AccessLogEntry_shutdown_function1158,41869
+    function HTTP_ETag(HTTP_ETag1170,42198
+    function equals(equals1180,42444
+    function asString(asString1189,42677
+    function parse(parse1198,42905
+    function matches(matches1205,43143
+    function HTTP_ValidatorSet(HTTP_ValidatorSet1236,44202
+    function append(append1254,44682
+    function getETag(getETag1272,45250
+    function getModificationTime(getModificationTime1278,45392
+    function checkConditionalRequest checkConditionalRequest1282,45470
+    function _checkIfUnmodifiedSince(_checkIfUnmodifiedSince1299,46213
+    function _checkIfModifiedSince(_checkIfModifiedSince1308,46537
+    function _checkIfMatch(_checkIfMatch1320,46973
+    function _checkIfNoneMatch(_checkIfNoneMatch1329,47265
+
+lib/RssParser.php,152
+    function tag_open(tag_open58,1704
+    function tag_close(tag_close71,2083
+    function cdata(cdata116,4210
+    function parse(parse160,5814
+
+lib/RssWriter.php,551
+    function RssWriter RssWriter18,390
+    function registerModule(registerModule44,1485
+    function channel(channel53,1724
+    function addItem(addItem61,1961
+    function image(image69,2183
+    function textinput(textinput77,2422
+    function finish(finish84,2607
+    function __spew(__spew119,3510
+    function __node(__node130,3862
+    function __uniquify_uri __uniquify_uri141,4211
+    function __elementize __elementize154,4577
+    function __check_predicate __check_predicate166,4860
+    function __ref(__ref180,5256
+
+lib/RSSWriter091.php,308
+    function RSSWriter091(RSSWriter09129,1202
+    function finish(finish37,1383
+    function __node(__node58,1837
+    function __spew(__spew66,2051
+    function format format81,2558
+    function channel_properties channel_properties106,3291
+    function item_properties item_properties128,3915
+
+lib/RssWriter2.php,113
+    function RssWriter2 RssWriter220,511
+    function cloud(cloud49,1683
+    function __spew(__spew66,2424
+
+lib/SemanticWeb.php,233
+    function RdfWriter RdfWriter115,4705
+    function ReasonerBackend ReasonerBackend160,5740
+    function transformTo transformTo166,5842
+    function transformFrom transformFrom172,5942
+    function invoke invoke178,6031
+
+lib/SpamBlocklist.php,153
+function stripDomainPrefixes(stripDomainPrefixes36,1311
+function IsBlackListed(IsBlackListed60,2069
+function BlackListDebug(BlackListDebug112,3751
+
+lib/spam_babycart.php,47
+function check_babycart(check_babycart14,419
+
+lib/stdlib.php,3907
+function MangleXmlIdentifier(MangleXmlIdentifier123,4120
+function UnMangleXmlIdentifier(UnMangleXmlIdentifier132,4365
+function WikiURL(WikiURL149,5029
+function AbsoluteURL AbsoluteURL218,7470
+function DataURL DataURL234,7921
+function IconForLink(IconForLink252,8558
+function PossiblyGlueIconToText(PossiblyGlueIconToText284,9770
+function IsSafeURL(IsSafeURL339,11576
+function LinkURL(LinkURL350,11939
+function LinkImage(LinkImage377,13011
+function ImgObject(ImgObject470,17105
+    function Stack(Stack501,18140
+    function push(push505,18226
+    function pop(pop511,18353
+    function cnt(cnt519,18540
+    function top(top523,18602
+function SplitQueryArgs SplitQueryArgs533,18773
+function LinkPhpwikiURL(LinkPhpwikiURL544,19103
+    function WikiPageName(WikiPageName645,22181
+    function getName(getName689,23951
+    function getParent(getParent693,24012
+    function isValid(isValid700,24208
+    function getWarnings(getWarnings706,24382
+    function _pagename(_pagename719,24830
+    function _normalize_bad_pagename(_normalize_bad_pagename736,25439
+    function _check(_check750,25890
+function ConvertOldMarkup ConvertOldMarkup818,28558
+function expand_tabs(expand_tabs1021,35637
+function SplitPagename SplitPagename1044,36279
+function NoSuchRevision NoSuchRevision1094,37940
+function TimezoneOffset TimezoneOffset1111,38581
+function Iso8601DateTime Iso8601DateTime1136,39146
+function Rfc2822DateTime Rfc2822DateTime1151,39530
+function Rfc1123DateTime Rfc1123DateTime1163,39846
+function ParseRfc1123DateTime ParseRfc1123DateTime1180,40385
+function CTime CTime1216,41575
+function ByteFormatter ByteFormatter1233,41960
+function __printf __printf1285,43426
+function __sprintf __sprintf1304,43827
+function __vsprintf __vsprintf1323,44232
+function file_mtime file_mtime1355,45517
+function sort_file_mtime sort_file_mtime1362,45645
+    function getFiles(getFiles1377,46084
+    function _filenameSelector(_filenameSelector1401,46834
+    function fileSet(fileSet1412,47209
+    function ListRegexExpand ListRegexExpand1451,48610
+    function listMatchCallback listMatchCallback1457,48822
+    function expandRegex expandRegex1465,49121
+function glob_to_pcre glob_to_pcre1476,49471
+function glob_match glob_match1504,50559
+function explodeList(explodeList1509,50742
+function explodePageList(explodePageList1529,51525
+function isa isa1547,52103
+function can can1565,52726
+function function_usable(function_usable1582,53316
+function wikihash wikihash1603,53917
+function better_srand(better_srand1627,54462
+function rand_ascii(rand_ascii1637,54800
+function rand_ascii_readable rand_ascii_readable1653,55194
+function count_all(count_all1675,55921
+function isSubPage(isSubPage1690,56315
+function subPageSlice(subPageSlice1694,56401
+    function Alert(Alert1720,57224
+    function show(show1731,57497
+    function _getButtons(_getButtons1744,57796
+function phpwiki_version(phpwiki_version1764,58355
+function phpwiki_gzhandler(phpwiki_gzhandler1776,58839
+function isWikiWord(isWikiWord1786,59134
+function obj2hash obj2hash1793,59373
+function isUtf8String(isUtf8String1812,59969
+function fixTitleEncoding(fixTitleEncoding1830,60635
+function stripForSearch(stripForSearch1867,61825
+function url_get_contents(url_get_contents1882,62415
+function GenerateId(GenerateId1908,63198
+function firstNWordsOfContent(firstNWordsOfContent1921,63494
+function extractSection extractSection1956,64701
+function isExternalReferrer(isExternalReferrer1979,65714
+function loadPhpExtension(loadPhpExtension1993,66235
+function string_starts_with(string_starts_with2002,66512
+function string_ends_with(string_ends_with2005,66623
+function longer_timeout(longer_timeout2015,66934
+function printSimpleTrace(printSimpleTrace2022,67215
+function getMemoryUsage(getMemoryUsage2039,67724
+
+lib/Template.php,806
+    function Template Template14,275
+    function _munge_input(_munge_input53,1552
+    function _mungePlugin(_mungePlugin66,1997
+    function _printPlugin _printPlugin76,2423
+    function _print _print86,2693
+    function _expandSubtemplate _expandSubtemplate94,2866
+    function replace(replace119,3653
+    function printExpansion printExpansion124,3749
+    function getExpansion getExpansion152,4728
+    function printXML printXML160,4969
+    function asXML asXML164,5036
+    function _dump_template _dump_template170,5140
+    function _errorHandler(_errorHandler179,5413
+function Template(Template219,6817
+function alreadyTemplateProcessed(alreadyTemplateProcessed224,6932
+function GeneratePage(GeneratePage239,7389
+function GeneratePageasXML(GeneratePageasXML259,7832
+
+lib/TextSearchQuery.php,2789
+    function TextSearchQuery(TextSearchQuery73,2862
+    function _optimize(_optimize89,3630
+    function asRegexp(asRegexp96,3779
+    function match(match112,4316
+    function getHighlightRegexp(getHighlightRegexp125,4657
+    function makeSqlClause(makeSqlClause170,6348
+    function _sql_clause(_sql_clause175,6540
+    function makeSqlClauseObj(makeSqlClauseObj196,7275
+    function _sql_clause_obj(_sql_clause_obj201,7432
+    function sql(sql220,8030
+    function asString(asString228,8258
+    function _as_string(_as_string232,8339
+    function NullTextSearchQuery(NullTextSearchQuery259,9056
+    function asRegexp(asRegexp260,9094
+    function match(match261,9144
+    function getHighlightRegexp(getHighlightRegexp262,9190
+    function makeSqlClause(makeSqlClause263,9239
+    function asString(asString264,9309
+    function optimize(optimize286,9798
+    function regexp(regexp293,9911
+    function highlight_words(highlight_words301,10136
+    function sql(sql305,10216
+    function TextSearchQuery_node_word(TextSearchQuery_node_word316,10374
+    function regexp(regexp319,10457
+    function highlight_words highlight_words322,10548
+    function _sql_quote(_sql_quote325,10660
+    function sql(sql329,10816
+    function regexp(regexp335,10975
+    function sql(sql336,11018
+    function regexp(regexp341,11162
+    function sql sql342,11243
+    function regexp(regexp348,11415
+    function sql sql349,11496
+    function regexp(regexp355,11660
+    function sql sql356,11741
+    function regexp(regexp362,11956
+    function sql sql363,12022
+    function regexp(regexp369,12193
+    function regexp(regexp375,12415
+    function regexp(regexp381,12579
+    function sql(sql382,12675
+    function TextSearchQuery_node_not(TextSearchQuery_node_not393,12841
+    function optimize(optimize397,12933
+    function regexp(regexp405,13157
+    function highlight_words highlight_words410,13269
+    function TextSearchQuery_node_binop(TextSearchQuery_node_binop421,13511
+    function _flatten(_flatten425,13602
+    function optimize(optimize439,14031
+    function highlight_words(highlight_words447,14244
+    function optimize(optimize464,14637
+    function regexp(regexp498,15791
+    function regexp(regexp514,16092
+    function _join(_join535,16691
+    function parse parse609,18404
+    function get_list get_list618,18743
+    function get_expr get_expr641,19449
+    function get_atom(get_atom666,20142
+    function get_word(get_word683,20700
+    function TextSearchQuery_Lexer TextSearchQuery_Lexer697,21216
+    function tell(tell702,21413
+    function seek(seek706,21469
+    function eof(eof710,21529
+    function tokenize(tokenize718,21730
+    function get(get821,25683
+
+lib/Theme.php,3596
+function WikiLink WikiLink56,2073
+function Button Button182,6343
+    function Theme Theme196,6774
+    function file file218,7552
+    function _findFile _findFile222,7640
+    function _findData _findData243,8415
+    function setDateFormat setDateFormat279,9644
+    function setTimeFormat setTimeFormat289,9903
+    function formatDate formatDate303,10225
+    function formatTime formatTime322,10814
+    function formatDateTime formatDateTime340,11394
+    function getDay getDay357,11911
+    function getLastModifiedMessage getLastModifiedMessage378,12608
+    function _relativeDay _relativeDay415,13902
+    function getOwnerMessage getOwnerMessage443,14870
+    function getAuthorMessage getAuthorMessage462,15648
+    function getFormatter getFormatter486,16565
+    function setAutosplitWikiWords(setAutosplitWikiWords500,16985
+    function maybeSplitWikiWord maybeSplitWikiWord504,17110
+    function setAnonEditUnknownLinks(setAnonEditUnknownLinks512,17330
+    function linkExistingWikiWord(linkExistingWikiWord516,17457
+    function linkUnknownWikiWord(linkUnknownWikiWord550,18604
+    function linkBadWikiWord(linkBadWikiWord607,20943
+    function addImageAlias addImageAlias641,21901
+    function addImageAlt addImageAlt647,22137
+    function getImageAlt getImageAlt650,22236
+    function getImageURL getImageURL654,22320
+    function setLinkIcon(setLinkIcon684,23348
+    function getLinkIconURL getLinkIconURL691,23501
+    function getLinkIconAttr getLinkIconAttr704,24056
+    function setLinkIconAttr setLinkIconAttr707,24129
+    function addButtonAlias addButtonAlias711,24211
+    function getButtonURL getButtonURL722,24519
+    function _findButton _findButton751,25661
+    function _getButtonPath _getButtonPath762,25987
+    function makeButton makeButton802,27265
+    function makeSubmitButton makeSubmitButton817,27824
+    function makeActionButton makeActionButton850,29124
+    function makeLinkButton makeLinkButton893,30647
+    function _get_name_and_rev _get_name_and_rev903,31036
+    function _labelForAction _labelForAction931,31897
+    function setButtonSeparator(setButtonSeparator952,32696
+    function getButtonSeparator(getButtonSeparator956,32795
+    function _CSSlink(_CSSlink1002,34458
+    function setDefaultCSS setDefaultCSS1045,36402
+    function addAlternateCSS addAlternateCSS1058,36857
+    function getCSS getCSS1067,37095
+    function findTemplate findTemplate1082,37564
+    function addMoreHeaders addMoreHeaders1098,38174
+    function getMoreHeaders getMoreHeaders1101,38272
+    function addMoreAttr addMoreAttr1117,38759
+    function getMoreAttr getMoreAttr1130,39257
+    function customUserPreferences(customUserPreferences1151,40034
+    function addPageListColumn addPageListColumn1164,40628
+    function initDoubleClickEdit(initDoubleClickEdit1175,41071
+    function initLiveSearch(initLiveSearch1183,41648
+    function Button Button1209,42575
+    function ImageButton ImageButton1243,43707
+    function SubmitButton SubmitButton1272,44708
+    function SubmitImageButton SubmitImageButton1296,45490
+    function SidebarBox(SidebarBox1324,46465
+    function format(format1329,46616
+    function PluginSidebarBox(PluginSidebarBox1343,46979
+    function format(format1359,47624
+    function RelatedLinksBox(RelatedLinksBox1368,47954
+    function RelatedExternalLinksBox(RelatedExternalLinksBox1388,48772
+function listAvailableThemes(listAvailableThemes1406,49419
+function listAvailableLanguages(listAvailableLanguages1425,49945
+
+lib/upgrade.php,687
+function doPgsrcUpdate(doPgsrcUpdate55,2164
+function isActionPage(isActionPage98,3913
+function CheckActionPageUpdate(CheckActionPageUpdate111,4504
+function CheckPgsrcUpdate(CheckPgsrcUpdate135,5503
+function installTable(installTable169,6668
+function CheckDatabaseUpdate(CheckDatabaseUpdate353,13315
+function _upgrade_db_init _upgrade_db_init608,26075
+function _upgrade_cached_html _upgrade_cached_html692,30712
+function _convert_cached_html _convert_cached_html727,32137
+function CheckPluginUpdate(CheckPluginUpdate751,32974
+function fixConfigIni(fixConfigIni777,34129
+function CheckConfigUpdate(CheckConfigUpdate817,35425
+function DoUpgrade(DoUpgrade863,36695
+
+lib/WikiCallback.php,567
+    function callback callback30,946
+    function call call48,1566
+    function call_array call_array60,1903
+    function toPearCb(toPearCb72,2266
+    function WikiFunctionCb WikiFunctionCb89,2571
+    function call_array call_array93,2669
+    function toPearCb(toPearCb97,2775
+    function WikiMethodCb(WikiMethodCb115,3111
+    function call_array call_array120,3244
+    function toPearCb(toPearCb155,4882
+    function WikiAnonymousCb WikiAnonymousCb174,5247
+    function call_array call_array178,5357
+    function toPearCb(toPearCb182,5459
+
+lib/WikiDB/ADODB.php,299
+    function WikiDB_ADODB WikiDB_ADODB16,427
+    function isWikiPage isWikiPage44,1540
+    function quote quote54,1936
+    function qstr qstr67,2345
+    function isOpen isOpen71,2427
+    function genericSqlQuery(genericSqlQuery79,2699
+    function genericSqlIter(genericSqlIter94,3228
+
+lib/WikiDB/backend/ADODB.php,2626
+    function WikiDB_backend_ADODB WikiDB_backend_ADODB77,3333
+    function close close133,6096
+    function is_wiki_page(is_wiki_page151,6635
+    function get_all_pagenames(get_all_pagenames162,7128
+    function numPages(numPages174,7529
+    function increaseHitCount(increaseHitCount183,7865
+    function get_pagedata(get_pagedata198,8445
+    function  _extract_page_data(_extract_page_data206,8823
+    function update_pagedata(update_pagedata213,9046
+    function get_cached_html(get_cached_html259,10734
+    function set_cached_html(set_cached_html267,11056
+    function _get_pageid(_get_pageid277,11435
+    function get_latest_version(get_latest_version320,12888
+    function get_previous_version(get_previous_version331,13374
+    function get_versiondata(get_versiondata355,14380
+    function _extract_version_data_num(_extract_version_data_num382,15705
+    function _extract_version_data_assoc(_extract_version_data_assoc402,16336
+    function set_versiondata(set_versiondata427,17147
+    function delete_versiondata(delete_versiondata465,18551
+    function delete_page(delete_page490,19545
+    function purge_page(purge_page532,21468
+    function set_links(set_links567,22918
+    function get_links(get_links618,25255
+    function exists_link(exists_link658,26879
+    function get_all_pages(get_all_pages679,27661
+    function text_search(text_search740,30080
+    function _sql_set(_sql_set793,32302
+    function most_popular most_popular804,32552
+    function most_recent(most_recent839,33702
+    function wanted_pages(wanted_pages916,36367
+    function rename_page(rename_page957,38235
+    function _update_recent_table(_update_recent_table982,39462
+    function _update_nonempty_table(_update_nonempty_table1012,40789
+    function lock(lock1043,42020
+    function _lock_tables(_lock_tables1054,42322
+    function unlock(unlock1068,42688
+    function _unlock_tables(_unlock_tables1085,43219
+    function _serialize(_serialize1092,43338
+    function _unserialize(_unserialize1102,43533
+    function database database1107,43718
+    function backendType(backendType1110,43789
+    function connection(connection1113,43866
+    function getRow(getRow1116,43943
+    function listOfTables(listOfTables1120,44024
+    function listOfFields(listOfFields1125,44176
+    function WikiDB_backend_ADODB_generic_iter(WikiDB_backend_ADODB_generic_iter1152,45210
+    function count(count1170,45864
+    function next(next1179,46063
+    function free free1199,46567
+    function next(next1211,46846
+function parseDSN(parseDSN1281,49294
+
+lib/WikiDB/backend/ADODB_mssql.php,445
+    function WikiDB_backend_ADODB_mssql(WikiDB_backend_ADODB_mssql16,294
+    function optimize(optimize35,822
+    function _lock_tables(_lock_tables48,1160
+    function _unlock_tables(_unlock_tables70,1873
+    function _sql_match_clause(_sql_match_clause77,2027
+    function _fullsearch_sql_match_clause(_fullsearch_sql_match_clause84,2264
+    function _serialize(_serialize94,2570
+    function _unserialize(_unserialize104,2777
+
+lib/WikiDB/backend/ADODB_mysql.php,416
+    function WikiDB_backend_ADODB_mysql(WikiDB_backend_ADODB_mysql32,1015
+    function _timeout(_timeout64,2410
+    function optimize(optimize82,2935
+    function _lock_tables(_lock_tables99,3429
+    function _unlock_tables(_unlock_tables124,4318
+    function increaseHitCount(increaseHitCount139,4736
+    function _get_pageid(_get_pageid154,5419
+    function set_versiondata(set_versiondata191,6531
+
+lib/WikiDB/backend/ADODB_oci8po.php,517
+    function WikiDB_backend_ADODB_oci8po(WikiDB_backend_ADODB_oci8po19,362
+    function optimize(optimize37,924
+    function _lock_tables(_lock_tables50,1263
+    function _unlock_tables(_unlock_tables72,1980
+    function _sql_match_clause(_sql_match_clause80,2167
+    function _fullsearch_sql_match_clause(_fullsearch_sql_match_clause92,2630
+    function _serialize(_serialize103,2952
+    function _unserialize(_unserialize113,3172
+    function _fulltext_match_clause(_fulltext_match_clause132,3810
+
+lib/WikiDB/backend/ADODB_postgres7.php,572
+    function WikiDB_backend_ADODB_postgres7(WikiDB_backend_ADODB_postgres725,605
+    function optimize(optimize40,1104
+    function _quote(_quote48,1329
+    function _unquote(_unquote58,1585
+    function get_cached_html(get_cached_html71,1905
+    function set_cached_html(set_cached_html80,2257
+    function _lock_tables(_lock_tables103,2898
+    function _unlock_tables(_unlock_tables110,3043
+    function _serialize(_serialize117,3186
+    function _unserialize(_unserialize127,3396
+    function _pagename_match_clause(_pagename_match_clause142,3814
+
+lib/WikiDB/backend/ADODB_sqlite.php,122
+    function WikiDB_backend_ADODB_sqlite(WikiDB_backend_ADODB_sqlite18,385
+    function _get_pageid(_get_pageid29,776
+
+lib/WikiDB/backend/cvs.php,2878
+    function WikiDB_backend_cvs(WikiDB_backend_cvs75,3221
+    function get_pagedata(get_pagedata146,6321
+    function update_pagedata(update_pagedata178,7333
+    function get_latest_version(get_latest_version236,9363
+    function get_previous_version(get_previous_version248,9746
+    function get_versiondata(get_versiondata258,10062
+    function purge_page(purge_page319,12424
+    function rename_page(rename_page343,13066
+    function delete_versiondata(delete_versiondata357,13513
+    function set_versiondata(set_versiondata366,13890
+    function update_versiondata(update_versiondata376,14332
+    function set_links(set_links382,14533
+    function get_links(get_links390,14774
+    function get_all_pages(get_all_pages409,15671
+    function text_search(text_search416,15936
+    function most_popular(most_popular432,16593
+    function most_recent(most_recent454,17197
+    function lock(lock487,18190
+    function unlock(unlock493,18341
+    function close close499,18492
+    function sync(sync503,18528
+    function optimize(optimize507,18562
+    function check(check520,19012
+    function rebuild(rebuild540,19599
+    function _create_meta_file(_create_meta_file556,20106
+    function _strip_leading_underscore(_strip_leading_underscore564,20421
+    function _updateMostPopular(_updateMostPopular574,20718
+    function _getMostPopular(_getMostPopular591,21223
+    function _getMostRecent(_getMostRecent600,21541
+    function _updateMostRecent(_updateMostRecent609,21854
+    function _writeMetaInfo(_writeMetaInfo617,22114
+    function _writePage(_writePage622,22314
+    function _removePage(_removePage626,22453
+    function _commitPage(_commitPage638,22848
+    function _addPage(_addPage666,23972
+    function _getAllFileNamesInDir(_getAllFileNamesInDir680,24509
+    function _mkdir(_mkdir695,24869
+    function _createFile(_createFile712,25351
+    function _deleteFile(_deleteFile722,25572
+    function _cvsError(_cvsError749,26404
+    function _cvsDebug(_cvsDebug765,27040
+    function _execCommand(_execCommand798,28029
+    function _readFileWithPath(_readFileWithPath816,28784
+    function _writeFileWithPath(_writeFileWithPath842,29624
+    function _copyFilesFromDirectory(_copyFilesFromDirectory865,30464
+    function _unescape(_unescape896,31506
+    function _strip_newlines(_strip_newlines910,31923
+    function Cvs_Backend_Iterator(Cvs_Backend_Iterator925,32226
+    function next(next930,32335
+    function count(count938,32492
+    function free(free942,32556
+    function Cvs_Backend_Title_Search_Iterator(Cvs_Backend_Title_Search_Iterator954,32752
+    function next(next963,33104
+    function _searchFile(_searchFile979,33621
+    function Cvs_Backend_Title_Search_Iterator(Cvs_Backend_Title_Search_Iterator1000,34288
+    function next(next1007,34539
+
+lib/WikiDB/backend/dba.php,58
+    function WikiDB_backend_dba WikiDB_backend_dba9,214
+
+lib/WikiDB/backend/dbaBase.php,2469
+    function WikiDB_backend_dbaBase WikiDB_backend_dbaBase46,1263
+    function sortable_columns(sortable_columns58,1838
+    function close(close62,1950
+    function optimize(optimize66,2009
+    function sync(sync70,2074
+    function rebuild(rebuild74,2131
+    function check(check79,2229
+    function get_pagedata(get_pagedata83,2299
+    function update_pagedata(update_pagedata92,2567
+    function get_latest_version(get_latest_version115,3290
+    function get_previous_version(get_previous_version119,3395
+    function get_versiondata(get_versiondata130,3680
+    function purge_page(purge_page150,4337
+    function rename_page(rename_page163,4698
+    function delete_versiondata(delete_versiondata187,5486
+    function set_versiondata(set_versiondata212,6246
+    function _update_latest_version(_update_latest_version220,6572
+    function numPages(numPages232,6946
+    function get_all_pages(get_all_pages253,7711
+    function set_links(set_links277,8779
+    function get_links(get_links281,8884
+function WikiDB_backend_dbaBase_sortby_pagename_ASC WikiDB_backend_dbaBase_sortby_pagename_ASC292,9459
+function WikiDB_backend_dbaBase_sortby_pagename_DESC WikiDB_backend_dbaBase_sortby_pagename_DESC295,9555
+function WikiDB_backend_dbaBase_sortby_mtime_ASC WikiDB_backend_dbaBase_sortby_mtime_ASC298,9652
+function WikiDB_backend_dbaBase_sortby_mtime_DESC WikiDB_backend_dbaBase_sortby_mtime_DESC301,9777
+function WikiDB_backend_dbaBase_sortby_hits_ASC WikiDB_backend_dbaBase_sortby_hits_ASC305,9906
+function WikiDB_backend_dbaBase_sortby_hits_DESC WikiDB_backend_dbaBase_sortby_hits_DESC308,10029
+function WikiDB_backend_dbaBase_sortby_num(WikiDB_backend_dbaBase_sortby_num312,10156
+    function WikiDB_backend_dbaBase_pageiter(WikiDB_backend_dbaBase_pageiter332,10868
+    function next(next351,11721
+    function count(count359,12013
+    function asArray(asArray363,12080
+    function free(free368,12172
+    function WikiDB_backend_dbaBase_linktable(WikiDB_backend_dbaBase_linktable375,12279
+    function get_links(get_links381,12479
+    function set_links(set_links385,12602
+    function rebuild rebuild432,14157
+    function check(check459,14978
+    function _add_backlink(_add_backlink491,16097
+    function _delete_backlink(_delete_backlink498,16322
+    function _has_link(_has_link507,16633
+    function _get_links(_get_links516,16864
+    function _set_links(_set_links521,17014
+
+lib/WikiDB/backend/dumb/AllRevisionsIter.php,126
+    function WikiDB_backend_dumb_AllRevisionsIter(WikiDB_backend_dumb_AllRevisionsIter20,555
+    function next next31,852
+
+lib/WikiDB/backend/dumb/BackLinkIter.php,150
+    function WikiDB_backend_dumb_BackLinkIter(WikiDB_backend_dumb_BackLinkIter15,400
+    function next(next21,603
+    function free(free34,1010
+
+lib/WikiDB/backend/dumb/MostPopularIter.php,369
+    function WikiDB_backend_dumb_MostPopularIter(WikiDB_backend_dumb_MostPopularIter17,411
+    function next(next42,1247
+    function free(free46,1323
+function WikiDB_backend_dumb_MostPopularIter_sortf(WikiDB_backend_dumb_MostPopularIter_sortf51,1384
+function WikiDB_backend_dumb_MostPopularIter_sortf_rev(WikiDB_backend_dumb_MostPopularIter_sortf_rev60,1671
+
+lib/WikiDB/backend/dumb/MostRecentIter.php,363
+    function WikiDB_backend_dumb_MostRecentIter(WikiDB_backend_dumb_MostRecentIter15,321
+    function next(next57,1802
+    function free(free61,1882
+function WikiDB_backend_dumb_MostRecentIter_sortf(WikiDB_backend_dumb_MostRecentIter_sortf66,1947
+function WikiDB_backend_dumb_MostRecentIter_sortf_rev(WikiDB_backend_dumb_MostRecentIter_sortf_rev72,2132
+
+lib/WikiDB/backend/dumb/TextSearchIter.php,237
+    function WikiDB_backend_dumb_TextSearchIter(WikiDB_backend_dumb_TextSearchIter7,169
+    function _get_content(_get_content24,824
+    function _match(_match35,1216
+    function next(next52,1800
+    function free(free64,2127
+
+lib/WikiDB/backend/dumb/WantedPagesIter.php,156
+    function WikiDB_backend_dumb_WantedPagesIter(WikiDB_backend_dumb_WantedPagesIter15,396
+    function next(next25,829
+    function free(free43,1509
+
+lib/WikiDB/backend/file.php,2271
+    function WikiDB_backend_file(WikiDB_backend_file57,1865
+    function _pagename2filename(_pagename2filename88,2940
+    function _loadPage(_loadPage95,3207
+    function _savePage(_savePage121,4110
+    function _removePage(_removePage139,4718
+    function _loadVersionData(_loadVersionData151,5243
+    function _saveVersionData(_saveVersionData169,5950
+    function _loadPageData(_loadPageData182,6410
+    function _savePageData(_savePageData199,6962
+    function _saveLatestVersions(_saveLatestVersions205,7185
+    function _setLatestVersion(_setLatestVersion212,7395
+    function _loadLatestVersions(_loadLatestVersions226,7881
+    function _getLatestVersion(_getLatestVersion237,8209
+    function _loadPageLinks(_loadPageLinks247,8569
+    function _savePageLinks(_savePageLinks254,8773
+    function get_pagedata(get_pagedata275,9450
+    function update_pagedata(update_pagedata306,10390
+    function get_latest_version(get_latest_version330,11137
+    function get_previous_version(get_previous_version344,11576
+    function get_versiondata(get_versiondata377,12936
+    function rename_page(rename_page389,13241
+    function delete_page(delete_page405,13851
+    function purge_page(purge_page416,14107
+    function delete_versiondata(delete_versiondata440,15004
+    function set_versiondata(set_versiondata468,16073
+    function update_versiondata(update_versiondata484,16632
+    function set_links(set_links506,17254
+    function get_links(get_links519,17631
+    function get_all_revisions(get_all_revisions546,18573
+    function get_all_pages(get_all_pages571,19400
+    function sortable_columns(sortable_columns586,20000
+    function numPages(numPages590,20075
+    function lock(lock607,20645
+    function unlock(unlock618,21029
+    function close close626,21182
+    function sync(sync635,21402
+    function optimize(optimize642,21543
+    function check(check657,21993
+    function rebuild(rebuild669,22312
+    function _parse_searchwords(_parse_searchwords673,22413
+    function WikiDB_backend_file_iter(WikiDB_backend_file_iter694,23019
+    function next(next702,23249
+    function asArray(asArray725,24020
+    function count(count729,24113
+    function free free732,24177
+
+lib/WikiDB/backend/PDO.php,2842
+    function WikiDB_backend_PDO WikiDB_backend_PDO34,964
+    function beginTransaction(beginTransaction161,7327
+    function commit(commit165,7449
+    function rollback(rollback169,7551
+    function query(query174,7677
+    function getRow(getRow179,7815
+    function close close190,8060
+    function is_wiki_page(is_wiki_page206,8477
+    function get_all_pagenames(get_all_pagenames220,9009
+    function numPages(numPages230,9377
+    function increaseHitCount(increaseHitCount239,9713
+    function get_pagedata(get_pagedata252,10148
+    function  _extract_page_data(_extract_page_data263,10617
+    function update_pagedata(update_pagedata270,10840
+    function get_cached_html(get_cached_html319,12677
+    function set_cached_html(set_cached_html328,13033
+    function _get_pageid(_get_pageid341,13538
+    function get_latest_version(get_latest_version390,15458
+    function get_previous_version(get_previous_version403,15973
+    function get_versiondata(get_versiondata427,16868
+    function _extract_version_data_num(_extract_version_data_num458,18308
+    function _extract_version_data_assoc(_extract_version_data_assoc478,18939
+    function set_versiondata(set_versiondata501,19622
+    function delete_versiondata(delete_versiondata559,22220
+    function delete_page(delete_page584,23212
+    function purge_page(purge_page631,25462
+    function set_links(set_links667,26935
+    function get_links(get_links720,29343
+    function exists_link(exists_link757,31022
+    function get_all_pages(get_all_pages777,31884
+    function text_search(text_search833,34096
+    function _sql_set(_sql_set879,36168
+    function most_popular(most_popular890,36418
+    function most_recent(most_recent925,37535
+    function wanted_pages(wanted_pages1000,40058
+    function rename_page(rename_page1040,41929
+    function _update_recent_table(_update_recent_table1067,43242
+    function _update_nonempty_table(_update_nonempty_table1100,44758
+    function lock(lock1131,45938
+    function _lock_tables(_lock_tables1142,46258
+    function unlock(unlock1160,46816
+    function _unlock_tables(_unlock_tables1176,47285
+    function _serialize(_serialize1183,47414
+    function _unserialize(_unserialize1193,47609
+    function database database1198,47794
+    function backendType(backendType1201,47865
+    function connection(connection1204,47942
+    function listOfTables(listOfTables1208,48068
+    function listOfFields(listOfFields1212,48194
+    function _limit_sql(_limit_sql1234,48904
+    function WikiDB_backend_PDO_generic_iter(WikiDB_backend_PDO_generic_iter1251,49387
+    function count(count1257,49607
+    function next(next1265,49783
+    function free free1273,49965
+    function next(next1283,50144
+    function parseDSN(parseDSN1341,52228
+
+lib/WikiDB/backend/PDO_mysql.php,339
+    function WikiDB_backend_PDO_mysql(WikiDB_backend_PDO_mysql32,982
+    function backendType(backendType60,2175
+    function _timeout(_timeout67,2334
+    function optimize(optimize86,2899
+    function listOfTables(listOfTables95,3117
+    function listOfFields(listOfFields103,3357
+    function _limit_sql(_limit_sql138,4702
+
+lib/WikiDB/backend/PDO_pgsql.php,90
+    function _limit_sql(_limit_sql36,1059
+    function backendType(backendType48,1392
+
+lib/WikiDB/backend/PearDB.php,3047
+    function WikiDB_backend_PearDB WikiDB_backend_PearDB13,275
+    function close close90,4012
+    function is_wiki_page(is_wiki_page111,4599
+    function get_all_pagenames(get_all_pagenames121,5063
+    function numPages(numPages129,5352
+    function increaseHitCount(increaseHitCount137,5662
+    function get_pagedata(get_pagedata152,6246
+    function  _extract_page_data(_extract_page_data162,6742
+    function update_pagedata(update_pagedata172,7058
+    function get_cached_html(get_cached_html222,9073
+    function set_cached_html(set_cached_html229,9366
+    function _get_pageid(_get_pageid238,9703
+    function get_latest_version(get_latest_version272,10892
+    function get_previous_version(get_previous_version283,11369
+    function get_versiondata(get_versiondata309,12427
+    function _extract_version_data(_extract_version_data341,13745
+    function set_versiondata(set_versiondata372,14695
+    function delete_versiondata(delete_versiondata420,16478
+    function delete_page(delete_page442,17268
+    function purge_page(purge_page463,18030
+    function set_links(set_links499,19476
+    function get_links(get_links529,20395
+    function exists_link(exists_link569,21955
+    function get_all_pages(get_all_pages589,22730
+    function text_search(text_search649,25032
+    function _sql_match_clause(_sql_match_clause698,27048
+    function _sql_casematch_clause(_sql_casematch_clause707,27472
+    function _fullsearch_sql_match_clause(_fullsearch_sql_match_clause712,27675
+    function _fullsearch_sql_casematch_clause(_fullsearch_sql_casematch_clause719,28045
+    function most_popular(most_popular728,28344
+    function most_recent(most_recent766,29505
+    function wanted_pages(wanted_pages843,32021
+    function _sql_set(_sql_set871,33259
+    function rename_page rename_page882,33516
+    function _update_recent_table(_update_recent_table907,34690
+    function _update_nonempty_table(_update_nonempty_table926,35381
+    function lock(lock958,36499
+    function _lock_tables(_lock_tables966,36706
+    function unlock(unlock980,37074
+    function _unlock_tables(_unlock_tables992,37387
+    function _serialize(_serialize1000,37524
+    function _unserialize(_unserialize1010,37719
+    function _pear_error_callback(_pear_error_callback1021,37953
+    function _is_false_error(_is_false_error1041,38707
+    function _pear_error_message(_pear_error_message1069,39643
+    function _pear_notice_filter(_pear_notice_filter1090,40494
+    function database database1098,40848
+    function backendType(backendType1101,40926
+    function connection(connection1104,40998
+    function getRow(getRow1107,41072
+    function listOfTables(listOfTables1111,41153
+    function listOfFields(listOfFields1114,41238
+    function WikiDB_backend_PearDB_generic_iter(WikiDB_backend_PearDB_generic_iter1150,42504
+    function count(count1162,42906
+    function next(next1168,43037
+    function free free1182,43343
+    function next(next1194,43566
+
+lib/WikiDB/backend/PearDB_mysql.php,622
+    function WikiDB_backend_PearDB_mysql(WikiDB_backend_PearDB_mysql14,350
+    function _timeout(_timeout46,1893
+    function set_versiondata(set_versiondata64,2443
+    function _update_recent_table(_update_recent_table96,3717
+    function wanted_pages(wanted_pages115,4431
+    function _update_nonempty_table(_update_nonempty_table144,5781
+    function optimize(optimize166,6528
+    function _lock_tables(_lock_tables178,6774
+    function _unlock_tables(_unlock_tables189,7094
+    function increaseHitCount(increaseHitCount193,7178
+    function _pagename_match_clause(_pagename_match_clause212,7916
+
+lib/WikiDB/backend/PearDB_oci8.php,231
+    function WikiDB_backend_PearDB_oci8(WikiDB_backend_PearDB_oci817,353
+    function optimize(optimize40,1214
+    function _lock_tables(_lock_tables49,1439
+    function _fulltext_match_clause(_fulltext_match_clause75,2514
+
+lib/WikiDB/backend/PearDB_pgsql.php,693
+    function WikiDB_backend_PearDB_pgsql(WikiDB_backend_PearDB_pgsql21,462
+    function _pgsql_open_error(_pgsql_open_error39,1177
+    function optimize(optimize49,1452
+    function _quote(_quote56,1620
+    function _unquote(_unquote65,1829
+    function get_cached_html(get_cached_html75,2092
+    function set_cached_html(set_cached_html84,2461
+    function _lock_tables(_lock_tables104,3355
+    function _unlock_tables(_unlock_tables111,3489
+    function _serialize(_serialize118,3604
+    function _unserialize(_unserialize128,3814
+    function _pagename_match_clause(_pagename_match_clause142,4229
+    function _fulltext_match_clause(_fulltext_match_clause154,4664
+
+lib/WikiDB/backend/PearDB_sqlite.php,339
+    function optimize(optimize29,782
+    function _lock_tables(_lock_tables36,862
+    function _unlock_tables(_unlock_tables43,1010
+    function _serialize(_serialize50,1098
+    function _unserialize(_unserialize60,1308
+    function sqlite_list_tables sqlite_list_tables72,1690
+   function _table_exists _table_exists84,2039
+
+lib/WikiDB/backend.php,2224
+    function get_pagedata(get_pagedata71,1980
+    function update_pagedata(update_pagedata98,2822
+    function get_latest_version(get_latest_version110,3162
+    function get_previous_version(get_previous_version122,3539
+    function get_versiondata(get_versiondata151,4754
+    function delete_page(delete_page164,5199
+    function purge_page(purge_page190,6228
+    function delete_versiondata(delete_versiondata206,6745
+    function set_versiondata(set_versiondata222,7239
+    function update_versiondata(update_versiondata238,7785
+    function set_links(set_links260,8407
+    function get_links(get_links273,8782
+    function get_all_revisions(get_all_revisions285,9170
+    function get_all_pages(get_all_pages309,9990
+    function text_search(text_search331,10718
+    function most_popular(most_popular355,11802
+    function most_recent(most_recent376,12592
+    function wanted_pages(wanted_pages387,13070
+    function lock(lock405,13835
+    function unlock(unlock415,14153
+    function close close422,14238
+    function sync(sync430,14391
+    function optimize(optimize436,14466
+    function check(check450,14837
+    function rebuild(rebuild461,15089
+    function _parse_searchwords(_parse_searchwords464,15121
+    function limit(limit487,15921
+    function sortby sortby505,16700
+    function sortable_columns(sortable_columns551,18577
+    function quote quote556,18717
+    function qstr qstr558,18823
+    function isSQL isSQL560,18863
+    function next(next590,19954
+    function count(count594,20031
+    function free(free601,20162
+    function WikiDB_backend_search(WikiDB_backend_search610,20267
+    function _quote(_quote616,20494
+    function EXACT(EXACT620,20597
+    function STARTS_WITH(STARTS_WITH621,20664
+    function ENDS_WITH(ENDS_WITH622,20733
+    function WORD(WORD623,20800
+    function REGEX(REGEX624,20858
+    function _pagename_match_clause(_pagename_match_clause626,20915
+    function isStoplisted isStoplisted633,21221
+    function getStoplisted(getStoplisted643,21575
+    function _pagename_match_clause(_pagename_match_clause653,21761
+    function _fulltext_match_clause(_fulltext_match_clause663,22138
+
+lib/WikiDB/cvs.php,43
+    function WikiDB_cvs(WikiDB_cvs25,494
+
+lib/WikiDB/dba.php,43
+    function WikiDB_dba WikiDB_dba10,191
+
+lib/WikiDB/file.php,46
+    function WikiDB_file(WikiDB_file40,1211
+
+lib/WikiDB/PDO.php,296
+    function WikiDB_PDO WikiDB_PDO22,725
+    function isWikiPage isWikiPage43,1512
+    function quote quote55,2028
+    function qstr qstr68,2416
+    function isOpen isOpen73,2564
+    function genericSqlQuery(genericSqlQuery81,2826
+    function genericSqlIter(genericSqlIter103,3543
+
+lib/WikiDB/SQL.php,334
+    function WikiDB_SQL WikiDB_SQL12,264
+    function view_dsn view_dsn29,970
+    function isWikiPage isWikiPage47,1558
+    function quote quote58,2003
+    function qstr qstr60,2136
+    function isOpen isOpen62,2213
+    function genericSqlQuery(genericSqlQuery70,2485
+    function genericSqlIter(genericSqlIter86,3056
+
+lib/WikiDB.php,5018
+    function open open98,3139
+    function WikiDB WikiDB113,3433
+    function close close140,4327
+    function getPage(getPage155,4744
+    function isWikiPage isWikiPage195,6033
+    function deletePage(deletePage212,6545
+    function purgePage(purgePage265,9165
+    function getAllPages(getAllPages286,9885
+    function numPages(numPages310,10990
+    function titleSearch(titleSearch339,12004
+    function fullSearch(fullSearch362,12894
+    function mostPopular(mostPopular385,13859
+    function mostRecent(mostRecent418,15139
+    function wantedPages(wantedPages428,15451
+    function renamePage(renamePage443,15984
+    function getTimestamp(getTimestamp509,19247
+    function touch(touch518,19438
+    function get(get541,20044
+    function set(set569,20778
+    function genericSqlQuery(genericSqlQuery590,21336
+    function genericSqlIter(genericSqlIter600,21734
+    function quote quote610,22113
+    function isOpen isOpen614,22165
+    function getParam(getParam621,22399
+    function getAuthParam(getAuthParam628,22602
+    function WikiDB_Page(WikiDB_Page647,23129
+    function getName(getName672,23982
+    function exists(exists679,24228
+    function deleteRevision(deleteRevision697,24831
+    function mergeRevision(mergeRevision746,26620
+    function createRevision(createRevision812,29214
+    function save(save890,32206
+    function getPageChangeEmails(getPageChangeEmails927,33744
+    function sendPageChangeNotification(sendPageChangeNotification1003,37285
+    function sendPageRenameNotification(sendPageRenameNotification1059,40217
+    function getCurrentRevision getCurrentRevision1090,41745
+    function getRevision getRevision1121,42971
+    function getRevisionBefore getRevisionBefore1153,44237
+    function getAllRevisions(getAllRevisions1181,45235
+    function getLinks getLinks1197,45755
+    function getBackLinks(getBackLinks1212,46505
+    function getPageLinks(getPageLinks1218,46766
+    function existLink(existLink1225,47036
+    function get(get1266,48686
+    function getMetaData(getMetaData1287,49361
+    function set(set1307,49867
+    function increaseHitCount(increaseHitCount1352,51256
+    function asString asString1370,51784
+    function _coerce_to_version(_coerce_to_version1388,52275
+    function isUserPage isUserPage1398,52597
+    function getOwner(getOwner1404,52854
+    function getCreator(getCreator1421,53606
+    function getAuthor(getAuthor1427,53809
+    function WikiDB_PageRevision(WikiDB_PageRevision1446,54313
+    function getPage(getPage1461,54843
+    function getVersion(getVersion1472,55101
+    function hasDefaultContents(hasDefaultContents1490,55598
+    function getContent(getContent1503,55962
+    function getPageName(getPageName1514,56179
+    function getName(getName1517,56247
+    function isCurrent(isCurrent1528,56491
+    function getTransformedContent(getTransformedContent1545,57029
+    function getPackedContent(getPackedContent1612,59427
+    function _get_content(_get_content1654,61082
+    function get(get1715,63791
+    function getMetaData(getMetaData1727,64095
+    function asString asString1746,64561
+    function WikiDB_PageIterator(WikiDB_PageIterator1767,65128
+    function count count1773,65338
+    function next next1784,65565
+    function free(free1821,67136
+    function asArray(asArray1825,67199
+    function applyFilters(applyFilters1839,67636
+    function _doSort(_doSort1872,68900
+    function WikiDB_PageRevisionIterator(WikiDB_PageRevisionIterator1889,69326
+    function count count1895,69530
+    function next next1907,69793
+    function free(free1951,71328
+    function asArray(asArray1955,71393
+    function WikiDB_Array_PageIterator(WikiDB_Array_PageIterator1968,71621
+    function next(next1974,71813
+    function count(count1979,71972
+    function free(free1982,72038
+    function asArray(asArray1983,72061
+    function WikiDB_Array_generic_iter(WikiDB_Array_generic_iter1991,72189
+    function next(next2003,72596
+    function count(count2008,72733
+    function free(free2011,72799
+    function asArray(asArray2012,72822
+    function WikiDB_cache WikiDB_cache2030,73172
+    function close(close2040,73531
+    function get_pagedata(get_pagedata2047,73721
+    function update_pagedata(update_pagedata2062,74288
+    function invalidate_cache(invalidate_cache2079,74891
+    function delete_page(delete_page2087,75188
+    function purge_page(purge_page2093,75360
+    function cache_data(cache_data2100,75604
+    function get_versiondata(get_versiondata2106,75772
+    function set_versiondata(set_versiondata2140,77334
+    function update_versiondata(update_versiondata2151,77792
+    function delete_versiondata(delete_versiondata2161,78205
+    function get_latest_version(get_latest_version2170,78694
+function _sql_debuglog(_sql_debuglog2186,79242
+function _sql_debuglog_shutdown_function(_sql_debuglog_shutdown_function2201,79674
+
+lib/WikiGroup.php,1895
+    function WikiGroup(WikiGroup75,2838
+    function _getUserName(_getUserName86,3192
+    function getGroup(getGroup105,3866
+    function specialGroup(specialGroup139,5190
+    function _specialGroup(_specialGroup143,5308
+    function specialGroups(specialGroups147,5426
+    function _specialGroups(_specialGroups159,5796
+    function isMember(isMember179,6501
+    function isSpecialMember(isSpecialMember192,6965
+    function getAllGroupsIn(getAllGroupsIn231,8649
+    function _allUsers(_allUsers238,8902
+    function getMembersOf(getMembersOf310,11717
+    function getSpecialMembersOf(getSpecialMembersOf320,12080
+    function setMemberOf(setMemberOf372,13892
+    function removeMemberOf(removeMemberOf388,14589
+    function GroupNone(GroupNone411,15308
+    function isMember(isMember423,15734
+    function getAllGroupsIn(getAllGroupsIn438,16261
+    function getMembersOf(getMembersOf449,16642
+    function GroupWikiPage(GroupWikiPage471,17238
+    function isMember(isMember488,17920
+    function _inGroupPage(_inGroupPage513,18794
+    function getAllGroupsIn(getAllGroupsIn539,19870
+    function getMembersOf(getMembersOf569,21008
+    function GroupDb(GroupDb607,22183
+    function isMember(isMember655,23980
+    function getAllGroupsIn(getAllGroupsIn681,24999
+    function getMembersOf(getMembersOf710,26042
+    function isMember(isMember740,26936
+    function getAllGroupsIn(getAllGroupsIn770,27950
+    function getMembersOf(getMembersOf800,28890
+    function GroupFile(GroupFile831,29739
+    function isMember(isMember860,30924
+    function getAllGroupsIn(getAllGroupsIn889,31911
+    function getMembersOf(getMembersOf920,32896
+    function GroupLdap(GroupLdap944,33467
+    function isMember(isMember986,35222
+    function getAllGroupsIn(getAllGroupsIn1005,35929
+    function getMembersOf(getMembersOf1064,38348
+
+lib/wikilens/Buddy.php,202
+function addBuddy(addBuddy28,789
+function getBuddies(getBuddies38,1101
+function CoAgreement(CoAgreement49,1475
+function MinMisery(MinMisery89,2482
+function AverageRating(AverageRating111,3181
+
+lib/wikilens/CustomPrefs.php,71
+    function sanify sanify20,695
+    function sanify sanify38,1454
+
+lib/wikilens/PageListColumns.php,1296
+    function _getValue _getValue47,1778
+    function _getSortableValue _getSortableValue52,1931
+    function _PageList_Column_coagreement _PageList_Column_coagreement59,2143
+    function _getValue _getValue65,2392
+    function _PageList_Column_minmisery _PageList_Column_minmisery91,3138
+    function _getValue _getValue97,3385
+    function _PageList_Column_averagerating _PageList_Column_averagerating115,3966
+    function _getValue _getValue122,4222
+    function _PageList_Column_ratingvalue _PageList_Column_ratingvalue150,5053
+    function format format158,5404
+    function _getValue _getValue174,5921
+    function hasNoRatings(hasNoRatings185,6260
+    function _getSortableValue _getSortableValue201,6612
+    function _PageList_Column_ratingwidget _PageList_Column_ratingwidget211,6893
+    function format format217,7131
+    function _getValue _getValue226,7501
+    function _getSortableValue _getSortableValue238,7873
+    function _PageList_Column_prediction _PageList_Column_prediction248,8126
+    function format format261,8681
+    function _getValue _getValue276,9195
+    function _getSortableValue _getSortableValue285,9501
+    function _PageList_Column_top3recs _PageList_Column_top3recs296,9763
+    function _getValue _getValue316,10704
+
+lib/wikilens/RatingsDb.php,1454
+    function RatingsDb(RatingsDb49,1525
+    function addRating(addRating93,3191
+    function deleteRating(deleteRating104,3653
+    function getRating(getRating115,4136
+    function getUsersRated(getUsersRated127,4625
+    function get_rating(get_rating182,6981
+    function get_users_rated(get_users_rated199,7689
+    function get_rating_page(get_rating_page218,8342
+    function delete_rating(delete_rating241,9135
+    function rate(rate263,9885
+    function getPrediction(getPrediction287,10905
+    function php_prediction(php_prediction321,12256
+    function getNumUsers(getNumUsers334,12898
+    function getAvg(getAvg353,13643
+    function sql_get_rating(sql_get_rating422,16546
+    function sql_get_users_rated(sql_get_users_rated429,16890
+    function _sql_get_rating_result(_sql_get_rating_result439,17255
+    function sql_delete_rating(sql_delete_rating499,19339
+    function sql_rate(sql_rate531,20508
+    function metadata_get_rating(metadata_get_rating553,21518
+    function metadata_set_rating(metadata_set_rating563,21856
+    function get_rating(get_rating583,22463
+    function get_users_rated(get_users_rated590,22794
+    function get_rating_page(get_rating_page596,23033
+    function _get_rating_result(_get_rating_result603,23362
+    function _get_users_rated_result(_get_users_rated_result652,24834
+    function delete_rating(delete_rating674,25444
+    function rate(rate687,25873
+
+lib/wikilens/RatingsUser.php,1001
+    function RatingsUser(RatingsUser56,1704
+    function getId(getId65,1969
+    function allow_view_ratings(allow_view_ratings88,2815
+    function get_ratings(get_ratings98,3022
+    function mean_rating(mean_rating109,3234
+    function has_rated(has_rated143,4448
+    function get_rating(get_rating166,4975
+    function set_rating(set_rating178,5321
+    function unset_rating(unset_rating202,6066
+    function pearson_similarity(pearson_similarity221,6715
+    function knn_uu_predict(knn_uu_predict288,8955
+    function _load_ratings(_load_ratings342,11026
+    function _UserRating _UserRating375,12140
+    function get_rater(get_rater383,12390
+    function get_ratee(get_ratee388,12458
+    function get_rating(get_rating393,12526
+    function get_dimension(get_dimension398,12596
+    function set_rater(set_rater403,12672
+    function set_ratee(set_ratee408,12750
+    function set_rating(set_rating413,12828
+    function set_dimension(set_dimension418,12908
+
+lib/wikilens/Utils.php,183
+function addPageTextData(addPageTextData26,835
+function getMembers(getMembers58,2082
+function getPageTextData(getPageTextData63,2284
+function notEmptyName(notEmptyName96,3296
+
+lib/WikiPlugin.php,1472
+    function getDefaultArguments(getDefaultArguments6,109
+    function managesValidators(managesValidators28,1018
+    function run run33,1106
+    function getWikiPageLinks getWikiPageLinks59,2163
+    function getName(getName78,2702
+    function getDescription(getDescription82,2796
+    function getVersion(getVersion87,2936
+    function getArgs(getArgs93,3102
+    function expandArg(expandArg154,5684
+    function parseArgStr(parseArgStr164,6158
+    function handle_plugin_args_cruft(handle_plugin_args_cruft234,8900
+    function makeList(makeList240,9141
+    function getDefaultLinkArguments(getDefaultLinkArguments253,9575
+    function makeLink(makeLink260,9851
+    function getDefaultFormArguments(getDefaultFormArguments283,10623
+    function makeForm(makeForm293,11026
+    function box(box363,14164
+    function makeBox(makeBox369,14408
+    function error error376,14698
+    function disabled disabled382,14912
+    function addPageListColumn addPageListColumn394,15535
+    function getUsage(getUsage403,15884
+    function getArgumentsDescription(getArgumentsDescription414,16205
+    function expandPI(expandPI437,16961
+    function getWikiPageLinks(getWikiPageLinks483,19212
+    function parsePI(parsePI494,19580
+    function getPlugin(getPlugin504,19953
+    function _plugin_error_filter _plugin_error_filter535,21300
+    function getErrorDetail(getErrorDetail541,21521
+    function _error(_error545,21591
+
+lib/WikiPluginCached.php,1471
+    function genUrl(genUrl79,3227
+    function run run139,5845
+    function getPluginType(getPluginType275,12757
+    function getImage(getImage294,13580
+    function getExpire(getExpire317,14615
+    function getImageType(getImageType333,15250
+    function getAlt(getAlt352,16021
+    function getHtml(getHtml371,16923
+    function getMap(getMap393,18032
+    function embedMap(embedMap416,19072
+    function embedImg(embedImg444,20311
+    function embedObject(embedObject468,21345
+    function newCache(newCache488,22104
+    function decideImgType(decideImgType527,23768
+    function writeImage(writeImage577,25506
+    function writeHeader(writeHeader597,26059
+    function glueArgs(glueArgs622,27071
+    function checkCall1(checkCall1654,28503
+    function checkCall2(checkCall2683,29614
+    function produceImage(produceImage714,31171
+    function staticUrl staticUrl783,33946
+    function tempnam(tempnam789,34119
+    function fetchImageFromCache(fetchImageFromCache807,34877
+    function resetError(resetError877,37583
+    function getError(getError887,37827
+    function complain(complain901,38273
+    function printError(printError914,38652
+    function text2img(text2img954,40331
+    function newFilterThroughCmd(newFilterThroughCmd1034,43022
+    function OldFilterThroughCmd(OldFilterThroughCmd1070,44479
+    function filterThroughCmd(filterThroughCmd1092,45230
+    function execute(execute1106,45742
+
+lib/WikiUser/AdoDb.php,337
+    function _AdoDbPassUser(_AdoDbPassUser22,577
+    function getPreferences(getPreferences39,1253
+    function setPreferences(setPreferences69,2483
+    function userExists(userExists115,4295
+    function checkPass(checkPass179,6972
+    function mayChangePass(mayChangePass242,9520
+    function storePass(storePass246,9629
+
+lib/WikiUser/BogoLogin.php,84
+    function userExists(userExists14,412
+    function checkPass(checkPass27,801
+
+lib/WikiUser/Db.php,142
+    function _DbPassUser(_DbPassUser36,1353
+    function isValidName isValidName77,2916
+    function mayChangePass(mayChangePass84,3156
+
+lib/WikiUser/File.php,227
+    function _FilePassUser(_FilePassUser20,525
+    function mayChangePass(mayChangePass41,1488
+    function userExists(userExists45,1561
+    function checkPass(checkPass56,1854
+    function storePass(storePass76,2637
+
+lib/WikiUser/Forbidden.php,33
+    function dummy(dummy14,359
+
+lib/WikiUser/HttpAuth.php,327
+    function _HttpAuthPassUser(_HttpAuthPassUser22,909
+    function _fake_auth(_fake_auth39,1525
+    function logout(logout52,2004
+    function _http_username(_http_username68,2661
+    function userExists(userExists89,3398
+    function checkPass(checkPass111,4155
+    function mayChangePass(mayChangePass117,4339
+
+lib/WikiUser/IMAP.php,135
+    function checkPass(checkPass15,376
+    function userExists(userExists42,1414
+    function mayChangePass(mayChangePass50,1587
+
+lib/WikiUser/LDAP.php,205
+    function _init(_init15,373
+    function _free(_free46,1613
+    function checkPass(checkPass53,1885
+    function userExists(userExists105,4000
+    function mayChangePass(mayChangePass132,4885
+
+lib/WikiUser/PdoDb.php,336
+    function _PdoDbPassUser(_PdoDbPassUser20,466
+    function getPreferences(getPreferences38,1174
+    function setPreferences(setPreferences66,2425
+    function userExists(userExists96,3656
+    function checkPass(checkPass175,6926
+    function mayChangePass(mayChangePass234,9275
+    function storePass(storePass238,9384
+
+lib/WikiUser/PearDb.php,339
+    function _PearDbPassUser(_PearDbPassUser19,496
+    function getPreferences(getPreferences37,1236
+    function setPreferences(setPreferences65,2476
+    function userExists(userExists110,4388
+    function checkPass(checkPass166,6934
+    function mayChangePass(mayChangePass209,8685
+    function storePass(storePass213,8794
+
+lib/WikiUser/PersonalPage.php,130
+    function isValidName isValidName19,536
+    function userExists(userExists25,766
+    function checkPass(checkPass33,1076
+
+lib/WikiUser/POP3.php,41
+    function checkPass(checkPass15,396
+
+lib/WikiUser/Session.php,191
+    function _SessionPassUser(_SessionPassUser17,520
+    function userExists(userExists47,1861
+    function checkPass(checkPass50,1934
+    function mayChangePass(mayChangePass53,2045
+
+lib/WikiUser.php,2327
+function WikiUserClassname(WikiUserClassname46,2352
+function UpgradeUser UpgradeUser50,2409
+    function WikiUser WikiUser80,3243
+    function auth_how(auth_how111,4275
+    function _ok _ok122,4579
+    function UserName(UserName133,4900
+    function getId getId137,4964
+    function getAuthenticatedId(getAuthenticatedId143,5142
+    function isSignedIn isSignedIn149,5337
+    function isAuthenticated isAuthenticated153,5420
+    function isAdmin isAdmin157,5508
+    function hasAuthority hasAuthority161,5589
+    function isValidName isValidName165,5689
+    function AuthCheck AuthCheck171,5879
+    function PrintLoginForm PrintLoginForm201,6973
+    function _pwcheck _pwcheck230,8089
+    function getPreferences(getPreferences322,12396
+    function setPreferences(setPreferences350,13573
+    function exists(exists409,16460
+    function homePage(homePage416,16717
+    function hasHomePage(hasHomePage427,17015
+    function createUser createUser432,17130
+    function createHomepage createHomepage450,17867
+    function tryAuthBackends(tryAuthBackends485,19473
+    function checkPassword(checkPassword491,19653
+    function changePassword(changePassword513,20593
+    function mayChangePass(mayChangePass535,21422
+function createUser createUser552,21942
+    function _UserPreference _UserPreference561,22108
+    function sanify sanify565,22210
+    function update update569,22279
+    function _UserPreference_numeric _UserPreference_numeric576,22375
+    function sanify sanify583,22638
+    function _UserPreference_int _UserPreference_int596,22998
+    function sanify sanify601,23207
+    function _UserPreference_bool _UserPreference_bool609,23349
+    function sanify sanify613,23459
+    function _UserPreference_language _UserPreference_language637,24171
+    function sanify sanify642,24327
+    function _UserPreference_theme _UserPreference_theme655,24668
+    function sanify sanify659,24773
+    function update update665,24930
+    function _themefile _themefile672,25133
+    function UserPreferences UserPreferences679,25297
+    function _getPref _getPref691,25724
+    function get get701,26040
+    function set set709,26266
+    function pack pack728,26804
+    function unpack unpack731,26881
+    function hash hash743,27224
+
+lib/WikiUserNew.php,4757
+function _isAnonUserAllowed(_isAnonUserAllowed152,6906
+function _isBogoUserAllowed(_isBogoUserAllowed155,7000
+function _isUserPasswordsAllowed(_isUserPasswordsAllowed158,7096
+function _determineAdminUserOrOtherUser(_determineAdminUserOrOtherUser163,7248
+function _determineBogoUserOrPassUser(_determineBogoUserOrPassUser181,7901
+function WikiUser WikiUser229,9699
+function WikiUserClassname(WikiUserClassname271,11263
+function UpgradeUser UpgradeUser282,11587
+function UserExists UserExists313,12807
+    function _WikiUser(_WikiUser346,13634
+    function UserName(UserName359,13976
+    function getPreferences(getPreferences364,14080
+    function setPreferences(setPreferences370,14317
+    function userExists(userExists377,14593
+    function checkPass(checkPass381,14665
+    function hasHomePage(hasHomePage390,15069
+    function array_position array_position408,15713
+    function nextAuthMethodIndex(nextAuthMethodIndex417,15986
+    function AuthMethod(AuthMethod436,16810
+    function nextClass(nextClass443,17063
+    function PrintLoginForm PrintLoginForm450,17288
+    function isSignedIn(isSignedIn481,18636
+    function isAuthenticated(isAuthenticated487,18789
+    function isAdmin isAdmin493,18984
+    function getId getId505,19432
+    function getAuthenticatedId(getAuthenticatedId513,19657
+    function hasAuthority hasAuthority519,19845
+    function isValidName isValidName527,20123
+    function AuthCheck AuthCheck536,20470
+    function getPreferences(getPreferences618,23563
+    function setPreferences(setPreferences701,27332
+    function userExists(userExists742,29103
+    function checkPass(checkPass746,29159
+    function checkPass(checkPass769,29920
+    function userExists(userExists773,30008
+    function userExists(userExists790,30508
+    function checkPass(checkPass800,30749
+    function _PassUser(_PassUser828,31571
+    function getAuthDbh getAuthDbh963,38744
+    function _normalize_stmt_var(_normalize_stmt_var994,40246
+    function prepare prepare1007,40834
+    function getPreferences(getPreferences1065,43706
+    function setPreferences(setPreferences1098,45211
+    function mayChangePass(mayChangePass1123,46328
+    function userExists(userExists1129,46514
+    function checkPass(checkPass1151,47367
+    function _checkPassLength(_checkPassLength1166,47894
+    function _checkPass(_checkPass1189,48883
+    function changePass(changePass1239,51299
+    function _tryNextPass(_tryNextPass1259,52152
+    function _tryNextUser(_tryNextUser1281,53034
+    function mayChangePass(mayChangePass1325,54429
+    function checkPass(checkPass1328,54488
+    function storePass(storePass1351,55487
+    function _UserPreference _UserPreference1373,56094
+    function sanify sanify1377,56196
+    function get get1381,56265
+    function getraw getraw1388,56411
+    function set set1394,56584
+    function update update1410,56954
+    function _UserPreference_numeric _UserPreference_numeric1418,57057
+    function sanify sanify1425,57320
+    function _UserPreference_int _UserPreference_int1438,57680
+    function sanify sanify1442,57850
+    function _UserPreference_bool _UserPreference_bool1450,57992
+    function sanify sanify1454,58102
+    function _UserPreference_language _UserPreference_language1478,58814
+    function sanify sanify1483,58970
+    function update update1492,59259
+    function _UserPreference_theme _UserPreference_theme1504,59593
+    function sanify sanify1508,59698
+    function update update1514,59868
+    function _themefile _themefile1525,60250
+    function sanify sanify1533,60395
+    function update update1547,60879
+    function _page_split(_page_split1599,63004
+    function sanify(sanify1607,63171
+    function update(update1627,63883
+function ValidateMail(ValidateMail1647,64730
+    function UserPreferences(UserPreferences1753,68569
+    function _getPref(_getPref1802,71449
+    function get(get1815,71894
+    function set(set1826,72192
+    function updatePrefs(updatePrefs1853,73039
+    function store(store1914,75826
+    function retrieve(retrieve1930,76452
+    function isChanged(isChanged1966,78038
+    function defaultPreferences(defaultPreferences1974,78247
+    function getAll(getAll1983,78460
+    function pack(pack1987,78521
+    function unpack(unpack1991,78598
+    function hash hash2007,79082
+    function CookieUserPreferences CookieUserPreferences2020,79365
+    function PageUserPreferences PageUserPreferences2029,79588
+    function PearDbUserPreferences PearDbUserPreferences2037,79765
+    function AdoDbUserPreferences AdoDbUserPreferences2045,79943
+    function getPreferences(getPreferences2048,80064
+
+lib/XmlElement.php,2056
+    function XmlContent XmlContent19,468
+    function pushContent pushContent24,600
+    function _pushContent_array _pushContent_array33,869
+    function _pushContent _pushContent42,1109
+    function unshiftContent unshiftContent50,1374
+    function _unshiftContent_array _unshiftContent_array59,1655
+    function _unshiftContent _unshiftContent68,1919
+    function getContent getContent75,2157
+    function setContent setContent79,2225
+    function printXML printXML84,2364
+    function asXML asXML101,2963
+    function asPDF asPDF118,3520
+    function asString asString135,4077
+    function isEmpty isEmpty157,4643
+    function _quote _quote167,4901
+    function XmlElement XmlElement183,5298
+    function _init _init189,5475
+    function _destruct _destruct212,6127
+    function getChildren getChildren223,6405
+    function hasChildren hasChildren227,6475
+    function getTag getTag233,6590
+    function setAttr setAttr237,6654
+    function getAttr getAttr262,7248
+    function _getClasses(_getClasses272,7452
+    function _setClasses(_setClasses287,7808
+    function setInClass(setInClass308,8352
+    function inClass(inClass326,8843
+    function startTag(startTag331,8952
+    function emptyTag(emptyTag347,9404
+    function endTag(endTag352,9498
+    function printXML printXML357,9575
+    function asXML asXML372,10013
+    function hasInlineContent hasInlineContent395,10665
+    function isInlineElement isInlineElement410,11057
+    function RawXml RawXml417,11143
+    function printXML printXML421,11217
+    function asXML asXML425,11277
+    function isEmpty isEmpty429,11336
+    function FormattedText FormattedText435,11428
+    function _init _init441,11564
+    function asXML asXML471,12828
+    function printXML printXML479,13092
+    function asString(asString487,13351
+function XmlContent_quote XmlContent_quote499,13665
+function PrintXML PrintXML507,13929
+function AsXML AsXML535,14846
+function AsString AsString570,15880
+function fmt fmt597,16622
+
+lib/XmlParser.php,282
+    function XmlParser(XmlParser54,1818
+    function __destruct(__destruct73,2683
+    function tag_open(tag_open86,3076
+    function tag_close(tag_close120,4486
+    function cdata(cdata125,4631
+    function parse(parse137,5102
+    function parse_url(parse_url145,5492
+
+lib/XMLRPC/utils.php,523
+function xu_load_extension(xu_load_extension47,1599
+function xu_query_http_post(xu_query_http_post63,2100
+function xu_fault_code(xu_fault_code129,4074
+function find_and_decode_xml(find_and_decode_xml135,4200
+function xu_rpc_http_concise(xu_rpc_http_concise194,6964
+function xu_rpc_http(xu_rpc_http223,7756
+function xu_is_fault(xu_is_fault242,8196
+function xu_server_send_http_response(xu_server_send_http_response248,8376
+function dbg(dbg254,8526
+function dbg1(dbg1257,8594
+function dbg2(dbg2262,8682
+
+lib/XmlRpcServer.php,1360
+function _getPageRevision _getPageRevision112,3823
+function UrlencodeControlCharacters(UrlencodeControlCharacters152,5009
+function short_string short_string159,5195
+function long_string long_string166,5375
+function short_string_decode short_string_decode173,5513
+function NoSuchPage NoSuchPage180,5649
+function getRPCVersionSupported(getRPCVersionSupported202,6375
+function getRecentChanges(getRecentChanges223,7328
+function getPage(getPage261,8947
+function getPageVersion(getPageVersion284,9649
+function getPageHTML(getPageHTML300,10104
+function getPageHTMLVersion(getPageHTMLVersion325,10928
+function getAllPages(getAllPages338,11292
+function getPageInfo(getPageInfo362,12055
+function getPageInfoVersion(getPageInfoVersion391,13215
+function listLinks(listLinks408,13829
+function _getUser(_getUser487,17254
+function putPage(putPage514,18098
+function rssPleaseNotify(rssPleaseNotify607,22184
+function mailPasswordToUser(mailPasswordToUser623,22597
+function titleSearch(titleSearch653,23620
+function listPlugins(listPlugins705,25211
+function getPluginSynopsis(getPluginSynopsis743,26437
+function listRelations(listRelations780,27717
+function pingBack(pingBack877,31664
+    function XmlRpcServer XmlRpcServer895,32225
+    function service service907,32587
+    function _errorHandler _errorHandler915,32814
+
+lib/ziplib.php,1365
+function gzip_cleanup gzip_cleanup13,459
+function gzip_tempnam gzip_tempnam20,575
+function gzip_compress gzip_compress34,956
+function gzip_uncompress gzip_uncompress55,1597
+function zip_crc32 zip_crc3279,2310
+function zip_deflate zip_deflate153,7214
+function zip_inflate zip_inflate186,8355
+function unixtime2dostime unixtime2dostime210,9176
+function dostime2unixtime dostime2unixtime226,9675
+    function ZipWriter ZipWriter250,10272
+  function addRegularFile addRegularFile261,10713
+  function finish finish344,13699
+    function ZipReader ZipReader381,14888
+    function _read _read401,15621
+    function done done416,16122
+  function readFile readFile424,16253
+function QuotedPrintableEncode QuotedPrintableEncode497,18799
+function QuotedPrintableDecode QuotedPrintableDecode517,19594
+function MimeContentTypeHeader MimeContentTypeHeader526,19832
+function MimeMultipart MimeMultipart539,20251
+function MimeifyPageRevision MimeifyPageRevision575,21512
+function ParseRFC822Headers ParseRFC822Headers635,24046
+function ParseMimeContentType ParseMimeContentType666,24918
+function ParseMimeMultipart(ParseMimeMultipart699,25998
+function GenerateFootnotesFromRefs(GenerateFootnotesFromRefs724,26742
+function ParseMimeifiedPerm(ParseMimeifiedPerm746,27534
+function ParseMimeifiedPages ParseMimeifiedPages771,28409
+
+passencrypt.php,144
+function better_srand(better_srand41,1497
+function rand_ascii(rand_ascii60,2084
+function random_good_password random_good_password79,2696
+
+RPC2.php,17
+$server 30,1010
+
+SOAP.php,488
+function checkCredentials(checkCredentials39,1045
+function doSavePage(doSavePage99,3663
+function getPageContent(getPageContent112,4187
+function getPageRevision(getPageRevision122,4532
+function getCurrentRevision(getCurrentRevision132,4888
+function getPageMeta(getPageMeta144,5354
+function getAllPagenames(getAllPagenames155,5730
+function getBacklinks(getBacklinks167,6120
+function doTitleSearch(doTitleSearch181,6626
+function doFullTextSearch(doFullTextSearch194,7083
+
+tests/CompatInfo.php,33
+function out_row(out_row30,998
+
+tests/glob2pcre-test.php,15
+foreach 9,180
+
+tests/pcre-crash.php,202
+	$blockpats=2,6
+        $blockpats[4,28
+        $blockpats[6,101
+        $blockpats[9,164
+        $blockpats[12,244
+        $blockpats[20,433
+        $block_re 22,471
+$pat 27,604
+$subj 40,1020
+
+tests/unit/lib/DumpHtml.php,339
+    function _dumpPage(_dumpPage12,201
+    function test01RateIt(test01RateIt24,648
+    function test02OrphanedPages(test02OrphanedPages27,720
+    function test03OldTextFormattingRules(test03OldTextFormattingRules30,806
+    function test04LinkDatabase(test04LinkDatabase33,910
+    function test99DumpHtml(test99DumpHtml38,1066
+
+tests/unit/lib/HtmlParserTest.php,43
+    function testSimple(testSimple14,315
+
+tests/unit/lib/InlineParserTest.php,142
+    function testNoWikiWords(testNoWikiWords13,291
+    function testWikiWord(testWikiWord22,612
+    function testLinks(testLinks36,1095
+
+tests/unit/lib/PageListTest.php,46
+    function testPageList(testPageList8,116
+
+tests/unit/lib/plugin/AllPagesTest.php,47
+    function testAllPages(testAllPages12,249
+
+tests/unit/lib/plugin/AllUsersTest.php,47
+    function testAllUsers(testAllUsers12,249
+
+tests/unit/lib/plugin/IncludePageTest.php,265
+    function _ensure_loaded(_ensure_loaded9,164
+    function testOldTextFormattingRules(testOldTextFormattingRules23,581
+    function testTextFormattingRules(testTextFormattingRules37,1032
+    function testIncludePageSynopsis(testIncludePageSynopsis53,1530
+
+tests/unit/lib/plugin/ListPagesTest.php,49
+    function testListPages(testListPages12,252
+
+tests/unit/lib/plugin/OrphanedPagesTest.php,57
+    function testOrphanedPages(testOrphanedPages11,263
+
+tests/unit/lib/plugin/WantedPagesTest.php,53
+    function testWantedPages(testWantedPages11,257
+
+tests/unit/lib/SetupWiki.php,221
+    function _loadPage(_loadPage11,192
+    function testOldMarkupTestPage(testOldMarkupTestPage25,744
+    function testIncludePagePlugin(testIncludePagePlugin30,911
+    function testSetupWiki(testSetupWiki34,1005
+
+tests/unit/lib/TextSearchTest.php,112
+    function testTitleSearch(testTitleSearch8,125
+    function testFulltextSearch(testFulltextSearch37,1089
+
+tests/unit/test.php,920
+function printMemoryUsage(printMemoryUsage112,4603
+function printSimpleTrace(printSimpleTrace130,5258
+function assert_callback(assert_callback142,5585
+function myErrorHandler$errno,myErrorHandler$errno164,6255
+function _ErrorHandler_CB(_ErrorHandler_CB170,6467
+function purge_dir(purge_dir185,6918
+function purge_testbox(purge_testbox197,7168
+function printConstant(printConstant227,7929
+function html_option_form(html_option_form238,8256
+function updateDebugEdit(updateDebugEdit275,9887
+function updateLevelEdit(updateLevelEdit285,10209
+    function MockRequest(MockRequest490,17984
+    function getGroup(getGroup497,18291
+        function MockUser(MockUser507,18548
+        function isSignedIn(isSignedIn512,18718
+        function MockUser(MockUser518,18852
+        function isSignedIn(isSignedIn523,19022
+    function setUp(setUp548,19608
+    function tearDown(tearDown558,19900
+
+tests/unit_test_backend_cvs.php,75
+function rcs_id(rcs_id13,366
+function get_pagedata(get_pagedata64,1886
+
+tests/xmlrpc/interop-client.php,443
+function match(match62,2344
+function pass(pass80,2726
+function fail(fail84,2818
+function check_if_matches(check_if_matches99,3135
+function foo(foo108,3309
+function run_test(run_test112,3396
+function run_no_param_test(run_no_param_test127,4026
+function run_easy_tests(run_easy_tests153,6906
+function ident(ident184,9195
+function run_stress_tests(run_stress_tests207,10093
+function print_html_form(print_html_form233,11643
+
+tests/xmlrpc/interop-server.php,247
+function method_echo(method_echo6,70
+function method_echo_void(method_echo_void15,338
+function method_no_in_params(method_no_in_params19,431
+function method_toolkit(method_toolkit26,525
+function introspection_cb(introspection_cb135,6547
+
+tests/xmlrpc/validate-form.php,44
+function do_test_case(do_test_case46,1405
+
+tests/xmlrpc/validate.php,611
+function validator1_arrayOfStructsTest(validator1_arrayOfStructsTest48,1633
+function validator1_countTheEntities validator1_countTheEntities68,2217
+function validator1_easyStructTest validator1_easyStructTest88,2873
+function validator1_echoStructTest(validator1_echoStructTest105,3235
+function validator1_manyTypesTest validator1_manyTypesTest114,3435
+function validator1_moderateSizeArrayCheck validator1_moderateSizeArrayCheck131,3878
+function validator1_nestedStructTest validator1_nestedStructTest152,4765
+function validator1_simpleStructReturnTest validator1_simpleStructReturnTest173,5275
+
+tests/xmlrpc/xmlrpc-client.php,411
+function match(match73,2630
+function pass(pass91,3012
+function fail(fail95,3106
+function check_if_matches(check_if_matches111,3452
+function foo(foo120,3626
+function run_test(run_test124,3713
+function run_no_param_test(run_no_param_test146,4638
+function run_easy_tests(run_easy_tests170,5496
+function run_stress_tests(run_stress_tests204,7729
+function print_html_form(print_html_form215,8094
+
+tests/xmlrpc/xmlrpc-introspect.php,383
+function format_describe_methods_result(format_describe_methods_result11,289
+function field(field138,4623
+function is_xmlrpc_type(is_xmlrpc_type149,4911
+function user_type(user_type154,5092
+function do_param(do_param160,5196
+function do_params(do_params230,6917
+function get_sig(get_sig243,7243
+function get_sigs(get_sigs292,8374
+function name_cmp(name_cmp306,8615
+
+tests/xmlrpc/xmlrpc-servers.php,510
+function get_user_server(get_user_server14,410
+function get_wiki_servers(get_wiki_servers26,834
+function get_intro_useful_servers(get_intro_useful_servers81,2691
+function get_introspection_servers(get_introspection_servers115,3839
+function get_interop_servers(get_interop_servers143,4875
+function print_servers_form(print_servers_form216,7591
+function get_server_from_user(get_server_from_user258,9194
+function server_uri_vars(server_uri_vars262,9304
+function server_vars(server_vars267,9464
+
+tests/xmlrpc/xmlrpc_utils.php,36
+function xi_format(xi_format7,118
+
+themes/alphatest.php,72
+function changebg(changebg12,373
+function find_pngs(find_pngs25,724
+
+themes/blog/lib/RecentChanges.php,118
+    function pageLink pageLink12,338
+    function pageLink pageLink26,834
+    function pageLink pageLink36,1127
+
+themes/blog/themeinfo.php,234
+    function _findFile _findFile43,1742
+    function _labelForAction _labelForAction51,2091
+    function getRecentChangesFormatter getRecentChangesFormatter65,2571
+    function linkExistingWikiWord(linkExistingWikiWord75,2995
+
+themes/Crao/themeinfo.php,73
+$WikiTheme 10,182
+$WikiTheme->addImageAlias('signature', false)42,1441
+
+themes/default/hyperapplet.php,47
+global $WikiTheme;10,442
+<applet code=12,464
+
+themes/default/hyperwiki.php,46
+global $WikiTheme;7,222
+<applet code=10,293
+
+themes/default/themeinfo.php,19
+$WikiTheme 10,183
+
+themes/Hawaiian/lib/random.php,146
+    function randomImage randomImage11,260
+    function pickRandom(pickRandom27,707
+    function _filenameSelector(_filenameSelector43,1208
+
+themes/Hawaiian/themeinfo.php,35
+    function getCSS(getCSS12,196
+
+themes/MacOSX/buttons/de/index.php,0
+
+themes/MacOSX/buttons/en/index.php,0
+
+themes/MacOSX/buttons/index.php,0
+
+themes/MacOSX/images/index.php,35
+function changebg(changebg12,373
+
+themes/MacOSX/lib/RecentChanges.php,258
+function MacOSX_RC_revision_formatter MacOSX_RC_revision_formatter10,266
+function MacOSX_PH_revision_formatter MacOSX_PH_revision_formatter23,769
+    function format_revision format_revision40,1435
+    function format_revision format_revision48,1614
+
+themes/MacOSX/themeinfo.php,242
+    function getCSS(getCSS30,1004
+    function getRecentChangesFormatter getRecentChangesFormatter42,1600
+    function getPageHistoryFormatter getPageHistoryFormatter49,1867
+    function linkUnknownWikiWord(linkUnknownWikiWord56,2130
+
+themes/MonoBook/themeinfo.php,55
+    function makeActionButton makeActionButton24,872
+
+themes/Portland/lib/RecentChanges.php,287
+function Portland_RC_revision_formatter Portland_RC_revision_formatter10,266
+    function format_revision format_revision36,1115
+    function summaryAsHTML summaryAsHTML39,1220
+    function format_revision format_revision52,1646
+    function summaryAsHTML summaryAsHTML55,1751
+
+themes/Portland/themeinfo.php,205
+    function linkUnknownWikiWord(linkUnknownWikiWord11,254
+    function getRecentChangesFormatter getRecentChangesFormatter37,1145
+    function getPageHistoryFormatter getPageHistoryFormatter44,1414
+
+themes/shamino_com/themeinfo.php,55
+    function makeActionButton makeActionButton18,419
+
+themes/Sidebar/clock.php,35
+  $ora 2,7
+<object classid=4,125
+
+themes/Sidebar/themeinfo.php,377
+    function Theme_Sidebar Theme_Sidebar16,424
+    function findTemplate findTemplate22,556
+    function calendarLink(calendarLink33,939
+    function calendarBase(calendarBase38,1110
+    function calendarInit(calendarInit51,1599
+function dateExists(dateExists87,3547
+function dateStatusFunc(dateStatusFunc100,3998
+function dateStatusFunc(dateStatusFunc107,4206
+
+themes/smaller/themeinfo.php,55
+    function makeActionButton makeActionButton14,356
+
+themes/SpaceWiki/lib/RecentChanges.php,410
+function SpaceWiki_RC_revision_formatter SpaceWiki_RC_revision_formatter10,260
+function SpaceWiki_PH_revision_formatter SpaceWiki_PH_revision_formatter24,801
+    function format_revision format_revision41,1491
+    function summaryAsHTML summaryAsHTML44,1597
+    function diffLink diffLink53,1946
+    function format_revision format_revision63,2180
+    function summaryAsHTML summaryAsHTML66,2286
+
+themes/SpaceWiki/themeinfo.php,143
+    function getRecentChangesFormatter getRecentChangesFormatter21,772
+    function getPageHistoryFormatter getPageHistoryFormatter28,1042
+
+themes/wikilens/themeinfo.php,73
+$WikiTheme 10,327
+$WikiTheme->addImageAlias('signature', false)41,1632
+
+themes/Wordpress/lib/RecentChanges.php,289
+function Wordpress_RC_revision_formatter Wordpress_RC_revision_formatter10,260
+    function format_revision format_revision36,1111
+    function summaryAsHTML summaryAsHTML39,1217
+    function format_revision format_revision52,1644
+    function summaryAsHTML summaryAsHTML55,1750
+
+themes/Wordpress/themeinfo.php,205
+    function linkUnknownWikiWord(linkUnknownWikiWord13,286
+    function getRecentChangesFormatter getRecentChangesFormatter39,1185
+    function getPageHistoryFormatter getPageHistoryFormatter46,1455

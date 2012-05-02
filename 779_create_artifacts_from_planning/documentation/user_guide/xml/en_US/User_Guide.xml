@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+//
+//
+-->
+<?xml-stylesheet type="text/css"
+href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
+?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"file:/usr/local/docbook-dtd/docbookx.dtd"
+[
+
+<!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
+%ParametersDefault;
+
+<!-- Entities for inclusion of document chapters -->
+<!ENTITY BookInfo SYSTEM "BookInfo.xml">
+<!ENTITY ChapterIntroduction SYSTEM "Introduction.xml">
+<!ENTITY ChapterSiteOverview SYSTEM "SiteOverview.xml">
+<!ENTITY ChapterBecomingACitizen SYSTEM "BecomingACitizen.xml">
+<!ENTITY ChapterCreatingANewProject SYSTEM "CreatingANewProject.xml">
+<!ENTITY ChapterProjectSummary SYSTEM "ProjectSummary.xml">
+<!ENTITY ChapterProjectAdministration SYSTEM "ProjectAdministration.xml">
+<!ENTITY ChapterTracker SYSTEM "Tracker.xml">
+<!ENTITY ChapterTrackerV5 SYSTEM "TrackerV5.xml">
+<!ENTITY ChapterFileRelease SYSTEM "FileRelease.xml">
+<!ENTITY ChapterVersionControlWithCVS SYSTEM "VersionControlWithCVS.xml">
+<!ENTITY ChapterVersionControlWithSubversion SYSTEM "VersionControlWithSubversion.xml">
+<!ENTITY ChapterVersionControlWithGit SYSTEM "VersionControlWithGit.xml">
+<!ENTITY ChapterDocumentManagerPlugin SYSTEM "DocumentManagerPlugin.xml">
+<!ENTITY ChapterContinuousIntegrationWithHudson SYSTEM "ContinuousIntegrationWithHudson.xml">
+<!ENTITY ChapterWiki SYSTEM "Wiki.xml">
+<!ENTITY ChapterCommunicationServices SYSTEM "CommunicationServices.xml">
+<!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
+<!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
+<!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
+<!ENTITY Chapterlegalnotice SYSTEM "LegalNotice.xml">
+
+<!-- Entity definition and inclusion for default and custom parameters
+(e.g. site name, server names, company name,etc.)
+Remark: local redefinition must be first because once defined
+an entity cannot be redefined. Hence this particular order  -->
+
+]>
+
+<book>
+  <title>&SYS_PRODUCT_NAME; User Guide</title>
+
+  <subtitle>&#34;Open Source suite for Application Lifecycle Management&#34;</subtitle>
+
+  &BookInfo;
+
+  &ChapterIntroduction;
+  &ChapterSiteOverview;
+  &ChapterBecomingACitizen;
+  &ChapterCreatingANewProject;
+  &ChapterProjectSummary;
+  &ChapterProjectAdministration;
+  &ChapterTrackerV5;
+  &ChapterFileRelease;
+  &ChapterVersionControlWithCVS;
+  &ChapterVersionControlWithSubversion;
+  &ChapterVersionControlWithGit;
+  &ChapterDocumentManagerPlugin;
+  &ChapterContinuousIntegrationWithHudson;
+  &ChapterWiki;
+  &ChapterCommunicationServices;
+  &ChapterSurveyManager;
+  &ChapterProjectWebSite;
+  &ChapterOtherServices;
+  &ChapterTracker;
+  &Chapterlegalnotice;
+</book>

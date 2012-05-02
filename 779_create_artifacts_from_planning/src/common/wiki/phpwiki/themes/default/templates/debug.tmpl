@@ -1,0 +1,26 @@
+<?php // -*-html-*-
+  rcs_id('$Id: debug.tmpl,v 1.17 2005/02/02 19:02:54 rurban Exp $');
+?>
+<?php global $RUNTIMER; ?>
+<table width="%100" border="0" cellpadding="0" cellspacing="0">
+<tr><td>
+<?php /* Note: The Portland theme's debug.tmpl overrides this file with it's own non-graphical variant. */ ?>
+<div id="xhtml-validator"><a href="http://validator.w3.org/check/referer" target="_top"><img
+        id="xhtml" border="0"
+        src="<?=$WikiTheme->_findData('buttons/valid-xhtml10.png')?>"
+        alt="Valid XHTML 1.0!" height="31" width="88" /></a>
+<a href="http://jigsaw.w3.org/css-validator/check/referer" target="_top"><img
+        id="css" border="0"
+        src="<?=$WikiTheme->_findData('buttons/vcss.png')?>"
+        alt="Valid CSS!" height="31" width="88" /></a>
+</div>
+</td><td>
+<span class="debug"><?=fmt("Page Execution took %s seconds", $RUNTIMER->getStats())?>
+<? $mem = getMemoryUsage(); 
+if ($mem) { ?>
+<?= fmt(", Memory: %s", $mem) ?>
+<? } ?>
+</span>
+</td></tr></table>
+<?php // This keeps the valid XHTML! icons from "hanging off the bottom of the screen" ?>
+<br clear="all" class="clear-floats" />

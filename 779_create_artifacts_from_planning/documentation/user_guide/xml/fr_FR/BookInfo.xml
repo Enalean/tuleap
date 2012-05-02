@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+-->
+  <bookinfo>
+    <revhistory>
+      <revision>
+        <revnumber>2.9.4</revnumber>
+
+        <date>18-Jan-2006</date>
+
+        <authorinitials>Laurent Julliard</authorinitials>
+
+        <revremark>Version française initiale par  L. Julliard basée sur la version 2.9.4 anglaise du 21-Déc-2005</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.5</revnumber>
+
+        <date>2-Mar-2006</date>
+
+        <authorinitials>Nicolas Guerin</authorinitials>
+
+        <revremark>Ajout d'une section concernant la gestion des références.</revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.6</revnumber>
+
+        <date>24-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Survey Manager suite à l'amélioration de ST 
+	des boutons radio spécifiques pour les sondages
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.7</revnumber>
+
+        <date>25-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour des chapitres Vue d'ensemble du site, 
+        Créer un nouveau projet et Administration d'un projet
+	pour les patron de projets.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.8</revnumber>
+
+        <date>30-Aug-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Mise à jour de la section Service d'annonces
+	pour inclure les amélioration de ST sur les annonces
+	privées (SR #265).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>2.9.9</revnumber>
+
+        <date>21-Sep-2006</date>
+
+        <authorinitials>Marie-Luise Schneider</authorinitials>
+
+        <revremark>Dans paragraphe type de projet : correction 
+	du lien sur références et ajout de détails sur la création de
+	projets à partir d'un projet de patron. 
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.0</revnumber>
+
+        <date>03-Avr-2007</date>
+
+        <authorinitials>Equipe Codex</authorinitials>
+
+        <revremark>Mise à jour pour la version 3.2 :
+        Documentation du nouveau service Fichiers, documentation 
+        des templates, documentation du mode CVS Watch, nombreuses 
+        corrections (voir SR #337).
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.1</revnumber>
+
+        <date>6-May-2008</date>
+
+        <authorinitials>Equipe Codex</authorinitials>
+
+        <revremark>Corrections mineures, mise à jour de certaines sections et
+        réparation de liens.
+        </revremark>
+      </revision>
+      <revision>
+        <revnumber>3.6</revnumber>
+        <date>12-August-2008</date>
+        <authorinitials>Equipe Codex</authorinitials>
+        <revremark>CodeX vers Codendi
+        </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.20</revnumber>
+        <date>19-Juillet-2011</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>Ajout Git
+        </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.23</revnumber>
+        <date>27-Octobre-2011</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>Corrige les utilisations du nom de produit.
+	Ajout des Post Actions dans le Workflow.
+	</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.27.2</revnumber>
+        <date>7 mars 2012</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>Git: suppression des références à Gitshell, ajout sur gitolite et les forks personnels.
+        Tracker: les tracker v5 ne sont plus en beta.
+        </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.28</revnumber>
+        <date>23-Mars-2012</date>
+        <authorinitials>Equipe Codex</authorinitials>
+        <revremark>
+            Notification Subversion par chemin.
+        </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>5.0</revnumber>
+        <date>20-Apr-2012</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>
+            Rafraichissement de la documentation et des captures d'écran
+        </revremark>
+      </revision>
+    </revhistory>
+  </bookinfo>
+<!--
+Local Variables:
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
+End:
+-->
+

@@ -1,0 +1,13 @@
+<h2>{{createPlanning}}</h2>
+<form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
+    <p>
+        <label for="planning_name">{{planningName}}</label>
+        <input type="text" name="planning_name"/>
+    </p>
+    <p>
+        {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}
+    </p>
+    <p>
+        <input type="submit" value="{{btnSubmit}}"/>
+    </p>
+</form>

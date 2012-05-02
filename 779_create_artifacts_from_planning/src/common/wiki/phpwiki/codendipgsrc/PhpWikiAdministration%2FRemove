@@ -1,0 +1,12 @@
+Date: Wed, 2 Jun 2004 21:09:39 +0200 
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.8)
+X-Rcs-Id: $Id: PhpWikiAdministration%2FRemove,v 1.5 2004/06/03 22:27:09 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PhpWikiAdministration%2FRemove;
+  pgsrc_version="2 $Revision: 1.5 $";
+  flags=PAGE_LOCKED;
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin WikiAdminRemove ?>

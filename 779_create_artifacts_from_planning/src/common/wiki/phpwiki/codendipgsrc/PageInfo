@@ -1,0 +1,12 @@
+Date: Mon, 14 Oct 2002 10:25:32 -0400
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.4pre)
+X-Rcs-Id: $Id: PageInfo,v 1.1 2002/10/14 14:43:23 carstenklapp Exp $
+Content-Type: application/x-phpwiki;
+  pagename=PageInfo;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision: 1.1 $";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+<?plugin PageInfo?>

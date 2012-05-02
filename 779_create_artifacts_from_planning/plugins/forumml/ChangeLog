@@ -1,0 +1,13 @@
+Version 2.6
+    * Make forumml compliant with default purifier
+    * Fix title typo
+
+Version 2.5
+    * Fix forumml drops forwarded emails
+
+Version 2.4
+    * Fix backlog #196: ForumML drops accents in messages coming from Outlook.
+
+Version 2.3
+
+           Enhancement: Add hook for color used in plugin statistics.

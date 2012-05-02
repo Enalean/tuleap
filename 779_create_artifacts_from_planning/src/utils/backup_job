@@ -1,0 +1,120 @@
+#!/bin/sh
+#
+# Codendi
+# Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+# http://www.codendi.com
+#
+#
+#  
+#
+#  License:
+#    This file is subject to the terms and conditions of the GNU General Public
+#    license. See the file COPYING in the main directory of this archive for
+#    more details.
+#
+# /usr/lib/codendi/bin/backup_job
+#
+#      Originally written by Vicki Tuttle 2001- 2003, Codendi Team, Xerox
+#      This job shuts down mysql and copies mysql database files to
+#      /cvsroot/.mysql_backup
+#      It then starts mysql and backs up all filesystems to tape
+#
+#     For this backup strategy to work properly the mysql log facility
+#     must be activated in /etc/my.cnf and this job must be run
+#     before the full system takes place.
+#
+
+set -e
+
+###############################################################################
+# Configuration Variables
+
+
+## Global definitions
+oldBackupDstDir=/var/lib/codendi/backup/mysql/old
+currentBackupDstDir=/var/lib/codendi/backup/mysql
+binaryLogDir=/var/lib/mysql
+mysqlDataDir=/var/lib/mysql
+tarDir=/var/lib
+#
+###############################################################################
+
+
+# if NOOLD=1 -> Old full backup is deleted instread of staying
+# in a dedicated directory.
+
+# Check arguments
+while   ((1))   # look for options
+do      case    "$1" in
+        \-keep\-n\-archives)    NOLD=$2; break;;
+        \-\noarchives) DELETEALLOLD=1; break;;
+        *)      if [ ! -z "$1" ];
+            then
+                echo "Invalid option $1";
+                HELP=1;
+            fi
+            break;;
+        esac
+        shift # next argument
+done
+
+# Display help in case of wrong arguments
+if [ ${HELP} ];
+then
+    echo "Usage: backup_job [-keep-n-archives] [-noarchives]";
+    echo "  -keep-n-archives: specifies the number of old backups to keep.";
+    echo "  -noarchives: removes all stored backups.";
+    echo "Note: providing no options will keep all archived backups.";
+fi 
+
+MKDIR=/bin/mkdir
+MV=/bin/mv
+DUMP=/sbin/dump
+RM=/bin/rm
+# New archive directory
+oldBackupDir=${oldBackupDstDir}/`date +%y%m%d`
+
+/etc/init.d/mysqld stop
+sleep 5
+
+# Move current bkp to old dir
+${MKDIR} -p ${oldBackupDir}
+
+dumpfiles=`ls ${currentBackupDstDir} | grep sqldump | head -1`
+if [ $dumpfiles ];
+then
+    ${MV} ${currentBackupDstDir}/sqldump* ${oldBackupDir}
+fi
+
+# back up mysql datafiles to disk
+cd ${tarDir}
+tar -hczf ${currentBackupDstDir}/sqldump.`date +%y%m%d.%H%M`.tgz --exclude 'codendi-bin.*' mysql
+# Delete all archived backups
+if [ ${DELETEALLOLD} ];
+then
+    echo "All archived backups will be deleted ..."
+    ${RM} -rf ${oldBackupDstDir}/*
+fi
+
+# Only keep n old archives.
+numoldarchives=`ls ${oldBackupDstDir} | wc -w`
+if [ "${NOLD}" ]; then 
+    echo "Only the $NOLD newest backups will be kept."
+    while (( 1 ))
+    do
+        if [[ ${numoldarchives} > ${NOLD} ]];
+        then
+            todelete=`ls -c --reverse ${oldBackupDstDir} | head -1`
+            echo "deleting $oldBackupDstDir/$todelete ..."
+            ${RM} -rf ${oldBackupDstDir}/${todelete}
+            numoldarchives=$(( ${numoldarchives} - 1))
+        else
+            break
+        fi
+    done
+fi
+
+# Delete mysql codendi-bin files
+${RM} -rf ${binaryLogDir}/codendi-bin*
+
+/etc/init.d/mysqld start

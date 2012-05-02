@@ -1,0 +1,51 @@
+<!ELEMENT docman (propdefs?, ugroups?, item*) >
+
+<!ELEMENT propdefs (propdef*) >
+
+<!ELEMENT propdef (value*) >
+<!ATTLIST propdef
+        name CDATA #REQUIRED
+        type (text|string|date|list) #REQUIRED
+        multivalue (true|false) #IMPLIED
+        empty (true|false) #IMPLIED
+>
+
+<!ELEMENT ugroups (ugroup*) >
+<!ELEMENT ugroup (member*) >
+<!ATTLIST ugroup name CDATA #REQUIRED >
+<!ELEMENT member (#PCDATA) >
+
+<!ELEMENT item (properties?, permissions?, versions?, pagename?, url?, item*) >
+<!ATTLIST item type (folder|link|empty|wiki|file|embeddedfile) #REQUIRED >
+
+<!ELEMENT properties (title, description?, create_date?, update_date?, owner?, status?, obsolescence_date?, property*) >
+<!ELEMENT title (#PCDATA) >
+<!ELEMENT description (#PCDATA) >
+<!ELEMENT create_date (#PCDATA) >
+<!ELEMENT update_date (#PCDATA) >
+<!ELEMENT owner (#PCDATA) >
+<!ATTLIST owner type CDATA #IMPLIED >
+<!ELEMENT status (#PCDATA) >
+<!ELEMENT obsolescence_date (#PCDATA) >
+<!ELEMENT property (#PCDATA | value )* >
+<!ATTLIST property title CDATA #REQUIRED >
+<!ELEMENT value (#PCDATA) >
+
+<!ELEMENT permissions (permission*) >
+<!ELEMENT permission (#PCDATA) >
+<!ATTLIST permission ugroup CDATA #REQUIRED >
+
+<!ELEMENT versions (version+) >
+<!ELEMENT version (author, label?, changelog?, date, filename?, filetype?, content) >
+<!ELEMENT author (#PCDATA) >
+<!ATTLIST author type CDATA #IMPLIED >
+<!ELEMENT label (#PCDATA) >
+<!ELEMENT changelog (#PCDATA) >
+<!ELEMENT date (#PCDATA) >
+<!ELEMENT filename (#PCDATA) >
+<!ELEMENT filetype (#PCDATA) >
+<!ELEMENT content (#PCDATA) >
+
+<!ELEMENT pagename (#PCDATA) >
+
+<!ELEMENT url (#PCDATA) >

@@ -1,0 +1,109 @@
+
+module forumml8 1.0;
+
+require {
+	type mailman_mail_t;
+	type usr_t;
+	type mysqld_t;
+	type postfix_smtpd_t;
+	type xfs_t;
+	type setroubleshootd_t;
+	type system_dbusd_t;
+	type tmp_t;
+	type mysqld_etc_t;
+	type initrc_t;
+	type mysqld_db_t;
+	type httpd_sys_content_t;
+	type logwatch_t;
+	type postfix_smtp_t;
+	type postfix_bounce_t;
+	type var_run_t;
+	type mysqld_var_run_t;
+	type named_t;
+	type postfix_cleanup_t;
+	type postfix_master_t;
+	type postfix_pickup_t;
+	type system_mail_t;
+	type postfix_qmgr_t;
+	type httpd_t;
+	type avahi_t;
+	class fifo_file { write read getattr ioctl };
+	class process signal;
+	class unix_stream_socket connectto;
+	class file { write getattr read create unlink };
+	class sock_file write;
+	class lnk_file read;
+	class dir { write search read remove_name create add_name };
+}
+
+#============= avahi_t ==============
+allow avahi_t mysqld_db_t:dir search;
+allow avahi_t mysqld_etc_t:file getattr;
+
+#============= httpd_t ==============
+allow httpd_t system_mail_t:process signal;
+
+#============= logwatch_t ==============
+allow logwatch_t initrc_t:unix_stream_socket connectto;
+allow logwatch_t mysqld_etc_t:file read;
+allow logwatch_t mysqld_t:unix_stream_socket connectto;
+
+#============= mailman_mail_t ==============
+allow mailman_mail_t httpd_sys_content_t:dir { read write create add_name };
+allow mailman_mail_t httpd_sys_content_t:file { read write create };
+allow mailman_mail_t httpd_sys_content_t:lnk_file read;
+allow mailman_mail_t self:fifo_file { write read getattr ioctl };
+allow mailman_mail_t tmp_t:file { read getattr };
+allow mailman_mail_t usr_t:file read;
+allow mailman_mail_t var_run_t:dir { write remove_name };
+allow mailman_mail_t var_run_t:file { read unlink };
+
+#============= named_t ==============
+allow named_t mysqld_db_t:dir search;
+allow named_t mysqld_etc_t:file { read getattr };
+
+#============= postfix_bounce_t ==============
+allow postfix_bounce_t initrc_t:unix_stream_socket connectto;
+allow postfix_bounce_t mysqld_db_t:dir search;
+allow postfix_bounce_t mysqld_etc_t:file getattr;
+allow postfix_bounce_t mysqld_t:unix_stream_socket connectto;
+
+#============= postfix_cleanup_t ==============
+allow postfix_cleanup_t initrc_t:unix_stream_socket connectto;
+allow postfix_cleanup_t mysqld_db_t:dir search;
+allow postfix_cleanup_t mysqld_etc_t:file getattr;
+
+#============= postfix_master_t ==============
+allow postfix_master_t initrc_t:unix_stream_socket connectto;
+allow postfix_master_t mysqld_etc_t:file getattr;
+
+#============= postfix_pickup_t ==============
+allow postfix_pickup_t initrc_t:unix_stream_socket connectto;
+allow postfix_pickup_t mysqld_db_t:dir search;
+allow postfix_pickup_t mysqld_etc_t:file { read getattr };
+allow postfix_pickup_t mysqld_var_run_t:sock_file write;
+
+#============= postfix_qmgr_t ==============
+allow postfix_qmgr_t initrc_t:unix_stream_socket connectto;
+allow postfix_qmgr_t mysqld_db_t:dir search;
+allow postfix_qmgr_t mysqld_etc_t:file getattr;
+
+#============= postfix_smtp_t ==============
+allow postfix_smtp_t initrc_t:unix_stream_socket connectto;
+allow postfix_smtp_t mysqld_db_t:dir search;
+allow postfix_smtp_t mysqld_etc_t:file getattr;
+
+#============= postfix_smtpd_t ==============
+allow postfix_smtpd_t initrc_t:unix_stream_socket connectto;
+allow postfix_smtpd_t mysqld_db_t:dir search;
+allow postfix_smtpd_t mysqld_etc_t:file getattr;
+
+#============= setroubleshootd_t ==============
+allow setroubleshootd_t httpd_sys_content_t:lnk_file read;
+
+#============= system_dbusd_t ==============
+allow system_dbusd_t mysqld_t:unix_stream_socket connectto;
+allow system_dbusd_t mysqld_var_run_t:sock_file write;
+
+#============= xfs_t ==============
+allow xfs_t mysqld_t:unix_stream_socket connectto;

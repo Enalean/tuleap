@@ -1,0 +1,3 @@
+# $Id: .htaccess,v 1.2 2001/11/08 16:35:05 dairiki Exp $
+order allow,deny
+Deny from all

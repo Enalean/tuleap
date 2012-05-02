@@ -1,0 +1,9 @@
+<?php // -*-html-*-
+  rcs_id('');
+?>
+<!-- Add your Disclaimer here -->
+<?php if (!$WikiTheme->DUMP_MODE) { ?>
+<?= $WARNINGS ?>
+<?= $GLOBALS['ErrorManager']->getPostponedErrorsAsHTML() ?>
+<?php if (defined('DEBUG') and DEBUG & 1) { ?><?= Template('debug') ?><?php } ?>
+<?php } ?>

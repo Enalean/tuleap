@@ -1,0 +1,18 @@
+<!--
+//
+// Codendi
+// Copyright (c) STMicroelectronics, 2008. All Rights Reserved
+// http://www.codendi.com
+//
+-->
+
+<p>
+<strong>WARNING: Beware if you select a project workspace below as template</strong><br />
+The new project inherits the definitions of the project used as template:
+<ul>
+ <li>Services enabled will be enabled in the new project</li>
+ <li>Service configuration will be inherited: trackers, forums, packages, etc.</li>
+ <li>Some data & metadata will be <strong>copied</strong>: document structure (folders), document content (files, wiki pages, etc), user groups</li>
+</ul></p>
+<p><strong>Proceed only if the selected project is a template or if you now what you're doing.</strong></p>
+

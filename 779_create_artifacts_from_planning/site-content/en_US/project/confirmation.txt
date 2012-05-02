@@ -1,0 +1,36 @@
+<?
+//
+// Codendi
+// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+// http://www.codendi.com
+//
+// 
+//
+
+	echo
+	'
+	<P>	<B>Full Name:</B><BR>
+	<INPUT size="40" maxlength="40" type="text" name="form_full_name" VALUE="'.$data['project']['form_full_name'].'">
+	<P>
+	<B>Unix Name:</B><BR>
+	<INPUT size="40" maxlength="40" type="text" name="form_unix_name" VALUE="'.$data['project']['form_unix_name'].'">
+	<P>
+	<B>License:</B><BR>
+	<SELECT NAME="form_license">
+	';
+
+	while (list($k,$v) = each($LICENSE)) {
+		print "<OPTION value=\"$k\"";
+		if ($k==$data['project']['form_license']) {
+			echo ' SELECTED';
+		}
+		print ">$v\n";
+	}
+	echo '</SELECT>';
+	echo '
+	<P>
+	<B>If Other License:</B><BR>
+	<TEXTAREA name="form_license_other" wrap=virtual cols=60 rows=10>'.$data['project']['form_license_other'].'</TEXTAREA>
+	<P>';
+	
+?>

@@ -1,0 +1,3 @@
+# $Id: .htaccess,v 1.1 2004/05/14 10:14:58 rurban Exp $
+order allow,deny
+Deny from all

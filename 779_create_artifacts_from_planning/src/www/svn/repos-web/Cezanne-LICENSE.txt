@@ -1,0 +1,5 @@
+The icons in this project are from the Cezanne icon theme
+http://www.kde-look.org/content/show.php?content=16479
+
+License: Creative Commons Attribution-ShareAlike 2.0
+http://creativecommons.org/licenses/by-sa/2.0/

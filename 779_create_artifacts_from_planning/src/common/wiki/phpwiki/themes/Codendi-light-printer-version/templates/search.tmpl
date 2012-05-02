@@ -1,0 +1,33 @@
+<!--{{{ LiveSearch --> <? // -*- php -*- ?>
+<div id="searchholder">
+<form id="searchform" name="searchform" action="<?= WikiURL(_("TitleSearch"))?>"
+      method="get" accept-charset="<?=$charset?>">
+<?php if (! USE_PATH_INFO) { ?>
+<input type="hidden" name="pagename" value="<?= _("TitleSearch")?>" />
+<?php } ?>
+<input type="hidden" name="auto_redirect" value="1" />
+<input name="s" size="12" maxlength="256"
+   value="<?=_("Search")?>"
+   onfocus="if (this.value == '<?=_("Search")?>') {this.value = '';}"
+   onmouseout="window.status=''; return true;" 
+   onmouseover="window.status='<?=_("Quick Search")?>'; return true;"
+<?php if (defined("ENABLE_LIVESEARCH") and ENABLE_LIVESEARCH) { ?>
+   type="text" id="livesearch" 
+   title="<?=_("LiveSearch")?>" 
+   onKeypress="liveSearchStart()"
+   onblur="setTimeout('closeResults()',2000); if (this.value == '') {this.value = '<?=_("Search")?>';}" />
+   <br/>
+   <div id="LSResult">
+   </div>
+<?php } elseif(defined("ENABLE_ACDROPDOWN") and ENABLE_ACDROPDOWN) { ?>
+   title="<?=_("LiveSearch")?>"
+   class="dropdown" id="autocomplete_remote" acdropdown="true" 
+   autocomplete_list="url:<?= WikiURL(_("TitleSearch"),array("format"=>"livesearch")) ?>&s=^[S]"
+   autocomplete_matchsubstring="true" />
+<?php } else { ?>
+   type="text" id="livesearch" 
+   title="<?=_("TitleSearch")?>" /> 
+<?php } ?>
+</form>
+</div>
+<!--}}}-->

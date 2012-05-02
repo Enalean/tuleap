@@ -1,0 +1,22 @@
+<?php  // -*-html-*-
+rcs_id('$Id: html.tmpl,v 1.10 2005/02/04 13:27:29 rurban Exp $');
+/*
+ * This template is responsible mainly for the outer level <html> stuff.
+ *
+ * NS/MO/IE/Op Browsers before 4.0 don't like that.
+ */
+if (browserVersion() >= 4.0)
+  echo "<","?xml version=\"1.0\" encoding=\"", $charset, "\"?", ">\n";
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?=$GLOBALS['LANG']?>" lang="<?=$GLOBALS['LANG']?>">
+<?= Template('head') ?>
+<?= Template('body') ?>
+<?php
+if (defined('DEBUG') and DEBUG) {
+    echo "<!-- phpwiki source: \n";
+    echo $RCS_IDS;
+    echo "-->\n";
+}
+?>
+</html>

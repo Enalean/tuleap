@@ -1,0 +1,71 @@
+Date: Fri, 3 Jan 2003 22:00:00 -0500
+Mime-Version: 1.0 (Produced by PhpWiki 1.3.4)
+X-Rcs-Id: $Id: ExternalSearchPlugin,v 1.3 2004/04/19 09:05:56 rurban Exp $
+Content-Type: application/x-phpwiki;
+  pagename=ExternalSearchPlugin;
+  flags=PAGE_LOCKED;
+  pgsrc_version="2 $Revision: 1.3 $";
+  markup=2;
+  charset=iso-8859-1
+Content-Transfer-Encoding: binary
+
+!! Synopsis
+
+The ExternalSearchPlugin creates a form to query InterWiki~s or other
+internet sites.
+
+!! Typical Usage
+<verbatim>
+<?plugin ExternalSearch
+         url="InterWiki or URL"
+         name="button text"
+?>
+</verbatim>
+
+
+!! Arguments
+__url__:
+  Specify a wiki from the InterWikiMap or a url. Any text entered by
+  the user will be appended to the search url. The string placeholder
+  '__=%s=__' can be used to insert a search query into the url rather
+  than appending it.
+
+__name__:
+  Text to display in the submit button. For InterWiki sites the
+  default is the wiki name, for other urls the default is the text
+  "External Search".
+
+__formsize__:
+  Specify the input area size. (default: 30 characters)
+
+__debug__:
+  Don't really redirect to the external site, just print out the url
+  that would be redirected to.
+
+
+!! Examples
+
+<verbatim>
+  url="http://sunir.org/apps/meta.pl?"       name="Metawiki Search"
+  url="http://www.usemod.com/cgi-bin/mb.pl?" name="MeatBall Search"
+  url=php-lookup
+  url=php-function
+  url=PhpWiki
+</verbatim>
+
+Perform a full-text search on multiple wiki's:
+<?plugin ExternalSearch url="http://sunir.org/apps/meta.pl?" name="Metawiki Search" ?>
+
+Perform a full-text search on [MeatBall|MeatBall:SiteSearch] wiki:
+<?plugin ExternalSearch url="http://www.usemod.com/cgi-bin/mb.pl?" name="MeatBall Search" ?>
+
+Search the PHP web site for a function name:
+<?plugin ExternalSearch url=php-lookup name="PHP Lookup" ?>
+
+Enter the name of a PHP function to view the documentation page:%%%
+<?plugin ExternalSearch url=php-function ?>
+
+Enter any existing page name on PhpWiki to jump to that page:
+<?plugin ExternalSearch url=PhpWiki ?>
+----
+PhpWikiDocumentation WikiPlugin

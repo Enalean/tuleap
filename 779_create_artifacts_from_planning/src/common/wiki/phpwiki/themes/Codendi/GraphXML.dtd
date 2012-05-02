@@ -1,0 +1,285 @@
+<!-- Graph Specification dtd                                                 -->
+<!-- Centrum voor Wiskunde en Informatica (CWI)                              -->
+<!--
+ Copyright Stichting Mathematisch Centrum 2000
+
+  Permission to use and distribute this software and its
+  documentation for any purpose is hereby granted without fee, provided that
+  the above copyright notice, author statement and this permission,
+  warranties and liability notice appear in all copies of this software
+  and related documentation.
+
+  Warranties
+  Stichting Mathematisch Centrum makes no warranties, express or implied, with
+  regard to this software. In particular, but without limitation, SMC makes
+  no warranty of fitness for a particular use, no warranty of freedom from
+  infringement of any patent or copyright, nor any warranty as to accuracy.
+  Accordingly, SMC assumes no obligation to furnish assistance of any kind
+  whatsoever or to furnish additional information or documentation.
+
+  Liability
+  In no event shall Stichting Mathematisch Centrum be liable for any damages
+  arising out of or in connection with the use or performance of this
+  software.
+
+  Amsterdam, 21 June, 2000
+  
+  Version 1.1
+  
+-->
+
+<!-- These entities are just to make the description simpler -->
+<!ENTITY % common-elements "label|data|dataref|properties">
+
+<!-- These entities are the basis of the user's extension mechanism -->
+<!ENTITY % rootExtensions "">
+<!ENTITY % nodeExtensions "">
+<!ENTITY % edgeExtensions "">
+<!ENTITY % graphExtensions "">
+<!ENTITY % editExtensions "">
+
+<!ENTITY % admissibleProperties "">
+<!ENTITY % admissibleGraphProperties "">
+
+<!-- ========================================================================= -->
+<!-- ========================================================================= -->
+
+<!-- A file consists of a graph definition and, optionally,                    -->
+<!-- addinitional definitions and edit nodes                                   -->
+<!-- The real 'content' might be preceeded by optional data                    -->
+<!ELEMENT GraphXML ((%common-elements;
+                     %rootExtensions;
+                     |style)*,graph*,(edit|edit-bundle)*)>
+
+<!--
+  Note that, according to the official W3C specification, the definition
+  of the xlink namespace on the root level should be enough for the whole
+  document (children should inherit namespaces). However, some xml processors
+  (like IE5.0) does not know that feature yet, so the same attribute
+  specification is repeated for all children nodes which use it.
+-->
+<!ATTLIST GraphXML 
+    xmlns:xlink    CDATA    #FIXED    "http://www.w3.org/1999/xlink/namespace/"
+>
+<!-- ========================================================================= -->
+<!-- ========================================================================= -->
+
+
+<!-- ========================================================================= -->
+<!--                      The definition part                                  -->
+<!-- ========================================================================= -->
+
+<!-- A graph consists of an optional label, references to icons, URL-s to      -->
+<!-- external data, locally stored data and, finally, nodes and edges          -->
+<!ELEMENT graph ((%common-elements;
+                  %graphExtensions;
+                  |style|icon|size)*,(node|edge)*)>
+<!ATTLIST graph
+    vendor           CDATA        #IMPLIED
+    version          CDATA        #IMPLIED
+    id               ID           #IMPLIED
+    class            CDATA        #IMPLIED
+    preferredlayout  CDATA        #IMPLIED
+>
+
+<!-- An icon to representing a full graph                                      -->
+<!ELEMENT icon EMPTY>
+<!ATTLIST icon
+    xmlns:xlink     CDATA                #FIXED   "http://www.w3.org/1999/xlink/namespace/"
+    xlink:type      CDATA                #FIXED   "simple"
+    xlink:role      CDATA                #FIXED   "Icon image for the full graph"
+    xlink:title     CDATA                #IMPLIED   
+    xlink:show      (new|parsed|replace) #FIXED   "parsed"
+    xlink:actuate   (user|auto)          #FIXED   "auto"
+    xlink:href      CDATA                #REQUIRED
+>
+
+<!-- ========================================================================= -->
+<!--                   Editing of graphs                                       -->
+<!-- ========================================================================= -->
+<!ELEMENT edit ((%common-elements;
+                 %editExtensions;)*,
+                 (node|edge)*)>
+<!ATTLIST edit
+    xmlns:xlink     CDATA                #FIXED   "http://www.w3.org/1999/xlink/namespace/"
+    action          (replace|remove)     #REQUIRED
+    xlink:type      CDATA                #FIXED   "simple"
+    xlink:role      CDATA                #FIXED   "Reference to graph"
+    xlink:title     CDATA                #IMPLIED   
+    xlink:show      (new|parsed|replace) #FIXED   "new"
+    xlink:actuate   (user|auto)          #FIXED   "user"
+    xlink:href      CDATA                #IMPLIED
+    class           CDATA                #IMPLIED
+>
+
+<!ELEMENT edit-bundle (edit*)>
+<!ATTLIST edit-bundle
+    class       CDATA        #IMPLIED
+>
+
+<!-- ========================================================================= -->
+<!--                   Nodes and edges                                         -->
+<!-- ========================================================================= -->
+
+<!-- A node may include element information; it has a unique identifier        -->
+<!ELEMENT node (%common-elements;
+                %nodeExtensions;
+                |style|position|size|transform|subgraph-style)*>
+<!ATTLIST node
+    xmlns:xlink     CDATA                #FIXED   "http://www.w3.org/1999/xlink/namespace/"
+    name            CDATA                #REQUIRED
+    isMetanode      (true|false)         "false"
+    xlink:type      CDATA                #FIXED   "simple"
+    xlink:role      CDATA                #FIXED   "Reference to graph"
+    xlink:title     CDATA                #IMPLIED
+    xlink:show      (new|parsed|replace) #FIXED   "new"
+    xlink:actuate   (user|auto)          #FIXED   "user"
+    xlink:href      CDATA                #IMPLIED
+    class           CDATA                #IMPLIED
+>
+
+<!-- An edge may include element information; it may have an identifier, and   -->
+<!-- it has to give its source and target                                      -->
+<!ELEMENT edge (%common-elements;
+                %edgeExtensions;
+                |style|path)*>
+<!ATTLIST edge
+    name       CDATA        #IMPLIED
+    source     CDATA        #REQUIRED
+    target     CDATA        #REQUIRED
+    class      CDATA        #IMPLIED
+    isDirected (true|false) #IMPLIED
+>
+
+<!-- ========================================================================= -->
+
+<!-- Properties are placeholders for key-value pairs                           -->
+<!ELEMENT properties EMPTY>
+<!ATTLIST properties 
+    class   CDATA   #IMPLIED
+    %admissibleProperties;
+>
+
+<!-- Graph-specific-properties are placeholders for key-value pairs,           -->
+<!-- within the context of the current (innermost nested) graph                -->
+<!ELEMENT graph-specific-properties EMPTY>
+<!ATTLIST graph-specific-properties 
+    class   CDATA   #IMPLIED
+    %admissibleGraphProperties;
+>
+
+<!ELEMENT label (#PCDATA)>
+<!ATTLIST label
+    class       CDATA        #IMPLIED
+>
+
+<!ELEMENT data (#PCDATA)>
+<!ATTLIST data
+    class       CDATA        #IMPLIED
+>
+
+<!ELEMENT dataref (ref*)>
+<!ATTLIST dataref
+    xmlns:xlink     CDATA                #FIXED      "http://www.w3.org/1999/xlink/namespace/"
+    xlink:type      CDATA                #FIXED   "extended"
+    xlink:role      CDATA                #FIXED   "Reference to external application data"
+    xlink:title     CDATA                #IMPLIED
+    xlink:show      (new|parsed|replace) #FIXED   "new"
+    xlink:actuate   (user|auto)          #FIXED   "user"
+    class           CDATA                #IMPLIED
+>
+
+<!-- links are like the html urls                                              -->
+<!ELEMENT ref EMPTY>
+<!ATTLIST ref     
+    xmlns:xlink     CDATA                #FIXED      "http://www.w3.org/1999/xlink/namespace/"
+    xlink:type      CDATA                #FIXED   "locator"
+    xlink:role      CDATA                #IMPLIED
+    xlink:title     CDATA                #IMPLIED
+    xlink:show      (new|parsed|replace) #FIXED   "new"
+    xlink:actuate   (user|auto)          #FIXED   "user"
+    xlink:href      CDATA                #REQUIRED
+    class           CDATA                #IMPLIED
+>
+
+<!-- position of a node                                                        -->
+<!ELEMENT position  EMPTY>
+<!ATTLIST position
+    x         CDATA   "0.0" 
+    y         CDATA   "0.0" 
+    z         CDATA   "0.0"
+    class     CDATA   #IMPLIED
+>
+
+<!-- size of a node or a graph                                                 -->
+<!ELEMENT size EMPTY>
+<!ATTLIST size
+    width   CDATA     #REQUIRED
+    height  CDATA     #REQUIRED
+    depth   CDATA     "0.0"
+    class   CDATA     #IMPLIED
+>
+
+<!-- the path of an edge is a sequence of positions                            -->
+<!ELEMENT path (position)*>
+<!ATTLIST path
+    type    (polyline|spline|arc)   "polyline"
+    class   CDATA                   #IMPLIED
+>
+
+<!ELEMENT transform EMPTY>
+<!ATTLIST transform
+    matrix  CDATA   "1.0 0.0 0.0 0.0  0.0 1.0 0.0 0.0  0.0 0.0 1.0 0.0"
+    class   CDATA   #IMPLIED
+>
+
+<!-- ========================================================================= -->
+<!--
+    In all specifications, colour can be:
+        name: black, blue, cyan, darkGray, gray, green, lightGray, magenta, orange, pink, red, white, yellow
+        #rrggbb
+        #rrggbbaa
+-->
+
+
+<!ELEMENT style (line|fill|implementation)*>
+<!ELEMENT subgraph-style (line|fill|implementation)*>
+
+<!ELEMENT line EMPTY>
+<!-- linestyle can be: none, solid, dashed, dash-dotted, dotted, or #bbbb -->
+<!ATTLIST line
+    tag         (edge|node)     "edge"
+    class        CDATA           #IMPLIED
+    color        CDATA           #IMPLIED
+    colour       CDATA           #IMPLIED
+    colour_start CDATA           #IMPLIED
+    colour_end   CDATA           #IMPLIED
+    color_start  CDATA           #IMPLIED
+    color_end    CDATA           #IMPLIED
+    linestyle    CDATA           #IMPLIED
+    linewidth    CDATA           #IMPLIED
+>
+
+<!ELEMENT fill EMPTY>
+<!ATTLIST fill
+    xmlns:xlink     CDATA                   #FIXED      "http://www.w3.org/1999/xlink/namespace/"
+    tag             (edge|node)             "node"
+    class           CDATA                   #IMPLIED
+    color           CDATA                   #IMPLIED
+    colour          CDATA                   #IMPLIED
+    fillstyle       (solid|none|background) #IMPLIED
+    xlink:type      CDATA                   #FIXED   "simple"
+    xlink:role      CDATA                   #FIXED   "Fill image or pattern"
+    xlink:title     CDATA                   #IMPLIED
+    xlink:show      (new|parsed|replace)    #FIXED   "parsed"
+    xlink:actuate   (user|auto)             #FIXED   "user"
+    xlink:href      CDATA                   #IMPLIED
+    imagefill       (resize|duplicate|none) #IMPLIED
+>
+
+<!ELEMENT implementation EMPTY>
+<!ATTLIST implementation
+    tag         (edge|node)     #REQUIRED
+    class       CDATA           #IMPLIED
+    scriptname  CDATA           #IMPLIED
+>

@@ -1,0 +1,42 @@
+Version 3.13 - Tuleap 5.0
+    * Fix unit tests
+
+Version 3.12 - Tuleap 4.0.27
+    * Add 2 new variables for fine grain LDAP plugin behaviour:
+      * $sys_ldap_user_management: Enable usage of LDAP for people management. For instance autocompletion on  user list, automatic creation of users not already referenced in the forge.
+      * $sys_ldap_grp_enabled: This allows to mirror a LDAP group defined in LDAP directory within the forge.
+    * Note: for backward compatibility reasons, if the variables are not defined
+      the default behaviour is to enable the corresponding feature.
+
+Version 3.11 (Tuleap 4.0.26)
+    * Fix Security issue (Contrib STMicroelectronics)
+
+Version 3.10 (Tuleap 4.0.26)
+    * Can now disable/enable LDAP daily synchronization in ldap.inc
+    * Add the Orange implementation of LDAP_UserSync
+    
+Version 3.9 (Tuleap 4.0.25)
+    * Checkbox checked by default when importing an LDAP group (contrib STMicroelectronics)
+    
+Version 3.8
+    * Update synchro example to suspend users upon given criterion.
+
+Version 3.7 (Tuleap 4.0.24)
+    * Use PHP5 constructor & fix method signature
+
+Version 3.6 (Tuleap 4.0.23)
+    == Bug Fix ==
+    * backlog #185: Propagate LDAP login changes in SVNAccessFile
+    
+Version 3.5 (Tuleap 4.0.22)
+    == Bug Fix ==
+    * Add CSRF countermeasures
+    * Fix LDAP options settings (for better compat with LDAPv3 directories, hence AD)
+
+Version 3.4 (Codendi_ST 4.0.17) 
+	
+	What Changed?
+	============
+        ** Make Codendi look for people in several LDAP branches, according to the config
+		** Add the autocompletion for external users
+		

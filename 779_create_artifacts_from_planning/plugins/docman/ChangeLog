@@ -1,0 +1,68 @@
+Version 2.25.3 - Tuleap 5.0
+    Some code clean-up
+
+Version 2.25.2 - Tuleap 4.0.28
+    Fix/Remove old documentation links
+
+Version 2.25.1 - Tuleap 4.0.28
+    Fix documentation name in install sql.
+
+Version 2.25 - Tuleap 4.0.27
+    Fix a typo
+
+Version 2.24 - Tuleap 4.0.27
+    Display a more explicit error message while adding a widget previewer without the item id
+
+Version 2.23 - Tuleap 4.0.27
+    Fix unit tests to prepare for simpletest 1.1
+
+Version 2.22 - Tuleap 4.0.26
+    Fix behaviour on permission denied when accessing document: when no one to notify, notify admin (contrib STMicroelectronics).
+
+Version 2.21 - Tuleap 4.0.26
+    Document manager can add and remove people that monitors documents and folders (contrib STMicroelectronics).
+
+Version 2.20 - Tuleap 4.0.25
+    SOAP getDocmanTreeInfo return the filename for files and embedded files(contrib STMicroelectronics).
+
+Version 2.19
+    Fix file type for files uploaded through soap.
+
+Version 2.18
+    Document manager can see who monitors documents and folder and may remove them (contrib STMicroelectronics).
+
+Version 2.17
+    Fix user realname output
+    
+Version 2.16
+    Fix output of date metadata (contrib Mesulog)
+    
+Version 2.15
+    Do not display [remove] button on a wiki page if it is referenced in the docman
+    Add index on docman_approval_user table
+    Fix french string translation (contrib Arnaud Quette).
+
+Version 2.14
+    'Paste' action should not appear in popup menu for the same cut item or for one of its subfolders.
+
+Version 2.13
+	Refactoring on DAO
+
+Version 2.12
+	Add missing icons for CodexSTN and SteerForge themes
+
+Version 2.11
+        Global text search is now more visible
+        The "View as" (tree|table|icons) selectbox is replaced by nice icons
+        Internal refactoring for webdav
+
+Version 2.9
+        Add hook to display info message in permission request dedicated screen.
+
+Version 2.8 
+        Fix bug: Do not allow the creation of metadata with empty name.
+        Fix bug: Paste action should not appear in popup menu for the same cut document. 
+        Enhancement: Add hook for color used in plugin statistics.
+
+Version 1.2
+	Update SOAP (see 4.1 release in src/www/soap/ChangeLog)
