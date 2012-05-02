@@ -808,7 +808,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
         }
         
-        $html .= '<form action="?'. http_build_query(array(
+        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query(array(
             'tracker'  => $this->id,
             'func' => 'submit-artifact',
             'return_to' => $request->get('return_to')
