@@ -119,7 +119,17 @@ class CodeReviewActions extends Actions {
             $rb_user         = 'codendiadm';
             $rb_password     = 'welcome0';
             $reviewSubmitter = 'codendiadm';
+            //$testing_done    = $reviewRessources['params']['testing_done'];
+            $testing_done    = 'testing_done';
+            $summary         = $reviewRessources['params']['summary'];
+            //$target_people   = $reviewRessources['params']['target_people'];
+            $target_people   = 'codendiadm';
+            $description     = $reviewRessources['params']['description'];
             $reviewRequestId = $this->postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter);
+            if (!empty($reviewRequestId)) {
+                $this->updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
+                $this->publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password);
+            }
         }
     }
 
@@ -143,13 +153,39 @@ class CodeReviewActions extends Actions {
                 return $request['return']['review_request']['id'];
             } else {
                 return $request['return']['return'];
-                error("Something went wrong!");
             }
         } else {
             return $request['status'];
         }
     }
 
+    /**
+     * Update a given review request
+     *
+     * @param Integer $reviewRequestId
+     * @param String  $rb_user
+     * @param String  $rb_password
+     * @param String  $testing_done
+     * @param String  $summary
+     * @param String  $target_people
+     * @param String  $description
+     *
+     * @return void
+     */
+    function updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description) {
+        $data = array('testing_done'   => $testing_done,
+                      'target_people'  => $target_people,
+                      'description'    => $description,
+                      'summary'        => $summary);
+        $curl    = new TuleapCurl();
+        $request = $curl->execute("http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
+    }
+
+    function publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password) {
+        $data = array('public' => 'true');
+        $curl    = new TuleapCurl();
+        $request = $curl->execute("http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
+    }
 
 }
 ?>
