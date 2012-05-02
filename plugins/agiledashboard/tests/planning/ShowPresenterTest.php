@@ -79,12 +79,14 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     protected function getATreeNode($tree_node_id, $artifact_links = array(), $classname = "planning-draggable-alreadyplanned") {
         $node = new TreeNode(array(
                         'id'                   => $tree_node_id,
+                        'artifact_id'          => $tree_node_id,
                         'title'                => 'Artifact '.$tree_node_id,
                         'class'                => $classname,
                         'uri'                  => '/bar',
                         'xref'                 => 'art #'. $tree_node_id,
-                        'allowedChildrenTypes' => array(),
                         'editLabel'            => null,
+                        'return_to'            => '',
+                        'allowedChildrenTypes' => array(),
         ));
         $node->setId($tree_node_id);
         foreach($artifact_links as $node_child) {
