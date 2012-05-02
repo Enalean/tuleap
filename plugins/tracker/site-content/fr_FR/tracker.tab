@@ -31,7 +31,7 @@ plugin_tracker_crosssearch	creation_lab_feature	Cette fonctionnalité est expér
 # Script: SF/www/tracker/add.php
 #
 plugin_tracker_add	invalid	Cet outil de suivi n'est plus valide.
-plugin_tracker_add	add_a	Créer un(e) 
+plugin_tracker	add_a	Créer un(e) $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/browse.php

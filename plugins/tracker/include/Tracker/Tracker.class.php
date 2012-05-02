@@ -91,8 +91,18 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
     
+    /**
+     * @return string the url of the form to submit a new artifact
+     */
     public function getSubmitUrl() {
         return TRACKER_BASE_URL .'/?tracker='. $this->getId() .'&func=new-artifact';
+    }
+    
+    /**
+     * @return string ~ 'Add new bug'
+     */
+    public function getAddNewLabel() {
+        return $GLOBALS['Language']->getText('plugin_tracker', 'add_a', $this->getItemName());
     }
 
     /**
@@ -747,7 +757,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $breadcrumbs = array(
                 array(
                         'title' => 'New artifact',
-                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=new-artifact',
+                        'url'   => $this->getSubmitUrl(),
                 ),
         );
         
@@ -987,7 +997,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $toolbar = array();
                 $toolbar[] = array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
-                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=new-artifact',
+                        'url'   => $this->getSubmitUrl(),
                         'class' => 'tracker-submit-new',
                 );
                 if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {

@@ -41,7 +41,7 @@ plugin_tracker_crosssearch	creation_lab_feature	This is an experimental feature.
 # Script: SF/www/tracker/add.php
 #
 plugin_tracker_add	invalid	This tracker is no longer valid.
-plugin_tracker_add	add_a	Add A 
+plugin_tracker	add_a	Add a $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/browse.php
