@@ -48,7 +48,6 @@ class RepositoryManager {
         $this->repoName       = $project->getUnixName();
         // TODO: Decide whether to go on or not if project doesn't use svn
         $this->svnPath        = svn_utils_get_svn_path($project);
-        $this->svnPath = 'http://svn.codex-cc.codex.cro.st.com/svnroot/codex';
         $this->tuleapUser     = $pluginInfo->getPropertyValueForName('tuleap_user');
         // TODO: we may use another alternative to authenticate through svn
         $this->tuleapPassword = $pluginInfo->getPropertyValueForName('tuleap_pw');
