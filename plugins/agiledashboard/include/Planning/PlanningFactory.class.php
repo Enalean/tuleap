@@ -131,15 +131,12 @@ class PlanningFactory {
     
     public function getPlanningWithTrackers($planning_id) {
         $planning = $this->getPlanning($planning_id);
-        if (! $planning) return;
         
-        $planning_tracker_id = $planning->getPlanningTrackerId();
-        $planning_tracker    = $this->tracker_factory->getTrackerById($planning_tracker_id);
-        $backlog_trackers    = $this->getBacklogTrackers($planning);
-        
-        // TODO: do not use setters...
-        $planning->setPlanningTracker($planning_tracker);
-        $planning->setBacklogTrackers($backlog_trackers);
+        if ($planning) {
+            // TODO: do not use setters...
+            $planning->setPlanningTracker($this->getPlanningTracker($planning));
+            $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
+        }
         
         return $planning;
     }
@@ -168,6 +165,10 @@ class PlanningFactory {
             $backlog_tracker_ids[] = $row['tracker_id'];
         }
         return $backlog_tracker_ids;
+    }
+    
+    public function getPlanningTracker(Planning $planning) {
+        return $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
     }
     
     /**
