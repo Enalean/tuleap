@@ -48,10 +48,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->current_uri      = $request->getUri();
     }
 
-    private function getArtifactId(Tracker_Artifact $artifact) {
-        return $artifact->getId();
-    }
-
     public function getShowPresenter(Planning $planning,
                                      Tracker_CrossSearch_SearchContentView $content_view,
                                      array $artifacts_to_select,
@@ -95,6 +91,10 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $view->current_url = $this->current_uri;
         
         return $view;
+    }
+
+    private function getArtifactId(Tracker_Artifact $artifact) {
+        return $artifact->getId();
     }
     
     private function getArrayFromRequest($parameter_name) {

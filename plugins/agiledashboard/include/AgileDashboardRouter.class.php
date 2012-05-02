@@ -47,12 +47,7 @@ class AgileDashboardRouter {
         
         switch($request->get('action')) {
             case 'show':
-                $object_god   = new TrackerManager();
-                $view_builder = $object_god->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser());
-                
-                $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
-                
-                $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
+                $this->routeShowPlanning($request);
                 break;
             case 'new':
                 $this->renderAction($controller, 'new_', $request);
@@ -103,21 +98,37 @@ class AgileDashboardRouter {
         return new Planning_Controller($request, $planning_factory);
     }
 
-    private function buildArtifactPlannificationController(Codendi_Request $request) {
+    protected function buildArtifactPlannificationController(Codendi_Request $request) {
         $artifact_factory = Tracker_ArtifactFactory::instance();
         $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
         
         return new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory);
     }
     
-    private function renderAction(MVC2_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
+    protected function renderAction(MVC2_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
         $this->executeAction($controller, $action_name, $args);
         $this->displayFooter($request);
     }
     
-    private function executeAction(MVC2_Controller $controller, $action_name, array $args = array()) {
+    protected function executeAction(MVC2_Controller $controller, $action_name, array $args = array()) {
         call_user_func_array(array($controller, $action_name), $args);
+    }
+
+    /**
+     * @param Codendi_Request $request
+     * @return Tracker_CrossSearch_ViewBuilder
+     */
+    protected function getViewBuilder(Codendi_Request $request) {
+        $object_god = new TrackerManager();
+        return $object_god->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser());
+    }
+    
+    public function routeShowPlanning(Codendi_Request $request) {
+        $view_builder = $this->getViewBuilder($request);
+        $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
+
+        $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
     }
 }
 ?>

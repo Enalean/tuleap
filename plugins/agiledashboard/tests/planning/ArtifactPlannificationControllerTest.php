@@ -387,8 +387,8 @@ class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCa
         
         $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
         
-        $encoded_equal = urlencode('=');
-        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/&amp;aid$encoded_equal/")));
+        $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
+        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));
         $controller->show(mock('Tracker_CrossSearch_ViewBuilder'), mock('ProjectManager'));
         
     }
