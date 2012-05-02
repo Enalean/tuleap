@@ -19,6 +19,7 @@
  */
 
 require_once('common/mvc/Actions.class.php');
+require_once('common/curl/TuleapCurl.class.php');
 
 /**
  * codereview
@@ -105,6 +106,50 @@ class CodeReviewActions extends Actions {
         }
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
 }
+
+    /**
+    * Creates a new review request
+    *
+    * @return void
+    */
+    function createReviewRequest() {
+        $reviewRessources = $this->validateRequest();
+        if ($reviewRessources['status']) {
+            $repository      = $reviewRessources['params']['repository'];
+            $rb_user         = 'codendiadm';
+            $rb_password     = 'welcome0';
+            $reviewSubmitter = 'codendiadm';
+            $reviewRequestId = $this->postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter);
+        }
+    }
+
+    /**
+     * Creates a review request
+     *
+     * @param String  $repository
+     * @param String  $rb_user
+     * @param String $rb_password
+     * @param String  $reviewSubmitter
+     *
+     * @return Integer
+     */
+    function postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter) {
+        $data = array('repository' => $repository,
+                      'submit_as'  => $reviewSubmitter);
+        $curl    = new TuleapCurl();
+        $request = $curl->execute('http://localhost/reviews/api/review-requests/', false, $rb_user, $rb_password, $data);
+        if ($request['return']) {
+            if ($request['return']['stat'] == "ok") {
+                return $request['return']['review_request']['id'];
+            } else {
+                return $request['return']['return'];
+                error("Something went wrong!");
+            }
+        } else {
+            return $request['status'];
+        }
+    }
+
 
 }
 ?>

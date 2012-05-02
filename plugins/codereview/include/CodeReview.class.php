@@ -80,7 +80,7 @@ class CodeReview extends Controler {
                 break;
             case 'submit_review':
                 // TODO: put some actions here
-                $this->action = 'validateRequest';
+                $this->action = 'createReviewRequest';
                 break;
             default:
                 $this->view = 'displayFrame';
