@@ -25,8 +25,10 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
+    public $current_url = '';
+    
     protected function fetchTable() {
-        Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
+        Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan', $this->current_url)->visit($this->tree_of_artifacts);
         $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
         return $renderer->render('cards', $this, true);
     }

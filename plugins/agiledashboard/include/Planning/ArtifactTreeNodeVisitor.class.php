@@ -26,6 +26,11 @@ class Planning_ArtifactTreeNodeVisitor {
     private $classname;
     
     /**
+     * @var string
+     */
+    private $current_url;
+    
+    /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
@@ -35,9 +40,10 @@ class Planning_ArtifactTreeNodeVisitor {
      */
     private $hierarchy_factory;
     
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_Hierarchy_HierarchicalTrackerFactory $hierarchy_factory, $classname) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_Hierarchy_HierarchicalTrackerFactory $hierarchy_factory, $classname, $current_url) {
         $this->artifact_factory  = $artifact_factory;
         $this->classname         = $classname;
+        $this->current_url       = $current_url;
         $this->hierarchy_factory = $hierarchy_factory;
     }
     
@@ -46,10 +52,10 @@ class Planning_ArtifactTreeNodeVisitor {
      *
      * @return Planning_ArtifactTreeNodeVisitor
      */
-    public static function build($classname) {
+    public static function build($classname, $current_url) {
         $artifact_factory  = Tracker_ArtifactFactory::instance();
         $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
-        return new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, $classname);
+        return new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, $classname, $current_url);
     }
     
     private function injectArtifactInChildren(TreeNode $node) {
@@ -62,12 +68,16 @@ class Planning_ArtifactTreeNodeVisitor {
         $row = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         if ($artifact) {
+            $row['artifact_id']          = $artifact->getId();
             $row['title']                = $artifact->getTitle();
             $row['class']                = $this->classname;
             $row['uri']                  = $artifact->getUri();
             $row['xref']                 = $artifact->getXRef();
-            $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
             $row['editLabel']            = $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
+            $row['return_to']            = urlencode($this->current_url);
+            if (!isset($row['allowedChildrenTypes'])) {
+                $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
+            }
             $node->setData($row);
         }
         $this->injectArtifactInChildren($node);

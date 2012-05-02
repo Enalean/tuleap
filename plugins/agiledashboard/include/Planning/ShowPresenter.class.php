@@ -81,8 +81,7 @@ class Planning_ShowPresenter {
         $destination = null;
         if ($this->artifact) {
             $destination = $this->getTreeNode($child_depth);
-            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
-            $this->overrideDestinationChildrenTypesWithBacklogTrackers($destination);
+            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned', $this->current_uri)->visit($destination);
         }
         return $destination;
     }
@@ -92,16 +91,10 @@ class Planning_ShowPresenter {
      */
     private function getTreeNode($child_depth) {
         $id          = $this->artifact->getId();
-        $parent_node = new TreeNode(array('id' => $id));
+        $parent_node = new TreeNode(array('id' => $id, 'allowedChildrenTypes' => $this->planning->getBacklogTrackers()));
         $parent_node->setId($id);
         $this->addChildItem($this->artifact, $parent_node, $child_depth);
         return $parent_node;
-    }
-    
-    private function overrideDestinationChildrenTypesWithBacklogTrackers(TreeNode $node) {
-        $data = $node->getData();
-        $data['allowedChildrenTypes'] = $this->planning->getBacklogTrackers();
-        $node->setData($data);
     }
     
     private function addChildItem($artifact, $parent_node, $child_depth = 0) {
@@ -225,6 +218,13 @@ class Planning_ShowPresenter {
      */
     public function getCurrentUri() {
         return $this->current_uri;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCurrentUrlEncoded() {
+        return urlencode($this->current_uri);
     }
     
     /**
