@@ -20,6 +20,7 @@
 
 require_once('common/mvc/Controler.class.php');
 require_once('CodeReviewViews.class.php');
+require_once('CodeReviewActions.class.php');
 require_once('RepositoryManager.class.php');
 
 /**
@@ -70,13 +71,16 @@ class CodeReview extends Controler {
         if ($this->getUser()->isLoggedIn()) {
             $repositoryManager = new RepositoryManager($this->plugin, $request);
             $repositoryManager->addRepository($request);
-            $vAction = new Valid_WhiteList('action', array('add_review'));
+            $vAction = new Valid_WhiteList('action', array('add_review', 'submit_review'));
             $vAction->required();
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {
             case 'add_review':
-                // TODO: put some actions here
                 $this->view = 'reviewSubmission';
+                break;
+            case 'submit_review':
+                // TODO: put some actions here
+                $this->action = 'validateRequest';
                 break;
             default:
                 $this->view = 'displayFrame';
