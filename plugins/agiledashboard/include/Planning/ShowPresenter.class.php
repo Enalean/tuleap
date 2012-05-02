@@ -83,7 +83,7 @@ class Planning_ShowPresenter {
             Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
             $this->overrideDestinationChildrenTypesWithBacklogTrackers($destination);
         }
-        return $parent_node;
+        return $destination;
     }
     
     /**

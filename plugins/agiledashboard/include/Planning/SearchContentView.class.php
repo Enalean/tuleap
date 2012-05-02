@@ -26,9 +26,7 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     protected function fetchTable() {
-        $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
-        $visitor = new Planning_ArtifactTreeNodeVisitor($this->artifact_factory, $hierarchy_factory, 'planning-draggable-toplan');
-        $visitor->visit($this->tree_of_artifacts);
+        Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
         $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
         return $renderer->render('cards', $this, true);
     }
