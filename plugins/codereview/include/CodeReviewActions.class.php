@@ -129,6 +129,7 @@ class CodeReviewActions extends Actions {
             $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
             if (!empty($reviewRequestId)) {
                 $this->updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
+                $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password);
                 $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);
             }
         }
@@ -190,5 +191,23 @@ class CodeReviewActions extends Actions {
         $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
     }
 
+    function CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_POST, 1 ); 
+        curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);  
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $server."/api/review-requests/".$reviewRequestId."/diffs/");
+        $post_array = array(
+            //The absolute path in the repository the diff was generated in.
+            "basedir"=>"http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc/contrib/st/enhancement/114983_sttrunk_tracker_followup_html",
+            //The path to the diff file.
+            "path"=>"@/usr/share/codendi/plugins/codereview/diff.diff"
+        );
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+        $request = curl_exec($ch);
+        var_dump($request);
+        $error = curl_error($ch);
+        curl_close($ch);
+    }
 }
 ?>
