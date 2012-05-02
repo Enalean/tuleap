@@ -548,7 +548,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         if ($request->isAjax()) {
                             header(json_header(array('aid' => $artifact->getId())));
                             exit;
-                        } else if ($link) {
+                        } else if ($link && !$request->get('return_to')) {
                             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact('. (int)$artifact->getId() .');</script>';
                             exit;
                         } else {
