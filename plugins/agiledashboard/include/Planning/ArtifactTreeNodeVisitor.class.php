@@ -41,6 +41,17 @@ class Planning_ArtifactTreeNodeVisitor {
         $this->hierarchy_factory = $hierarchy_factory;
     }
     
+    /**
+     * @param string $classname The css classname to inject in TreeNode
+     *
+     * @return Planning_ArtifactTreeNodeVisitor
+     */
+    public static function build($classname) {
+        $artifact_factory  = Tracker_ArtifactFactory::instance();
+        $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
+        return new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, $classname);
+    }
+    
     private function injectArtifactInChildren(TreeNode $node) {
         foreach ($node->getChildren() as $child) {
             $child->accept($this);

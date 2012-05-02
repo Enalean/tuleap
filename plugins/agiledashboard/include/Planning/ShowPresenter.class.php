@@ -77,28 +77,30 @@ class Planning_ShowPresenter {
      * @return TreeNode
      */
     public function getDestination($child_depth = 1) {
-        $parent_node = null;
+        $destination = null;
         if ($this->artifact) {
-            $parent_node = new TreeNode(
-                array(
-                    'id' => $this->artifact->getId(),
-                )
-            );
-            $parent_node->setId($this->artifact->getId());
-            $this->addChildItem($this->artifact, $parent_node, $child_depth);
-            
-            $artifact_factory = Tracker_ArtifactFactory::instance();
-            $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
-            $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'planning-draggable-alreadyplanned');
-            $visitor->visit($parent_node);
-            
-            // override allowedChildrenTypes with backlog trackers
-            $data = $parent_node->getData();
-            $data['allowedChildrenTypes'] = $this->planning->getBacklogTrackers();
-            $parent_node->setData($data);
-            
+            $destination = $this->getTreeNode();
+            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
+            $this->overrideDestinationChildrenTypesWithBacklogTrackers($destination);
         }
         return $parent_node;
+    }
+    
+    /**
+     * @return TreeNode
+     */
+    private function getTreeNode() {
+        $id          = $this->artifact->getId();
+        $parent_node = new TreeNode(array('id' => $id));
+        $parent_node->setId($id);
+        $this->addChildItem($this->artifact, $parent_node, $child_depth);
+        return $parent_node;
+    }
+    
+    private function overrideDestinationChildrenTypesWithBacklogTrackers(TreeNode $node) {
+        $data = $node->getData();
+        $data['allowedChildrenTypes'] = $this->planning->getBacklogTrackers();
+        $node->setData($data);
     }
     
     private function addChildItem($artifact, $parent_node, $child_depth = 0) {
