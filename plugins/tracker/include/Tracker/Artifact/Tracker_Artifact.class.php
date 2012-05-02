@@ -366,25 +366,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         
         $html = '';
         
+        $action_params = array(
+            'aid'       => $this->id,
+            'func'      => 'artifact-update',
+            'return_to' => $request->get('return_to')
+        );
+
         if ($from_aid != null) {
-            $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query(
-                array(
-                    'aid'  => $this->id,
-                    'func' => 'artifact-update',
-                    'from_aid' => $from_aid,
-                    'return_to' => $request->get('return_to')
-                )
-            ) .'" method="POST" enctype="multipart/form-data">';
-            
-        } else {
-            $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query(
-                array(
-                    'aid'  => $this->id,
-                    'func' => 'artifact-update',
-                    'return_to' => $request->get('return_to')
-                )
-            ) .'" method="POST" enctype="multipart/form-data">';
+            $action_params['from_aid'] = $from_aid;
         }
+        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($action_params) .'" method="POST" enctype="multipart/form-data">';
         
         
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
