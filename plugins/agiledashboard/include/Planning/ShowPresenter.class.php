@@ -79,7 +79,7 @@ class Planning_ShowPresenter {
     public function getDestination($child_depth = 1) {
         $destination = null;
         if ($this->artifact) {
-            $destination = $this->getTreeNode();
+            $destination = $this->getTreeNode($child_depth);
             Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
             $this->overrideDestinationChildrenTypesWithBacklogTrackers($destination);
         }
@@ -89,7 +89,7 @@ class Planning_ShowPresenter {
     /**
      * @return TreeNode
      */
-    private function getTreeNode() {
+    private function getTreeNode($child_depth) {
         $id          = $this->artifact->getId();
         $parent_node = new TreeNode(array('id' => $id));
         $parent_node->setId($id);
