@@ -35,18 +35,17 @@ class TuleapCurl {
      * @return Array
      */
     public function execute($url, $includeHeader = false,$authUser = null, $authPassword = null, $postfields = null) {
-
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if(!empty($authUser) && !empty($authPassword)){
+        if (!empty($authUser) && !empty($authPassword)) {
             curl_setopt($ch, CURLOPT_USERPWD, $authUser.':'.$authPassword);
         }
-        if(!empty($postfields)) {
+        if (!empty($postfields)) {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postfields, "", "&"));
         }
-        if($includeHeader) {
+        if ($includeHeader) {
             curl_setopt($ch, CURLOPT_HEADER, true);
         }
         $return = json_decode(curl_exec($ch), true);
