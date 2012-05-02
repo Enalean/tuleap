@@ -267,6 +267,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('getId', $id);
         $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
         $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
+        $artifact->setReturnValue('userCanView', true);
         return $artifact;
     }
     
@@ -287,9 +288,9 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             $open_artifacts[] = $artifact;
         }
         $factory->setReturnValue(
-            'getOpenArtifactsByTrackerId', 
+            'getOpenArtifactsByTrackerIdUserCanView', 
             $open_artifacts, 
-            array($this->planning->getPlanningTrackerId()));
+            array(aUser()->build(), $this->planning->getPlanningTrackerId()));
         return $factory;
     }
     

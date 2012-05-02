@@ -120,10 +120,13 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
-    public function getOpenArtifactsByTrackerId($tracker_id) {
+    public function getOpenArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {
-            $artifacts[$row['id']] = $this->getInstanceFromRow($row);
+            $artifact = $this->getInstanceFromRow($row);
+            if ($artifact->userCanView($user)) {
+                $artifacts[$row['id']] = $artifact; 
+            }
         }
         return $artifacts;
     }
