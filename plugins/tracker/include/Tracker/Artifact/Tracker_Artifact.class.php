@@ -367,7 +367,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html = '';
         
         if ($from_aid != null) {
-            $html .= '<form action="?'. http_build_query(
+            $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query(
                 array(
                     'aid'  => $this->id,
                     'func' => 'artifact-update',
@@ -377,7 +377,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             ) .'" method="POST" enctype="multipart/form-data">';
             
         } else {
-            $html .= '<form action="?'. http_build_query(
+            $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query(
                 array(
                     'aid'  => $this->id,
                     'func' => 'artifact-update',
