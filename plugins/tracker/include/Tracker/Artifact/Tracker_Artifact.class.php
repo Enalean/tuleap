@@ -1196,17 +1196,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $artifact_links;
     }
     
-    public function isAnArtifactLink() {
-        foreach ($artifact_links as $artifact_link) {
-            $link->getLinkedArtifacts();
-            if (in_array($sublinks, $artifact_links)){
-             
-            }
-        }     
-    }
-    
     /**
-     * Get the latest artifacts from the hierarchy linked to the current artifact
+     * Get latest artifacts linked to the current artifact if 
+     * they are not in children.
      * 
      * @param User $user The user who should see the artifacts
      * 
@@ -1216,12 +1208,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $artifact_links = array();
         $direct_linked_artifacts = $this->getLinkedArtifacts($user);
         foreach($direct_linked_artifacts as $artifact_link) {
-            $sub_artifact_links = $artifact_link->getLinkedArtifacts($user);
-            foreach($sub_artifact_links as $sub_artifact_link){
-                if (in_array($sub_artifact_link, $direct_linked_artifacts)){
-                    $keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link);
-                    $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
-                }
+            $sub_artifact_links      = $artifact_link->getLinkedArtifacts($user);
+            $direct_linked_artifacts = $this->filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links);
+        }
+        return $direct_linked_artifacts;
+    }
+    
+    private function filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links) {
+        foreach($sub_artifact_links as $sub_artifact_link) {
+            if (($keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link))){
+                $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
             }
         }
         return $direct_linked_artifacts;
