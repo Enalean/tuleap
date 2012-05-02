@@ -115,6 +115,7 @@ class CodeReviewActions extends Actions {
     function createReviewRequest() {
         $reviewRessources = $this->validateRequest();
         if ($reviewRessources['status']) {
+            $server          = $reviewRessources['params']['server'];
             $repository      = $reviewRessources['params']['repository'];
             $rb_user         = 'codendiadm';
             $rb_password     = 'welcome0';
@@ -125,10 +126,10 @@ class CodeReviewActions extends Actions {
             //$target_people   = $reviewRessources['params']['target_people'];
             $target_people   = 'codendiadm';
             $description     = $reviewRessources['params']['description'];
-            $reviewRequestId = $this->postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter);
+            $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
             if (!empty($reviewRequestId)) {
-                $this->updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
-                $this->publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password);
+                $this->updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
+                $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);
             }
         }
     }
@@ -136,18 +137,19 @@ class CodeReviewActions extends Actions {
     /**
      * Creates a review request
      *
+     * @param String  $server
      * @param String  $repository
      * @param String  $rb_user
-     * @param String $rb_password
+     * @param String  $rb_password
      * @param String  $reviewSubmitter
      *
      * @return Integer
      */
-    function postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter) {
+    function postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter) {
         $data = array('repository' => $repository,
                       'submit_as'  => $reviewSubmitter);
         $curl    = new TuleapCurl();
-        $request = $curl->execute('http://localhost/reviews/api/review-requests/', false, $rb_user, $rb_password, $data);
+        $request = $curl->execute($server."/api/review-requests/", false, $rb_user, $rb_password, $data);
         if ($request['return']) {
             if ($request['return']['stat'] == "ok") {
                 return $request['return']['review_request']['id'];
@@ -162,6 +164,7 @@ class CodeReviewActions extends Actions {
     /**
      * Update a given review request
      *
+     * @param String  $server
      * @param Integer $reviewRequestId
      * @param String  $rb_user
      * @param String  $rb_password
@@ -172,19 +175,19 @@ class CodeReviewActions extends Actions {
      *
      * @return void
      */
-    function updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description) {
+    function updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description) {
         $data = array('testing_done'   => $testing_done,
                       'target_people'  => $target_people,
                       'description'    => $description,
                       'summary'        => $summary);
         $curl    = new TuleapCurl();
-        $request = $curl->execute("http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
+        $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
     }
 
-    function publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password) {
+    function publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password) {
         $data = array('public' => 'true');
         $curl    = new TuleapCurl();
-        $request = $curl->execute("http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
+        $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
     }
 
 }
