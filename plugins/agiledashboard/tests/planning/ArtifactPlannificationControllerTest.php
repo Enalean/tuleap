@@ -355,7 +355,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
 }
 
-class ArtifactPlannificationController_UriTest extends TuleapTestCase {
+class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCase {
     
     public function itPassesTheCurrentUriToThePresenter() {
         $expected_uri = '/plugins/agiledashboard/?blabla';
@@ -373,21 +373,24 @@ class ArtifactPlannificationController_UriTest extends TuleapTestCase {
         $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
     }
     
-    public function itUsesTheCurrentUriWithoutThe_aid() {
+    public function itReturnsToTheCurrentUrlWithoutAidReferenceOnArtifactCreation() {
         $expected_uri = '/plugins/agiledashboard/?blabla';
         $request = mock('Codendi_Request');
-        $aid_to_remove = '&aid=-1';
-        stub($request)->getUri()->returns($expected_uri.$aid_to_remove);
+        $aid_to_remove = 'aid=-1';
+        stub($request)->getUri()->returns($expected_uri.'&'.$aid_to_remove);
+        stub($request)->get('aid')->returns(-1);
         stub($request)->getCurrentUser()->returns(mock('User'));
         
-        $planning_factory = mock('PlanningFactory');
+        $planning_factory = stub('PlanningFactory')->getPlanningWithTrackers()->returns(mock('Planning'));
         $artifact_factory = mock('Tracker_ArtifactFactory');
         $tracker_factory  = mock('TrackerFactory');
         
         $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
         
-        $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
-        $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
+        $encoded_equal = urlencode('=');
+        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/&amp;aid$encoded_equal/")));
+        $controller->show(mock('Tracker_CrossSearch_ViewBuilder'), mock('ProjectManager'));
+        
     }
     
 }
