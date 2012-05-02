@@ -37,7 +37,7 @@ codendi.tracker.artifact.artifactLink = {
         
         table_cells.each(function (td) {
             var unlinked = codendi.imgroot + 'ic/cross.png';
-            var linked   = codendi.imgroot + 'ic/cross-disabled.png';            
+            var linked   = codendi.imgroot + 'ic/cross-disabled.png';
             if ( td.down('span') ) {
                 td.down('span').hide();
             }

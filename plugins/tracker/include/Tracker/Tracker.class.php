@@ -767,11 +767,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 ),
         );
         
-        if (!$link || !$request->isAjax()) {
+        if (!$link) {
             $this->displayHeader($layout, $this->name, $breadcrumbs);
         }
         
-        if ($link && !$request->isAjax()) {
+        if ($link) {
             echo '<html>';
             echo '<head>';
             $GLOBALS['HTML']->displayStylesheetElements(array());
@@ -780,6 +780,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             echo '</head>';
             
             echo '<body>';
+            echo '<div class="main_body_row">';
             echo '<div class="contenttable">';
 
             $project = null;
@@ -844,8 +845,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $trm = new Tracker_RulesManager($this);
         $html .= $trm->displayRulesAsJavascript();
         
+        $html .= '</div></div>';
+        
         echo $html;
-        if (!$link || !$request->isAjax()) {
+        if (!$link) {
             $this->displayFooter($layout);
         }
     }
