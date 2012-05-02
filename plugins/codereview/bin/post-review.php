@@ -48,9 +48,10 @@ $description     = $params['description'];
 
 $reviewRequestId = postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter);
 if (!empty($reviewRequestId)) {
+    //Don't publish review request before adding the diff ressource, otherwise, its status is reset to draft
     updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
+    CreateNewDiff($reviewRequestId, $rb_user, $rb_password);
     publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password);
-    //CreateNewDiff($reviewRequestId, $rb_user, $rb_password);
 } else {
     error("Crate review request Failure");
 }
@@ -114,7 +115,7 @@ function updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_do
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-    curl_setopt($ch, CURLOPT_USERPWD, "codendiadm:welcome0"); 
+    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password); 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, "testing_done=".$testing_done."&target_people=".$target_people."&description=".$description."&summary=".$summary);
     curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/");
@@ -137,15 +138,20 @@ function publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password) {
 }
 
 function CreateNewDiff($reviewRequestId, $rb_user, $rb_password) {
+    //@TODO: remove hardocoded post vars and keep in mind that the data will be usually sent as part of a multipart/form-data mimetype
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
+    curl_setopt($ch, CURLOPT_POST, 1 ); 
     curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);  
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "path=/root/Desktop/diff.diff");
     curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/diffs/");
-    $request = json_decode(curl_exec($ch), true);
-    var_dump($request);
+    $post_array = array(
+        //The absolute path in the repository the diff was generated in.
+        "basedir"=>"http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc/contrib/st/enhancement/114983_sttrunk_tracker_followup_html",
+        //The path to the diff file.
+        "path"=>"@/usr/share/codendi/plugins/codereview/diff.diff"
+    );
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
+    $request = curl_exec($ch);
     $error = curl_error($ch);
     curl_close($ch);
 }
