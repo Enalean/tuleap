@@ -147,7 +147,7 @@ class Planning_ShowPresenter {
             $artifacts_data[] = array(
                 'id'       => $artifact->getId(),
                 'title'    => $hp->purify($artifact->getTitle()),
-                'selected' => ($artifact->getId() == $this->artifact->getId()) ? 'selected="selected"' : '',
+                'selected' => ($artifact->getId() == $selected_id) ? 'selected="selected"' : '',
             );
         }
         return $artifacts_data;

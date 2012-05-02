@@ -83,6 +83,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
                         'uri'                  => '/bar',
                         'xref'                 => 'art #'. $tree_node_id,
                         'allowedChildrenTypes' => array(),
+                        'editLabel'            => null,
         ));
         $node->setId($tree_node_id);
         foreach($artifact_links as $node_child) {
@@ -176,35 +177,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     
         $result = $presenter->getDestination();
         $this->assertEqualTreeNodes($node_parent, $result);
-    }
-    
-    public function itProvidesBacklogArtifactTypeNamesAndCreationUrls() {
-        $stories_tracker     = aMockTracker()->withItemName('Story')->build();
-        $issues_tracker      = aMockTracker()->withItemName('Issue')->build();
-        $planning            = mock('Planning');
-        $content_view        = mock('Tracker_CrossSearch_SearchContentView');
-        $artifacts_to_select = array();
-        $artifact            = null;
-        $user                = mock('User');
-        $origin_url          = null;
-        
-        $presenter = new Planning_ShowPresenter($planning,
-                                                $content_view,
-                                                $artifacts_to_select,
-                                                $artifact,
-                                                $user,
-                                                $origin_url);
-        
-        $root_backlog_trackers = array($stories_tracker, $issues_tracker);
-        stub($planning)->getBacklogTrackers()->returns($root_backlog_trackers);
-        
-        $expected_artifact_types = array(
-            array('name' => 'Story', 'creationUrl' => null),
-            array('name' => 'Issue', 'creationUrl' => null),
-        );
-        
-        $actual_artifact_types = $presenter->backlogArtifactTypes();
-        $this->assertEqual($actual_artifact_types, $expected_artifact_types);
     }
 }
 ?>
