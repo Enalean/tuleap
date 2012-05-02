@@ -47,6 +47,10 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
+        
+        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+        $_SERVER['REQUEST_URI'] = '';
+        
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
@@ -57,6 +61,14 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     public function tearDown() {
+        parent::tearDown();
+        
+        if ($this->request_uri != null) {
+            $_SERVER['REQUEST_URI'] = $this->request_uri;
+        } else {
+            unset($_SERVER['REQUEST_URI']);
+        }
+        
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
@@ -349,6 +361,23 @@ class ArtifactPlannificationController_UriTest extends TuleapTestCase {
         $expected_uri = '/plugins/agiledashboard/?blabla';
         $request = mock('Codendi_Request');
         stub($request)->getUri()->returns($expected_uri);
+        stub($request)->getCurrentUser()->returns(mock('User'));
+        
+        $planning_factory = mock('PlanningFactory');
+        $artifact_factory = mock('Tracker_ArtifactFactory');
+        $tracker_factory  = mock('TrackerFactory');
+        
+        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
+        
+        $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
+        $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
+    }
+    
+    public function itUsesTheCurrentUriWithoutThe_aid() {
+        $expected_uri = '/plugins/agiledashboard/?blabla';
+        $request = mock('Codendi_Request');
+        $aid_to_remove = '&aid=-1';
+        stub($request)->getUri()->returns($expected_uri.$aid_to_remove);
         stub($request)->getCurrentUser()->returns(mock('User'));
         
         $planning_factory = mock('PlanningFactory');
