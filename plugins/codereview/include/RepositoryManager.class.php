@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/curl/TuleapCurl.class.php';
+
 /**
  * Manager of RB repositories
  */
@@ -46,6 +48,7 @@ class RepositoryManager {
         $this->repoName       = $project->getUnixName();
         // TODO: Decide whether to go on or not if project doesn't use svn
         $this->svnPath        = svn_utils_get_svn_path($project);
+        $this->svnPath = 'http://svn.codex-cc.codex.cro.st.com/svnroot/codex';
         $this->tuleapUser     = $pluginInfo->getPropertyValueForName('tuleap_user');
         // TODO: we may use another alternative to authenticate through svn
         $this->tuleapPassword = $pluginInfo->getPropertyValueForName('tuleap_pw');
@@ -60,18 +63,12 @@ class RepositoryManager {
      * @return Boolean
      */
     public function isRepositoryAlreadyThere() {
-        $exist = false;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
-        curl_setopt($ch, CURLOPT_USERPWD, $this->rbUser.":".$this->rbPassword); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_URL, $this->rbPath."/api/repositories/");
-        $result = json_decode(curl_exec($ch), true);
+        $exist  = false;
+        $curl   = new TuleapCurl();
+        $result = $curl->execute($this->rbPath."/api/repositories/", false, $this->rbUser, $this->rbPassword);
         // TODO: handle errors
-        $error = curl_error($ch);
-        curl_close($ch);
-        if ($result) {
-            foreach ($result['repositories'] as $repository) {
+        if ($result['return']) {
+            foreach ($result['return']['repositories'] as $repository) {
                 if ($repository['path'] == $this->svnPath) {
                     $exist = true;
                     break;
@@ -94,19 +91,9 @@ class RepositoryManager {
                           "tool"     => "subversion",
                           "username" => $this->tuleapUser,
                           "password" => $this->tuleapPassword);
-            $post = http_build_query($data, "", "&");
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HEADER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/xml"));
-            curl_setopt($ch, CURLOPT_USERPWD, $this->rbUser.":".$this->rbPassword); 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-            curl_setopt($ch, CURLOPT_URL, $this->rbPath."/api/repositories/");
-            curl_exec($ch);
+            $curl   = new TuleapCurl();
+            $result = $curl->execute($this->rbPath."/api/repositories/", true, $this->rbUser, $this->rbPassword, $data);
             // TODO: handle errors
-            $error = curl_error($ch);
-            curl_close($ch);
         }
     }
 

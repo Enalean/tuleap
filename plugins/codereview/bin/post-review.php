@@ -23,6 +23,7 @@
  * Usage: php post-review.php --repository="http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc" --rb_login="codendiadm" --rb_pass="welcome0" --submit_as="codendiadm" --testing_done="klo" --summary="This is my summary." --target_people="codendiadm" --description="This is my description."
  */
 
+require_once dirname(__FILE__).'/../../../src/common/curl/TuleapCurl.class.php';
 
 // Check script parameters
 /*if ($argc != 8) {
@@ -79,19 +80,13 @@ function error($msg) {
  * @return Integer
  */
 function postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password); 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "repository=".$repository."&submit_as=".$reviewSubmitter);
-    curl_setopt($ch, CURLOPT_URL, 'http://localhost/reviews/api/review-requests/');
-    $request = json_decode(curl_exec($ch), true);
-    $error = curl_error($ch);
-    curl_close($ch);
-    if ($request) {
-        if ($request['stat'] == "ok") {
-            return $request['review_request']['id'];
+    $data = array('repository' => $repository,
+                  'submit_as'  => $reviewSubmitter);
+    $curl    = new TuleapCurl();
+    $request = $curl->execute('http://localhost/api/review-requests/', false, $rb_user, $rb_password, $data);
+    if ($request['return']) {
+        if ($request['return']['stat'] == "ok") {
+            return $request['return']['review_request']['id'];
         } else {
             error("Something went wrong!");
         }
@@ -112,48 +107,28 @@ function postEmptyReview($repository, $rb_user, $rb_password, $reviewSubmitter) 
  * @return void
  */
 function updateEmptyReview($reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password); 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "testing_done=".$testing_done."&target_people=".$target_people."&description=".$description."&summary=".$summary);
-    curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/");
-    $request = json_decode(curl_exec($ch), true);
-    $error = curl_error($ch);
-    curl_close($ch);
+    $data = array('testing_done'   => $testing_done,
+                  'target_people'  => $target_people,
+                  'description'    => $description,
+                  'summary'        => $summary);
+    $curl    = new TuleapCurl();
+    $request = $curl->execute("http://localhost/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
 }
 
 function publishReviewRequestDraft($reviewRequestId, $rb_user, $rb_password) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
-    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password); 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, "public=true");
-    curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/draft/");
-    $request = json_decode(curl_exec($ch), true);
-    $error = curl_error($ch);
-    curl_close($ch);
+    $data = array('public' => 'true');
+    $curl    = new TuleapCurl();
+    $request = $curl->execute("http://localhost/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
 }
 
 function CreateNewDiff($reviewRequestId, $rb_user, $rb_password) {
     //@TODO: remove hardocoded post vars and keep in mind that the data will be usually sent as part of a multipart/form-data mimetype
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_POST, 1 ); 
-    curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);  
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, "http://localhost/reviews/api/review-requests/".$reviewRequestId."/diffs/");
-    $post_array = array(
-        //The absolute path in the repository the diff was generated in.
-        "basedir"=>"http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc/contrib/st/enhancement/114983_sttrunk_tracker_followup_html",
-        //The path to the diff file.
-        "path"=>"@/usr/share/codendi/plugins/codereview/diff.diff"
-    );
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
-    $request = curl_exec($ch);
-    $error = curl_error($ch);
-    curl_close($ch);
+    // basedir: The absolute path in the repository the diff was generated in.
+    // path:    The path to the diff file.
+    $data = array('basedir' => 'http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc/contrib/st/enhancement/114983_sttrunk_tracker_followup_html',
+                  'path'    => '@/usr/share/codendi/plugins/codereview/diff.diff');
+    $curl    = new TuleapCurl();
+    $request = $curl->execute("http://localhost/api/review-requests/".$reviewRequestId."/diffs/", false, $rb_user, $rb_password, $data);
 }
 
 ?>
