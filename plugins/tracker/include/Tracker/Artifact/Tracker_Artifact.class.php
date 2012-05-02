@@ -368,20 +368,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         
         if ($from_aid != null) {
             $html .= '<form action="?'. http_build_query(
-            array(
-                'aid'  => $this->id,
-                'func' => 'artifact-update',
-                'from_aid' => $from_aid,
-            )
-        ) .'" method="POST" enctype="multipart/form-data">';
+                array(
+                    'aid'  => $this->id,
+                    'func' => 'artifact-update',
+                    'from_aid' => $from_aid,
+                    'return_to' => $request->get('return_to')
+                )
+            ) .'" method="POST" enctype="multipart/form-data">';
             
         } else {
             $html .= '<form action="?'. http_build_query(
-            array(
-                'aid'  => $this->id,
-                'func' => 'artifact-update',
-            )
-        ) .'" method="POST" enctype="multipart/form-data">';
+                array(
+                    'aid'  => $this->id,
+                    'func' => 'artifact-update',
+                    'return_to' => $request->get('return_to')
+                )
+            ) .'" method="POST" enctype="multipart/form-data">';
         }
         
         
