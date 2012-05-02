@@ -967,7 +967,7 @@ plugin_tracker	submit_new_artifact	Soumettre un nouvel artefact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Aide
-plugin_tracker	linked_to	This artifact (of $3) will be linked to <a href="/tracker/?aid=$1" target="_blank">$2 #$1</a>
+plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
 plugin_tracker	tracker_switcher	Sélectionnez un outil de suivi
 
 plugin_tracker_artifact	set_to	à 

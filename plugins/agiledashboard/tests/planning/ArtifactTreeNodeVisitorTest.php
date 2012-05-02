@@ -41,7 +41,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         stub($artifact_factory)->getArtifactById(123)->returns($artifact);
         
         $node    = new TreeNode(array('id' => 123));
-        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'baz');
+        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'baz', '');
         
         $visitor->visit($node);
         

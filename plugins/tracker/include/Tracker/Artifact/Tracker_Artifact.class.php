@@ -659,15 +659,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'associate-artifact-to':
-                $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
                 $linked_artifact_id = $request->get('linked-artifact-id');
-                if (count($artlink_fields)) {
-                    $this->linkArtifact($artlink_fields, $linked_artifact_id, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+                if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
-                break;    
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -1172,13 +1168,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return UserManager::instance();
     }
 
-    private function linkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
-        $comment       = '';
-        $email         = '';
-        $artlink_field = $artlink_fields[0];
-        $fields_data   = array();
-        $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
-        $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+    /**
+     * User want to link an artifact to the current one
+     *
+     * @param int  $linked_artifact_id The id of the artifact to link
+     * @param User $current_user       The user who made the link
+     *
+     * @return bool true if success false otherwise
+     */
+    public function linkArtifact($linked_artifact_id, User $current_user) {
+        $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+        if (count($artlink_fields)) {
+            $comment       = '';
+            $email         = '';
+            $artlink_field = $artlink_fields[0];
+            $fields_data   = array();
+            $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
+            return $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+        }
     }
     
     /**

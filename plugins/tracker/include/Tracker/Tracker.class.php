@@ -539,6 +539,12 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $link = (int)$request->get('link-artifact-id');
                     if ($artifact = $this->createArtifact($layout, $request, $current_user)) {
+                        if ($request->get('immediate')) {
+                            $source_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link);
+                            if ($source_artifact) {
+                                $source_artifact->linkArtifact($artifact->getId(), $current_user);
+                            }
+                        }
                         if ($request->isAjax()) {
                             header(json_header(array('aid' => $artifact->getId())));
                             exit;
@@ -761,11 +767,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 ),
         );
         
-        if (!$link) {
+        if (!$link || !$request->isAjax()) {
             $this->displayHeader($layout, $this->name, $breadcrumbs);
         }
         
-        if ($link) {
+        if ($link && !$request->isAjax()) {
             echo '<html>';
             echo '<head>';
             $GLOBALS['HTML']->displayStylesheetElements(array());
@@ -786,8 +792,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'plugin_tracker', 
                         'linked_to', 
                         array(
-                            $link, 
-                            $artifact->getTracker()->getItemName(), 
+                            $artifact->fetchDirectLinkToArtifact(),
                             $layout->fetchTrackerSwitcher($current_user, ' ', $project, $this),
                         )
                     ),
@@ -810,6 +815,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
             )) .'" method="POST" enctype="multipart/form-data">';
         if ($link) {
             $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
+            if ($request->get('immediate')) {
+                $html .= '<input type="hidden" name="immediate" value="1" />';
+            }
         }
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
         $html .= '<table><tr><td>';
@@ -837,7 +845,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $html .= $trm->displayRulesAsJavascript();
         
         echo $html;
-        if (!$link) {
+        if (!$link || !$request->isAjax()) {
             $this->displayFooter($layout);
         }
     }
