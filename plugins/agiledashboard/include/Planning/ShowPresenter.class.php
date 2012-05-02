@@ -26,12 +26,12 @@ class Planning_ShowPresenter {
     public $planning_id;
     public $planning_name;
     public $group_id;
-    public $destination_id;
-    public $destination_title;
-    public $destination_link;
-    public $destination_xref;
     
     private $artifacts_to_select;
+    
+    /**
+     * @var Tracker_Artifact
+     */
     private $artifact;
     private $content_view;
     private $current_user;
@@ -53,23 +53,10 @@ class Planning_ShowPresenter {
                                 Tracker_Artifact $artifact = null, 
                                 User $user,
                                 $current_uri) {
-        $hp = Codendi_HTMLPurifier::instance();
-        
-        $this->planning         = $planning;
-        $this->planning_id      = $planning->getId();
-        $this->planning_name    = $planning->getName();
-        $this->planning_tracker = $planning->getPlanningTracker();
-        
-        if ($artifact) {
-            $this->destination_id     = $artifact->getId();
-            $this->destination_title  = $hp->purify($artifact->getTitle());
-            $this->destination_link   = $artifact->getUri();
-            $this->destination_xref   = $artifact->getXRef();
-            
-            // FIXME
-            if ($this->destination_link == null) { $this->destination_link = ''; }
-            if ($this->destination_xref == null) { $this->destination_xref = ''; }
-        }
+        $this->planning            = $planning;
+        $this->planning_id         = $planning->getId();
+        $this->planning_name       = $planning->getName();
+        $this->planning_tracker    = $planning->getPlanningTracker();
         $this->artifact            = $artifact;
         $this->artifacts_to_select = $artifacts_to_select;
         $this->content_view        = $content_view;
@@ -78,23 +65,39 @@ class Planning_ShowPresenter {
         $this->current_uri         = $current_uri;
     }
     
+    
+    /**
+     * @return bool
+     */
     public function hasArtifact() {
         return $this->artifact !== null;
     }
     
-    public function getLinkedItems($child_depth = 1) {
-        $parent_node = new TreeNode(
-            array(
-                'id' => $this->destination_id,
-            )
-        );
-        $parent_node->setId($this->destination_id);
-        $this->addChildItem($this->artifact, $parent_node, $child_depth);
-        
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
-        $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'planning-draggable-alreadyplanned');
-        $visitor->visit($parent_node);
+    /**
+     * @return TreeNode
+     */
+    public function getDestination($child_depth = 1) {
+        $parent_node = null;
+        if ($this->artifact) {
+            $parent_node = new TreeNode(
+                array(
+                    'id' => $this->artifact->getId(),
+                )
+            );
+            $parent_node->setId($this->artifact->getId());
+            $this->addChildItem($this->artifact, $parent_node, $child_depth);
+            
+            $artifact_factory = Tracker_ArtifactFactory::instance();
+            $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
+            $visitor = new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, 'planning-draggable-alreadyplanned');
+            $visitor->visit($parent_node);
+            
+            // override allowedChildrenTypes with backlog trackers
+            $data = $parent_node->getData();
+            $data['allowedChildrenTypes'] = $this->planning->getBacklogTrackers();
+            $parent_node->setData($data);
+            
+        }
         return $parent_node;
     }
     
@@ -117,48 +120,54 @@ class Planning_ShowPresenter {
         }
     }
     
-    
+    /**
+     * @return string html
+     */
     public function fetchSearchContent() {
         return $this->content_view->fetch();
     }
     
+    
+    /**
+     * @return string
+     */
     public function pleaseChoose() {
         return $GLOBALS['Language']->getText('global', 'please_choose_dashed');
     }
     
+    
+    /**
+     * @return array of (id, title, selected)
+     */
     public function artifactsToSelect() {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp             = Codendi_HTMLPurifier::instance();
         $artifacts_data = array();
+        $selected_id    = $this->artifact ? $this->artifact->getId() : null;
         foreach ($this->artifacts_to_select as $artifact) {
             $artifacts_data[] = array(
                 'id'       => $artifact->getId(),
                 'title'    => $hp->purify($artifact->getTitle()),
-                'selected' => ($artifact->getId() == $this->destination_id) ? 'selected="selected"' : '',
+                'selected' => ($artifact->getId() == $this->artifact->getId()) ? 'selected="selected"' : '',
             );
         }
         return $artifacts_data;
     }
     
+    /**
+     * @return string
+     */
     public function destinationHelp() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_destination_help');
     }
     
+    /**
+     * @return string
+     */
     public function getDestinationDroppableClass() {
         if ($this->canDrop()) {
             return 'planning-droppable';
         }
         return false;
-    }
-    
-    public function backlogArtifactTypes() {
-        $artifact_types = array();
-        
-        foreach($this->planning->getBacklogTrackers() as $tracker) {
-            $artifact_types[] = array('name'        => $tracker->getItemName(),
-                                      'creationUrl' => null);
-        }
-        
-        return $artifact_types;
     }
     
     private function getArtifactCreationLabel(Tracker $tracker) {
@@ -168,10 +177,16 @@ class Planning_ShowPresenter {
         return "$new $item_name";
     }
     
+    /**
+     * @return string
+     */
     public function getPlanningTrackerArtifactCreationLabel() {
         return $this->getArtifactCreationLabel($this->planning_tracker);
     }
     
+    /**
+     * @return string
+     */
     public function getPlanningTrackerArtifactCreationUrl() {
         $tracker_id = $this->planning_tracker->getId();
         $return_url = urlencode($this->getCurrentUri());
@@ -179,6 +194,9 @@ class Planning_ShowPresenter {
         return TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&return_to=$return_url";
     }
     
+    /**
+     * @return bool
+     */
     public function canDrop() {
         if ($this->artifact) {
             $art_link_field = $this->artifact->getAnArtifactLinkField($this->current_user);
@@ -189,6 +207,9 @@ class Planning_ShowPresenter {
         return false;
     }
     
+    /**
+     * @return string html
+     */
     public function errorCantDrop() {
         if ($this->canDrop()) {
             return false;
@@ -196,18 +217,30 @@ class Planning_ShowPresenter {
         return '<div class="feedback_warning">'. $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field') .'</div>';
     }
     
+    /**
+     * @return string
+     */
     public function getCurrentUri() {
         return $this->current_uri;
     }
     
+    /**
+     * @return string
+     */
     public function createNewItemToPlan() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan');
     }
     
+    /**
+     * @return string
+     */
     public function editLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
     
+    /**
+     * @return string
+     */
     public function __trans($text) {
         $args = explode('|', $text);
         $secondary_key = array_shift($args);

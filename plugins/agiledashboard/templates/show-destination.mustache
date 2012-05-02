@@ -1,22 +1,24 @@
-<div id="art-{{destination_id}}" class="release_planner card {{getDestinationDroppableClass}}">
-    {{> planning/planning-tracker-actions}}
-    {{> select-destination}}
-    <hr style="border:0px; border-top:1px solid #ccc;"/>
-    <p class="help">{{destinationHelp}}</p>
-    {{^canDrop}}
-    {{{errorCantDrop}}}
-    {{/canDrop}}
-    {{#canDrop}}
-    <div>
-        {{#getLinkedItems}}
-            {{^hasChildren}}
-                No items yet
-            {{/hasChildren}}
-            {{#hasChildren}}
-                {{> cards}}
-            {{/hasChildren}}
-        {{/getLinkedItems}}
+{{#getDestination}}
+    <div id="art-{{getId}}" class="release_planner card {{getDestinationDroppableClass}}">
+        {{#getData}}
+            {{> card-actions}}
+        {{/getData}}
+        {{> select-destination}}
+        <hr style="border:0px; border-top:1px solid #ccc;"/>
+        <p class="help">{{destinationHelp}}</p>
+        {{^canDrop}}
+            {{{errorCantDrop}}}
+        {{/canDrop}}
+        {{#canDrop}}
+            <div>
+                {{^hasChildren}}
+                    No items yet
+                {{/hasChildren}}
+                {{#hasChildren}}
+                    {{> cards}}
+                {{/hasChildren}}
+            </div>
+        {{/canDrop}}
     </div>
-    {{/canDrop}}
-</div>
+{{/getDestination}}
 <div style="clear: both"></div>
