@@ -208,10 +208,6 @@ class Planning_ShowPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
     
-    public function addNew() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
-    }
-    
     public function __trans($text) {
         $args = explode('|', $text);
         $secondary_key = array_shift($args);

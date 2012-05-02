@@ -51,11 +51,12 @@ class Planning_ArtifactTreeNodeVisitor {
         $row = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         if ($artifact) {
-            $row['title'] = $artifact->getTitle();
-            $row['class'] = $this->classname;
-            $row['uri']   = $artifact->getUri();
-            $row['xref']  = $artifact->getXRef();
+            $row['title']                = $artifact->getTitle();
+            $row['class']                = $this->classname;
+            $row['uri']                  = $artifact->getUri();
+            $row['xref']                 = $artifact->getXRef();
             $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
+            $row['editLabel']            = $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
             $node->setData($row);
         }
         $this->injectArtifactInChildren($node);
