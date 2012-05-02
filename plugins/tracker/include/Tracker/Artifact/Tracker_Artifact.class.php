@@ -1196,6 +1196,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $artifact_links;
     }
     
+    public function isAnArtifactLink() {
+        foreach ($artifact_links as $artifact_link) {
+            $link->getLinkedArtifacts();
+            if (in_array($sublinks, $artifact_links)){
+             
+            }
+        }     
+    }
+    
     /**
      * Get the latest artifacts from the hierarchy linked to the current artifact
      * 
@@ -1203,16 +1212,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * 
      * @return Array of Tracker_Artifact
      */
-    public function getLinkedArtifactsFromHierarchy(User $user) {
+    public function getUniqueLinkedArtifacts(User $user) {
         $artifact_links = array();
-        $children_trackers_ids = $this->getChildTrackersIds();
-        foreach($this->getLinkedArtifacts($user) as $artifact_link) {
-            if (in_array($artifact_link->getTrackerId(), $children_trackers_ids)) {
-                $artifact_links[] = $artifact_link;
+        $direct_linked_artifacts = $this->getLinkedArtifacts($user);
+        foreach($direct_linked_artifacts as $artifact_link) {
+            $sub_artifact_links = $artifact_link->getLinkedArtifacts($user);
+            foreach($sub_artifact_links as $sub_artifact_link){
+                if (in_array($sub_artifact_link, $direct_linked_artifacts)){
+                    $keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link);
+                    $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
+                }
             }
         }
-        
-        return $artifact_links;
+        return $direct_linked_artifacts;
     }
     
     /**

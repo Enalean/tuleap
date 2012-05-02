@@ -102,7 +102,7 @@ class Planning_ShowPresenter {
     }
     
     private function addChildItem($artifact, $parent_node, $child_depth = 0) {
-        $linked_items = $artifact->getLinkedArtifactsFromHierarchy($this->current_user);
+        $linked_items = $artifact->getUniqueLinkedArtifacts($this->current_user);
         if (! $linked_items) {
             return false;
         }

@@ -1594,66 +1594,52 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
         $this->assertEqual($artifact->getAnArtifactLinkField($current_user), null);
     }
+    
     /**
-     * Tracker Hierarchy
-     * - tracker 22 ($artifact)
-     *   - tracker 33 ($artifactLinkFromHierarchy)
-     * 
-     * $artifact : 2 artifacts links  
-     *   - $artifactLinkFromHierarchy
-     *   - $artifactLinkNotFromHierarchy
-     * 
-     * result:
-     * - $artifactLinkFromHierarchy
+     * Artifact Links
+     * - art 1
+     *   - art 2
+     *   - art 3
+     * - art 2 (should be hidden)
      */
-    public function itReturnsTheArtifactLinksOfTheHierarchy() {
+    public function itReturnsOnlyOneIfTwoLinksIdentical() {
         $user          = aUser()->build();
-        
         $changeset = new MockTracker_Artifact_Changeset();
+        
+        $child_tracker  = aTracker()->withId(33)->build();
+        $non_child_tracker = aTracker()->withId(44)->build();
+        
+        $factory = new MockTracker_FormElementFactory();
         
         $parent_tracker = aTracker()->withId(22)->build();
         $child_tracker  = aTracker()->withId(33)->build();
         $non_child_tracker = aTracker()->withId(44)->build();
         
-        $children_trackers = array($child_tracker);
-        $hierarchy_factory = stub('Tracker_HierarchyFactory')->getChildren($parent_tracker->getId())->returns($children_trackers);
-        $factory = new MockTracker_FormElementFactory();
         $artifact = anArtifact()
                     ->withTracker($parent_tracker)
                     ->withFormElementFactory($factory)
                     ->withChangesets(array($changeset))
                     ->build();
         
-        $artifact->setHierarchyFactory($hierarchy_factory);
+        $artifact2 = mock('Tracker_Artifact');
+        stub($artifact2)->getLinkedArtifacts()->returns(array());
         
-        $artifactLinkFromHierarchy = anArtifact()
-                    ->withTracker($child_tracker)
-                    ->withFormElementFactory($factory)
-                    ->withChangesets(array($changeset))
-                    ->build();
+        $artifact3 = mock('Tracker_Artifact');
+        stub($artifact3)->getLinkedArtifacts()->returns(array());
         
-        $artifactLinkNotFromHierarchy = anArtifact()
-                    ->withTracker($non_child_tracker)
-                    ->withFormElementFactory($factory)
-                    ->withChangesets(array($changeset))
-                    ->build();
+        $artifact1 = mock('Tracker_Artifact');
+        stub($artifact1)->getLinkedArtifacts()->returns(array($artifact2, $artifact3));
         
-        $expected_list = array(
-            $artifactLinkFromHierarchy,
-            $artifactLinkNotFromHierarchy
-        );
-        
-        $changeset = new MockTracker_Artifact_Changeset();
+        $expected_list = array($artifact1, $artifact2);
         
         $field = mock('Tracker_FormElement_Field_ArtifactLink');
         stub($field)->getLinkedArtifacts($changeset, $user)->returns($expected_list);
         stub($field)->userCanRead($user)->returns(true);
-        
         $factory->setReturnValue('getUsedArtifactLinkFields', array($field));
+        //$artifactLinks = $artifactLinkToBeKept->getLinkedArtifacts($user);
         
-        $expected_result = array($artifactLinkFromHierarchy);
-        $this->assertEqual($expected_result, $artifact->getLinkedArtifactsFromHierarchy($user));
-        $artifact->setHierarchyFactory();
+        $expected_result = array($artifact1);
+        $this->assertEqual($expected_result, $artifact->getUniqueLinkedArtifacts($user));
     }
     
     private function GivenAFactoryThatReturns($artifactLinkFields) {

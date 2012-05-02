@@ -92,7 +92,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     }
     
     protected function getAnArtifact($artifact_id, $children = array()) {
-        $artifact = stub('Tracker_Artifact')->getLinkedArtifactsFromHierarchy()->returns($children);
+        $artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns($children);
         stub($artifact)->getId()->returns($artifact_id);
         stub($artifact)->getTitle()->returns('Artifact '.$artifact_id);
         stub($artifact)->fetchDirectLinkToArtifact()->returns('');
