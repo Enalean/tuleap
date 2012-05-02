@@ -13,7 +13,7 @@
     padding: 0 0.5em;
 }
 
-.planning-draggable {
+.planning-draggable > .card {
     cursor: move;
 }
 
@@ -27,39 +27,25 @@
 }
 
 .cards {
-    list-style-type: none;
-    padding-left: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cards .cards {
+  margin-left: 2em;
 }
 .card {
-    padding: 0.5em 1em;
+    padding: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
     margin-bottom: 1em;
-    border: 1px solid gray;
-    box-shadow: 1px 1px 2px 1px lightgray;
+    border:1px solid #B2B39D;
     background: #ffe;
     min-width: 200px;
 }
-.card > .cards > .card {
-    background: #ffd;
-}
 
-.card > .cards > .card > .cards > .card {
-    background: #ffc;
-}
-
-.card > .cards > .card > .cards > .card > .cards > .card {
-    background: #ffb;
-}
-
-.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card {
-    background: #ffa;
-}
-
-.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card  > .cards > .card {
-    background: #ff9;
-}
-
-.card-link {
-    text-align:right;
+.card-actions {
+    float:right;
 }
 
 .release_planner {
@@ -78,4 +64,28 @@
     padding: 0.5em 1em;
 }
 .planning-artifact-chooser > option {
+}
+
+.card-actions ul {
+    list-style: none;
+    padding: 0.25em 0.5em;
+}
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  vertical-align: top;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid #000000;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+  content: "";
+}
+.card-actions .caret {
+  margin-top: 6px;
+}
+.card-actions:hover .caret {
+  opacity: 1;
+  filter: alpha(opacity=100);
 }

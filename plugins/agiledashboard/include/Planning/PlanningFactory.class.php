@@ -129,6 +129,18 @@ class PlanningFactory {
         return null;
     }
     
+    public function getPlanningWithTrackers($planning_id) {
+        $planning = $this->getPlanning($planning_id);
+        
+        if ($planning) {
+            // TODO: do not use setters...
+            $planning->setPlanningTracker($this->getPlanningTracker($planning));
+            $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
+        }
+        
+        return $planning;
+    }
+    
     /**
      * Build a new planning in a project
      * 
@@ -153,6 +165,28 @@ class PlanningFactory {
             $backlog_tracker_ids[] = $row['tracker_id'];
         }
         return $backlog_tracker_ids;
+    }
+    
+    public function getPlanningTracker(Planning $planning) {
+        return $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
+    }
+    
+    /**
+     * Get a list of trackers defined as backlog for a planning
+     * 
+     * @param Planning $planning
+     *
+     * @return array of Tracker
+     */
+    public function getBacklogTrackers(Planning $planning) {
+        $planning_id      = $planning->getId();
+        $backlog_trackers = array();
+        
+        foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
+            $backlog_trackers[] = $this->tracker_factory->getTrackerById($row['tracker_id']);
+        }
+        
+        return $backlog_trackers;
     }
     
     public function getPlanningTrackerIdsByGroupId($group_id) {

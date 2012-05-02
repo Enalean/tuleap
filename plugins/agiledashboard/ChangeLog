@@ -1,3 +1,8 @@
+Version 0.15 - Tuleap 5.1
+    * Allow to create new elements from the Planning interface.
+      * For instance, for sprint planning: New sprints, new stories into the
+	current sprint, new tasks in planned stories, ...
+
 Version 0.14 - Tuleap 5.1
     * Check permissions
 

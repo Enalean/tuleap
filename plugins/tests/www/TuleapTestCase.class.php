@@ -135,5 +135,34 @@ abstract class TuleapTestCase extends UnitTestCase {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
     }
+    
+    /**
+     * assert that $substring is present $string
+     * @param string $string
+     * @param string $substring
+     * @return boolean true if $substring is present in $string
+     */
+    protected function assertStringContains($string, $substring) {
+        return $this->assertPattern("/$substring/", $string);
+    }
+    
+    /**
+     * assert that uri has the specified parameters, no matter the possition in the uri
+     * @param type $uri
+     * @param type $param
+     * @param type $value 
+     */
+    protected function assertUriHasArgument($uri, $param, $value) {
+        $this->assertPattern("/[?&]$param=$value/", $uri);
+    }
+    
+    /**
+     * asserts that $string starts with the $start_sequence
+     * @param type $string
+     * @param type $start_sequence 
+     */
+    protected function assertStringBeginsWith($string, $start_sequence) {
+        $this->assertPattern("%^$start_sequence%", $string);
+    }
 }
 ?>

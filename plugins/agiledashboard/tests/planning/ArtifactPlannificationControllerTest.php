@@ -19,13 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('TRACKER_BASE_URL')) {                                             // 
-    define('TRACKER_BASE_URL', '/plugins/tracker');                             // 
-}                                                                               // TODO: use constants.php instead
-if (!defined('TRACKER_BASE_DIR')) {                                             //       (available only in trunk)
-    define('TRACKER_BASE_DIR', dirname(__FILE__) .'/../../../tracker/include'); // 
-}
-
+require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once(dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
@@ -53,9 +47,31 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), 66);
+        
+        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+        $_SERVER['REQUEST_URI'] = '';
+        
+        $this->planning_tracker_id = 66;
+        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
+        
+        $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
+        Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
+    }
+    
+    public function tearDown() {
+        parent::tearDown();
+        
+        if ($this->request_uri != null) {
+            $_SERVER['REQUEST_URI'] = $this->request_uri;
+        } else {
+            unset($_SERVER['REQUEST_URI']);
+        }
+        
+        Tracker_ArtifactFactory::clearInstance();
+        Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
+        TrackerFactory::clearInstance();
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -100,6 +116,22 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
     
+    public function itRedirectsToArtifactCreationForm() {
+        $request = new Codendi_Request(array(
+            'planning_id' => $this->planning->getId(),
+            'aid'         => -1,
+        ));
+        $_SERVER['REQUEST_URI'] = '/someplugin/someaction/?somearg=toto';
+        $request->setCurrentUser(aUser()->build());
+        
+        $factory = $this->GivenAnArtifactFactory();
+        
+        $return_url = urlencode($request->getUri());
+        
+        $GLOBALS['Response']->expectOnce('redirect', array(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&return_to=$return_url"));
+        $this->WhenICaptureTheOutputOfShowAction($request, $factory);
+    }
+    
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
         $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
@@ -109,11 +141,11 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $id = 987;
         $linked_items = array(
             $this->GivenAnArtifactWithNoLinkedItem(123, 'Tutu'),
-            $this->GivenAnArtifactWithNoLinkedItem(123, 'Tata')
+            $this->GivenAnArtifactWithNoLinkedItem(124, 'Tata')
         );
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $factory  = $this->GivenAnArtifactFactory(array_merge(array($artifact), $linked_items));
         $request = new Codendi_Request(
             array(
                 'aid'         => $id,
@@ -156,6 +188,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
     
+
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
         $project_id                = 1111;
         $id                        = 987;
@@ -248,6 +281,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         );
 
         $factory  = new MockTracker_ArtifactFactory();
+        Tracker_ArtifactFactory::setInstance($factory);
         foreach ($artifacts as $artifact) {
             $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
             $open_artifacts[] = $artifact;
@@ -296,7 +330,14 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
         $planning_factory = new MockPlanningFactory();
-        $planning_factory->setReturnValue('getPlanning', $this->planning, array($this->planning->getId()));
+        $planning_tracker = mock('Tracker');
+        
+        $this->planning->setPlanningTracker($planning_tracker);
+        stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
+        $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
+        
+        $tracker_factory = new MockTrackerFactory();
+        TrackerFactory::setInstance($tracker_factory);
         
         ob_start();
         $controller = new Planning_ArtifactPlannificationController($request, $factory, $planning_factory, new MockTrackerFactory());
@@ -312,5 +353,45 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         }
         return $project_manager;
     }
+}
+
+class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCase {
+    
+    public function itPassesTheCurrentUriToThePresenter() {
+        $expected_uri = '/plugins/agiledashboard/?blabla';
+        $request = mock('Codendi_Request');
+        stub($request)->getUri()->returns($expected_uri);
+        stub($request)->getCurrentUser()->returns(mock('User'));
+        
+        $planning_factory = mock('PlanningFactory');
+        $artifact_factory = mock('Tracker_ArtifactFactory');
+        $tracker_factory  = mock('TrackerFactory');
+        
+        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
+        
+        $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
+        $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
+    }
+    
+    public function itReturnsToTheCurrentUrlWithoutAidReferenceOnArtifactCreation() {
+        $expected_uri = '/plugins/agiledashboard/?blabla';
+        $request = mock('Codendi_Request');
+        $aid_to_remove = 'aid=-1';
+        stub($request)->getUri()->returns($expected_uri.'&'.$aid_to_remove);
+        stub($request)->get('aid')->returns(-1);
+        stub($request)->getCurrentUser()->returns(mock('User'));
+        
+        $planning_factory = stub('PlanningFactory')->getPlanningWithTrackers()->returns(mock('Planning'));
+        $artifact_factory = mock('Tracker_ArtifactFactory');
+        $tracker_factory  = mock('TrackerFactory');
+        
+        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
+        
+        $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
+        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));
+        $controller->show(mock('Tracker_CrossSearch_ViewBuilder'), mock('ProjectManager'));
+        
+    }
+    
 }
 ?>

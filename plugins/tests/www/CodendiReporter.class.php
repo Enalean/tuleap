@@ -106,6 +106,7 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
      *    @access public
      */
     function paintFail($message) {
+        ob_end_flush();
         $this->_fails++;
         print "<span class=\"fail\">Fail</span>: ";
         $breadcrumb = $this->getTestListAsTreeNode();

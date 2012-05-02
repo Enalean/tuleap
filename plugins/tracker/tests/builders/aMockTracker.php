@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once dirname(__FILE__) .'/../../include/Tracker/Tracker.class.php';
 
 class MockTrackerBuilder {
     public function __construct() {
@@ -30,6 +31,11 @@ class MockTrackerBuilder {
     
     public function withName($name) {
         stub($this->tracker)->getName()->returns($name);
+        return $this;
+    }
+    
+    public function withItemName($item_name) {
+        stub($this->tracker)->getItemName()->returns($item_name);
         return $this;
     }
     

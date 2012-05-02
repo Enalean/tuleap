@@ -145,6 +145,17 @@ class Codendi_Request {
     }
 
     /**
+     * Return the path part of the current URI
+     * 
+     * eg: /plugins/tracker/?group_id=123&toto=pouet
+     * 
+     * @return String
+     */
+    public function getUri() {
+        return $_SERVER['REQUEST_URI'];
+    }
+    
+    /**
      * Check if $variable exists in user submitted parameters.
      *
      * @param string $variable Name of the parameter.

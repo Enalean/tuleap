@@ -1,0 +1,15 @@
+<div class="card-actions">
+    <a id="card-{{id}}-actions-menu_handle" href="{{uri}}">{{xref}} <span class="caret"></span></a>
+    <ul class="dropdown_panel" id="card-{{id}}-actions-menu">
+        <li>
+            <a href="{{uri}}&return_to={{return_to}}">{{editLabel}}</a>
+            <hr style="border:0px; border-top:1px solid #ccc;"/>
+        </li>
+        {{#allowedChildrenTypes}}
+            <li>
+                <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&return_to={{return_to}}">{{getAddNewLabel}}</a>
+            </li>
+        {{/allowedChildrenTypes}}
+    </ul>
+</div>
+

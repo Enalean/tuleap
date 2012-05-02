@@ -18,14 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('TRACKER_BASE_URL')) {                                             //
-    define('TRACKER_BASE_URL', '/plugins/tracker');                             //
-}                                                                               // TODO: use constants.php instead
-if (!defined('TRACKER_BASE_DIR')) {                                             //       (available only in trunk)
-    define('TRACKER_BASE_DIR', dirname(__FILE__) .'/../../../tracker/include'); //
-}
+require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../builders/planning_factory.php';
+require_once TRACKER_BASE_DIR.'/../tests/Test_Tracker_Builder.php';
 
 Mock::generate('Planning');
 Mock::generate('PlanningDao');
@@ -37,6 +33,43 @@ class PlanningFactoryTest extends TuleapTestCase {
         parent::setUp();
         
         $this->user = aUser()->build();
+    }
+    
+    public function itCanRetrieveBothAPlanningAndItsTrackers() {
+        $group_id            = 42;
+        $planning_id         = 17;
+        $planning_tracker_id = 54;
+        $backlog_tracker_id  = 89;
+        
+        $planning_dao     = mock('PlanningDao');
+        $tracker_factory  = mock('TrackerFactory');
+        $planning_tracker = mock('Tracker');
+        $backlog_tracker  = mock('Tracker');
+        $planning_factory = aPlanningFactory()->withDao($planning_dao)
+                                              ->withTrackerFactory($tracker_factory)
+                                              ->build();
+        
+        $planning_rows = mock('DataAccessResult');
+        $planning_row  = array('id'                  => $planning_id,
+                               'name'                => 'Foo',
+                               'group_id'            => $group_id,
+                               'planning_tracker_id' => $planning_tracker_id);
+        
+        $backlog_rows = array(array('tracker_id' => $backlog_tracker_id));
+        
+        stub($tracker_factory)->getTrackerById($planning_tracker_id)->returns($planning_tracker);
+        stub($tracker_factory)->getTrackerById($backlog_tracker_id)->returns($backlog_tracker);
+        
+        stub($planning_dao)->searchById($planning_id)->returns($planning_rows);
+        stub($planning_rows)->getRow()->returns($planning_row);
+        
+        stub($planning_dao)->searchBacklogTrackersById($planning_id)->returns($backlog_rows);
+        
+        $planning = $planning_factory->getPlanningWithTrackers($planning_id);
+        
+        $this->assertIsA($planning, 'Planning');
+        $this->assertEqual($planning->getPlanningTracker(), $planning_tracker);
+        $this->assertEqual($planning->getBacklogTrackers(), array($backlog_tracker));
     }
     
     public function itDuplicatesPlannings() {

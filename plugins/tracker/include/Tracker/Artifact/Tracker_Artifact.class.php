@@ -52,6 +52,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $formElementFactory;
     
     /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+    
+    /**
      * Constructor
      *
      * @param int     $id                       The Id of the artifact
@@ -361,23 +366,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         
         $html = '';
         
+        $action_params = array(
+            'aid'       => $this->id,
+            'func'      => 'artifact-update',
+            'return_to' => $request->get('return_to')
+        );
+
         if ($from_aid != null) {
-            $html .= '<form action="?'. http_build_query(
-            array(
-                'aid'  => $this->id,
-                'func' => 'artifact-update',
-                'from_aid' => $from_aid,
-            )
-        ) .'" method="POST" enctype="multipart/form-data">';
-            
-        } else {
-            $html .= '<form action="?'. http_build_query(
-            array(
-                'aid'  => $this->id,
-                'func' => 'artifact-update',
-            )
-        ) .'" method="POST" enctype="multipart/form-data">';
+            $action_params['from_aid'] = $from_aid;
         }
+        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($action_params) .'" method="POST" enctype="multipart/form-data">';
         
         
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
@@ -635,15 +633,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
-                    $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->tracker_id;
-                    if ($request->get('submit_and_stay')) {
-                        $url_redirection = TRACKER_BASE_URL.'/?aid=' . $this->getId();
-                    }
                     
-                    if ($request->get('from_aid')) {
-                        $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
-                    }
-                    $GLOBALS['Response']->redirect($url_redirection);
+                    $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
                 } else {
                     $this->display($layout, $request, $current_user);
                 }
@@ -659,15 +650,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'associate-artifact-to':
-                $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
                 $linked_artifact_id = $request->get('linked-artifact-id');
-                if (count($artlink_fields)) {
-                    $this->linkArtifact($artlink_fields, $linked_artifact_id, $current_user);
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+                if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
-                break;    
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -682,7 +669,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string html
      */
     public function fetchDirectLinkToArtifact() {
-        return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUri() {
+        return TRACKER_BASE_URL .'/?aid=' . $this->getId();
+    }
+    
+    /**
+    * @return string the cross reference text: bug #42
+    */
+    public function getXRef() {
+        return $this->getTracker()->getItemName() . ' #' . $this->getId();
     }
     
     /**
@@ -1158,13 +1159,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return UserManager::instance();
     }
 
-    private function linkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
-        $comment       = '';
-        $email         = '';
-        $artlink_field = $artlink_fields[0];
-        $fields_data   = array();
-        $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
-        $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+    /**
+     * User want to link an artifact to the current one
+     *
+     * @param int  $linked_artifact_id The id of the artifact to link
+     * @param User $current_user       The user who made the link
+     *
+     * @return bool true if success false otherwise
+     */
+    public function linkArtifact($linked_artifact_id, User $current_user) {
+        $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+        if (count($artlink_fields)) {
+            $comment       = '';
+            $email         = '';
+            $artlink_field = $artlink_fields[0];
+            $fields_data   = array();
+            $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
+            return $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+        }
     }
     
     /**
@@ -1182,6 +1196,65 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $artifact_links = $artifact_link_field->getLinkedArtifacts($changeset, $user);
         }
         return $artifact_links;
+    }
+    
+    /**
+     * Get latest artifacts linked to the current artifact if 
+     * they are not in children.
+     * 
+     * @param User $user The user who should see the artifacts
+     * 
+     * @return Array of Tracker_Artifact
+     */
+    public function getUniqueLinkedArtifacts(User $user) {
+        $artifact_links = array();
+        $direct_linked_artifacts = $this->getLinkedArtifacts($user);
+        foreach($direct_linked_artifacts as $artifact_link) {
+            $sub_artifact_links      = $artifact_link->getLinkedArtifacts($user);
+            $direct_linked_artifacts = $this->filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links);
+        }
+        return $direct_linked_artifacts;
+    }
+    
+    private function filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links) {
+        foreach($sub_artifact_links as $sub_artifact_link) {
+            if (($keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link))){
+                $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
+            }
+        }
+        return $direct_linked_artifacts;
+    }
+    
+    /**
+     * Returns the previously injected factory (e.g. in tests), or a new
+     * instance (e.g. in production).
+     * 
+     * @return Tracker_HierarchyFactory
+     */
+    public function getHierarchyFactory() {
+        if ($this->hierarchy_factory == null) {
+            $this->hierarchy_factory = Tracker_HierarchyFactory::build();
+        }
+        return $this->hierarchy_factory;
+    }
+    
+
+    public function setHierarchyFactory($hierarchy = null) {
+        $this->hierarchy_factory = $hierarchy;
+    }    
+    
+    /**
+     * Returns the children of the burndown field tracker.
+     * 
+     * @return array of Tracker
+     */
+    protected function getChildTrackersIds() {
+        $children_trackers_ids = array();
+        $children_hierarchy_tracker = $this->getHierarchyFactory()->getChildren($this->getTrackerId());
+        foreach ($children_hierarchy_tracker as $tracker) {
+            $children_trackers_ids[] = $tracker->getId();
+        }
+        return $children_trackers_ids;
     }
     
     /**
@@ -1205,6 +1278,34 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $fields_data[$artlink_field->getId()]['new_values'] = '';
         $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
         $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+    }
+
+    public function getRedirectUrlAfterArtifactUpdate($request) {
+        $return_to = urldecode($request->get('return_to'));
+        $stay = $request->get('submit_and_stay') ;
+        if (! $stay && $return_to) {
+            return $return_to;
+        }
+        $from_aid = $request->get('from_aid');
+
+        $redirect_params = $this->calculateRedirectParams($stay, $from_aid, $return_to);
+        return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
+
+    }
+
+    private function calculateRedirectParams($stay, $from_aid, $return_to) {
+        $redirect_params = array();
+        if ($stay) {
+            $redirect_params['aid'] = $this->getId();
+            $redirect_params['from_aid'] = $from_aid;
+            $redirect_params['return_to'] = $return_to;
+        } else if ($from_aid) {
+            $redirect_params['aid'] = $from_aid;
+        } else {
+            $redirect_params['tracker'] = $this->tracker_id;
+        }
+        return array_filter($redirect_params);
+        
     }
 }
 
