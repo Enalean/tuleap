@@ -115,7 +115,7 @@ class CodeReviewViews extends Views {
         $form .= "  </p>";
         $form .= "  <p>";
         $form .= "   <label for=\"codereview_target\">Target people</label><br>";
-        $form .= "   <input id=\"codereview_target_people\" name=\"codereview_revision_range\" type=\"text\" size=\"32\" />";
+        $form .= "   <input id=\"codereview_target_people\" name=\"codereview_target_people\" type=\"text\" size=\"32\" />";
         $form .= "  </p>";
         $form .= "  <p>";
         $form .= "   <label for=\"codereview_summary\">Summary</label><br>";

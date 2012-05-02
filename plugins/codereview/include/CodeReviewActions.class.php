@@ -104,6 +104,16 @@ class CodeReviewActions extends Actions {
             $status    = false;
             $invalid[] = 'description';
         }
+
+        $valid       = new Valid_String('codereview_target_people');
+        $target_people = trim($this->request->get('codereview_target_people'));
+        if ($this->request->valid($valid) && $target_people != '') {
+            $params['target_people'] = $target_people;
+        } else {
+            $status    = false;
+            $invalid[] = 'target_people';
+        }
+
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
 }
 
@@ -123,8 +133,7 @@ class CodeReviewActions extends Actions {
             //$testing_done    = $reviewRessources['params']['testing_done'];
             $testing_done    = 'testing_done';
             $summary         = $reviewRessources['params']['summary'];
-            //$target_people   = $reviewRessources['params']['target_people'];
-            $target_people   = 'codendiadm';
+            $target_people   = $reviewRessources['params']['target_people'];
             $description     = $reviewRessources['params']['description'];
             $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
             if (!empty($reviewRequestId)) {
