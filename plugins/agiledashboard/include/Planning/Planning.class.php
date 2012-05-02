@@ -55,6 +55,11 @@ class Planning {
      */
     private $planning_tracker;
     
+    /**
+     * @var array of Tracker
+     */
+    private $backlog_trackers = array();
+    
     function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
         $this->id                  = $id;
         $this->name                = $name;
@@ -115,10 +120,19 @@ class Planning {
     }
     
     /**
+     * TODO: Pass the backlog trackers at instanciation, and remove this setter.
+     * 
+     * @param array $backlog_trackers The trackers used as a backlog
+     */
+    public function setBacklogTrackers(array $trackers) {
+        $this->backlog_trackers = $trackers;
+    }
+    
+    /**
      * @return array of Tracker
      */
-    public function getRootBacklogTrackers() {
-        return array();
+    public function getBacklogTrackers() {
+        return $this->backlog_trackers;
     }
 }
 

@@ -322,7 +322,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         
         $this->planning->setPlanningTracker($planning_tracker);
         stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
-        $planning_factory->setReturnValue('getPlanningWithPlanningTracker', $this->planning, array($this->planning->getId()));
+        $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
         
         $tracker_factory = new MockTrackerFactory();
         TrackerFactory::setInstance($tracker_factory);

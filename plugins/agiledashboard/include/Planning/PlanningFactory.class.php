@@ -129,15 +129,18 @@ class PlanningFactory {
         return null;
     }
     
-    public function getPlanningWithPlanningTracker($planning_id) {
+    public function getPlanningWithTrackers($planning_id) {
         $planning = $this->getPlanning($planning_id);
         if (! $planning) return;
         
         $planning_tracker_id = $planning->getPlanningTrackerId();
         $planning_tracker    = $this->tracker_factory->getTrackerById($planning_tracker_id);
+        $backlog_trackers    = $this->getBacklogTrackers($planning);
         
-        // TODO: do not use a setter...
+        // TODO: do not use setters...
         $planning->setPlanningTracker($planning_tracker);
+        $planning->setBacklogTrackers($backlog_trackers);
+        
         return $planning;
     }
     
@@ -165,6 +168,24 @@ class PlanningFactory {
             $backlog_tracker_ids[] = $row['tracker_id'];
         }
         return $backlog_tracker_ids;
+    }
+    
+    /**
+     * Get a list of trackers defined as backlog for a planning
+     * 
+     * @param Planning $planning
+     *
+     * @return array of Tracker
+     */
+    public function getBacklogTrackers(Planning $planning) {
+        $planning_id      = $planning->getId();
+        $backlog_trackers = array();
+        
+        foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
+            $backlog_trackers[] = $this->tracker_factory->getTrackerById($row['tracker_id']);
+        }
+        
+        return $backlog_trackers;
     }
     
     public function getPlanningTrackerIdsByGroupId($group_id) {

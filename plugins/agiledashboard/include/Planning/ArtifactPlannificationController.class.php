@@ -115,7 +115,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
-        return $this->planning_factory->getPlanningWithPlanningTracker($planning_id);
+        return $this->planning_factory->getPlanningWithTrackers($planning_id);
     }
 
     /**

@@ -196,7 +196,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
                                                 $origin_url);
         
         $root_backlog_trackers = array($stories_tracker, $issues_tracker);
-        stub($planning)->getRootBacklogTrackers()->returns($root_backlog_trackers);
+        stub($planning)->getBacklogTrackers()->returns($root_backlog_trackers);
         
         $expected_artifact_types = array(
             array('name' => 'Story', 'creationUrl' => null),

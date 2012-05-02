@@ -153,17 +153,12 @@ class Planning_ShowPresenter {
     public function backlogArtifactTypes() {
         $artifact_types = array();
         
-        foreach($this->planning->getRootBacklogTrackers() as $tracker) {
+        foreach($this->planning->getBacklogTrackers() as $tracker) {
             $artifact_types[] = array('name'        => $tracker->getItemName(),
                                       'creationUrl' => null);
         }
         
         return $artifact_types;
-        
-//        return array(
-//            array('name' => 'Story', 'creationUrl' => '#create_story'),
-//            array('name' => 'Bug',   'creationUrl' => '#create_bug'),
-//        );
     }
     
     private function getArtifactCreationLabel(Tracker $tracker) {
