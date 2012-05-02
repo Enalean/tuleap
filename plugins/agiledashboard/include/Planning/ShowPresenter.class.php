@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'ArtifactTreeNodeVisitor.class.php';
 
 class Planning_ShowPresenter {
     

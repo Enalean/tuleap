@@ -31,6 +31,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     
     
     public function setUp() {
+        parent::setUp();
         $this->user                = mock('User');
         $this->planning_tracker_id = 191;
         $this->planning_tracker    = mock('Tracker');
