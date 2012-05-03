@@ -120,6 +120,7 @@ class Toggler {
     /**
      * Returns true if the toggler should be displayed
      *
+     * @param User   $user    The user
      * @param string $id      the id of the toggler
      * @param bool   $default if we don't know, return $default
      *
@@ -127,7 +128,7 @@ class Toggler {
      */
     public static function shouldBeDisplayed(User $user, $id, $default) {
         if ($user->isLoggedIn()) {
-            $should_be_displayed = $current_user->getPreference('toggle_'. $id); //TODO: DRY 'toggle_'. $id
+            $should_be_displayed = $user->getPreference('toggle_'. $id); //TODO: DRY 'toggle_'. $id
             if ($should_be_displayed !== false) {
                 return $should_be_displayed;
             }
