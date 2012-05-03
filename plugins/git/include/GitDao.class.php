@@ -267,7 +267,7 @@ class GitDao extends DataAccessObject {
      */
     public function getAllProjectRepositoryList($projectId) {
         $projectId = $this->da->escapeInt($projectId);
-        if ( empty($projectId) ) {
+        if (empty($projectId)) {
             return false;
         }
 
