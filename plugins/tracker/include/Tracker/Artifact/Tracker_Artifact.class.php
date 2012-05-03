@@ -1195,7 +1195,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-     * Get the latest artifacts linked to the current artifact
+     * Get artifacts linked to the current artifact
      * 
      * @param User $user The user who should see the artifacts
      * 
