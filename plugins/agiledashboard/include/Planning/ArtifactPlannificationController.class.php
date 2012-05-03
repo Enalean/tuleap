@@ -57,14 +57,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning = $this->getPlanning();
-        if ($this->request->get('aid') == -1) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL .'/?'. http_build_query(array(
-                'tracker'   => $planning->getPlanningTrackerId(),
-                'func'      => 'new-artifact',
-                'return_to' => $this->current_uri,
-                )));
-            return;
-        }
         $project_id          = $this->request->get('group_id');
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
         $tracker_ids         = $planning->getBacklogTrackerIds();
@@ -131,6 +123,10 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
         return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>>  removed redirection logic from ArtifactPlannificationController
 }
 
 ?>
