@@ -69,7 +69,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
         $tracker_ids         = $planning->getBacklogTrackerIds();
         
-        $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select);
+        $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select, $planning);
         
         $presenter           = $this->getShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
@@ -82,13 +82,14 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
-    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select) {
+    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select, Planning $planning) {
         $tracker_linked_items  = $this->getTrackerLinkedItems($artifacts_to_select);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
         $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
         
         $view->current_url = $this->current_uri;
+        $view->planning    = $planning;
         
         return $view;
     }

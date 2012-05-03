@@ -44,10 +44,14 @@
     min-width: 200px;
 }
 
+.backlog-actions, 
 .card-actions {
     float:right;
 }
-
+.backlog-content {
+    clear:both;
+    padding-top: 0.5em;
+}
 .release_planner {
     background: white;
 }
@@ -66,6 +70,7 @@
 .planning-artifact-chooser > option {
 }
 
+.backlog-actions ul, 
 .card-actions ul {
     list-style: none;
     padding: 0.25em 0.5em;
@@ -82,9 +87,11 @@
   filter: alpha(opacity=30);
   content: "";
 }
+.backlog-actions .caret, 
 .card-actions .caret {
   margin-top: 6px;
 }
+.backlog-actions:hover .caret, 
 .card-actions:hover .caret {
   opacity: 1;
   filter: alpha(opacity=100);

@@ -25,16 +25,27 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
+    // {{{ TODO: should be private. Need to have a factory of searchcontentview to inject in viewbuilder since constructors will differ
     public $current_url = '';
+    public $planning;
+    // }}}
     
     protected function fetchTable() {
         Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan', $this->current_url)->visit($this->tree_of_artifacts);
         $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
-        return $renderer->render('cards', $this, true);
+        return $renderer->render('backlog', $this, true);
     }
 
     public function getChildren() {
         return $this->tree_of_artifacts->getChildren();
+    }
+    
+    public function allowedChildrenTypes() {
+        return $this->planning->getBacklogTrackers();
+    }
+    
+    public function addLabel() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
     }
 }
 ?>
