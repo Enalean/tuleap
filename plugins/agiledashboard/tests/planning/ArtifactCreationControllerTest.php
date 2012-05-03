@@ -41,8 +41,8 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         
         $return_url       = urlencode($request->getUri());
         $controller       = new Planning_ArtifactCreationController($planning_factory, $request);
-        $new_artifact_url = TRACKER_BASE_URL."/\?tracker=$planning_tracker_id&func=new-artifact";
-        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("%$new_artifact_url%")));
+        $new_artifact_url = TRACKER_BASE_URL."/\?tracker=$planning_tracker_id&func=new-artifact&return_to=$return_url";
+        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("@$new_artifact_url@")));
         
         $controller->createArtifact();
     }
@@ -60,7 +60,6 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         
         stub($planning_factory)->getPlanning($planning_id)->returns($planning);
         
-        $return_url       = urlencode($request->getUri());
         $controller       = new Planning_ArtifactCreationController($planning_factory, $request);
 
         $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
