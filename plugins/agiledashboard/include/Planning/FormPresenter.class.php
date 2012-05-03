@@ -55,10 +55,6 @@ class Planning_FormPresenter {
         return $this->planning->getName();
     }
     
-    public function getPlanningId() {
-        return $this->planning->getId();
-    }
-    
     public function getPlanningTrackerPresenters(array $trackers) {
         return array_map(array($this, 'getPlanningTrackerPresenter'), $trackers);
     }

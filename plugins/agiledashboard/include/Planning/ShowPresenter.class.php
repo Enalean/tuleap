@@ -42,6 +42,7 @@ class Planning_ShowPresenter {
      * @var Planning
      */
     private $planning;
+    public $planning_redirect_parameter;
     
     /**
      * @var Tracker
@@ -53,17 +54,19 @@ class Planning_ShowPresenter {
                                 array $artifacts_to_select,
                                 Tracker_Artifact $artifact = null, 
                                 User $user,
-                                $current_uri) {
-        $this->planning            = $planning;
-        $this->planning_id         = $planning->getId();
-        $this->planning_name       = $planning->getName();
-        $this->planning_tracker    = $planning->getPlanningTracker();
-        $this->artifact            = $artifact;
-        $this->artifacts_to_select = $artifacts_to_select;
-        $this->content_view        = $content_view;
-        $this->group_id            = $planning->getGroupId();
-        $this->current_user        = $user;
-        $this->current_uri         = $current_uri;
+                                $current_uri,
+                                $planning_redirect_parameter) {
+        $this->planning                    = $planning;
+        $this->planning_id                 = $planning->getId();
+        $this->planning_name               = $planning->getName();
+        $this->planning_tracker            = $planning->getPlanningTracker();
+        $this->artifact                    = $artifact;
+        $this->artifacts_to_select         = $artifacts_to_select;
+        $this->content_view                = $content_view;
+        $this->group_id                    = $planning->getGroupId();
+        $this->current_user                = $user;
+        $this->current_uri                 = $current_uri;
+        $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
     
     
@@ -178,16 +181,6 @@ class Planning_ShowPresenter {
      */
     public function getPlanningTrackerArtifactCreationLabel() {
         return $this->getArtifactCreationLabel($this->planning_tracker);
-    }
-    
-    /**
-     * @return string
-     */
-    public function getPlanningTrackerArtifactCreationUrl() {
-        $tracker_id = $this->planning_tracker->getId();
-        $return_url = $this->current_uri;
-        
-        return TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&return_to=$return_url";
     }
     
     /**

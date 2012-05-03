@@ -6,7 +6,7 @@
             {{#getBacklogTrackers}}
             {{#userCanView}}
                 <li>
-                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact&return_to={{current_url}}">{{getAddNewLabel}}</a>
+                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
                 </li>
             {{/userCanView}}
             {{/getBacklogTrackers}}

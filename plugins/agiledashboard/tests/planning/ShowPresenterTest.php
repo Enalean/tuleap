@@ -72,7 +72,8 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
             $this->artifacts_to_select,
             $this->artifact,                                                                                                                                                        
             $this->user,
-            $origin_url
+            $origin_url,
+            'planning['. (int)$this->planning->getId() .']='
         );
     }
     
@@ -112,15 +113,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         foreach($children1 as $child_num => $child) {
             $this->assertEqualTreeNodes($child, $children2[$child_num]);
         }
-    }
-    
-    
-    public function itProvidesThePlanningTrackerArtifactCreationUrl() {
-        $origin_url = urlencode('/plugins/agiledashboard/?group_id=104&action=show&planning_id=5&aid=17');
-        $presenter = $this->getAPlanning($origin_url);
-        $url = $presenter->getPlanningTrackerArtifactCreationUrl();
-        
-        $this->assertEqual($url, "/plugins/tracker/?tracker=191&func=new-artifact&return_to=$origin_url");
     }
     
     /**

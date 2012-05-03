@@ -40,6 +40,13 @@ class PlanningFactory {
     }
     
     /**
+     * @return PlanningFactory
+     */
+    public static function build() {
+        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+    }
+    
+    /**
      * Duplicate plannings for some previously duplicated trackers.
      * 
      * @param int    $group_id         The id of the project where plannings should be created.

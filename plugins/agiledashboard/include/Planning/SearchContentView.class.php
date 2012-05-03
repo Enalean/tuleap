@@ -28,6 +28,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     // {{{ TODO: should be private. Need to have a factory of searchcontentview to inject in viewbuilder since constructors will differ
     public $current_url = '';
     public $planning;
+    public $planning_redirect_parameter = '';
     // }}}
     
     protected function fetchTable() {

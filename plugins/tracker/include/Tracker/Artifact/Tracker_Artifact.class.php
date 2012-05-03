@@ -369,12 +369,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $action_params = array(
             'aid'       => $this->id,
             'func'      => 'artifact-update',
-            'return_to' => $request->get('return_to')
         );
 
         if ($from_aid != null) {
             $action_params['from_aid'] = $from_aid;
         }
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$action_params,
+            )
+        );
+        
         $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($action_params) .'" method="POST" enctype="multipart/form-data">';
         
         
@@ -633,6 +640,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
+                    EventManager::instance()->processEvent(
+                        TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
+                        array(
+                            'request' => $request,
+                        )
+                    );
                     
                     $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
                 } else {

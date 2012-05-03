@@ -539,16 +539,24 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $link = (int)$request->get('link-artifact-id');
                     if ($artifact = $this->createArtifact($layout, $request, $current_user)) {
-                        if ($request->get('immediate')) {
+                        if ($link && $request->get('immediate')) {
                             $source_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link);
                             if ($source_artifact) {
                                 $source_artifact->linkArtifact($artifact->getId(), $current_user);
                             }
                         }
+                        
+                        EventManager::instance()->processEvent(
+                            TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
+                            array(
+                                'request' => $request,
+                            )
+                        );
+                        
                         if ($request->isAjax()) {
                             header(json_header(array('aid' => $artifact->getId())));
                             exit;
-                        } else if ($link && !$request->get('return_to')) {
+                        } else if ($link) {
                             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact('. (int)$artifact->getId() .');</script>';
                             exit;
                         } else {
@@ -809,11 +817,19 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
         }
         
-        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query(array(
+        $query_parameters = array(
             'tracker'  => $this->id,
-            'func' => 'submit-artifact',
-            'return_to' => $request->get('return_to')
-            )) .'" method="POST" enctype="multipart/form-data">';
+            'func'     => 'submit-artifact',
+        );
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$query_parameters,
+            )
+        );
+        
+        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($query_parameters) .'" method="POST" enctype="multipart/form-data">';
         if ($link) {
             $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
             if ($request->get('immediate')) {
