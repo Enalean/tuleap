@@ -185,7 +185,7 @@ class Planning_ShowPresenter {
      */
     public function getPlanningTrackerArtifactCreationUrl() {
         $tracker_id = $this->planning_tracker->getId();
-        $return_url = urlencode($this->getCurrentUri());
+        $return_url = $this->current_uri;
         
         return TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&return_to=$return_url";
     }
@@ -219,14 +219,7 @@ class Planning_ShowPresenter {
     public function getCurrentUri() {
         return $this->current_uri;
     }
-    
-    /**
-     * @return string
-     */
-    public function getCurrentUrlEncoded() {
-        return urlencode($this->current_uri);
-    }
-    
+
     /**
      * @return string
      */

@@ -74,7 +74,7 @@ class Planning_ArtifactTreeNodeVisitor {
             $row['uri']                  = $artifact->getUri();
             $row['xref']                 = $artifact->getXRef();
             $row['editLabel']            = $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
-            $row['return_to']            = urlencode($this->current_url);
+            $row['return_to']            = $this->current_url;
             if (!isset($row['allowedChildrenTypes'])) {
                 $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
             }

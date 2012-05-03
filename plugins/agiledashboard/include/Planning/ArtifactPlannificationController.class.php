@@ -45,7 +45,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
         $this->current_user     = $request->getCurrentUser();
-        $this->current_uri      = $request->getUri();
+        $this->current_uri      = $request->getEncodedUri();
     }
 
     public function getShowPresenter(Planning $planning,

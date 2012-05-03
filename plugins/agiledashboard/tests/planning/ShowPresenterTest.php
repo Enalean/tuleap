@@ -116,14 +116,11 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     
     
     public function itProvidesThePlanningTrackerArtifactCreationUrl() {
-        
-        $origin_url = '/plugins/agiledashboard/?group_id=104&action=show&planning_id=5&aid=17';
+        $origin_url = urlencode('/plugins/agiledashboard/?group_id=104&action=show&planning_id=5&aid=17');
         $presenter = $this->getAPlanning($origin_url);
-        
         $url = $presenter->getPlanningTrackerArtifactCreationUrl();
         
-        $expected_return_to = urlencode($origin_url);
-        $this->assertEqual($url, "/plugins/tracker/?tracker=191&func=new-artifact&return_to=$expected_return_to");
+        $this->assertEqual($url, "/plugins/tracker/?tracker=191&func=new-artifact&return_to=$origin_url");
     }
     
     /**

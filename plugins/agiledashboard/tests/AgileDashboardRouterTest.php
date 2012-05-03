@@ -36,9 +36,9 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         stub($router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
         
         
-        $request = new Codendi_Request(array());
-        $request->setUri('someurl');
+        $request = new Codendi_Request(array(), array('REQUEST_URI' => 'someurl'));
         $request->setCurrentUser(aUser()->build());
+        
         $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
         $router->routeShowPlanning($request);
     }
@@ -63,9 +63,9 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         stub($router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
         
         
-        $request = new Codendi_Request(array('aid' => '732'));
-        $request->setUri('someurl');
+        $request = new Codendi_Request(array('aid' => '732'),  array('REQUEST_URI' => 'someurl'));
         $request->setCurrentUser(aUser()->build());
+        
         $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
         $router->routeShowPlanning($request);
     }

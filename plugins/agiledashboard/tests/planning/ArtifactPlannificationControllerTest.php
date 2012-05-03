@@ -339,9 +339,10 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
 class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCase {
     
     public function itPassesTheCurrentUriToThePresenter() {
-        $expected_uri = '/plugins/agiledashboard/?blabla';
-        $request = mock('Codendi_Request');
-        stub($request)->getUri()->returns($expected_uri);
+        $expected_uri = urlencode('/plugins/agiledashboard/?blabla');
+        $request      = mock('Codendi_Request');
+        
+        stub($request)->getEncodedUri()->returns($expected_uri);
         stub($request)->getCurrentUser()->returns(mock('User'));
         
         $planning_factory = mock('PlanningFactory');
