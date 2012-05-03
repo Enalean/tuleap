@@ -372,26 +372,5 @@ class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCa
         $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
         $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
     }
-    
-    public function itReturnsToTheCurrentUrlWithoutAidReferenceOnArtifactCreation() {
-        $expected_uri = '/plugins/agiledashboard/?blabla';
-        $request = mock('Codendi_Request');
-        $aid_to_remove = 'aid=-1';
-        stub($request)->getUri()->returns($expected_uri.'&'.$aid_to_remove);
-        stub($request)->get('aid')->returns(-1);
-        stub($request)->getCurrentUser()->returns(mock('User'));
-        
-        $planning_factory = stub('PlanningFactory')->getPlanningWithTrackers()->returns(mock('Planning'));
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        $tracker_factory  = mock('TrackerFactory');
-        
-        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
-        
-        $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
-        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));
-        $controller->show(mock('Tracker_CrossSearch_ViewBuilder'), mock('ProjectManager'));
-        
-    }
-    
 }
 ?>

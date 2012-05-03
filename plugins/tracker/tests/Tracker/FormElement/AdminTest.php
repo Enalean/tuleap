@@ -18,6 +18,7 @@
  */
 
 
+require_once(dirname(__FILE__).'/../../../include/constants.php');
 require_once('common/layout/Layout.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/View/Admin.class.php');
@@ -26,10 +27,6 @@ Mock::generate('Project');
 Mock::generate('Layout');
 Mock::generate('Tracker_FormElement_Field_String');
 Mock::generate('Tracker_FormElementFactory');
-
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
 
 class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     

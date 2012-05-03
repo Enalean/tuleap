@@ -19,6 +19,7 @@
  */
  
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generatePartial(
     'Tracker_Artifact', 
@@ -145,10 +146,6 @@ class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extend
         $fields_data[102] = '456';
         return parent::before($fields_data, $submitter);
     }
-}
-
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
 }
 
 class Tracker_ArtifactTest extends UnitTestCase {

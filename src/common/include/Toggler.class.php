@@ -125,9 +125,8 @@ class Toggler {
      *
      * @return bool
      */
-    public static function shouldBeDisplayed($id, $default) {
-        $current_user = UserManager::instance()->getCurrentUser();
-        if ($current_user->isLoggedIn()) {
+    public static function shouldBeDisplayed(User $user, $id, $default) {
+        if ($user->isLoggedIn()) {
             $should_be_displayed = $current_user->getPreference('toggle_'. $id); //TODO: DRY 'toggle_'. $id
             if ($should_be_displayed !== false) {
                 return $should_be_displayed;

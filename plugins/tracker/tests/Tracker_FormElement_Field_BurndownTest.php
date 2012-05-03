@@ -27,9 +27,7 @@ require_once dirname(__FILE__).'/builders/aBurndownField.php';
 require_once dirname(__FILE__).'/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/builders/aMockHierarchyFactory.php';
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
+require_once(dirname(__FILE__).'/../include/constants.php');
 
 class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends TuleapTestCase {
     
