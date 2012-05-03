@@ -3010,7 +3010,7 @@ EOS;
         $continue  = $request->get('submit_and_continue');
         $return_to = urldecode($request->get('return_to'));
         if ((! $stay && !$continue) && $return_to) {
-            return $return_to;
+            return str_replace('&aid=-1', '&aid='. $artifact_id, $return_to);
         }
         
         $redirect_params = $this->calculateRedirectParams($tracker_id, $artifact_id, $return_to, $stay, $continue);
@@ -3030,7 +3030,6 @@ EOS;
             $redirect_params['return_to'] = $return_to;
         }
         return array_filter($redirect_params);
-        
     }
 
 }
