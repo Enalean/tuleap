@@ -1202,7 +1202,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Array of Tracker_Artifact
      */
     public function getLinkedArtifacts(User $user) {
-        $artifact_links       = array();
+        $artifact_links      = array();
         $artifact_link_field = $this->getAnArtifactLinkField($user);
         if ($artifact_link_field) {
             $changeset      = $this->getLastChangeset();
@@ -1212,7 +1212,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-     * Get latest artifacts linked to the current artifact if 
+     * Get artifacts linked to the current artifact if 
      * they are not in children.
      * 
      * @param User $user The user who should see the artifacts
@@ -1220,9 +1220,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Array of Tracker_Artifact
      */
     public function getUniqueLinkedArtifacts(User $user) {
-        $artifact_links = array();
         $direct_linked_artifacts = $this->getLinkedArtifacts($user);
-        foreach($direct_linked_artifacts as $artifact_link) {
+        foreach ($direct_linked_artifacts as $artifact_link) {
             $sub_artifact_links      = $artifact_link->getLinkedArtifacts($user);
             $direct_linked_artifacts = $this->filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links);
         }
@@ -1230,7 +1229,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     private function filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links) {
-        foreach($sub_artifact_links as $sub_artifact_link) {
+        foreach ($sub_artifact_links as $sub_artifact_link) {
             if (($keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link))){
                 $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
             }
