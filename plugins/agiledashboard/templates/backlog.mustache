@@ -1,0 +1,19 @@
+<div class="backlog">
+    <div class="backlog-actions">
+        <a id="backlog-menu_handle" href="#">{{addLabel}} <span class="caret"></span></a>
+        <ul class="dropdown_panel" id="backlog-menu">
+            {{#planning}}
+            {{#getBacklogTrackers}}
+            {{#userCanView}}
+                <li>
+                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact&return_to={{current_url}}">{{getAddNewLabel}}</a>
+                </li>
+            {{/userCanView}}
+            {{/getBacklogTrackers}}
+            {{/planning}}
+        </ul>
+    </div>
+    <div class="backlog-content">
+        {{> cards}}
+    </div>
+</div>
