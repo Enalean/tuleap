@@ -6,9 +6,11 @@
             <hr style="border:0px; border-top:1px solid #ccc;"/>
         </li>
         {{#allowedChildrenTypes}}
-            <li>
-                <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&return_to={{return_to}}">{{getAddNewLabel}}</a>
-            </li>
+            {{#userCanView}}
+                <li>
+                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&return_to={{return_to}}">{{getAddNewLabel}}</a>
+                </li>
+            {{/userCanView}}
         {{/allowedChildrenTypes}}
     </ul>
 </div>
