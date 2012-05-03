@@ -123,10 +123,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
         return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
     }
-<<<<<<< HEAD
-=======
-
->>>>>>>  removed redirection logic from ArtifactPlannificationController
 }
 
 ?>

@@ -46,7 +46,7 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         
         $controller->createArtifact();
     }
-    public function itReturnsToTheCurrentUrlWithoutAidReference() {
+    public function itReturnsToTheCurrentUrlWithAidReference() {
         $planning_id         = 99876387;
         $aid                 = -1;
         $planning_tracker_id = 66;
@@ -64,7 +64,7 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         $controller       = new Planning_ArtifactCreationController($planning_factory, $request);
 
         $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
-        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));        
+        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));        
         $controller->createArtifact();
     }
 
