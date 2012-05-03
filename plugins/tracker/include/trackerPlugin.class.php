@@ -114,7 +114,10 @@ class trackerPlugin extends Plugin {
     }
     
     public function toggle($params) {
-        if (strpos($params['id'], 'tracker_report_query_') === 0) {
+        if ($params['id'] === 'tracker_report_query_0') {
+            Toggler::togglePreference($params['user'], $params['id']);
+            $params['done'] = true;
+        } else if (strpos($params['id'], 'tracker_report_query_') === 0) {
             require_once('Tracker/Report/Tracker_ReportFactory.class.php');
             $report_id = (int)substr($params['id'], strlen('tracker_report_query_'));
             $report_factory = Tracker_ReportFactory::instance();

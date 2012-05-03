@@ -122,7 +122,7 @@ class Tracker_CrossSearch_ViewBuilder {
     
     private function getReport() {
         $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
-        $is_query_displayed = true;
+        $is_query_displayed = Toggler::shouldBeDisplayed('tracker_report_query_0', true);
         
         $report_id = $description = $current_renderer_id = $parent_report_id
             = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
