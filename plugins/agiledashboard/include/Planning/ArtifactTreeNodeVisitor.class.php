@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This visitor injects various artifact related data in a TreeNode to be used in mustache
+ */
 class Planning_ArtifactTreeNodeVisitor {
     
     /**
