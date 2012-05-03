@@ -291,8 +291,8 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $factory = $this->GivenAnArtifactFactory();
-        $request = aRequest()->with('planning_id', $this->planning->getId())
-                             ->withUri($this->request_uri)
+        $request = aRequest()->withUri($this->request_uri)
+                             ->with('planning_id', $this->planning->getId())
                              ->build();
         
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);

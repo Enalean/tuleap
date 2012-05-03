@@ -48,6 +48,7 @@ class Codendi_Request_TestBuilder {
     }
     
     public function withUri($uri) {
+        $this->withParams($this->extractParamsFromUri($uri));
         $this->server['REQUEST_URI'] = $uri;
         return $this;
     }
@@ -66,6 +67,30 @@ class Codendi_Request_TestBuilder {
         $request = new Codendi_Request($this->params, $this->server);
         $request->setCurrentUser($this->buildUser());
         return $request;
+    }
+
+    private function extractParamsFromUri($uri) {
+        $query  = $this->extractQueryFromUri($uri);
+        $params = $this->extractParamsFromQuery($query);
+        
+        return $params;
+    }
+    
+    private function extractQueryFromUri($uri) {
+        $uri_parts = parse_url($uri);
+        return isset($uri_parts['query']) ? $uri_parts['query'] : '';
+    }
+    
+    private function extractParamsFromQuery($query) {
+        $params = array();
+        if ($query === '') return $params;
+        
+        foreach(explode('&', $query) as $param_name_and_value) {
+            list($param_name, $param_value) = explode('=', $param_name_and_value);
+            $params[$param_name] = $param_value;
+        }
+        
+        return $params;
     }
 }
 

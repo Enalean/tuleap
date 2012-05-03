@@ -23,19 +23,17 @@ require_once dirname(__FILE__).'/../../include/Planning/ArtifactCreationControll
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../builders/planning.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
         
-        $planning_id         = 99876387;
+        $planning_id         = "99876387";
         $aid                 = -1;
         $this->planning_tracker_id = 66;
-        
-        $this->request = new Codendi_Request(array('planning_id' => $planning_id,
-                                                   'aid'         => $aid),
-                                             array('REQUEST_URI' => "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid"));
+        $this->request = aRequest()->withUri("/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid")->build();
         
         $planning         = aPlanning()->withPlanningTrackerId($this->planning_tracker_id)->build();
         $planning_factory = mock('PlanningFactory');
