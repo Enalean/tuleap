@@ -152,9 +152,21 @@ class Codendi_Request {
      * @return String
      */
     public function getUri() {
-        return $_SERVER['REQUEST_URI'];
+        if (isset($this->uri)) {
+            return $this->uri;
+        } else {
+            return $_SERVER['REQUEST_URI'];
+        }
     }
     
+    /**
+     * Use this method only to isolate tests from $_SERVER['REQUEST_URI±±']
+     * @param type $uri 
+     */
+    public function setUri($uri) {
+        $this->uri = $uri;
+    }
+
     /**
      * Check if $variable exists in user submitted parameters.
      *
