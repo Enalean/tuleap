@@ -28,6 +28,7 @@ require_once(dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/Test
 require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -43,7 +44,7 @@ Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
 
 
-class ArtifactPlannificationControllerTest extends TuleapTestCase {
+class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
@@ -123,14 +124,10 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array_merge(array($artifact), $linked_items));
-        $request = new Codendi_Request(
-            array(
-                'aid'         => $id,
-                'planning_id' => $this->planning->getId(),
-            ),
-            array('REQUEST_URI' => $this->request_uri)
-        );
-        $request->setCurrentUser(aUser()->build());
+        $request  = aRequest()->with('aid', $id)
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
 
         $content = $this->WhenICaptureTheOutputOfShowAction($request, $factory);
         $this->assertPattern('/Tutu/', $content);
@@ -215,18 +212,13 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             'aid'         => $aid,
             'planning_id' => $this->planning->getId(),
             'group_id'    => $project_id,
+            'criteria'    => $shared_field_criteria,
+            'semantic_criteria' => $semantic_criteria,
         );
 
-        if ($shared_field_criteria !== null) {
-            $request_params['criteria'] = $shared_field_criteria;
-        }
-
-        if ($semantic_criteria !== null) {
-            $request_params['semantic_criteria'] = $semantic_criteria;
-        }
-
-        $request = new Codendi_Request($request_params, array('REQUEST_URI' => $this->request_uri));
-        $request->setCurrentUser(aUser()->build());
+        $request = aRequest()->withParams($request_params)
+                             ->withUri($this->request_uri)
+                             ->build();
         return $request;
     }
 
@@ -272,30 +264,37 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
-        $id       = 987;
-        $title    = 'Coin';
-        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()),
-                                        array('REQUEST_URI' => $this->request_uri));
-        $request->setCurrentUser(aUser()->build());
+        $id    = 987;
+        $title = 'Coin';
+        
         $artifact = $this->GivenAnArtifact($id, $title, array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $request  = aRequest()->with('aid', $id)
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()),
-                                        array('REQUEST_URI' => $this->request_uri));
-        $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $request  = aRequest()->with('aid', $id)
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
+        
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $request = new Codendi_Request(array('planning_id' => $this->planning->getId()),
-                                       array('REQUEST_URI' => $this->request_uri));
-        $request->setCurrentUser(aUser()->build());
         $factory = $this->GivenAnArtifactFactory();
+        $request = aRequest()->with('planning_id', $this->planning->getId())
+                             ->withUri($this->request_uri)
+                             ->build();
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     

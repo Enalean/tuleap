@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/../include/AgileDashboardRouter.class.php';
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
 
 class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
@@ -27,7 +28,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         
     }
     
-    public function itRoutesToTheArtifactPlannificationByDefault() {        
+    public function itRoutesToTheArtifactPlannificationByDefault() {
         $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'getPlanningFactory', 'getArtifactFactory'));
         $router->__construct(mock('Plugin'));
         
@@ -35,9 +36,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
         stub($router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
         
-        
-        $request = new Codendi_Request(array(), array('REQUEST_URI' => 'someurl'));
-        $request->setCurrentUser(aUser()->build());
+        $request = aRequest()->withUri('someurl')->build();
         
         $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
         $router->routeShowPlanning($request);
@@ -62,9 +61,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
         stub($router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
         
-        
-        $request = new Codendi_Request(array('aid' => '732'),  array('REQUEST_URI' => 'someurl'));
-        $request->setCurrentUser(aUser()->build());
+        $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
         
         $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
         $router->routeShowPlanning($request);

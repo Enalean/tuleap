@@ -54,9 +54,9 @@ abstract class Planning_ControllerIndexTest extends TuleapTestCase {
         parent::setUp();
         
         $this->group_id         = '123';
-        $this->current_user     = aUser()->build();
-        $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
-        $this->request->setCurrentUser($this->current_user);
+        $this->request          = aRequest()->with('group_id', $this->group_id)
+                                            ->build();
+        $this->current_user     = $this->request->getCurrentUser();
         $this->planning_factory = new MockPlanningFactory();
         $this->controller       = new Planning_Controller($this->request, $this->planning_factory);
     }
@@ -123,8 +123,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     function setUp() {
         parent::setUp();
         $this->group_id         = '123';
-        $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
-        $this->request->setCurrentUser(aUser()->build());
+        $this->request          = aRequest()->with('group_id', $this->group_id)->build();
         $this->dao              = mock('PlanningDao');
         $this->planning_factory = aPlanningFactory()->withDao($this->dao)->build();
         $this->tracker_factory  = $this->planning_factory->getTrackerFactory();
@@ -178,8 +177,7 @@ abstract class Planning_ControllerCreateTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->group_id         = '123';
-        $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
-        $this->request->setCurrentUser(aUser()->build());
+        $this->request          = aRequest()->with('group_id', $this->group_id)->build();
         $this->planning_factory = new MockPlanningFactory();
         
         $this->planning_factory->setReturnValue('getAvailableTrackers', array());
@@ -231,12 +229,11 @@ class Planning_ControllerDeleteTest extends TuleapTestCase {
     public function itDeletesThePlanningAndRedirectsToTheIndex() {
         $group_id         = '34';
         $planning_id      = '12';
-        $request          = new Codendi_Request(array('planning_id' => $planning_id,
-                                                      'group_id'    => $group_id));
-        $request->setCurrentUser(aUser()->build());
+        $request          = aRequest()->with('group_id', $group_id)
+                                      ->with('planning_id', $planning_id);
         $planning_factory = new MockPlanningFactory();
-        $controller       = aPlanningController()->with('request', $request)
-                                                 ->with('planning_factory', $planning_factory)
+        $controller       = aPlanningController()->withRequest($request)
+                                                 ->withPlanningFactory($planning_factory)
                                                  ->build();
         
         $planning_factory->expectOnce('deletePlanning', array($planning_id));

@@ -1,0 +1,76 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once 'common/include/Codendi_Request.class.php';
+
+class Codendi_Request_TestBuilder {
+    
+    /**
+     * @var array
+     */
+    private $params = array();
+    
+    /**
+     * @var array
+     */
+    private $server = array();
+    
+    /**
+     * @var UserTestBuilder
+     */
+    private $user;
+    
+    public function with($param_name, $param_value) {
+        $this->params[$param_name] = $param_value;
+        return $this;
+    }
+
+    public function withParams(array $params) {
+        $this->params = array_merge($this->params, $params);
+        return $this;
+    }
+    
+    public function withUri($uri) {
+        $this->server['REQUEST_URI'] = $uri;
+        return $this;
+    }
+    
+    public function withUser(UserTestBuilder $user) {
+        $this->user = $user;
+        return $this;
+    }
+    
+    private function buildUser() {
+        $user = $this->user ? $this->user : aUser();
+        return $user->build();
+    }
+    
+    public function build() {
+        $request = new Codendi_Request($this->params, $this->server);
+        $request->setCurrentUser($this->buildUser());
+        return $request;
+    }
+}
+
+function aRequest() {
+    return new Codendi_Request_TestBuilder();
+}
+
+?>
