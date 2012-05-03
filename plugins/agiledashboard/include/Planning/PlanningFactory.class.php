@@ -174,6 +174,9 @@ class PlanningFactory {
         return $backlog_tracker_ids;
     }
     
+    /**
+     * @return Tracker
+     */
     private function getPlanningTracker(Planning $planning) {
         return $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
     }
@@ -185,7 +188,7 @@ class PlanningFactory {
      *
      * @return array of Tracker
      */
-    public function getBacklogTrackers(Planning $planning) {
+    private function getBacklogTrackers(Planning $planning) {
         $planning_id      = $planning->getId();
         $backlog_trackers = array();
         
