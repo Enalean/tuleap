@@ -114,6 +114,15 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'target_people';
         }
 
+        $valid     = new Valid_String('codereview_testing_done');
+        $testingDone = trim($this->request->get('codereview_testing_done'));
+        if ($this->request->valid($valid) && $testingDone != '') {
+            $params['testing_done'] = $testingDone;
+        } else {
+            $status    = false;
+            $invalid[] = 'testing_done';
+        }
+
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
 }
 

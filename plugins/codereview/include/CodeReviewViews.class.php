@@ -118,6 +118,10 @@ class CodeReviewViews extends Views {
         $form .= "   <input id=\"codereview_target_people\" name=\"codereview_target_people\" type=\"text\" size=\"32\" />";
         $form .= "  </p>";
         $form .= "  <p>";
+        $form .= "   <label for=\"codereview_testing_done\">Testing done</label><br>";
+        $form .= "   <input id=\"codereview_testing_done\" name=\"codereview_testing_done\" type=\"text\" size=\"32\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
         $form .= "   <label for=\"codereview_summary\">Summary</label><br>";
         $form .= "   <input id=\"codereview_summary\" name=\"codereview_summary\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
