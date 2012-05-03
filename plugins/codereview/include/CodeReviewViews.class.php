@@ -129,6 +129,18 @@ class CodeReviewViews extends Views {
         $form .= "   <label for=\"codereview_description\">Description</label><br>";
         $form .= "   <textarea rows=\"4\" cols=\"60\" id=\"codereview_description\" name=\"codereview_description\">Write something meaningful here</textarea>";
         $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"codereview_submit_as\">Submit as</label><br>";
+        $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=\"text\" size=\"32\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"codereview_base_dir\">The absolute path in the repository the diff was generated in</label><br>";
+        $form .= "   <input id=\"codereview_base_dir\" name=\"codereview_base_dir\" type=\"text\" size=\"64\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"codereview_diff_path\">Path to the diff file</label><br>";
+        $form .= "   <input id=\"codereview_diff_path\" name=\"codereview_diff_path\" type=\"text\" size=\"64\" />";
+        $form .= "  </p>";
         $form .= "   <input type=\"submit\" value=\"Add review request\" />";
         $form .= " </form>";
         print $form;

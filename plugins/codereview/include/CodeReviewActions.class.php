@@ -123,6 +123,33 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'testing_done';
         }
 
+        $valid     = new Valid_String('codereview_submit_as');
+        $submitAs = trim($this->request->get('codereview_submit_as'));
+        if ($this->request->valid($valid) && $submitAs != '') {
+            $params['submit_as'] = $submitAs;
+        } else {
+            $status    = false;
+            $invalid[] = 'submit_as';
+        }
+
+        $valid     = new Valid_String('codereview_base_dir');
+        $baseDir = trim($this->request->get('codereview_base_dir'));
+        if ($this->request->valid($valid) && $baseDir != '') {
+            $params['base_dir'] = $baseDir;
+        } else {
+            $status    = false;
+            $invalid[] = 'base_dir';
+        }
+
+        $valid     = new Valid_String('codereview_diff_path');
+        $diffPath = trim($this->request->get('codereview_diff_path'));
+        if ($this->request->valid($valid) && $diffPath != '') {
+            $params['diff_path'] = $diffPath;
+        } else {
+            $status    = false;
+            $invalid[] = 'diff_path';
+        }
+
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
 }
 
@@ -138,16 +165,17 @@ class CodeReviewActions extends Actions {
             $repository      = $reviewRessources['params']['repository'];
             $rb_user         = 'codendiadm';
             $rb_password     = 'welcome0';
-            $reviewSubmitter = 'codendiadm';
-            //$testing_done    = $reviewRessources['params']['testing_done'];
-            $testing_done    = 'testing_done';
+            $reviewSubmitter = $reviewRessources['params']['submit_as'];
+            $testing_done    = $reviewRessources['params']['testing_done'];
             $summary         = $reviewRessources['params']['summary'];
             $target_people   = $reviewRessources['params']['target_people'];
             $description     = $reviewRessources['params']['description'];
+            $baseDir         = $reviewRessources['params']['base_dir'];
+            $path            = "@".$reviewRessources['params']['diff_path'];
             $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
             if (!empty($reviewRequestId)) {
                 $this->updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
-                $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password);
+                $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path);
                 $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);
             }
         }
@@ -209,21 +237,18 @@ class CodeReviewActions extends Actions {
         $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
     }
 
-    function CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password) {
+    function CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, 1 ); 
         curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);  
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $server."/api/review-requests/".$reviewRequestId."/diffs/");
         $post_array = array(
-            //The absolute path in the repository the diff was generated in.
-            "basedir"=>"http://svn.codex-cc.codex.cro.st.com/svnroot/codex-cc/contrib/st/enhancement/114983_sttrunk_tracker_followup_html",
-            //The path to the diff file.
-            "path"=>"@/usr/share/codendi/plugins/codereview/diff.diff"
+            "basedir"=> $baseDir,
+            "path"=> $path
         );
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
         $request = curl_exec($ch);
-        var_dump($request);
         $error = curl_error($ch);
         curl_close($ch);
     }
