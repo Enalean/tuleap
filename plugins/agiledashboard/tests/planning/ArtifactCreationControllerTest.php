@@ -25,46 +25,39 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../builders/planning.php';
 
 class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
-    public function itRedirectsToArtifactCreationForm() {
+    
+    public function setUp() {
+        parent::setUp();
+        
         $planning_id         = 99876387;
         $aid                 = -1;
-        $planning_tracker_id = 33;
+        $this->planning_tracker_id = 66;
         
-        $request = new Codendi_Request(array('planning_id' => $planning_id,
-                                             'aid'         => $aid),
-                                       array('REQUEST_URI' => "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid"));
+        $this->request = new Codendi_Request(array('planning_id' => $planning_id,
+                                                   'aid'         => $aid),
+                                             array('REQUEST_URI' => "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid"));
         
-        $planning         = aPlanning()->withPlanningTrackerId($planning_tracker_id)->build();
+        $planning         = aPlanning()->withPlanningTrackerId($this->planning_tracker_id)->build();
         $planning_factory = mock('PlanningFactory');
         
         stub($planning_factory)->getPlanning($planning_id)->returns($planning);
         
-        $return_url       = urlencode($request->getUri());
-        $controller       = new Planning_ArtifactCreationController($planning_factory, $request);
-        $new_artifact_url = TRACKER_BASE_URL."/\?tracker=$planning_tracker_id&func=new-artifact&return_to=$return_url";
-        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("@$new_artifact_url@")));
+        $this->controller = new Planning_ArtifactCreationController($planning_factory, $this->request);
+    }
+    
+    
+    public function itRedirectsToArtifactCreationForm() {
+        $return_url       = urlencode($this->request->getUri());
+        $new_artifact_url = TRACKER_BASE_URL."/\?tracker=$this->planning_tracker_id&func=new-artifact&return_to=$return_url";
         
-        $controller->createArtifact();
+        $this->expectRedirectTo(new PatternExpectation("@$new_artifact_url@"));
+        $this->controller->createArtifact();
     }
     public function itReturnsToTheCurrentUrlWithAidReference() {
-        $planning_id         = 99876387;
-        $aid                 = -1;
-        $planning_tracker_id = 66;
-        
-        $request = new Codendi_Request(array('planning_id' => $planning_id,
-                                             'aid'         => $aid),
-                                       array('REQUEST_URI' => "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid"));
-        
-        $planning         = aPlanning()->withPlanningTrackerId($planning_tracker_id)->build();
-        $planning_factory = mock('PlanningFactory');
-        
-        stub($planning_factory)->getPlanning($planning_id)->returns($planning);
-        
-        $controller       = new Planning_ArtifactCreationController($planning_factory, $request);
-
         $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
-        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));        
-        $controller->createArtifact();
+        
+        $this->expectRedirectTo(new PatternExpectation("/$aid_surrounded_by_ampersand_and_equals/"));
+        $this->controller->createArtifact();
     }
 
 }
