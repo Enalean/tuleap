@@ -92,7 +92,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     
     private function getArrayFromRequest($parameter_name) {
         $request_criteria = array();
-        $valid_criteria = new Valid_Array($parameter_name);
+        $valid_criteria   = new Valid_Array($parameter_name);
         $valid_criteria->required();
         if ($this->request->valid($valid_criteria)) {
             $request_criteria = $this->request->get($parameter_name);

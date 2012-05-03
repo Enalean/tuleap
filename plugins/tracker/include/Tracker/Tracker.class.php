@@ -3019,12 +3019,12 @@ EOS;
 
     private function calculateRedirectParams($tracker_id, $artifact_id, $return_to, $stay, $continue) {
         $redirect_params = array();
-        $redirect_params['tracker'] = $tracker_id;
+        $redirect_params['tracker']       = $tracker_id;
         if ($continue) {
-            $redirect_params['func'] = 'new-artifact';
+            $redirect_params['func']      = 'new-artifact';
         }
         if ($stay) {
-            $redirect_params['aid'] = $artifact_id;
+            $redirect_params['aid']       = $artifact_id;
         }
         if ($return_to) {
             $redirect_params['return_to'] = $return_to;

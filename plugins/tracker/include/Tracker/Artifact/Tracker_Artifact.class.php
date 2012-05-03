@@ -1296,13 +1296,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function calculateRedirectParams($stay, $from_aid, $return_to) {
         $redirect_params = array();
         if ($stay) {
-            $redirect_params['aid'] = $this->getId();
-            $redirect_params['from_aid'] = $from_aid;
+            $redirect_params['aid']       = $this->getId();
+            $redirect_params['from_aid']  = $from_aid;
             $redirect_params['return_to'] = $return_to;
         } else if ($from_aid) {
-            $redirect_params['aid'] = $from_aid;
+            $redirect_params['aid']       = $from_aid;
         } else {
-            $redirect_params['tracker'] = $this->tracker_id;
+            $redirect_params['tracker']   = $this->tracker_id;
         }
         return array_filter($redirect_params);
         
