@@ -31,7 +31,7 @@ class HTTPRequest extends Codendi_Request {
      * Constructor
      */
     public function __construct() {
-        parent::__construct($_REQUEST);
+        parent::__construct($_REQUEST, $_SERVER);
     }
     
 

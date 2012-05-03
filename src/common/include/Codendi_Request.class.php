@@ -44,8 +44,9 @@ class Codendi_Request {
     /**
      * Constructor
      */
-    public function __construct($params) {
+    public function __construct($params, $server = array()) {
         $this->params                = $params;
+        $this->server                = $server;
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
     }
@@ -152,19 +153,7 @@ class Codendi_Request {
      * @return String
      */
     public function getUri() {
-        if (isset($this->uri)) {
-            return $this->uri;
-        } else {
-            return $_SERVER['REQUEST_URI'];
-        }
-    }
-    
-    /**
-     * Use this method only to isolate tests from $_SERVER['REQUEST_URI±±']
-     * @param type $uri 
-     */
-    public function setUri($uri) {
-        $this->uri = $uri;
+        return $this->server['REQUEST_URI'];
     }
 
     /**

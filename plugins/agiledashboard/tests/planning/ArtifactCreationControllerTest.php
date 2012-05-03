@@ -30,11 +30,9 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         $aid                 = -1;
         $planning_tracker_id = 33;
         
-        $request = new Codendi_Request(array(
-            'planning_id' => $planning_id,
-            'aid'         => $aid,
-        ));
-        $_SERVER['REQUEST_URI'] = "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid";
+        $request = new Codendi_Request(array('planning_id' => $planning_id,
+                                             'aid'         => $aid),
+                                       array('REQUEST_URI' => "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid"));
         
         $planning         = aPlanning()->withPlanningTrackerId($planning_tracker_id)->build();
         $planning_factory = mock('PlanningFactory');
@@ -53,11 +51,9 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         $aid                 = -1;
         $planning_tracker_id = 66;
         
-        $request = new Codendi_Request(array(
-            'planning_id' => $planning_id,
-            'aid'         => $aid,
-        ));
-        $_SERVER['REQUEST_URI'] = "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid";
+        $request = new Codendi_Request(array('planning_id' => $planning_id,
+                                             'aid'         => $aid),
+                                       array('REQUEST_URI' => "/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid"));
         
         $planning         = aPlanning()->withPlanningTrackerId($planning_tracker_id)->build();
         $planning_factory = mock('PlanningFactory');

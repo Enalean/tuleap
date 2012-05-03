@@ -48,9 +48,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
-        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
-        $_SERVER['REQUEST_URI'] = '';
-        
+        $this->request_uri = '/plugins/agiledashboard/';
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
@@ -63,11 +61,6 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     public function tearDown() {
         parent::tearDown();
         
-        if ($this->request_uri != null) {
-            $_SERVER['REQUEST_URI'] = $this->request_uri;
-        } else {
-            unset($_SERVER['REQUEST_URI']);
-        }
         
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
@@ -134,7 +127,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             array(
                 'aid'         => $id,
                 'planning_id' => $this->planning->getId(),
-            )
+            ),
+            array('REQUEST_URI' => $this->request_uri)
         );
         $request->setCurrentUser(aUser()->build());
 
@@ -231,7 +225,7 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             $request_params['semantic_criteria'] = $semantic_criteria;
         }
 
-        $request = new Codendi_Request($request_params);
+        $request = new Codendi_Request($request_params, array('REQUEST_URI' => $this->request_uri));
         $request->setCurrentUser(aUser()->build());
         return $request;
     }
@@ -280,7 +274,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
         $id       = 987;
         $title    = 'Coin';
-        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()),
+                                        array('REQUEST_URI' => $this->request_uri));
         $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifact($id, $title, array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
@@ -288,7 +283,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
+        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()),
+                                        array('REQUEST_URI' => $this->request_uri));
         $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
@@ -296,7 +292,8 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $request = new Codendi_Request(array('planning_id' => $this->planning->getId()));
+        $request = new Codendi_Request(array('planning_id' => $this->planning->getId()),
+                                       array('REQUEST_URI' => $this->request_uri));
         $request->setCurrentUser(aUser()->build());
         $factory = $this->GivenAnArtifactFactory();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
