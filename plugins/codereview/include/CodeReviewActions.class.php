@@ -20,6 +20,7 @@
 
 require_once('common/mvc/Actions.class.php');
 require_once('common/curl/TuleapCurl.class.php');
+require_once('exceptions/CodeReviewException.class.php');
 
 /**
  * codereview
@@ -172,11 +173,13 @@ class CodeReviewActions extends Actions {
             $description     = $reviewRessources['params']['description'];
             $baseDir         = $reviewRessources['params']['base_dir'];
             $path            = "@".$reviewRessources['params']['diff_path'];
-            $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
-            if (!empty($reviewRequestId)) {
+            try {
+                $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
                 $this->updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
                 $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path);
                 $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);
+            } catch(CodeReviewException $exception) {
+                print $exception->getMessage();
             }
         }
     }
@@ -201,7 +204,10 @@ class CodeReviewActions extends Actions {
             if ($request['return']['stat'] == "ok") {
                 return $request['return']['review_request']['id'];
             } else {
-                return $request['return']['return'];
+                $msg = "Request status: ".$request['status'].' => ';
+                $msg .= __METHOD__." - ".$request['return']['stat'].': '.$request['return']['err']['msg'];
+                $code = $request['return']['err']['code'];
+                throw new CodeReviewException($msg, $code);
             }
         } else {
             return $request['status'];
