@@ -26,6 +26,7 @@ require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
 require_once 'Planning/Controller.class.php';
 require_once 'Planning/ArtifactPlannificationController.class.php';
 require_once 'Planning/PlanningFactory.class.php';
+require_once 'Planning/ArtifactCreationController.class.php';
 
 class AgileDashboardRouter {
     /**
@@ -126,7 +127,7 @@ class AgileDashboardRouter {
     
     public function routeShowPlanning(Codendi_Request $request) {
         if ($request->get('aid') == -1) {
-            $this->executeAction(new ArtifactCreationRedirectController($request), 'create-artifact', $request);
+            $this->executeAction(new Planning_ArtifactCreationController($request), 'createArtifact');
         } else {
             $view_builder = $this->getViewBuilder($request);
             $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
@@ -136,11 +137,4 @@ class AgileDashboardRouter {
     }
 }
 
-class ArtifactCreationRedirectController extends MVC2_Controller {
-
-    public function __construct(Codendi_Request $request) {
-        parent::__construct('agiledashboard', $request);
-    }
-
-}
 ?>

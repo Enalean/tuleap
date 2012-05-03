@@ -41,7 +41,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $router->__construct(mock('Plugin'));
         
         $request = new Codendi_Request(array('aid' => '-1'));
-        $router->expectOnce('executeAction', array(new IsAExpectation('ArtifactCreationRedirectController'), 'create-artifact', $request));
+        $router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $router->routeShowPlanning($request);
     }
     

@@ -116,22 +116,6 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
     
-    public function itRedirectsToArtifactCreationForm() {
-        $request = new Codendi_Request(array(
-            'planning_id' => $this->planning->getId(),
-            'aid'         => -1,
-        ));
-        $_SERVER['REQUEST_URI'] = '/someplugin/someaction/?somearg=toto';
-        $request->setCurrentUser(aUser()->build());
-        
-        $factory = $this->GivenAnArtifactFactory();
-        
-        $return_url = urlencode($request->getUri());
-        
-        $GLOBALS['Response']->expectOnce('redirect', array(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&return_to=$return_url"));
-        $this->WhenICaptureTheOutputOfShowAction($request, $factory);
-    }
-    
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
         $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
