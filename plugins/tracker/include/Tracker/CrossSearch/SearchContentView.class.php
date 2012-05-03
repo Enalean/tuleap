@@ -168,8 +168,8 @@ class Tracker_CrossSearch_SearchContentView {
             $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
                 $values = array();
-                // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
-                $linked_artifact_ids = array_unique(explode(',', $row[$key]));
+                // GROUP_CONCAT DISTINCT retrieve only once id (no need of array_unique)  
+                $linked_artifact_ids = explode(',', $row[$key]);
                 foreach ($linked_artifact_ids as $id) {
                     $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
                 }
@@ -192,9 +192,10 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     private function isASharedField(Tracker_Report_Field $report_field) {
-        return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
-                 $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
-                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
+        return !(  $report_field instanceof Tracker_CrossSearch_SemanticTitleReportField 
+                || $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField 
+                || $report_field instanceof Tracker_CrossSearch_ArtifactReportField
+        );
     }
 
 }

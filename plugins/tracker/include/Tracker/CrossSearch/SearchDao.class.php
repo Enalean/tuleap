@@ -23,7 +23,18 @@ require_once 'SharedField.class.php';
 require_once dirname(__FILE__).'/../Report/dao/Tracker_ReportDao.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
-    
+    /**
+     * Monstro query 
+     * 
+     * @param User $user
+     * @param unknown_type $group_id
+     * @param Tracker_CrossSearch_Query $query
+     * @param array $tracker_ids
+     * @param array $shared_fields
+     * @param array $semantic_fields
+     * @param array $artifact_link_field_ids_for_column_display
+     * @param array $excluded_artifact_ids
+     */
     public function searchMatchingArtifacts(User $user,
                                             $group_id,
                                             Tracker_CrossSearch_Query $query,
@@ -55,7 +66,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                    artifact.last_changeset_id,
                    CVT.value                      AS title,
                    artifact.tracker_id,
-                   GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
+                   GROUP_CONCAT( DISTINCT CVAL.artifact_id) AS artifactlinks
                    $artifact_link_columns_select
                    
             FROM       tracker_artifact  AS artifact
@@ -86,7 +97,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             ) ON CV2.changeset_id = artifact.last_changeset_id
 
             $artifact_link_columns_join
-        
             $artifact_permissions_join
         
             WHERE 1=1 
@@ -260,7 +270,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     protected function getArtifactLinkSelects(array $field_ids) {
         $sql = '';
         foreach ($field_ids as $field_id) {
-            $sql .= ', GROUP_CONCAT(AL_COL_'.$field_id.'.id) AS art_link_'.$field_id;
+            $sql .= ', GROUP_CONCAT( DISTINCT AL_COL_'.$field_id.'.id) AS art_link_'.$field_id;
         }
         return $sql;
     }
