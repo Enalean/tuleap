@@ -223,22 +223,23 @@ class GitDao extends DataAccessObject {
      *
      * @return Array
      */
-    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $userId = null) {
+    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $scope = true, $userId = null) {
         $condition = "";
         if ($onlyGitShell) {
             $condition .= " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
         }
         $projectId = $this->da->escapeInt($projectId);
         $userId    = $this->da->escapeInt($userId);
-        
-        if ( empty($projectId) ) {
+
+        if (empty($projectId)) {
             return false;
         }
-        
-        if ( empty($userId) ) {
-            $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
-        } else {
-            $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
+        if ($scope) {
+            if (empty($userId)) {
+                $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
+            } else {
+                $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
+            }
         }
 
         $sql = "SELECT * FROM $this->tableName
@@ -247,35 +248,6 @@ class GitDao extends DataAccessObject {
                   $condition
                 ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
                   
-        $rs = $this->retrieve($sql);
-        $list = array();
-        if ($rs && $rs->rowCount() > 0 ) {        
-            foreach ($rs as $row) {
-                $repoId        = $row[self::REPOSITORY_ID];
-                $list[$repoId] = $row;
-            }
-        }
-        return $list;
-    }
-
-    /**
-     * Obtain all project's list of git repositories
-     *
-     * @param Integre $projectId Project id
-     *
-     * @return Array
-     */
-    public function getAllProjectRepositoryList($projectId) {
-        $projectId = $this->da->escapeInt($projectId);
-        if (empty($projectId)) {
-            return false;
-        }
-
-        $sql = "SELECT * FROM $this->tableName
-                WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
-                ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
-
         $rs = $this->retrieve($sql);
         $list = array();
         if ($rs && $rs->rowCount() > 0 ) {        
