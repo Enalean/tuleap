@@ -127,12 +127,12 @@ class AgileDashboardRouter {
     
     public function routeShowPlanning(Codendi_Request $request) {
         if ($request->get('aid') == -1) {
-            $this->executeAction(new Planning_ArtifactCreationController($this->getPlanningFactory(), $request), 'createArtifact');
+            $controller = new Planning_ArtifactCreationController($this->getPlanningFactory(), $request);
+            $this->executeAction($controller, 'createArtifact');
         } else {
-            $view_builder = $this->getViewBuilder($request);
-            $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
-
-            $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
+            $controller = $this->buildArtifactPlannificationController($request);
+            $action_arguments = array($this->getViewBuilder($request), ProjectManager::instance());
+            $this->renderAction($controller, 'show', $request, $action_arguments);
         }
     }
 
@@ -141,7 +141,7 @@ class AgileDashboardRouter {
 
     }
 
-    public function getArtifactFactory() {
+    protected function getArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
     }
 }
