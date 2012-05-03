@@ -210,7 +210,8 @@ class CodeReviewActions extends Actions {
                 throw new CodeReviewException($msg, $code);
             }
         } else {
-            return $request['status'];
+            $msg = "Request status: ".$request['status'];
+            throw new CodeReviewException($msg);
         }
     }
 
