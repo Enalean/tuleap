@@ -26,12 +26,36 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'buildArtifactPlannificationController'));
         $router->__construct(mock('Plugin'));
         
+        $controller = mock('MVC2_Controller');
         stub($router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
-        stub($router)->buildArtifactPlannificationController()->returns(mock('MVC2_Controller'));
+        stub($router)->buildArtifactPlannificationController()->returns($controller);
         
         
         $request = new Codendi_Request(array());
-        $router->expectOnce('renderAction', array('*', 'show', $request, '*'));
+        $router->expectOnce('renderAction', array($controller, 'show', $request, '*'));
+        $router->routeShowPlanning($request);
+    }
+    
+    public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
+        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('executeAction'));
+        $router->__construct(mock('Plugin'));
+        
+        $request = new Codendi_Request(array('aid' => '-1'));
+        $router->expectOnce('executeAction', array(new IsAExpectation('ArtifactCreationRedirectController'), 'create-artifact', $request));
+        $router->routeShowPlanning($request);
+    }
+    
+    public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
+        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'buildArtifactPlannificationController'));
+        $router->__construct(mock('Plugin'));
+        
+        $controller = mock('MVC2_Controller');
+        stub($router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
+        stub($router)->buildArtifactPlannificationController()->returns($controller);
+        
+        
+        $request = new Codendi_Request(array('aid' => '732'));
+        $router->expectOnce('renderAction', array($controller, 'show', $request, '*'));
         $router->routeShowPlanning($request);
     }
 }

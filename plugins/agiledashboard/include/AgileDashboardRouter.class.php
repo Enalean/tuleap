@@ -125,10 +125,22 @@ class AgileDashboardRouter {
     }
     
     public function routeShowPlanning(Codendi_Request $request) {
-        $view_builder = $this->getViewBuilder($request);
-        $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
+        if ($request->get('aid') == -1) {
+            $this->executeAction(new ArtifactCreationRedirectController($request), 'create-artifact', $request);
+        } else {
+            $view_builder = $this->getViewBuilder($request);
+            $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
 
-        $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
+            $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
+        }
     }
+}
+
+class ArtifactCreationRedirectController extends MVC2_Controller {
+
+    public function __construct(Codendi_Request $request) {
+        parent::__construct('agiledashboard', $request);
+    }
+
 }
 ?>
