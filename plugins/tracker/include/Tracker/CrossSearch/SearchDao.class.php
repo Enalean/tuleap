@@ -43,6 +43,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                                             array $semantic_fields, 
                                             array $artifact_link_field_ids_for_column_display, 
                                             array $excluded_artifact_ids = array()) {
+        $ugroups                   = $user->getUgroups($group_id, array());
         $tracker_ids               = $this->da->quoteSmartImplode(',', $tracker_ids);
         $excluded_artifact_ids     = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
         
@@ -53,13 +54,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment($query->listArtifactIds());
         
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
-        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display);
+        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display, $ugroups);
         
         $reportDao = new Tracker_ReportDao();
-        $artifact_permissions = $reportDao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $user->getUgroups($group_id, array()));
+        $artifact_permissions = $reportDao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $ugroups);
         $artifact_permissions_join  = $artifact_permissions['from'];
         $artifact_permissions_where = $artifact_permissions['where'];
-        
         
         $sql = "
             SELECT artifact.id,
@@ -282,10 +282,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * 
      * @return String
      */
-    protected function getArtifactLinkColumns(array $field_ids) {
+    protected function getArtifactLinkColumns(array $field_ids, $ugroups) {
         $sql = '';
         foreach ($field_ids as $field_id) {
-            $sql .= $this->getArtifactLinkColumn($field_id);
+            $sql .= $this->getArtifactLinkColumn($field_id, $ugroups);
         }
         return $sql;
     }
@@ -297,18 +297,23 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * 
      * @return String
      */
-    protected function getArtifactLinkColumn($field_id) {
+    protected function getArtifactLinkColumn($field_id, $ugroups) {
         $field_id = intval($field_id);
-        
+        $ugroups  = $this->da->escapeIntImplode($ugroups);
+                
         $tracker_artifact_title        = 'AL_COL_'.$field_id;
         $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
         $al_tracker_changeset_value_al = 'AL_COL_CVAL_'.$field_id;
+        $permissions = 'AL_COL_PERM_'.$field_id;
                 
         $sql = "LEFT JOIN (
                     tracker_artifact AS $tracker_artifact_title
 
                 INNER JOIN tracker_changeset_value  AS $al_tracker_changeset_value   ON ($tracker_artifact_title.last_changeset_id = $al_tracker_changeset_value.changeset_id AND $al_tracker_changeset_value.field_id IN ($field_id))
                 INNER JOIN tracker_changeset_value_artifactlink AS $al_tracker_changeset_value_al ON ($al_tracker_changeset_value.id = $al_tracker_changeset_value_al.changeset_value_id)
+                INNER JOIN permissions AS $permissions ON ($permissions.object_id = CAST($field_id AS CHAR) 
+                                  AND $permissions.permission_type = 'PLUGIN_TRACKER_FIELD_READ' 
+                                  AND $permissions.ugroup_id IN ($ugroups))
                 ) ON ($al_tracker_changeset_value_al.artifact_id = artifact.id)";
         return $sql;
     }
