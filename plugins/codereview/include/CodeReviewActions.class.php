@@ -143,7 +143,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'rb_user';
         }
 
-        $valid     = new Valid_String('codereview_rb_password');
+        $valid  = new Valid_String('codereview_rb_password');
         $rbPass = trim($this->request->get('codereview_rb_password'));
         if ($this->request->valid($valid) && $rbPass != '') {
             $params['rb_password'] = $rbPass;
@@ -152,7 +152,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'rb_password';
         }
 
-        $valid     = new Valid_String('codereview_base_dir');
+        $valid   = new Valid_String('codereview_base_dir');
         $baseDir = trim($this->request->get('codereview_base_dir'));
         if ($this->request->valid($valid) && $baseDir != '') {
             $params['base_dir'] = $baseDir;
@@ -276,6 +276,14 @@ class CodeReviewActions extends Actions {
         );
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
         $request = curl_exec($ch);
+        $result = json_decode($request, true);
+        if ($result["stat"] == "ok") {
+            $diffFileName = $result["diff"]["name"];
+            $diffLink     = $result["diff"]["links"];
+        } else {
+            $msg = "Create new diff failure. Your review request is already created without any diff.";
+            throw new CodeReviewException($msg);
+        }
         $error = curl_error($ch);
         curl_close($ch);
     }
