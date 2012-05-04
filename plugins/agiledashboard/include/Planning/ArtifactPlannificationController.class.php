@@ -31,11 +31,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
      */
     private $artifact;
     
-    /**
-     * @var User
-     */
-    private $current_user;
-    
     public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
@@ -44,7 +39,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->artifact         = $artifact_factory->getArtifactById($aid);
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
-        $this->current_user     = $request->getCurrentUser();
     }
 
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
@@ -66,7 +60,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         
         $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
         
-        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->current_user, $planning_redirect_parameter);
+        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->getCurrentUser(), $planning_redirect_parameter);
     }
     
     private function getPlanningRedirectParameter(Planning $planning) {
@@ -88,7 +82,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $tracker_linked_items  = $this->getTrackerLinkedItems($artifacts_to_select);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
-        $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
+        $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->getCurrentUser(), $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
         
         $view->planning                    = $planning;
         $view->planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
@@ -113,7 +107,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     private function getTrackerLinkedItems($artifacts_to_select) {
         $linked_items = array();
         foreach ($artifacts_to_select as $artifact) {
-            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts($this->current_user));
+            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts($this->getCurrentUser()));
         }
         return $linked_items;
     }
