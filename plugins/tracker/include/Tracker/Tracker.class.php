@@ -541,13 +541,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     if ($artifact = $this->createArtifact($layout, $request, $current_user)) {
                         $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
                         
-                        EventManager::instance()->processEvent(
-                            TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
-                            array(
-                                'request'  => $request,
-                                'artifact' => $artifact,
-                            )
-                        );
+                        $artifact->summonArtifactRedirectors($request);
                         
                         if ($request->isAjax()) {
                             header(json_header(array('aid' => $artifact->getId())));

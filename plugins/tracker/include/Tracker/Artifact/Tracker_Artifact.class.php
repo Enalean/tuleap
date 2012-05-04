@@ -640,13 +640,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
-                    EventManager::instance()->processEvent(
-                        TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
-                        array(
-                            'request'  => $request,
-                            'artifact' => $artifact,
-                        )
-                    );
+                    $this->summonArtifactRedirectors($request);
                     
                     $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
                 } else {
@@ -1310,6 +1304,25 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return array_filter($redirect_params);
         
+    }
+    
+    /**
+     * Invoke those we don't speak of which may want to redirect to a 
+     * specific page after an update/creation of this artifact.
+     * If the summoning is not strong enough (or there is no listener) then
+     * nothing is done. Else the client is redirected and 
+     * the script will die in agony!
+     *
+     * @param Codendi_Request $request The request
+     */
+    public function summonArtifactRedirectors(Codendi_Request $request) {
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
+            array(
+                'request'  => $request,
+                'artifact' => $this,
+            )
+        );
     }
 }
 
