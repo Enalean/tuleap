@@ -43,7 +43,7 @@ class Planning_ShowPresenter {
     public function __construct(Planning $planning,
                                 Tracker_CrossSearch_SearchContentView $content_view,
                                 array $artifacts_to_select,
-                                Tracker_Artifact $artifact = null, 
+                                Tracker_Artifact $artifact, 
                                 User $user,
                                 $current_uri,
                                 $planning_redirect_parameter) {
