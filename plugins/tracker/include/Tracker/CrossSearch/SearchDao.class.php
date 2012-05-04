@@ -44,6 +44,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                                             array $artifact_link_field_ids_for_column_display, 
                                             array $excluded_artifact_ids = array()) {
         $ugroups                   = $user->getUgroups($group_id, array());
+        $quoted_ugroups            = $this->da->quoteSmartImplode(',', $ugroups);
         $tracker_ids               = $this->da->quoteSmartImplode(',', $tracker_ids);
         $excluded_artifact_ids     = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
         
@@ -54,7 +55,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $artifact_link_constraints = $this->getArtifactLinkSearchSqlFragment($query->listArtifactIds());
         
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
-        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display, $ugroups);
+        $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display, $quoted_ugroups);
         
         $reportDao = new Tracker_ReportDao();
         $artifact_permissions = $reportDao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $ugroups);
@@ -80,6 +81,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                            tracker_changeset_value      AS CV
                 INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
                 INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
+                INNER JOIN permissions AS CVPerm ON (CVPerm.object_id = CAST(ST.field_id AS CHAR) 
+                                  AND CVPerm.permission_type = 'PLUGIN_TRACKER_FIELD_READ' 
+                                  AND CVPerm.ugroup_id IN ($quoted_ugroups)
+                )
             
             ) ON (c.id = CV.changeset_id)
             
@@ -87,6 +92,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                            tracker_changeset_value      AS CV3
                 INNER JOIN tracker_semantic_status      AS SS  ON (CV3.field_id = SS.field_id)
                 INNER JOIN tracker_changeset_value_list AS CVL ON (CV3.id       = CVL.changeset_value_id AND SS.open_value_id = CVL.bindvalue_id)
+                INNER JOIN permissions AS CVPerm3 ON (CVPerm3.object_id = CAST(SS.field_id AS CHAR) 
+                                  AND CVPerm3.permission_type = 'PLUGIN_TRACKER_FIELD_READ' 
+                                  AND CVPerm3.ugroup_id IN ($quoted_ugroups)
+                )
             
             ) ON (c.id = CV3.changeset_id)
 
@@ -282,10 +291,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * 
      * @return String
      */
-    protected function getArtifactLinkColumns(array $field_ids, $ugroups) {
+    protected function getArtifactLinkColumns(array $field_ids, $quoted_ugroups) {
         $sql = '';
         foreach ($field_ids as $field_id) {
-            $sql .= $this->getArtifactLinkColumn($field_id, $ugroups);
+            $sql .= $this->getArtifactLinkColumn($field_id, $quoted_ugroups);
         }
         return $sql;
     }
@@ -297,9 +306,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      * 
      * @return String
      */
-    protected function getArtifactLinkColumn($field_id, $ugroups) {
+    protected function getArtifactLinkColumn($field_id, $quoted_ugroups) {
         $field_id = intval($field_id);
-        $ugroups  = $this->da->escapeIntImplode($ugroups);
                 
         $tracker_artifact_title        = 'AL_COL_'.$field_id;
         $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
@@ -313,7 +321,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 INNER JOIN tracker_changeset_value_artifactlink AS $al_tracker_changeset_value_al ON ($al_tracker_changeset_value.id = $al_tracker_changeset_value_al.changeset_value_id)
                 INNER JOIN permissions AS $permissions ON ($permissions.object_id = CAST($field_id AS CHAR) 
                                   AND $permissions.permission_type = 'PLUGIN_TRACKER_FIELD_READ' 
-                                  AND $permissions.ugroup_id IN ($ugroups))
+                                  AND $permissions.ugroup_id IN ($quoted_ugroups))
                 ) ON ($al_tracker_changeset_value_al.artifact_id = artifact.id)";
         return $sql;
     }
