@@ -1244,7 +1244,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns the ids of the children of the tracker.
      * 
-     * @return array of Tracker ids
+     * @return array of int
      */
     protected function getChildTrackersIds() {
         $children_trackers_ids = array();
