@@ -1,14 +1,22 @@
 <div class="card-actions">
     <a id="card-actions-menu_handle" href="{{{destination_link}}}">{{destination_xref}} <span class="caret"></span></a>
-    <ul class="dropdown_panel" id="card-actions-menu">
-        <li>
-            <a href="{{{destination_link}}}">{{editLabel}}</a>
-            <hr />
-        </li>
-        {{#backlogArtifactTypes}}
-            <li>
-                <a href="{{creationUrl}}">{{getAddNewLabel}}</a>
-            </li>
-        {{/backlogArtifactTypes}}
-    </ul>
+    <table class="dropdown_panel" id="card-actions-menu">
+        <tbody>
+            <tr>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{{destination_link}}}">{{editLabel}}</a>
+                            <hr />
+                        </li>
+                        {{#backlogArtifactTypes}}
+                            <li>
+                                <a href="{{creationUrl}}">{{getAddNewLabel}}</a>
+                            </li>
+                        {{/backlogArtifactTypes}}
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

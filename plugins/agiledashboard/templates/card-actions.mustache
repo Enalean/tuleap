@@ -1,17 +1,25 @@
 <div class="card-actions">
     <a id="card-{{id}}-actions-menu_handle" href="{{uri}}">{{xref}} <span class="caret"></span></a>
-    <ul class="dropdown_panel" id="card-{{id}}-actions-menu">
-        <li>
-            <a href="{{uri}}&{{planning_redirect_parameter}}">{{editLabel}}</a>
-            <hr />
-        </li>
-        {{#allowedChildrenTypes}}
-            {{#userCanView}}
-                <li>
-                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
-                </li>
-            {{/userCanView}}
-        {{/allowedChildrenTypes}}
-    </ul>
+    <table class="dropdown_panel" id="card-{{id}}-actions-menu">
+        <tbody>
+            <tr>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{uri}}&{{planning_redirect_parameter}}">{{editLabel}}</a>
+                            <hr />
+                        </li>
+                        {{#allowedChildrenTypes}}
+                            {{#userCanView}}
+                                <li>
+                                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
+                                </li>
+                            {{/userCanView}}
+                        {{/allowedChildrenTypes}}
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
