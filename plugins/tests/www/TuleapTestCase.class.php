@@ -153,7 +153,8 @@ abstract class TuleapTestCase extends UnitTestCase {
      * @param type $value 
      */
     protected function assertUriHasArgument($uri, $param, $value) {
-        $this->assertPattern("/[?&]$param=$value/", $uri);
+        $pattern = '/[?&]'. preg_quote("$param=$value", '/') .'\W?$/';
+        return $this->assertPattern($pattern, $uri);
     }
     
     /**
@@ -162,7 +163,7 @@ abstract class TuleapTestCase extends UnitTestCase {
      * @param type $start_sequence 
      */
     protected function assertStringBeginsWith($string, $start_sequence) {
-        $this->assertPattern("%^$start_sequence%", $string);
+        return $this->assertPattern("%^$start_sequence%", $string);
     }
 }
 ?>
