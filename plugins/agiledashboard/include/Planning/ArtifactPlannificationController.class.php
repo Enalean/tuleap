@@ -42,7 +42,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->planning_factory = $planning_factory;
     }
 
-    public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
+    public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning            = $this->getPlanning();
         $project_id          = $this->request->get('group_id');
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
@@ -79,14 +79,19 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
-    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select, Planning $planning) {
+    private function buildContentView(Planning_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select, Planning $planning) {
         $tracker_linked_items  = $this->getTrackerLinkedItems($artifacts_to_select);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
-        $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->getCurrentUser(), $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
+
         
-        $view->planning                    = $planning;
-        $view->planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
+        $view = $view_builder->buildPlanningView($this->getCurrentUser(), 
+                                                 $project, 
+                                                 $cross_search_query, 
+                                                 $excluded_artifact_ids, 
+                                                 $tracker_ids,
+                                                 $planning,
+                                                 $this->getPlanningRedirectParameter($planning));
         
         return $view;
     }

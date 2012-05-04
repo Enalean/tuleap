@@ -1,11 +1,11 @@
-{{#getDestination}}
-    <div id="art-{{getId}}" class="release_planner card {{getDestinationDroppableClass}}">
+{{#plannedArtifactsTree}}
+    <div id="art-{{getId}}" class="release_planner card {{planningDroppableClass}}">
         {{#getData}}
             {{> card-actions}}
         {{/getData}}
         {{> select-destination}}
         <hr />
-        <p class="help">{{destinationHelp}}</p>
+        <p class="help">{{plannedArtifactsHelp}}</p>
         {{^canDrop}}
             {{{errorCantDrop}}}
         {{/canDrop}}
@@ -20,5 +20,5 @@
             </div>
         {{/canDrop}}
     </div>
-{{/getDestination}}
+{{/plannedArtifactsTree}}
 <div style="clear: both"></div>

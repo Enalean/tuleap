@@ -1,7 +1,10 @@
 Version 5.1 (Not released yet)
    == Plugins ==
-   * AgileDashboard v0.16
-   * Tracker v5.7.10
+   * AgileDashboard v0.17
+   * Tracker v5.7.11
+
+  == Bug fix ==
+  * Fix bug with IE7 and drag'n drop in scriptaculous.
 
   == Development ==
   * Check release with git

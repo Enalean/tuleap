@@ -32,6 +32,8 @@ function aPlanning() {
 class Test_Planning_Builder {
     private $id                  = '1';
     private $name                = 'Test Planning';
+    private $backlog_title       = 'Release Backlog';
+    private $plan_title          = 'Sprint Plan';
     private $group_id            = '102';
     private $backlog_tracker_ids = array();
     private $planning_tracker_id;
@@ -55,6 +57,8 @@ class Test_Planning_Builder {
         return new Planning($this->id,
                             $this->name,
                             $this->group_id,
+                            $this->backlog_title,
+                            $this->plan_title,
                             $this->backlog_tracker_ids,
                             $this->planning_tracker_id);
     }

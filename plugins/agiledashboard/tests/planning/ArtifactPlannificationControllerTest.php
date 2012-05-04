@@ -40,7 +40,7 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
-Mock::generate('Tracker_CrossSearch_ViewBuilder');
+Mock::generate('Planning_ViewBuilder');
 
 
 
@@ -51,7 +51,7 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
         
         $this->request_uri = '/plugins/agiledashboard/';
         $this->planning_tracker_id = 66;
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
+        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
         
@@ -187,17 +187,18 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
         $tracker_ids  = array();
-        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder = new MockPlanning_ViewBuilder();
         $expected_arguments = array(
-        	'Planning_SearchContentView', 
         	'*', 
             $project, 
             new EqualExpectation($expected_criteria), 
             $already_linked_items, 
-            $tracker_ids
+            $tracker_ids,
+            $this->planning, 
+            '*' // TODO an assert on planning_redirect_param
         );
-        $view_builder->expectOnce('buildCustomContentView', $expected_arguments);
-        $view_builder->setReturnValue('buildCustomContentView', $content_view);
+        $view_builder->expectOnce('buildPlanningView', $expected_arguments);
+        $view_builder->setReturnValue('buildPlanningView', $content_view);
 
         return $view_builder;
     }
@@ -301,8 +302,8 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
     private function WhenICaptureTheOutputOfShowAction($request, $factory) {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
-        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->setReturnValue('buildCustomContentView', $content_view);
+        $view_builder = new MockPlanning_ViewBuilder();
+        $view_builder->setReturnValue('buildPlanningView', $content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, array(), new MockTracker_CrossSearch_Search());
     }
     

@@ -1,3 +1,6 @@
+Version 5.7.11 - Tuleap 5.1
+    * Refactoring of cross search view builder
+
 Version 5.7.10 - Tuleap 5.1
     * Let the plugins that depends on trackers choose the redirection url after artifact update/creation
     * Introduce 'immediate' parameter in api to link immediately a new artifact to another one.

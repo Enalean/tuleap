@@ -793,18 +793,20 @@ class Tracker_FormElementFactory {
      */
     public function getSharedFieldsReadableBy(User $user, Project $project) {
         $fields = $this->getProjectSharedFields($project);
-        array_walk(&$fields, array($this, 'unsetUnreadeableSharedFields'), $user);
-        return array_filter($fields);
-    }
-    
-    protected function unsetUnreadeableSharedFields(Tracker_FormElement &$field, $field_index, User $user) {
-        // use || (OR) condition to avoid to enter canReadAtLeastOneTarget when possible:
-        if (($field->userCanRead($user) || $this->canReadAtleastOneTarget($field, $user)) == false) {
-            $field = false;
+        foreach ($fields as $k => $field) {
+            if (!$this->userCanReadSharedField($user, $field)) {
+                unset($fields[$k]);
+            }
         }
+        return $fields;
     }
     
-    private function canReadAtleastOneTarget(Tracker_FormElement $field, User $user) {
+    protected function userCanReadSharedField(User $user, Tracker_FormElement $field) {
+        // use || (OR) condition to avoid to enter canReadAtLeastOneTarget when possible:
+        return ($field->userCanRead($user) || $this->canReadAtleastOneTarget($user, $field));
+    }
+    
+    private function canReadAtleastOneTarget(User $user, Tracker_FormElement $field) {
         $targetFields = $this->getSharedTargets($field);
         
         foreach ($targetFields as $targetField) {

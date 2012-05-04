@@ -1,28 +1,25 @@
 <div class="agiledashboard">
     <h2>{{planningName}}</h2>
-
+    
     <table cellspacing="5">
         <tbody>
             <tr valign="top">
                 <td width="50%">
-
                     <div class="planning-backlog">
-                        {{{fetchSearchContent}}}
+                        <h3>{{planningBacklogTitle}}</h3>
+                        {{{backlogSearchView}}}
                     </div>
-
-                </td><td>
-                    {{^hasArtifact}}
+                </td>
+                <td>
+                    <h3>{{planningPlanTitle}}</h3>
+                    {{^hasSelectedArtifact}}
                         {{> select-destination}}
-                    {{/hasArtifact}}
-                    {{#hasArtifact}}
+                    {{/hasSelectedArtifact}}
+                    {{#hasSelectedArtifact}}
                         {{> show-destination}}
-                    {{/hasArtifact}}
-
+                    {{/hasSelectedArtifact}}
                 </td>
             </tr>
         </tbody>
     </table>
-
 </div>
-
-

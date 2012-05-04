@@ -53,7 +53,9 @@ class PlanningFactoryTest extends TuleapTestCase {
         $planning_row  = array('id'                  => $planning_id,
                                'name'                => 'Foo',
                                'group_id'            => $group_id,
-                               'planning_tracker_id' => $planning_tracker_id);
+                               'planning_tracker_id' => $planning_tracker_id,
+                               'backlog_title'       => 'Release Backlog',
+                               'plan_title'          => 'Sprint Plan');
         
         $backlog_rows = array(array('tracker_id' => $backlog_tracker_id));
         
@@ -140,15 +142,15 @@ class PlanningFactoryTest extends TuleapTestCase {
         $factoryBuilder->tracker_factory->setReturnValue('getTrackerById', $tracker);
         
         $result_set   = TestHelper::arrayToDar(
-            array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 'planning_tracker_id'=>103),
-            array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102, 'planning_tracker_id'=>103)
+            array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan'),
+            array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102, 'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan')
         );
         
         $factoryBuilder->dao->setReturnValue('searchPlannings', $result_set);
         
         $expected = array(
-            new Planning(1, 'Release Backlog', 102),
-            new Planning(2, 'Product Backlog', 102),
+            new Planning(1, 'Release Backlog', 102, 'Release Backlog', 'Sprint Plan'),
+            new Planning(2, 'Product Backlog', 102, 'Release Backlog', 'Sprint Plan'),
         );
         $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
@@ -164,14 +166,14 @@ class PlanningFactoryTest extends TuleapTestCase {
         $factoryBuilder->tracker_factory->setReturnValue('getTrackerById', $tracker2, array(104));
                 
         $result_set   = TestHelper::arrayToDar(
-            array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 'planning_tracker_id'=>103),
-            array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102, 'planning_tracker_id'=>104)
+            array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan'),
+            array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102, 'planning_tracker_id' => 104, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan')
         );
         
         $factoryBuilder->dao->setReturnValue('searchPlannings', $result_set);
         
         $expected = array(
-            new Planning(1, 'Release Backlog', 102),
+            new Planning(1, 'Release Backlog', 102, 'Release Backlog', 'Sprint Plan'),
         );
         $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
