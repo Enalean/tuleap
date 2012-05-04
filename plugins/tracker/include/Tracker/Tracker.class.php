@@ -787,6 +787,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         if ($link) {
             echo '<html>';
             echo '<head>';
+            echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
             $GLOBALS['HTML']->displayStylesheetElements(array());
             $GLOBALS['HTML']->includeCalendarScripts();
             $GLOBALS['HTML']->displayJavascriptElements(array());
