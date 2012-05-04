@@ -43,9 +43,18 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($factory);
         
+        $this->generateABunchOfArtifacts($factory);
+        
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
         
+        
+        stub($this->planning)->getPlanningTrackerId()->returns($this->planning_tracker_id);
+        stub($this->planning)->getPlanningTracker()->returns($this->planning_tracker);
+        stub($this->planning_tracker)->getId()->returns($this->planning_tracker_id);
+    }
+    
+    private function generateABunchOfArtifacts($factory) {
         for ($i = 30 ; $i < 40 ; ++$i) {
             $artifact = mock('Tracker_Artifact');
             stub($artifact)->getId()->returns($i);
@@ -54,10 +63,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
             stub($artifact)->getXRef()->returns('art #'. $i);
             stub($factory)->getArtifactById($i)->returns($artifact);
         }
-        
-        stub($this->planning)->getPlanningTrackerId()->returns($this->planning_tracker_id);
-        stub($this->planning)->getPlanningTracker()->returns($this->planning_tracker);
-        stub($this->planning_tracker)->getId()->returns($this->planning_tracker_id);
     }
     
     public function tearDown() {
