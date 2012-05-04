@@ -1242,9 +1242,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }    
     
     /**
-     * Returns the children of the burndown field tracker.
+     * Returns the ids of the children of the tracker.
      * 
-     * @return array of Tracker
+     * @return array of Tracker ids
      */
     protected function getChildTrackersIds() {
         $children_trackers_ids = array();
