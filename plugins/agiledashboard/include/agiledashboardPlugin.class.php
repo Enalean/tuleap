@@ -64,7 +64,7 @@ class AgileDashboardPlugin extends Plugin {
         if ($requested_planning) {
             require_once 'Planning/PlanningFactory.class.php';
             $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
-            if ($planning) {
+            if ($planning && $this->requestCanLeaveTheTracker($params['request'])) {
                 $this->redirectToPlanning($params, $requested_planning, $planning);
             }
         }
@@ -101,6 +101,10 @@ class AgileDashboardPlugin extends Plugin {
                 'artifact_id' => $planning_artifact_id
             );
         }
+    }
+    
+    private function requestCanLeaveTheTracker(Codendi_Request $request) {
+        return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
     }
     
     /**

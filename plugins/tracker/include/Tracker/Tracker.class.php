@@ -3026,6 +3026,13 @@ EOS;
         $continue  = $request->get('submit_and_continue');
         
         $redirect_params = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$redirect_params,
+            )
+        );
         return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
     }
 

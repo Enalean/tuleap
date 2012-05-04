@@ -1283,6 +1283,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $from_aid = $request->get('from_aid');
 
         $redirect_params = $this->calculateRedirectParams($stay, $from_aid);
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$redirect_params,
+            )
+        );
         return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
     }
 
