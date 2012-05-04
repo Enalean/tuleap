@@ -24,10 +24,6 @@ class Planning_ShowPresenter {
     
     public $__ = array(__CLASS__, '__trans');
     
-    public $planning_id;
-    public $planning_name;
-    public $group_id;
-    
     private $artifacts_to_select;
     
     /**
@@ -44,11 +40,6 @@ class Planning_ShowPresenter {
     private $planning;
     public $planning_redirect_parameter;
     
-    /**
-     * @var Tracker
-     */
-    private $planning_tracker;
-    
     public function __construct(Planning $planning,
                                 Tracker_CrossSearch_SearchContentView $content_view,
                                 array $artifacts_to_select,
@@ -56,19 +47,27 @@ class Planning_ShowPresenter {
                                 User $user,
                                 $current_uri,
                                 $planning_redirect_parameter) {
+        
         $this->planning                    = $planning;
-        $this->planning_id                 = $planning->getId();
-        $this->planning_name               = $planning->getName();
-        $this->planning_tracker            = $planning->getPlanningTracker();
         $this->artifact                    = $artifact;
         $this->artifacts_to_select         = $artifacts_to_select;
         $this->content_view                = $content_view;
-        $this->group_id                    = $planning->getGroupId();
         $this->current_user                = $user;
         $this->current_uri                 = $current_uri;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
     
+    public function planningId() {
+        return $this->planning->getId();
+    }
+    
+    public function planningName() {
+        return $this->planning->getName();
+    }
+    
+    public function groupId() {
+        return $this->planning->getGroupId();
+    }
     
     /**
      * @return bool
@@ -174,7 +173,7 @@ class Planning_ShowPresenter {
      */
     public function getPlanningTrackerArtifactCreationLabel() {
         $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
-        $item_name = $this->planning_tracker->getItemName();
+        $item_name = $this->planning->getPlanningTracker()->getItemName();
         
         return "$new $item_name";
     }
