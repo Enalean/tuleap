@@ -539,12 +539,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $link = (int)$request->get('link-artifact-id');
                     if ($artifact = $this->createArtifact($layout, $request, $current_user)) {
-                        if ($link && $request->get('immediate')) {
-                            $source_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link);
-                            if ($source_artifact) {
-                                $source_artifact->linkArtifact($artifact->getId(), $current_user);
-                            }
-                        }
+                        $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
                         
                         EventManager::instance()->processEvent(
                             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
@@ -602,6 +597,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
         }
         return false;
+    }
+    
+    private function associateImmediatelyIfNeeded(Tracker_Artifact $new_artifact, $link_artifact_id, $doitnow, User $current_user) {
+        if ($link_artifact_id && $doitnow) {
+            $source_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link_artifact_id);
+            if ($source_artifact) {
+                $source_artifact->linkArtifact($new_artifact->getId(), $current_user);
+            }
+        }
     }
     
     private function getHierarchyController($request) {
