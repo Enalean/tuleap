@@ -38,6 +38,7 @@ define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated')
   *
   * Parameters:
   * 'request'  => The initial request
+  * 'artifact' => The involved artifact
   *
   * Either a redirection has been done or nothing has been done 
   * (in this case plugins/tracker will commpute the redirection)

@@ -549,7 +549,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         EventManager::instance()->processEvent(
                             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
                             array(
-                                'request' => $request,
+                                'request'  => $request,
+                                'artifact' => $artifact,
                             )
                         );
                         

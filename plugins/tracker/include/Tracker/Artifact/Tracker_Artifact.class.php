@@ -643,7 +643,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     EventManager::instance()->processEvent(
                         TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
                         array(
-                            'request' => $request,
+                            'request'  => $request,
+                            'artifact' => $artifact,
                         )
                     );
                     

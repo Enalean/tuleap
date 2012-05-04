@@ -66,11 +66,15 @@ class AgileDashboardPlugin extends Plugin {
             $planning_factory = PlanningFactory::build();
             $planning         = $planning_factory->getPlanning($requested_planning['planning_id']);
             if ($planning) {
+                $redirect_to_artifact = $requested_planning['artifact_id'];
+                if ($redirect_to_artifact == -1) {
+                    $redirect_to_artifact = $params['artifact']->getId();
+                }
                 $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query(array(
                     'group_id'    => $planning->getGroupId(),
                     'planning_id' => $planning->getId(),
                     'action'      => 'show',
-                    'aid'         => $requested_planning['artifact_id'],
+                    'aid'         => $redirect_to_artifact,
                 )));
             }
         }
