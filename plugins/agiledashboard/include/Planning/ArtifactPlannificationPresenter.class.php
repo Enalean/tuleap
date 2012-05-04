@@ -23,60 +23,81 @@ require_once 'PlanningPresenter.class.php';
 
 class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     
-    private $artifacts_to_select;
+    /**
+     * @var array of Tracker_Artifact
+     */
+    private $selectable_artifacts;
     
     /**
      * @var Tracker_Artifact
      */
-    private $artifact;
-    private $content_view;
+    private $selected_artifact;
+    
+    /**
+     * @var Tracker_CrossSearch_SearchContentView 
+     */
+    private $backlog_search_view;
+    
+    /**
+     * @var User
+     */
     private $current_user;
     
+    /**
+     * @var string
+     */
     public $planning_redirect_parameter;
     
-    public function __construct(Planning $planning,
-                                Tracker_CrossSearch_SearchContentView $content_view,
-                                array $artifacts_to_select,
-                                Tracker_Artifact $artifact = null, 
-                                User $user,
-                                $planning_redirect_parameter) {
-        
+    /**
+     * @param Planning                              $planning                    The planning (e.g. Release planning, Sprint planning).
+     * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
+     * @param array                                 $selectable_artifacts        The artifacts with a displayable planning (e.g. Sprint 2, Release 1.0).
+     * @param Tracker_Artifact                      $selected_artifact           The artifact with planning being displayed right now.
+     * @param User                                  $current_user                The user to which the artifact plannification UI is presented.
+     * @param string                                $planning_redirect_parameter The request parameter representing the artifact being planned, used for redirection (e.g: "planning[2]=123").
+     */
+    public function __construct(Planning                              $planning,
+                                Tracker_CrossSearch_SearchContentView $backlog_search_view,
+                                array                                 $selectable_artifacts,
+                                Tracker_Artifact                      $selected_artifact = null, 
+                                User                                  $current_user,
+                                                                      $planning_redirect_parameter) {
         parent::__construct($planning);
         
-        $this->artifact                    = $artifact;
-        $this->artifacts_to_select         = $artifacts_to_select;
-        $this->content_view                = $content_view;
-        $this->current_user                = $user;
+        $this->selected_artifact           = $selected_artifact;
+        $this->selectable_artifacts        = $selectable_artifacts;
+        $this->backlog_search_view         = $backlog_search_view;
+        $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
     
     /**
      * @return bool
      */
-    public function hasArtifact() {
-        return $this->artifact !== null;
+    public function hasSelectedArtifact() {
+        return $this->selected_artifact !== null;
     }
     
     /**
      * @return TreeNode
      */
-    public function getDestination($child_depth = 1) {
-        $destination = null;
-        if ($this->artifact) {
-            $destination = $this->getTreeNode($child_depth);
-            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
+    public function plannedArtifactsTree($child_depth = 1) {
+        $root_node = null;
+        if ($this->selected_artifact) {
+            $root_node = $this->getTreeNode($child_depth);
+            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
         }
-        return $destination;
+        return $root_node;
     }
     
     /**
      * @return TreeNode
      */
     private function getTreeNode($child_depth) {
-        $id          = $this->artifact->getId();
+        $id          = $this->selected_artifact->getId();
         $parent_node = new TreeNode(array('id' => $id, 'allowedChildrenTypes' => $this->planning->getBacklogTrackers()));
         $parent_node->setId($id);
-        $this->addChildItem($this->artifact, $parent_node, $child_depth);
+        $this->addChildItem($this->selected_artifact, $parent_node, $child_depth);
         return $parent_node;
     }
     
@@ -102,8 +123,8 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     /**
      * @return string html
      */
-    public function fetchSearchContent() {
-        return $this->content_view->fetch();
+    public function backlogSearchView() {
+        return $this->backlog_search_view->fetch();
     }
     
     
@@ -114,15 +135,14 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
         return $GLOBALS['Language']->getText('global', 'please_choose_dashed');
     }
     
-    
     /**
      * @return array of (id, title, selected)
      */
-    public function artifactsToSelect() {
+    public function selectableArtifacts() {
         $hp             = Codendi_HTMLPurifier::instance();
         $artifacts_data = array();
-        $selected_id    = $this->artifact ? $this->artifact->getId() : null;
-        foreach ($this->artifacts_to_select as $artifact) {
+        $selected_id    = $this->selected_artifact ? $this->selected_artifact->getId() : null;
+        foreach ($this->selectable_artifacts as $artifact) {
             $artifacts_data[] = array(
                 'id'       => $artifact->getId(),
                 'title'    => $hp->purify($artifact->getTitle()),
@@ -135,14 +155,14 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     /**
      * @return string
      */
-    public function destinationHelp() {
+    public function plannedArtifactsHelp() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_destination_help');
     }
     
     /**
      * @return string
      */
-    public function getDestinationDroppableClass() {
+    public function planningDroppableClass() {
         if ($this->canDrop()) {
             return 'planning-droppable';
         }
@@ -163,8 +183,8 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
      * @return bool
      */
     public function canDrop() {
-        if ($this->artifact) {
-            $art_link_field = $this->artifact->getAnArtifactLinkField($this->current_user);
+        if ($this->selected_artifact) {
+            $art_link_field = $this->selected_artifact->getAnArtifactLinkField($this->current_user);
             if ($art_link_field && $art_link_field->userCanUpdate($this->current_user)) {
                 return true;
             }

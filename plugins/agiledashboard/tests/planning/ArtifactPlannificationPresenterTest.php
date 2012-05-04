@@ -146,7 +146,7 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node33, $node34, $node36));
         
-        $result = $presenter->getDestination();
+        $result = $presenter->plannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
     }
     
@@ -171,7 +171,7 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));
     
-        $result = $presenter->getDestination();
+        $result = $presenter->plannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
     }
 }

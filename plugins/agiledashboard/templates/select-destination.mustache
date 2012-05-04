@@ -5,9 +5,9 @@
         <input type="hidden" name="planning_id" value="{{planningId}}" />
         <select class="planning-artifact-chooser" name="aid">
             <option value="">{{pleaseChoose}}</option>
-            {{#artifactsToSelect}}
-            <option value="{{id}}" {{{selected}}}>{{{title}}}</option>
-            {{/artifactsToSelect}}
+            {{#selectableArtifacts}}
+                <option value="{{id}}" {{{selected}}}>{{{title}}}</option>
+            {{/selectableArtifacts}}
             <option value="-1">{{createNewItemToPlan}}</option>
         </select>
         <noscript>
