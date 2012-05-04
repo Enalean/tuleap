@@ -19,7 +19,6 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
-require_once dirname(__FILE__) .'/../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
@@ -27,6 +26,7 @@ require_once 'Planning/Controller.class.php';
 require_once 'Planning/ArtifactPlannificationController.class.php';
 require_once 'Planning/PlanningFactory.class.php';
 require_once 'Planning/ArtifactCreationController.class.php';
+require_once 'Planning/ViewBuilder.class.php';
 
 class AgileDashboardRouter {
     /**
@@ -121,8 +121,18 @@ class AgileDashboardRouter {
      * @return Tracker_CrossSearch_ViewBuilder
      */
     protected function getViewBuilder(Codendi_Request $request) {
-        $object_god = new TrackerManager();
-        return $object_god->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser());
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $object_god           = new TrackerManager();
+        $group_id             = $request->get('group_id');
+        $user                 = $request->getCurrentUser();
+        $planning_trackers    = $object_god->getPlanningTrackers($group_id, $user);
+        $art_link_field_ids   = $object_god->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
+        
+        return new Planning_ViewBuilder(
+            $form_element_factory, 
+            $object_god->getCrossSearch($art_link_field_ids), 
+            $object_god->getCriteriaBuilder($user, $planning_trackers)
+        );
     }
     
     public function routeShowPlanning(Codendi_Request $request) {
