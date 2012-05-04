@@ -291,8 +291,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
 	                AND use_it = 1
         ";
         
-        $dar = $this->retrieve($sql);
-        if ($dar && $dar->rowCount() > 0) {
+        if (($dar = $this->retrieve($sql))) {
             foreach ($dar as $row) {
                 $artifacts_fields[$row['field_id']][] = $row['artifact_id'];
             }
