@@ -28,11 +28,6 @@ class Codendi_Request_TestBuilder {
     private $params = array();
     
     /**
-     * @var array
-     */
-    private $server = array();
-    
-    /**
      * @var UserTestBuilder
      */
     private $user;
@@ -49,7 +44,6 @@ class Codendi_Request_TestBuilder {
     
     public function withUri($uri) {
         $this->withParams($this->extractParamsFromUri($uri));
-        $this->server['REQUEST_URI'] = $uri;
         return $this;
     }
     
@@ -64,7 +58,7 @@ class Codendi_Request_TestBuilder {
     }
     
     public function build() {
-        $request = new Codendi_Request($this->params, $this->server);
+        $request = new Codendi_Request($this->params);
         $request->setCurrentUser($this->buildUser());
         return $request;
     }

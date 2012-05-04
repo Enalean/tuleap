@@ -44,9 +44,8 @@ class Codendi_Request {
     /**
      * Constructor
      */
-    public function __construct($params, $server = array()) {
+    public function __construct($params) {
         $this->params                = $params;
-        $this->server                = $server;
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
     }
