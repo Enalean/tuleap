@@ -179,7 +179,8 @@ class CodeReviewActions extends Actions {
                 $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path);
                 $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);
             } catch(CodeReviewException $exception) {
-                print $exception->getMessage();
+                $GLOBALS['Response']->addFeedBack('error', $exception->getMessage());
+                $this->controller->view = 'displayFrame';
             }
         }
     }
