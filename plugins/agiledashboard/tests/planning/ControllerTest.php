@@ -216,10 +216,12 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
         $this->request->set('planning_name', 'Release Planning');
         $this->request->set('backlog_tracker_ids', array('1', '2'));
         $this->request->set('planning_tracker_id', '3');
+        $this->request->set('planning_backlog_title', 'Release Backlog');
+        $this->request->set('planning_plan_title', 'Sprint Plan');
     }
     
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
-        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, array('1', '2'), '3'));
+        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, 'Release Backlog', 'Sprint Plan', array('1', '2'), '3'));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
         $this->create();
     }

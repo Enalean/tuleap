@@ -40,5 +40,13 @@ class PlanningPresenter {
     public function groupId() {
         return $this->planning->getGroupId();
     }
+    
+    public function planningBacklogTitle() {
+        return $this->planning->getBacklogTitle();
+    }
+    
+    public function planningPlanTitle() {
+        return $this->planning->getPlanTitle();
+    }
 }
 ?>

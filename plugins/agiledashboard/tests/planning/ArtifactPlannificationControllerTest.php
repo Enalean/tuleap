@@ -51,7 +51,7 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
         
         $this->request_uri = '/plugins/agiledashboard/';
         $this->planning_tracker_id = 66;
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
+        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
         

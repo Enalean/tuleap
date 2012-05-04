@@ -6,10 +6,12 @@
             <tr valign="top">
                 <td width="50%">
                     <div class="planning-backlog">
+                        <h3>{{planningBacklogTitle}}</h3>
                         {{{backlogSearchView}}}
                     </div>
                 </td>
                 <td>
+                    <h3>{{planningPlanTitle}}</h3>
                     {{^hasSelectedArtifact}}
                         {{> select-destination}}
                     {{/hasSelectedArtifact}}
