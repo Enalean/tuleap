@@ -793,7 +793,7 @@ class Tracker_FormElementFactory {
      */
     public function getSharedFieldsReadableBy(User $user, Project $project) {
         $fields = $this->getProjectSharedFields($project);
-        array_walk(&$fields, array($this, 'unsetUnreadeableSharedFields'), $user);
+        array_walk($fields, array($this, 'unsetUnreadeableSharedFields'), $user);
         return array_filter($fields);
     }
     
