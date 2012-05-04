@@ -41,16 +41,6 @@ class Planning {
     private $group_id;
     
     /**
-     * @var string
-     */
-    private $backlog_title;
-    
-    /**
-     * @var string
-     */
-    private $plan_title;
-    
-    /**
      * @var Array of int
      */
     private $backlog_tracker_ids;
@@ -70,12 +60,10 @@ class Planning {
      */
     private $backlog_trackers = array();
     
-    function __construct($id, $name, $group_id, $backlog_title, $plan_title, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
+    function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
         $this->id                  = $id;
         $this->name                = $name;
         $this->group_id            = $group_id;
-        $this->plan_title          = $plan_title;
-        $this->backlog_title       = $backlog_title;
         $this->backlog_tracker_ids = $backlog_tracker_ids;
         $this->planning_tracker_id = $planning_tracker_id;
     }
@@ -99,20 +87,6 @@ class Planning {
      */
     public function getGroupId() {
         return $this->group_id;
-    }
-    
-    /**
-     * @return String the title of the backlog
-     */
-    public function getBacklogTitle() {
-        return $this->backlog_title;
-    }
-    
-    /**
-     * @return String the title of the plan
-     */
-    public function getPlanTitle() {
-        return $this->plan_title;
     }
     
     /**

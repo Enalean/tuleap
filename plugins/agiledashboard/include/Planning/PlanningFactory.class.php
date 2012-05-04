@@ -113,8 +113,8 @@ class PlanningFactory {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
-            if ($tracker && $tracker->userCanView($user)) {
-                $plannings[] = new Planning($row['id'], $row['name'], $row['group_id'], $row['backlog_title'], $row['plan_title']);
+            if($tracker->userCanView($user)) {
+                $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
             }
         }
         return $plannings;
@@ -131,7 +131,7 @@ class PlanningFactory {
         $planning =  $this->dao->searchById($planning_id)->getRow();
         if ($planning) {
             $backlog_tracker_ids = $this->getAllBacklogTrackerIds($planning_id);
-            return new Planning($planning_id, $planning['name'], $planning['group_id'], $planning['backlog_title'], $planning['plan_title'], $backlog_tracker_ids, $planning['planning_tracker_id']);
+            return new Planning($planning_id, $planning['name'], $planning['group_id'], $backlog_tracker_ids, $planning['planning_tracker_id']);
         }
         return null;
     }
@@ -156,7 +156,7 @@ class PlanningFactory {
      * @return Planning
      */
     public function buildNewPlanning($group_id) {
-        return new Planning(null, null, $group_id, 'Release Backlog', 'Sprint Backlog');
+        return new Planning(null, null, $group_id);
     }
     
     /**
@@ -213,12 +213,12 @@ class PlanningFactory {
      *
      * @return array of Planning
      */
-    public function createPlanning($planning_name, $group_id, $backlog_title, $plan_title, $backlog_tracker_ids, $planning_tracker_id) {
-        return $this->dao->createPlanning($planning_name, $group_id, $backlog_title, $plan_title, $backlog_tracker_ids, $planning_tracker_id);
+    public function createPlanning($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id) {
+        return $this->dao->createPlanning($planning_name, $group_id, $backlog_tracker_ids, $planning_tracker_id);
     }
     
-    public function updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_ids, $planning_tracker_id) {
-        return $this->dao->updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_ids, $planning_tracker_id);
+    public function updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id) {
+        return $this->dao->updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id);
     }
     
     /**

@@ -8,8 +8,6 @@ plugin_agiledashboard	planning_destination_help	Drag'n drop content from backlog
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
 plugin_agiledashboard	planning_name	Name
-plugin_agiledashboard	planning_backlog_title	Backlog title
-plugin_agiledashboard	planning_plan_title	Plan title
 plugin_agiledashboard	planning-allows-assignment	This planning allows assignment of $1 to $2
 plugin_agiledashboard	planning_all_fields_mandatory	Please select a value for each field
 plugin_agiledashboard	planning_index	Plannings

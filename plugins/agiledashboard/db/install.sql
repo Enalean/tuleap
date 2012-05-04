@@ -3,12 +3,10 @@ CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning(
     name varchar(255) NOT NULL,
     group_id INT( 11 ) UNSIGNED NOT NULL,
     planning_tracker_id INT(11) NOT NULL,
-    backlog_title varchar(255) NOT NULL,
-    plan_title varchar(255) NOT NULL,
     KEY idx(id, planning_tracker_id)
 );
 
-CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker(
+CREATE TABLE IF NOT EXISTS plugin_agiledashboard_planning_backlog_tracker (
     planning_id int(11) NOT NULL,
     tracker_id int(11) NOT NULL,
     KEY idx(planning_id, tracker_id)

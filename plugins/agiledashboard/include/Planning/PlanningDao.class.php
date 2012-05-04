@@ -28,16 +28,14 @@ class PlanningDao extends DataAccessObject {
         return new TrackerDao();
     }
     
-    function createPlanning($planning_name, $group_id, $backlog_title, $plan_title, $planning_backlog_ids, $planning_tracker_id) {
+    function createPlanning($planning_name, $group_id, $planning_backlog_ids, $planning_tracker_id) {
         $planning_name       = $this->da->quoteSmart($planning_name);
-        $backlog_title       = $this->da->quoteSmart($backlog_title);
-        $plan_title          = $this->da->quoteSmart($plan_title);
         $group_id            = $this->da->escapeInt($group_id);
         $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
         
         $sql = "INSERT INTO plugin_agiledashboard_planning
-                    (name, group_id, planning_tracker_id, backlog_title, plan_title)
-                    VALUES ($planning_name, $group_id, $planning_tracker_id, $backlog_title, $plan_title)";
+                    (name, group_id, planning_tracker_id)
+                    VALUES ($planning_name, $group_id, $planning_tracker_id)";
         
         $last_id = $this->updateAndGetLastId($sql);
         
@@ -121,18 +119,14 @@ class PlanningDao extends DataAccessObject {
         return $tracker_dao->searchByGroupIdWithExcludedIds($group_id, $planning_tracker_ids);
     }
     
-    function updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_ids, $planning_tracker_id) {
-        $planning_id         = $this->da->escapeInt($planning_id);
-        $planning_name       = $this->da->quoteSmart($planning_name);
-        $backlog_title       = $this->da->quoteSmart($backlog_title);
-        $plan_title          = $this->da->quoteSmart($plan_title);
+    function updatePlanning($planning_id, $planning_name, $backlog_tracker_ids, $planning_tracker_id) {
+        $planning_id        = $this->da->escapeInt($planning_id);
+        $planning_name      = $this->da->quoteSmart($planning_name);
         $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
         
         $sql = "UPDATE plugin_agiledashboard_planning
                 SET name                = $planning_name,
-                    planning_tracker_id = $planning_tracker_id, 
-                    backlog_title       = $backlog_title, 
-                    plan_title          = $plan_title
+                    planning_tracker_id = $planning_tracker_id
                 WHERE id = $planning_id";
         $this->update($sql);
         
