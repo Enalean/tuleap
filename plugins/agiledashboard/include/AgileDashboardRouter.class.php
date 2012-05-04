@@ -26,6 +26,7 @@ require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
 require_once 'Planning/Controller.class.php';
 require_once 'Planning/ArtifactPlannificationController.class.php';
 require_once 'Planning/PlanningFactory.class.php';
+require_once 'Planning/ArtifactCreationController.class.php';
 
 class AgileDashboardRouter {
     /**
@@ -99,8 +100,8 @@ class AgileDashboardRouter {
     }
 
     protected function buildArtifactPlannificationController(Codendi_Request $request) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+        $artifact_factory = $this->getArtifactFactory();
+        $planning_factory = $this->getPlanningFactory();
         
         return new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory);
     }
@@ -125,10 +126,24 @@ class AgileDashboardRouter {
     }
     
     public function routeShowPlanning(Codendi_Request $request) {
-        $view_builder = $this->getViewBuilder($request);
-        $artifact_plannification_controller = $this->buildArtifactPlannificationController($request);
+        if ($request->get('aid') == -1) {
+            $controller = new Planning_ArtifactCreationController($this->getPlanningFactory(), $request);
+            $this->executeAction($controller, 'createArtifact');
+        } else {
+            $controller = $this->buildArtifactPlannificationController($request);
+            $action_arguments = array($this->getViewBuilder($request), ProjectManager::instance());
+            $this->renderAction($controller, 'show', $request, $action_arguments);
+        }
+    }
 
-        $this->renderAction($artifact_plannification_controller, 'show', $request, array($view_builder, ProjectManager::instance()));
+    protected function getPlanningFactory() {
+        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+
+    }
+
+    protected function getArtifactFactory() {
+        return Tracker_ArtifactFactory::instance();
     }
 }
+
 ?>

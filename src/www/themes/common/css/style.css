@@ -2024,10 +2024,13 @@ h3.toggler-hide-noajax {
 /* }}} */
 
 /* {{{ Dropdown panel */
+ul.dropdown_panel {
+    margin: 0;
+}
 .dropdown_panel {
     background:#F7F7F7;
     border:thick solid #ccc;
-    z-index:100;
+    z-index:10000;
     -webkit-box-shadow: 0px 2px 10px #ccc;
     -moz-box-shadow: 0px 2px 10px #ccc;
     box-shadow: 0px 2px 10px #ccc;

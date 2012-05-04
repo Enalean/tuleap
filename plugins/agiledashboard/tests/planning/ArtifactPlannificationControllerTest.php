@@ -28,6 +28,7 @@ require_once(dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/Test
 require_once(dirname(__FILE__).'/../builders/planning.php');
 require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -43,14 +44,12 @@ Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
 
 
-class ArtifactPlannificationControllerTest extends TuleapTestCase {
+class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
         
-        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
-        $_SERVER['REQUEST_URI'] = '';
-        
+        $this->request_uri = '/plugins/agiledashboard/';
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
@@ -63,11 +62,6 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     public function tearDown() {
         parent::tearDown();
         
-        if ($this->request_uri != null) {
-            $_SERVER['REQUEST_URI'] = $this->request_uri;
-        } else {
-            unset($_SERVER['REQUEST_URI']);
-        }
         
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
@@ -116,22 +110,6 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
     
-    public function itRedirectsToArtifactCreationForm() {
-        $request = new Codendi_Request(array(
-            'planning_id' => $this->planning->getId(),
-            'aid'         => -1,
-        ));
-        $_SERVER['REQUEST_URI'] = '/someplugin/someaction/?somearg=toto';
-        $request->setCurrentUser(aUser()->build());
-        
-        $factory = $this->GivenAnArtifactFactory();
-        
-        $return_url = urlencode($request->getUri());
-        
-        $GLOBALS['Response']->expectOnce('redirect', array(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&return_to=$return_url"));
-        $this->WhenICaptureTheOutputOfShowAction($request, $factory);
-    }
-    
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
         $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
@@ -146,13 +124,10 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array_merge(array($artifact), $linked_items));
-        $request = new Codendi_Request(
-            array(
-                'aid'         => $id,
-                'planning_id' => $this->planning->getId(),
-            )
-        );
-        $request->setCurrentUser(aUser()->build());
+        $request  = aRequest()->with('aid', $id)
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
 
         $content = $this->WhenICaptureTheOutputOfShowAction($request, $factory);
         $this->assertPattern('/Tutu/', $content);
@@ -237,18 +212,13 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
             'aid'         => $aid,
             'planning_id' => $this->planning->getId(),
             'group_id'    => $project_id,
+            'criteria'    => $shared_field_criteria,
+            'semantic_criteria' => $semantic_criteria,
         );
 
-        if ($shared_field_criteria !== null) {
-            $request_params['criteria'] = $shared_field_criteria;
-        }
-
-        if ($semantic_criteria !== null) {
-            $request_params['semantic_criteria'] = $semantic_criteria;
-        }
-
-        $request = new Codendi_Request($request_params);
-        $request->setCurrentUser(aUser()->build());
+        $request = aRequest()->withParams($request_params)
+                             ->withUri($this->request_uri)
+                             ->build();
         return $request;
     }
 
@@ -294,27 +264,37 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
-        $id       = 987;
-        $title    = 'Coin';
-        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
-        $request->setCurrentUser(aUser()->build());
+        $id    = 987;
+        $title = 'Coin';
+        
         $artifact = $this->GivenAnArtifact($id, $title, array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $request  = aRequest()->with('aid', $id)
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
-        $request->setCurrentUser(aUser()->build());
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $request  = aRequest()->with('aid', $id)
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
+        
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $request = new Codendi_Request(array('planning_id' => $this->planning->getId()));
-        $request->setCurrentUser(aUser()->build());
         $factory = $this->GivenAnArtifactFactory();
+        $request = aRequest()->withUri($this->request_uri)
+                             ->with('planning_id', $this->planning->getId())
+                             ->build();
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
@@ -353,45 +333,5 @@ class ArtifactPlannificationControllerTest extends TuleapTestCase {
         }
         return $project_manager;
     }
-}
-
-class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCase {
-    
-    public function itPassesTheCurrentUriToThePresenter() {
-        $expected_uri = '/plugins/agiledashboard/?blabla';
-        $request = mock('Codendi_Request');
-        stub($request)->getUri()->returns($expected_uri);
-        stub($request)->getCurrentUser()->returns(mock('User'));
-        
-        $planning_factory = mock('PlanningFactory');
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        $tracker_factory  = mock('TrackerFactory');
-        
-        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
-        
-        $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
-        $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
-    }
-    
-    public function itReturnsToTheCurrentUrlWithoutAidReferenceOnArtifactCreation() {
-        $expected_uri = '/plugins/agiledashboard/?blabla';
-        $request = mock('Codendi_Request');
-        $aid_to_remove = 'aid=-1';
-        stub($request)->getUri()->returns($expected_uri.'&'.$aid_to_remove);
-        stub($request)->get('aid')->returns(-1);
-        stub($request)->getCurrentUser()->returns(mock('User'));
-        
-        $planning_factory = stub('PlanningFactory')->getPlanningWithTrackers()->returns(mock('Planning'));
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        $tracker_factory  = mock('TrackerFactory');
-        
-        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
-        
-        $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
-        $GLOBALS['Response']->expectOnce('redirect', array(new NoPatternExpectation("/$aid_surrounded_by_ampersand_and_equals/")));
-        $controller->show(mock('Tracker_CrossSearch_ViewBuilder'), mock('ProjectManager'));
-        
-    }
-    
 }
 ?>

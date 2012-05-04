@@ -23,6 +23,7 @@ require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 require_once 'SearchContentView.class.php';
+require_once 'ArtifactPlannificationPresenter.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     
@@ -30,11 +31,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
      * @var Tracker_Artifact
      */
     private $artifact;
-    
-    /**
-     * @var User
-     */
-    private $current_user;
     
     public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
@@ -44,37 +40,38 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->artifact         = $artifact_factory->getArtifactById($aid);
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
-        $this->current_user     = $request->getCurrentUser();
-        $this->current_uri      = $request->getUri();
+    }
+
+    public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
+        $planning            = $this->getPlanning();
+        $project_id          = $this->request->get('group_id');
+        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
+        $tracker_ids         = $planning->getBacklogTrackerIds();
+        
+        $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select, $planning);
+        
+        $presenter           = $this->getShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
+        $this->render('show', $presenter);
     }
 
     public function getShowPresenter(Planning $planning,
                                      Tracker_CrossSearch_SearchContentView $content_view,
                                      array $artifacts_to_select,
                                      Tracker_Artifact $artifact = null) {
-        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->current_user, $this->current_uri);
+        
+        $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
+        
+        return new Planning_ArtifactPlanificationPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->getCurrentUser(), $planning_redirect_parameter);
     }
     
-    public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
-        $planning = $this->getPlanning();
-        if ($this->request->get('aid') == -1) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL .'/?'. http_build_query(array(
-                'tracker'   => $planning->getPlanningTrackerId(),
-                'func'      => 'new-artifact',
-                'return_to' => $this->currentUriWithoutNegativeAid(),
-                )));
-            return;
+    private function getPlanningRedirectParameter(Planning $planning) {
+        $planning_redirect_parameter = 'planning['. (int)$planning->getId() .']=';
+        if ($this->artifact) {
+            $planning_redirect_parameter .= $this->artifact->getId();
         }
-        $project_id          = $this->request->get('group_id');
-        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
-        $tracker_ids         = $planning->getBacklogTrackerIds();
-        
-        $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select);
-        
-        $presenter           = $this->getShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
-        $this->render('show', $presenter);
+        return $planning_redirect_parameter;
     }
-
+    
     private function getCrossSearchQuery() {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
@@ -82,13 +79,14 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
-    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select) {
+    private function buildContentView(Tracker_CrossSearch_ViewBuilder $view_builder, $project, array $tracker_ids, array $artifacts_to_select, Planning $planning) {
         $tracker_linked_items  = $this->getTrackerLinkedItems($artifacts_to_select);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
-        $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
+        $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->getCurrentUser(), $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
         
-        $view->current_url = $this->current_uri;
+        $view->planning                    = $planning;
+        $view->planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
         
         return $view;
     }
@@ -99,7 +97,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     
     private function getArrayFromRequest($parameter_name) {
         $request_criteria = array();
-        $valid_criteria = new Valid_Array($parameter_name);
+        $valid_criteria   = new Valid_Array($parameter_name);
         $valid_criteria->required();
         if ($this->request->valid($valid_criteria)) {
             $request_criteria = $this->request->get($parameter_name);
@@ -110,7 +108,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     private function getTrackerLinkedItems($artifacts_to_select) {
         $linked_items = array();
         foreach ($artifacts_to_select as $artifact) {
-            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts($this->current_user));
+            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts($this->getCurrentUser()));
         }
         return $linked_items;
     }
@@ -129,10 +127,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
         $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
         return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
-    }
-
-    private function currentUriWithoutNegativeAid() {
-        return preg_replace('/&aid=-\d/', '', $this->current_uri);
     }
 }
 

@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once 'ShowPresenter.class.php';
 require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
@@ -40,22 +39,16 @@ class Planning_Controller extends MVC2_Controller {
      * @var PlanningFactory
      */
     private $planning_factory;
-    
-    /**
-     * @var User
-     */
-    private $current_user;
 
     public function __construct(Codendi_Request $request, PlanningFactory $planning_factory) {
         parent::__construct('agiledashboard', $request);
         
         $this->group_id         = $request->get('group_id');
-        $this->current_user     = $request->getCurrentUser();
         $this->planning_factory = $planning_factory;
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlannings($this->current_user, $this->group_id);
+        $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
         $presenter = new Planning_IndexPresenter($plannings, $this->group_id);
         $this->render('index', $presenter);
     }

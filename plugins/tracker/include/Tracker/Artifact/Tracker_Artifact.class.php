@@ -369,12 +369,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $action_params = array(
             'aid'       => $this->id,
             'func'      => 'artifact-update',
-            'return_to' => $request->get('return_to')
         );
 
         if ($from_aid != null) {
             $action_params['from_aid'] = $from_aid;
         }
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$action_params,
+            )
+        );
+        
         $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($action_params) .'" method="POST" enctype="multipart/form-data">';
         
         
@@ -633,6 +640,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
+                    $this->summonArtifactRedirectors($request);
                     
                     $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
                 } else {
@@ -680,8 +688,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-    * @return string the cross reference text: bug #42
-    */
+     * @return string the cross reference text: bug #42
+     */
     public function getXRef() {
         return $this->getTracker()->getItemName() . ' #' . $this->getId();
     }
@@ -696,7 +704,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             'key'      => $this->getTracker()->getItemName(),
             'val'      => $this->getId(),
             'group_id' => $this->getTracker()->getGroupId(),
-        )) .'">'. $this->getTracker()->getItemName() .' #'. $this->getId() .'</a>';
+        )) .'">'. $this->getXRef() .'</a>';
     }
     
     /**
@@ -881,7 +889,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $is_valid = false; //TODO To be removed
                     }
                 } else {
-                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getXRef() . '</a>';
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     $is_valid = false;
                 }
@@ -1182,14 +1190,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-     * Get the latest artifacts linked to the current artifact
+     * Get artifacts linked to the current artifact
      * 
      * @param User $user The user who should see the artifacts
      * 
      * @return Array of Tracker_Artifact
      */
     public function getLinkedArtifacts(User $user) {
-        $artifact_links       = array();
+        $artifact_links      = array();
         $artifact_link_field = $this->getAnArtifactLinkField($user);
         if ($artifact_link_field) {
             $changeset      = $this->getLastChangeset();
@@ -1199,30 +1207,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-     * Get latest artifacts linked to the current artifact if 
+     * Get artifacts linked to the current artifact if 
      * they are not in children.
      * 
      * @param User $user The user who should see the artifacts
      * 
      * @return Array of Tracker_Artifact
-     */
+     */    
     public function getUniqueLinkedArtifacts(User $user) {
-        $artifact_links = array();
-        $direct_linked_artifacts = $this->getLinkedArtifacts($user);
-        foreach($direct_linked_artifacts as $artifact_link) {
-            $sub_artifact_links      = $artifact_link->getLinkedArtifacts($user);
-            $direct_linked_artifacts = $this->filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links);
+        $sub_artifacts = $this->getLinkedArtifacts($user);
+        $grandchild_artifacts = array();
+        foreach ($sub_artifacts as $artifact) {
+            $grandchild_artifacts = array_merge($grandchild_artifacts, $artifact->getLinkedArtifacts($user));
         }
-        return $direct_linked_artifacts;
-    }
-    
-    private function filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links) {
-        foreach($sub_artifact_links as $sub_artifact_link) {
-            if (($keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link))){
-                $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
-            }
-        }
-        return $direct_linked_artifacts;
+        return array_diff($sub_artifacts, $grandchild_artifacts);
     }
     
     /**
@@ -1244,9 +1242,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }    
     
     /**
-     * Returns the children of the burndown field tracker.
+     * Returns the ids of the children of the tracker.
      * 
-     * @return array of Tracker
+     * @return array of int
      */
     protected function getChildTrackersIds() {
         $children_trackers_ids = array();
@@ -1281,31 +1279,50 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function getRedirectUrlAfterArtifactUpdate($request) {
-        $return_to = urldecode($request->get('return_to'));
-        $stay = $request->get('submit_and_stay') ;
-        if (! $stay && $return_to) {
-            return $return_to;
-        }
+        $stay     = $request->get('submit_and_stay') ;
         $from_aid = $request->get('from_aid');
 
-        $redirect_params = $this->calculateRedirectParams($stay, $from_aid, $return_to);
+        $redirect_params = $this->calculateRedirectParams($stay, $from_aid);
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$redirect_params,
+            )
+        );
         return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
-
     }
 
-    private function calculateRedirectParams($stay, $from_aid, $return_to) {
+    private function calculateRedirectParams($stay, $from_aid) {
         $redirect_params = array();
         if ($stay) {
-            $redirect_params['aid'] = $this->getId();
-            $redirect_params['from_aid'] = $from_aid;
-            $redirect_params['return_to'] = $return_to;
+            $redirect_params['aid']       = $this->getId();
+            $redirect_params['from_aid']  = $from_aid;
         } else if ($from_aid) {
-            $redirect_params['aid'] = $from_aid;
+            $redirect_params['aid']       = $from_aid;
         } else {
-            $redirect_params['tracker'] = $this->tracker_id;
+            $redirect_params['tracker']   = $this->tracker_id;
         }
         return array_filter($redirect_params);
-        
+    }
+    
+    /**
+     * Invoke those we don't speak of which may want to redirect to a 
+     * specific page after an update/creation of this artifact.
+     * If the summoning is not strong enough (or there is no listener) then
+     * nothing is done. Else the client is redirected and 
+     * the script will die in agony!
+     *
+     * @param Codendi_Request $request The request
+     */
+    public function summonArtifactRedirectors(Codendi_Request $request) {
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
+            array(
+                'request'  => $request,
+                'artifact' => $this,
+            )
+        );
     }
 }
 

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../../include/constants.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
 require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
@@ -26,9 +27,6 @@ Mock::generate('Tracker_Hierarchy_HierarchicalTrackerFactory');
 Mock::generate('TrackerFactory');
 Mock::generate('Tracker_Hierarchy_Dao');
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
 
 class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     

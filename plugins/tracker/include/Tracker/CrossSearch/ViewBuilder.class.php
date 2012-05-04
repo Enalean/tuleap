@@ -61,7 +61,7 @@ class Tracker_CrossSearch_ViewBuilder {
      * @return Tracker_CrossSearch_SearchView 
      */
     public function buildView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query) {
-        $report       = $this->getReport();
+        $report       = $this->getReport($user);
         $service      = $this->getService($project);
         $criteria     = $this->getCriteria($user, $project, $report, $cross_search_query);
         $trackers     = $this->tracker_factory->getTrackersByGroupIdUserCanView($project->getGroupId(), $user);
@@ -74,7 +74,7 @@ class Tracker_CrossSearch_ViewBuilder {
     }
     
     public function buildCustomContentView($class_name, User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query, $excluded_artifact_ids, $tracker_ids) {
-        $report    = $this->getReport();
+        $report    = $this->getReport($user);
         $criteria  = $this->getCriteria($user, $project, $report, $cross_search_query);
         $artifacts = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
         
@@ -120,9 +120,9 @@ class Tracker_CrossSearch_ViewBuilder {
         }
     }
     
-    private function getReport() {
+    private function getReport(User $user) {
         $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
-        $is_query_displayed = true;
+        $is_query_displayed = Toggler::shouldBeDisplayed($user, 'tracker_report_query_0', true);
         
         $report_id = $description = $current_renderer_id = $parent_report_id
             = $user_id = $is_default = $tracker_id = $updated_by = $updated_at

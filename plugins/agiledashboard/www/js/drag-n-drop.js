@@ -17,7 +17,7 @@ var Planning = {
     },
 
     executeRequest: function (func, sourceId, targetId) {
-        var r = new Ajax.Request(Planning.trackerBaseUrl + '?func='+ func +'&linked-artifact-id=' + sourceId + '&aid=' + targetId, {
+        new Ajax.Request(Planning.trackerBaseUrl + '?func='+ func +'&linked-artifact-id=' + sourceId + '&aid=' + targetId, {
             onSuccess: Planning.reload,
             onFailure: Planning.errorOccured
         });
@@ -62,7 +62,7 @@ var Planning = {
                 revert: 'failure',
                 scroll: window
             });
-        })
+        });
     }
 
 };

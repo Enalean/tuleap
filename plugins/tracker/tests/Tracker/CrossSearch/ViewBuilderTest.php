@@ -49,7 +49,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $this->search             = mock('Tracker_CrossSearch_Search');
         $this->criteria_builder   = mock('Tracker_CrossSearch_CriteriaBuilder');
     }
-
+    
     public function itBuildPlanningContentView() {
         $tracker_ids = array();
         $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $tracker_ids);

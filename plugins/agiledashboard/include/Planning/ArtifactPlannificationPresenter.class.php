@@ -19,14 +19,9 @@
  */
 
 require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'PlanningPresenter.class.php';
 
-class Planning_ShowPresenter {
-    
-    public $__ = array(__CLASS__, '__trans');
-    
-    public $planning_id;
-    public $planning_name;
-    public $group_id;
+class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     
     private $artifacts_to_select;
     
@@ -36,36 +31,24 @@ class Planning_ShowPresenter {
     private $artifact;
     private $content_view;
     private $current_user;
-    private $current_uri;
     
-    /**
-     * @var Planning
-     */
-    private $planning;
-    
-    /**
-     * @var Tracker
-     */
-    private $planning_tracker;
+    public $planning_redirect_parameter;
     
     public function __construct(Planning $planning,
                                 Tracker_CrossSearch_SearchContentView $content_view,
                                 array $artifacts_to_select,
                                 Tracker_Artifact $artifact = null, 
                                 User $user,
-                                $current_uri) {
-        $this->planning            = $planning;
-        $this->planning_id         = $planning->getId();
-        $this->planning_name       = $planning->getName();
-        $this->planning_tracker    = $planning->getPlanningTracker();
-        $this->artifact            = $artifact;
-        $this->artifacts_to_select = $artifacts_to_select;
-        $this->content_view        = $content_view;
-        $this->group_id            = $planning->getGroupId();
-        $this->current_user        = $user;
-        $this->current_uri         = $current_uri;
+                                $planning_redirect_parameter) {
+        
+        parent::__construct($planning);
+        
+        $this->artifact                    = $artifact;
+        $this->artifacts_to_select         = $artifacts_to_select;
+        $this->content_view                = $content_view;
+        $this->current_user                = $user;
+        $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
-    
     
     /**
      * @return bool
@@ -81,7 +64,7 @@ class Planning_ShowPresenter {
         $destination = null;
         if ($this->artifact) {
             $destination = $this->getTreeNode($child_depth);
-            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned', $this->current_uri)->visit($destination);
+            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
         }
         return $destination;
     }
@@ -166,28 +149,14 @@ class Planning_ShowPresenter {
         return false;
     }
     
-    private function getArtifactCreationLabel(Tracker $tracker) {
-        $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
-        $item_name = $tracker->getItemName();
-        
-        return "$new $item_name";
-    }
-    
     /**
      * @return string
      */
     public function getPlanningTrackerArtifactCreationLabel() {
-        return $this->getArtifactCreationLabel($this->planning_tracker);
-    }
-    
-    /**
-     * @return string
-     */
-    public function getPlanningTrackerArtifactCreationUrl() {
-        $tracker_id = $this->planning_tracker->getId();
-        $return_url = urlencode($this->getCurrentUri());
+        $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
+        $item_name = $this->planning->getPlanningTracker()->getItemName();
         
-        return TRACKER_BASE_URL."/?tracker=$tracker_id&func=new-artifact&return_to=$return_url";
+        return "$new $item_name";
     }
     
     /**
@@ -212,21 +181,7 @@ class Planning_ShowPresenter {
         }
         return '<div class="feedback_warning">'. $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field') .'</div>';
     }
-    
-    /**
-     * @return string
-     */
-    public function getCurrentUri() {
-        return $this->current_uri;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getCurrentUrlEncoded() {
-        return urlencode($this->current_uri);
-    }
-    
+
     /**
      * @return string
      */
@@ -240,15 +195,5 @@ class Planning_ShowPresenter {
     public function editLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
-    
-    /**
-     * @return string
-     */
-    public function __trans($text) {
-        $args = explode('|', $text);
-        $secondary_key = array_shift($args);
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', $secondary_key, $args);
-    }
 }
-
 ?>

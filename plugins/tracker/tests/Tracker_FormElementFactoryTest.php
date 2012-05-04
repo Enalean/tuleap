@@ -53,9 +53,7 @@ Mock::generate('HTTPRequest');
 require_once 'common/event/EventManager.class.php';
 Mock::generate('EventManager');
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/coin');
-}
+require_once(dirname(__FILE__).'/../include/constants.php');
 
 abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
 

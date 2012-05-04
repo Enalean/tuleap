@@ -19,21 +19,44 @@
  */
 
 require_once dirname(__FILE__).'/../include/AgileDashboardRouter.class.php';
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
 
 class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
-    public function itRoutesToTheArtifactPlannificationByDefault() {        
-        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'buildArtifactPlannificationController'));
-        $router->__construct(mock('Plugin'));
+    public function setUp() {
+        parent::setUp();
         
-        stub($router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
-        stub($router)->buildArtifactPlannificationController()->returns(mock('MVC2_Controller'));
+        $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
+                                             array('getViewBuilder',
+                                                   'renderAction',
+                                                   'executeAction',
+                                                   'getPlanningFactory',
+                                                   'getArtifactFactory'));
+        $this->router->__construct(mock('Plugin'));
         
-        
-        $request = new Codendi_Request(array());
-        $router->expectOnce('renderAction', array('*', 'show', $request, '*'));
-        $router->routeShowPlanning($request);
+        stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
+        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
+        stub($this->router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
     }
+    
+    public function itRoutesToTheArtifactPlannificationByDefault() {
+        $request = aRequest()->withUri('someurl')->build();
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->routeShowPlanning($request);
+    }
+    
+    public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
+        $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->routeShowPlanning($request);
+    }
+
+    public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
+        $request = new Codendi_Request(array('aid' => '-1'));
+        $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
+        $this->router->routeShowPlanning($request);
+    }
+    
 }
 
 ?>

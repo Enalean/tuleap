@@ -3,11 +3,11 @@
     <ul class="dropdown_panel" id="card-actions-menu">
         <li>
             <a href="{{{destination_link}}}">{{editLabel}}</a>
-            <hr style="border:0px; border-top:1px solid #ccc;"/>
+            <hr />
         </li>
         {{#backlogArtifactTypes}}
             <li>
-                <a href="{{creationUrl}}">{{#__}}add_subitem|{{name}}{{/__}}</a>
+                <a href="{{creationUrl}}">{{getAddNewLabel}}</a>
             </li>
         {{/backlogArtifactTypes}}
     </ul>

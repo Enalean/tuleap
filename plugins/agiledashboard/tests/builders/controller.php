@@ -28,17 +28,21 @@ require_once dirname(__FILE__).'/../../include/Planning/Controller.class.php';
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('PlanningFactory');
 
-class Builder {
-    public function with($key, $value) {
-        $this->$key = $value;
-        return $this;
-    }
-}
-
-class TestPlanningControllerBuilder extends Builder {
+class PlanningController_TestBuilder {
+    
     public function __construct() {
         $this->request          = new Codendi_Request(array());
         $this->planning_factory = new MockPlanningFactory();
+    }
+    
+    public function withRequest(Codendi_Request_TestBuilder $request) {
+        $this->request = $request->build();
+        return $this;
+    }
+
+    public function withPlanningFactory($planning_factory) {
+        $this->planning_factory = $planning_factory;
+        return $this;
     }
     
     public function build() {
@@ -48,6 +52,6 @@ class TestPlanningControllerBuilder extends Builder {
 }
 
 function aPlanningController() {
-    return new TestPlanningControllerBuilder();
+    return new PlanningController_TestBuilder();
 }
 ?>

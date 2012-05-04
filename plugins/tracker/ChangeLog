@@ -1,3 +1,7 @@
+Version 5.7.10 - Tuleap 5.1
+    * Let the plugins that depends on trackers choose the redirection url after artifact update/creation
+    * Introduce 'immediate' parameter in api to link immediately a new artifact to another one.
+
 Version 5.7.9 - Tuleap 5.1
     * Internal refactoring to manage creation of elements from AgileDashboard
       plugin.

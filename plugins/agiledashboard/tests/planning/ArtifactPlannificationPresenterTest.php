@@ -23,9 +23,9 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ShowPresenter.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationPresenter.class.php';
 
-class Planning_ShowPresenterTest extends TuleapTestCase {
+class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
     
     protected $user;
     
@@ -43,9 +43,18 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($factory);
         
+        $this->generateABunchOfArtifacts($factory);
+        
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
         
+        
+        stub($this->planning)->getPlanningTrackerId()->returns($this->planning_tracker_id);
+        stub($this->planning)->getPlanningTracker()->returns($this->planning_tracker);
+        stub($this->planning_tracker)->getId()->returns($this->planning_tracker_id);
+    }
+    
+    private function generateABunchOfArtifacts($factory) {
         for ($i = 30 ; $i < 40 ; ++$i) {
             $artifact = mock('Tracker_Artifact');
             stub($artifact)->getId()->returns($i);
@@ -54,10 +63,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
             stub($artifact)->getXRef()->returns('art #'. $i);
             stub($factory)->getArtifactById($i)->returns($artifact);
         }
-        
-        stub($this->planning)->getPlanningTrackerId()->returns($this->planning_tracker_id);
-        stub($this->planning)->getPlanningTracker()->returns($this->planning_tracker);
-        stub($this->planning_tracker)->getId()->returns($this->planning_tracker_id);
     }
     
     public function tearDown() {
@@ -65,14 +70,14 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
     
-    protected function getAPlanning($origin_url) {
-        return new Planning_ShowPresenter(
+    protected function getAPresenter() {
+        return new Planning_ArtifactPlanificationPresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,
             $this->artifact,                                                                                                                                                        
             $this->user,
-            $origin_url
+            'planning['. (int)$this->planning->getId() .']='
         );
     }
     
@@ -85,7 +90,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
                         'uri'                  => '/bar',
                         'xref'                 => 'art #'. $tree_node_id,
                         'editLabel'            => null,
-                        'return_to'            => '',
                         'allowedChildrenTypes' => array(),
         ));
         $node->setId($tree_node_id);
@@ -96,7 +100,8 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     }
     
     protected function getAnArtifact($artifact_id, $children = array()) {
-        $artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns($children);
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getUniqueLinkedArtifacts()->returns($children);
         stub($artifact)->getId()->returns($artifact_id);
         stub($artifact)->getTitle()->returns('Artifact '.$artifact_id);
         stub($artifact)->fetchDirectLinkToArtifact()->returns('');
@@ -112,18 +117,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         foreach($children1 as $child_num => $child) {
             $this->assertEqualTreeNodes($child, $children2[$child_num]);
         }
-    }
-    
-    
-    public function itProvidesThePlanningTrackerArtifactCreationUrl() {
-        
-        $origin_url = '/plugins/agiledashboard/?group_id=104&action=show&planning_id=5&aid=17';
-        $presenter = $this->getAPlanning($origin_url);
-        
-        $url = $presenter->getPlanningTrackerArtifactCreationUrl();
-        
-        $expected_return_to = urlencode($origin_url);
-        $this->assertEqual($url, "/plugins/tracker/?tracker=191&func=new-artifact&return_to=$expected_return_to");
     }
     
     /**
@@ -146,7 +139,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
 
         
-        $presenter = $this->getAPlanning(''); 
+        $presenter = $this->getAPresenter();
         
         $node33 = $this->getATreeNode(33);
         $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
@@ -173,7 +166,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
     
     
-        $presenter = $this->getAPlanning('');
+        $presenter = $this->getAPresenter();
     
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));

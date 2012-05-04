@@ -40,6 +40,13 @@ class PlanningFactory {
     }
     
     /**
+     * @return PlanningFactory
+     */
+    public static function build() {
+        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
+    }
+    
+    /**
      * Duplicate plannings for some previously duplicated trackers.
      * 
      * @param int    $group_id         The id of the project where plannings should be created.
@@ -167,7 +174,10 @@ class PlanningFactory {
         return $backlog_tracker_ids;
     }
     
-    public function getPlanningTracker(Planning $planning) {
+    /**
+     * @return Tracker
+     */
+    private function getPlanningTracker(Planning $planning) {
         return $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
     }
     
@@ -178,7 +188,7 @@ class PlanningFactory {
      *
      * @return array of Tracker
      */
-    public function getBacklogTrackers(Planning $planning) {
+    private function getBacklogTrackers(Planning $planning) {
         $planning_id      = $planning->getId();
         $backlog_trackers = array();
         

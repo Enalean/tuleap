@@ -39,6 +39,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
+            $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
+            $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
         }
     }
     
@@ -51,12 +53,58 @@ class AgileDashboardPlugin extends Plugin {
         require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
         require_once 'Planning/PlanningFactory.class.php';
         
-        $planning_dao     = new PlanningDao();
-        $tracker_factory  = TrackerFactory::instance();
-        $planning_factory = new PlanningFactory($planning_dao, $tracker_factory);
-        
-        $planning_factory->duplicatePlannings($params['group_id'],
-                                              $params['tracker_mapping']);
+        PlanningFactory::build()->duplicatePlannings(
+            $params['group_id'],
+            $params['tracker_mapping']
+        );
+    }
+    
+    public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+        $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
+        if ($requested_planning) {
+            require_once 'Planning/PlanningFactory.class.php';
+            $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
+            if ($planning && $this->requestCanLeaveTheTracker($params['request'])) {
+                $this->redirectToPlanning($params, $requested_planning, $planning);
+            }
+        }
+    }
+    
+    private function redirectToPlanning($params, $requested_planning, Planning $planning) {
+        $redirect_to_artifact = $requested_planning['artifact_id'];
+        if ($redirect_to_artifact == -1) {
+            $redirect_to_artifact = $params['artifact']->getId();
+        }
+        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query(array(
+            'group_id'    => $planning->getGroupId(),
+            'planning_id' => $planning->getId(),
+            'action'      => 'show',
+            'aid'         => $redirect_to_artifact,
+        )));
+    }
+    
+    public function tracker_event_build_artifact_form_action($params) {
+        $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
+        if ($requested_planning) {
+            $key   = 'planning['. $requested_planning['planning_id'] .']';
+            $value = $requested_planning['artifact_id'];
+            $params['query_parameters'][$key] = $value;
+        }
+    }
+    
+    private function extractPlanningAndArtifactFromRequest(Codendi_Request $request) {
+        $from_planning = $request->get('planning');
+        if (is_array($from_planning) && count($from_planning)) {
+            list($planning_id, $planning_artifact_id) = each($from_planning);
+            return array(
+                'planning_id' => $planning_id, 
+                'artifact_id' => $planning_artifact_id
+            );
+        }
+    }
+    
+    private function requestCanLeaveTheTracker(Codendi_Request $request) {
+        return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
     }
     
     /**

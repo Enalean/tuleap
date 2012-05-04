@@ -110,5 +110,9 @@ abstract class MVC2_Controller {
         $redirect = http_build_query($query_parts);
         $GLOBALS['Response']->redirect('/plugins/'.$this->plugin_name.'/?'.$redirect);
     }
+    
+    protected function getCurrentUser() {
+        return $this->request->getCurrentUser();
+    }
 }
 ?>
