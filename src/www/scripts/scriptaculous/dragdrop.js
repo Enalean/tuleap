@@ -357,7 +357,12 @@ var Draggable = Class.create({
       this.delta = this.currentDelta();
 
     if(this.options.zindex) {
-      this.originalZ = parseInt(Element.getStyle(this.element,'z-index') || 0);
+      this.originalZ = Element.getStyle(this.element,'z-index');
+      if (this.originalZ === null) {
+          this.originalZ = 'inherit';
+      } else {
+          this.originalZ = parseInt(this.originalZ || 0);
+      }
       this.element.style.zIndex = this.options.zindex;
     }
 
