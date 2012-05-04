@@ -50,27 +50,6 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $this->criteria_builder   = mock('Tracker_CrossSearch_CriteriaBuilder');
     }
     
-    public function itBuildPlanningContentView() {
-        $tracker_ids = array();
-        $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $tracker_ids);
-        
-        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-        
-        $this->criteria_builder->setReturnValue('getCriteria', array());
-        
-        $user    = aUser()->build();
-        $project = new MockProject();
-        
-        $cross_search_criteria = aCrossSearchCriteria()->build();
-        
-        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
-        
-        $builder            = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, $this->tracker_factory, $this->search, $this->criteria_builder);
-        $expected_class     = 'Fake_Tracker_CrossSearch_SearchContentView';
-        $view               = $builder->buildCustomContentView($expected_class, $user, $project, $cross_search_criteria, array(), $tracker_ids);
-        
-        $this->assertIsA($view, $expected_class);
-    }
     
     public function itRetrievesIdsOfTrackers() {
         $builder  = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, $this->tracker_factory, $this->search, $this->criteria_builder);
