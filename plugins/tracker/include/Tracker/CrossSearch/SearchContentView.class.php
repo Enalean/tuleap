@@ -168,8 +168,8 @@ class Tracker_CrossSearch_SearchContentView {
             $key = $field->getArtifactLinkFieldName($this->factory);
             if (isset($row[$key])) {
                 $values = array();
-                // GROUP_CONCAT DISTINCT retrieve only once id (no need of array_unique)  
-                $linked_artifact_ids = explode(',', $row[$key]);
+                // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
+                $linked_artifact_ids = array_unique(explode(',', $row[$key]));
                 foreach ($linked_artifact_ids as $id) {
                     $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
                 }

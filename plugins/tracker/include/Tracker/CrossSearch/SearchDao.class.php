@@ -73,7 +73,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                    artifact.last_changeset_id,
                    CVT.value                                AS title,
                    artifact.tracker_id,
-                   GROUP_CONCAT( DISTINCT CVAL.artifact_id) AS artifactlinks
+                   GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
                    $artifact_link_columns_select
                    
             FROM       tracker_artifact  AS artifact
@@ -319,7 +319,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     protected function getArtifactLinkSelects(array $field_ids) {
         $sql = '';
         foreach ($field_ids as $field_id) {
-            $sql .= ', GROUP_CONCAT( DISTINCT AL_COL_'.$field_id.'.id) AS art_link_'.$field_id;
+            $sql .= ', GROUP_CONCAT(AL_COL_'.$field_id.'.id) AS art_link_'.$field_id;
         }
         return $sql;
     }
