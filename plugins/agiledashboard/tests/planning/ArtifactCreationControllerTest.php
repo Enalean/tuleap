@@ -35,28 +35,24 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         $this->planning_tracker_id = 66;
         $this->request = aRequest()->withUri("/plugins/agiledashboard/?group_id=104&action=show&planning_id=$planning_id&aid=$aid")->build();
         
-        $planning         = aPlanning()->withPlanningTrackerId($this->planning_tracker_id)->build();
+        $this->planning = aPlanning()
+            ->withId($planning_id)
+            ->withPlanningTrackerId($this->planning_tracker_id)
+            ->build();
+        
         $planning_factory = mock('PlanningFactory');
         
-        stub($planning_factory)->getPlanning($planning_id)->returns($planning);
+        stub($planning_factory)->getPlanning($planning_id)->returns($this->planning);
         
         $this->controller = new Planning_ArtifactCreationController($planning_factory, $this->request);
     }
     
-    
     public function itRedirectsToArtifactCreationForm() {
         $return_url       = $this->request->getEncodedUri();
-        $new_artifact_url = TRACKER_BASE_URL."/\?tracker=$this->planning_tracker_id&func=new-artifact&return_to=$return_url";
+        $new_artifact_url = preg_quote(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&planning[{$this->planning->getId()}]=-1");
         
         $this->expectRedirectTo(new PatternExpectation("@$new_artifact_url@"));
         $this->controller->createArtifact();
     }
-    public function itReturnsToTheCurrentUrlWithAidReference() {
-        $aid_surrounded_by_ampersand_and_equals = urlencode('&').'aid'.urlencode('=');
-        
-        $this->expectRedirectTo(new PatternExpectation("/$aid_surrounded_by_ampersand_and_equals/"));
-        $this->controller->createArtifact();
-    }
-
 }
 ?>
