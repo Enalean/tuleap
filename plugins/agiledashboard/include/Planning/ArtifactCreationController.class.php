@@ -35,7 +35,6 @@ class Planning_ArtifactCreationController extends MVC2_Controller {
     }
     
     public function createArtifact() {
-        $return_to   = $this->request->getEncodedUri();
         $planning_id = $this->request->get('planning_id');
         $planning    = $this->planning_factory->getPlanning($planning_id);
         $tracker_id  = $planning->getPlanningTrackerId();

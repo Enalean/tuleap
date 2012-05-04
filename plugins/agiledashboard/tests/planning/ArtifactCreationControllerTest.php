@@ -48,7 +48,6 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
     }
     
     public function itRedirectsToArtifactCreationForm() {
-        $return_url       = $this->request->getEncodedUri();
         $new_artifact_url = preg_quote(TRACKER_BASE_URL."/?tracker=$this->planning_tracker_id&func=new-artifact&planning[{$this->planning->getId()}]=-1");
         
         $this->expectRedirectTo(new PatternExpectation("@$new_artifact_url@"));
