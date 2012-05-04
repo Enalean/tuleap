@@ -34,7 +34,7 @@ class Test_Planning_Builder {
     private $name                = 'Test Planning';
     private $group_id            = '102';
     private $backlog_tracker_ids = array();
-    private $planning_tracker_id = null;
+    private $planning_tracker_id;
     
     public function withId($id) {
         $this->id = $id;

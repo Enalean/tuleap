@@ -67,7 +67,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     }
     
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
-        $planning = $this->getPlanning();
+        $planning            = $this->getPlanning();
         $project_id          = $this->request->get('group_id');
         $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
         $tracker_ids         = $planning->getBacklogTrackerIds();

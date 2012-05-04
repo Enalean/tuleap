@@ -42,17 +42,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $router->routeShowPlanning($request);
     }
     
-    public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
-        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('executeAction', 'getPlanningFactory'));
-        $router->__construct(mock('Plugin'));
-        stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
-        
-        $request = new Codendi_Request(array('aid' => '-1'));
-        
-        $router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
-        $router->routeShowPlanning($request);
-    }
-    
     public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
         $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'getPlanningFactory', 'getArtifactFactory'));
         $router->__construct(mock('Plugin'));
@@ -66,6 +55,18 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
         $router->routeShowPlanning($request);
     }
+
+    public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
+        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('executeAction', 'getPlanningFactory'));
+        $router->__construct(mock('Plugin'));
+        stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
+        
+        $request = new Codendi_Request(array('aid' => '-1'));
+        
+        $router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
+        $router->routeShowPlanning($request);
+    }
+    
 }
 
 ?>
