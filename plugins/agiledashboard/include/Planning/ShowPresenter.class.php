@@ -169,18 +169,14 @@ class Planning_ShowPresenter {
         return false;
     }
     
-    private function getArtifactCreationLabel(Tracker $tracker) {
-        $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
-        $item_name = $tracker->getItemName();
-        
-        return "$new $item_name";
-    }
-    
     /**
      * @return string
      */
     public function getPlanningTrackerArtifactCreationLabel() {
-        return $this->getArtifactCreationLabel($this->planning_tracker);
+        $new       = $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_artifact_new');
+        $item_name = $this->planning_tracker->getItemName();
+        
+        return "$new $item_name";
     }
     
     /**
