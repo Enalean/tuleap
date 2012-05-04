@@ -688,8 +688,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-    * @return string the cross reference text: bug #42
-    */
+     * @return string the cross reference text: bug #42
+     */
     public function getXRef() {
         return $this->getTracker()->getItemName() . ' #' . $this->getId();
     }
@@ -704,7 +704,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             'key'      => $this->getTracker()->getItemName(),
             'val'      => $this->getId(),
             'group_id' => $this->getTracker()->getGroupId(),
-        )) .'">'. $this->getTracker()->getItemName() .' #'. $this->getId() .'</a>';
+        )) .'">'. $this->getXRef() .'</a>';
     }
     
     /**
@@ -889,7 +889,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $is_valid = false; //TODO To be removed
                     }
                 } else {
-                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getXRef() . '</a>';
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     $is_valid = false;
                 }
