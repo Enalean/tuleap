@@ -2,6 +2,10 @@
     display: none;
 }
 
+.agiledashboard label {
+    font-weight: bold;
+}
+
 .planning-backlog > table {
     width: 100%;
 }

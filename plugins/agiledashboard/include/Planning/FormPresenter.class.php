@@ -69,6 +69,14 @@ class Planning_FormPresenter extends PlanningPresenter {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_name');
     }
     
+    public function planningBacklogTitleFieldLabel() {
+        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_backlog_title');
+    }
+    
+    public function planningPlanTitleFieldLabel() {
+        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_plan_title');
+    }
+    
     public function btnSubmit() {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
