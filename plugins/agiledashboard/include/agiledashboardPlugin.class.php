@@ -63,20 +63,23 @@ class AgileDashboardPlugin extends Plugin {
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
             require_once 'Planning/PlanningFactory.class.php';
-            $planning_factory = PlanningFactory::build();
-            $planning         = $planning_factory->getPlanning($requested_planning['planning_id']);
-            if ($planning) {
-                $redirect_to_artifact = $requested_planning['artifact_id'];
-                if ($redirect_to_artifact == -1) {
-                    $redirect_to_artifact = $params['artifact']->getId();
-                }
-                $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query(array(
-                    'group_id'    => $planning->getGroupId(),
-                    'planning_id' => $planning->getId(),
-                    'action'      => 'show',
-                    'aid'         => $redirect_to_artifact,
-                )));
+            $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
+            $this->redirectToPlanning($params, $planning);
+        }
+    }
+    
+    private function redirectToPlanning($params, Planning $planning = null) {
+        if ($planning) {
+            $redirect_to_artifact = $requested_planning['artifact_id'];
+            if ($redirect_to_artifact == -1) {
+                $redirect_to_artifact = $params['artifact']->getId();
             }
+            $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query(array(
+                'group_id'    => $planning->getGroupId(),
+                'planning_id' => $planning->getId(),
+                'action'      => 'show',
+                'aid'         => $redirect_to_artifact,
+            )));
         }
     }
     
