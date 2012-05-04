@@ -133,6 +133,25 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'submit_as';
         }*/
 
+
+        $valid     = new Valid_String('codereview_rb_user');
+        $rbUser = trim($this->request->get('codereview_rb_user'));
+        if ($this->request->valid($valid) && $rbUser != '') {
+            $params['rb_user'] = $rbUser;
+        } else {
+            $status    = false;
+            $invalid[] = 'rb_user';
+        }
+
+        $valid     = new Valid_String('codereview_rb_password');
+        $rbPass = trim($this->request->get('codereview_rb_password'));
+        if ($this->request->valid($valid) && $rbPass != '') {
+            $params['rb_password'] = $rbPass;
+        } else {
+            $status    = false;
+            $invalid[] = 'rb_password';
+        }
+
         $valid     = new Valid_String('codereview_base_dir');
         $baseDir = trim($this->request->get('codereview_base_dir'));
         if ($this->request->valid($valid) && $baseDir != '') {
@@ -164,8 +183,8 @@ class CodeReviewActions extends Actions {
         if ($reviewRessources['status']) {
             $server          = $reviewRessources['params']['server'];
             $repository      = $reviewRessources['params']['repository'];
-            $rb_user         = 'codendiadm';
-            $rb_password     = 'welcome0';
+            $rb_user         = $reviewRessources['params']['rb_user'];
+            $rb_password     = $reviewRessources['params']['rb_password'];
             $reviewSubmitter = '';//$reviewRessources['params']['submit_as'];
             $testing_done    = '';//$reviewRessources['params']['testing_done'];
             $summary         = $reviewRessources['params']['summary'];
