@@ -65,12 +65,12 @@ class AgileDashboardPlugin extends Plugin {
             require_once 'Planning/PlanningFactory.class.php';
             $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
             if ($planning) {
-                $this->redirectToPlanning($params, $planning);
+                $this->redirectToPlanning($params, $requested_planning, $planning);
             }
         }
     }
     
-    private function redirectToPlanning($params, Planning $planning) {
+    private function redirectToPlanning($params, $requested_planning, Planning $planning) {
         $redirect_to_artifact = $requested_planning['artifact_id'];
         if ($redirect_to_artifact == -1) {
             $redirect_to_artifact = $params['artifact']->getId();
