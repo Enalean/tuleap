@@ -26,45 +26,35 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
+        $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
+                                             array('getViewBuilder',
+                                                   'renderAction',
+                                                   'executeAction',
+                                                   'getPlanningFactory',
+                                                   'getArtifactFactory'));
+        $this->router->__construct(mock('Plugin'));
+        
+        stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
+        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
+        stub($this->router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
     }
     
     public function itRoutesToTheArtifactPlannificationByDefault() {
-        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'getPlanningFactory', 'getArtifactFactory'));
-        $router->__construct(mock('Plugin'));
-        
-        stub($router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
-        stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
-        stub($router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
-        
         $request = aRequest()->withUri('someurl')->build();
-        
-        $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
-        $router->routeShowPlanning($request);
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->routeShowPlanning($request);
     }
     
     public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
-        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('getViewBuilder', 'renderAction', 'getPlanningFactory', 'getArtifactFactory'));
-        $router->__construct(mock('Plugin'));
-        
-        stub($router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
-        stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
-        stub($router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
-        
         $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
-        
-        $router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
-        $router->routeShowPlanning($request);
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->routeShowPlanning($request);
     }
 
     public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
-        $router  = TestHelper::getPartialMock('AgileDashboardRouter', array('executeAction', 'getPlanningFactory'));
-        $router->__construct(mock('Plugin'));
-        stub($router)->getPlanningFactory()->returns(mock('PlanningFactory'));
-        
         $request = new Codendi_Request(array('aid' => '-1'));
-        
-        $router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
-        $router->routeShowPlanning($request);
+        $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
+        $this->router->routeShowPlanning($request);
     }
     
 }
