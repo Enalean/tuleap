@@ -1219,23 +1219,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param User $user The user who should see the artifacts
      * 
      * @return Array of Tracker_Artifact
-     */
+     */    
     public function getUniqueLinkedArtifacts(User $user) {
-        $direct_linked_artifacts = $this->getLinkedArtifacts($user);
-        foreach ($direct_linked_artifacts as $artifact_link) {
-            $sub_artifact_links      = $artifact_link->getLinkedArtifacts($user);
-            $direct_linked_artifacts = $this->filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links);
+        $sub_artifacts = $this->getLinkedArtifacts($user);
+        $grandchild_artifacts = array();
+        foreach ($sub_artifacts as $artifact) {
+            $grandchild_artifacts = array_merge($grandchild_artifacts, $artifact->getLinkedArtifacts($user));
         }
-        return $direct_linked_artifacts;
-    }
-    
-    private function filterLinkedArtifacts($direct_linked_artifacts, $sub_artifact_links) {
-        foreach ($sub_artifact_links as $sub_artifact_link) {
-            if (($keys_to_remove = array_keys($direct_linked_artifacts, $sub_artifact_link))){
-                $direct_linked_artifacts = array_diff_key($direct_linked_artifacts , array_flip($keys_to_remove));
-            }
-        }
-        return $direct_linked_artifacts;
+        return array_diff($sub_artifacts, $grandchild_artifacts);
     }
     
     /**
