@@ -19,8 +19,9 @@
  */
 
 require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'PlanningPresenter.class.php';
 
-class Planning_ShowPresenter {
+class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     
     private $artifacts_to_select;
     
@@ -31,10 +32,6 @@ class Planning_ShowPresenter {
     private $content_view;
     private $current_user;
     
-    /**
-     * @var Planning
-     */
-    private $planning;
     public $planning_redirect_parameter;
     
     public function __construct(Planning $planning,
@@ -44,24 +41,13 @@ class Planning_ShowPresenter {
                                 User $user,
                                 $planning_redirect_parameter) {
         
-        $this->planning                    = $planning;
+        parent::__construct($planning);
+        
         $this->artifact                    = $artifact;
         $this->artifacts_to_select         = $artifacts_to_select;
         $this->content_view                = $content_view;
         $this->current_user                = $user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
-    }
-    
-    public function planningId() {
-        return $this->planning->getId();
-    }
-    
-    public function planningName() {
-        return $this->planning->getName();
-    }
-    
-    public function groupId() {
-        return $this->planning->getGroupId();
     }
     
     /**

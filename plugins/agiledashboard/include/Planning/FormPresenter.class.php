@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'PlanningPresenter.class.php';
 require_once 'TrackerPresenter.class.php';
 
-class Planning_FormPresenter {
+class Planning_FormPresenter extends PlanningPresenter {
     // Manage translation
     public $__ = array(__CLASS__, '__trans');
     
@@ -45,14 +46,11 @@ class Planning_FormPresenter {
     public $available_planning_trackers;
     
     public function __construct(Planning $planning, array $available_trackers, array $available_planning_trackers) {
+        parent::__construct($planning);
+        
         $this->group_id                    = $planning->getGroupId();
-        $this->planning                    = $planning;
         $this->available_trackers          = $this->getPlanningTrackerPresenters($available_trackers);
         $this->available_planning_trackers = $this->getPlanningTrackerPresenters($available_planning_trackers);
-    }
-    
-    public function getPlanningName() {
-        return $this->planning->getName();
     }
     
     public function getPlanningTrackerPresenters(array $trackers) {
@@ -67,7 +65,7 @@ class Planning_FormPresenter {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
     
-    public function planningName() {
+    public function planningNameFieldLabel() {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_name');
     }
     

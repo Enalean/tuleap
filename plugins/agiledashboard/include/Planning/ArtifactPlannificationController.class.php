@@ -23,6 +23,7 @@ require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 require_once 'SearchContentView.class.php';
+require_once 'ArtifactPlannificationPresenter.class.php';
 
 class Planning_ArtifactPlannificationController extends MVC2_Controller {
     
@@ -60,7 +61,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         
         $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
         
-        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->getCurrentUser(), $planning_redirect_parameter);
+        return new Planning_ArtifactPlanificationPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->getCurrentUser(), $planning_redirect_parameter);
     }
     
     private function getPlanningRedirectParameter(Planning $planning) {

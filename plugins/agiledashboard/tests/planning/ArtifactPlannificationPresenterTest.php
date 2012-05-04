@@ -23,9 +23,9 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ShowPresenter.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationPresenter.class.php';
 
-class Planning_ShowPresenterTest extends TuleapTestCase {
+class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
     
     protected $user;
     
@@ -71,7 +71,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
     }
     
     protected function getAPresenter() {
-        return new Planning_ShowPresenter(
+        return new Planning_ArtifactPlanificationPresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,
