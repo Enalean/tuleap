@@ -272,7 +272,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         if (!$is_super_user) {
             $permissions  = "
                 INNER JOIN permissions		  AS P ON (
-                	P.object_id          =  CAST(field_id AS CHAR)
+                	P.object_id          =  CAST(F.id AS CHAR)
                     AND P.permission_type=  'PLUGIN_TRACKER_FIELD_READ'
                     AND P.ugroup_id      IN ($quoted_ugroups)
                 )";
@@ -290,6 +290,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 	AND formElement_type = 'art_link'
 	                AND use_it = 1
         ";
+        
         $dar = $this->retrieve($sql);
         if ($dar && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
