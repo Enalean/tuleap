@@ -22,8 +22,6 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 
 class Planning_ShowPresenter {
     
-    public $__ = array(__CLASS__, '__trans');
-    
     private $artifacts_to_select;
     
     /**
@@ -211,15 +209,5 @@ class Planning_ShowPresenter {
     public function editLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
-    
-    /**
-     * @return string
-     */
-    public function __trans($text) {
-        $args = explode('|', $text);
-        $secondary_key = array_shift($args);
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', $secondary_key, $args);
-    }
 }
-
 ?>
