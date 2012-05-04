@@ -1279,31 +1279,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function getRedirectUrlAfterArtifactUpdate($request) {
-        $return_to = urldecode($request->get('return_to'));
-        $stay = $request->get('submit_and_stay') ;
-        if (! $stay && $return_to) {
-            return $return_to;
-        }
+        $stay     = $request->get('submit_and_stay') ;
         $from_aid = $request->get('from_aid');
 
-        $redirect_params = $this->calculateRedirectParams($stay, $from_aid, $return_to);
+        $redirect_params = $this->calculateRedirectParams($stay, $from_aid);
         return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
-
     }
 
-    private function calculateRedirectParams($stay, $from_aid, $return_to) {
+    private function calculateRedirectParams($stay, $from_aid) {
         $redirect_params = array();
         if ($stay) {
             $redirect_params['aid']       = $this->getId();
             $redirect_params['from_aid']  = $from_aid;
-            $redirect_params['return_to'] = $return_to;
         } else if ($from_aid) {
             $redirect_params['aid']       = $from_aid;
         } else {
             $redirect_params['tracker']   = $this->tracker_id;
         }
         return array_filter($redirect_params);
-        
     }
     
     /**

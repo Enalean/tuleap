@@ -3024,19 +3024,14 @@ EOS;
     public function redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id) {
         $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
-        $return_to = urldecode($request->get('return_to'));
-        if ((! $stay && !$continue) && $return_to) {
-            return str_replace('&aid=-1', '&aid='. $artifact_id, $return_to);
-        }
         
-        $redirect_params = $this->calculateRedirectParams($tracker_id, $artifact_id, $return_to, $stay, $continue);
+        $redirect_params = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
         return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
     }
 
-    private function calculateRedirectParams($tracker_id, $artifact_id, $return_to, $stay, $continue) {
+    private function calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue) {
         $redirect_params = array();
         $redirect_params['tracker']       = $tracker_id;
-        $redirect_params['return_to']     = $return_to;
         if ($continue) {
             $redirect_params['func']      = 'new-artifact';
         }
