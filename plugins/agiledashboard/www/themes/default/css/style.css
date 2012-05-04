@@ -96,3 +96,8 @@
   opacity: 1;
   filter: alpha(opacity=100);
 }
+
+.agiledashboard hr {
+    border:0px; 
+    border-top:1px solid #ccc;
+}
