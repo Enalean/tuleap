@@ -157,17 +157,6 @@ class Codendi_Request {
     }
     
     /**
-     * Returns the 'urlencoded' version of URI.
-     * 
-     * See: urlencode.
-     * 
-     * @return string
-     */
-    public function getEncodedUri() {
-        return urlencode($this->getUri());
-    }
-
-    /**
      * Check if $variable exists in user submitted parameters.
      *
      * @param string $variable Name of the parameter.
