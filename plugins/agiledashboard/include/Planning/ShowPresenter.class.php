@@ -79,11 +79,15 @@ class Planning_ShowPresenter {
      */
     public function getDestination($child_depth = 1) {
         $destination = null;
-        if ($this->artifact) {
+        if ($this->canAccessPlannedItem()) {
             $destination = $this->getTreeNode($child_depth);
             Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned', $this->current_uri)->visit($destination);
         }
         return $destination;
+    }
+    
+    private function canAccessPlannedItem() {
+        return $this->artifact && $this->artifact->getTracker()->userCanView($this->current_user);
     }
     
     /**
