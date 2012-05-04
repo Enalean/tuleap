@@ -91,7 +91,6 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $cross_search_query    = $this->getCrossSearchQuery();
         $view = $view_builder->buildCustomContentView('Planning_SearchContentView', $this->current_user, $project, $cross_search_query, $excluded_artifact_ids, $tracker_ids);
         
-        $view->current_url                 = $this->current_uri;
         $view->planning                    = $planning;
         $view->planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
         

@@ -84,7 +84,7 @@ class Planning_ShowPresenter {
         $destination = null;
         if ($this->artifact) {
             $destination = $this->getTreeNode($child_depth);
-            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned', $this->current_uri)->visit($destination);
+            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($destination);
         }
         return $destination;
     }

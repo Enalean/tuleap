@@ -86,7 +86,6 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
                         'uri'                  => '/bar',
                         'xref'                 => 'art #'. $tree_node_id,
                         'editLabel'            => null,
-                        'return_to'            => '',
                         'allowedChildrenTypes' => array(),
         ));
         $node->setId($tree_node_id);
