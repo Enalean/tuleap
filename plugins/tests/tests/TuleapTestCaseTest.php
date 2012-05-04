@@ -25,6 +25,7 @@ class TuleapTestCaseTest extends TuleapTestCase {
         $this->assertFalse($this->assertUriHasArgument('/foo?bar=baz_baz', 'bar', 'baz'));
         $this->assertFalse($this->assertUriHasArgument('/foo?bar=baz', 'bar', 'b.z'));
         $this->assertTrue($this->assertUriHasArgument('/foo?bar=b/z', 'bar', 'b/z'));
+        $this->assertTrue($this->assertUriHasArgument('/foo?bar=baz&truc=muche', 'bar', 'baz'));
     }
     
     public function assertUriHasArgument($uri, $param, $value) {

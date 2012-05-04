@@ -153,8 +153,9 @@ abstract class TuleapTestCase extends UnitTestCase {
      * @param type $value 
      */
     protected function assertUriHasArgument($uri, $param, $value) {
-        $pattern = '/[?&]'. preg_quote("$param=$value", '/') .'\W?$/';
-        return $this->assertPattern($pattern, $uri);
+        $query_string = parse_url($uri, PHP_URL_QUERY);
+        parse_str($query_string, $args);
+        return $this->assertTrue(isset($args[$param]) && $args[$param] == $value);
     }
     
     /**
