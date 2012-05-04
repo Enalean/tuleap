@@ -88,7 +88,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'Description';
         }
 
-        $valid     = new Valid_String('codereview_revision_range');
+/*        $valid     = new Valid_String('codereview_revision_range');
         $revisions = trim($this->request->get('codereview_revision_range'));
         if ($this->request->valid($valid) && $revisions != '') {
             $params['revisions'] = $revisions;
@@ -105,7 +105,7 @@ class CodeReviewActions extends Actions {
             $status    = false;
             $invalid[] = 'description';
         }
-
+*/
         $valid       = new Valid_String('codereview_target_people');
         $target_people = trim($this->request->get('codereview_target_people'));
         if ($this->request->valid($valid) && $target_people != '') {
@@ -115,7 +115,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'target_people';
         }
 
-        $valid     = new Valid_String('codereview_testing_done');
+/*         $valid     = new Valid_String('codereview_testing_done');
         $testingDone = trim($this->request->get('codereview_testing_done'));
         if ($this->request->valid($valid) && $testingDone != '') {
             $params['testing_done'] = $testingDone;
@@ -124,14 +124,14 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'testing_done';
         }
 
-        $valid     = new Valid_String('codereview_submit_as');
+       $valid     = new Valid_String('codereview_submit_as');
         $submitAs = trim($this->request->get('codereview_submit_as'));
         if ($this->request->valid($valid) && $submitAs != '') {
             $params['submit_as'] = $submitAs;
         } else {
             $status    = false;
             $invalid[] = 'submit_as';
-        }
+        }*/
 
         $valid     = new Valid_String('codereview_base_dir');
         $baseDir = trim($this->request->get('codereview_base_dir'));
@@ -166,11 +166,11 @@ class CodeReviewActions extends Actions {
             $repository      = $reviewRessources['params']['repository'];
             $rb_user         = 'codendiadm';
             $rb_password     = 'welcome0';
-            $reviewSubmitter = $reviewRessources['params']['submit_as'];
-            $testing_done    = $reviewRessources['params']['testing_done'];
+            $reviewSubmitter = '';//$reviewRessources['params']['submit_as'];
+            $testing_done    = '';//$reviewRessources['params']['testing_done'];
             $summary         = $reviewRessources['params']['summary'];
             $target_people   = $reviewRessources['params']['target_people'];
-            $description     = $reviewRessources['params']['description'];
+            $description     = '';//$reviewRessources['params']['description'];
             $baseDir         = $reviewRessources['params']['base_dir'];
             $path            = "@".$reviewRessources['params']['diff_path'];
             try {
@@ -196,7 +196,7 @@ class CodeReviewActions extends Actions {
      *
      * @return Integer
      */
-    function postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter) {
+    function postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter = null) {
         $data = array('repository' => $repository,
                       'submit_as'  => $reviewSubmitter);
         $curl    = new TuleapCurl();
@@ -230,7 +230,7 @@ class CodeReviewActions extends Actions {
      *
      * @return void
      */
-    function updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description) {
+    function updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done , $summary, $target_people, $description) {
         $data = array('testing_done'   => $testing_done,
                       'target_people'  => $target_people,
                       'description'    => $description,

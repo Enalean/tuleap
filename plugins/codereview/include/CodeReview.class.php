@@ -28,7 +28,7 @@ require_once('RepositoryManager.class.php');
  */
 class CodeReview extends Controler {
 
-    protected $plugin;
+    public $plugin;
 
     /**
      * Class constructor

@@ -20,6 +20,7 @@
 
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
+require_once('RepositoryManager.class.php');
 
 /**
  * CodeReviewViews
@@ -98,40 +99,24 @@ class CodeReviewViews extends Views {
      */
     function reviewSubmission() {
         $project_manager = ProjectManager::instance();
+        $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
         $project = $project_manager->getProject($this->request->get('group_id'));
         $form  = " <form id=\"reviewAdd\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_review\">";
-        $form .= " <p>";
-        $form .= "   <label for=\"codereview_server\">Server</label><br>";
-        $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" type=\"text\" size=\"32\" />";
-        $form .= "  </p>";
+        $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$repository_manager->rbPath."\" type=\"hidden\"/>";
+        //$form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->svnPath."\" type=\"hidden\"/>";
+        $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" Value=\"".$repository_manager->rbUser."\" type=\"hidden\" size=\"64\"/>";
+        $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" Value=\"".$repository_manager->rbPassword."\" type=\"hidden\"/>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_repository\">Repository url</label><br>";
-        $form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" type=\"text\" size=\"64\" />";
-        $form .= "  </p>";
-        $form .= " <p>";
-        $form .= "   <label for=\"codereview_revision\">Revision range</label><br>";
-        $form .= "   <span class=\"legend\">Specifies a revision \"REVISION\" or a range of revisions \"STARTREV:STOPREV\" used to generate the diff</span><br>";
-        $form .= "   <input id=\"codereview_revision_range\" name=\"codereview_revision_range\" type=\"text\" size=\"22\" />";
+        $form .= "   <label for=\"codereview_repository_url\">Repository url</label><br>";
+        $form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->svnPath."\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "  <p>";
         $form .= "   <label for=\"codereview_target\">Target people</label><br>";
         $form .= "   <input id=\"codereview_target_people\" name=\"codereview_target_people\" type=\"text\" size=\"32\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_testing_done\">Testing done</label><br>";
-        $form .= "   <input id=\"codereview_testing_done\" name=\"codereview_testing_done\" type=\"text\" size=\"32\" />";
-        $form .= "  </p>";
-        $form .= "  <p>";
         $form .= "   <label for=\"codereview_summary\">Summary</label><br>";
         $form .= "   <input id=\"codereview_summary\" name=\"codereview_summary\" type=\"text\" size=\"64\" />";
-        $form .= "  </p>";
-        $form .= "  <p>";
-        $form .= "   <label for=\"codereview_description\">Description</label><br>";
-        $form .= "   <textarea rows=\"4\" cols=\"60\" id=\"codereview_description\" name=\"codereview_description\">Write something meaningful here</textarea>";
-        $form .= "  </p>";
-        $form .= "  <p>";
-        $form .= "   <label for=\"codereview_submit_as\">Submit as</label><br>";
-        $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=\"text\" size=\"32\" />";
         $form .= "  </p>";
         $form .= "  <p>";
         $form .= "   <label for=\"codereview_base_dir\">The absolute path in the repository the diff was generated in</label><br>";
@@ -141,6 +126,25 @@ class CodeReviewViews extends Views {
         $form .= "   <label for=\"codereview_diff_path\">Path to the diff file</label><br>";
         $form .= "   <input id=\"codereview_diff_path\" name=\"codereview_diff_path\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
+
+        $formOptionalInput  = "  <p>";
+        $formOptionalInput .= "   <label for=\"codereview_testing_done\">Testing done</label><br>";
+        $formOptionalInput .= "   <input id=\"codereview_testing_done\" name=\"codereview_testing_done\" type=\"text\" size=\"32\" />";
+        $formOptionalInput .= "  </p>";
+        $formOptionalInput .= "  <p>";
+        $formOptionalInput .= "   <label for=\"codereview_submit_as\">Submit as</label><br>";
+        $formOptionalInput .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=\"text\" size=\"32\" />";
+        $formOptionalInput .= "  </p>";
+        $formOptionalInput .= " <p>";
+        $formOptionalInput .= "   <label for=\"codereview_revision\">Revision range</label><br>";
+        $formOptionalInput .= "   <span class=\"legend\">Specifies a revision \"REVISION\" or a range of revisions \"STARTREV:STOPREV\" used to generate the diff</span><br>";
+        $formOptionalInput .= "   <input id=\"codereview_revision_range\" name=\"codereview_revision_range\" type=\"text\" size=\"22\" />";
+        $formOptionalInput .= "  </p>";
+        $formOptionalInput .= "  <p>";
+        $formOptionalInput .= "   <label for=\"codereview_description\">Description</label><br>";
+        $formOptionalInput .= "   <textarea rows=\"4\" cols=\"60\" id=\"codereview_description\" name=\"codereview_description\">Write something meaningful here</textarea>";
+        $formOptionalInput .= "  </p>";
+
         $form .= "   <input type=\"submit\" value=\"Add review request\" />";
         $form .= " </form>";
         print $form;
