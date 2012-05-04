@@ -334,24 +334,4 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
         return $project_manager;
     }
 }
-
-class ArtifactPlannificationController_ReturnToPlanningTest extends TuleapTestCase {
-    
-    public function itPassesTheCurrentUriToThePresenter() {
-        $expected_uri = urlencode('/plugins/agiledashboard/?blabla');
-        $request      = mock('Codendi_Request');
-        
-        stub($request)->getEncodedUri()->returns($expected_uri);
-        stub($request)->getCurrentUser()->returns(mock('User'));
-        
-        $planning_factory = mock('PlanningFactory');
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        $tracker_factory  = mock('TrackerFactory');
-        
-        $controller = new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory, $tracker_factory);
-        
-        $presenter = $controller->getShowPresenter(mock('Planning'), mock('Planning_SearchContentView'), array(), mock('Tracker_Artifact'), $expected_uri);
-        $this->assertEqual($presenter->getCurrentUri(), $expected_uri);
-    }
-}
 ?>

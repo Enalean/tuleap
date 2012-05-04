@@ -32,7 +32,6 @@ class Planning_ShowPresenter {
     private $artifact;
     private $content_view;
     private $current_user;
-    private $current_uri;
     
     /**
      * @var Planning
@@ -43,9 +42,8 @@ class Planning_ShowPresenter {
     public function __construct(Planning $planning,
                                 Tracker_CrossSearch_SearchContentView $content_view,
                                 array $artifacts_to_select,
-                                Tracker_Artifact $artifact, 
+                                Tracker_Artifact $artifact = null, 
                                 User $user,
-                                $current_uri,
                                 $planning_redirect_parameter) {
         
         $this->planning                    = $planning;
@@ -53,7 +51,6 @@ class Planning_ShowPresenter {
         $this->artifacts_to_select         = $artifacts_to_select;
         $this->content_view                = $content_view;
         $this->current_user                = $user;
-        $this->current_uri                 = $current_uri;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
     
@@ -199,13 +196,6 @@ class Planning_ShowPresenter {
             return false;
         }
         return '<div class="feedback_warning">'. $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field') .'</div>';
-    }
-    
-    /**
-     * @return string
-     */
-    public function getCurrentUri() {
-        return $this->current_uri;
     }
 
     /**

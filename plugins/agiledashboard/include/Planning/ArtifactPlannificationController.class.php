@@ -45,27 +45,8 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
         $this->current_user     = $request->getCurrentUser();
-        $this->current_uri      = $request->getEncodedUri();
     }
 
-    public function getShowPresenter(Planning $planning,
-                                     Tracker_CrossSearch_SearchContentView $content_view,
-                                     array $artifacts_to_select,
-                                     Tracker_Artifact $artifact = null) {
-        
-        $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
-        
-        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->current_user, $this->current_uri, $planning_redirect_parameter);
-    }
-    
-    private function getPlanningRedirectParameter(Planning $planning) {
-        $planning_redirect_parameter = 'planning['. (int)$planning->getId() .']=';
-        if ($this->artifact) {
-            $planning_redirect_parameter .= $this->artifact->getId();
-        }
-        return $planning_redirect_parameter;
-    }
-    
     public function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning            = $this->getPlanning();
         $project_id          = $this->request->get('group_id');
@@ -78,6 +59,24 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $this->render('show', $presenter);
     }
 
+    public function getShowPresenter(Planning $planning,
+                                     Tracker_CrossSearch_SearchContentView $content_view,
+                                     array $artifacts_to_select,
+                                     Tracker_Artifact $artifact = null) {
+        
+        $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
+        
+        return new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->current_user, $planning_redirect_parameter);
+    }
+    
+    private function getPlanningRedirectParameter(Planning $planning) {
+        $planning_redirect_parameter = 'planning['. (int)$planning->getId() .']=';
+        if ($this->artifact) {
+            $planning_redirect_parameter .= $this->artifact->getId();
+        }
+        return $planning_redirect_parameter;
+    }
+    
     private function getCrossSearchQuery() {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
