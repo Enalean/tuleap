@@ -70,7 +70,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
     
-    protected function getAPlanning() {
+    protected function getAPresenter() {
         return new Planning_ShowPresenter(
             $this->planning,
             $this->content_view,
@@ -139,7 +139,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
 
         
-        $presenter = $this->getAPlanning();
+        $presenter = $this->getAPresenter();
         
         $node33 = $this->getATreeNode(33);
         $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
@@ -166,7 +166,7 @@ class Planning_ShowPresenterTest extends TuleapTestCase {
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
     
     
-        $presenter = $this->getAPlanning();
+        $presenter = $this->getAPresenter();
     
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));
