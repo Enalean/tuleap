@@ -135,6 +135,7 @@ class ProjectQuota {
             $project = $pm->getProjectFromAutocompleter($project);
             if ($project) {
                 if ($this->dao->addException($project->getGroupID(), null, $quota, null)) {
+                    // TODO: Add entry in project history
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
@@ -157,6 +158,7 @@ class ProjectQuota {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'nothing_to_delete'));
         } else {
             if ($this->dao->deleteCustomQuota($projects)) {
+                // TODO: Add entry in project history
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array(join(', ', $projects))));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
