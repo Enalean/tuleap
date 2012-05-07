@@ -50,7 +50,7 @@ class ProjectQuota {
         $output .= '<form method="post" >';
         $output .= '<tr><td colspan="2"><b>'.$GLOBALS['Language']->getText('plugin_statistics', 'set_quota').'</b></td></tr>';
         $output .= '<tr>';
-        $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').'</td><td><input name="project" /></td>';
+        $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').'</td><td><input id="project" name="project" /></td>';
         $output .= '</tr>';
         $output .= '<tr>';
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</td><td><input name="quota" /></td>';
@@ -61,6 +61,8 @@ class ProjectQuota {
         $output .= '</tr>';
         $output .= '</form>';
         $output .= '</table>';
+        $js = "new ProjectAutoCompleter('project', '".util_get_dir_image_theme()."');";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         return $output;
     }
 
