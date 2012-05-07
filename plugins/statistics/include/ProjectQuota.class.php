@@ -33,7 +33,7 @@ class ProjectQuota {
         $output = '';
         $output .= html_build_list_table_top($titles);
         $i = 0;
-        $output .= '<form>';
+        $output .= '<form method="post" >';
         $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
         $output .= '<td>Project1</td><td>10 GB</td><td><input type="checkbox" name="delete_quota[]" value="Project1" /></td>';
         $output .= '</tr>';
@@ -47,7 +47,7 @@ class ProjectQuota {
         $output .= '</form>';
         $output .= '</table>';
         $output .= '<table>';
-        $output .= '<form>';
+        $output .= '<form method="post" >';
         $output .= '<tr><td colspan="2"><b>'.$GLOBALS['Language']->getText('plugin_statistics', 'set_quota').'</b></td></tr>';
         $output .= '<tr>';
         $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').'</td><td><input name="project" /></td>';
@@ -74,7 +74,6 @@ class ProjectQuota {
     public function handleRequest($request) {
         // TODO: i18n in feddback messages
         $validAction = new Valid_WhiteList('action', array('add', 'delete'));
-        $validAction->required();
         if($request->valid($validAction)) {
             $action = $request->get('action');
             switch ($action) {

@@ -291,8 +291,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     public function getTotalProjectSize($groupId) {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
-        if ($this->_dum->getProperty('allowed_quota')) {
-            $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $this->_dum->getProperty('allowed_quota').'GiB')).'</p></div>';
+        // TODO: Get project custom allowed quota
+        $allowedQuota = $this->_dum->getProperty('allowed_quota');
+        if ($allowedQuota) {
+            $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $allowedQuota.'GiB')).'</p></div>';
         } else {
             $html = '<LABEL><b>';
             $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
