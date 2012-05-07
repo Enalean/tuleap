@@ -31,7 +31,7 @@ class ProjectQuota {
      * @return Void
      */
     public function __construct() {
-        //$this->dao = new Statistics_ProjectQuotaDao();
+        $this->dao = new Statistics_ProjectQuotaDao();
     }
 
     /**
@@ -41,7 +41,7 @@ class ProjectQuota {
      */
     public function displayProjectQuota() {
         $output = '';
-        //$res    = $this->dao->getProjectsCustomQuota();
+        $res    = $this->dao->getProjectsCustomQuota();
         if ($res && !$res->isError()) {
             $i      = 0;
             $titles = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('global', 'delete'));

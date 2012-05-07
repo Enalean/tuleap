@@ -78,5 +78,19 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
                                             )";
         return $this->update($query);
     }
+
+    /**
+     * List all projects having custom quota
+     *
+     * @return DataAccessResult
+     */
+    public function getProjectsCustomQuota() {
+        $sql = "SELECT q.".self::GROUP_ID.", g.group_name AS project, q.".self::REQUEST_SIZE."
+                FROM ".$this->getTable()." q
+                JOIN groups g ON (g.group_id = q.".self::GROUP_ID.")";
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>
