@@ -61,9 +61,9 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
     /**
      * Call getCriteria on this criteria_builder 
      * 
-     * @param User 						$user			 	an user
-     * @param Project 					$project			a project
-     * @param Tracker_Report 			$report				a tracker report
+     * @param User                      $user			 	an user
+     * @param Project                   $project			a project
+     * @param Tracker_Report            $report				a tracker report
      * @param Tracker_CrossSearch_Query $cross_search_query a cross search query
      * 
      * @return array of Tracker_Report_Criteria

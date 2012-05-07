@@ -45,7 +45,7 @@ class Tracker_CrossSearch_SearchController {
     public function __construct(Codendi_Request                 $request,
                                 ProjectManager                  $project_manager, 
                                 Layout                          $layout,
-                                Tracker_CrossSearch_ViewBuilder $view_builder) {
+                                Tracker_CrossSearch_SearchViewBuilder $view_builder) {
         
         $this->request         = $request;
         $this->project_manager = $project_manager;

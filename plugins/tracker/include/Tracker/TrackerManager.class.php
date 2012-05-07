@@ -29,7 +29,7 @@ require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
-require_once('CrossSearch/ViewBuilder.class.php');
+require_once('CrossSearch/SearchViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
 require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
@@ -807,7 +807,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $art_link_field_ids      = $this->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
         $criteria_builder        = $this->getCriteriaBuilder($user, $planning_trackers);
         
-        return new Tracker_CrossSearch_ViewBuilder(
+        return new Tracker_CrossSearch_SearchViewBuilder(
             $form_element_factory, 
             $this->getTrackerFactory(), 
             $this->getCrossSearch($art_link_field_ids), 

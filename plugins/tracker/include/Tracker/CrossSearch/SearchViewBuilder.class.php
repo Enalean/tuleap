@@ -25,7 +25,7 @@ require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
 require_once 'AbstractViewBuilder.class.php';
 
-class Tracker_CrossSearch_ViewBuilder extends Tracker_CrossSearch_AbstractViewBuilder {
+class Tracker_CrossSearch_SearchViewBuilder extends Tracker_CrossSearch_AbstractViewBuilder {
 
     /**
      * @var TrackerFactory
