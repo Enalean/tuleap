@@ -83,11 +83,15 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
      */
     public function plannedArtifactsTree($child_depth = 1) {
         $root_node = null;
-        if ($this->selected_artifact) {
+        if ($this->canAccessPlannedItem()) {
             $root_node = $this->getTreeNode($child_depth);
             Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
         }
         return $root_node;
+    }
+    
+    private function canAccessPlannedItem() {
+        return $this->artifact && $this->artifact->getTracker()->userCanView($this->current_user);
     }
     
     /**

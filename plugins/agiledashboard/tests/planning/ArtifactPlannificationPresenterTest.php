@@ -22,10 +22,28 @@ require_once 'common/user/User.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
+require_once TRACKER_BASE_DIR.'/../tests/Test_Artifact_Builder.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationPresenter.class.php';
 
-class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
+abstract class Planning_ShowPresenter_Common extends TuleapTestCase {
+
+    protected function getAnArtifact($artifact_id, $children = array(), $tracker = null) {
+        if (!$tracker) {
+            $tracker = stub('Tracker')->userCanView()->returns(true);
+        }
+        
+        $artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns($children);
+        stub($artifact)->getId()->returns($artifact_id);
+        stub($artifact)->getTitle()->returns('Artifact ' . $artifact_id);
+        stub($artifact)->fetchDirectLinkToArtifact()->returns('');
+        stub($artifact)->getTracker()->returns($tracker);
+        return $artifact;
+    }
+
+}
+
+class Planning_ShowPresenterTest extends Planning_ShowPresenter_Common {
     
     protected $user;
     
@@ -98,16 +116,7 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         }
         return $node;
     }
-    
-    protected function getAnArtifact($artifact_id, $children = array()) {
-        $artifact = mock('Tracker_Artifact');
-        stub($artifact)->getUniqueLinkedArtifacts()->returns($children);
-        stub($artifact)->getId()->returns($artifact_id);
-        stub($artifact)->getTitle()->returns('Artifact '.$artifact_id);
-        stub($artifact)->fetchDirectLinkToArtifact()->returns('');
-        return $artifact;
-    }
-    
+
     protected function assertEqualTreeNodes($node1, $node2) {
         $this->assertEqual($node1->getData(), $node2->getData());
         $this->assertEqual($node1->getId(), $node2->getId());
@@ -175,4 +184,35 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $this->assertEqualTreeNodes($node_parent, $result);
     }
 }
+
+class Planning_ShowPresenter_AssertPermissionsTest extends Planning_ShowPresenter_Common {
+    private $sprint_artifact;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user                = mock('User');
+        $this->planning            = mock('Planning');
+        $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
+        $this->artifacts_to_select = array();
+        $this->sprint_artifact     = null;
+
+        $this->presenter = new Planning_ShowPresenter(
+                        $this->planning,
+                        $this->content_view,
+                        $this->artifacts_to_select,
+                        $this->sprint_artifact,
+                        $this->user,
+                        ''
+        );
+    }
+
+    public function itDisplaysDestinationOnlyIfUserCanAccessTheTracker() {
+        $sprint_tracker            = stub('Tracker')->userCanView()->returns(false);
+        
+        $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
+
+        $this->assertNull($this->presenter->getDestination());
+    }
+}
+
 ?>

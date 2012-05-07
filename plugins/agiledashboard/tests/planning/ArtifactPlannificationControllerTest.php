@@ -228,6 +228,8 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
         stub($field)->userCanUpdate()->returns(true);
         $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
         stub($artifact)->getAnArtifactLinkField()->returns($field);
+        $tracker = stub('Tracker')->userCanView()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
         return $artifact;
     }
     
@@ -238,6 +240,11 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('getId', $id);
         $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
         $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
+        $artifact->setReturnValue('userCanView', true);
+        
+        $tracker = stub('Tracker')->userCanView()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
+        
         return $artifact;
     }
     
@@ -258,9 +265,9 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
             $open_artifacts[] = $artifact;
         }
         $factory->setReturnValue(
-            'getOpenArtifactsByTrackerId', 
+            'getOpenArtifactsByTrackerIdUserCanView', 
             $open_artifacts, 
-            array($this->planning->getPlanningTrackerId()));
+            array(aUser()->build(), $this->planning->getPlanningTrackerId()));
         return $factory;
     }
     

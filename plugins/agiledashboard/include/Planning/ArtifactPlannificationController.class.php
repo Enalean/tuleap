@@ -45,7 +45,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
     public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
         $planning            = $this->getPlanning();
         $project_id          = $this->request->get('group_id');
-        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getPlanningTrackerId());
+        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($this->current_user, $planning->getPlanningTrackerId());
         $tracker_ids         = $planning->getBacklogTrackerIds();
         
         $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select, $planning);
