@@ -22,7 +22,7 @@
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
 
 /**
- * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
+ * This class builds the Planning_SearchContentView that is used to display the left column of the Planning
  */
 class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
     

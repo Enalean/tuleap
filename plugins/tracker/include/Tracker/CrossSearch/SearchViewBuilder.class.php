@@ -25,6 +25,11 @@ require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
 require_once 'ViewBuilder.class.php';
 
+/**
+ * Build Tracker_CrossSearch_SearchView object
+ * 
+ * @see Tracker_CrossSearch_SearchView for details on what it does 
+ */
 class Tracker_CrossSearch_SearchViewBuilder extends Tracker_CrossSearch_ViewBuilder {
 
     /**
@@ -33,7 +38,11 @@ class Tracker_CrossSearch_SearchViewBuilder extends Tracker_CrossSearch_ViewBuil
     private $tracker_factory;
     
 
-    public function __construct(Tracker_FormElementFactory $form_element_factory, TrackerFactory $tracker_factory, Tracker_CrossSearch_Search $search, Tracker_CrossSearch_CriteriaBuilder $criteria_builder) {
+    public function __construct(Tracker_FormElementFactory          $form_element_factory, 
+                                TrackerFactory                      $tracker_factory,
+                                Tracker_CrossSearch_Search          $search, 
+                                Tracker_CrossSearch_CriteriaBuilder $criteria_builder) {
+        
         parent::__construct($form_element_factory, $search, $criteria_builder);
         $this->tracker_factory = $tracker_factory;
     }
