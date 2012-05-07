@@ -29,7 +29,7 @@ class ProjectQuota {
      * @return ???
      */
     public function displayProjectQuota() {
-        $titles = array('Project', 'Quota', 'delete');
+        $titles = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('global', 'delete'));
         echo html_build_list_table_top($titles);
         $i = 0;
         echo '<form>';
@@ -46,12 +46,12 @@ class ProjectQuota {
         echo '</table>';
         echo '<table>';
         echo '<form>';
-        echo '<tr><td colspan="2"><b>Set custom quota for a project</b></td></tr>';
+        echo '<tr><td colspan="2"><b>'.$GLOBALS['Language']->getText('plugin_statistics', 'set_quota').'</b></td></tr>';
         echo '<tr>';
-        echo '<td>Project</td><td><input name="project" /></td>';
+        echo '<td>'.$GLOBALS['Language']->getText('global', 'Project').'</td><td><input name="project" /></td>';
         echo '</tr>';
         echo '<tr>';
-        echo '<td>Quota</td><td><input name="quota" /></td>';
+        echo '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</td><td><input name="quota" /></td>';
         echo '</tr>';
         echo '<tr>';
         echo '<td></td><td><input type="submit" /></td>';

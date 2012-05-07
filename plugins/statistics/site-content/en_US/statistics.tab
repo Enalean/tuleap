@@ -56,3 +56,5 @@ plugin_statistics	scm_repo_total	Total number of repositories containing commits
 
 plugin_statistics	quota_title	Project quota
 plugin_statistics	quota_description	Custom quota for each project
+plugin_statistics	quota	Quota
+plugin_statistics	set_quota	Set custom quota for a project
