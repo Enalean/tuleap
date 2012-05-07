@@ -51,6 +51,22 @@ class Tracker_CrossSearch_ViewBuilder extends Tracker_CrossSearch_AbstractViewBu
         $content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, Tracker_ArtifactFactory::instance(), $this->form_element_factory);
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
     }
+
+    /**
+     * @return Service
+     */
+    private function getService(Project $project) {
+        $service = $project->getService('plugin_tracker');
+        
+        if ($service) {
+            return $service;
+        } else {
+            $service_label = $GLOBALS['Language']->getText('plugin_tracker', 'title');
+            $error_message = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($service_label));
+            
+            throw new Tracker_CrossSearch_ServiceNotUsedException($error_message);
+        }
+    }
     
     public function getTrackersIds(array $trackers) {
         return array_map(array($this, 'getTrackerId'), $trackers);

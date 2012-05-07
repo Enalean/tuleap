@@ -72,23 +72,6 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
         return $this->criteria_builder->getCriteria($user, $project, $report, $cross_search_query);
     }
     
-    
-    /**
-     * @return Service
-     */
-    protected function getService(Project $project) {
-        $service = $project->getService('plugin_tracker');
-        
-        if ($service) {
-            return $service;
-        } else {
-            $service_label = $GLOBALS['Language']->getText('plugin_tracker', 'title');
-            $error_message = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($service_label));
-            
-            throw new Tracker_CrossSearch_ServiceNotUsedException($error_message);
-        }
-    }
-    
     protected function getReport(User $user) {
         $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
         $is_query_displayed = Toggler::shouldBeDisplayed($user, 'tracker_report_query_0', true);
