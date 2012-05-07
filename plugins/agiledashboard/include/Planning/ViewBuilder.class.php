@@ -20,25 +20,31 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/AbstractViewBuilder.class.php';
+
+/**
+ * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
+ */
 class Planning_ViewBuilder extends Tracker_CrossSearch_AbstractViewBuilder {
-    public function buildPlanningView(  User $user, 
-                                        Project $project,
-                                        Tracker_CrossSearch_Query $cross_search_query, 
-                                        array $excluded_artifact_ids, 
-                                        array $tracker_ids,
-                                        Planning $planning,
-                                        $planning_redirect_parameter) {
+    
+    public function build(User $user, 
+                          Project $project,
+                          Tracker_CrossSearch_Query $cross_search_query, 
+                          array $excluded_artifact_ids, 
+                          array $tracker_ids,
+                          Planning $planning,
+                          $planning_redirect_parameter) {
+    
         $report    = $this->getReport($user);
         $criteria  = $this->getCriteria($user, $project, $report, $cross_search_query);
         $artifacts = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
         
-        return new Planning_SearchContentView(  $report, 
-                                                $criteria, 
-                                                $artifacts, 
-                                                Tracker_ArtifactFactory::instance(), 
-                                                $this->form_element_factory,
-                                                $planning,
-                                                $planning_redirect_parameter);        
+        return new Planning_SearchContentView($report, 
+                                              $criteria, 
+                                              $artifacts, 
+                                              Tracker_ArtifactFactory::instance(), 
+                                              $this->form_element_factory,
+                                              $planning,
+                                              $planning_redirect_parameter);        
     }
     
     

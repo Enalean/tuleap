@@ -85,7 +85,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $cross_search_query    = $this->getCrossSearchQuery();
 
         
-        $view = $view_builder->buildPlanningView($this->getCurrentUser(), 
+        $view = $view_builder->build($this->getCurrentUser(), 
                                                  $project, 
                                                  $cross_search_query, 
                                                  $excluded_artifact_ids, 

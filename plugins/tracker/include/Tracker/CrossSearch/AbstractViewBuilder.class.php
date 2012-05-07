@@ -24,7 +24,12 @@ require_once 'SemanticStatusReportField.class.php';
 require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
 
+
+/**
+ * Base class for building view of type cross tracker search 
+ */
 abstract class Tracker_CrossSearch_AbstractViewBuilder {
+
     /**
      * @var Tracker_FormElementFactory
      */
@@ -34,7 +39,6 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
      * @var Tracker_CrossSearch_Search
      */
     private $search;
-
 
     /**
      * @var Tracker_CrossSearch_CriteriaBuilder
@@ -90,10 +94,10 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
         $is_query_displayed = Toggler::shouldBeDisplayed($user, 'tracker_report_query_0', true);
         
         $report_id = $description = $current_renderer_id = $parent_report_id
-            = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
-            = 0;
+                   = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
+                   = 0;
         
-        $report = new Tracker_Report($report_id, 
+        return new Tracker_Report($report_id, 
                                      $name, 
                                      $description, 
                                      $current_renderer_id, 
@@ -104,7 +108,6 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
                                      $is_query_displayed, 
                                      $updated_by, 
                                      $updated_at);
-        return $report;
     }
     
 }
