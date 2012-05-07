@@ -63,5 +63,7 @@ plugin_statistics	invalid_project	Invalid project
 plugin_statistics	invalid_quota	Invalid quota
 plugin_statistics	nothing_to_delete	Nothing to delete
 plugin_statistics	delete_error	An error occured when deleting entries
+plugin_statistics	add_error	Anerror occured when adding the entry
+plugin_statistics	no_project	Project not found
 plugin_statistics	quota_added	Quota for project "$1" is now $2 GB
 plugin_statistics	quota_deleted	Quota deleted for $1

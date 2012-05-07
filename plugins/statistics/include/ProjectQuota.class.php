@@ -84,7 +84,7 @@ class ProjectQuota {
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return ???
+     * @return Void
      */
     public function handleRequest($request) {
         $validAction = new Valid_WhiteList('action', array('add', 'delete'));
@@ -120,10 +120,10 @@ class ProjectQuota {
     /**
      * Add custom quota for a project
      *
-     * @param Project $project Project for which quota will be customized
+     * @param String  $project Project for which quota will be customized
      * @param Integer $quota   Quota to be set for the project
      *
-     * @return ???
+     * @return Void
      */
     public function addQuota($project, $quota) {
         if (empty($project)) {
@@ -131,7 +131,17 @@ class ProjectQuota {
         } elseif (empty($quota)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project, $quota)));
+            $pm = ProjectManager::instance();
+            $project = $pm->getProjectFromAutocompleter($project);
+            if ($project) {
+                if ($this->dao->addException($project->getGroupID(), null, $quota, null)) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project, $quota)));
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
+                }
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'no_project'));
+            }
         }
     }
 
@@ -140,7 +150,7 @@ class ProjectQuota {
      *
      * @param Array $projects List of projects for which custom quota will be deleted
      *
-     * @return ???
+     * @return Void
      */
     public function deleteCustomQuota($projects) {
         if (empty($projects)) {

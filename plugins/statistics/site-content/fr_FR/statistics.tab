@@ -63,5 +63,7 @@ plugin_statistics	invalid_project	Projet invalide
 plugin_statistics	invalid_quota	Quota invalide
 plugin_statistics	nothing_to_delete	Rien a supprimer
 plugin_statistics	delete_error	Une erreur est survenue lors de la suppression
+plugin_statistics	add_error	Une erreur est survenue lors de l'ajout
+plugin_statistics	no_project	Projet non trouvé
 plugin_statistics	quota_added	Le quota pour le projet "$1" est maintenant $2 GB
 plugin_statistics	quota_deleted	Quota supprimé pour $1
