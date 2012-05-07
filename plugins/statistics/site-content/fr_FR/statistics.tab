@@ -53,3 +53,6 @@ plugin_statistics	scm_cvs_commit_project	Nombre total de projets avec des commit
 plugin_statistics	scm_cvs_commit_user	Nombre total d'utilisateurs avec des commits CVS
 plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un commit
 plugin_statistics	scm_repo_total	Nombre total des dépôts contenant au moins un commit
+
+plugin_statistics	quota_title	Quota par projet
+plugin_statistics	quota_description	quota personnalisé par projet
