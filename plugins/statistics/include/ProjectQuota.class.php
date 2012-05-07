@@ -159,7 +159,8 @@ class ProjectQuota {
         } else {
             if ($this->dao->deleteCustomQuota($projects)) {
                 // TODO: Add entry in project history
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array(join(', ', $projects))));
+                // TODO: put project name in feedback not project id
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', array(join(', ', $projects))));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
             }
