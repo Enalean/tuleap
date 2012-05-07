@@ -23,8 +23,7 @@
 class Statistics_ProjectQuotaDao extends DataAccessObject {
 
     protected $tableName       = 'plugin_statistics_disk_quota_exception';
-    const REQUEST_ID           = 'request_id'; //PK
-    const GROUP_ID             = 'group_id';
+    const GROUP_ID             = 'group_id'; //PK
     const REQUESTER_ID         = 'requester_id';
     const REQUEST_SIZE         = 'requested_size';
     const EXCEPTION_MOTIVATION = 'exception_motivation';
@@ -62,20 +61,20 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
         $requestStatus       = self::REQUEST_STATUS_NEW;
         $requestDate         = time();
-        $query               = "INSERT INTO ".$this->getTable()." (".self::GROUP_ID.",
-                                            ".self::REQUESTER_ID.",
-                                            ".self::REQUEST_SIZE.",
-                                            ".self::EXCEPTION_MOTIVATION.",
-                                            ".self::REQUEST_STATUS.",
-                                            ".self::REQUEST_DATE."
-                                            ) values (
-                                            $groupId,
-                                            $requesterId,
-                                            $requestedSize,
-                                            $exceptionMotivation,
-                                            $requestStatus,
-                                            $requestDate
-                                            )";
+        $query               = "REPLACE INTO ".$this->getTable()." (".self::GROUP_ID.",
+                                             ".self::REQUESTER_ID.",
+                                             ".self::REQUEST_SIZE.",
+                                             ".self::EXCEPTION_MOTIVATION.",
+                                             ".self::REQUEST_STATUS.",
+                                             ".self::REQUEST_DATE."
+                                             ) values (
+                                             $groupId,
+                                             $requesterId,
+                                             $requestedSize,
+                                             $exceptionMotivation,
+                                             $requestStatus,
+                                             $requestDate
+                                             )";
         return $this->update($query);
     }
 
@@ -105,5 +104,4 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     }
 
 }
-
 ?>

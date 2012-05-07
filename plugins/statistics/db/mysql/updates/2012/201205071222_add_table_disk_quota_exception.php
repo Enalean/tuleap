@@ -33,14 +33,13 @@ EOT;
 
     public function up() {
         $sql = "CREATE TABLE IF NOT EXISTS plugin_statistics_disk_quota_exception (
-                   request_id int(11) unsigned NOT NULL AUTO_INCREMENT,
-                   group_id int(11) NOT NULL default '0',
+                   group_id int(11) NOT NULL,
                    requester_id int(11) NOT NULL default '0',
                    requested_size int(11) NOT NULL,
                    exception_motivation text,
                    request_status varchar(255) NOT NULL,
                    request_date int(11) unsigned NOT NULL default '0',
-                   PRIMARY KEY (request_id)
+                   PRIMARY KEY (group_id)
                 );";
         $this->db->createTable('plugin_statistics_disk_quota_exception', $sql);
     }
