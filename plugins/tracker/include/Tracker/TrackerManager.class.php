@@ -790,21 +790,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $search;
     }
     
-    public function getArtifactLinkFieldsOfTrackers(Tracker_FormElementFactory $formElementFactory, array $planning_trackers) {
-        $art_link_field_ids = array();
-        foreach ($planning_trackers as $tracker) {
-            $fields = $formElementFactory->getUsedArtifactLinkFields($tracker);
-            if (count($fields)) { 
-                $art_link_field_ids[] = $fields[0]->getId();
-            }
-        }
-        return $art_link_field_ids;
-    }
-    
     public function getCrossSearchViewBuilder($group_id, User $user) {
         $form_element_factory    = Tracker_FormElementFactory::instance();
         $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
-        $art_link_field_ids      = $this->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
+        $art_link_field_ids      = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
         $criteria_builder        = $this->getCriteriaBuilder($user, $planning_trackers);
         
         return new Tracker_CrossSearch_SearchViewBuilder(
@@ -835,13 +824,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $trackers;
     }
 
-    public function getCriteriaBuilder($user, $planning_trackers) {
+    public function getCriteriaBuilder($user, $trackers) {
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
         $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
         $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
 
-        return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $planning_trackers);
+        return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
 
     }
 }

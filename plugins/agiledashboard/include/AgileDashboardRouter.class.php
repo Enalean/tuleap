@@ -128,7 +128,7 @@ class AgileDashboardRouter {
         
         $object_god           = new TrackerManager();
         $planning_trackers    = $this->getPlanningFactory()->getPlanningTrackers($group_id, $user);
-        $art_link_field_ids   = $object_god->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
+        $art_link_field_ids   = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
         
         return new Planning_ViewBuilder(
             $form_element_factory, 
@@ -150,7 +150,6 @@ class AgileDashboardRouter {
 
     protected function getPlanningFactory() {
         return new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
-
     }
 
     protected function getArtifactFactory() {
