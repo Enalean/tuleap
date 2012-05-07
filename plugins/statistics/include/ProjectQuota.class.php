@@ -35,10 +35,10 @@ class ProjectQuota {
         $i = 0;
         $output .= '<form>';
         $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-        $output .= '<td>Project1</td><td>10 GB</td><td><input type="checkbox" /></td>';
+        $output .= '<td>Project1</td><td>10 GB</td><td><input type="checkbox" name="delete_quota[]" value="Project1" /></td>';
         $output .= '</tr>';
         $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-        $output .= '<td>Project2</td><td>20 GB</td><td><input type="checkbox" /></td>';
+        $output .= '<td>Project2</td><td>20 GB</td><td><input type="checkbox" name="delete_quota[]" value="Project2" /></td>';
         $output .= '</tr>';
         $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
         $output .= '<input type="hidden" name ="action" value="delete" />';
@@ -72,21 +72,35 @@ class ProjectQuota {
      * @return ???
      */
     public function handleRequest($request) {
-        // TODO: validate request elements
-        $action = $request->get('action');
-        switch ($action) {
-            case 'add' :
-                $project = $request->get('project');
-                $quota   = $request->get('quota');
-                $this->addQuota($project, $quota);
-                break;
-            case 'delete' :
-                // TODO: prepare the list of projects
-                $projects = array('project1', 'project2');
-                $this->deleteCustomQuota($projects);
-                break;
-            default :
-                break;
+        // TODO: i18n in feddback messages
+        $validAction = new Valid_WhiteList('action', array('add', 'delete'));
+        $validAction->required();
+        if($request->valid($validAction)) {
+            $action = $request->get('action');
+            switch ($action) {
+                case 'add' :
+                    $validProject = new Valid_String('project');
+                    $validProject->required();
+                    if($request->valid($validProject)) {
+                        $project = $request->get('project');
+                    }
+                    $validQuota = new Valid_UInt('quota');
+                    $validQuota->required();
+                    if($request->valid($validQuota)) {
+                        $quota   = $request->get('quota');
+                    }
+                    $this->addQuota($project, $quota);
+                    break;
+                case 'delete' :
+                    // TODO: prepare the list of projects
+                    $projects = $request->get('delete_quota');
+                    $this->deleteCustomQuota($projects);
+                    break;
+                default :
+                    break;
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'Invalid action');
         }
     }
 
@@ -99,7 +113,13 @@ class ProjectQuota {
      * @return ???
      */
     public function addQuota($project, $quota) {
-        $GLOBALS['Response']->addFeedback('info', 'Quota for project "'.$project.'" is now '.$quota.' GB');
+        if (empty($project)) {
+            $GLOBALS['Response']->addFeedback('error', 'No project');
+        } elseif (empty($quota)) {
+            $GLOBALS['Response']->addFeedback('error', 'No quota');
+        } else {
+            $GLOBALS['Response']->addFeedback('info', 'Quota for project "'.$project.'" is now '.$quota.' GB');
+        }
     }
 
     /**
@@ -110,7 +130,11 @@ class ProjectQuota {
      * @return ???
      */
     public function deleteCustomQuota($projects) {
-        $GLOBALS['Response']->addFeedback('info', 'Custom quota deleted for '.join(', ', $projects));
+        if (empty($projects)) {
+            $GLOBALS['Response']->addFeedback('error', 'Nothing to delete');
+        } else {
+            $GLOBALS['Response']->addFeedback('info', 'Custom quota deleted for '.join(', ', $projects));
+        }
     }
 
 }
