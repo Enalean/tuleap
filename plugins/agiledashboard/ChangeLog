@@ -1,3 +1,6 @@
+Version 0.18 - Tuleap 5.1
+    * Clean-up refactoring of view builder
+
 Version 0.17 - Tuleap 5.1
     * Allow to define a name for each planning pane (Backlog/Plan)
     * Refactoring of view builder + rename to make code a little bit more readable.

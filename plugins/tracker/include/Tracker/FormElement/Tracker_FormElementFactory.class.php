@@ -1311,6 +1311,17 @@ class Tracker_FormElementFactory {
         }
     }
 
+    public function getArtifactLinkFieldsOfTrackers(array $trackers) {
+        $art_link_field_ids = array();
+        foreach ($trackers as $tracker) {
+            $fields = $this->getUsedArtifactLinkFields($tracker);
+            if (count($fields)) { 
+                $art_link_field_ids[] = $fields[0]->getId();
+            }
+        }
+        return $art_link_field_ids;
+    }
+    
 
 }
 ?>

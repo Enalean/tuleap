@@ -46,7 +46,7 @@ class ViewBuilderTest extends TuleapTestCase {
         
         $builder  = new Planning_ViewBuilder($this->formElementFactory, $this->search, $this->criteria_builder);
         $planning = aPlanning()->build();
-        $view     = $builder->buildPlanningView($user, $project, $cross_search_criteria, array(), $tracker_ids, $planning, '');
+        $view     = $builder->build($user, $project, $cross_search_criteria, array(), $tracker_ids, $planning, '');
         
         $this->assertIsA($view, 'Planning_SearchContentView');
     }

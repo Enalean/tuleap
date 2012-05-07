@@ -45,7 +45,7 @@ class Tracker_CrossSearch_SearchController {
     public function __construct(Codendi_Request                 $request,
                                 ProjectManager                  $project_manager, 
                                 Layout                          $layout,
-                                Tracker_CrossSearch_ViewBuilder $view_builder) {
+                                Tracker_CrossSearch_SearchViewBuilder $view_builder) {
         
         $this->request         = $request;
         $this->project_manager = $project_manager;
@@ -59,7 +59,7 @@ class Tracker_CrossSearch_SearchController {
             
             $project_id            = $this->request->get('group_id');
             $project               = $this->getProject($project_id, $this->project_manager);
-            $view                  = $this->view_builder->buildView($user, $project, $cross_search_criteria);
+            $view                  = $this->view_builder->build($user, $project, $cross_search_criteria);
             $view->render($user);
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {

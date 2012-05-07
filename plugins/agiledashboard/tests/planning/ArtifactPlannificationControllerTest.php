@@ -197,8 +197,8 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
             $this->planning, 
             '*' // TODO an assert on planning_redirect_param
         );
-        $view_builder->expectOnce('buildPlanningView', $expected_arguments);
-        $view_builder->setReturnValue('buildPlanningView', $content_view);
+        $view_builder->expectOnce('build', $expected_arguments);
+        $view_builder->setReturnValue('build', $content_view);
 
         return $view_builder;
     }
@@ -303,7 +303,7 @@ class Planning_ArtifactPlannificationControllerTest extends TuleapTestCase {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockPlanning_ViewBuilder();
-        $view_builder->setReturnValue('buildPlanningView', $content_view);
+        $view_builder->setReturnValue('build', $content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, array(), new MockTracker_CrossSearch_Search());
     }
     

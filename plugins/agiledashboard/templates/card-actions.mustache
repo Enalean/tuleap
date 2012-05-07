@@ -1,25 +1,19 @@
 <div class="card-actions">
-    <a id="card-{{id}}-actions-menu_handle" href="{{uri}}">{{xref}} <span class="caret"></span></a>
-    <table class="dropdown_panel" id="card-{{id}}-actions-menu">
-        <tbody>
-            <tr>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{uri}}&{{planning_redirect_parameter}}">{{editLabel}}</a>
-                            <hr />
-                        </li>
-                        {{#allowedChildrenTypes}}
-                            {{#userCanView}}
-                                <li>
-                                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
-                                </li>
-                            {{/userCanView}}
-                        {{/allowedChildrenTypes}}
-                    </ul>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="dropdown" id="card-{{id}}-actions-menu">
+        <a href="{{uri}}" data-target="#card-{{id}}-actions-menu" class="dropdown-toggle" data-toggle="dropdown">{{xref}} <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{uri}}&{{planning_redirect_parameter}}">{{editLabel}}</a>
+            </li>
+            <li class="divider"></li>
+            {{#allowedChildrenTypes}}
+                {{#userCanView}}
+                    <li>
+                        <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{artifact_id}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
+                    </li>
+                {{/userCanView}}
+            {{/allowedChildrenTypes}}
+        </ul>
+    </div>
 </div>
 
