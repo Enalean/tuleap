@@ -23,9 +23,9 @@ require_once 'Query.class.php';
 require_once 'SemanticStatusReportField.class.php';
 require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
-require_once 'AbstractViewBuilder.class.php';
+require_once 'ViewBuilder.class.php';
 
-class Tracker_CrossSearch_SearchViewBuilder extends Tracker_CrossSearch_AbstractViewBuilder {
+class Tracker_CrossSearch_SearchViewBuilder extends Tracker_CrossSearch_ViewBuilder {
 
     /**
      * @var TrackerFactory

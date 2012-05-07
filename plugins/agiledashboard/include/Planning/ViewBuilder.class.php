@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/AbstractViewBuilder.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
 
 /**
  * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
  */
-class Planning_ViewBuilder extends Tracker_CrossSearch_AbstractViewBuilder {
+class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
     
     public function build(User $user, 
                           Project $project,

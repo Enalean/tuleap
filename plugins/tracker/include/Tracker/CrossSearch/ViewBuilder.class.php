@@ -28,7 +28,7 @@ require_once 'CriteriaBuilder.class.php';
 /**
  * Base class for building view of type cross tracker search 
  */
-abstract class Tracker_CrossSearch_AbstractViewBuilder {
+abstract class Tracker_CrossSearch_ViewBuilder {
 
     /**
      * @var Tracker_FormElementFactory
@@ -54,7 +54,7 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
         $this->criteria_builder       = $criteria_builder;
     }
     
-    protected function getHierarchicallySortedArtifacts( User $user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids = array()) {
+    protected function getHierarchicallySortedArtifacts(User $user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids = array()) {
         return $this->search->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
     }
     
@@ -81,16 +81,16 @@ abstract class Tracker_CrossSearch_AbstractViewBuilder {
                    = 0;
         
         return new Tracker_Report($report_id, 
-                                     $name, 
-                                     $description, 
-                                     $current_renderer_id, 
-                                     $parent_report_id, 
-                                     $user_id, 
-                                     $is_default, 
-                                     $tracker_id, 
-                                     $is_query_displayed, 
-                                     $updated_by, 
-                                     $updated_at);
+                                  $name, 
+                                  $description, 
+                                  $current_renderer_id, 
+                                  $parent_report_id, 
+                                  $user_id, 
+                                  $is_default, 
+                                  $tracker_id, 
+                                  $is_query_displayed, 
+                                  $updated_by, 
+                                  $updated_at);
     }
     
 }
