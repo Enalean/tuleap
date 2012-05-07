@@ -83,15 +83,15 @@ class Git_Ci {
                 $selectBox    = '<select id="hudson_use_plugin_git_trigger" name="hudson_use_plugin_git_trigger">';
                 $selectBox    .= '<option>'.$GLOBALS['Language']->getText('global', 'none').'</option>';
                 foreach ($repositories as $repository) {
-                    $namaSpace = '';
+                    $nameSpace = '';
                     if (!empty($repository['repository_namespace'])) {
-                        $namaSpace = $repository['repository_namespace']."/";
+                        $nameSpace = $repository['repository_namespace']."/";
                     }
                     $selectBox .= '<option value="'.$repository['repository_id'].'" ';
                     if ($repositoryId == $repository['repository_id']) {
                         $selectBox .= 'selected="selected"';
                     }
-                    $selectBox .= '>'.$namaSpace.$repository['repository_name'].'</option>';
+                    $selectBox .= '>'.$nameSpace.$repository['repository_name'].'</option>';
                 }
                 $selectBox .= '</select>';
 
