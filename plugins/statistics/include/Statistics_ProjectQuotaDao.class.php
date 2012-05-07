@@ -22,7 +22,7 @@
 
 class Statistics_ProjectQuotaDao extends DataAccessObject {
 
-    protected $tableName       = 'disk_quota_exception';
+    protected $tableName       = 'plugin_statistics_disk_quota_exception';
     const REQUEST_ID           = 'request_id'; //PK
     const GROUP_ID             = 'group_id';
     const REQUESTER_ID         = 'requester_id';

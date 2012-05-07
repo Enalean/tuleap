@@ -32,22 +32,22 @@ EOT;
     }
 
     public function up() {
-        $sql = "CREATE TABLE IF NOT EXISTS disk_quota_exception (
+        $sql = "CREATE TABLE IF NOT EXISTS plugin_statistics_disk_quota_exception (
                    request_id int(11) unsigned NOT NULL AUTO_INCREMENT,
                    group_id int(11) NOT NULL default '0',
                    requester_id int(11) NOT NULL default '0',
                    requested_size int(11) NOT NULL,
-                   exception_motivation text NOT NULL default '',
+                   exception_motivation text,
                    request_status varchar(255) NOT NULL,
                    request_date int(11) unsigned NOT NULL default '0',
                    PRIMARY KEY (request_id)
                 );";
-        $this->db->createTable('disk_quota_exception', $sql);
+        $this->db->createTable('plugin_statistics_disk_quota_exception', $sql);
     }
 
     public function postUp() {
-        if (!$this->db->tableNameExists('disk_quota_exception')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('disk_quota_exception table is missing');
+        if (!$this->db->tableNameExists('plugin_statistics_disk_quota_exception')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_statistics_disk_quota_exception table is missing');
         }
     }
 
