@@ -58,3 +58,9 @@ plugin_statistics	quota_title	Quota par projet
 plugin_statistics	quota_description	Quota personnalisé par projet
 plugin_statistics	quota	Quota
 plugin_statistics	set_quota	Définir un quota personnalisé pour un projet
+plugin_statistics	invalid_action	Action invalide
+plugin_statistics	invalid_project	Projet invalide
+plugin_statistics	invalid_quota	Quota invalide
+plugin_statistics	delete_error	Rien a supprimer
+plugin_statistics	quota_added	Le quota pour le projet "$1" est maintenant $2 GB
+plugin_statistics	quota_deleted	Quota supprimé pour $1
