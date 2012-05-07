@@ -3,6 +3,13 @@ Version 5.1 (Not released yet)
    * AgileDashboard v0.14
    * Tracker v5.7.8
 
+   == Development ==
+   * jQuery support: Now Tuleap support jQuery as an alternative of
+   Prototypejs/Scriptaculous.
+   * Bootstrap support: Introduce dropdown plugin from Bootstrap to replace
+   our own implementation of dropdown panels. This improve compatibility with
+   Internet Explorer.
+
 Version 5.0.1 (Thursday, April 26th 2012)
    == Bug fix ==
    * Fix link to cli documentation in footer
