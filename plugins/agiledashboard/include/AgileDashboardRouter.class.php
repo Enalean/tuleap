@@ -122,10 +122,11 @@ class AgileDashboardRouter {
      */
     protected function getViewBuilder(Codendi_Request $request) {
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $object_god           = new TrackerManager();
         $group_id             = $request->get('group_id');
         $user                 = $request->getCurrentUser();
-        $planning_trackers    = $object_god->getPlanningTrackers($group_id, $user);
+        
+        $object_god           = new TrackerManager();
+        $planning_trackers    = $this->getPlanningFactory()->getPlanningTrackers($group_id, $user);
         $art_link_field_ids   = $object_god->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
         
         return new Planning_ViewBuilder(

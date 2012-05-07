@@ -825,21 +825,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      * @return Array of Integer
      */
-    public function getPlanningTrackers($group_id, User $user) {
+    private function getPlanningTrackers($group_id, User $user) {
         $trackers = array();
         @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
         if (class_exists('PlanningFactory')) {
-            $tracker_factory  = $this->getTrackerFactory();
-            $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
-            foreach ($planning_factory->getPlannings($user, $group_id) as $planning) {
-                $planning   = $planning_factory->getPlanning($planning->getId());
-                $tracker_id = $planning->getPlanningTrackerId();
-                if (!isset($trackers[$tracker_id])) {
-                    if ($tracker = $tracker_factory->getTrackerById($tracker_id)) {
-                        $trackers[$tracker_id] = $tracker;
-                    }
-                }
-            }
+            $planning_factory = new PlanningFactory(new PlanningDao(), $this->getTrackerFactory());
+            $trackers = $planning_factory->getPlanningTrackers($group_id, $user);
         }
         return $trackers;
     }
