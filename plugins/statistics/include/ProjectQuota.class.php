@@ -42,14 +42,14 @@ class ProjectQuota {
     public function displayProjectQuota() {
         $output = '';
         $res    = $this->dao->getProjectsCustomQuota();
-        if ($res && !$res->isError()) {
+        if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i      = 0;
             $titles = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('global', 'delete'));
             $output .= html_build_list_table_top($titles);
             $output .= '<form method="post" >';
             foreach ($res as $row) {
                 $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output .= '<td>'.$row['project'].'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output .= '<td>'.$row['project'].'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
                 $output .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
@@ -144,9 +144,13 @@ class ProjectQuota {
      */
     public function deleteCustomQuota($projects) {
         if (empty($projects)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'nothing_to_delete'));
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array(join(', ', $projects))));
+            if ($this->dao->deleteCustomQuota($projects)) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array(join(', ', $projects))));
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
+            }
         }
     }
 

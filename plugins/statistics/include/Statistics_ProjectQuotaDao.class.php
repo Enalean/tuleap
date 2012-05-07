@@ -91,6 +91,19 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Delete Custom quota for the given projects
+     *
+     * @param Array $projects List of Id of projects
+     *
+     * @return Boolean
+     */
+    public function deleteCustomQuota($projects) {
+        $sql = "DELETE FROM ".$this->getTable()."
+                WHERE ".self::GROUP_ID." IN (".join(', ', $projects).")";
+        return $this->update($sql);
+    }
+
 }
 
 ?>
