@@ -36,6 +36,11 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     const REQUEST_STATUS_APPROVED = 30;
     const REQUEST_STATUS_REJECTED = 40;
 
+    /**
+     * Get the dao table name
+     *
+     * @return String
+     */
     public function getTable() {
         return $this->tableName;
     }
@@ -43,10 +48,10 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     /**
      * This function add a disk quota exception in the database
      *
-     * @param Integer $groupId                    Id of the project we want to add excpetion for its disk quota
-     * @param Integer $requesterId             Id of the user that performed the request
-     * @param Integer $requestedSize          New disk size we want to apply as quota
-     * @param String   $exceptionMotivation A text that should justify a given exception request
+     * @param Integer $groupId             Id of the project we want to add excpetion for its disk quota
+     * @param Integer $requesterId         Id of the user that performed the request
+     * @param Integer $requestedSize       New disk size we want to apply as quota
+     * @param String  $exceptionMotivation A text that should justify a given exception request
      *
      * @return Boolean
      */
@@ -57,20 +62,20 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
         $requestStatus       = self::REQUEST_STATUS_NEW;
         $requestDate         = time();
-        $query         = "INSERT INTO ".$this->getTable()." (".self::GROUP_ID.",
-                                                      ".self::REQUESTER_ID.",
-                                                      ".self::REQUEST_SIZE.",
-                                                      ".self::EXCEPTION_MOTIVATION.",
-                                                      ".self::REQUEST_STATUS.",
-                                                      ".self::REQUEST_DATE."
-                                                      ) values (
-                                                      $groupId,
-                                                      $requesterId,
-                                                      $requestedSize,
-                                                      $exceptionMotivation,
-                                                      $requestStatus,
-                                                      $requestDate
-                                                      )";
+        $query               = "INSERT INTO ".$this->getTable()." (".self::GROUP_ID.",
+                                            ".self::REQUESTER_ID.",
+                                            ".self::REQUEST_SIZE.",
+                                            ".self::EXCEPTION_MOTIVATION.",
+                                            ".self::REQUEST_STATUS.",
+                                            ".self::REQUEST_DATE."
+                                            ) values (
+                                            $groupId,
+                                            $requesterId,
+                                            $requestedSize,
+                                            $exceptionMotivation,
+                                            $requestStatus,
+                                            $requestDate
+                                            )";
         return $this->update($query);
     }
 }
