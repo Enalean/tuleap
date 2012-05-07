@@ -19,10 +19,11 @@
 /**
  * DAO class for Project Quota
  */
+
 class Statistics_ProjectQuotaDao extends DataAccessObject {
 
-    protected $tableName = 'disk_quota_exception';
-    const REPOSITORY_ID        = 'request_id'; //PK
+    protected $tableName       = 'disk_quota_exception';
+    const REQUEST_ID           = 'request_id'; //PK
     const GROUP_ID             = 'group_id';
     const REQUESTER_ID         = 'requester_id';
     const REQUEST_SIZE         = 'requested_size';
@@ -30,21 +31,47 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     const REQUEST_STATUS       = 'request_status';
     const REQUEST_DATE         = 'request_date';
 
-    /**
-     * Constructor of the class
-     *
-     * @param DataAccess $da      Data access details
-     *
-     * @return void
-     */
-    function __construct(DataAccess $da) {
-        parent::__construct($da);
-    }
+    const REQUEST_STATUS_NEW      = 10;
+    const REQUEST_STATUS_ANALYZED = 20;
+    const REQUEST_STATUS_APPROVED = 30;
+    const REQUEST_STATUS_REJECTED = 40;
 
     public function getTable() {
         return $this->tableName;
     }
 
+    /**
+     * This function add a disk quota exception in the database
+     *
+     * @param Integer $groupId                    Id of the project we want to add excpetion for its disk quota
+     * @param Integer $requesterId             Id of the user that performed the request
+     * @param Integer $requestedSize          New disk size we want to apply as quota
+     * @param String   $exceptionMotivation A text that should justify a given exception request
+     *
+     * @return Boolean
+     */
+    public function addException($groupId, $requesterId, $requestedSize, $exceptionMotivation) {
+        $groupId             = $this->da->escapeInt($groupId);
+        $requesterId         = $this->da->escapeInt($requesterId);
+        $requestedSize       = $this->da->escapeInt($requestedSize);
+        $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
+        $requestStatus       = self::REQUEST_STATUS_NEW;
+        $requestDate         = time();
+        $query         = "INSERT INTO ".$this->getTable()." (".self::GROUP_ID.",
+                                                      ".self::REQUESTER_ID.",
+                                                      ".self::REQUEST_SIZE.",
+                                                      ".self::EXCEPTION_MOTIVATION.",
+                                                      ".self::REQUEST_STATUS.",
+                                                      ".self::REQUEST_DATE."
+                                                      ) values (
+                                                      $groupId,
+                                                      $requesterId,
+                                                      $requestedSize,
+                                                      $exceptionMotivation,
+                                                      $requestStatus,
+                                                      $requestDate
+                                                      )";
+        return $this->update($query);
+    }
 }
-
 ?>
