@@ -41,7 +41,7 @@ class Tracker_CrossSearch_ViewBuilder extends Tracker_CrossSearch_AbstractViewBu
     /**
      * @return Tracker_CrossSearch_SearchView 
      */
-    public function buildView(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query) {
+    public function build(User $user, Project $project, Tracker_CrossSearch_Query $cross_search_query) {
         $report       = $this->getReport($user);
         $service      = $this->getService($project);
         $criteria     = $this->getCriteria($user, $project, $report, $cross_search_query);

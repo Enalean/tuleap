@@ -71,7 +71,7 @@ class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
                                 ->forOpenItems()
                                 ->build();
 
-        $builder->buildView($user, $project, $cross_search_criteria);
+        $builder->build($user, $project, $cross_search_criteria);
     }
     
     public function _itReturnsCrossSearchViewIncludingTheContentView() {
@@ -82,7 +82,7 @@ class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
         $view_builder = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('buildContentView', 'getService'));
         
         $view_builder->expectOnce('buildContentView', array($user, $project, $cross_search_query));
-        $view_builder->buildView($user, $project, $cross_search_query);
+        $view_builder->build($user, $project, $cross_search_query);
     }
 }
 

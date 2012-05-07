@@ -88,7 +88,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->project->setReturnValue('getService', null, array('plugin_tracker'));
         $this->project->setReturnValue('getUnixName', 'coin');
 
-        $this->view_builder->throwOn('buildView', new Tracker_CrossSearch_ServiceNotUsedException());
+        $this->view_builder->throwOn('build', new Tracker_CrossSearch_ServiceNotUsedException());
         $controller = $this->getController();
 
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
@@ -102,8 +102,8 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $view->expectOnce('render');
                 
         $controller = $this->getController();        
-        $this->view_builder->setReturnValue('buildView', $view);
-        $this->view_builder->expectOnce('buildView', array($this->user, $this->project, $this->cross_search_criteria));
+        $this->view_builder->setReturnValue('build', $view);
+        $this->view_builder->expectOnce('build', array($this->user, $this->project, $this->cross_search_criteria));
         
         $controller->search($this->user);
     }
@@ -111,8 +111,8 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
         $no_criteria = aCrossSearchCriteria()->build();
         $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $this->view_builder->expectOnce('buildView', array($this->user, $this->project, $no_criteria));
-        $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
+        $this->view_builder->expectOnce('build', array($this->user, $this->project, $no_criteria));
+        $this->view_builder->setReturnValue('build', new MockTracker_CrossSearch_SearchView());
         $this->request = new Codendi_Request(array(
             'group_id' => '66',
         ));
