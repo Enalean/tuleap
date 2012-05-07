@@ -23,12 +23,9 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationPresenter.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/MilestonePresenter.class.php';
 
-class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
-    
-    protected $user;
-    
+class Planning_MilestonePresenterTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
@@ -70,12 +67,17 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
     
-    protected function getAPresenter() {
-        return new Planning_ArtifactPlanificationPresenter(
+    protected function getAPresenter(TreeNode $assigned_artifacts_tree = null) {
+        $milestone = new Planning_Milestone($this->planning->getGroupId(),
+                                            $this->planning,
+                                            $this->artifact,
+                                            $assigned_artifacts_tree);
+        
+        return new Planning_MilestonePresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,
-            $this->artifact,                                                                                                                                                        
+            $milestone,
             $this->user,
             'planning['. (int)$this->planning->getId() .']='
         );
@@ -137,16 +139,15 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
         
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
-
-        
-        $presenter = $this->getAPresenter();
         
         $node33 = $this->getATreeNode(33);
         $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node33, $node34, $node36));
+
+        $presenter = $this->getAPresenter($node_parent);
         
-        $result = $presenter->plannedArtifactsTree();
+        $result = $presenter->plannedArtifactsTree($node_parent);
         $this->assertEqualTreeNodes($node_parent, $result);
     }
     
@@ -164,12 +165,11 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
     
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
-    
-    
-        $presenter = $this->getAPresenter();
-    
+        
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));
+    
+        $presenter = $this->getAPresenter($node_parent);
     
         $result = $presenter->plannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);

@@ -23,7 +23,7 @@ require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.c
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
 require_once 'Planning/Controller.class.php';
-require_once 'Planning/ArtifactPlannificationController.class.php';
+require_once 'Planning/MilestoneController.class.php';
 require_once 'Planning/PlanningFactory.class.php';
 require_once 'Planning/ArtifactCreationController.class.php';
 require_once 'Planning/ViewBuilder.class.php';
@@ -99,11 +99,12 @@ class AgileDashboardRouter {
         return new Planning_Controller($request, $planning_factory);
     }
 
-    protected function buildArtifactPlannificationController(Codendi_Request $request) {
-        $artifact_factory = $this->getArtifactFactory();
-        $planning_factory = $this->getPlanningFactory();
+    protected function buildMilestoneController(Codendi_Request $request) {
+        $artifact_factory  = $this->getArtifactFactory();
+        $planning_factory  = $this->getPlanningFactory();
+        $milestone_factory = $this->getMilestoneFactory();
         
-        return new Planning_ArtifactPlannificationController($request, $artifact_factory, $planning_factory);
+        return new Planning_MilestoneController($request, $artifact_factory, $planning_factory, $milestone_factory);
     }
     
     protected function renderAction(MVC2_Controller $controller, $action_name, Codendi_Request $request, array $args = array()) {
@@ -141,7 +142,7 @@ class AgileDashboardRouter {
             $controller = new Planning_ArtifactCreationController($this->getPlanningFactory(), $request);
             $this->executeAction($controller, 'createArtifact');
         } else {
-            $controller = $this->buildArtifactPlannificationController($request);
+            $controller = $this->buildMilestoneController($request);
             $action_arguments = array($this->getViewBuilder($request), ProjectManager::instance());
             $this->renderAction($controller, 'show', $request, $action_arguments);
         }
@@ -154,6 +155,11 @@ class AgileDashboardRouter {
 
     protected function getArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
+    }
+    
+    protected function getMilestoneFactory() {
+        return new Planning_MilestoneFactory($this->getPlanningFactory(),
+                                             $this->getArtifactFactory());
     }
 }
 
