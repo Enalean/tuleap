@@ -31,12 +31,13 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
 }
 
 $request = HTTPRequest::instance();
+$pq      = new ProjectQuota();
+$pq->HandleRequest($request);
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
 $GLOBALS['HTML']->header(array('title' => $title));
 echo '<h1>'.$title.'</h1>';
-$pq = new ProjectQuota();
-$pq->displayProjectQuota();
+echo $pq->displayProjectQuota();
 $GLOBALS['HTML']->footer(array());
 
 ?>
