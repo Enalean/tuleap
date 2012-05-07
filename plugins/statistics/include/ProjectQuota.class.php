@@ -135,7 +135,7 @@ class ProjectQuota {
             $project = $pm->getProjectFromAutocompleter($project);
             if ($project) {
                 if ($this->dao->addException($project->getGroupID(), null, $quota, null)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project, $quota)));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
                 }
