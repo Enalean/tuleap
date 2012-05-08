@@ -49,7 +49,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     function totalRead($startDate, $endDate) {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
-                cvs_checkouts + cvs_browse AS count,
+                SUM(cvs_checkouts) + SUM(cvs_browse) AS count,
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
@@ -71,7 +71,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     function totalCommits($startDate, $endDate) {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
-                cvs_commits + cvs_adds AS count,
+                SUM(cvs_commits) + SUM(cvs_adds) AS count,
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
