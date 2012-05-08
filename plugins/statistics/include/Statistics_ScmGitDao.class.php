@@ -49,7 +49,7 @@ class Statistics_ScmGitDao extends DataAccessObject {
     function totalPushes($startDate, $endDate) {
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(push_date), '%M') AS month,
                 YEAR(FROM_UNIXTIME(push_date)) AS year,
-                COUNT(*) AS count,
+                COUNT(*) AS pushes_count,
                 COUNT(DISTINCT(repository_id)) AS repositories,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM plugin_git_log
