@@ -172,6 +172,7 @@ class ProjectQuota {
                 $userId = null;
                 $um     = UserManager::instance();
                 $user   = $um->findUser($requester);
+                $userId = 100;
                 if ($user) {
                     $userId = $user->getId();
                 }
