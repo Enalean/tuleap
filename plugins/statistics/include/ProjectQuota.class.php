@@ -50,10 +50,18 @@ class ProjectQuota {
             foreach ($res as $row) {
                 $pm      = ProjectManager::instance();
                 $project = $pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
+                $projectName = '';
+                if ($project) {
+                    $projectName = $project->getPublicName();
+                }
                 $um      = UserManager::instance();
                 $user    = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
+                $userName = '';
+                if ($user) {
+                    $username = $user->getUserName();
+                }
                 $output  .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output  .= '<td>'.$project->getPublicName().'</td><td>'.$user->getUserName().'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION].'</pre></td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output  .= '<td>'.$projectName.'</td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION].'</pre></td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
                 $output  .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
