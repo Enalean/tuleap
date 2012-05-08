@@ -43,10 +43,11 @@ class ProjectQuota {
         $output = '';
         $res    = $this->dao->getProjectsCustomQuota();
         if ($res && !$res->isError() && $res->rowCount() > 0) {
-            $i      = 0;
-            $titles = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('global', 'delete'));
-            $output .= html_build_list_table_top($titles);
-            $output .= '<form method="post" >';
+            $i        = 0;
+            $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('global', 'delete'));
+            $output   .= html_build_list_table_top($titles);
+            $output   .= '<form method="post" >';
+            $purifier = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
                 $pm      = ProjectManager::instance();
                 $project = $pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
@@ -61,7 +62,7 @@ class ProjectQuota {
                     $username = $user->getUserName();
                 }
                 $output  .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output  .= '<td>'.$projectName.'</td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION].'</pre></td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output  .= '<td>'.$projectName.'</td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_CONVERT_HTML, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
                 $output  .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
