@@ -125,7 +125,7 @@ class ProjectQuota {
                     }
                     $validQuota = new Valid_UInt('quota');
                     $validQuota->required();
-                    $suota = null;
+                    $quota = null;
                     if($request->valid($validQuota)) {
                         $quota   = $request->get('quota');
                     }
