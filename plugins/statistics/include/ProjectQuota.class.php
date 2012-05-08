@@ -58,7 +58,7 @@ class ProjectQuota {
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $output .= '<input type="hidden" name ="action" value="delete" />';
-            $output .= '<td></td><td></td><td><input type="submit" /></td>';
+            $output .= '<td></td><td></td><td></td><td></td><td><input type="submit" /></td>';
             $output .= '</tr>';
             $output .= '</form>';
             $output .= '</table>';
