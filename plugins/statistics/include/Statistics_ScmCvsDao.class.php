@@ -165,27 +165,6 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     }
 
     /**
-     * Number of CVS repo having handeled at least 1 commit
-     * in the given period
-     *
-     * @param String $startDate Period start date
-     * @param String $endDate   Period end date
-     *
-     * @return DataAccessResult
-     */
-    function repositoriesEvolutionForPeriod($startDate, $endDate) {
-        $sql = "SELECT MONTH(cc.comm_when) AS month,
-                YEAR(cc.comm_when) AS year ,
-                COUNT(DISTINCT(repositoryid)) AS repo_count
-                From cvs_commits cc
-                JOIN cvs_checkins c ON cc.id = c.commitid
-                WHERE cc.comm_when BETWEEN ".$this->da->quoteSmart($startDate)." AND ".$this->da->quoteSmart($endDate)."
-                GROUP BY year, month";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
      * Number of repositories containing commits for the given period
      *
      * @param String $startDate Period start date

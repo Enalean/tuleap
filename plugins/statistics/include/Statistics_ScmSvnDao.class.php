@@ -165,26 +165,6 @@ class Statistics_ScmSvnDao extends DataAccessObject {
     }
 
     /**
-     * Number of SVN repo having handeled at least 1 commit
-     * in the given period
-     *
-     * @param String $startDate Period start date
-     * @param String $endDate   Period end date
-     *
-     * @return DataAccessResult
-     */
-    function repositoriesEvolutionForPeriod($startDate, $endDate) {
-        $sql = "SELECT MONTH(FROM_UNIXTIME(date)) AS month,
-                YEAR(FROM_UNIXTIME(date)) AS year ,
-                COUNT(DISTINCT(repositoryid)) AS repo_count
-                FROM svn_commits 
-                WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
-                GROUP BY year, month";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
      * Number of repositories containing commits for the given period
      *
      * @param String $startDate Period start date
