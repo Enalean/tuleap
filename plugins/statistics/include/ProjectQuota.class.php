@@ -44,13 +44,17 @@ class ProjectQuota {
         $res    = $this->dao->getProjectsCustomQuota();
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i      = 0;
-            $titles = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('global', 'delete'));
+            $titles = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('global', 'delete'));
             $output .= html_build_list_table_top($titles);
             $output .= '<form method="post" >';
             foreach ($res as $row) {
-                $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output .= '<td>'.$row['project'].'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
-                $output .= '</tr>';
+                $pm      = ProjectManager::instance();
+                $project = $pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
+                $um      = UserManager::instance();
+                $user    = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
+                $output  .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+                $output  .= '<td>'.$project->getPublicName().'</td><td>'.$user->getUserName().'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION].'</pre></td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output  .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $output .= '<input type="hidden" name ="action" value="delete" />';
@@ -155,7 +159,7 @@ class ProjectQuota {
             if ($project) {
                 $userId = null;
                 $um     = UserManager::instance();
-                $user = $um->findUser($requester);
+                $user   = $um->findUser($requester);
                 if ($user) {
                     $userId = $user->getId();
                 }

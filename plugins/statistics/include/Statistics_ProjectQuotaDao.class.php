@@ -84,9 +84,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      * @return DataAccessResult
      */
     public function getProjectsCustomQuota() {
-        $sql = "SELECT q.".self::GROUP_ID.", g.group_name AS project, q.".self::REQUEST_SIZE."
-                FROM ".$this->getTable()." q
-                JOIN groups g ON (g.group_id = q.".self::GROUP_ID.")";
+        $sql = "SELECT *
+                FROM ".$this->getTable();
         return $this->retrieve($sql);
     }
 
