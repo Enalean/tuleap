@@ -113,21 +113,25 @@ class ProjectQuota {
                 case 'add' :
                     $validProject = new Valid_String('project');
                     $validProject->required();
+                    $project = null;
                     if($request->valid($validProject)) {
                         $project = $request->get('project');
                     }
                     $validRequester = new Valid_String('requester');
                     $validRequester->required();
+                    $requester = null;
                     if($request->valid($validRequester)) {
                         $requester = $request->get('requester');
                     }
                     $validQuota = new Valid_UInt('quota');
                     $validQuota->required();
+                    $suota = null;
                     if($request->valid($validQuota)) {
                         $quota   = $request->get('quota');
                     }
                     $validMotivation = new Valid_Text('motivation');
                     $validMotivation->required();
+                    $motivation = null;
                     if($request->valid($validMotivation)) {
                         $motivation = $request->get('motivation');
                     }
