@@ -215,7 +215,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $res;
     }
     
-    private function getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+    public function getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         
         //Does the user member of at least one group which has ACCESS_SUBMITTER ?

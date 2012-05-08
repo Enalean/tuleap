@@ -37,6 +37,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      */
     public function searchMatchingArtifacts(User $user,
                                             $group_id,
+                                            PermissionsManager $permissions_manager,
                                             Tracker_CrossSearch_Query $query,
                                             array $tracker_ids, 
                                             array $shared_fields, 
@@ -48,13 +49,13 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $ugroups                      = $user->getUgroups($group_id, array());
         $quoted_ugroups               = $this->da->quoteSmartImplode(',', $ugroups);
         
-        $tracker_ids                  = $this->da->quoteSmartImplode(',', $tracker_ids);
+        $quoted_tracker_ids           = $this->da->quoteSmartImplode(',', $tracker_ids);
         $excluded_artifact_ids        = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
         
         $shared_fields_constraints    = $this->getSharedFieldsSqlFragment($shared_fields);
         $title_constraint             = $this->getTitleSqlFragment($semantic_fields['title']);
         $status_constraint            = $this->getStatusSqlFragment($semantic_fields['status']);
-        $tracker_constraint           = $tracker_ids ? " AND   artifact.tracker_id IN ($tracker_ids) " : "";
+        $tracker_constraint           = $tracker_ids ? " AND   artifact.tracker_id IN ($quoted_tracker_ids) " : "";
         
         $artifact_ids_list            = $query->listArtifactIds();
         $artifact_link_constraints    = '';
@@ -67,15 +68,47 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
         $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display, $is_super_user, $quoted_ugroups);
         
-        $reportDao                    = new Tracker_ReportDao();
-        $artifact_permissions         = $reportDao->getSqlFragmentForArtifactPermissions($is_super_user, $ugroups);
-        $artifact_permissions_join    = $artifact_permissions['from'];
-        $artifact_permissions_where   = $artifact_permissions['where'];
+        $report_dao = new Tracker_ReportDao();
+        $artifact_permissions = $report_dao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $user->getUgroups($group_id, array()));
+        $artifact_permissions_join  = $artifact_permissions['from'];
+        $artifact_permissions_where = $artifact_permissions['where'];
         
         $tracker_semantic_title_join  = $this->getTrackerSemanticTitleJoin($is_super_user, $quoted_ugroups);
         $tracker_semantic_status_join = $this->getTrackerSemanticStatusJoin($is_super_user, $quoted_ugroups);
-        
-        $sql = "
+
+        $from  = " FROM tracker_artifact AS artifact
+                   INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id) 
+                   $shared_fields_constraints $artifact_link_constraints $artifact_permissions_join ";
+        $where = " WHERE 1 $artifact_permissions_where $title_constraint $status_constraint ";
+
+        $sqls = array();
+        foreach ($tracker_ids as $tracker_id) {
+            $instances            = array('artifact_type' => $tracker_id);
+            $ugroups              = $user->getUgroups($group_id, $instances);
+            $static_ugroups       = $user->getStaticUgroups($group_id);
+            $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
+            $permissions          = $permissions_manager->getPermissionsAndUgroupsByObjectid($tracker_id, $ugroups);
+            $subwhere             = " $where AND artifact.tracker_id = $tracker_id ";
+            $tracker              = TrackerFactory::instance()->getTrackerById($tracker_id);
+            $contributor_field    = $tracker->getContributorField();
+            $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
+            if ($user->isSuperUser() || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
+                $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $subwhere;
+            } else {
+                $sqls = array_merge($sqls, $report_dao->getSqlFragmentAccordingToTrackerPermissions($from, $subwhere, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id));
+            }
+        }
+        array_filter($sqls);
+
+        if (count($sqls) == 0) {
+            return new DataAccessResultEmpty();
+        } else {
+            $union = implode(' UNION ', $sqls);
+
+            $sql = "SET SESSION group_concat_max_len = 134217728";
+            $this->retrieve($sql);
+
+            $sql = "
             SELECT artifact.id,
                    artifact.last_changeset_id,
                    CVT.value                                AS title,
@@ -84,10 +117,13 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                    $artifact_link_columns_select
                    
             FROM       tracker_artifact  AS artifact
-            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+            INNER JOIN ( $union ) AS R ON (R.id = artifact.id)
+            INNER JOIN tracker_changeset AS c ON (R.last_changeset_id = c.id)
+
+            -- shared_fields_constraints
             
-            $shared_fields_constraints
-            $artifact_link_constraints
+            -- artifact_link_constraints
+
             $tracker_semantic_title_join
             $tracker_semantic_status_join
 
@@ -98,27 +134,26 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             ) ON CV2.changeset_id = artifact.last_changeset_id
 
             $artifact_link_columns_join
-            $artifact_permissions_join
+            -- artifact_permissions_join
         
-            WHERE 1=1 
-            $artifact_permissions_where
-            $tracker_constraint
-            $title_constraint
-            $status_constraint
-        ";
+            WHERE 1
+            -- artifact_permissions_where
+                    $tracker_constraint
+            -- title_constraint
+            -- status_constraint
+            ";
         
-        if ($excluded_artifact_ids != '') {
+            if ($excluded_artifact_ids != '') {
+                $sql .= "
+                  AND artifact.id NOT IN ($excluded_artifact_ids) ";
+            }
             $sql .= "
-              AND artifact.id NOT IN ($excluded_artifact_ids) ";
+                GROUP BY artifact.id
+                ORDER BY title
+            ";
+            //echo "<pre>$sql</pre>";
+            return $this->retrieve($sql);
         }
-        $sql .= "
-            GROUP BY artifact.id
-            ORDER BY title
-        ";
-        
-        //echo "<pre>$sql</pre>";
-        
-        return $this->retrieve($sql);
     }
     
     protected function getTrackerSemanticStatusJoin($is_super_user, $quoted_ugroups) {
