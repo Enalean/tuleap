@@ -66,7 +66,13 @@ class ProjectQuota {
         $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').'</td><td><input id="project" name="project" /></td>';
         $output .= '</tr>';
         $output .= '<tr>';
+        $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'requester').'</td><td><input id="requester" name="requester" /></td>';
+        $output .= '</tr>';
+        $output .= '<tr>';
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').' (GB) </td><td><input name="quota" /></td>';
+        $output .= '</tr>';
+        $output .= '<tr>';
+        $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'motivation').'</td><td><textarea name="motivation" ></textarea></td>';
         $output .= '</tr>';
         $output .= '<tr>';
         $output .= '<input type="hidden" name ="action" value="add" />';
@@ -75,6 +81,7 @@ class ProjectQuota {
         $output .= '</form>';
         $output .= '</table>';
         $js     = "new ProjectAutoCompleter('project', '".util_get_dir_image_theme()."');";
+        $js     .= "new UserAutoCompleter('requester', '".util_get_dir_image_theme()."');";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         return $output;
     }
@@ -97,12 +104,22 @@ class ProjectQuota {
                     if($request->valid($validProject)) {
                         $project = $request->get('project');
                     }
+                    $validRequester = new Valid_String('requester');
+                    $validRequester->required();
+                    if($request->valid($validRequester)) {
+                        $requester = $request->get('requester');
+                    }
                     $validQuota = new Valid_UInt('quota');
                     $validQuota->required();
                     if($request->valid($validQuota)) {
                         $quota   = $request->get('quota');
                     }
-                    $this->addQuota($project, $quota);
+                    $validMotivation = new Valid_Text('motivation');
+                    $validMotivation->required();
+                    if($request->valid($validMotivation)) {
+                        $motivation = $request->get('motivation');
+                    }
+                    $this->addQuota($project, $requester, $quota, $motivation);
                     break;
                 case 'delete' :
                     // TODO: prepare the list of projects
@@ -120,12 +137,14 @@ class ProjectQuota {
     /**
      * Add custom quota for a project
      *
-     * @param String  $project Project for which quota will be customized
-     * @param Integer $quota   Quota to be set for the project
+     * @param String  $project    Project for which quota will be customized
+     * @param String  $requester  User that asked for the custom quota
+     * @param Integer $quota      Quota to be set for the project
+     * @param String  $motivation Why the custom quota was requested
      *
      * @return Void
      */
-    public function addQuota($project, $quota) {
+    public function addQuota($project, $requester, $quota, $motivation) {
         if (empty($project)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
         } elseif (empty($quota)) {
@@ -134,7 +153,13 @@ class ProjectQuota {
             $pm = ProjectManager::instance();
             $project = $pm->getProjectFromAutocompleter($project);
             if ($project) {
-                if ($this->dao->addException($project->getGroupID(), null, $quota, null)) {
+                $userId = null;
+                $um     = UserManager::instance();
+                $user = $um->findUser($requester);
+                if ($user) {
+                    $userId = $user->getId();
+                }
+                if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                     // TODO: Add entry in project history
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
                 } else {
