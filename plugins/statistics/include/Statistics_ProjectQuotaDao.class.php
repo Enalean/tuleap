@@ -83,9 +83,24 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getProjectsCustomQuota() {
+    public function getAllCustomQuota() {
         $sql = "SELECT *
                 FROM ".$this->getTable();
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Get custom quota for a given project
+     *
+     * @param Integer $groupId Id of the project
+     *
+     * @return DataAccessResult
+     */
+    public function getProjectCustomQuota($groupId) {
+        $groupId = $this->da->escapeInt($groupId);
+        $sql = "SELECT *
+                FROM ".$this->getTable()."
+                WHERE ".self::GROUP_ID." = ".$groupId;
         return $this->retrieve($sql);
     }
 

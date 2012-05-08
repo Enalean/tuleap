@@ -22,6 +22,7 @@
  */
 
 require_once 'Statistics_DiskUsageOutput.class.php';
+require_once 'Statistics_ProjectQuotaDao.class.php';
 require_once 'common/chart/Chart.class.php';
 
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
@@ -291,8 +292,13 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
     public function getTotalProjectSize($groupId) {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
-        // TODO: Get project custom allowed quota
         $allowedQuota = $this->_dum->getProperty('allowed_quota');
+        $quotaDao     = new Statistics_ProjectQuotaDao();
+        $res          = $quotaDao->getProjectCustomQuota($groupId);
+        if ($res && !$res->isError() && $res->rowCount() == 1) {
+            $row          = $res->getRow();
+            $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
+        }
         if ($allowedQuota) {
             $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $allowedQuota.'GiB')).'</p></div>';
         } else {

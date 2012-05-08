@@ -41,7 +41,7 @@ class ProjectQuota {
      */
     public function displayProjectQuota() {
         $output = '';
-        $res    = $this->dao->getProjectsCustomQuota();
+        $res    = $this->dao->getAllCustomQuota();
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
             $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('global', 'delete'));
