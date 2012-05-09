@@ -381,6 +381,9 @@ class Tracker_ReportDao extends DataAccessObject {
     }
     
     
+    // {{{ Those logging methods are here only for debugging purpose, to have 
+    //     metrics about execution time of the search requests.
+    //     Would be nice to have a real logging strategy in Tuleap.
     private $time_start;
     public function logStart($method, $query) {
         $this->log($method, "searching for ". $query);
@@ -394,5 +397,6 @@ class Tracker_ReportDao extends DataAccessObject {
     private function log($method, $message) {
         error_log(date('c') ." $method -> $message\n", 3, $GLOBALS['codendi_log'] .'/debug.log');
     }
+    // }}}
 }
 ?>
