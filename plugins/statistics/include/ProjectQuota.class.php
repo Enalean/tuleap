@@ -62,7 +62,7 @@ class ProjectQuota {
                     $username = $user->getUserName();
                 }
                 $output  .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output  .= '<td>'.$projectName.'</td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_CONVERT_HTML, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td><td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output  .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_CONVERT_HTML, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td><td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
                 $output  .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
