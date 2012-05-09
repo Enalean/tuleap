@@ -76,6 +76,13 @@ class Planning_Milestone {
     }
     
     /**
+     * @return int
+     */
+    public function getPlanningId() {
+        return $this->planning->getId();
+    }
+    
+    /**
      * @return TreeNode
      */
     public function getPlannedArtifacts() {

@@ -91,7 +91,6 @@ class Planning_MilestoneController extends MVC2_Controller {
         
         $aid                     = $request->get('aid');
         $this->group_id          = $request->get('group_id');
-        $this->artifact          = $artifact_factory->getArtifactById($aid);
         $this->artifact_factory  = $artifact_factory;
         $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
@@ -110,17 +109,16 @@ class Planning_MilestoneController extends MVC2_Controller {
         $tracker_ids          = $planning->getBacklogTrackerIds();
         
         $content_view         = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $available_milestones, $planning);
-        $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones, $this->artifact);
+        $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
         
         $this->render('show', $presenter);
     }
 
     private function getMilestonePresenter(Planning                              $planning,
                                            Tracker_CrossSearch_SearchContentView $content_view,
-                                           array                                 $available_milestones,
-                                           Tracker_Artifact                      $artifact = null) {
+                                           array                                 $available_milestones) {
         
-        $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
+        $planning_redirect_parameter = $this->getPlanningRedirectParameter();
         
         return new Planning_MilestonePresenter($planning,
                                                $content_view,
@@ -130,12 +128,11 @@ class Planning_MilestoneController extends MVC2_Controller {
                                                $planning_redirect_parameter);
     }
     
-    private function getPlanningRedirectParameter(Planning $planning) {
-        $planning_redirect_parameter = 'planning['. (int)$planning->getId() .']=';
-        if ($this->artifact) {
-            $planning_redirect_parameter .= $this->artifact->getId();
-        }
-        return $planning_redirect_parameter;
+    private function getPlanningRedirectParameter() {
+        $planning_id = (int) $this->milestone->getPlanningId();
+        $artifact_id = $this->milestone->getArtifactId();
+        
+        return "planning[$planning_id]=$artifact_id";
     }
     
     private function getCrossSearchQuery() {
@@ -204,7 +201,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     public function getBreadcrumbs($plugin_path) {
         $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
         $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
-        $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->artifact);
+        $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
         return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
     }
 }
