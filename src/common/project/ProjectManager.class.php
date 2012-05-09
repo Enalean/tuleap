@@ -422,5 +422,21 @@ class ProjectManager {
     protected function getEventManager() {
         return EventManager::instance();
     }
+
+    /**
+     * Return all projects matching given parameters
+     *
+     * @param Integer $offset    Offset
+     * @param Integer $limit     Limit of the search
+     * @param String  $status    Statud of the projects to search
+     * @param String  $groupName Name to search
+     *
+     * @return Array
+     */
+    protected function returnAllProjects($offset, $limit, $status = false, $groupName = false) {
+        $dao = $this->_getDao();
+        return $dao->returnAllProjects($offset, $limit, $status, $groupName);
+    }
+
 }
 ?>

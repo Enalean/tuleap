@@ -37,7 +37,7 @@ $pq->HandleRequest($request);
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
 $GLOBALS['HTML']->header(array('title' => $title));
 echo '<h1>'.$title.'</h1>';
-echo $pq->displayProjectQuota();
+echo $pq->displayProjectQuota($request);
 $GLOBALS['HTML']->footer(array());
 
 ?>

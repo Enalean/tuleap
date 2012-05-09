@@ -24,6 +24,7 @@ require_once 'Statistics_ProjectQuotaDao.class.php';
 class ProjectQuota {
 
     protected $dao;
+    public    $pm;
 
     /**
      * Constructor of the class
@@ -32,15 +33,19 @@ class ProjectQuota {
      */
     public function __construct() {
         $this->dao = new Statistics_ProjectQuotaDao();
+        $this->pm  = ProjectManager::instance();
     }
 
     /**
      * Display the list of projects having a custom quota
      *
+     * @param HTTPRequest $request HTTP request
+     *
      * @return String
      */
-    public function displayProjectQuota() {
+    public function displayProjectQuota($request) {
         $output = '';
+        // TODO: Filter projects
         $res    = $this->dao->getAllCustomQuota();
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
@@ -49,8 +54,7 @@ class ProjectQuota {
             $output   .= '<form method="post" >';
             $purifier = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
-                $pm      = ProjectManager::instance();
-                $project = $pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
+                $project     = $this->pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
                 $projectName = '';
                 if ($project) {
                     $projectName = $project->getPublicName();
@@ -140,12 +144,11 @@ class ProjectQuota {
                     break;
                 case 'delete' :
                     $list       = $request->get('delete_quota');
-                    $pm         = ProjectManager::instance();
                     $projects   = array();
                     $validProjectId = new Valid_UInt();
                     foreach ($list as $projectId) {
                         if ($validProjectId->validate($projectId)) {
-                            $project = $pm->getProject($projectId);
+                            $project = $this->pm->getProject($projectId);
                             if ($project) {
                                 $projects[$project->getId()] = $project->getPublicName();
                             }
@@ -177,8 +180,7 @@ class ProjectQuota {
         } elseif (empty($quota)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
         } else {
-            $pm = ProjectManager::instance();
-            $project = $pm->getProjectFromAutocompleter($project);
+            $project = $this->pm->getProjectFromAutocompleter($project);
             if ($project) {
                 $userId = null;
                 $um     = UserManager::instance();
