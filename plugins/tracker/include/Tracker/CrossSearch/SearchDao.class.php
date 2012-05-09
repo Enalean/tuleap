@@ -77,7 +77,11 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
 
         $from  = " FROM tracker_artifact AS artifact
                    INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id) 
-                   $shared_fields_constraints $artifact_link_constraints $artifact_permissions_join ";
+                   $shared_fields_constraints 
+                   $artifact_link_constraints 
+                   $tracker_semantic_title_join 
+                   $tracker_semantic_status_join 
+                   $artifact_permissions_join ";
         $where = " WHERE 1 $artifact_permissions_where $title_constraint $status_constraint ";
 
         $permissions_manager = PermissionsManager::instance();
@@ -125,7 +129,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             -- artifact_link_constraints
 
             $tracker_semantic_title_join
-            $tracker_semantic_status_join
 
             LEFT JOIN (
                            tracker_changeset_value_artifactlink AS CVAL
@@ -158,50 +161,49 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
     protected function getTrackerSemanticStatusJoin($is_super_user, $quoted_ugroups) {
         $semantic_status_join = "
-        LEFT JOIN (
-        	tracker_changeset_value                 AS CV3
-	        INNER JOIN tracker_semantic_status      AS SS  ON (
-	        	CV3.field_id         = SS.field_id
-	        )
-	        INNER JOIN tracker_changeset_value_list AS CVL ON (
-        		CV3.id               = CVL.changeset_value_id 
-        		AND SS.open_value_id = CVL.bindvalue_id
-        	)";
+            LEFT JOIN (
+                tracker_changeset_value                 AS CV3
+                INNER JOIN tracker_semantic_status      AS SS  ON (
+                    CV3.field_id         = SS.field_id
+                )
+                INNER JOIN tracker_changeset_value_list AS CVL ON (
+                    CV3.id               = CVL.changeset_value_id 
+                    AND SS.open_value_id = CVL.bindvalue_id
+                )";
         if (!$is_super_user) {
-            $semantic_status_join.="
-            INNER JOIN permissions AS CVPerm3 ON (
-            	CVPerm3.object_id           =  CAST(SS.field_id AS CHAR)
-            	AND CVPerm3.permission_type =  'PLUGIN_TRACKER_FIELD_READ'
-            	AND CVPerm3.ugroup_id       IN ($quoted_ugroups)
-            )";
+            $semantic_status_join .= "
+                INNER JOIN permissions AS CVPerm3 ON (
+                    CVPerm3.object_id           =  CAST(SS.field_id AS CHAR)
+                    AND CVPerm3.permission_type =  'PLUGIN_TRACKER_FIELD_READ'
+                    AND CVPerm3.ugroup_id       IN ($quoted_ugroups)
+                )";
         }
-        $semantic_status_join.="
-        ) ON (c.id = CV3.changeset_id)";
+        $semantic_status_join .= "
+            ) ON (c.id = CV3.changeset_id)";
+        return $semantic_status_join;
     }
     
     protected function getTrackerSemanticTitleJoin($is_super_user, $quoted_ugroups) {
-        
-        $semantic_title_join = "LEFT JOIN (
-        	tracker_changeset_value                 AS CV
-        	INNER JOIN tracker_semantic_title       AS ST  ON (
-        		CV.field_id = ST.field_id
-        	)
-        	INNER JOIN tracker_changeset_value_text AS CVT ON (
-        		CV.id       = CVT.changeset_value_id
-        	)";
+        $semantic_title_join = "
+            LEFT JOIN (
+                tracker_changeset_value                 AS CV
+                INNER JOIN tracker_semantic_title       AS ST  ON (
+                    CV.field_id = ST.field_id
+                )
+                INNER JOIN tracker_changeset_value_text AS CVT ON (
+                    CV.id       = CVT.changeset_value_id
+                )";
         if (!$is_super_user) {
-            $semantic_title_join.="
-            INNER JOIN permissions AS CVPerm ON (
-            	CVPerm.object_id = CAST(ST.field_id AS CHAR)
-            	AND CVPerm.permission_type = 'PLUGIN_TRACKER_FIELD_READ'
-            	AND CVPerm.ugroup_id IN ($quoted_ugroups)
-            )";
+            $semantic_title_join .= "
+                INNER JOIN permissions AS CVPerm ON (
+                    CVPerm.object_id = CAST(ST.field_id AS CHAR)
+                    AND CVPerm.permission_type = 'PLUGIN_TRACKER_FIELD_READ'
+                    AND CVPerm.ugroup_id IN ($quoted_ugroups)
+                )";
         }
-        $semantic_title_join.="
-        ) ON (c.id = CV.changeset_id)";
-        
+        $semantic_title_join .= "
+            ) ON (c.id = CV.changeset_id)";
         return $semantic_title_join;
-                    
     }
     
     protected function getSharedFieldsSqlFragment(array $shared_fields) {
