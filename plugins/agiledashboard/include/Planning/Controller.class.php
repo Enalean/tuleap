@@ -28,6 +28,12 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Track
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
 
+/**
+ * Handles the HTTP actions related to a planning.
+ * 
+ * TODO: Rename this file to PlanningController.class.php, to be consistent with
+ * other classes. 
+ */
 class Planning_Controller extends MVC2_Controller {
     
     /**

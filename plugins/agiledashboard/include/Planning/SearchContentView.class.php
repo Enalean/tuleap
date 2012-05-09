@@ -23,30 +23,18 @@ require_once 'common/mustache/MustacheRenderer.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
 
-/**
- * Display the left part of the planning view (cross-search criteria and post-it
- * result).
- * 
- * This class is partially used as a Presenter by ArtifactPlannificationController
- */
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     public $planning;
     public $planning_redirect_parameter = '';
 
-    public function __construct(Tracker_Report             $report,
-                                array                      $criteria,
-                                TreeNode                   $tree_of_artifacts,
-                                Tracker_ArtifactFactory    $artifact_factory,
-                                Tracker_FormElementFactory $factory,
-                                Planning                   $planning,
-                                                           $planning_redirect_param) {
-        
+    public function __construct(Tracker_Report $report, array $criteria, TreeNode $tree_of_artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $factory,
+                                Planning $planning,
+                                $planning_redirect_param) {
         parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory);
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
     }
-    
     protected function fetchTable() {
         Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
         $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');

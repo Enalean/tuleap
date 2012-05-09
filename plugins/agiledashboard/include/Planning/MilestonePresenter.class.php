@@ -21,17 +21,20 @@
 require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'PlanningPresenter.class.php';
 
-class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
+/**
+ * Provides the presentation logic for a planning milestone. 
+ */
+class Planning_MilestonePresenter extends PlanningPresenter {
     
     /**
      * @var array of Tracker_Artifact
      */
-    private $selectable_artifacts;
+    private $available_milestones;
     
     /**
      * @var Tracker_Artifact
      */
-    private $selected_artifact;
+    private $milestone;
     
     /**
      * @var Tracker_CrossSearch_SearchContentView 
@@ -52,20 +55,20 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
      * @param Planning                              $planning                    The planning (e.g. Release planning, Sprint planning).
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
      * @param array                                 $selectable_artifacts        The artifacts with a displayable planning (e.g. Sprint 2, Release 1.0).
-     * @param Tracker_Artifact                      $selected_artifact           The artifact with planning being displayed right now.
+     * @param Tracker_Artifact                      $milestone           The artifact with planning being displayed right now.
      * @param User                                  $current_user                The user to which the artifact plannification UI is presented.
      * @param string                                $planning_redirect_parameter The request parameter representing the artifact being planned, used for redirection (e.g: "planning[2]=123").
      */
     public function __construct(Planning                              $planning,
                                 Tracker_CrossSearch_SearchContentView $backlog_search_view,
                                 array                                 $selectable_artifacts,
-                                Tracker_Artifact                      $selected_artifact = null, 
+                                Planning_Milestone                    $milestone, 
                                 User                                  $current_user,
                                                                       $planning_redirect_parameter) {
         parent::__construct($planning);
         
-        $this->selected_artifact           = $selected_artifact;
-        $this->selectable_artifacts        = $selectable_artifacts;
+        $this->milestone                   = $milestone;
+        $this->available_milestones        = $selectable_artifacts;
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
@@ -75,7 +78,7 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
      * @return bool
      */
     public function hasSelectedArtifact() {
-        return $this->selected_artifact !== null;
+        return !is_a($this->milestone, 'Planning_NoMilestone');
     }
     
     /**
@@ -83,45 +86,19 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
      */
     public function plannedArtifactsTree($child_depth = 1) {
         $root_node = null;
+        
         if ($this->canAccessPlannedItem()) {
-            $root_node = $this->getTreeNode($child_depth);
-            Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
+            $root_node = $this->milestone->getPlannedArtifacts();
+            
+            if ($root_node) {
+                Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
+            }
         }
         return $root_node;
     }
     
     private function canAccessPlannedItem() {
-        return $this->selected_artifact && $this->selected_artifact->getTracker()->userCanView($this->current_user);
-    }
-    
-    /**
-     * @return TreeNode
-     */
-    private function getTreeNode($child_depth) {
-        $id          = $this->selected_artifact->getId();
-        $parent_node = new TreeNode(array('id' => $id, 'allowedChildrenTypes' => $this->planning->getBacklogTrackers()));
-        $parent_node->setId($id);
-        $this->addChildItem($this->selected_artifact, $parent_node, $child_depth);
-        return $parent_node;
-    }
-    
-    private function addChildItem($artifact, $parent_node, $child_depth = 0) {
-        $linked_items = $artifact->getUniqueLinkedArtifacts($this->current_user);
-        if (! $linked_items) {
-            return false;
-        }
-        foreach ($linked_items as $item) {
-            $node = new TreeNode(
-                array(
-                    'id' => $item->getId(),
-                )
-            );
-            $node->setId($item->getId());
-            if ($child_depth > 0 ) {
-                $this->addChildItem($item, $node, $child_depth - 1);
-            }
-            $parent_node->addChild($node);
-        }
+        return $this->milestone && $this->milestone->userCanView($this->current_user);
     }
     
     /**
@@ -145,8 +122,9 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     public function selectableArtifacts() {
         $hp             = Codendi_HTMLPurifier::instance();
         $artifacts_data = array();
-        $selected_id    = $this->selected_artifact ? $this->selected_artifact->getId() : null;
-        foreach ($this->selectable_artifacts as $artifact) {
+        $selected_id    = $this->milestone->getArtifactId();
+        
+        foreach ($this->available_milestones as $artifact) {
             $artifacts_data[] = array(
                 'id'       => $artifact->getId(),
                 'title'    => $hp->purify($artifact->getTitle()),
@@ -187,8 +165,8 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
      * @return bool
      */
     public function canDrop() {
-        if ($this->selected_artifact) {
-            $art_link_field = $this->selected_artifact->getAnArtifactLinkField($this->current_user);
+        if ($this->milestone) {
+            $art_link_field = $this->milestone->getArtifact()->getAnArtifactLinkField($this->current_user);
             if ($art_link_field && $art_link_field->userCanUpdate($this->current_user)) {
                 return true;
             }

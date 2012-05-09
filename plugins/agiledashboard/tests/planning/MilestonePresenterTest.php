@@ -22,11 +22,10 @@ require_once 'common/user/User.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
-require_once TRACKER_BASE_DIR.'/../tests/Test_Artifact_Builder.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationPresenter.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/MilestonePresenter.class.php';
 
-abstract class Planning_ShowPresenter_Common extends TuleapTestCase {
+abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
 
     protected function getAnArtifact($artifact_id, $children = array(), $tracker = null) {
         if (!$tracker) {
@@ -43,10 +42,7 @@ abstract class Planning_ShowPresenter_Common extends TuleapTestCase {
 
 }
 
-class Planning_ShowPresenterTest extends Planning_ShowPresenter_Common {
-    
-    protected $user;
-    
+class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common {
     
     public function setUp() {
         parent::setUp();
@@ -88,12 +84,17 @@ class Planning_ShowPresenterTest extends Planning_ShowPresenter_Common {
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
     
-    protected function getAPresenter() {
-        return new Planning_ArtifactPlanificationPresenter(
+    protected function getAPresenter(TreeNode $planned_artifacts_tree = null) {
+        $milestone = new Planning_Milestone($this->planning->getGroupId(),
+                                            $this->planning,
+                                            $this->artifact,
+                                            $planned_artifacts_tree);
+        
+        return new Planning_MilestonePresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,
-            $this->artifact,                                                                                                                                                        
+            $milestone,
             $this->user,
             'planning['. (int)$this->planning->getId() .']='
         );
@@ -116,7 +117,7 @@ class Planning_ShowPresenterTest extends Planning_ShowPresenter_Common {
         }
         return $node;
     }
-
+    
     protected function assertEqualTreeNodes($node1, $node2) {
         $this->assertEqual($node1->getData(), $node2->getData());
         $this->assertEqual($node1->getId(), $node2->getId());
@@ -146,16 +147,15 @@ class Planning_ShowPresenterTest extends Planning_ShowPresenter_Common {
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
         
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
-
-        
-        $presenter = $this->getAPresenter();
         
         $node33 = $this->getATreeNode(33);
         $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node33, $node34, $node36));
+
+        $presenter = $this->getAPresenter($node_parent);
         
-        $result = $presenter->plannedArtifactsTree();
+        $result = $presenter->plannedArtifactsTree($node_parent);
         $this->assertEqualTreeNodes($node_parent, $result);
     }
     
@@ -173,19 +173,18 @@ class Planning_ShowPresenterTest extends Planning_ShowPresenter_Common {
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
     
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
-    
-    
-        $presenter = $this->getAPresenter();
-    
+        
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));
+    
+        $presenter = $this->getAPresenter($node_parent);
     
         $result = $presenter->plannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
     }
 }
 
-class Planning_ShowPresenter_AssertPermissionsTest extends Planning_ShowPresenter_Common {
+class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_MilestonePresenter_Common {
     private $sprint_artifact;
 
     public function setUp() {
@@ -196,11 +195,11 @@ class Planning_ShowPresenter_AssertPermissionsTest extends Planning_ShowPresente
         $this->artifacts_to_select = array();
         $this->sprint_artifact     = null;
 
-        $this->presenter = new Planning_ArtifactPlanificationPresenter(
+        $this->presenter = new Planning_MilestonePresenter(
                         $this->planning,
                         $this->content_view,
                         $this->artifacts_to_select,
-                        $this->sprint_artifact,
+                        new Planning_NoMilestone('123', $this->planning),
                         $this->user,
                         ''
         );
@@ -214,5 +213,4 @@ class Planning_ShowPresenter_AssertPermissionsTest extends Planning_ShowPresente
         $this->assertNull($this->presenter->plannedArtifactsTree());
     }
 }
-
 ?>

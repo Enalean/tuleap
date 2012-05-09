@@ -23,23 +23,67 @@ require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 require_once 'SearchContentView.class.php';
-require_once 'ArtifactPlannificationPresenter.class.php';
+require_once 'MilestonePresenter.class.php';
+require_once 'MilestoneFactory.class.php';
 
-class Planning_ArtifactPlannificationController extends MVC2_Controller {
+/**
+ * Handles the HTTP actions related to a planning milestone.
+ */
+class Planning_MilestoneController extends MVC2_Controller {
+    
+    /**
+     * @var int
+     * 
+     * TODO: Use $artifact->getProject() instead.
+     */
+    private $group_id;
     
     /**
      * @var Tracker_Artifact
      */
     private $artifact;
     
-    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
+    /**
+     * @var Tracker_ArtifactFactory
+     * 
+     * TODO: Use $milestone_factory instead, which should delegate to
+     *       Tracker_ArtifactFactory.
+     */
+    private $artifact_factory;
+    
+    /**
+     * @var PlanningFactory
+     * 
+     * TODO: Use $milestone_factory instead, which should delegate to
+     *       Planning_Factory.
+     */
+    private $planning_factory;
+    
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
+    
+    /**
+     * @var Planning_Milestone
+     */
+    private $milestone;
+    
+    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory) {
         parent::__construct('agiledashboard', $request);
         
-        $aid                    = $request->get('aid');
-        $this->group_id         = $request->get('group_id');
-        $this->artifact         = $artifact_factory->getArtifactById($aid);
-        $this->artifact_factory = $artifact_factory;
-        $this->planning_factory = $planning_factory;
+        $aid                     = $request->get('aid');
+        $this->group_id          = $request->get('group_id');
+        $this->artifact          = $artifact_factory->getArtifactById($aid);
+        $this->artifact_factory  = $artifact_factory;
+        $this->planning_factory  = $planning_factory;
+        $this->milestone_factory = $milestone_factory;
+        $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifacts(
+                                       $this->getCurrentUser(),
+                                       $request->get('group_id'),
+                                       $request->get('planning_id'),
+                                       $request->get('aid')
+                                   );
     }
 
     public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
@@ -50,18 +94,23 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         
         $content_view        = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $artifacts_to_select, $planning);
         
-        $presenter           = $this->getShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
+        $presenter           = $this->getMilestonePresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
     }
 
-    public function getShowPresenter(Planning $planning,
+    private function getMilestonePresenter(Planning $planning,
                                      Tracker_CrossSearch_SearchContentView $content_view,
                                      array $artifacts_to_select,
                                      Tracker_Artifact $artifact = null) {
         
         $planning_redirect_parameter = $this->getPlanningRedirectParameter($planning);
         
-        return new Planning_ArtifactPlanificationPresenter($planning, $content_view, $artifacts_to_select, $artifact, $this->getCurrentUser(), $planning_redirect_parameter);
+        return new Planning_MilestonePresenter($planning,
+                                               $content_view,
+                                               $artifacts_to_select,
+                                               $this->milestone,
+                                               $this->getCurrentUser(),
+                                               $planning_redirect_parameter);
     }
     
     private function getPlanningRedirectParameter(Planning $planning) {
@@ -76,6 +125,7 @@ class Planning_ArtifactPlannificationController extends MVC2_Controller {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
         $artifact_criteria     = $this->getArrayFromRequest('artifact_criteria');
+        
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
