@@ -88,6 +88,27 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $tracker_factory     = TrackerFactory::instance();
         $sqls = array();
         foreach ($tracker_ids as $tracker_id) {
+            // {{{ This is a big copy 'n paste from Tracker_Report::getMatchingIdsInDb.
+            //     TODO:
+            //          instead of building a big query with plenty of unions, 
+            //          call getMatchingIdsInDb foreach tracker involved in the
+            //          crosssearch query. As getMatchingIdsInDb returns the
+            //          tuple (artifact_ids, matching_ids) -- where ids are 
+            //          comma separated --, we will have to do the join in php 
+            //          by concatenating strings.
+            //          Example:
+            //              $artifact_ids = $changeset_ids = '';
+            //              foreach ($trackers as $tracker) {
+            //                  merge($artifact_ids, $changeset_ids, report->getMatchingIdsInDb(..., $tracker, ...));
+            //              }
+            //              crosssearch->retrieveColumns($artifact_ids, $changeset_ids)
+            //
+            //          And if we are feeling lucky, we can also move the 
+            //              reportdao->searchMatchingIds in searchdao since it make more sense.
+            //
+            //          Possible caveat:
+            //              - 1 big sql query full of unions is really slower  
+            //                than n small queries?
             $instances            = array('artifact_type' => $tracker_id);
             $ugroups              = $user->getUgroups($group_id, $instances);
             $static_ugroups       = $user->getStaticUgroups($group_id);
@@ -97,6 +118,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             $tracker              = $tracker_factory->getTrackerById($tracker_id);
             $contributor_field    = $tracker->getContributorField();
             $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
+            // }}}
             $sqls = array_merge(
                 $sqls, 
                 $report_dao->getSqlFragmentsAccordinglyToTrackerPermissions($user->isSuperUser(), $from, $subwhere, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)
