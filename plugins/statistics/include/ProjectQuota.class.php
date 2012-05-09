@@ -45,7 +45,7 @@ class ProjectQuota {
      */
     public function displayProjectQuota($request) {
         $output = '';
-        // TODO: Filter projects
+        // TODO: Add offset & limit management
         $validFilter = new Valid_String('project_filter');
         $filter      = null;
         if ($request->valid($validFilter)) {
