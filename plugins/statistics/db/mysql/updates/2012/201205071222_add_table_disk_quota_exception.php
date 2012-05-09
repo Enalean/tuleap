@@ -37,7 +37,6 @@ EOT;
                    requester_id int(11) NOT NULL default '0',
                    requested_size int(11) NOT NULL,
                    exception_motivation text,
-                   request_status varchar(255) NOT NULL,
                    request_date int(11) unsigned NOT NULL default '0',
                    PRIMARY KEY (group_id)
                 );";

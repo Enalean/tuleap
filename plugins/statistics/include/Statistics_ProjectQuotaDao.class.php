@@ -27,13 +27,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     const REQUESTER_ID         = 'requester_id';
     const REQUEST_SIZE         = 'requested_size';
     const EXCEPTION_MOTIVATION = 'exception_motivation';
-    const REQUEST_STATUS       = 'request_status';
     const REQUEST_DATE         = 'request_date';
-
-    const REQUEST_STATUS_NEW      = 10;
-    const REQUEST_STATUS_ANALYZED = 20;
-    const REQUEST_STATUS_APPROVED = 30;
-    const REQUEST_STATUS_REJECTED = 40;
 
     /**
      * Get the dao table name
@@ -59,20 +53,17 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         $requesterId         = $this->da->escapeInt($requesterId);
         $requestedSize       = $this->da->escapeInt($requestedSize);
         $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
-        $requestStatus       = self::REQUEST_STATUS_NEW;
         $requestDate         = time();
         $query               = "REPLACE INTO ".$this->getTable()." (".self::GROUP_ID.",
                                              ".self::REQUESTER_ID.",
                                              ".self::REQUEST_SIZE.",
                                              ".self::EXCEPTION_MOTIVATION.",
-                                             ".self::REQUEST_STATUS.",
                                              ".self::REQUEST_DATE."
                                              ) values (
                                              $groupId,
                                              $requesterId,
                                              $requestedSize,
                                              $exceptionMotivation,
-                                             $requestStatus,
                                              $requestDate
                                              )";
         return $this->update($query);
