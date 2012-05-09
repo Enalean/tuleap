@@ -184,11 +184,20 @@ class ProjectQuota {
                 if ($user) {
                     $userId = $user->getId();
                 }
-                if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
-                    // TODO: Add entry in project history
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
+                $dum      = new Statistics_DiskUsageManager();
+                $maxQuota = $dum->getProperty('maximum_quota');
+                if (!$maxQuota) {
+                    $maxQuota = 50;
+                }
+                if ($quota > $maxQuota) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
+                    if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
+                        // TODO: Add entry in project history
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
+                    }
                 }
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'no_project'));
