@@ -59,6 +59,7 @@ plugin_statistics	quota_description	Quota personnalisé par projet
 plugin_statistics	quota	Quota
 plugin_statistics	requester	Demandeur
 plugin_statistics	motivation	Motivation
+plugin_statistics	date	Date
 plugin_statistics	set_quota	Définir un quota personnalisé pour un projet
 plugin_statistics	invalid_action	Action invalide
 plugin_statistics	invalid_project	Projet invalide
