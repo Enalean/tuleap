@@ -1,3 +1,7 @@
+Version 5.0.2 (Wednsday, May 9th 2012)
+   == Plugins ==
+   * Git 2.5
+
 Version 5.0.1 (Thursday, April 26th 2012)
    == Bug fix ==
    * Fix link to cli documentation in footer

@@ -1,3 +1,6 @@
+Version 2.5 (Tuleap 5.0.2)
+    * Fix require order
+
 Version 2.4 (Tuleap 5.0)
     * Fix issues with gitphp: 'plain' commitdiff output & FRS Fixture filename (for Windows workstation users). (contrib STMicroelectronics).
 
