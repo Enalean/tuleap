@@ -173,7 +173,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $factory                   = $this->GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items);
         $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
-        $milestone                 = $this->GivenNoMilestone();
+        $milestone                 = $this->GivenNoMilestone($project_id);
 
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array($project), new MockTracker_CrossSearch_Search());
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
@@ -285,9 +285,11 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $milestone;
     }
     
-    private function GivenNoMilestone() {
-        return new Planning_NoMilestone($this->planning->getGroupId(),
-                                        $this->planning);
+    private function GivenNoMilestone($project_id = null) {
+        if (! $project_id) {
+            $project_id = $this->planning->getGroupId();
+        }
+        return new Planning_NoMilestone($project_id, $this->planning);
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {

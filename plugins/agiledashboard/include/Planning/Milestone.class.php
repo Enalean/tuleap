@@ -53,6 +53,10 @@ class Planning_Milestone {
         $this->artifact          = $artifact;
         $this->planned_artifacts = $planned_artifacts;
     }
+    
+    public function getGroupId() {
+        return $this->group_id;
+    }
 
     /**
      * @return Tracker_Artifact

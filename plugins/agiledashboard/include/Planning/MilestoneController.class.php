@@ -32,13 +32,6 @@ require_once 'MilestoneFactory.class.php';
 class Planning_MilestoneController extends MVC2_Controller {
     
     /**
-     * @var int
-     * 
-     * TODO: Use $artifact->getProject() instead.
-     */
-    private $group_id;
-    
-    /**
      * @var Tracker_Artifact
      */
     private $artifact;
@@ -89,8 +82,6 @@ class Planning_MilestoneController extends MVC2_Controller {
         
         parent::__construct('agiledashboard', $request);
         
-        $aid                     = $request->get('aid');
-        $this->group_id          = $request->get('group_id');
         $this->artifact_factory  = $artifact_factory;
         $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
@@ -103,12 +94,12 @@ class Planning_MilestoneController extends MVC2_Controller {
     }
 
     public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
+        $project              = $manager->getProject($this->milestone->getGroupId());
         $planning             = $this->getPlanning();
-        $project_id           = $this->request->get('group_id');
         $available_milestones = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($this->getCurrentUser(), $planning->getPlanningTrackerId());
         $tracker_ids          = $planning->getBacklogTrackerIds();
         
-        $content_view         = $this->buildContentView($view_builder, $manager->getProject($project_id), $tracker_ids, $available_milestones, $planning);
+        $content_view         = $this->buildContentView($view_builder, $project, $tracker_ids, $available_milestones, $planning);
         $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
         
         $this->render('show', $presenter);
@@ -143,7 +134,12 @@ class Planning_MilestoneController extends MVC2_Controller {
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
-    private function buildContentView(Planning_ViewBuilder $view_builder, $project, array $tracker_ids, array $available_milestones, Planning $planning) {
+    private function buildContentView(Planning_ViewBuilder $view_builder,
+                                      Project              $project = null,
+                                      array                $tracker_ids,
+                                      array                $available_milestones,
+                                      Planning             $planning) {
+        
         $tracker_linked_items  = $this->getTrackerLinkedItems($available_milestones);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
@@ -199,7 +195,7 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+        $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, $this->milestone->getGroupId());
         $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
         $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
         return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
