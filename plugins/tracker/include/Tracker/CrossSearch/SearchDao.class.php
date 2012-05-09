@@ -93,11 +93,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             $tracker              = $tracker_factory->getTrackerById($tracker_id);
             $contributor_field    = $tracker->getContributorField();
             $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
-            if ($user->isSuperUser() || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
-                $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $subwhere;
-            } else {
-                $sqls = array_merge($sqls, $report_dao->getSqlFragmentAccordingToTrackerPermissions($from, $subwhere, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id));
-            }
+            $sqls = array_merge(
+                $sqls, 
+                $report_dao->getSqlFragmentsAccordinglyToTrackerPermissions($user->isSuperUser(), $from, $subwhere, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)
+            );
         }
         array_filter($sqls);
 

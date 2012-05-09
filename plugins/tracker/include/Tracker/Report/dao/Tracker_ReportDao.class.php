@@ -172,13 +172,7 @@ class Tracker_ReportDao extends DataAccessObject {
         }
         
         // $sqls => SELECT UNION SELECT UNION SELECT ...
-        $sqls = array();
-        //Does the user member of at least one group which has ACCESS_FULL or is super user?
-        if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
-        } else {
-            $sqls = $this->getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
-        }
+        $sqls = $this->getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
         
         if (count($sqls) == 0) {
             return new DataAccessResultEmpty();
@@ -200,6 +194,17 @@ class Tracker_ReportDao extends DataAccessObject {
         }
     }
     
+    public function getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+        $sqls = array();
+        //Does the user member of at least one group which has ACCESS_FULL or is super user?
+        if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
+        } else {
+            $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
+        }
+        return $sqls;
+    }
+    
     public function getSqlFragmentForArtifactPermissions($user_is_superuser, array $ugroups) {
         $res = array('from' => '', 'where' => '');
         if(!$user_is_superuser) {
@@ -215,7 +220,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $res;
     }
     
-    public function getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+    private function getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         
         //Does the user member of at least one group which has ACCESS_SUBMITTER ?
