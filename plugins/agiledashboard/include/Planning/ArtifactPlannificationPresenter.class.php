@@ -91,7 +91,7 @@ class Planning_ArtifactPlanificationPresenter extends PlanningPresenter {
     }
     
     private function canAccessPlannedItem() {
-        return $this->artifact && $this->artifact->getTracker()->userCanView($this->current_user);
+        return $this->selected_artifact && $this->selected_artifact->getTracker()->userCanView($this->current_user);
     }
     
     /**

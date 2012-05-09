@@ -196,7 +196,7 @@ class Planning_ShowPresenter_AssertPermissionsTest extends Planning_ShowPresente
         $this->artifacts_to_select = array();
         $this->sprint_artifact     = null;
 
-        $this->presenter = new Planning_ShowPresenter(
+        $this->presenter = new Planning_ArtifactPlanificationPresenter(
                         $this->planning,
                         $this->content_view,
                         $this->artifacts_to_select,
@@ -211,7 +211,7 @@ class Planning_ShowPresenter_AssertPermissionsTest extends Planning_ShowPresente
         
         $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
 
-        $this->assertNull($this->presenter->getDestination());
+        $this->assertNull($this->presenter->plannedArtifactsTree());
     }
 }
 
