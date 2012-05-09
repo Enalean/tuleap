@@ -402,10 +402,25 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitolite[]      = intval($row['count']);
             }
         }
+        $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitPushes[]  = "Total number of git pushes";
+        $gitCommits[] = "Total number of git commits";
+        $dar = $dao->totalPushes( $formatter->groupId, '2011-05-05', '2012-05-09');
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $gitIndex[]   = $row['month']." ".$row['year'];
+                $gitPushes[]  = intval($row['pushes_count']);
+                $gitCommits[] = intval($row['commits_count']);
+            }
+        }
         $formatter->addLine($gitShellIndex);
         $formatter->addLine($gitShell);
         $formatter->addLine($gitoliteIndex);
         $formatter->addLine($gitolite);
+
+        $formatter->addLine($gitIndex);
+        $formatter->addLine($gitPushes);
+        $formatter->addLine($gitCommits);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
         return $content;
