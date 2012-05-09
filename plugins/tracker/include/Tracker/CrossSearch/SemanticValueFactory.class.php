@@ -65,7 +65,7 @@ class Tracker_CrossSearch_SemanticValueFactory {
         $artifact = $this->getArtifact($artifact_id);
         $field    = $this->getField($artifact, $this->semantic_title_factory);
         
-        if ($field == null) { 
+        if ($field == null || !$field->userCanRead()) { 
             return ''; 
         }
         
