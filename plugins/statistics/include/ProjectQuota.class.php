@@ -139,8 +139,15 @@ class ProjectQuota {
                     $this->addQuota($project, $requester, $quota, $motivation);
                     break;
                 case 'delete' :
-                    // TODO: prepare the list of projects
-                    $projects = $request->get('delete_quota');
+                    $list = $request->get('delete_quota');
+                    $pm = ProjectManager::instance();
+                    $projects = array();
+                    foreach ($list as $projectId) {
+                        $project = $pm->getProject($projectId);
+                        if ($project) {
+                            $projects[$project->getId()] = $project->getPublicName();
+                        }
+                    }
                     $this->deleteCustomQuota($projects);
                     break;
                 default :
@@ -200,10 +207,15 @@ class ProjectQuota {
         if (empty($projects)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'nothing_to_delete'));
         } else {
-            if ($this->dao->deleteCustomQuota($projects)) {
+            $list  = array();
+            $names = array();
+            foreach ($projects as $projectId => $name) {
+                $list[]  = $projectId;
+                $names[] = $name;
+            }
+            if ($this->dao->deleteCustomQuota($list)) {
                 // TODO: Add entry in project history
-                // TODO: put project name in feedback not project id
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', array(join(', ', $projects))));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', array(join(', ', $names))));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
             }
