@@ -32,11 +32,6 @@ require_once 'MilestoneFactory.class.php';
 class Planning_MilestoneController extends MVC2_Controller {
     
     /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
-    
-    /**
      * @var Tracker_ArtifactFactory
      * 
      * TODO: Use $milestone_factory instead, which should delegate to
