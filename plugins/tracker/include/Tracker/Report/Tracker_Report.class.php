@@ -203,10 +203,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
     
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+        $dump_criteria = array();
+        foreach ($criteria as $c) {
+            $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
+        }
         $dao->logStart(__METHOD__, json_encode(array(
             'user'     => $user->getUserName(),
             'project'  => $tracker->getGroupId(), 
-            'query'    => json_encode($criteria),
+            'query'    => $dump_criteria,
             'trackers' => array($tracker->getId()),
         )));
         
