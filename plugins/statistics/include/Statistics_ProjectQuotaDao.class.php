@@ -72,11 +72,18 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     /**
      * List all projects having custom quota
      *
+     * @param Array $list List of projects Id corresponding to a filter
+     *
      * @return DataAccessResult
      */
-    public function getAllCustomQuota() {
+    public function getAllCustomQuota($list = array()) {
+        $condition = '';
+        if (!empty($list)) {
+            $condition = "WHERE ".self::GROUP_ID." IN (".join(', ', $list).")";
+        }
         $sql = "SELECT *
-                FROM ".$this->getTable();
+                FROM ".$this->getTable()."
+                ".$condition;
         return $this->retrieve($sql);
     }
 

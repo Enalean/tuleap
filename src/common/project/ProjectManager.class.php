@@ -433,7 +433,7 @@ class ProjectManager {
      *
      * @return Array
      */
-    protected function returnAllProjects($offset, $limit, $status = false, $groupName = false) {
+    public function returnAllProjects($offset, $limit, $status = false, $groupName = false) {
         $dao = $this->_getDao();
         return $dao->returnAllProjects($offset, $limit, $status, $groupName);
     }

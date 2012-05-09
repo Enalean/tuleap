@@ -56,6 +56,8 @@ plugin_statistics	scm_repo_total	Nombre total des dépôts contenant au moins un
 
 plugin_statistics	quota_title	Quota par projet
 plugin_statistics	quota_description	Quota personnalisé par projet
+plugin_statistics	search_projects	Recherche de projets
+plugin_statistics	no_projects	Aucun projet à afficher
 plugin_statistics	quota	Quota
 plugin_statistics	requester	Demandeur
 plugin_statistics	motivation	Motivation
