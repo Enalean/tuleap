@@ -112,32 +112,32 @@ class ProjectQuota {
      */
     public function handleRequest($request) {
         $validAction = new Valid_WhiteList('action', array('add', 'delete'));
-        if($request->valid($validAction)) {
+        if ($request->valid($validAction)) {
             $action = $request->get('action');
             switch ($action) {
                 case 'add' :
                     $validProject = new Valid_String('project');
                     $validProject->required();
                     $project = null;
-                    if($request->valid($validProject)) {
+                    if ($request->valid($validProject)) {
                         $project = $request->get('project');
                     }
                     $validRequester = new Valid_String('requester');
                     $validRequester->required();
                     $requester = null;
-                    if($request->valid($validRequester)) {
+                    if ($request->valid($validRequester)) {
                         $requester = $request->get('requester');
                     }
                     $validQuota = new Valid_UInt('quota');
                     $validQuota->required();
                     $quota = null;
-                    if($request->valid($validQuota)) {
+                    if ($request->valid($validQuota)) {
                         $quota   = $request->get('quota');
                     }
                     $validMotivation = new Valid_Text('motivation');
                     $validMotivation->required();
                     $motivation = null;
-                    if($request->valid($validMotivation)) {
+                    if ($request->valid($validMotivation)) {
                         $motivation = $request->get('motivation');
                     }
                     $this->addQuota($project, $requester, $quota, $motivation);
