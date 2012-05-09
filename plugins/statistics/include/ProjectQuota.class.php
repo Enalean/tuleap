@@ -215,6 +215,8 @@ class ProjectQuota {
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                         // TODO: Add entry in project history
+                        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+                        $historyDao->groupAddHistory("ADD_CUSTOM_QUOTA", $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
@@ -237,11 +239,15 @@ class ProjectQuota {
         if (empty($projects)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'nothing_to_delete'));
         } else {
-            $list  = array();
-            $names = array();
+            $list         = array();
+            $names        = array();
+            $dum          = new Statistics_DiskUsageManager();
+            $defaultQuota = $dum->getProperty('allowed_quota');
+            $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
             foreach ($projects as $projectId => $name) {
                 $list[]  = $projectId;
                 $names[] = $name;
+                $historyDao->groupAddHistory("RESTORE_DEFAULT_QUOTA", intval($defaultQuota), $projectId);
             }
             if ($this->dao->deleteCustomQuota($list)) {
                 // TODO: Add entry in project history
