@@ -69,7 +69,24 @@ class Planning_MilestoneController extends MVC2_Controller {
      */
     private $milestone;
     
-    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory) {
+    /**
+     * Instanciates a new controller.
+     * 
+     * TODO:
+     *   - $artifact_factory must die
+     *   - $tracker_factory must die
+     *   - pass $request to actions (e.g. show).
+     * 
+     * @param Codendi_Request           $request
+     * @param Tracker_ArtifactFactory   $artifact_factory
+     * @param PlanningFactory           $planning_factory
+     * @param Planning_MilestoneFactory $milestone_factory 
+     */
+    public function __construct(Codendi_Request           $request,
+                                Tracker_ArtifactFactory   $artifact_factory,
+                                PlanningFactory           $planning_factory,
+                                Planning_MilestoneFactory $milestone_factory) {
+        
         parent::__construct('agiledashboard', $request);
         
         $aid                     = $request->get('aid');

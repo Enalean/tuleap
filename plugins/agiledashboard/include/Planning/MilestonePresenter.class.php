@@ -22,7 +22,7 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'PlanningPresenter.class.php';
 
 /**
- * Provides the presentation logic for a planning milestone. 
+ * Provides the presentation logic for a planning milestone.
  */
 class Planning_MilestonePresenter extends PlanningPresenter {
     
@@ -52,6 +52,12 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public $planning_redirect_parameter;
     
     /**
+     * Instanciates a new presenter.
+     * 
+     * TODO:
+     *   - $planning could be retrieved from $milestone
+     *   - $selectable_artifacts may also be retrieved from $milestone (not sure it's a good idea)
+     * 
      * @param Planning                              $planning                    The planning (e.g. Release planning, Sprint planning).
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
      * @param array                                 $selectable_artifacts        The artifacts with a displayable planning (e.g. Sprint 2, Release 1.0).
