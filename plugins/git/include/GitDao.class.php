@@ -219,6 +219,7 @@ class GitDao extends DataAccessObject {
      *
      * @param Integre $projectId    Project id
      * @param Boolean $onlyGitShell If true list will contain only git repositories no gitolite
+     * @param Boolean $scope        Allows to get all projects ignoring if the scope is project or personal
      * @param Integer $userId       User id
      *
      * @return Array
