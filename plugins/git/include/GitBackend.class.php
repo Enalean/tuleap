@@ -405,12 +405,16 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitPushes[]  = "Total number of git pushes";
         $gitCommits[] = "Total number of git commits";
+        $gitUsers[]   = "Total number of users";
+        $gitRepo[]    = "Total number of repositories";
         $dar = $dao->totalPushes( $formatter->groupId, '2011-05-05', '2012-05-09');
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $gitIndex[]   = $row['month']." ".$row['year'];
                 $gitPushes[]  = intval($row['pushes_count']);
                 $gitCommits[] = intval($row['commits_count']);
+                $gitUsers[]   = intval($row['users']);
+                $gitRepo[]    = intval($row['repositories']);
             }
         }
         $formatter->addLine($gitShellIndex);
@@ -421,6 +425,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $formatter->addLine($gitIndex);
         $formatter->addLine($gitPushes);
         $formatter->addLine($gitCommits);
+        $formatter->addLine($gitUsers);
+        $formatter->addLine($gitRepo);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
         return $content;

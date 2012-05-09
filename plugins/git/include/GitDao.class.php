@@ -500,7 +500,8 @@ class GitDao extends DataAccessObject {
                 COUNT(DISTINCT(user_id)) AS users
                 FROM plugin_git_log JOIN plugin_git USING(repository_id)
                 WHERE push_date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
-                  AND project_id = ".$this->da->escapeInt($projectId)." GROUP BY year, month";
+                  AND project_id = ".$this->da->escapeInt($projectId)."
+                GROUP BY year, month";
         return $this->retrieve($sql);
     }
 
