@@ -116,6 +116,19 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         
         return $criteria_builder->getSharedFieldsCriteria($this->user, $this->project, $this->report, $cross_search_criteria);
     }
+    
+    public function itRemovesFromQuerySharedFieldsThatAreNotReadableByUser() {
+        $this->shared_field_criteria = array('220' => array('values' => array('350')));
+        $cross_search_query = aCrossSearchCriteria()->withSharedFieldsCriteria($this->shared_field_criteria)->build();
+        
+        stub($this->form_element_factory)->getSharedFieldsReadableBy()->returns(array());
+        
+        $criteria_builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
+        $criteria = $criteria_builder->getSharedFieldsCriteria($this->user, $this->project, $this->report, $cross_search_query);
+                
+        $this->assertEqual($criteria, array());
+        $this->assertEqual($cross_search_query->getSharedFields(), array());
+    }
 
 }
 

@@ -62,6 +62,23 @@ class Tracker_CrossSearch_Query {
         return $this->shared_fields_criteria;
     }
     
+    /**
+     * Remove fields from request shared fields according to given list.
+     * 
+     * This is used to remove the fields the user cannot access (eg. if user
+     * attempt to forge URL).
+     * 
+     * @param array $blessed_field_ids 
+     */
+    public function purgeSharedFieldNotInList(array $blessed_field_ids) {
+        foreach ($this->shared_fields_criteria as $field_id => $value_ids) {
+            if (!isset($blessed_field_ids[$field_id])) {
+                unset($this->shared_fields_criteria[$field_id]);
+            }
+        } 
+    }
+
+
     public function getSemanticCriteria() {
         return $this->semantic_criteria;
     }

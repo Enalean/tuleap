@@ -60,19 +60,29 @@ class Tracker_CrossSearch_CriteriaBuilder {
     }
 
     /**
+     * Build a Report criteria based on submitted values.
+     * 
+     * If used cannot access requested value (eg. forged URL) the Query is modified
+     * to remove the offending query.
+     * 
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
-        $fields   = $this->form_element_factory->getSharedFieldsReadableBy($user, $project);
-        $criteria = array();
+    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query &$cross_search_query) {
+        $fields            = $this->form_element_factory->getSharedFieldsReadableBy($user, $project);
+        $criteria          = array();
+        $allowed_field_ids = array();
         
         foreach ($fields as $field) {
-                $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
-                $id          = null;
-                $rank        = 0;
-                $is_advanced = true;
-                $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+            $allowed_field_ids[$field->getId()] = true;
+            
+            $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
+            $id          = null;
+            $rank        = 0;
+            $is_advanced = true;
+            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
         }
+        
+        $cross_search_query->purgeSharedFieldNotInList($allowed_field_ids);
         
         return $criteria;
     }

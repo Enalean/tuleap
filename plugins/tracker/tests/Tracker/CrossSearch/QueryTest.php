@@ -77,4 +77,26 @@ class Query_ArtifactTest extends TuleapTestCase {
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(456));
     }
 }
+
+class Query_SharedFieldsTest extends TuleapTestCase {
+    
+    public function itDoesntRemoveSharedFieldsThatAreInTheBlessedList() {
+        $shared_field_request = array('220' => array('values' => array('350')));
+        $query = new Tracker_CrossSearch_Query($shared_field_request);
+        
+        $query->purgeSharedFieldNotInList(array(220 => true));
+        
+        $this->assertEqual($query->getSharedFields(), $shared_field_request);
+    }
+    
+    public function itRemovesSharedFieldsThatAreNotInTheBlessedList() {
+        $shared_field_request = array('220' => array('values' => array('350')));
+        $query = new Tracker_CrossSearch_Query($shared_field_request);
+        
+        $query->purgeSharedFieldNotInList(array(330 => true));
+        
+        $this->assertEqual($query->getSharedFields(), array());
+    }
+}
+
 ?>
