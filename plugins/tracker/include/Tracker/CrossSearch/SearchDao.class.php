@@ -37,7 +37,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      */
     public function searchMatchingArtifacts(User $user,
                                             $group_id,
-                                            PermissionsManager $permissions_manager,
                                             Tracker_CrossSearch_Query $query,
                                             array $tracker_ids, 
                                             array $shared_fields, 
@@ -81,6 +80,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                    $shared_fields_constraints $artifact_link_constraints $artifact_permissions_join ";
         $where = " WHERE 1 $artifact_permissions_where $title_constraint $status_constraint ";
 
+        $permissions_manager = PermissionsManager::instance();
+        $tracker_factory     = TrackerFactory::instance();
         $sqls = array();
         foreach ($tracker_ids as $tracker_id) {
             $instances            = array('artifact_type' => $tracker_id);
@@ -89,7 +90,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
             $permissions          = $permissions_manager->getPermissionsAndUgroupsByObjectid($tracker_id, $ugroups);
             $subwhere             = " $where AND artifact.tracker_id = $tracker_id ";
-            $tracker              = TrackerFactory::instance()->getTrackerById($tracker_id);
+            $tracker              = $tracker_factory->getTrackerById($tracker_id);
             $contributor_field    = $tracker->getContributorField();
             $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
             if ($user->isSuperUser() || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {

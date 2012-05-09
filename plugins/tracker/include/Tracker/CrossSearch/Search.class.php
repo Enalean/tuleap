@@ -90,8 +90,7 @@ class Tracker_CrossSearch_Search {
         $shared_fields   = $this->shared_field_factory->getSharedFields($criteria->getSharedFields());
         $semantic_fields = $criteria->getSemanticCriteria();
         
-        $permissions_manager = PermissionsManager::instance();
-        $artifacts = $this->dao->searchMatchingArtifacts($user, $project->getId(), $permissions_manager, $criteria, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
+        $artifacts = $this->dao->searchMatchingArtifacts($user, $project->getId(), $criteria, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
         return $this->result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
     }
