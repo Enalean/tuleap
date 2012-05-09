@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once 'FormPresenter.class.php';
-require_once 'IndexPresenter.class.php';
+require_once 'PlanningFormPresenter.class.php';
+require_once 'PlanningListPresenter.class.php';
 require_once 'PlanningFactory.class.php';
 require_once 'NotFoundException.class.php';
-require_once 'RequestValidator.class.php';
+require_once 'PlanningRequestValidator.class.php';
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
@@ -55,7 +55,7 @@ class Planning_Controller extends MVC2_Controller {
     
     public function index() {
         $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
-        $presenter = new Planning_IndexPresenter($plannings, $this->group_id);
+        $presenter = new Planning_ListPresenter($plannings, $this->group_id);
         $this->render('index', $presenter);
     }
     

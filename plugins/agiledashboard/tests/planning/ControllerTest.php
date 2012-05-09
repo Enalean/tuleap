@@ -27,7 +27,7 @@ if (!defined('TRACKER_BASE_DIR')) {                                             
 
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TrackerManager.class.php';
-require_once(dirname(__FILE__).'/../../include/Planning/Controller.class.php');
+require_once(dirname(__FILE__).'/../../include/Planning/PlanningController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
