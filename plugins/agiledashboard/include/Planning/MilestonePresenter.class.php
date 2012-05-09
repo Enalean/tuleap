@@ -56,25 +56,25 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * 
      * TODO:
      *   - $planning could be retrieved from $milestone
-     *   - $selectable_artifacts may also be retrieved from $milestone (not sure it's a good idea)
+     *   - use $milestone->getPlanning()->getAllMilestones() instead of $available_milestones ?
      * 
      * @param Planning                              $planning                    The planning (e.g. Release planning, Sprint planning).
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
-     * @param array                                 $selectable_artifacts        The artifacts with a displayable planning (e.g. Sprint 2, Release 1.0).
-     * @param Tracker_Artifact                      $milestone           The artifact with planning being displayed right now.
+     * @param array                                 $available_milestones        The artifacts with a displayable planning (e.g. Sprint 2, Release 1.0).
+     * @param Tracker_Artifact                      $milestone                   The artifact with planning being displayed right now.
      * @param User                                  $current_user                The user to which the artifact plannification UI is presented.
      * @param string                                $planning_redirect_parameter The request parameter representing the artifact being planned, used for redirection (e.g: "planning[2]=123").
      */
     public function __construct(Planning                              $planning,
                                 Tracker_CrossSearch_SearchContentView $backlog_search_view,
-                                array                                 $selectable_artifacts,
+                                array                                 $available_milestones,
                                 Planning_Milestone                    $milestone, 
                                 User                                  $current_user,
                                                                       $planning_redirect_parameter) {
         parent::__construct($planning);
         
         $this->milestone                   = $milestone;
-        $this->available_milestones        = $selectable_artifacts;
+        $this->available_milestones        = $available_milestones;
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
