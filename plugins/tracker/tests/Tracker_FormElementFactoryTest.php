@@ -260,13 +260,13 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
     }
 
-    public function itReturnsTheFieldsIfUserCanReadTheOriginal() {
+    public function itReturnsTheFieldsIfUserCanReadTheOriginalAndAllTargets() {
         $user       = mock('User');
         $project = new MockProject();
         
         $readableField   = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
-        $targetOfReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
-        $targetOfReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+        $targetOfReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $targetOfReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
         $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
         
         $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
@@ -277,34 +277,34 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
         $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($readableField));
     }
     
-    public function itReturnsTheFieldsIfUserCannotReadTheOriginalButAtleastOneOfTheTargets() {
+    public function itDoesntReturnAnythingIfUserCannotReadTheOriginalAndAllTheTargets() {
         $user       = mock('User');
         $project = new MockProject();
         
-        $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
-        $targetOfUnReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
-        $targetOfUnReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $aReadableField         = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $targetOfReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
+        $targetOfReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
                 
         $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
-        $factory->setReturnValue('getProjectSharedFields', array($unReadableField), array($project));
-        $factory->setReturnValue('getSharedTargets', array($targetOfUnReadableField1, $targetOfUnReadableField2), array($unReadableField));
+        $factory->setReturnValue('getProjectSharedFields', array($aReadableField), array($project));
+        $factory->setReturnValue('getSharedTargets', array($targetOfReadableField1, $targetOfReadableField2), array($aReadableField));
         
-        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($unReadableField));
+        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array());
     }
     
     public function itReturnsACollectionOfUniqueOriginals() {
         $user       = mock('User');
         $project = new MockProject();
         
-        $unReadableField = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(false);
-        $targetOfUnReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
-        $targetOfUnReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $aReadableField         = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $targetOfReadableField1 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
+        $targetOfReadableField2 = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
                 
         $factory = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getProjectSharedFields', 'getSharedTargets'));
-        $factory->setReturnValue('getProjectSharedFields', array($unReadableField), array($project));
-        $factory->setReturnValue('getSharedTargets', array($targetOfUnReadableField1, $targetOfUnReadableField2), array($unReadableField));
+        $factory->setReturnValue('getProjectSharedFields', array($aReadableField), array($project));
+        $factory->setReturnValue('getSharedTargets', array($targetOfReadableField1, $targetOfReadableField2), array($aReadableField));
         
-        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($unReadableField));
+        $this->assertEqual($factory->getSharedFieldsReadableBy($user, $project), array($aReadableField));
     }
 
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {
