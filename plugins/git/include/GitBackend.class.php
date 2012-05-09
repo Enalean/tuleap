@@ -403,11 +403,11 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             }
         }
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitPushes[]  = "Total number of git pushes";
-        $gitCommits[] = "Total number of git commits";
-        $gitUsers[]   = "Total number of users";
-        $gitRepo[]    = "Total number of repositories";
-        $dar = $dao->totalPushes( $formatter->groupId, '2011-05-05', '2012-05-09');
+        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
+        $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
+        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_users');
+        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
+        $dar = $dao->totalPushes( $formatter->groupId, $formatter->startDate, $formatter->endDate);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $gitIndex[]   = $row['month']." ".$row['year'];
