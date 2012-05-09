@@ -139,13 +139,16 @@ class ProjectQuota {
                     $this->addQuota($project, $requester, $quota, $motivation);
                     break;
                 case 'delete' :
-                    $list = $request->get('delete_quota');
-                    $pm = ProjectManager::instance();
-                    $projects = array();
+                    $list       = $request->get('delete_quota');
+                    $pm         = ProjectManager::instance();
+                    $projects   = array();
+                    $validProjectId = new Valid_UInt();
                     foreach ($list as $projectId) {
-                        $project = $pm->getProject($projectId);
-                        if ($project) {
-                            $projects[$project->getId()] = $project->getPublicName();
+                        if ($validProjectId->validate($projectId)) {
+                            $project = $pm->getProject($projectId);
+                            if ($project) {
+                                $projects[$project->getId()] = $project->getPublicName();
+                            }
                         }
                     }
                     $this->deleteCustomQuota($projects);
