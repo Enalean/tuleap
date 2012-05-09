@@ -52,7 +52,7 @@ class ProjectQuota {
             $filter = $request->get('project_filter');
         }
         $result = $this->pm->returnAllProjects(0, 20, false, $filter);
-        $projects = $result[projects];
+        $projects = $result['projects'];
         $list = array();
         foreach ($projects as $entry) {
             $list[] = $entry['group_id'];
