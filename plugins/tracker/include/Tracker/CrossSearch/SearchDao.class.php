@@ -23,6 +23,7 @@ require_once 'SharedField.class.php';
 require_once dirname(__FILE__).'/../Report/dao/Tracker_ReportDao.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
+    
     /**
      * Monstro query 
      * 
@@ -43,6 +44,13 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                                             array $semantic_fields, 
                                             array $artifact_link_field_ids_for_column_display, 
                                             array $excluded_artifact_ids = array()) {
+        $report_dao = new Tracker_ReportDao();
+        $report_dao->logStart(__METHOD__, json_encode(array(
+            'user'     => $user->getUserName(),
+            'project'  => $group_id, 
+            'query'    => $query->toArrayOfDoom(),
+            'trackers' => array_values($tracker_ids)
+        )));
         
         $is_super_user                = $user->isSuperUser();
         $ugroups                      = $user->getUgroups($group_id, array());
@@ -67,7 +75,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
         $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display, $is_super_user, $quoted_ugroups);
         
-        $report_dao = new Tracker_ReportDao();
         $artifact_permissions = $report_dao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $user->getUgroups($group_id, array()));
         $artifact_permissions_join  = $artifact_permissions['from'];
         $artifact_permissions_where = $artifact_permissions['where'];
@@ -127,7 +134,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         array_filter($sqls);
 
         if (count($sqls) == 0) {
-            return new DataAccessResultEmpty();
+            $results = new DataAccessResultEmpty();
         } else {
             $union = implode(' UNION ', $sqls);
 
@@ -177,8 +184,11 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 ORDER BY title
             ";
             //echo "<pre>$sql</pre>";
-            return $this->retrieve($sql);
+            $results = $this->retrieve($sql);
         }
+        $nb_matching = count($results);
+        $report_dao->logEnd(__METHOD__, $nb_matching);
+        return $results;
     }
     
     protected function getTrackerSemanticStatusJoin($is_super_user, $quoted_ugroups) {

@@ -47,6 +47,17 @@ class Tracker_CrossSearch_Query {
         $this->artifact_ids           = $artifact_ids;
     }
     
+    /**
+     * @return array
+     */
+    public function toArrayOfDoom() {
+        return array(
+            'shared_fields' => $this->shared_fields_criteria,
+            'semantic'      => $this->semantic_criteria,
+            'artifacts'     => $this->artifact_ids
+        );
+    }
+    
     public function getSharedFields() {
         return $this->shared_fields_criteria;
     }

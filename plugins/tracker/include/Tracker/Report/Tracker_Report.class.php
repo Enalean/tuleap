@@ -203,6 +203,13 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
     
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+        $dao->logStart(__METHOD__, json_encode(array(
+            'user'     => $user->getUserName(),
+            'project'  => $tracker->getGroupId(), 
+            'query'    => json_encode($criteria),
+            'trackers' => array($tracker->getId()),
+        )));
+        
         $matching_ids = array();
         
         $group_id             = $tracker->getGroupId();
@@ -238,6 +245,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $matching_ids['id']                = '';
             $matching_ids['last_changeset_id'] = '';
         }
+        
+        $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
+        $dao->logEnd(__METHOD__, $nb_matching);
+        
         return $matching_ids;
     }
     
@@ -850,7 +861,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $session_criterion = $this->report_session->getCriterion($formElement_id);
             if ( $session_criterion ) {
                 if ($field = $ff->getFormElementById($formElement_id)) {
-                    $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));                   ;
+                    $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));
                 }
             }
         }        

@@ -379,5 +379,20 @@ class Tracker_ReportDao extends DataAccessObject {
         return in_array($ugroupId, $dynamic_ugroups) &&
                in_array($ugroupId, $allowed_groups);
     }
+    
+    
+    private $time_start;
+    public function logStart($method, $query) {
+        $this->log($method, "searching for ". $query);
+        $this->time_start = microtime(1);
+    }
+    public function logEnd($method, $nb_matching) {
+        $time_taken = microtime(1) - $this->time_start;
+        $this->log($method, "\tNb matching: $nb_matching");
+        $this->log($method, "\tTime taken: $time_taken seconds");
+    }
+    private function log($method, $message) {
+        error_log(date('c') ." $method -> $message\n", 3, $GLOBALS['codendi_log'] .'/debug.log');
+    }
 }
 ?>
