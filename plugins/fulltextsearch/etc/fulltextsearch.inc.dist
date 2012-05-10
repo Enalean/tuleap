@@ -1,0 +1,5 @@
+<?php
+$fulltextsearch_path = '/usr/local/share/php/elasticsearch';
+$fulltextsearch_host = 'localhost';
+$fulltextsearch_port = 9200;
+?>
