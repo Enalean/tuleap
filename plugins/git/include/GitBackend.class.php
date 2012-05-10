@@ -19,6 +19,7 @@
   */
 require_once('common/backend/Backend.class.php');
 require_once('GitDao.class.php');
+require_once('Git_LogDao.class.php');
 require_once('GitDriver.class.php');
 require_once('Git_Backend_Interface.php');
 require_once('GitRepository.class.php');
@@ -389,23 +390,45 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitolite[]      = "Gitolite";
         $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitShellIndex[] = $row['month']." ".$row['year'];
                 $gitShell[]      = intval($row['count']);
             }
+        $formatter->addLine($gitShellIndex);
+        $formatter->addLine($gitShell);
         }
         $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitoliteIndex[] = $row['month']." ".$row['year'];
                 $gitolite[]      = intval($row['count']);
             }
-        }
-        $formatter->addLine($gitShellIndex);
-        $formatter->addLine($gitShell);
         $formatter->addLine($gitoliteIndex);
         $formatter->addLine($gitolite);
+        }
+        $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
+        $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
+        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_users');
+        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
+
+        $gitLogDao = new Git_LogDao();
+        $dar       = $gitLogDao->totalPushes( $formatter->groupId, $formatter->startDate, $formatter->endDate);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $gitIndex[]   = $row['month']." ".$row['year'];
+                $gitPushes[]  = intval($row['pushes_count']);
+                $gitCommits[] = intval($row['commits_count']);
+                $gitUsers[]   = intval($row['users']);
+                $gitRepo[]    = intval($row['repositories']);
+            }
+        $formatter->addLine($gitIndex);
+        $formatter->addLine($gitPushes);
+        $formatter->addLine($gitCommits);
+        $formatter->addLine($gitUsers);
+        $formatter->addLine($gitRepo);
+        }
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
         return $content;
