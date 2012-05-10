@@ -395,8 +395,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitShellIndex[] = $row['month']." ".$row['year'];
                 $gitShell[]      = intval($row['count']);
             }
-            $formatter->addLine($gitShellIndex);
-            $formatter->addLine($gitShell);
+        $formatter->addLine($gitShellIndex);
+        $formatter->addLine($gitShell);
         }
         $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -404,23 +404,9 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitoliteIndex[] = $row['month']." ".$row['year'];
                 $gitolite[]      = intval($row['count']);
             }
-            $formatter->addLine($gitoliteIndex);
-            $formatter->addLine($gitolite);
+        $formatter->addLine($gitoliteIndex);
+        $formatter->addLine($gitolite);
         }
-        $this->retrieveLoggedPushesStatistics($formatter);
-        $content = $formatter->getCsvContent();
-        $formatter->clearContent();
-        return $content;
-    }
-
-    /**
-     * Retrieve logged pushes statistics for CSV export
-     *
-     * @param Statistics_Formatter $formatter instance of statistics formatter class
-     *
-     * @return void
-     */
-    private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
         $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
@@ -428,7 +414,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
 
         $gitLogDao = new Git_LogDao();
-        $dar       = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        $dar       = $gitLogDao->totalPushes( $formatter->groupId, $formatter->startDate, $formatter->endDate);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitIndex[]   = $row['month']." ".$row['year'];
@@ -437,12 +423,15 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitUsers[]   = intval($row['users']);
                 $gitRepo[]    = intval($row['repositories']);
             }
-            $formatter->addLine($gitIndex);
-            $formatter->addLine($gitPushes);
-            $formatter->addLine($gitCommits);
-            $formatter->addLine($gitUsers);
-            $formatter->addLine($gitRepo);
+        $formatter->addLine($gitIndex);
+        $formatter->addLine($gitPushes);
+        $formatter->addLine($gitCommits);
+        $formatter->addLine($gitUsers);
+        $formatter->addLine($gitRepo);
         }
+        $content = $formatter->getCsvContent();
+        $formatter->clearContent();
+        return $content;
     }
 }
 
