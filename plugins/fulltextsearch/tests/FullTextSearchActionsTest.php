@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/clients/ElasticSearchFakeClient.php';
+
 if (!defined('DOCMAN_PATH')) {
     define('DOCMAN_INCLUDE_PATH', dirname(__FILE__).'/../../docman/include' );
 }
@@ -27,7 +28,6 @@ require_once DOCMAN_INCLUDE_PATH.'/Docman_Version.class.php';
 
 require_once dirname(__FILE__).'/../include/FullTextSearchActions.class.php';
 
-Mock::generate('User');
 Mock::generate('ElasticSearchFakeClient');
 Mock::generate('FullTextSearchActions');
 Mock::generate('Docman_File');
@@ -36,6 +36,9 @@ Mock::generate('Docman_Version');
 
 class FullTextSearchActionsTests extends TuleapTestCase {
     protected $client;
+    protected $actions;
+    protected $params;
+    
     public function setUp() {
         parent::setUp();
         $this->client  = new MockElasticSearchFakeClient();
@@ -44,25 +47,33 @@ class FullTextSearchActionsTests extends TuleapTestCase {
         $this->params  = array(
         	'item' => new MockDocman_File(),
             'version' => new MockDocman_Version(),
-            'user' => new MockUser(),
+            'user' => '',
         ); 
     }
     
     public function itCallIndexOnClientWithRightParameters() {
         $expected_id          = 'id';
+        $expected_group_id    = 'group_id';
         $expected_title       = 'title'; 
         $expected_description = 'description';
         $expected_path        = 'path';
+        $permissions          = array('PLUGIN_DOCMAN_READ' =>  array(3, 102));
+        $expected_permissions = array($expected_group_id => array(3, 102));
+        
         $expected_datas       = array(
             'title'       => $expected_title,
             'description' => $expected_description,
-            'file'        => $expected_path
+            'file'        => $expected_path,
+            'permissions' => $expected_permissions
         );
-        
+                
         $this->params['item']->setReturnValue('getId',          $expected_id);
+        $this->params['item']->setReturnValue('getGroupId',     $expected_group_id);
         $this->params['item']->setReturnValue('getTitle',       $expected_title);
         $this->params['item']->setReturnValue('getDescription', $expected_description);
-        $this->params['version']->setReturnValue('getPath',        $expected_path);
+        $this->params['item']->setReturnValue('getPermissions', $permissions);
+        $this->params['version']->setReturnValue('getPath',     $expected_path);
+        
         
         $this->actions->setReturnValue('file_content_encode', $expected_path);
         $this->client->expectOnce('index', array($expected_datas, $expected_id));

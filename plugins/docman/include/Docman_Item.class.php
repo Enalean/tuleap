@@ -351,6 +351,11 @@ class Docman_Item {
     protected function getEventManager() {
         return EventManager::instance();
     }
+    
+    public function getPermissions() {
+        require_once 'common/permission/PermissionsManager.class.php';
+        return PermissionsManager::instance()->getPermissionsAndUgroupsByObjectid($this->id, array());
+    }
 }
 
 ?>

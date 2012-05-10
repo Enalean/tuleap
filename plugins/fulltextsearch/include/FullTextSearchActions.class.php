@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/permission/PermissionsManager.class.php';
-require_once 'common/permission/PermissionsManager.class.php';
 
 class FullTextSearchActions {
     
@@ -33,19 +31,14 @@ class FullTextSearchActions {
         $item_id = $params['item']->getId();
         $group_id= $params['item']->getGroupId();
         $user    = $params['user'];
-        //$ugroups = $user->getUgroups($group_id, array());
         
-        $permissions = PermissionsManager::instance()->getPermissionsAndUgroupsByObjectid($item_id, array());
-        $perms = array();
-        foreach($permissions as $permission) {
-            $perms = array_merge($perms, array_values($permission));
-        }
+        $permissions = $this->permissions_values($params['item']->getPermissions());
         
         $indexed_datas = array(
     		'title'       => $params['item']->getTitle(),
     		'description' => $params['item']->getDescription(),
             'file'        => $this->file_content_encode($params['version']->getPath()), 
-            'perms'		  => array($group_id => $perms)
+            'permissions' => array($group_id => $permissions)
         );
         
         $this->client->index($indexed_datas, $item_id);
@@ -57,6 +50,14 @@ class FullTextSearchActions {
     
     protected function file_content_encode($file_name) {
         return base64_encode(file_get_contents($file_name));
+    }
+    
+    protected function permissions_values($permissions) {
+        $permissions_values = array();
+        foreach($permissions as $permission) {
+            $permissions_values = array_merge($permissions_values, array_values($permission));
+        }
+        return $permissions_values;
     }
 }
 ?>
