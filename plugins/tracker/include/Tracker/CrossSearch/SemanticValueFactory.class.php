@@ -127,5 +127,13 @@ class Tracker_CrossSearch_SemanticValueFactory {
     private function getArtifact($artifact_id) {
         return $this->artifact_factory->getArtifactById($artifact_id);
     }
+    
+    public function allTitlesAreReadable(User $user, Project $project) {
+        return true;
+    }
+    
+    public function allStatusesAreReadable(User $user, Project $project) {
+        return true;
+    }
 }
 ?>

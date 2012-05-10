@@ -54,7 +54,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
      */
     public function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $shared_fields   = $this->getSharedFieldsCriteria($user, $project, $report, $cross_search_query);
-        $semantic_fields = $this->getSemanticFieldsCriteria($report, $cross_search_query);
+        $semantic_fields = $this->getSemanticFieldsCriteria($user, $project, $report, $cross_search_query);
         $artifact_fields = $this->getArtifactLinkCriteria($user, $report, $cross_search_query);
         return array_merge($semantic_fields, $shared_fields, $artifact_fields);
     }
@@ -76,10 +76,8 @@ class Tracker_CrossSearch_CriteriaBuilder {
             $allowed_field_ids[$field->getId()] = true;
             
             $field->setCriteriaValue($this->getSelectedValues($field, $cross_search_query->getSharedFields()));
-            $id          = null;
-            $rank        = 0;
-            $is_advanced = true;
-            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+            
+            $criteria[]  = $this->buildCriteria($report, $field);
         }
         
         $cross_search_query->purgeSharedFieldNotInList($allowed_field_ids);
@@ -90,17 +88,20 @@ class Tracker_CrossSearch_CriteriaBuilder {
     /**
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSemanticFieldsCriteria(Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
-        $title_field  = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_query->getTitle(), $this->semantic_value_factory);
-        $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_query->getStatus(), $this->semantic_value_factory);
-        $id           = null;
-        $rank         = 0;
-        $is_advanced  = true;
+    public function getSemanticFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        $criteria = array();
         
-        return array(
-            new Tracker_Report_Criteria($id, $report, $title_field,  $rank, $is_advanced), 
-            new Tracker_Report_Criteria($id, $report, $status_field, $rank, $is_advanced)
-        );
+        if ($this->semantic_value_factory->allTitlesAreReadable($user, $project)) {
+            $title_field  = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_query->getTitle(), $this->semantic_value_factory);
+            $criteria[] = $this->buildCriteria($report, $title_field);
+        }
+        
+        if ($this->semantic_value_factory->allStatusesAreReadable($user, $project)) {
+            $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_query->getStatus(), $this->semantic_value_factory);
+            $criteria[] = $this->buildCriteria($report, $status_field);
+        }
+        
+        return $criteria;
     }
 
     public function getArtifactLinkCriteria(User $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
@@ -141,7 +142,16 @@ class Tracker_CrossSearch_CriteriaBuilder {
             && $artifact->getTracker()->getTitleField()->userCanRead($user)
             && ($artifact->getAnArtifactLinkField($user) !== null);
     }
-
+    
+    /**
+     * @return Tracker_Report_Criteria
+     */
+    private function buildCriteria(Tracker_Report $report, $field) {
+        $id           = null;
+        $rank         = 0;
+        $is_advanced  = true;
+        return new Tracker_Report_Criteria($id, $report, $field,  $rank, $is_advanced);
+    }
 }
 
 ?>
