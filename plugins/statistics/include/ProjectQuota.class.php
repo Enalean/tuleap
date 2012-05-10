@@ -44,7 +44,9 @@ class ProjectQuota {
      * @return String
      */
     public function displayProjectQuota($request) {
-        $output = '';
+        $output = '<form method="get" >';
+        $output .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
+        $output .= '</form>';
         // TODO: Add offset & limit management
         $validFilter = new Valid_String('project_filter');
         $filter      = null;
@@ -62,9 +64,6 @@ class ProjectQuota {
             $i        = 0;
             $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('plugin_statistics', 'date'), $GLOBALS['Language']->getText('global', 'delete'));
             $output   .= html_build_list_table_top($titles);
-            $output   .= '<form method="get" >';
-            $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-            $output   .= '</form>';
             $output   .= '<form method="post" >';
             $purifier = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
