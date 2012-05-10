@@ -1,3 +1,4 @@
-*.swp
-src/www/scripts/combined/*
-*.swo
+.buildpath
+.project
+.settings
+adminer.php
