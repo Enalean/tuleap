@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php';
+
 /**
  * The criteria for a cross-tracker search.
  * Includes both semantic field criteria (e.g. title, status) and shared field
@@ -78,7 +80,6 @@ class Tracker_CrossSearch_Query {
         } 
     }
 
-
     public function getSemanticCriteria() {
         return $this->semantic_criteria;
     }
@@ -103,6 +104,24 @@ class Tracker_CrossSearch_Query {
         return $id_list;
     }
     
+    /**
+     * Remove artifact ids in requests that are not part of the given list
+     * 
+     * This is used to remove the artifact ids the user cannot access (eg. if user
+     * attempt to forge URL).
+     * 
+     * @param array $blessed_artifact_ids 
+     */
+    public function purgeArtifactIdsNotInList(array $blessed_artifact_ids) {
+        foreach ($this->artifact_ids as $tracker_id => $artifact_ids) {
+            foreach ($artifact_ids as $k => $artifact_id) {
+                if (!isset($blessed_artifact_ids[$artifact_id])) {
+                    unset($this->artifact_ids[$tracker_id][$k]);
+                }
+            }
+        }
+    }
+    
     //TODO : is it going to be used?
     public function getArtifactsOfTracker($tracker_id) {
         $artifacts = array();
@@ -113,6 +132,7 @@ class Tracker_CrossSearch_Query {
         }
         return $artifacts;
     }
+    
     /**
      * add the public property isSelected on each artifact of $artifact_list
      * A selected artifact must be shwn as selected in the html select box of the view.

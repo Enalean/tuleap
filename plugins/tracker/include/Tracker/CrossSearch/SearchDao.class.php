@@ -203,12 +203,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                     AND SS.open_value_id = CVL.bindvalue_id
                 )";
         if (!$is_super_user) {
-            $semantic_status_join .= "
+            /*$semantic_status_join .= "
                 INNER JOIN permissions AS CVPerm3 ON (
                     CVPerm3.object_id           =  CAST(SS.field_id AS CHAR)
                     AND CVPerm3.permission_type =  'PLUGIN_TRACKER_FIELD_READ'
                     AND CVPerm3.ugroup_id       IN ($quoted_ugroups)
-                )";
+                )";*/
         }
         $semantic_status_join .= "
             ) ON (c.id = CV3.changeset_id)";
@@ -226,12 +226,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                     CV.id       = CVT.changeset_value_id
                 )";
         if (!$is_super_user) {
-            $semantic_title_join .= "
+            /*$semantic_title_join .= "
                 INNER JOIN permissions AS CVPerm ON (
                     CVPerm.object_id = CAST(ST.field_id AS CHAR)
                     AND CVPerm.permission_type = 'PLUGIN_TRACKER_FIELD_READ'
                     AND CVPerm.ugroup_id IN ($quoted_ugroups)
-                )";
+                )";*/
         }
         $semantic_title_join .= "
             ) ON (c.id = CV.changeset_id)";
@@ -338,14 +338,14 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     protected function getArtifactLinkFields($artifact_ids_list, $is_super_user, $quoted_ugroups) {
         $artifacts_fields = array();
         $permissions      = '';
-        if (!$is_super_user) {
+        /*if (!$is_super_user) {
             $permissions  = "
                 INNER JOIN permissions		  AS P ON (
                 	P.object_id          =  CAST(F.id AS CHAR)
                     AND P.permission_type=  'PLUGIN_TRACKER_FIELD_READ'
                     AND P.ugroup_id      IN ($quoted_ugroups)
                 )";
-        } 
+        } */
         $sql = "SELECT F.id AS field_id, A.id AS artifact_id
                 FROM tracker_field            AS F
                 INNER JOIN tracker            AS T ON (
@@ -392,7 +392,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
      */
     protected function getArtifactLinkColumns(array $field_ids, $is_super_user, $quoted_ugroups) {
         $artifact_link_columns = '';
-        if ($is_super_user) {
+        /*if ($is_super_user) {
             $permissions_template = '';
         } else {
             $permissions_template = "
@@ -401,12 +401,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                     AND AL_COL_PERM_{field_id}.permission_type=  'PLUGIN_TRACKER_FIELD_READ'
                     AND AL_COL_PERM_{field_id}.ugroup_id      IN ($quoted_ugroups)
                 )";
-        }
+        }*/
         foreach ($field_ids as $field_id) {
             $tracker_artifact_title        = 'AL_COL_'.$field_id;
             $al_tracker_changeset_value    = 'AL_COL_CV_'.$field_id;
             $al_tracker_changeset_value_al = 'AL_COL_CVAL_'.$field_id;
-            $permissions = str_replace('{field_id}', $field_id, $permissions_template);
+            $permissions = '';//str_replace('{field_id}', $field_id, $permissions_template);
                     
             $artifact_link_columns .= "
             LEFT JOIN (

@@ -76,6 +76,22 @@ class Query_ArtifactTest extends TuleapTestCase {
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(132));
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(456));
     }
+    
+    public function itDoesntRemoveArtifactIdsThatAreInTheBlessedList() {
+        $query = $this->givenAnArtifactQuery(array('132' => array('1', '2'), '456' => array('3', '4')));
+        
+        $query->purgeArtifactIdsNotInList(array('1' => 0, '2' => 1, '3' => 4, '4' => 5));
+        
+        $this->assertEqual(array('1', '2', '3', '4'), $query->listArtifactIds());
+    }
+    
+    public function itRemovesArtifactIdsThatAreNotInTheBlessedList() {
+        $query = $this->givenAnArtifactQuery(array('132' => array('1', '2'), '456' => array('3', '4')));
+        
+        $query->purgeArtifactIdsNotInList(array('6' => 0));
+        
+        $this->assertEqual(array(), $query->listArtifactIds());
+    }
 }
 
 class Query_SharedFieldsTest extends TuleapTestCase {

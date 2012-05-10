@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__) . '/../../Test_Artifact_Builder.php';
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
@@ -305,7 +306,108 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         
     }
     
+    public function _itRemovesFromQueryArtifactIdsThatAreNotReadableByUser() {
+        $user                    = mock('User');
+        $release_tracker_id      = 999;
+        $release_tracker         = aTracker()->withId($release_tracker_id)->build();
+        
+        $sprint_tracker_id       = 666;
+        $sprint_tracker          = aTracker()->withId($sprint_tracker_id)->build();
+        
+        $artifacts_ids           = array($release_tracker_id => array(1, 512), $sprint_tracker_id => array(33));
+        $query                   = aCrossSearchCriteria()->withArtifactIds($artifacts_ids)->build();
+        
+        $report                  = new MockTracker_Report();
+        
+        $artifact1               = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
+        
+        stub($this->artifact_factory)->getArtifactsByTrackerIdUserCanView($user, $release_tracker_id)
+                                     ->returns(array($artifact1));
+        stub($this->artifact_factory)->getArtifactsByTrackerIdUserCanView($user, $sprint_tracker_id)
+                                     ->returns(array());
+        
+        $this->planning_trackers = array($release_tracker, $sprint_tracker);
+        
+        $builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory,
+                                                           $this->semantic_factory,
+                                                           $this->planning_trackers);
+        
+        $builder->getArtifactLinkCriteria($user, $report, $query);
+        
+        $this->assertEqual($query->listArtifactIds(), array(1));
+    }
     
+}
+
+class Tracker_CrossSearch_CriteriaBuilder_AssertUserCanSearchOnArtifactTest extends Tracker_CrossSearch_CriteriaBuilderTest {
+    private $builder;
+    private $user;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->user    = mock('User');
+        $this->builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory,
+                                                                 $this->semantic_factory,
+                                                                 $this->planning_trackers);
+    }
+    
+    public function itEnsuresUserCannotSearchOnArtifactWhenHeCannotReadTheTitleField() {
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(false);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertFalse($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCanSearchOnArtifactWhenSheCanReadTheTitleField() {        
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(true);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertTrue($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCannotSearchOnArtifactWhenHeCannotReadTheArtifactLinkField() {
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(true);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns(null);
+        
+        $this->assertFalse($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCanSearchOnArtifactWhenHeCanReadTheArtifactLinkField() {
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(true);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertTrue($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCannotSearchOnArtifactWhenItHasNoTitleField() {
+        $release_tracker = stub('Tracker')->getTitleField()->returns(null);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertFalse($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
 }
 
 ?>

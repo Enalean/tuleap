@@ -67,7 +67,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
      * 
      * @return array of \Tracker_Report_Criteria 
      */
-    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query &$cross_search_query) {
+    public function getSharedFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $fields            = $this->form_element_factory->getSharedFieldsReadableBy($user, $project);
         $criteria          = array();
         $allowed_field_ids = array();
@@ -105,13 +105,24 @@ class Tracker_CrossSearch_CriteriaBuilder {
 
     public function getArtifactLinkCriteria(User $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $criteria = array();
+        
+        $allowed_artifact_ids = array();
+        
         foreach ($this->planning_trackers as $tracker) {
             $tracker_id        = $tracker->getId();
             $tracker_artifacts = Tracker_ArtifactFactory::instance()->getArtifactsByTrackerIdUserCanView($user, $tracker_id);
+            // TODO: far from being perfect, anyway we should not modify query but
+            //       we should only use criteria in the whole stack
+            foreach ($tracker_artifacts as $artifact) {
+                $allowed_artifact_ids[$artifact->getId()] = true;
+            }            
             $tracker_artifacts = $cross_search_query->setSelectedArtifacts($tracker_id, $tracker_artifacts);
             $field      = new Tracker_CrossSearch_ArtifactReportField($tracker, $tracker_artifacts);
             $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
         }
+                
+        $cross_search_query->purgeArtifactIdsNotInList($allowed_artifact_ids);
+        
         return $criteria;
     }
     
@@ -123,6 +134,12 @@ class Tracker_CrossSearch_CriteriaBuilder {
         }
         
         return $current_value;
+    }
+    
+    public function userCanSearchOnArtifact(User $user, Tracker_Artifact $artifact) {
+        return ($artifact->getTracker()->getTitleField() !== null)
+            && $artifact->getTracker()->getTitleField()->userCanRead($user)
+            && ($artifact->getAnArtifactLinkField($user) !== null);
     }
 
 }
