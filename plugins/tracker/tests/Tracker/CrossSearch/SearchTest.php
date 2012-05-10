@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
-require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__) . '/../../builders/aTracker.php';
+require_once dirname(__FILE__) . '/../../builders/aField.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Search.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Query.class.php';
-require_once 'Test_CriteriaBuilder.php';
+require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
 
 Mock::generate('Tracker_CrossSearch_SharedFieldFactory');
 Mock::generate('Tracker_CrossSearch_SearchDao');

@@ -22,12 +22,12 @@
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once(dirname(__FILE__).'/../../include/Planning/MilestoneController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_FormElement_Builder.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/Test_CriteriaBuilder.php');
-require_once(dirname(__FILE__).'/../builders/planning.php');
-require_once(dirname(__FILE__).'/../builders/planning_factory.php');
-require_once dirname(__FILE__).'/../builders/controller.php';
+require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php');
+require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aField.php');
+require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCriteria.php');
+require_once(dirname(__FILE__).'/../builders/aPlanning.php');
+require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
+require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 Mock::generate('Tracker_ArtifactFactory');

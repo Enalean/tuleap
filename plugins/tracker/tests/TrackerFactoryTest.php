@@ -20,13 +20,13 @@
 
 //require_once('common/dao/include/DataAccessObject.class.php');
 //require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
-require_once('Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/builders/aTracker.php');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Hierarchy/HierarchyFactory.class.php');
 Mock::generate('Tracker_HierarchyFactory');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
-require_once('Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/builders/aTracker.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');

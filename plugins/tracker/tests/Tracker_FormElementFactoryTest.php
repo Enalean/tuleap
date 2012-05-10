@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__).'/builders/aField.php';
 
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generatePartial(
@@ -40,7 +40,7 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 Mock::generate('Tracker_FormElement_Field_Date');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
-require_once(dirname(__FILE__).'/Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/builders/aTracker.php');
 
 Mock::generate('Tracker');
 Mock::generate('TrackerManager');

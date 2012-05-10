@@ -19,7 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/../../include/Planning/PlanningRequestValidator.class.php';
-require_once dirname(__FILE__).'/../builders/planning_creation_request.php';
+require_once dirname(__FILE__).'/../builders/aPlanningCreationRequest.php';
 
 class RequestValidatorTest extends TuleapTestCase {
     

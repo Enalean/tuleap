@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
-require_once dirname(__FILE__) . '/../../Test_Artifact_Builder.php';
-require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__) . '/../../builders/aTracker.php';
+require_once dirname(__FILE__) . '/../../builders/anArtifact.php';
+require_once dirname(__FILE__) . '/../../builders/aField.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
-require_once 'Test_CriteriaBuilder.php';
+require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/CriteriaBuilder.class.php';
 

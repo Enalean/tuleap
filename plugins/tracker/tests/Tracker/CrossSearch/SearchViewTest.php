@@ -20,7 +20,7 @@
 
 
 require_once(dirname(__FILE__).'/../../../include/constants.php');
-require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__) . '/../../builders/aTracker.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 

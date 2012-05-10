@@ -29,10 +29,10 @@ if (!defined('TRACKER_BASE_DIR')) {                                             
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TrackerManager.class.php';
 require_once(dirname(__FILE__).'/../../include/Planning/PlanningController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
-require_once(dirname(__FILE__).'/../builders/planning.php');
-require_once(dirname(__FILE__).'/../builders/planning_factory.php');
-require_once dirname(__FILE__).'/../builders/controller.php';
+require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php');
+require_once(dirname(__FILE__).'/../builders/aPlanning.php');
+require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
+require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');

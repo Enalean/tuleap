@@ -20,8 +20,8 @@
 
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
-require_once dirname(__FILE__).'/../builders/planning_factory.php';
-require_once TRACKER_BASE_DIR.'/../tests/Test_Tracker_Builder.php';
+require_once dirname(__FILE__).'/../builders/aPlanningFactory.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aTracker.php';
 
 Mock::generate('Planning');
 Mock::generate('PlanningDao');

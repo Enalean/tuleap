@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/Test_CriteriaBuilder.php';
+require_once dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
 
 class ViewBuilderTest extends TuleapTestCase {
     public function setUp() {
