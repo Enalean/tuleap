@@ -120,8 +120,7 @@ class Tracker_CrossSearch_SemanticValueFactory_WhenSemanticStatusIsUnreadable_Te
     public function setUp() {
         parent::setUp();
 
-        $artifact                      = aMockArtifact()->withId(123)->build();
-        $artifact_factory              = aMockArtifactFactory()->withArtifact($artifact)->build();
+        $artifact_factory              = aMockArtifactFactory()->build();
         $this->semantic_title_factory  = aMockSemanticTitleFactory()->build();
         $this->tracker_factory         = mock('TrackerFactory');
         
@@ -163,6 +162,56 @@ class Tracker_CrossSearch_SemanticValueFactory_WhenSemanticStatusIsUnreadable_Te
         stub($this->field_102)->userCanRead($this->user)->returns(true);
         stub($this->field_103)->userCanRead($this->user)->returns(false);
         $this->assertFalse($this->semantic_value_factory->allStatusesAreReadable($this->user, $this->project));
+    }
+}
+
+class Tracker_CrossSearch_SemanticValueFactory_WhenSemanticTitleIsUnreadable_Test extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+
+        $artifact_factory              = aMockArtifactFactory()->build();
+        $this->semantic_status_factory = aMockSemanticStatusFactory()->build();
+        $this->tracker_factory         = mock('TrackerFactory');
+        
+        $group_id = 456;
+        $this->user    = mock('User');
+        $this->project = stub('Project')->getId()->returns($group_id);
+        
+        $trackers = array(
+            101 => stub('Tracker')->getId()->returns(101),
+            102 => stub('Tracker')->getId()->returns(102),
+            103 => stub('Tracker')->getId()->returns(103),
+        );
+        stub($this->tracker_factory)->getTrackersByGroupId($group_id)->returns($trackers);
+        
+        $this->field_102 = aMockField()->build();
+        $this->field_103 = aMockField()->build();
+        
+        $this->semantic_title_factory = aMockSemanticTitleFactory()
+            ->withNoFieldForTracker($trackers[101])
+            ->withFieldForTracker($this->field_102, $trackers[102])
+            ->withFieldForTracker($this->field_103, $trackers[103])
+            ->build();
+        
+        $this->semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory(
+            $artifact_factory,
+            $this->semantic_title_factory,
+            $this->semantic_status_factory,
+            $this->tracker_factory
+        );
+    }
+    
+    public function itReturnsTrueIfAllTitlesAreReadable() {
+        stub($this->field_102)->userCanRead($this->user)->returns(true);
+        stub($this->field_103)->userCanRead($this->user)->returns(true);
+        $this->assertTrue($this->semantic_value_factory->allTitlesAreReadable($this->user, $this->project));
+    }
+    
+    public function itReturnsFalseIfOneTitleIsUnreadable() {
+        stub($this->field_102)->userCanRead($this->user)->returns(true);
+        stub($this->field_103)->userCanRead($this->user)->returns(false);
+        $this->assertFalse($this->semantic_value_factory->allTitlesAreReadable($this->user, $this->project));
     }
 }
 ?>

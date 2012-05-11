@@ -29,6 +29,13 @@ class MockSemanticTitleFactoryBuilder {
         $this->factory = new MockTracker_Semantic_TitleFactory();
     }
     
+    public function withFieldForTracker($field, $tracker) {
+        $semantic = mock('Tracker_Semantic_Title');
+        stub($semantic)->getField()->returns($field);
+        stub($this->factory)->getByTracker($tracker)->returns($semantic);
+        return $this;
+    }
+    
     public function withNoFieldForTracker($tracker) {
         $semantic_title = new MockTracker_Semantic_Status();
         
