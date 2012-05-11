@@ -23,7 +23,7 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
+require_once 'aTracker.php';
 
 function anArtifact() {
     return new Test_Artifact_Builder();
