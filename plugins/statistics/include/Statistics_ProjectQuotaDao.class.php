@@ -73,6 +73,8 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      * List all projects having custom quota
      *
      * @param Array $list List of projects Id corresponding to a filter
+     * @param int $offset From where the result will be displayed.
+     * @param int $count  How many results are returned.
      *
      * @return DataAccessResult
      */

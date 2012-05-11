@@ -180,7 +180,6 @@ function get_history_entries() {
                                         'rename_with_error',
                                         'add_custom_quota',
                                         'restore_default_quota',
-                                        'rename_with_error',
                                         'approved',
                                         'deleted',
                                         'rename_request',
