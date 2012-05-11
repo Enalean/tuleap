@@ -178,9 +178,9 @@ class Tracker_CrossSearch_SearchContentView {
                 // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
                 $linked_artifact_ids = array_unique(explode(',', $row[$key]));
                 foreach ($linked_artifact_ids as $id) {
-                    $values[]= $this->artifact_factory->getArtifactByIdUserCanView($this->user, $id)->getTitle();
+                    $values[]= $this->getArtifactLinkTitle($id);
                 }
-                $value = implode(', ', $values);
+                $value = implode(', ', array_filter($values));
             }
             
         } else {
@@ -188,6 +188,13 @@ class Tracker_CrossSearch_SearchContentView {
         }
         
         return $value;
+    }
+    
+    private function getArtifactLinkTitle($id) {
+        if ($artifact = $this->artifact_factory->getArtifactByIdUserCanView($this->user, $id)) {
+            return $artifact->getTitle();
+        }
+        return '';
     }
     
     private function getFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
