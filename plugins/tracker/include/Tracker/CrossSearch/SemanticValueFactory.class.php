@@ -21,6 +21,7 @@
 require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_StatusFactory.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 
 /**
  * This factory provides a simple way to retrieve semantic values (e.g. title,
@@ -54,11 +55,13 @@ class Tracker_CrossSearch_SemanticValueFactory {
     
     public function __construct(Tracker_ArtifactFactory        $artifact_factory,
                                 Tracker_Semantic_TitleFactory  $semantic_title_factory,
-                                Tracker_Semantic_StatusFactory $semantic_status_factory) {
+                                Tracker_Semantic_StatusFactory $semantic_status_factory,
+                                TrackerFactory                 $tracker_factory) {
         
         $this->artifact_factory        = $artifact_factory;
         $this->semantic_title_factory  = $semantic_title_factory;
         $this->semantic_status_factory = $semantic_status_factory;
+        $this->tracker_factory         = $tracker_factory;
     }
     
     public function getTitle($artifact_id, $changeset_id) {
@@ -133,6 +136,13 @@ class Tracker_CrossSearch_SemanticValueFactory {
     }
     
     public function allStatusesAreReadable(User $user, Project $project) {
+        $trackers = $this->tracker_factory->getTrackersByGroupId($project->getId());
+        foreach ($trackers as $tracker) {
+            $field = $this->semantic_status_factory->getByTracker($tracker)->getField();
+            if ($field && ! $field->userCanRead($user)) {
+                return false;
+            }
+        }
         return true;
     }
 }

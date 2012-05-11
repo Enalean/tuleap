@@ -367,11 +367,9 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
 
 class Tracker_CrossSearch_CriteriaBuilder_AssertUserCanSearchOnArtifactTest extends Tracker_CrossSearch_CriteriaBuilderTest {
     private $builder;
-    private $user;
     
     public function setUp() {
         parent::setUp();
-        $this->user    = mock('User');
         $this->builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory,
                                                                  $this->semantic_factory,
                                                                  $this->planning_trackers);
