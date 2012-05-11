@@ -28,13 +28,20 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     public $planning;
     public $planning_redirect_parameter = '';
 
-    public function __construct(Tracker_Report $report, array $criteria, TreeNode $tree_of_artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_FormElementFactory $factory,
-                                Planning $planning,
-                                $planning_redirect_param) {
-        parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory);
+    public function __construct(Tracker_Report             $report,
+                                array                      $criteria,
+                                TreeNode                   $tree_of_artifacts, 
+                                Tracker_ArtifactFactory    $artifact_factory, 
+                                Tracker_FormElementFactory $factory,
+                                User                       $user,
+                                Planning                   $planning,
+                                                           $planning_redirect_param) {
+        parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory, $user);
+        
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
     }
+    
     protected function fetchTable() {
         Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
         $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');

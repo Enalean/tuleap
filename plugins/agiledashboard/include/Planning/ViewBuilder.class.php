@@ -43,6 +43,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
                                               $artifacts, 
                                               Tracker_ArtifactFactory::instance(), 
                                               $this->form_element_factory,
+                                              $user,
                                               $planning,
                                               $planning_redirect_parameter);        
     }
