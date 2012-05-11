@@ -222,11 +222,14 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->withSemanticCriteria(array('title' => 'Foo', 'status' => ''))
+                                ->forOpenItems()
                                 ->build();
         $report_criteria       = $this->getSemanticCriteria($user, $cross_search_criteria);
         
         $this->assertEqual(count($report_criteria), 1);
         $this->assertIsA($report_criteria[0]->field, 'Tracker_CrossSearch_SemanticStatusReportField');
+        $this->assertNotNull($cross_search_criteria->getStatus());
+        $this->assertNull($cross_search_criteria->getTitle());
     }
     
     public function itDontBuildSemanticStatusCriteriaIfOneStatusIsNotReadable() {
@@ -235,12 +238,15 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         stub($this->semantic_factory)->allStatusesAreReadable($user, $this->project)->returns(false);
         
         $cross_search_criteria = aCrossSearchCriteria()
+                                ->withSemanticCriteria(array('title' => 'Bar', 'status' => ''))
                                 ->forOpenItems()
                                 ->build();
         $report_criteria       = $this->getSemanticCriteria($user, $cross_search_criteria);
         
         $this->assertEqual(count($report_criteria), 1);
         $this->assertIsA($report_criteria[0]->field, 'Tracker_CrossSearch_SemanticTitleReportField');
+        $this->assertNull($cross_search_criteria->getStatus());
+        $this->assertNotNull($cross_search_criteria->getTitle());
     }
     
     protected function getSemanticCriteria(User $user, $cross_search_criteria) {

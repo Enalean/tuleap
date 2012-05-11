@@ -96,6 +96,14 @@ class Tracker_CrossSearch_Query {
         }
     }
     
+    public function purgeTitle() {
+        unset($this->semantic_criteria['title']);
+    }
+    
+    public function purgeStatus() {
+        unset($this->semantic_criteria['status']);
+    }
+    
     /**
      * @return the flattened list of artifact_ids
      */

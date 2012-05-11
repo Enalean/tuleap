@@ -91,17 +91,28 @@ class Tracker_CrossSearch_CriteriaBuilder {
     public function getSemanticFieldsCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         $criteria = array();
         
-        if ($this->semantic_value_factory->allTitlesAreReadable($user, $project)) {
-            $title_field  = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_query->getTitle(), $this->semantic_value_factory);
-            $criteria[] = $this->buildCriteria($report, $title_field);
-        }
-        
-        if ($this->semantic_value_factory->allStatusesAreReadable($user, $project)) {
-            $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_query->getStatus(), $this->semantic_value_factory);
-            $criteria[] = $this->buildCriteria($report, $status_field);
-        }
+        $this->getSemanticTitleCriteria($criteria, $user, $project, $report, $cross_search_query);
+        $this->getSemanticStatusCriteria($criteria, $user, $project, $report, $cross_search_query);
         
         return $criteria;
+    }
+    
+    private function getSemanticStatusCriteria(array &$criteria, User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        if ($this->semantic_value_factory->allStatusesAreReadable($user, $project)) {
+            $status_field = new Tracker_CrossSearch_SemanticStatusReportField($cross_search_query->getStatus(), $this->semantic_value_factory);
+            $criteria[]   = $this->buildCriteria($report, $status_field);
+        } else {
+            $cross_search_query->purgeStatus();
+        }
+    }
+    
+    private function getSemanticTitleCriteria(array &$criteria, User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        if ($this->semantic_value_factory->allTitlesAreReadable($user, $project)) {
+            $title_field = new Tracker_CrossSearch_SemanticTitleReportField($cross_search_query->getTitle(), $this->semantic_value_factory);
+            $criteria[]  = $this->buildCriteria($report, $title_field);
+        } else {
+            $cross_search_query->purgeTitle();
+        }
     }
 
     public function getArtifactLinkCriteria(User $user, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
