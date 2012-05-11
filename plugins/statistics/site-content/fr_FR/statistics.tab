@@ -72,3 +72,4 @@ plugin_statistics	add_error	Une erreur est survenue lors de l'ajout
 plugin_statistics	no_project	Projet non trouvé
 plugin_statistics	quota_added	Le quota pour le projet "$1" est maintenant $2 GB
 plugin_statistics	quota_deleted	Quota supprimé pour $1
+plugin_statistics	no_search_result	Aucun résultat ne correspond a la recherche

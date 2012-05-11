@@ -60,12 +60,20 @@ class ProjectQuota {
         if ($request->valid($validFilter)) {
             $filter = $request->get('project_filter');
         }
-        $result = $this->pm->returnAllProjects(0, 20, false, $filter);
-        $projects = $result['projects'];
         $list = array();
-        foreach ($projects as $entry) {
-            $list[] = $entry['group_id'];
+        if ($filter) {
+            $result = $this->pm->returnAllProjects(0, 20, false, $filter);
+            $projects = $result['projects'];
+            foreach ($projects as $entry) {
+                $list[] = $entry['group_id'];
+            }
+            if (empty($list)) {
+                $output .= '<div id="feedback"><ul class="feedback_warning"><li>'.$GLOBALS['Language']->getText('plugin_statistics', 'no_search_result').'</li></ul></div>';
+            }
         }
+        $output   .= '<form method="get" >';
+        $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
+        $output   .= '</form>';
         $count        = 5;
         $res          = $this->dao->getAllCustomQuota($list, $offset, $count);
         $foundRowsRes = $this->dao->getAllCustomQuota($list);
@@ -90,10 +98,6 @@ class ProjectQuota {
             $i        = 0;
             $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('plugin_statistics', 'date'), $GLOBALS['Language']->getText('global', 'delete'));
             $output   .= html_build_list_table_top($titles);
-            $output   .= '<form method="get" >';
-            $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-            $output   .= '</form>';
-
             $output   .= '<form method="post" >';
             $purifier = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
