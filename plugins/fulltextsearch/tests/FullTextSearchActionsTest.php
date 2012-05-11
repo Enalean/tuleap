@@ -19,10 +19,8 @@
  */
 
 require_once dirname(__FILE__).'/clients/ElasticSearchFakeClient.php';
+require_once dirname(__FILE__).'/Constants.php';
 
-if (!defined('DOCMAN_PATH')) {
-    define('DOCMAN_INCLUDE_PATH', dirname(__FILE__).'/../../docman/include' );
-}
 require_once DOCMAN_INCLUDE_PATH.'/Docman_File.class.php';
 require_once DOCMAN_INCLUDE_PATH.'/Docman_Version.class.php';
 
