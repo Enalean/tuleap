@@ -44,10 +44,17 @@ class ProjectQuota {
      * @return String
      */
     public function displayProjectQuota($request) {
-        $output = '<form method="get" >';
-        $output .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-        $output .= '</form>';
-        // TODO: Add offset & limit management
+        $output = '';
+        $valid = new Valid('offset');
+        $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
+        $valid->addRule(new Rule_Int());
+        $valid->addRule(new Rule_GreaterOrEqual(0));
+        if($request->valid($valid)) {
+            $offset = $request->get('offset');
+        } else {
+            $offset = 0;
+        }
+
         $validFilter = new Valid_String('project_filter');
         $filter      = null;
         if ($request->valid($validFilter)) {
@@ -59,11 +66,34 @@ class ProjectQuota {
         foreach ($projects as $entry) {
             $list[] = $entry['group_id'];
         }
-        $res    = $this->dao->getAllCustomQuota($list);
+        $count        = 5;
+        $res          = $this->dao->getAllCustomQuota($list, $offset, $count);
+        $foundRowsRes = $this->dao->getAllCustomQuota($list);
+        $foundRows    = $foundRowsRes->rowCount();
+        // Prepare Navigation bar
+        $prevHref = '&lt;Previous';
+        if($offset > 0) {
+            $prevOffset = $offset - $count;
+            if($prevOffset < 0) {
+                $prevOffset = 0;
+            }
+            $prevHref = '<a href="?&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
+        }
+        $nextHref = 'Next&gt;';
+        $nextOffset = $offset + $count;
+        if($nextOffset > $foundRows) {
+            $nextOffset = null;
+        } else {
+            $nextHref = '<a href="?&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
+        }
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
             $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('plugin_statistics', 'date'), $GLOBALS['Language']->getText('global', 'delete'));
             $output   .= html_build_list_table_top($titles);
+            $output   .= '<form method="get" >';
+            $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
+            $output   .= '</form>';
+
             $output   .= '<form method="post" >';
             $purifier = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
@@ -87,7 +117,8 @@ class ProjectQuota {
             $output .= '<td></td><td></td><td></td><td></td><td></td><td><input type="submit" /></td>';
             $output .= '</tr>';
             $output .= '</form>';
-            $output .= '</table>';
+            $output .= '<tr><td>'.$prevHref.'</td><td></td><td></td><td></td><td></td><td>'.$nextHref.'</td></tr>';
+            $output .= '</table><br>';
         } else {
             $output .= $GLOBALS['Language']->getText('plugin_statistics', 'no_projects');
         }
@@ -215,7 +246,7 @@ class ProjectQuota {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                         // TODO: Add entry in project history
                         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-                        $historyDao->groupAddHistory("ADD_CUSTOM_QUOTA", $quota, $project->getGroupID());
+                        $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
@@ -246,7 +277,7 @@ class ProjectQuota {
             foreach ($projects as $projectId => $name) {
                 $list[]  = $projectId;
                 $names[] = $name;
-                $historyDao->groupAddHistory("RESTORE_DEFAULT_QUOTA", intval($defaultQuota), $projectId);
+                $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $projectId);
             }
             if ($this->dao->deleteCustomQuota($list)) {
                 // TODO: Add entry in project history

@@ -76,14 +76,19 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getAllCustomQuota($list = array()) {
+    public function getAllCustomQuota($list = array(), $offset = null, $count = null) {
         $condition = '';
         if (!empty($list)) {
             $condition = "WHERE ".self::GROUP_ID." IN (".join(', ', $list).")";
         }
+        if (isset($offset) && isset($count)) {
+            $limit = " LIMIT ".$this->da->escapeInt($offset).", ".$this->da->escapeInt($count);
+        } else {
+            $limit     = '';
+        }
         $sql = "SELECT *
                 FROM ".$this->getTable()."
-                ".$condition;
+                ".$condition.$limit;
         return $this->retrieve($sql);
     }
 
