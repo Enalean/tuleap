@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../Semantic/IRetrieveSemantic.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_StatusFactory.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
+require_once dirname(__FILE__).'/../TrackerFactory.class.php';
 
 /**
  * This factory provides a simple way to retrieve semantic values (e.g. title,
