@@ -18,13 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../include/Tracker/TrackerManager.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/Tracker.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report_Criteria.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/Artifact/Tracker_Artifact.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+require_once dirname(__FILE__).'/../../builders/anArtifact.php';
 
 Mock::generate('Tracker_Report');
 Mock::generate('Tracker_ArtifactFactory');
@@ -54,11 +48,13 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $report   = mock('Tracker_Report');
         $criteria = $this->buildCriteria($report);
         $factory  = $this->buildAFormElementFactory();
+        $user     = mock('User');
         $view     = new Tracker_CrossSearch_SearchContentView($report,
                                                               $criteria,
                                                               $tree_of_artifacts,
                                                               $artifact_factory,
-                                                              $factory);
+                                                              $factory,
+                                                              $user);
         $html = $view->fetch();
     }
     
@@ -135,19 +131,20 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $factory           = new MockTracker_FormElementFactory();
         $tracker           = new MockTracker();
         $artifact          = new MockTracker_Artifact();
+        $user              = mock('User');
         
         $artifact->setReturnValue('getTracker', $tracker);
         
         stub($artifact_factory)->getArtifactById(123)->returns($artifact);
-        stub($artifact_factory)->getArtifactById($sprint_id)->returns($sprint);
-        stub($artifact_factory)->getArtifactById($release_id)->returns($release);
-        
+        stub($artifact_factory)->getArtifactByIdUserCanView($user, $sprint_id)->returns($sprint);
+        stub($artifact_factory)->getArtifactByIdUserCanView($user, $release_id)->returns($release);
 
         $view = new Tracker_CrossSearch_SearchContentView($report,
                                                           $criteria,
                                                           $tree_of_artifacts,
                                                           $artifact_factory,
-                                                          $factory);
+                                                          $factory,
+                                                          $user);
         $html = $view->fetch();
         
         $this->assertPattern('/The planning known as Sprint/', $html);

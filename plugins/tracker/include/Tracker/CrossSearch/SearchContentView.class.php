@@ -48,17 +48,24 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
+    /**
+     * @var User
+     */
+    private $user;
+    
     public function __construct(Tracker_Report                   $report, 
                          array                            $criteria, 
                          TreeNode                         $tree_of_artifacts, 
                          Tracker_ArtifactFactory          $artifact_factory, 
-                         Tracker_FormElementFactory       $factory) {
+                         Tracker_FormElementFactory       $factory,
+                         User                             $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
         $this->factory           = $factory;
+        $this->user              = $user;
         $collapsable             = true;
         $treeVisitor             = new TreeNode_InjectSpanPaddingInTreeNodeVisitor($collapsable);
         $this->tree_of_artifacts->accept($treeVisitor);
@@ -171,7 +178,7 @@ class Tracker_CrossSearch_SearchContentView {
                 // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
                 $linked_artifact_ids = array_unique(explode(',', $row[$key]));
                 foreach ($linked_artifact_ids as $id) {
-                    $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
+                    $values[]= $this->artifact_factory->getArtifactByIdUserCanView($this->user, $id)->getTitle();
                 }
                 $value = implode(', ', $values);
             }
