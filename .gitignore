@@ -2,4 +2,4 @@
 src/www/scripts/combined/*
 *.swo
 *~
-
+.settings
