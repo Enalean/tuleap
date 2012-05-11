@@ -37,7 +37,7 @@ class MockSemanticTitleFactoryBuilder {
     }
     
     public function withNoFieldForTracker($tracker) {
-        $semantic_title = new MockTracker_Semantic_Status();
+        $semantic_title = new MockTracker_Semantic_Title();
         
         $semantic_title->setReturnValue('getField', null);
         $this->factory->setReturnValue('getByTracker', $semantic_title, array($tracker));
