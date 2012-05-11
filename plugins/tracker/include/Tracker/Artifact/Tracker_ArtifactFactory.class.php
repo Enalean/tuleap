@@ -86,6 +86,22 @@ class Tracker_ArtifactFactory {
     }
     
     /**
+     * Return the artifact corresponding to $id the user can access
+     * 
+     * @param User    $user
+     * @param Integer $id
+     * 
+     * @return Tracker_Artifact
+     */
+    public function getArtifactByIdUserCanView(User $user, $id) {
+        $artifact = $this->getArtifactById($id);
+        if ($artifact && $artifact->userCanView($user)) {
+            return $artifact;
+        }
+        return null;
+    }
+    
+    /**
      * Returns all the artifacts of the tracker racker_id
      *
      * @param int $tracker_id the id of the tracker
@@ -99,7 +115,6 @@ class Tracker_ArtifactFactory {
         }
         return $artifacts;
     }
-    
     
     /**
      * Returns all the artifacts of the tracker with id $tracker_id the User $user can read
