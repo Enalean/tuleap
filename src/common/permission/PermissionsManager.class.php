@@ -52,6 +52,14 @@ class PermissionsManager {
         }
         return self::$_permissionmanager_instance;
     }
+    
+    public static function setInstance($instance) {
+        self::$_permissionmanager_instance = $instance;
+    }
+    
+    public static function clearInstance() {
+        self::$_permissionmanager_instance = null;
+    }
 
     /**
     * Returns if one of the user's ugroups has permission to access the object
