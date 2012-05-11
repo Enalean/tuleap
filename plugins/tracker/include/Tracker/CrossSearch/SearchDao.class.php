@@ -60,8 +60,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $excluded_artifact_ids        = $this->da->quoteSmartImplode(',', $excluded_artifact_ids);
         
         $shared_fields_constraints    = $this->getSharedFieldsSqlFragment($shared_fields);
-        $title_constraint             = $this->getTitleSqlFragment($semantic_fields['title']);
-        $status_constraint            = $this->getStatusSqlFragment($semantic_fields['status']);
+        $title_constraint             = $this->getTitleSqlFragment($this->getSemanticFieldCriteria($semantic_fields, 'title'));
+        $status_constraint            = $this->getStatusSqlFragment($this->getSemanticFieldCriteria($semantic_fields, 'status'));
         $tracker_constraint           = $tracker_ids ? " AND   artifact.tracker_id IN ($quoted_tracker_ids) " : "";
         
         $artifact_ids_list            = $query->listArtifactIds();
@@ -189,6 +189,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $nb_matching = count($results);
         $report_dao->logEnd(__METHOD__, $nb_matching);
         return $results;
+    }
+    
+    private function getSemanticFieldCriteria($fields, $name) {
+        return isset($fields[$name]) ? $fields[$name] : '';
     }
     
     protected function getTrackerSemanticStatusJoin($is_super_user, $quoted_ugroups) {

@@ -85,11 +85,15 @@ class Tracker_CrossSearch_Query {
     }
     
     public function getTitle() {
-        return $this->semantic_criteria['title'];
+        if (isset($this->semantic_criteria['title'])) {
+            return $this->semantic_criteria['title'];
+        }
     }
     
     public function getStatus() {
-        return $this->semantic_criteria['status'];
+        if (isset($this->semantic_criteria['status'])) {
+            return $this->semantic_criteria['status'];
+        }
     }
     
     /**
