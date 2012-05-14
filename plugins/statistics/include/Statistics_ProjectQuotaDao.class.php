@@ -53,7 +53,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         $requesterId         = $this->da->escapeInt($requesterId);
         $requestedSize       = $this->da->escapeInt($requestedSize);
         $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
-        $requestDate         = time();
+        $requestDate         = $_SERVER['REQUEST_TIME'];
         $query               = "REPLACE INTO ".$this->getTable()." (".self::GROUP_ID.",
                                              ".self::REQUESTER_ID.",
                                              ".self::REQUEST_SIZE.",
