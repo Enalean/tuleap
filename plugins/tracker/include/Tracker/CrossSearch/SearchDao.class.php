@@ -183,7 +183,6 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 GROUP BY artifact.id
                 ORDER BY title
             ";
-            //echo "<pre>$sql</pre>";
             $results = $this->retrieve($sql);
         }
         $nb_matching = count($results);
@@ -215,7 +214,11 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 )";*/
         }
         $semantic_status_join .= "
-            ) ON (c.id = CV3.changeset_id)";
+            ) ON (c.id = CV3.changeset_id)
+            
+            LEFT JOIN tracker_semantic_status AS SS2
+            ON (artifact.tracker_id = SS2.tracker_id AND CVL.bindvalue_id IS NULL)
+        ";
         return $semantic_status_join;
     }
     
@@ -285,12 +288,14 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     protected function getStatusSqlFragment($status) {
+        $open_condition = "(SS.open_value_id IS NOT NULL OR
+                            SS2.open_value_id IS NULL)";
         switch ($status) {
         case Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN:
-            return " AND SS.open_value_id IS NOT NULL ";
+            return " AND $open_condition ";
             break;
         case Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED:
-            return " AND SS.open_value_id IS NULL ";
+            return " AND NOT $open_condition ";
             break;
         default:
             // no constraint
