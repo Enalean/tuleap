@@ -29,9 +29,9 @@ require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCri
 require_once(dirname(__FILE__).'/../builders/aPlanning.php');
 require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
 require_once dirname(__FILE__).'/../builders/aPlanningController.php';
+require_once dirname(__FILE__).'/../builders/aMockMilestone.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
-
 
 class Planning_MilestoneController_TestCase extends TuleapTestCase {
     
@@ -103,16 +103,9 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     }
     
     protected function GivenAMilestone($artifact) {
-        $milestone = mock('Planning_Milestone');
-        $root_node = new TreeNode(array('id'    => $artifact->getId(),
-                                        'title' => $artifact->getTitle()));
-        $root_node->setId($artifact->getId());
-        
-        stub($milestone)->getArtifact()->returns($artifact);
-        stub($milestone)->getPlannedArtifacts()->returns($root_node);
-        stub($milestone)->userCanView()->returns(true);
-        
-        return $milestone;
+        return aMockMilestone()->withArtifact($artifact)
+                               ->withReadPermission()
+                               ->build();
     }
     
     protected function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
