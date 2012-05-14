@@ -32,17 +32,6 @@ require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 
-Mock::generate('Tracker_ArtifactFactory');
-Mock::generate('Tracker_Artifact');
-Mock::generate('TrackerFactory');
-Mock::generate('Tracker_HierarchyFactory');
-Mock::generate('PlanningFactory');
-Mock::generate('Planning');
-Mock::generate('ProjectManager');
-Mock::generate('Project');
-Mock::generate('Tracker_CrossSearch_Search');
-Mock::generate('Tracker_CrossSearch_SearchContentView');
-Mock::generate('Planning_ViewBuilder');
 
 class Planning_MilestoneController_TestCase extends TuleapTestCase {
     
@@ -89,7 +78,7 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
             $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
         );
 
-        $factory  = new MockTracker_ArtifactFactory();
+        $factory  = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($factory);
         foreach ($artifacts as $artifact) {
             $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
@@ -134,24 +123,24 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     }
     
     protected function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
-        $content_view = new MockTracker_CrossSearch_SearchContentView();
+        $content_view = mock('Tracker_CrossSearch_SearchContentView');
         $content_view->setReturnValue('fetch', 'stuff');
-        $view_builder = new MockPlanning_ViewBuilder();
+        $view_builder = mock('Planning_ViewBuilder');
         $view_builder->setReturnValue('build', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), new MockTracker_CrossSearch_Search());
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), mock('Tracker_CrossSearch_Search'));
     }
     
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
-        $planning_factory = new MockPlanningFactory();
+        $planning_factory = mock('PlanningFactory');
         $planning_tracker = mock('Tracker');
         
         $this->planning->setPlanningTracker($planning_tracker);
         stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
         $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
         
-        $tracker_factory = new MockTrackerFactory();
+        $tracker_factory = mock('TrackerFactory');
         TrackerFactory::setInstance($tracker_factory);
         
         $milestone_factory = mock('Planning_MilestoneFactory');
@@ -345,7 +334,7 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
         $milestone                 = $this->GivenNoMilestone($project_id);
 
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array($project), new MockTracker_CrossSearch_Search());
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array($project), mock('Tracker_CrossSearch_Search'));
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
 
@@ -358,7 +347,7 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
         $tracker_ids  = array();
-        $view_builder = new MockPlanning_ViewBuilder();
+        $view_builder = mock('Planning_ViewBuilder');
         $expected_arguments = array(
         	'*', 
             $project, 
