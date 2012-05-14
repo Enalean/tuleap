@@ -95,13 +95,11 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     }
 
     protected function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
-        $field = mock('Tracker_FormElement_Field_ArtifactLink');
-        stub($field)->userCanUpdate()->returns(true);
         $artifact = aMockArtifact()->withId($id)
                                    ->withTitle($title)
                                    ->withLinkedArtifacts($already_linked_items)
                                    ->withReadPermission()
-                                   ->withArtifactLinkField($field)
+                                   ->withUpdatePermissionOnArtifactLinkField()
                                    ->build();
         return $artifact;
     }

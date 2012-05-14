@@ -29,7 +29,7 @@ class MockArtifactBuilder {
         $this->id                  = 123;
         $this->tracker             = new MockTracker();
         $this->artifact            = new MockTracker_Artifact();
-        $this->artifact_link_field = null;
+        $this->artifact_link_field = mock('Tracker_FormElement_Field_ArtifactLink');;
     }
 
     public function withId($id) {
@@ -50,6 +50,11 @@ class MockArtifactBuilder {
     public function withReadPermission() {
         stub($this->artifact)->userCanView()->returns(true);
         stub($this->tracker)->userCanView()->returns(true);
+        return $this;
+    }
+    
+    public function withUpdatePermissionOnArtifactLinkField() {
+        stub($this->artifact_link_field)->userCanUpdate()->returns(true);
         return $this;
     }
     
