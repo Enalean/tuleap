@@ -60,6 +60,12 @@ class ProjectQuota {
         if ($request->valid($validFilter)) {
             $filter = $request->get('project_filter');
         }
+        $validSort = new Valid_String('sort');
+        $sortBy    = "date";
+        if ($request->valid($validSort)) {
+            $sortBy = $request->get('sort');
+        }
+
         $list = array();
         if ($filter) {
             $result = $this->pm->returnAllProjects(0, 20, false, $filter);
@@ -75,7 +81,7 @@ class ProjectQuota {
         $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
         $output   .= '</form>';
         $count        = 5;
-        $res          = $this->dao->getAllCustomQuota($list, $offset, $count);
+        $res          = $this->dao->getAllCustomQuota($list, $offset, $count, $sortBy);
         $foundRowsRes = $this->dao->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
         // Prepare Navigation bar
@@ -85,18 +91,18 @@ class ProjectQuota {
             if($prevOffset < 0) {
                 $prevOffset = 0;
             }
-            $prevHref = '<a href="?&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
+            $prevHref = '<a href="?sort='.$sortBy.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
         }
         $nextHref = 'Next&gt;';
         $nextOffset = $offset + $count;
-        if($nextOffset > $foundRows) {
+        if($nextOffset >= $foundRows) {
             $nextOffset = null;
         } else {
-            $nextHref = '<a href="?&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
+            $nextHref = '<a href="?sort='.$sortBy.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
         }
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
-            $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), $GLOBALS['Language']->getText('plugin_statistics', 'quota'), $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), $GLOBALS['Language']->getText('plugin_statistics', 'date'), $GLOBALS['Language']->getText('global', 'delete'));
+            $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
             $output   .= html_build_list_table_top($titles);
             $output   .= '<form method="post" >';
             $purifier = Codendi_HTMLPurifier::instance();
@@ -230,7 +236,7 @@ class ProjectQuota {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
         } elseif (empty($quota)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
-        } elseif (strlen($motivation)>256) {
+        } elseif (strlen($motivation) > 512) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_motivation'));
         } else {
             $project = $this->pm->getProjectFromAutocompleter($project);
