@@ -50,7 +50,7 @@ $server->register(
     $uri.'#checkUsersExistence',
     'rpc',
     'encoded',
-    'Returns the users that exist with their Codendi user name'
+    'Returns the users that exist with their user name'
 );
 
 } else {

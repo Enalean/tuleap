@@ -42,8 +42,8 @@ $server->wsdl->addComplexType(
     'all',
     '',
     array(
-        'user_id' => array('name'=>'user_id', 'type'=>'xsd:int'), 
-        'user_name' => array('name'=>'user_name', 'type'=>'xsd:string'),
+        'user_id'   => array('name'=>'user_id',   'type'=>'xsd:int'), 
+        'user_name' => array('name'=>'user_name', 'type'=>'xsd:string')
     )
 );
 
@@ -135,8 +135,52 @@ $server->register(
     $uri.'#getGroupUgroups',
     'rpc',
     'encoded',
-    'Returns the Ugroups associated to the given project.'
+    'Returns the Ugroups associated to the given project:
+     <pre>
+       [ 
+         ["ugroup_id" => 120,
+          "name"      => "my custom group",
+          "members"   => [ ["user_id"   => 115,
+                            "user_name" => "john_doe"],
+                         ]
+         ]
+       ]
+     </pre>
+    '
 );
+
+$server->register(
+    'getProjectGroupsAndUsers',
+    array('sessionKey' => 'xsd:string',
+          'group_id'   => 'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfUgroup'),
+    $uri,
+    $uri.'#getProjectGroupsAndUsers',
+    'rpc',
+    'encoded',
+    'Returns all groups defined in project both dynamic and static (aka user group).
+     <pre>
+      [
+        ["ugroup_id" => 3,
+         "name"      => "project_members",
+         "members"   => [ ["user_id"   => 115,
+                           "user_name" => "john_doe"],
+                          ["user_id"   => 120,
+                           "user_name" => "foo_bar"]
+                        ]
+        ],
+        ["ugroup_id" => 120,
+         "name"      => "my custom group",
+         "members"   => [ ["user_id"   => 115,
+                           "user_name" => "john_doe"],
+                        ]
+        ]
+      ]
+     </pre>
+    '
+);
+
 
 } else {
 	
@@ -232,7 +276,7 @@ function getGroupUgroups($sessionKey, $group_id) {
             $pm = ProjectManager::instance();
             $group = $pm->getGroupByIdForSoap($group_id, 'getGroupUgroups');
             $ugroups = ugroup_get_ugroups_with_members($group_id);
-            $return = ugroups_to_soap($ugroups);
+            return ugroups_to_soap($ugroups);
         } catch (SoapFault $e) {
             return $e;
         }
@@ -241,12 +285,30 @@ function getGroupUgroups($sessionKey, $group_id) {
     }
 }
 
+function getProjectGroupsAndUsers($session_key, $group_id) {
+    if (session_continue($session_key)) {
+        try {
+            ProjectManager::instance()->checkGroupIdForSoap($group_id, 'getProjectGroupsAndUsers');
+            
+            $ugroups     = ugroup_get_ugroups_with_members($group_id);
+            $dyn_members = ugroup_get_all_dynamic_members($group_id);
+            
+            return ugroups_to_soap(array_merge($dyn_members, $ugroups));
+        } catch (SoapFault $e) {
+            return $e;
+        }
+    } else {
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'getProjectGroupsAndUsers');
+    }
+}
+
 $server->addFunction(
-    	array(
+        array(
             'getMyProjects',
             'getGroupByName',
             'getGroupById',
-    	    'getGroupUgroups',
+            'getGroupUgroups',
+            'getProjectGroupsAndUsers',
             ));
 
 }
