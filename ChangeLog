@@ -1,4 +1,7 @@
-Version 5.0.2 (Wednsday, May 9th 2012)
+Version 5.0.3 (Monday, May 14th 2012)
+   * Generate an intermediate release to test git migration.
+
+Version 5.0.2 (Wednesday, May 9th 2012)
    == Plugins ==
    * Git 2.5
 
