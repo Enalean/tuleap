@@ -56,9 +56,9 @@ function stub($classname_or_simpletest_mock) {
  * $mock = new MockSomeClass();
  * </code>
  * 
- * @param type $classname
+ * @param string $classname
  * 
- * @return a simpletest mock 
+ * @return a simpletest mock
  */
 function mock($classname) {
     Mock::generate($classname);
@@ -66,10 +66,36 @@ function mock($classname) {
     return new $mockclassname();
 }
 
+/**
+ * Setup both an expectation and a stub.
+ * 
+ * <code>
+ *   expect($mock)->foo('bar', 'baz')->returns('qux')
+ * </code>
+ * 
+ * is exactly the same as
+ * 
+ * <code>
+ *   $mock->expectOnce('foo', array('bar', 'baz'));
+ *   $mock->setReturnValue('foo', 'qux');
+ * </code>
+ * 
+ * TODO:
+ *   - Support other expectations, not only "expectOnce"
+ * 
+ * @param mixed $mock A mock instance
+ * 
+ * @return \OngoingIntelligentStub 
+ */
+function expect($mock) {
+    return new OngoingIntelligentStub($mock, 'expectOnce');
+}
+
 class OngoingIntelligentStub {
 
-    function __construct($mock) {
-        $this->mock = $mock;
+    function __construct($mock, $expectation = false) {
+        $this->mock        = $mock;
+        $this->expectation = $expectation;
     }
 
     public function __call($name, $arguments) {
@@ -82,11 +108,18 @@ class OngoingIntelligentStub {
      * @return the configured mock 
      */
     public function returns($value) {
-        if (empty($this->arguments)) {
+        $expectation = $this->expectation;
+        
+        if ($expectation) {
+            $this->mock->$expectation($this->method, $this->arguments);
+        }
+        
+        if (empty($this->arguments) || $expectation) {
             $this->mock->setReturnValue($this->method, $value);
         } else {
             $this->mock->setReturnValue($this->method, $value, $this->arguments);
         }
+        
         return $this->mock;
     }
     

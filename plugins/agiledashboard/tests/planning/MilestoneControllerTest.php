@@ -349,17 +349,15 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
         $content_view = $this->GivenAContentViewThatFetch($content);
         $tracker_ids  = array();
         $view_builder = mock('Planning_ViewBuilder');
-        $expected_arguments = array(
-        	'*', 
-            $project, 
-            new EqualExpectation($expected_criteria), 
-            $already_linked_items, 
-            $tracker_ids,
-            $this->planning, 
-            '*' // TODO an assert on planning_redirect_param
-        );
-        $view_builder->expectOnce('build', $expected_arguments);
-        stub($view_builder)->build()->returns($content_view);
+        
+        expect($view_builder)->build('*', 
+                                     $project,
+                                     new EqualExpectation($expected_criteria), 
+                                     $already_linked_items, 
+                                     $tracker_ids,
+                                     $this->planning, 
+                                     '*')
+                             ->returns($content_view); // TODO an assert on planning_redirect_param
 
         return $view_builder;
     }
