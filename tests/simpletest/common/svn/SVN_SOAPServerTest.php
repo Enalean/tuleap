@@ -32,16 +32,15 @@ class SVN_SOAPServerTest extends TuleapTestCase {
     }
     
     public function itShowsOnlyTheDirectoryContents() {
-        $content = '';
-        $content .= "/my/Project/tags\n";
-        $content .= "/my/Project/tags/1.0\n";
-        $content .= "/my/Project/tags/2.0\n";
+        $content = array("/my/Project/tags",
+                         "/my/Project/tags/1.0",
+                         "/my/Project/tags/2.0");
         
-        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getDirectoryContent'));
-        stub($svn_soap)->getDirectoryContent('/data/svnroot/gpig', '/my/Project/tags')->returns($content);
-    
+        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getDirectoryListing'));
+        stub($svn_soap)->getDirectoryListing('/data/svnroot/gpig', '/my/Project/tags')->returns($content);
+
         $tags = $svn_soap->getSVNPaths('gpig', '/my/Project/tags');
-        $this->assertEqual($tags, array('1.0', '2.0'));
+        $this->assertEqual(array_values($tags), array('1.0', '2.0'));
     }
 }
 

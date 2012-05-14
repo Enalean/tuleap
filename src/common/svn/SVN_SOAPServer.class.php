@@ -21,14 +21,30 @@
  * Wrapper for subversion related SOAP methods
  */
 class SVN_SOAPServer {
-    protected function getDirectoryContent($repository_path, $svn_path) {
-        //svnlook tree --non-recursive --full-paths /svnroot/gpig /tags    
+    
+    protected function getDirectoryListing($repository_path, $svn_path) {
+        $cmd    = '/usr/bin/svnlook tree --non-recursive --full-paths'.escapeshellarg($repository_path).' '.escapeshellarg($svn_path);
+        $output = array();
+        exec($cmd, $output);
+        return $output;
     }
     
     public function getSVNPaths($project_name, $svn_path) {
-        $content = $this->getDirectoryContent($GLOBALS['svn_prefix'].'/'.$project_name, $svn_path);
-        $content = preg_replace("%^$svn_path%", '', $content);
-        return array_filter(explode("\n", $content));
+        $paths            = array();
+        $repository_path  = $GLOBALS['svn_prefix'].'/'.$project_name;
+        $content          = $this->getDirectoryListing($repository_path, $svn_path);
+        foreach ($content as $line) {
+            $paths[]= $this->extractDirectoryContent($line, $svn_path);
+        }
+        return array_filter($paths);
+    }
+    
+    private function extractDirectoryContent($line, $svn_path) {
+        $match_path_regex = "%^$svn_path/%";
+        if (preg_match($match_path_regex, $line)) {
+            return preg_replace($match_path_regex, '', $line);
+        }
+        return '';
     }
 }
 
