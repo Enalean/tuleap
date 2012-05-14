@@ -33,8 +33,8 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
     
     protected $repository;
     protected $repository_id = 200;
-    protected $admin_dir     = '/tmp/gitolite-admin';
-    protected $admin_ref_dir = '/tmp/gitolite-admin-ref';
+    protected $admin_dir     = '/tmp/gitolite-admin-permissions';
+    protected $admin_ref_dir = '/tmp/gitolite-admin-permissions-ref';
     public function setUp() {
         parent::setUp();
         $this->project_id++;
@@ -55,75 +55,70 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
 
     public function tearDown() {
         parent::tearDown();
-        rmdir($this->admin_dir);
+        system('rm -Rf '.$this->admin_dir);
         PermissionsManager::clearInstance();
     }
 
     public function itReturnsEmptyStringForUnknownType() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroups', TestHelper::arrayToDar(array()));
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array());
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, '__none__');
-        $this->assertEqual('', $result);
+        $this->assertIdentical('', $result);
     }
-
-    function FetchPermissions() {
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
-
-        $ug_1 = 130;
-        $ug_2 = 140;
-        $ug_3 = 150;
-        $ug_4 = 160;
-        $ug_5 = 170;
-        $ug_6 = 180;
-        $ug_n = 100;
-
-        $this->assertIdentical('',
-            $driver->fetchPermissions($prj, array(), array(), array())
-        );
-
-        $this->assertIdentical('',
-            $driver->fetchPermissions($prj, array($ug_n), array($ug_n), array($ug_n))
-        );
-
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/one-reader.conf'),
-            $driver->fetchPermissions($prj, array($ug_1), array(), array())
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/one-writer.conf'),
-            $driver->fetchPermissions($prj, array(), array($ug_1), array())
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/one-rewinder.conf'),
-            $driver->fetchPermissions($prj, array(), array(), array($ug_1))
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/two-readers.conf'),
-            $driver->fetchPermissions($prj, array($ug_1, $ug_2), array(), array())
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/two-writers.conf'),
-            $driver->fetchPermissions($prj, array(), array($ug_1, $ug_2), array())
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/two-rewinders.conf'),
-            $driver->fetchPermissions($prj, array(), array(), array($ug_1, $ug_2))
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/full.conf'),
-            $driver->fetchPermissions($prj, array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6))
-        );
-        
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/default.conf'),
-            $driver->fetchPermissions($prj, array('2'), array('3'), array())
-        );
+    
+    public function itReturnsEmptyStringForAUserIdLowerOrEqualThan_100() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(100));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $this->assertIdentical('', $result);
+    }
+    
+    public function itReturnsStringWithUserIdIfIdGreaterThan_100() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $this->assertPattern('/=\s@ug_101$/', $result);
+    }
+    
+    public function itReturnsSiteActiveIfUserGroupIsRegistered() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_REGISTERED']));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $this->assertPattern('/=\s@site_active$/', $result);
+    }
+    
+    public function itReturnsProjectNameWithProjectMemberIfUserIsProjectMember() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_PROJECT_MEMBERS']));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $project_name = 'project' . $this->project_id;
+        $this->assertPattern('/=\s@'.$project_name.'_project_members$/', $result);
+    }
+    
+    public function itReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $project_name = 'project' . $this->project_id;
+        $this->assertPattern('/=\s@'.$project_name.'_project_admin$/', $result);
+    }
+    
+    public function itPrefixesWithRForReaders() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $this->assertPattern('/^\sR\s\s\s=/', $result);
+    }
+    
+    public function itPrefixesWithRWForWriters() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WRITE);
+        $this->assertPattern('/^\sRW\s\s=/', $result);
+    }
+    
+    public function itPrefixesWithRWPlusForWritersPlus() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WPLUS);
+        $this->assertPattern('/^\sRW\+\s=/', $result);
+    }
+    
+    public function itReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups() {
+        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(666, $GLOBALS['UGROUP_REGISTERED']));
+        $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
+        $this->assertIdentical(' R   = @ug_666 @site_active' . PHP_EOL, $result);
     }
 
 }
