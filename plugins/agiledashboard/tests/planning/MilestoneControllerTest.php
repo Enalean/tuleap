@@ -76,6 +76,13 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         TrackerFactory::clearInstance();
     }
     
+    protected function GivenNoMilestone($project_id = null) {
+        if (! $project_id) {
+            $project_id = $this->planning->getGroupId();
+        }
+        return new Planning_NoMilestone($project_id, $this->planning);
+    }
+    
     protected function GivenAnArtifactFactory(array $artifacts = array()) {
         $open_artifacts = array(
             $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
@@ -223,6 +230,25 @@ class Planning_MilestoneController_EmptyMilestoneTest extends Planning_Milestone
     }
 }
 
+class Planning_MilestoneController_NoMilestoneTest extends Planning_MilestoneController_TestCase {
+    
+    private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
+        $milestone = $this->GivenNoMilestone();
+        $factory = $this->GivenAnArtifactFactory();
+        $request = aRequest()->withUri($this->request_uri)
+                             ->with('group_id', $this->planning->getGroupId())
+                             ->with('planning_id', $this->planning->getId())
+                             ->withUser(aUser())
+                             ->build();
+        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
+    }
+    
+    public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
+        $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
+        $this->assertNoErrors();
+    }
+}
+
 class Planning_MilestoneController_OldTest extends Planning_MilestoneController_TestCase {
     
     public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
@@ -230,11 +256,6 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
         
         $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
-    }
-    
-    public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
-        $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
-        $this->assertNoErrors();
     }
 
     public function itListsAllLinkedItems() {
@@ -347,13 +368,6 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
         return $request;
     }
     
-    private function GivenNoMilestone($project_id = null) {
-        if (! $project_id) {
-            $project_id = $this->planning->getGroupId();
-        }
-        return new Planning_NoMilestone($project_id, $this->planning);
-    }
-    
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
         $id    = 987;
         $title = 'Coin';
@@ -371,17 +385,6 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         
-        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
-    }
-    
-    private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $milestone = $this->GivenNoMilestone();
-        $factory = $this->GivenAnArtifactFactory();
-        $request = aRequest()->withUri($this->request_uri)
-                             ->with('group_id', $this->planning->getGroupId())
-                             ->with('planning_id', $this->planning->getId())
-                             ->withUser(aUser())
-                             ->build();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
 }
