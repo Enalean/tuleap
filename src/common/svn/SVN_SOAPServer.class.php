@@ -19,6 +19,7 @@
 
 require_once 'SVN_PermissionsManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
+require_once 'common/user/UserManager.class.php';
 
 /**
  * Wrapper for subversion related SOAP methods
@@ -49,20 +50,22 @@ class SVN_SOAPServer {
     
     public function getSvnPath($session_key, $group_id, $path) {
         try {
-            $this->continueSession($session_key);
-            $project = $this->project_manager->getGroupByIdForSoap($group_id, 'getSVNPath');
-            return $this->getSVNPathListing($project, $path);
+            $current_user = $this->continueSession($session_key);
+            $project      = $this->project_manager->getGroupByIdForSoap($group_id, 'getSVNPath');
+            return $this->getSVNPathListing($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault('0', $e->getMessage());
         }
     }
     
-    public function getSVNPathListing(Project $project, $svn_path) {
+    public function getSVNPathListing(User $user, Project $project, $svn_path) {
         $paths            = array();
         $repository_path  = $GLOBALS['svn_prefix'].'/'.$project->getUnixName();
         $content          = $this->getDirectoryListing($repository_path, $svn_path);
         foreach ($content as $line) {
-            $paths[]= $this->extractDirectoryContent($line, $svn_path);
+            if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
+                $paths[]= $this->extractDirectoryContent($line, $svn_path);
+            }
         }
         return array_filter($paths);
     }
