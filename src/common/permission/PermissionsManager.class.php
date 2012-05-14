@@ -193,6 +193,32 @@ class PermissionsManager {
         }
      }
 
+     /**
+      * Return the list of ugroup ids authorized to access the given object with the given permission_type
+      *
+      * If no specific permissions set, returns the defaults.
+      *
+      * @param Integer $objectId
+      * @param String  $permissionType
+      *
+      * @return DataAccessResult
+      */
+     public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true) {
+         $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);
+         if (!$dar || $dar->isError()) {
+             return array();
+         }
+         
+         $ugroups = array();
+         foreach ($dar as $row) {
+             $ugroups[] = $row['ugroup_id'];
+         }
+         return $ugroups;
+     }
+     
+     
+     
+
     /**
     * Returns true if user has full permissions in all cases
     * 
