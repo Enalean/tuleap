@@ -30,6 +30,7 @@ require_once(dirname(__FILE__).'/../builders/aPlanning.php');
 require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
 require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -75,21 +76,6 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         TrackerFactory::clearInstance();
     }
     
-    protected function GivenAnArtifact($id, $title, $already_linked_items) {
-        $artifact = new MockTracker_Artifact();
-        $artifact->setReturnValue('getTitle', $title);
-        $artifact->setReturnValue('fetchTitle', "#$id $title");
-        $artifact->setReturnValue('getId', $id);
-        $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
-        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
-        $artifact->setReturnValue('userCanView', true);
-        
-        $tracker = stub('Tracker')->userCanView()->returns(true);
-        stub($artifact)->getTracker()->returns($tracker);
-
-        return $artifact;
-    }
-    
     protected function GivenAnArtifactFactory(array $artifacts = array()) {
         $open_artifacts = array(
             $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
@@ -116,7 +102,11 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     protected function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
         $field = mock('Tracker_FormElement_Field_ArtifactLink');
         stub($field)->userCanUpdate()->returns(true);
-        $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
+        $artifact = aMockArtifact()->withId($id)
+                                   ->withTitle($title)
+                                   ->withLinkedArtifacts($already_linked_items)
+                                   ->withReadPermission()
+                                   ->build();
         stub($artifact)->getAnArtifactLinkField()->returns($field);
         $tracker = stub('Tracker')->userCanView()->returns(true);
         stub($artifact)->getTracker()->returns($tracker);
@@ -368,7 +358,11 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
         $id    = 987;
         $title = 'Coin';
         
-        $artifact = $this->GivenAnArtifact($id, $title, array());
+        $artifact = aMockArtifact()->withId($id)
+                                   ->withTitle($title)
+                                   ->withLinkedArtifacts(array())
+                                   ->withReadPermission()
+                                   ->build();
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())

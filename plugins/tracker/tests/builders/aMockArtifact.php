@@ -36,9 +36,29 @@ class MockArtifactBuilder {
         return $this;
     }
     
+    public function withTitle($title) {
+        $this->title = $title;
+        return $this;
+    }
+    
+    public function withLinkedArtifacts($linked_artifacts) {
+        $this->linked_artifacts = $linked_artifacts;
+        return $this;
+    }
+    
+    public function withReadPermission() {
+        stub($this->artifact)->userCanView()->returns(true);
+        stub($this->tracker)->userCanView()->returns(true);
+        return $this;
+    }
+    
     public function build() {
-        $this->artifact->setReturnValue('getId', $this->id);
-        $this->artifact->setReturnValue('getTracker', $this->tracker);
+        stub($this->artifact)->getId()->returns($this->id);
+        stub($this->artifact)->getTitle()->returns($this->title);
+        stub($this->artifact)->fetchTitle()->returns("#$this->id $this->title");
+        stub($this->artifact)->fetchDirectLinkToArtifact()->returns($this->id);
+        stub($this->artifact)->getLinkedArtifacts()->returns($this->linked_artifacts);
+        stub($this->artifact)->getTracker()->returns($this->tracker);
         
         return $this->artifact;
     }
