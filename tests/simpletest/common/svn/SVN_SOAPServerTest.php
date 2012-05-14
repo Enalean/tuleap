@@ -36,15 +36,17 @@ class SVN_SOAPServerTest extends TuleapTestCase {
         $group_id    = 123;
         $svn_path    = '/tags';
 
-        $project         = mock('Project');
-        $project_manager = stub('ProjectManager')->getGroupByIdForSoap($group_id, '*')->returns($project);
-        $svn_perms_mgr   = mock('SVN_PermissionsManager');
-        
-        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getSVNPathListing', 'continueSession'));
-        $svn_soap->__construct($project_manager, $svn_perms_mgr);
-        
+        $soap_request_valid = mock('SOAP_RequestValidator');
+        $svn_perms_mgr      = mock('SVN_PermissionsManager');
+
+        $project = mock('Project');
+        stub($soap_request_valid)->getProjectById($group_id, '*')->returns($project);
+
         $user = mock('User');
-        stub($svn_soap)->continueSession($session_key)->returns($user);
+        stub($soap_request_valid)->continueSession($session_key)->returns($user);
+        
+        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getSVNPathListing'));
+        $svn_soap->__construct($soap_request_valid, $svn_perms_mgr);
         
         $svn_soap->expectOnce('getSVNPathListing', array($user, $project, $svn_path));
         
@@ -58,9 +60,9 @@ class SVN_SOAPServerTest extends TuleapTestCase {
         
         $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getDirectoryListing'));
         
-        $project_manager = mock('ProjectManager');
-        $svn_perms_mgr = stub('SVN_PermissionsManager')->userCanRead()->returns(true);
-        $svn_soap->__construct($project_manager, $svn_perms_mgr);
+        $soap_request_validator = mock('SOAP_RequestValidator');
+        $svn_perms_mgr          = stub('SVN_PermissionsManager')->userCanRead()->returns(true);
+        $svn_soap->__construct($soap_request_validator, $svn_perms_mgr);
 
         $content = array("/my/Project/tags",
                          "/my/Project/tags/1.0",
@@ -78,9 +80,9 @@ class SVN_SOAPServerTest extends TuleapTestCase {
         
         $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getDirectoryListing'));
         
-        $project_manager = mock('ProjectManager');
-        $svn_perms_mgr   = stub('SVN_PermissionsManager')->userCanRead($user, $project, '/my/Project/tags/1.0')->returns(true);
-        $svn_soap->__construct($project_manager, $svn_perms_mgr);
+        $soap_request_validator = mock('SOAP_RequestValidator');
+        $svn_perms_mgr          = stub('SVN_PermissionsManager')->userCanRead($user, $project, '/my/Project/tags/1.0')->returns(true);
+        $svn_soap->__construct($soap_request_validator, $svn_perms_mgr);
 
         $content = array("/my/Project/tags",
                          "/my/Project/tags/1.0",

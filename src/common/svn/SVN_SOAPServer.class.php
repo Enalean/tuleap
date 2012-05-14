@@ -18,8 +18,7 @@
  */
 
 require_once 'SVN_PermissionsManager.class.php';
-require_once 'common/project/ProjectManager.class.php';
-require_once 'common/user/UserManager.class.php';
+require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 /**
  * Wrapper for subversion related SOAP methods
@@ -28,16 +27,16 @@ class SVN_SOAPServer {
     /**
      * @var ProjectManager 
      */
-    private $project_manager;
+    private $soap_request_validator;
     
     /**
      * @var SVN_PermissionsManager
      */
     private $svn_permissions_manager;
     
-    public function __construct(ProjectManager $project_manager,
+    public function __construct(SOAP_RequestValidator $soap_request_validator,
                                 SVN_PermissionsManager $svn_permissions_manager) {
-        $this->project_manager         = $project_manager;
+        $this->soap_request_validator  = $soap_request_validator;
         $this->svn_permissions_manager = $svn_permissions_manager;
     }
     
@@ -50,8 +49,8 @@ class SVN_SOAPServer {
     
     public function getSvnPath($session_key, $group_id, $path) {
         try {
-            $current_user = $this->continueSession($session_key);
-            $project      = $this->project_manager->getGroupByIdForSoap($group_id, 'getSVNPath');
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             return $this->getSVNPathListing($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault('0', $e->getMessage());
@@ -76,23 +75,6 @@ class SVN_SOAPServer {
             return preg_replace($match_path_regex, '', $line);
         }
         return '';
-    }
-    
-    
-    /**
-     *
-     * @see session_continue
-     * 
-     * @param String $session_key
-     * 
-     * @return User
-     */
-    protected function continueSession($session_key) {
-        $user = $this->userManager->getCurrentUser($session_key);
-        if ($user->isLoggedIn()) {
-            return $user;
-        }
-        throw new SoapFault('3001', 'Invalid session');
     }
 }
 
