@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'SVN_PermissionsManager.class.php';
+require_once 'SVN_RepositoryListing.class.php';
 require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 /**
@@ -30,51 +30,24 @@ class SVN_SOAPServer {
     private $soap_request_validator;
     
     /**
-     * @var SVN_PermissionsManager
+     * @var SVN_RepositoryListing
      */
-    private $svn_permissions_manager;
+    private $svn_repository_listing;
     
     public function __construct(SOAP_RequestValidator $soap_request_validator,
-                                SVN_PermissionsManager $svn_permissions_manager) {
-        $this->soap_request_validator  = $soap_request_validator;
-        $this->svn_permissions_manager = $svn_permissions_manager;
-    }
-    
-    protected function getDirectoryListing($repository_path, $svn_path) {
-        $cmd    = '/usr/bin/svnlook tree --non-recursive --full-paths'.escapeshellarg($repository_path).' '.escapeshellarg($svn_path);
-        $output = array();
-        exec($cmd, $output);
-        return $output;
+                                SVN_RepositoryListing $svn_repository_listing) {
+        $this->soap_request_validator = $soap_request_validator;
+        $this->svn_repository_listing = $svn_repository_listing;
     }
     
     public function getSvnPath($session_key, $group_id, $path) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
-            return $this->getSVNPathListing($current_user, $project, $path);
+            return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault('0', $e->getMessage());
         }
-    }
-    
-    public function getSVNPathListing(User $user, Project $project, $svn_path) {
-        $paths            = array();
-        $repository_path  = $GLOBALS['svn_prefix'].'/'.$project->getUnixName();
-        $content          = $this->getDirectoryListing($repository_path, $svn_path);
-        foreach ($content as $line) {
-            if ($this->svn_permissions_manager->userCanRead($user, $project, $line)) {
-                $paths[]= $this->extractDirectoryContent($line, $svn_path);
-            }
-        }
-        return array_filter($paths);
-    }
-    
-    private function extractDirectoryContent($line, $svn_path) {
-        $match_path_regex = "%^$svn_path/%";
-        if (preg_match($match_path_regex, $line)) {
-            return preg_replace($match_path_regex, '', $line);
-        }
-        return '';
     }
 }
 
