@@ -139,7 +139,7 @@ class ProjectQuota {
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').' (GB) </td><td><input name="quota" /></td>';
         $output .= '</tr>';
         $output .= '<tr>';
-        $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'motivation').'</td><td><textarea name="motivation" ></textarea></td>';
+        $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'motivation').'</td><td><textarea name="motivation" rows="5" cols="50" ></textarea></td>';
         $output .= '</tr>';
         $output .= '<tr>';
         $output .= '<input type="hidden" name ="action" value="add" />';
