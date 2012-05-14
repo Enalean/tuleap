@@ -24,7 +24,7 @@ require_once('FulltextsearchPluginDescriptor.class.php');
 
 class FulltextsearchPluginInfo extends PluginFileInfo {
     
-    function __construct($plugin) {
+    public function __construct($plugin) {
         parent::__construct($plugin, 'fulltextsearch');
         $this->setPluginDescriptor(new FulltextsearchPluginDescriptor());
     }

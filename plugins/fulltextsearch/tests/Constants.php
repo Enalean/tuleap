@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-if (!define('DOCMAN_INCLUDE_PATH')) {
-    define('DOCMAN_INCLUDE_PATH', dirname(__FILE__.'/../../docman/include'));
+if (!defined('DOCMAN_INCLUDE_PATH')) {
+    define('DOCMAN_INCLUDE_PATH', dirname(__FILE__).'/../../docman/include');
 }
 ?>
