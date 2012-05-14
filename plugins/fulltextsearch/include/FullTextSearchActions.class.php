@@ -32,7 +32,7 @@ class FullTextSearchActions {
         $group_id= $params['item']->getGroupId();
         $user    = $params['user'];
         
-        $permissions = $this->permissions_values($params['item']->getPermissions());
+        $permissions = $params['item']->getPermissions();
         
         $indexed_datas = array(
     		'title'       => $params['item']->getTitle(),
@@ -52,12 +52,5 @@ class FullTextSearchActions {
         return base64_encode(file_get_contents($file_name));
     }
     
-    protected function permissions_values($permissions) {
-        $permissions_values = array();
-        foreach($permissions as $permission) {
-            $permissions_values = array_merge($permissions_values, array_values($permission));
-        }
-        return $permissions_values;
-    }
 }
 ?>
