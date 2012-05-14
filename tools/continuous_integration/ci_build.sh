@@ -29,7 +29,7 @@ local_module_directory="codendi-src";
 port="80";
 sys_org_name="Tuleap";
 sys_long_org_name="Tuleap";
-sniff_svn="false"
+sniff_svn="true"
 
 ##
 ## Parse options
@@ -111,7 +111,7 @@ php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M
 # Checkstyle
 files=""
 if [ "$sniff_svn" = "true" ]; then
-  files=$(git diff --name-only  HEAD^ | grep ".php" | grep -v "plugins/git/gitphp-0.1.0\|plugins/webdav/include/lib\|src/db/mysql/updates\|tools/examples\|cli")
+  files=$(git diff --name-only  HEAD^ | grep ".php" | grep -v "plugins/git/gitphp-0.1.0\|plugins/webdav/include/lib\|src/db/mysql/updates\|tools/examples\|cli" || echo '')
 fi
 
 php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
