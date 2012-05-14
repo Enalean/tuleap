@@ -19,8 +19,9 @@
  */
 require_once('Tracker_Semantic_Contributor.class.php');
 require_once('dao/Tracker_Semantic_ContributorDao.class.php');
+require_once 'IRetrieveSemantic.class.php';
 
-class Tracker_Semantic_ContributorFactory {
+class Tracker_Semantic_ContributorFactory implements Tracker_Semantic_IRetrieveSemantic {
     
     /**
      * Hold an instance of the class
@@ -38,6 +39,10 @@ class Tracker_Semantic_ContributorFactory {
             self::$instance = new $c;
         }
         return self::$instance;
+    }
+    
+    public function getByTracker(Tracker $tracker) {
+        return Tracker_Semantic_Contributor::load($tracker);
     }
     
     /**

@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Dao.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/TrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/../../builders/aTracker.php');
 
 Mock::generate('Tracker_Hierarchy_Dao');
 Mock::generate('Project');

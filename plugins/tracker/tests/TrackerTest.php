@@ -150,7 +150,7 @@ Mock::generate('Tracker_Artifact');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
 
-require_once 'Test_Tracker_Builder.php';
+require_once dirname(__FILE__).'/builders/aTracker.php';
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
     public function exportToXML($root, &$xmlMapping, &$index) {

@@ -20,8 +20,8 @@
 
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
-require_once dirname(__FILE__).'/../builders/planning_factory.php';
-require_once TRACKER_BASE_DIR.'/../tests/Test_Tracker_Builder.php';
+require_once dirname(__FILE__).'/../builders/aPlanningFactory.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aTracker.php';
 
 Mock::generate('Planning');
 Mock::generate('PlanningDao');
@@ -220,20 +220,4 @@ class PlanningFactoryTest extends TuleapTestCase {
     }
 }
 
-class PlanningFactory_getPlanningTrackersTest extends TuleapTestCase {
-    
-    public function itReturnsAnEmptyArrayWhenThereAreNoPlannings() {
-        $group_id        = 137;
-        $user            = mock('User');
-        $dao             = stub('PlanningDao')->searchPlannings($group_id)->returns(array());
-        $tracker_factory = mock('TrackerFactory');
-        $factory         = new PlanningFactory($dao, $tracker_factory);
-        $trackers        = $factory->getPlanningTrackers($group_id, $user);
-        $this->assertEmpty($trackers);
-    }
-
-    public function assertEmpty(array $array) {
-        return count($array) === 0;
-    }
-}
 ?>

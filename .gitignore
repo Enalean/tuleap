@@ -1,3 +1,5 @@
 *.swp
 src/www/scripts/combined/*
 *.swo
+*~
+.settings

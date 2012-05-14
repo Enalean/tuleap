@@ -31,23 +31,25 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
                                                    'renderAction',
                                                    'executeAction',
                                                    'getPlanningFactory',
-                                                   'getArtifactFactory'));
+                                                   'getArtifactFactory',
+                                                   'getMilestoneFactory'));
         $this->router->__construct(mock('Plugin'));
         
         stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
         stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
         stub($this->router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
+        stub($this->router)->getMilestoneFactory()->returns(mock('Planning_MilestoneFactory'));
     }
     
     public function itRoutesToTheArtifactPlannificationByDefault() {
         $request = aRequest()->withUri('someurl')->build();
-        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*'));
         $this->router->routeShowPlanning($request);
     }
     
     public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
         $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
-        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*'));
         $this->router->routeShowPlanning($request);
     }
 

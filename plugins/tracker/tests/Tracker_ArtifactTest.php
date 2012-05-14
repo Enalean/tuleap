@@ -129,13 +129,13 @@ Mock::generate('Tracker_RulesManager');
     )
 );*/
 
-require_once('Test_Tracker_FormElement_Builder.php');
-require_once('Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/builders/aField.php');
+require_once(dirname(__FILE__).'/builders/aTracker.php');
 
 
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
-require_once 'Test_Artifact_Builder.php';
+require_once dirname(__FILE__).'/builders/anArtifact.php';
 
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');

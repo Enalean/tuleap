@@ -66,7 +66,7 @@ Mock::generate('Tracker_Valid_Rule_ArtifactId');
 require_once 'common/include/Response.class.php';
 Mock::generate('Response');
 
-require_once dirname(__FILE__).'/Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__).'/builders/aField.php';
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     
