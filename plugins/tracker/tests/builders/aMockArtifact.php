@@ -21,14 +21,11 @@
 require_once dirname(__FILE__).'/../../include/Tracker/Tracker.class.php';
 require_once dirname(__FILE__).'/../../include/Tracker/Artifact/Tracker_Artifact.class.php';
 
-Mock::generate('Tracker');
-Mock::generate('Tracker_Artifact');
-
 class MockArtifactBuilder {
     public function __construct() {
         $this->id                  = 123;
-        $this->tracker             = new MockTracker();
-        $this->artifact            = new MockTracker_Artifact();
+        $this->tracker             = mock('Tracker');
+        $this->artifact            = mock('Tracker_Artifact');
         $this->artifact_link_field = mock('Tracker_FormElement_Field_ArtifactLink');;
     }
 
