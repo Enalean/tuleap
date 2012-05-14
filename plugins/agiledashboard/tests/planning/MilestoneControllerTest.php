@@ -43,16 +43,25 @@ Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Planning_ViewBuilder');
 
-class Planning_MilestoneControllerTest extends TuleapTestCase {
+class Planning_MilestoneController_TestCase extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
         
-        $this->request_uri = '/plugins/agiledashboard/';
+        $this->request_uri         = '/plugins/agiledashboard/';
         $this->planning_tracker_id = 66;
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', array(), $this->planning_tracker_id);
-        $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
-        $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
+        $this->planning            = new Planning(123,
+                                                  'Stuff Backlog',
+                                                  $group_id = 103,
+                                                  'Release Backlog',
+                                                  'Sprint Plan',
+                                                  array(),
+                                                  $this->planning_tracker_id);
+        
+        $this->setText('-- Please choose',
+                       array('global', 'please_choose_dashed'));
+        $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker',
+                       array('plugin_tracker', 'must_have_artifact_link_field'));
         
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
@@ -61,10 +70,130 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
     public function tearDown() {
         parent::tearDown();
         
-        
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
+    }
+    
+    protected function GivenAnArtifact($id, $title, $already_linked_items) {
+        $artifact = new MockTracker_Artifact();
+        $artifact->setReturnValue('getTitle', $title);
+        $artifact->setReturnValue('fetchTitle', "#$id $title");
+        $artifact->setReturnValue('getId', $id);
+        $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
+        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
+        $artifact->setReturnValue('userCanView', true);
+        
+        $tracker = stub('Tracker')->userCanView()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
+
+        return $artifact;
+    }
+    
+    protected function GivenAnArtifactFactory(array $artifacts = array()) {
+        $open_artifacts = array(
+            $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
+            $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
+        );
+
+        $factory  = new MockTracker_ArtifactFactory();
+        Tracker_ArtifactFactory::setInstance($factory);
+        foreach ($artifacts as $artifact) {
+            $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
+            $open_artifacts[] = $artifact;
+        }
+        $factory->setReturnValue(
+            'getOpenArtifactsByTrackerIdUserCanView', 
+            $open_artifacts,
+            array(aUser()->build(), $this->planning->getPlanningTrackerId()));
+        return $factory;
+    }
+    
+    protected function GivenAnArtifactWithNoLinkedItem($id, $title) {
+        return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
+    }
+
+    protected function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
+        $field = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->userCanUpdate()->returns(true);
+        $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
+        stub($artifact)->getAnArtifactLinkField()->returns($field);
+        $tracker = stub('Tracker')->userCanView()->returns(true);
+        stub($artifact)->getTracker()->returns($tracker);
+        return $artifact;
+    }
+    
+    protected function GivenAMilestone($artifact) {
+        $milestone = mock('Planning_Milestone');
+        $root_node = new TreeNode(array('id'    => $artifact->getId(),
+                                        'title' => $artifact->getTitle()));
+        $root_node->setId($artifact->getId());
+        
+        stub($milestone)->getArtifact()->returns($artifact);
+        stub($milestone)->getPlannedArtifacts()->returns($root_node);
+        stub($milestone)->userCanView()->returns(true);
+        
+        return $milestone;
+    }
+    
+    protected function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
+        $content_view = new MockTracker_CrossSearch_SearchContentView();
+        $content_view->setReturnValue('fetch', 'stuff');
+        $view_builder = new MockPlanning_ViewBuilder();
+        $view_builder->setReturnValue('build', $content_view);
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), new MockTracker_CrossSearch_Search());
+    }
+    
+    protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
+        $project_manager = $this->GivenAProjectManagerThatReturns($projects);
+
+        $planning_factory = new MockPlanningFactory();
+        $planning_tracker = mock('Tracker');
+        
+        $this->planning->setPlanningTracker($planning_tracker);
+        stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
+        $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
+        
+        $tracker_factory = new MockTrackerFactory();
+        TrackerFactory::setInstance($tracker_factory);
+        
+        $milestone_factory = mock('Planning_MilestoneFactory');
+        stub($milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
+                                                                   $request->get('group_id'),
+                                                                   $request->get('planning_id'),
+                                                                   $request->get('aid'))
+                                ->returns($milestone);
+        
+        ob_start();
+        $controller = new Planning_MilestoneController($request, $factory, $planning_factory, $milestone_factory);
+        
+        $controller->show($view_builder, $project_manager, $search);
+        $content = ob_get_clean();
+        return $content;
+    }
+
+    private function GivenAProjectManagerThatReturns(array $projects) {
+        $project_manager = mock('ProjectManager');
+        foreach ($projects as $project) {
+            stub($project_manager)->getProject($project->getId())->returns($project);
+        }
+        return $project_manager;
+    }
+}
+
+class Planning_MilestoneController_EmptyMilestoneTest extends Planning_MilestoneController_TestCase {
+    
+    private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
+        $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
+        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $request  = aRequest()->with('aid', $id)
+                              ->with('group_id', $this->planning->getGroupId())
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
+        $milestone = $this->GivenAMilestone($artifact);
+        
+        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -102,6 +231,9 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/<input type="hidden" name="action" value="show"/', $content);
         $this->assertPattern('/<input type="hidden" name="group_id" value="103"/', $content);
     }
+}
+
+class Planning_MilestoneController_OldTest extends Planning_MilestoneController_TestCase {
     
     public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
@@ -224,67 +356,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                              ->build();
         return $request;
     }
-
-    private function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
-        $field = mock('Tracker_FormElement_Field_ArtifactLink');
-        stub($field)->userCanUpdate()->returns(true);
-        $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
-        stub($artifact)->getAnArtifactLinkField()->returns($field);
-        $tracker = stub('Tracker')->userCanView()->returns(true);
-        stub($artifact)->getTracker()->returns($tracker);
-        return $artifact;
-    }
-    
-    private function GivenAnArtifact($id, $title, $already_linked_items) {
-        $artifact = new MockTracker_Artifact();
-        $artifact->setReturnValue('getTitle', $title);
-        $artifact->setReturnValue('fetchTitle', "#$id $title");
-        $artifact->setReturnValue('getId', $id);
-        $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
-        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
-        $artifact->setReturnValue('userCanView', true);
-        
-        $tracker = stub('Tracker')->userCanView()->returns(true);
-        stub($artifact)->getTracker()->returns($tracker);
-
-        return $artifact;
-    }
-    
-    private function GivenAnArtifactWithNoLinkedItem($id, $title) {
-        return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
-    }
-    
-    private function GivenAnArtifactFactory(array $artifacts = array()) {
-        $open_artifacts = array(
-            $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
-            $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
-        );
-
-        $factory  = new MockTracker_ArtifactFactory();
-        Tracker_ArtifactFactory::setInstance($factory);
-        foreach ($artifacts as $artifact) {
-            $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
-            $open_artifacts[] = $artifact;
-        }
-        $factory->setReturnValue(
-            'getOpenArtifactsByTrackerIdUserCanView', 
-            $open_artifacts,
-            array(aUser()->build(), $this->planning->getPlanningTrackerId()));
-        return $factory;
-    }
-    
-    private function GivenAMilestone($artifact) {
-        $milestone = mock('Planning_Milestone');
-        $root_node = new TreeNode(array('id'    => $artifact->getId(),
-                                        'title' => $artifact->getTitle()));
-        $root_node->setId($artifact->getId());
-        
-        stub($milestone)->getArtifact()->returns($artifact);
-        stub($milestone)->getPlannedArtifacts()->returns($root_node);
-        stub($milestone)->userCanView()->returns(true);
-        
-        return $milestone;
-    }
     
     private function GivenNoMilestone($project_id = null) {
         if (! $project_id) {
@@ -309,19 +380,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
     
-    private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
-        $request  = aRequest()->with('aid', $id)
-                              ->with('group_id', $this->planning->getGroupId())
-                              ->with('planning_id', $this->planning->getId())
-                              ->withUri($this->request_uri)
-                              ->build();
-        $milestone = $this->GivenAMilestone($artifact);
-        
-        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
-    }
-    
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $milestone = $this->GivenNoMilestone();
         $factory = $this->GivenAnArtifactFactory();
@@ -331,50 +389,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                              ->withUser(aUser())
                              ->build();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
-    }
-    
-    private function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
-        $content_view = new MockTracker_CrossSearch_SearchContentView();
-        $content_view->setReturnValue('fetch', 'stuff');
-        $view_builder = new MockPlanning_ViewBuilder();
-        $view_builder->setReturnValue('build', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), new MockTracker_CrossSearch_Search());
-    }
-    
-    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
-        $project_manager = $this->GivenAProjectManagerThatReturns($projects);
-
-        $planning_factory = new MockPlanningFactory();
-        $planning_tracker = mock('Tracker');
-        
-        $this->planning->setPlanningTracker($planning_tracker);
-        stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
-        $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
-        
-        $tracker_factory = new MockTrackerFactory();
-        TrackerFactory::setInstance($tracker_factory);
-        
-        $milestone_factory = mock('Planning_MilestoneFactory');
-        stub($milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
-                                                                   $request->get('group_id'),
-                                                                   $request->get('planning_id'),
-                                                                   $request->get('aid'))
-                                ->returns($milestone);
-        
-        ob_start();
-        $controller = new Planning_MilestoneController($request, $factory, $planning_factory, $milestone_factory);
-        
-        $controller->show($view_builder, $project_manager, $search);
-        $content = ob_get_clean();
-        return $content;
-    }
-
-    private function GivenAProjectManagerThatReturns(array $projects) {
-        $project_manager = mock('ProjectManager');
-        foreach ($projects as $project) {
-            stub($project_manager)->getProject($project->getId())->returns($project);
-        }
-        return $project_manager;
     }
 }
 ?>
