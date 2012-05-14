@@ -40,13 +40,26 @@ class Docman_ItemTest extends TuleapTestCase {
     }
     
     
-    public function itReturnsPermissionsThanksToPermisisonsManager() {
+    public function itReturnsPermissionsThanksToPermissionsManager() {
         $item_id = 10;
         $this->docman_item->setId($item_id);
         
+        $this->permissions_manager->setReturnValue('getPermissionsAndUgroupsByObjectid', array());
         $this->permissions_manager->expectOnce('getPermissionsAndUgroupsByObjectid', array($item_id, array()));
         
         $this->docman_item->getPermissions();
+    }
+    
+    public function itReturnsPermissionsAfterReducingArrayToValues() {
+        $permissions = array(
+                'PLUGIN_DOCMAN_READ' =>  array(3, 102),
+                'PLUGIN_DOCMAN_WRITE' =>  array(103, 2),
+        );
+        $this->permissions_manager->setReturnValue('getPermissionsAndUgroupsByObjectid', $permissions);
+        
+        $expected_permissions = array(3, 102, 103, 2);
+        $permissions = $this->docman_item->getPermissions();
+        $this->assertEqual($expected_permissions, $permissions);
     }
     
 }

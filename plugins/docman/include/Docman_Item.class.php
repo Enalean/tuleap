@@ -354,7 +354,12 @@ class Docman_Item {
     
     public function getPermissions() {
         require_once 'common/permission/PermissionsManager.class.php';
-        return PermissionsManager::instance()->getPermissionsAndUgroupsByObjectid($this->id, array());
+        $permissions = PermissionsManager::instance()->getPermissionsAndUgroupsByObjectid($this->id, array());
+        $permissions_values = array();
+        foreach($permissions as $permission) {
+            $permissions_values = array_merge($permissions_values, array_values($permission));
+        }
+        return $permissions_values;
     }
 }
 
