@@ -26,9 +26,10 @@ Mock::generate('Tracker_Artifact');
 
 class MockArtifactBuilder {
     public function __construct() {
-        $this->id       = 123;
-        $this->tracker  = new MockTracker();
-        $this->artifact = new MockTracker_Artifact();
+        $this->id                  = 123;
+        $this->tracker             = new MockTracker();
+        $this->artifact            = new MockTracker_Artifact();
+        $this->artifact_link_field = null;
     }
 
     public function withId($id) {
@@ -52,6 +53,11 @@ class MockArtifactBuilder {
         return $this;
     }
     
+    public function withArtifactLinkField($field) {
+        $this->artifact_link_field = $field;
+        return $this;
+    }
+    
     public function build() {
         stub($this->artifact)->getId()->returns($this->id);
         stub($this->artifact)->getTitle()->returns($this->title);
@@ -59,6 +65,7 @@ class MockArtifactBuilder {
         stub($this->artifact)->fetchDirectLinkToArtifact()->returns($this->id);
         stub($this->artifact)->getLinkedArtifacts()->returns($this->linked_artifacts);
         stub($this->artifact)->getTracker()->returns($this->tracker);
+        stub($this->artifact)->getAnArtifactLinkField()->returns($this->artifact_link_field);
         
         return $this->artifact;
     }

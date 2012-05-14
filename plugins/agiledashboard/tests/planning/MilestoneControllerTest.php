@@ -101,10 +101,8 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
                                    ->withTitle($title)
                                    ->withLinkedArtifacts($already_linked_items)
                                    ->withReadPermission()
+                                   ->withArtifactLinkField($field)
                                    ->build();
-        stub($artifact)->getAnArtifactLinkField()->returns($field);
-        $tracker = stub('Tracker')->userCanView()->returns(true);
-        stub($artifact)->getTracker()->returns($tracker);
         return $artifact;
     }
     
