@@ -249,14 +249,40 @@ class Planning_MilestoneController_NoMilestoneTest extends Planning_MilestoneCon
     }
 }
 
-class Planning_MilestoneController_OldTest extends Planning_MilestoneController_TestCase {
+class Planning_MilestoneController_NoArtifactLinkFieldTest extends Planning_MilestoneController_TestCase {
     
-    public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
-        $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
+    private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
+        $id    = 987;
+        $title = 'Coin';
         
-        $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
+        $artifact = aMockArtifact()->withId($id)
+                                   ->withTitle($title)
+                                   ->withLinkedArtifacts(array())
+                                   ->withReadPermission()
+                                   ->build();
+        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $request  = aRequest()->with('aid', $id)
+                              ->with('group_id', $this->planning->getGroupId())
+                              ->with('planning_id', $this->planning->getId())
+                              ->withUri($this->request_uri)
+                              ->build();
+        $milestone = $this->GivenAMilestone($artifact);
+        
+        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
+    }
+    
+    public function itDisplaysAnErrorMessage() {
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
+    
+    public function itDoesNotAllowDragAndDrop() {
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
+        $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
+    }
+}
+
+class Planning_MilestoneController_OldTest extends Planning_MilestoneController_TestCase {
 
     public function itListsAllLinkedItems() {
         $id = 987;
@@ -366,26 +392,6 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
                              ->withUri($this->request_uri)
                              ->build();
         return $request;
-    }
-    
-    private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
-        $id    = 987;
-        $title = 'Coin';
-        
-        $artifact = aMockArtifact()->withId($id)
-                                   ->withTitle($title)
-                                   ->withLinkedArtifacts(array())
-                                   ->withReadPermission()
-                                   ->build();
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
-        $request  = aRequest()->with('aid', $id)
-                              ->with('group_id', $this->planning->getGroupId())
-                              ->with('planning_id', $this->planning->getId())
-                              ->withUri($this->request_uri)
-                              ->build();
-        $milestone = $this->GivenAMilestone($artifact);
-        
-        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
 }
 ?>
