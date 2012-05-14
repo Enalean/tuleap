@@ -130,13 +130,13 @@ class ProjectQuota {
         $output .= '<form method="post" >';
         $output .= '<tr><td colspan="2"><b>'.$GLOBALS['Language']->getText('plugin_statistics', 'set_quota').'</b></td></tr>';
         $output .= '<tr>';
-        $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').'</td><td><input id="project" name="project" /></td>';
+        $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').' <span class="highlight">*</span></td><td><input id="project" name="project" /></td>';
         $output .= '</tr>';
         $output .= '<tr>';
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'requester').'</td><td><input id="requester" name="requester" /></td>';
         $output .= '</tr>';
         $output .= '<tr>';
-        $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').' (GB) </td><td><input name="quota" /></td>';
+        $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').' (GB) <span class="highlight">*</span></td><td><input name="quota" /></td>';
         $output .= '</tr>';
         $output .= '<tr>';
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'motivation').'</td><td><textarea name="motivation" rows="5" cols="50" ></textarea></td>';
@@ -147,6 +147,7 @@ class ProjectQuota {
         $output .= '</tr>';
         $output .= '</form>';
         $output .= '</table>';
+        $output .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
         $js     = "new ProjectAutoCompleter('project', '".util_get_dir_image_theme()."');";
         $js     .= "new UserAutoCompleter('requester', '".util_get_dir_image_theme()."');";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
