@@ -58,9 +58,10 @@ class SVN_SOAPServerTest extends TuleapTestCase {
         $project_manager = stub('ProjectManager')->getGroupByIdForSoap($group_id, '*')->returns($project);
         $svn_perms_mgr   = mock('SVN_PermissionsManager');
         
-        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getSVNPathListing'));
+        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getSVNPathListing', 'continueSession'));
         $svn_soap->__construct($project_manager, $svn_perms_mgr);
         
+        $svn_soap->expectOnce('continueSession', array($session_key));
         $svn_soap->expectOnce('getSVNPathListing', array($project, $svn_path));
         
         $svn_soap->getSvnPath($session_key, $group_id, $svn_path);

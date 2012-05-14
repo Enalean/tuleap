@@ -49,6 +49,7 @@ class SVN_SOAPServer {
     
     public function getSvnPath($session_key, $group_id, $path) {
         try {
+            $this->continueSession($session_key);
             $project = $this->project_manager->getGroupByIdForSoap($group_id, 'getSVNPath');
             return $this->getSVNPathListing($project, $path);
         } catch (Exception $e) {
