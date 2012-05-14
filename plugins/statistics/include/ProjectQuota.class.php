@@ -230,6 +230,8 @@ class ProjectQuota {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
         } elseif (empty($quota)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
+        } elseif (strlen($motivation)>256) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_motivation'));
         } else {
             $project = $this->pm->getProjectFromAutocompleter($project);
             if ($project) {
