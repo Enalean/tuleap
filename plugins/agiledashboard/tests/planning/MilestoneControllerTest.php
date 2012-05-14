@@ -65,11 +65,9 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         TrackerFactory::clearInstance();
     }
     
-    protected function GivenNoMilestone($project_id = null) {
-        if (! $project_id) {
-            $project_id = $this->planning->getGroupId();
-        }
-        return new Planning_NoMilestone($project_id, $this->planning);
+    protected function GivenNoMilestone() {
+        return new Planning_NoMilestone($this->planning->getGroupId(),
+                                        $this->planning);
     }
     
     protected function GivenAnArtifactFactory(array $artifacts = array()) {
@@ -321,7 +319,7 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
     
 
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
-        $project_id                = 1111;
+        $project_id                = $this->planning->getGroupId();
         $id                        = 987;
         $a_list_of_draggable_items = 'A list of draggable items';
         $project                   = stub('Project')->getId()->returns($project_id);
@@ -329,7 +327,7 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
         $factory                   = $this->GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items);
         $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
-        $milestone                 = $this->GivenNoMilestone($project_id);
+        $milestone                 = $this->GivenNoMilestone();
 
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array($project), mock('Tracker_CrossSearch_Search'));
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
