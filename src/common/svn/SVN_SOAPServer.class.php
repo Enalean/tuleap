@@ -17,10 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'SVN_PermissionsManager.class.php';
+require_once 'common/project/ProjectManager.class.php';
+
 /**
  * Wrapper for subversion related SOAP methods
  */
 class SVN_SOAPServer {
+    /**
+     * @var ProjectManager 
+     */
+    private $project_manager;
+    
+    /**
+     * @var SVN_PermissionsManager
+     */
+    private $svn_permissions_manager;
+    
+    public function __construct(ProjectManager $project_manager,
+                                SVN_PermissionsManager $svn_permissions_manager) {
+        $this->project_manager         = $project_manager;
+        $this->svn_permissions_manager = $svn_permissions_manager;
+    }
     
     protected function getDirectoryListing($repository_path, $svn_path) {
         $cmd    = '/usr/bin/svnlook tree --non-recursive --full-paths'.escapeshellarg($repository_path).' '.escapeshellarg($svn_path);
@@ -29,9 +47,18 @@ class SVN_SOAPServer {
         return $output;
     }
     
-    public function getSVNPaths($project_name, $svn_path) {
+    public function getSvnPath($session_key, $group_id, $path) {
+        try {
+            $project = $this->project_manager->getGroupByIdForSoap($group_id, 'getSVNPath');
+            return $this->getSVNPathListing($project, $path);
+        } catch (Exception $e) {
+            return new SoapFault('0', $e->getMessage());
+        }
+    }
+    
+    public function getSVNPathListing(Project $project, $svn_path) {
         $paths            = array();
-        $repository_path  = $GLOBALS['svn_prefix'].'/'.$project_name;
+        $repository_path  = $GLOBALS['svn_prefix'].'/'.$project->getUnixName();
         $content          = $this->getDirectoryListing($repository_path, $svn_path);
         foreach ($content as $line) {
             $paths[]= $this->extractDirectoryContent($line, $svn_path);
@@ -45,6 +72,23 @@ class SVN_SOAPServer {
             return preg_replace($match_path_regex, '', $line);
         }
         return '';
+    }
+    
+    
+    /**
+     *
+     * @see session_continue
+     * 
+     * @param String $session_key
+     * 
+     * @return User
+     */
+    protected function continueSession($session_key) {
+        $user = $this->userManager->getCurrentUser($session_key);
+        if ($user->isLoggedIn()) {
+            return $user;
+        }
+        throw new SoapFault('3001', 'Invalid session');
     }
 }
 

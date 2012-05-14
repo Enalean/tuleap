@@ -32,15 +32,38 @@ class SVN_SOAPServerTest extends TuleapTestCase {
     }
     
     public function itShowsOnlyTheDirectoryContents() {
+        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getDirectoryListing'));
+        
+        $project_manager = mock('ProjectManager');
+        $svn_perms_mgr = stub('SVN_PermissionsManager')->userCanRead()->returns(true);
+        $svn_soap->__construct($project_manager, $svn_perms_mgr);
+
         $content = array("/my/Project/tags",
                          "/my/Project/tags/1.0",
                          "/my/Project/tags/2.0");
-        
-        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getDirectoryListing'));
         stub($svn_soap)->getDirectoryListing('/data/svnroot/gpig', '/my/Project/tags')->returns($content);
 
-        $tags = $svn_soap->getSVNPaths('gpig', '/my/Project/tags');
+        $project = stub('Project')->getUnixName()->returns('gpig');
+        
+        $tags = $svn_soap->getSVNPathListing($project, '/my/Project/tags');
         $this->assertEqual(array_values($tags), array('1.0', '2.0'));
+    }
+    
+    public function itCheckUserSessionAngGroupValidity() {
+        $session_key = 'whatever';
+        $group_id    = 123;
+        $svn_path    = '/tags';
+
+        $project         = mock('Project');
+        $project_manager = stub('ProjectManager')->getGroupByIdForSoap($group_id, '*')->returns($project);
+        $svn_perms_mgr   = mock('SVN_PermissionsManager');
+        
+        $svn_soap = TestHelper::getPartialMock('SVN_SOAPServer', array('getSVNPathListing'));
+        $svn_soap->__construct($project_manager, $svn_perms_mgr);
+        
+        $svn_soap->expectOnce('getSVNPathListing', array($project, $svn_path));
+        
+        $svn_soap->getSvnPath($session_key, $group_id, $svn_path);
     }
 }
 
