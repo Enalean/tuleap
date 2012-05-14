@@ -81,13 +81,12 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         $factory  = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($factory);
         foreach ($artifacts as $artifact) {
-            $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
+            stub($factory)->getArtifactByid($artifact->getId())->returns($artifact);
             $open_artifacts[] = $artifact;
         }
-        $factory->setReturnValue(
-            'getOpenArtifactsByTrackerIdUserCanView', 
-            $open_artifacts,
-            array(aUser()->build(), $this->planning->getPlanningTrackerId()));
+        stub($factory)->getOpenArtifactsByTrackerIdUserCanView(aUser()->build(),
+                                                               $this->planning->getPlanningTrackerId())
+                      ->returns($open_artifacts);
         return $factory;
     }
     
@@ -124,9 +123,9 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     
     protected function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
         $content_view = mock('Tracker_CrossSearch_SearchContentView');
-        $content_view->setReturnValue('fetch', 'stuff');
+        stub($content_view)->fetch()->returns('stuff');
         $view_builder = mock('Planning_ViewBuilder');
-        $view_builder->setReturnValue('build', $content_view);
+        stub($view_builder)->build()->returns($content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), mock('Tracker_CrossSearch_Search'));
     }
     
@@ -137,8 +136,10 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         $planning_tracker = mock('Tracker');
         
         $this->planning->setPlanningTracker($planning_tracker);
-        stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
-        $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
+        stub($planning_tracker)->getId()
+                               ->returns($this->planning->getPlanningTrackerId());
+        stub($planning_factory)->getPlanningWithTrackers($this->planning->getId())
+                               ->returns($this->planning);
         
         $tracker_factory = mock('TrackerFactory');
         TrackerFactory::setInstance($tracker_factory);
@@ -358,7 +359,7 @@ class Planning_MilestoneController_OldTest extends Planning_MilestoneController_
             '*' // TODO an assert on planning_redirect_param
         );
         $view_builder->expectOnce('build', $expected_arguments);
-        $view_builder->setReturnValue('build', $content_view);
+        stub($view_builder)->build()->returns($content_view);
 
         return $view_builder;
     }
