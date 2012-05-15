@@ -50,6 +50,10 @@ class Tracker_CrossSearch_Query {
     }
     
     /**
+     * Method to ease serialization of query parameters in logs.
+     * 
+     * DO NOT USE IT FOR ANY OTHER PURPOSES OR KITTENS WILL DIE SLOWLY AND PAINFULLY!
+     * 
      * @return array
      */
     public function toArrayOfDoom() {
