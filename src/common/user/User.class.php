@@ -444,6 +444,10 @@ class User {
         return $this->isMember(1, 'A');
     }
     
+    public function getAllUgroups() {
+        return $this->getUGroupDao()->searchByUserId($this->user_id);
+    }
+    
     var $_ugroups;
     function getUgroups($group_id, $instances) {
         $hash = md5(serialize($instances));
