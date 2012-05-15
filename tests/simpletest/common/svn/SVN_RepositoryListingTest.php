@@ -86,7 +86,7 @@ class SVN_RepositoryListingTest extends TuleapTestCase {
  * A: To set expectations in tests :) 
  */
 class SVN_RevisionsSource {
-    public function getRevisions(&$project, $offset, $chunksz, $_commiter = '') {
+    public function getRevisions(&$project, $chunksz, $_commiter = '') {
         // svn_get_revisions($project, $offset, $chunksz, '', $_commiter, '', '', 0, false);
     }
 }
@@ -112,7 +112,8 @@ class SVN_Repository_CommitListingTest extends SVN_Repository_TestCase {
     
     public function itReturnsAnEmptyListWhenThereAreNoCommits() {
         stub($this->revisions_source)->getRevisions()->returns($this->EMPTY_COMMIT_LIST);
-        $this->assertIdentical($this->EMPTY_COMMIT_LIST, $this->repo_listing->getCommits());
+        $limit = 100;
+        $this->assertIdentical($this->EMPTY_COMMIT_LIST, $this->repo_listing->getCommits($this->project, $limit));
     }
     
     public function itReturnsAllPossibleCommits() {
@@ -128,8 +129,10 @@ class SVN_Repository_CommitListingTest extends SVN_Repository_TestCase {
                                          'whoid'       => 4)),
                              -1);
         
+        $limit     = 50;
         stub($this->revisions_source)->getRevisions()->returns($two_commits);
-        $this->assertIdentical($two_commits, $this->repo_listing->getCommits());
+        $this->revisions_source->expectOnce('getRevisions', array($this->project, $limit));
+        $this->assertIdentical($two_commits, $this->repo_listing->getCommits($this->project, $limit));
     }
 }
 

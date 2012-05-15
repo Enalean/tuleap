@@ -62,8 +62,8 @@ class SVN_RepositoryListing {
         return '';
     }
 
-    public function getCommits($author_id = null) {
-        return $this->revision_source->getRevisions();
+    public function getCommits($project, $limit, $author_id = null) {
+        return $this->revision_source->getRevisions($project, $limit);
     }
 }
 
