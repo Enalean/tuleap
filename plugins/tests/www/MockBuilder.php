@@ -70,7 +70,7 @@ function mock($classname) {
  * Setup both an expectation and a stub.
  * 
  * <code>
- *   expect($mock)->foo('bar', 'baz')->returns('qux')
+ *   expect($mock)->foo('bar', 'baz')->returns('qux');
  * </code>
  * 
  * is exactly the same as
@@ -78,6 +78,18 @@ function mock($classname) {
  * <code>
  *   $mock->expectOnce('foo', array('bar', 'baz'));
  *   $mock->setReturnValue('foo', 'qux');
+ * </code>
+ * 
+ * Setting return value is not mandatory:
+ * 
+ * <code>
+ *   expect($mock)->foo('bar', 'baz');
+ * </code>
+ * 
+ * is exactly the same as
+ * 
+ * <code>
+ *   $mock->expectOnce('foo', array('bar', 'baz'));
  * </code>
  * 
  * TODO:
@@ -101,6 +113,12 @@ class OngoingIntelligentStub {
     public function __call($name, $arguments) {
         $this->method = $name;
         $this->arguments = $arguments;
+        
+        if ($this->expectation) {
+            $expectation = $this->expectation;
+            $this->mock->$expectation($this->method, $this->arguments);
+        }
+        
         return $this;
     }
 
@@ -108,13 +126,7 @@ class OngoingIntelligentStub {
      * @return the configured mock 
      */
     public function returns($value) {
-        $expectation = $this->expectation;
-        
-        if ($expectation) {
-            $this->mock->$expectation($this->method, $this->arguments);
-        }
-        
-        if (empty($this->arguments) || $expectation) {
+        if (empty($this->arguments) || $this->expectation) {
             $this->mock->setReturnValue($this->method, $value);
         } else {
             $this->mock->setReturnValue($this->method, $value, $this->arguments);
