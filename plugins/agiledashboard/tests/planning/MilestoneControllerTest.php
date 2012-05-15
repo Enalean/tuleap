@@ -35,6 +35,7 @@ require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/bui
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifactFactory.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTrackerFactory.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/builders/aMockProjectManager.php';
 
 class Planning_MilestoneController_TestCase extends TuleapTestCase {
     
@@ -144,11 +145,7 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     }
 
     private function GivenAProjectManagerThatReturns(array $projects) {
-        $project_manager = mock('ProjectManager');
-        foreach ($projects as $project) {
-            stub($project_manager)->getProject($project->getId())->returns($project);
-        }
-        return $project_manager;
+        return aMockProjectManager()->withProjects($projects)->build();
     }
 }
 
