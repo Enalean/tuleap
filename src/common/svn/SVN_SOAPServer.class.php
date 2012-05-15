@@ -46,7 +46,7 @@ class SVN_SOAPServer {
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
         } catch (Exception $e) {
-            return new SoapFault('0', $e->getMessage());
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 }
