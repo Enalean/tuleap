@@ -23,10 +23,10 @@ require_once 'common/project/ProjectManager.class.php';
 require_once 'common/project/UGroupManager.class.php';
 require_once 'common/user/UserManager.class.php';
 
-class Git_GitoliteMembershipPgm {
+class ExternalPermissions {
     public static $status = array(
-            User::STATUS_RESTRICTED => 'site_restricted',
-            User::STATUS_ACTIVE     => 'site_active'
+        User::STATUS_RESTRICTED => 'site_restricted',
+        User::STATUS_ACTIVE     => 'site_active'
     );
     
     

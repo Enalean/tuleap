@@ -267,7 +267,7 @@ class Git_GitoliteDriver {
     }
 
     /**
-     * Convert given ugroup id to a format managed by Git_GitoliteMembershipPgmTest
+     * Convert given ugroup id to a format managed by ExternalPermissionsTest
      *
      * @param String $ug UGroupId
      */

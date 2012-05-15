@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../include/Git_GitoliteMembershipPgm.class.php';
+require_once 'common/permission/ExternalPermissions.class.php';
 require_once 'common/user/User.class.php';
 
 Mock::generate('ProjectManager');
@@ -27,7 +27,7 @@ Mock::generate('Project');
 Mock::generate('UserManager');
 Mock::generate('User');
 
-class Git_GitoliteMembershipPgmTest extends TuleapTestCase {
+class ExternalPermissionsTest extends TuleapTestCase {
     
     protected $membership;
     protected $user;
@@ -38,7 +38,7 @@ class Git_GitoliteMembershipPgmTest extends TuleapTestCase {
         $userManager = new MockUserManager();
         $userManager->setReturnValue('getUserByUserName', $this->user);
         UserManager::setInstance($userManager);
-        $this->membership = new Git_GitoliteMembershipPgm();
+        $this->membership = new ExternalPermissions();
     }
     
     public function tearDown() {
