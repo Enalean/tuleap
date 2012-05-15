@@ -79,4 +79,63 @@ class SVN_RepositoryListingTest extends TuleapTestCase {
     }
 }
 
+class SVN_RevisionsSource {
+    public function getCommits() {
+        
+    }
+}
+
+class SVN_Repository_CommitListingTest extends TuleapTestCase {
+    
+    public function itReturnsAnEmptyListWhenThereAreNoCommits() {
+        $revisions_source    = stub('SVN_RevisionsSource')->getCommits()->returns(array());
+        $repo_listing = new SVN_RepositoryListing(mock('SVN_PermissionsManager'), $revisions_source);
+        $result      = $repo_listing->getCommits();
+        $this->assertIdentical(array(), $result);
+    }
+    
+    public function itReturnsAllPossibleCommits() {
+        $two_commits = array(array('revision' => 1,
+                               'commit_id' => 2,
+                               'description' => 'Foo',
+                               'date' => null,
+                               'whoid' => 3),
+                        array('revision' => 2,
+                               'commit_id' => 2,
+                               'description' => 'Foo',
+                               'date' => null,
+                               'whoid' => 4),
+                         2);
+        
+        $permissions_manager = mock('SVN_PermissionsManager');
+        $revisions_source    = stub('SVN_RevisionsSource')->getCommits()->returns($two_commits);
+        $repo_listing        = new SVN_RepositoryListing($permissions_manager, $revisions_source);
+        
+        
+        $this->assertIdentical($two_commits, $repo_listing->getCommits());
+    }
+}
+
+class SVN_Repository_CommitListing_AuthorFilteringTest extends TuleapTestCase {
+
+    public function itReturnsAnEmptyListWhenThereAreNoCommitsForTheGivenAuthor() {
+        
+    }
+    
+    public function itReturnsOnlyCommitsOfTheGivenAuthor() {
+    }
+}
+
+class Repository_CommitListing_RepositoryPermissionsTest extends TuleapTestCase {
+    public function itReturnsAnEmptyListWhenViewerHasNoReadPermissionOnRepository() {
+    }
+}
+
+class Repository_CommitListing_ResultsLimitationTest extends TuleapTestCase {
+    // nb commit = limit
+    // nb commit > limit
+    public function itReturnsNoMoreCommitsThanTheGivenLimit() {
+    }
+}
+
 ?>

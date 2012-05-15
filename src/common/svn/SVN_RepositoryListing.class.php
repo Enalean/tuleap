@@ -25,8 +25,14 @@ class SVN_RepositoryListing {
      */
     private $svn_permissions_manager;
     
-    public function __construct(SVN_PermissionsManager $svn_permissions_manager) {
+    /**
+     * @var SVN_RevisionsSource
+     */
+    private $revision_source;
+    
+    public function __construct(SVN_PermissionsManager $svn_permissions_manager, SVN_RevisionsSource $revision_source = null) {
         $this->svn_permissions_manager = $svn_permissions_manager;
+        $this->revision_source         = $revision_source;
     }
 
     public function getSvnPath(User $user, Project $project, $svn_path) {
@@ -54,6 +60,10 @@ class SVN_RepositoryListing {
             return preg_replace($match_path_regex, '', $line);
         }
         return '';
+    }
+
+    public function getCommits() {
+        return $this->revision_source->getCommits();
     }
 }
 
