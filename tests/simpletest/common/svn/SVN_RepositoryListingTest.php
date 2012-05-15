@@ -79,59 +79,82 @@ class SVN_RepositoryListingTest extends TuleapTestCase {
     }
 }
 
+/**
+ * Wrapper for svn_get_revisions.
+ * 
+ * Q: Why is it useful?
+ * A: To set expectations in tests :) 
+ */
 class SVN_RevisionsSource {
-    public function getCommits() {
-        
+    public function getRevisions(&$project, $offset, $chunksz, $_commiter = '') {
+        // svn_get_revisions($project, $offset, $chunksz, '', $_commiter, '', '', 0, false);
     }
 }
 
-class SVN_Repository_CommitListingTest extends TuleapTestCase {
+class SVN_Repository_TestCase extends TuleapTestCase {
+    
+    protected $EMPTY_COMMIT_LIST;
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $this->EMPTY_COMMIT_LIST = array(array(), -1);
+        
+        $this->project             = mock('Project');
+        $this->revisions_source    = mock('SVN_RevisionsSource');
+        $this->permissions_manager = mock('SVN_PermissionsManager');
+        $this->repo_listing        = new SVN_RepositoryListing($this->permissions_manager,
+                                                               $this->revisions_source);
+    }
+}
+
+class SVN_Repository_CommitListingTest extends SVN_Repository_TestCase {
     
     public function itReturnsAnEmptyListWhenThereAreNoCommits() {
-        $revisions_source    = stub('SVN_RevisionsSource')->getCommits()->returns(array());
-        $repo_listing = new SVN_RepositoryListing(mock('SVN_PermissionsManager'), $revisions_source);
-        $result      = $repo_listing->getCommits();
-        $this->assertIdentical(array(), $result);
+        stub($this->revisions_source)->getRevisions()->returns($this->EMPTY_COMMIT_LIST);
+        $this->assertIdentical($this->EMPTY_COMMIT_LIST, $this->repo_listing->getCommits());
     }
     
     public function itReturnsAllPossibleCommits() {
-        $two_commits = array(array('revision' => 1,
-                               'commit_id' => 2,
-                               'description' => 'Foo',
-                               'date' => null,
-                               'whoid' => 3),
-                        array('revision' => 2,
-                               'commit_id' => 2,
-                               'description' => 'Foo',
-                               'date' => null,
-                               'whoid' => 4),
-                         2);
+        $two_commits = array(array(array('revision'    => 1,
+                                         'commit_id'   => 2,
+                                         'description' => 'Foo',
+                                         'date'        => null,
+                                         'whoid'       => 3),
+                                   array('revision'    => 2,
+                                         'commit_id'   => 2,
+                                         'description' => 'Foo',
+                                         'date'        => null,
+                                         'whoid'       => 4)),
+                             -1);
         
-        $permissions_manager = mock('SVN_PermissionsManager');
-        $revisions_source    = stub('SVN_RevisionsSource')->getCommits()->returns($two_commits);
-        $repo_listing        = new SVN_RepositoryListing($permissions_manager, $revisions_source);
-        
-        
-        $this->assertIdentical($two_commits, $repo_listing->getCommits());
+        stub($this->revisions_source)->getRevisions()->returns($two_commits);
+        $this->assertIdentical($two_commits, $this->repo_listing->getCommits());
     }
 }
 
-class SVN_Repository_CommitListing_AuthorFilteringTest extends TuleapTestCase {
+class SVN_Repository_CommitListing_AuthorFilteringTest extends SVN_Repository_TestCase {
 
-    public function itReturnsAnEmptyListWhenThereAreNoCommitsForTheGivenAuthor() {
-        
-    }
-    
-    public function itReturnsOnlyCommitsOfTheGivenAuthor() {
-    }
+//    public function itReturnsAnEmptyListWhenThereAreNoCommitsForTheGivenAuthor() {
+//        $chuck       = 88;
+//        $permissions_manager = mock('SVN_PermissionsManager');
+//        $revisions_source    = stub('SVN_RevisionsSource')->getRevisions()->returns($this->EMPTY_COMMIT_LIST);
+//        $repo_listing        = new SVN_RepositoryListing($permissions_manager, $revisions_source);
+//        
+//        $this->assertIdentical($this->EMPTY_COMMIT_LIST, $repo_listing->getCommits($chuck));
+//        
+//    }
+//    
+//    public function itReturnsOnlyCommitsOfTheGivenAuthor() {
+//    }
 }
 
-class Repository_CommitListing_RepositoryPermissionsTest extends TuleapTestCase {
+class Repository_CommitListing_RepositoryPermissionsTest extends SVN_Repository_TestCase {
     public function itReturnsAnEmptyListWhenViewerHasNoReadPermissionOnRepository() {
     }
 }
 
-class Repository_CommitListing_ResultsLimitationTest extends TuleapTestCase {
+class Repository_CommitListing_ResultsLimitationTest extends SVN_Repository_TestCase {
     // nb commit = limit
     // nb commit > limit
     public function itReturnsNoMoreCommitsThanTheGivenLimit() {
