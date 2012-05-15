@@ -59,6 +59,8 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
+        
+        $this->view_builder = stub('Planning_ViewBuilder')->build()->returns(stub('Tracker_CrossSearch_SearchContentView')->fetch()->returns('stuff'));
     }
     
     public function tearDown() {
@@ -111,15 +113,11 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     }
     
     protected function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
-        $content_view = mock('Tracker_CrossSearch_SearchContentView');
-        stub($content_view)->fetch()->returns('stuff');
-        $view_builder = mock('Planning_ViewBuilder');
-        stub($view_builder)->build()->returns($content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), mock('Tracker_CrossSearch_Search'));
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $this->view_builder, array(), mock('Tracker_CrossSearch_Search'));
     }
     
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
-        $project_manager = $this->aMockProjectManager()->withProjects($projects)->build();
+        $project_manager = aMockProjectManager()->withProjects($projects)->build();
 
         $planning_tracker = mock('Tracker');
         $this->planning->setPlanningTracker($planning_tracker);
