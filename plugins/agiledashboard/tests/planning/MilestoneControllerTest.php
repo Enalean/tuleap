@@ -197,7 +197,9 @@ class Planning_MilestoneController_EmptyMilestoneTest extends Planning_Milestone
 
 class Planning_MilestoneController_NoMilestoneTest extends Planning_MilestoneController_TestCase {
     
-    private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
+    public function setUp() {
+        parent::setUp();
+        
         $milestone = $this->GivenNoMilestone();
         $factory = $this->GivenAnArtifactFactory();
         $request = aRequest()->withUri($this->request_uri)
@@ -205,11 +207,10 @@ class Planning_MilestoneController_NoMilestoneTest extends Planning_MilestoneCon
                              ->with('planning_id', $this->planning->getId())
                              ->withUser(aUser())
                              ->build();
-        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
+        $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
     
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
-        $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
     }
 }
