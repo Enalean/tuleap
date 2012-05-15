@@ -20,7 +20,8 @@
 class SVN_PermissionsManager {
     
     public function userCanRead(User $user, Project $project, $svnpath) {
-        svn_utils_check_access($user->getUserName(), $project->getUnixName(), $svnpath);
+        include_once 'www/svn/svn_utils.php';
+        return svn_utils_check_access($user->getUserName(), $project->getUnixName(), $svnpath);
     }
 }
 
