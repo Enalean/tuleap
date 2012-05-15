@@ -113,8 +113,6 @@ class SVN_Repository_CommitListingTest extends TuleapTestCase {
     }
     
     public function itReturnsMatchingCommitsWhenRequesterHasReadAccessToTheRepository() {
-        stub($this->permissions_manager)->userCanRead($this->user, $this->project, '*')->returns(true);
-        
         $limit     = 10;
         $author_id = 123;
         $commits   = whatever();
@@ -126,12 +124,6 @@ class SVN_Repository_CommitListingTest extends TuleapTestCase {
         $this->assertIdentical($commits, $actual_commits);
     }
     
-    public function itReturnsAnEmptyListWhenRequesterHasNoReadAccessToTheRepository() {
-        stub($this->permissions_manager)->userCanRead($this->user, $this->project, '*')->returns(false);
-        $this->revisions_source->expectNever('getRevisions');
-        $actual_commits = $this->repo_listing->getCommits($this->user, $this->project, whatever(), whatever());
-        $this->assertIdentical(array(), $actual_commits);
-    }
 }
 
 ?>
