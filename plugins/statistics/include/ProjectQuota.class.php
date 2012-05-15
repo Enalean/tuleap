@@ -55,8 +55,9 @@ class ProjectQuota {
             $offset = 0;
         }
 
-        $validFilter = new Valid_String('project_filter');
-        $filter      = null;
+        $validFilter        = new Valid_String('project_filter');
+        $filter             = null;
+        $projectFilterParam = null;
         if ($request->valid($validFilter)) {
             $filter = $request->get('project_filter');
         }
@@ -68,7 +69,7 @@ class ProjectQuota {
 
         $list = array();
         if ($filter) {
-            $result = $this->pm->returnAllProjects(0, 20, false, $filter);
+            $result   = $this->pm->returnAllProjects(0, 20, false, $filter);
             $projects = $result['projects'];
             foreach ($projects as $entry) {
                 $list[] = $entry['group_id'];
@@ -76,44 +77,45 @@ class ProjectQuota {
             if (empty($list)) {
                 $output .= '<div id="feedback"><ul class="feedback_warning"><li>'.$GLOBALS['Language']->getText('plugin_statistics', 'no_search_result').'</li></ul></div>';
             }
+            $projectFilterParam = '&amp;project_filter='.$filter;
         }
         $output   .= '<form method="get" >';
         $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
         $output   .= '</form>';
-        $count        = 5;
+        $count        = 1;
         $res          = $this->dao->getAllCustomQuota($list, $offset, $count, $sortBy);
         $foundRowsRes = $this->dao->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
         // Prepare Navigation bar
         $prevHref = '&lt;Previous';
-        if($offset > 0) {
+        if ($offset > 0) {
             $prevOffset = $offset - $count;
-            if($prevOffset < 0) {
+            if ($prevOffset < 0) {
                 $prevOffset = 0;
             }
-            $prevHref = '<a href="?sort='.$sortBy.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
+            $prevHref = '<a href="?sort='.$sortBy.$projectFilterParam.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
         }
         $nextHref = 'Next&gt;';
         $nextOffset = $offset + $count;
-        if($nextOffset >= $foundRows) {
+        if ($nextOffset >= $foundRows) {
             $nextOffset = null;
         } else {
-            $nextHref = '<a href="?sort='.$sortBy.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
+            $nextHref = '<a href="?sort='.$sortBy.$projectFilterParam.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
         }
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
-            $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
+            $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota'.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date'.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
             $output   .= html_build_list_table_top($titles);
             $output   .= '<form method="post" >';
-            $purifier = Codendi_HTMLPurifier::instance();
+            $purifier  = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
                 $project     = $this->pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
                 $projectName = '';
                 if ($project) {
                     $projectName = $project->getPublicName();
                 }
-                $um      = UserManager::instance();
-                $user    = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
+                $um       = UserManager::instance();
+                $user     = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
                 $userName = '';
                 if ($user) {
                     $username = $user->getUserName();
@@ -154,7 +156,7 @@ class ProjectQuota {
         $output .= '</form>';
         $output .= '</table>';
         $output .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
-        $js     = "new ProjectAutoCompleter('project', '".util_get_dir_image_theme()."');";
+        $js      = "new ProjectAutoCompleter('project', '".util_get_dir_image_theme()."');";
         $js     .= "new UserAutoCompleter('requester', '".util_get_dir_image_theme()."');";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         return $output;
