@@ -120,7 +120,6 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
         $project_manager = aMockProjectManager()->withProjects($projects)->build();
 
-        $planning_tracker = mock('Tracker');
         $planning_tracker = aMockTracker()->withId($this->planning->getPlanningTrackerId())->build();
         $this->planning->setPlanningTracker($planning_tracker);
         
