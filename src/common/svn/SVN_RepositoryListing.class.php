@@ -42,7 +42,7 @@ class SVN_RepositoryListing {
     }
 
     protected function getDirectoryListing($repository_path, $svn_path) {
-        $cmd    = '/usr/bin/svnlook tree --non-recursive --full-paths'.escapeshellarg($repository_path).' '.escapeshellarg($svn_path);
+        $cmd    = '/usr/bin/svnlook tree --non-recursive --full-paths '.escapeshellarg($repository_path).' '.escapeshellarg($svn_path);
         $output = array();
         exec($cmd, $output);
         return $output;

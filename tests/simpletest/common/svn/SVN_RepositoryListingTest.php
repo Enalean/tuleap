@@ -70,6 +70,13 @@ class SVN_RepositoryListingTest extends TuleapTestCase {
         $tags = $svn_repo_listing->getSvnPath($user, $project, $svn_path);
         $this->assertEqual(array_values($tags), array('1.0'));
     }
+    
+    public function itExecuteTheCommandOnTheSystem() {
+        /*'svnadmin create toto'
+        'svn mkdir --parents -m "1.0" file:///.../toto/tags/1.0';
+        'svn mkdir --parents -m "1.0" file:///.../toto/tags/2.0';
+        */
+    }
 }
 
 ?>
