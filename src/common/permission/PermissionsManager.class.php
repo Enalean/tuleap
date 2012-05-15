@@ -35,7 +35,7 @@ class PermissionsManager {
     
     private static $_permissionmanager_instance;
     
-    function PermissionsManager($permission_dao) {
+    public function __construct($permission_dao) {
         $this->_permission_dao   = $permission_dao;
         $this->_permissions      = array();
         $this->_ugroups_for_user = array();
@@ -73,13 +73,13 @@ class PermissionsManager {
     * @param  array   $ugroups         The user's ugroups
     * @return boolean 
     */
-    function userHasPermission($object_id, $permission_type, $ugroups) {
+    public function userHasPermission($object_id, $permission_type, $ugroups) {
         if (!isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
         }
         
         if (count(array_diff($ugroups, array_keys($this->_permissions[$object_id]))) > 0) {
-            $this->_retrievePermissions($object_id, $ugroups);
+            $this->retrievePermissions($object_id, $ugroups);
         }
         //now we search for $permission_type
         $has_permission = false;
@@ -103,8 +103,8 @@ class PermissionsManager {
     * @param  int     $object_id  The id of the object
     * @param  array   $ugroups    A list of ugroups we want to see in permissions
     */
-    function getPermissionsAndUgroupsByObjectid($object_id, $ugroups) {
-        $this->_retrievePermissions($object_id); //Why don't we pass $ugroups ???
+    public function getPermissionsAndUgroupsByObjectid($object_id, $ugroups) {
+        $this->retrievePermissions($object_id); //Why don't we pass $ugroups ???
         $perms = array();
         if (isset($this->_permissions[$object_id])) {
             foreach($this->_permissions[$object_id] as $ugroup_id => $permissions) {
@@ -124,7 +124,7 @@ class PermissionsManager {
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
-     function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type){
+     public function getUgroupNameByObjectIdAndPermissionType($object_id, $permission_type){
          $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
          if ($dar->isError()) {
             return;
@@ -152,7 +152,7 @@ class PermissionsManager {
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
-     function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
+     public function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
          $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, false);
          if ($dar->isError() || !$dar->valid()) {
             return;
@@ -170,7 +170,7 @@ class PermissionsManager {
       * 
       * @return DataAccessResult
       */
-     public function getDefaults($permissionType, $withName = true) {
+     public public function getDefaults($permissionType, $withName = true) {
          return $this->_permission_dao->searchDefaults($permissionType, $withName);
      }
 
@@ -216,21 +216,7 @@ class PermissionsManager {
          return $ugroups;
      }
      
-     
-     
-
-    /**
-    * Returns true if user has full permissions in all cases
-    * 
-    * @access protected
-    * 
-    * @param  int     $user_id  The id of the user
-    */
-    function _userHasFullPermission($user_id = 0) {
-        return (user_isloggedin() && user_is_super_user());
-    }
-    
-    function _buildPermissionsCache(&$dar, &$ugroups) {
+    protected function buildPermissionsCache(&$dar, &$ugroups) {
         while ($row =& $dar->getRow()) {
             if (!isset($this->_permissions[$row['object_id']])) {
                 $this->_permissions[$row['object_id']] = array();
@@ -257,27 +243,17 @@ class PermissionsManager {
     * @param  int     $object_id  The id of the object
     * @param  array   $ugroups    A list of ugroups we want to see in permissions
     */
-    function _retrievePermissions($object_id, $ugroups = array()) {
+    protected function retrievePermissions($object_id, $ugroups = array()) {
         $tracker_field_id = explode('#', $object_id); //An artifact field ?
         if (count($tracker_field_id) > 1) {
             $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
         } else {
             $dar =& $this->_permission_dao->searchPermissionsByObjectId($object_id);
         }
-        $this->_buildPermissionsCache($dar, $ugroups);
+        $this->buildPermissionsCache($dar, $ugroups);
     }
-
-    function _retrievePermissionsArray($object_id, $ptype, $ugroups = array()) {
-        //$tracker_field_id = explode('#', $object_id); //An artifact field ?
-        //if (count($tracker_field_id) > 1) {
-        //    $dar =& $this->_permission_dao->searchPermissionsByArtifactFieldId($tracker_field_id[0]);
-        //} else {
-        $dar =& $this->_permission_dao->searchPermissionsByObjectId($object_id, $ptype);
-            //}
-        $this->_buildPermissionsCache($dar, $ugroups);
-    }
-    
-    function clonePermissions($source, $target, $perms, $toGroupId=0) {
+     
+    public function clonePermissions($source, $target, $perms, $toGroupId=0) {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }
     
@@ -338,12 +314,12 @@ class PermissionsManager {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
     }
 
-    function isPermissionExist($object_id, $ptype){    	
+    public function isPermissionExist($object_id, $ptype){    	
     	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
     	return $dar->valid();
     }
     
-    function addPermission($permission_type, $object_id, $ugroup_id){
+    public function addPermission($permission_type, $object_id, $ugroup_id){
         return $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
     }
 
@@ -355,7 +331,7 @@ class PermissionsManager {
      * 
      * @return Boolean
      */
-    function clearPermission($permissionType, $objectId) {
+    public function clearPermission($permissionType, $objectId) {
         return $this->_permission_dao->clearPermission($permissionType, $objectId);
     }
 
