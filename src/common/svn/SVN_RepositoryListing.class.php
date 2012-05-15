@@ -57,7 +57,7 @@ class SVN_RepositoryListing {
     private function extractDirectoryContent($line, $svn_path) {
         $match_path_regex = "%^$svn_path/%";
         if (preg_match($match_path_regex, $line)) {
-            return preg_replace($match_path_regex, '', $line);
+            return trim(preg_replace($match_path_regex, '', $line), '/');
         }
         return '';
     }
