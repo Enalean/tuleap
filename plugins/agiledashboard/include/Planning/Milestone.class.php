@@ -66,7 +66,7 @@ class Planning_Milestone {
     }
     
     /**
-     * @return Tracker
+     * @return Boolean
      */
     public function userCanView(User $user) {
         return $this->artifact->getTracker()->userCanView($user);
