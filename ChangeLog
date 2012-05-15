@@ -14,6 +14,18 @@ Version 5.1 (Not released yet)
     our own implementation of dropdown panels. This improve compatibility with
     Internet Explorer.
 
+Version 5.0.4 (Monday, May 15th 2012)
+   * Added missing jars after migration: chardet, jing and codendi_auth
+
+Version 5.0.3 (Monday, May 14th 2012)
+   * Generate an intermediate release to test git migration.
+Version 5.0.3 (Monday, May 14th 2012)
+   * Generate an intermediate release to test git migration.
+
+Version 5.0.2 (Wednesday, May 9th 2012)
+   == Plugins ==
+   * Git 2.5
+
 Version 5.0.1 (Thursday, April 26th 2012)
    == Bug fix ==
    * Fix link to cli documentation in footer
