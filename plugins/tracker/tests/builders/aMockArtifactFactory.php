@@ -24,15 +24,27 @@ Mock::generate('Tracker_ArtifactFactory');
 
 class MockArtifactFactoryBuilder {
     public function __construct() {
-        $this->factory = new MockTracker_ArtifactFactory();
+        $this->factory   = new MockTracker_ArtifactFactory();
+        $this->artifacts = array();
     }
     
     public function withArtifact($artifact) {
         $this->factory->setReturnValue('getArtifactById', $artifact, array($artifact->getId()));
+        $this->artifacts[] = $artifact;
+        return $this;
+    }
+    
+    public function withArtifacts(array $artifacts) {
+        foreach($artifacts as $artifact) {
+            $this->withArtifact($artifact);
+        }
         return $this;
     }
     
     public function build() {
+        stub($this->factory)->getOpenArtifactsByTrackerIdUserCanView('*', '*')
+                            ->returns($this->artifacts);
+        Tracker_ArtifactFactory::setInstance($this->factory);
         return $this->factory;
     }
 }

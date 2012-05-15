@@ -32,6 +32,7 @@ require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../builders/aMockMilestone.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifactFactory.php';
 
 class Planning_MilestoneController_TestCase extends TuleapTestCase {
     
@@ -76,12 +77,10 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
             $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
         );
 
-        $factory  = mock('Tracker_ArtifactFactory');
-        Tracker_ArtifactFactory::setInstance($factory);
-        foreach ($artifacts as $artifact) {
-            stub($factory)->getArtifactByid($artifact->getId())->returns($artifact);
-            $open_artifacts[] = $artifact;
-        }
+        $factory = aMockArtifactFactory()->withArtifacts($open_artifacts)
+                                         ->withArtifacts($artifacts)
+                                         ->build();
+
         stub($factory)->getOpenArtifactsByTrackerIdUserCanView(aUser()->build(),
                                                                $this->planning->getPlanningTrackerId())
                       ->returns($open_artifacts);
