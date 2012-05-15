@@ -130,7 +130,7 @@ class Tracker_CrossSearch_CriteriaBuilder {
             }            
             $tracker_artifacts = $cross_search_query->setSelectedArtifacts($tracker_id, $tracker_artifacts);
             $field      = new Tracker_CrossSearch_ArtifactReportField($tracker, $tracker_artifacts);
-            $criteria[] = new Tracker_Report_Criteria(null, $report, $field, null, true);
+            $criteria[] = $this->buildCriteria($report, $field);
         }
                 
         $cross_search_query->purgeArtifactIdsNotInList($allowed_artifact_ids);
