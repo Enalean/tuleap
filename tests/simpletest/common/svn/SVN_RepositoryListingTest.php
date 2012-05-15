@@ -91,7 +91,11 @@ class SVN_RevisionsSource {
     }
 }
 
-class SVN_Repository_TestCase extends TuleapTestCase {
+function whatever() {
+    return new stdClass();
+}
+
+class SVN_Repository_CommitListingTest extends TuleapTestCase {
     
     protected $EMPTY_COMMIT_LIST;
     
@@ -100,67 +104,33 @@ class SVN_Repository_TestCase extends TuleapTestCase {
         
         $this->EMPTY_COMMIT_LIST = array(array(), -1);
         
+        $this->user                = mock('User');
         $this->project             = mock('Project');
         $this->revisions_source    = mock('SVN_RevisionsSource');
         $this->permissions_manager = mock('SVN_PermissionsManager');
         $this->repo_listing        = new SVN_RepositoryListing($this->permissions_manager,
                                                                $this->revisions_source);
     }
-}
-
-class SVN_Repository_CommitListingTest extends SVN_Repository_TestCase {
     
-    public function itReturnsAnEmptyListWhenThereAreNoCommits() {
-        stub($this->revisions_source)->getRevisions()->returns($this->EMPTY_COMMIT_LIST);
-        $limit = 100;
-        $this->assertIdentical($this->EMPTY_COMMIT_LIST, $this->repo_listing->getCommits($this->project, $limit));
-    }
-    
-    public function itReturnsAllPossibleCommits() {
-        $two_commits = array(array(array('revision'    => 1,
-                                         'commit_id'   => 2,
-                                         'description' => 'Foo',
-                                         'date'        => null,
-                                         'whoid'       => 3),
-                                   array('revision'    => 2,
-                                         'commit_id'   => 2,
-                                         'description' => 'Foo',
-                                         'date'        => null,
-                                         'whoid'       => 4)),
-                             -1);
+    public function itReturnsMatchingCommitsWhenRequesterHasReadAccessToTheRepository() {
+        stub($this->permissions_manager)->userCanRead($this->user, $this->project, '*')->returns(true);
         
-        $limit     = 50;
-        stub($this->revisions_source)->getRevisions()->returns($two_commits);
-        $this->revisions_source->expectOnce('getRevisions', array($this->project, $limit));
-        $this->assertIdentical($two_commits, $this->repo_listing->getCommits($this->project, $limit));
+        $limit     = 10;
+        $author_id = 123;
+        $commits   = whatever();
+        
+        $this->revisions_source->expectOnce('getRevisions', array($this->project, $limit, $author_id));
+        stub($this->revisions_source)->getRevisions()->returns($commits);
+        
+        $actual_commits = $this->repo_listing->getCommits($this->user, $this->project, $limit, $author_id);
+        $this->assertIdentical($commits, $actual_commits);
     }
-}
-
-class SVN_Repository_CommitListing_AuthorFilteringTest extends SVN_Repository_TestCase {
-
-//    public function itReturnsAnEmptyListWhenThereAreNoCommitsForTheGivenAuthor() {
-//        $chuck       = 88;
-//        $permissions_manager = mock('SVN_PermissionsManager');
-//        $revisions_source    = stub('SVN_RevisionsSource')->getRevisions()->returns($this->EMPTY_COMMIT_LIST);
-//        $repo_listing        = new SVN_RepositoryListing($permissions_manager, $revisions_source);
-//        
-//        $this->assertIdentical($this->EMPTY_COMMIT_LIST, $repo_listing->getCommits($chuck));
-//        
-//    }
-//    
-//    public function itReturnsOnlyCommitsOfTheGivenAuthor() {
-//    }
-}
-
-class Repository_CommitListing_RepositoryPermissionsTest extends SVN_Repository_TestCase {
-    public function itReturnsAnEmptyListWhenViewerHasNoReadPermissionOnRepository() {
-    }
-}
-
-class Repository_CommitListing_ResultsLimitationTest extends SVN_Repository_TestCase {
-    // nb commit = limit
-    // nb commit > limit
-    public function itReturnsNoMoreCommitsThanTheGivenLimit() {
+    
+    public function itReturnsAnEmptyListWhenRequesterHasNoReadAccessToTheRepository() {
+        stub($this->permissions_manager)->userCanRead($this->user, $this->project, '*')->returns(false);
+        $this->revisions_source->expectNever('getRevisions');
+        $actual_commits = $this->repo_listing->getCommits($this->user, $this->project, whatever(), whatever());
+        $this->assertIdentical(array(), $actual_commits);
     }
 }
 

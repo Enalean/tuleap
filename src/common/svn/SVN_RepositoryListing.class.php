@@ -62,8 +62,12 @@ class SVN_RepositoryListing {
         return '';
     }
 
-    public function getCommits($project, $limit, $author_id = null) {
-        return $this->revision_source->getRevisions($project, $limit);
+    public function getCommits(User $user, Project $project, $limit, $author_id) {
+        $svnpath = '';
+        if (!$this->svn_permissions_manager->userCanRead($user, $project, $svnpath)) {
+            return array();
+        }
+        return $this->revision_source->getRevisions($project, $limit, $author_id);
     }
 }
 
