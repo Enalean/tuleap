@@ -170,7 +170,7 @@ class PermissionsManager {
       * 
       * @return DataAccessResult
       */
-     public public function getDefaults($permissionType, $withName = true) {
+     public function getDefaults($permissionType, $withName = true) {
          return $this->_permission_dao->searchDefaults($permissionType, $withName);
      }
 
