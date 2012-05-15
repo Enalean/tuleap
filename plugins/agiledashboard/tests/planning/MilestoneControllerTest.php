@@ -30,6 +30,7 @@ require_once(dirname(__FILE__).'/../builders/aPlanning.php');
 require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
 require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../builders/aMockMilestone.php';
+require_once dirname(__FILE__).'/../builders/aMockPlanningFactory.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifactFactory.php';
@@ -118,14 +119,12 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
-        $planning_factory = mock('PlanningFactory');
         $planning_tracker = mock('Tracker');
-        
         $this->planning->setPlanningTracker($planning_tracker);
         stub($planning_tracker)->getId()
                                ->returns($this->planning->getPlanningTrackerId());
-        stub($planning_factory)->getPlanningWithTrackers($this->planning->getId())
-                               ->returns($this->planning);
+        
+        $planning_factory = aMockPlanningFactory()->withPlanning($this->planning)->build();
         
         $tracker_factory = mock('TrackerFactory');
         TrackerFactory::setInstance($tracker_factory);
