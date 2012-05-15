@@ -23,12 +23,15 @@ require_once 'common/project/ProjectManager.class.php';
 require_once 'common/project/UGroupManager.class.php';
 require_once 'common/user/UserManager.class.php';
 
+/**
+ * Return groups of a user given by name to use them externally
+ *
+ */
 class ExternalPermissions {
     public static $status = array(
         User::STATUS_RESTRICTED => 'site_restricted',
         User::STATUS_ACTIVE     => 'site_active'
     );
-    
     
     public function getGroups($userName) {
         $user = $this->getValidUserByName($userName);
