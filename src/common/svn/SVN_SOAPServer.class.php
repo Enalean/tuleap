@@ -49,6 +49,12 @@ class SVN_SOAPServer {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
+    
+    public function getSvnLog($sessionHash, $groupId) {
+        $user    = $this->soap_request_validator->continueSession($sessionHash);
+        $project = $this->soap_request_validator->getProjectById($groupId);
+        return $this->svn_repository_listing->getCommits($user, $project);
+    }
 }
 
 ?>
