@@ -144,6 +144,17 @@ class ProjectQuota {
         } else {
             $output .= $GLOBALS['Language']->getText('plugin_statistics', 'no_projects');
         }
+        $output .= $this->renderNewCustomQuotaForm();
+        return $output;
+    }
+
+    /**
+     * Render form to set custom quota for a given project
+     *
+     * @return String
+     */
+    public function renderNewCustomQuotaForm() {
+        $output  = '';
         $output .= '<table>';
         $output .= '<form method="post" >';
         $output .= '<tr><td colspan="2"><b>'.$GLOBALS['Language']->getText('plugin_statistics', 'set_quota').'</b></td></tr>';
