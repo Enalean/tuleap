@@ -216,7 +216,9 @@ class Planning_MilestoneController_NoMilestoneTest extends Planning_MilestoneCon
 
 class Planning_MilestoneController_NoArtifactLinkFieldTest extends Planning_MilestoneController_TestCase {
     
-    private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
+    public function setUp() {
+        parent::setUp();
+        
         $id    = 987;
         $title = 'Coin';
         
@@ -233,17 +235,15 @@ class Planning_MilestoneController_NoArtifactLinkFieldTest extends Planning_Mile
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         
-        return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
+        $this->content = $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
     
     public function itDisplaysAnErrorMessage() {
-        $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
-        $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
+        $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $this->content);
     }
     
     public function itDoesNotAllowDragAndDrop() {
-        $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
-        $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
+        $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $this->content);
     }
 }
 
