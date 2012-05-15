@@ -24,6 +24,8 @@ require_once dirname(__FILE__).'/../../include/Tracker/Artifact/Tracker_Artifact
 class MockArtifactBuilder {
     public function __construct() {
         $this->id                  = 123;
+        $this->title               = 'whatever';
+        $this->linked_artifacts    = array();
         $this->tracker             = mock('Tracker');
         $this->artifact            = mock('Tracker_Artifact');
         $this->artifact_link_field = mock('Tracker_FormElement_Field_ArtifactLink');;
