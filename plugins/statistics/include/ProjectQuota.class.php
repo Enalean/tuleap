@@ -87,10 +87,10 @@ class ProjectQuota {
             }
             $projectFilterParam = '&amp;project_filter='.$filter;
         }
-        $output   .= '<form method="get" >';
-        $output   .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-        $output   .= '</form>';
-        $count        = 4;
+        $output      .= '<form method="get" >';
+        $output      .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
+        $output      .= '</form>';
+        $count        = 50;
         $res          = $this->dao->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
         $foundRowsRes = $this->dao->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
