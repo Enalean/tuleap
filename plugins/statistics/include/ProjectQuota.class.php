@@ -65,7 +65,6 @@ class ProjectQuota {
         $sortBy    = null;
         if ($request->valid($validSort)) {
             $sortBy  = $request->get('sort');
-            //@todo validate order param
             $validOrderBy = new Valid_String('order');
             if ($request->valid($validOrderBy)) {
                 if ($request->get('order') == "ASC" || $request->get('order') == "DESC") {
@@ -270,7 +269,6 @@ class ProjectQuota {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
-                        // TODO: Add entry in project history
                         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
                         $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
@@ -306,7 +304,6 @@ class ProjectQuota {
                 $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $projectId);
             }
             if ($this->dao->deleteCustomQuota($list)) {
-                // TODO: Add entry in project history
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', array(join(', ', $names))));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
