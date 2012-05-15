@@ -28,6 +28,7 @@ require_once 'common/user/UserManager.class.php';
  *
  */
 class ExternalPermissions {
+    
     public static $status = array(
         User::STATUS_RESTRICTED => 'site_restricted',
         User::STATUS_ACTIVE     => 'site_active'
@@ -39,8 +40,13 @@ class ExternalPermissions {
             return array();
         }
         $groups = array(self::$status[$user->getStatus()]);
+        $groups = $this->appendProjectGroups($user, $groups);
+        $groups = $this->appendUgroups($user, $groups);
         
-        // Dynamic groups
+        return $groups;        
+    }
+    
+    protected function appendProjectGroups($user, array $groups = array()) {
         $user_projects = $user->getProjects(true);
         foreach($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -50,14 +56,16 @@ class ExternalPermissions {
                 $groups[] = $project_name.'_project_admin';
             }
         }
-        
-        // Static groups
+        return $groups;
+    }
+    
+    protected function appendUgroups($user, array $groups = array()) {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $groups[] = 'ug_'.$row['ugroup_id'];
         }
         return $groups;
-    }
+    } 
     
     protected function getValidUserByName($username) {
         $user = UserManager::instance()->getUserByUserName($username);
