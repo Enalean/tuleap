@@ -32,6 +32,7 @@ require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../builders/aMockMilestone.php';
 require_once dirname(__FILE__).'/../builders/aMockPlanningFactory.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifactFactory.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTrackerFactory.php';
@@ -120,9 +121,8 @@ class Planning_MilestoneController_TestCase extends TuleapTestCase {
         $project_manager = aMockProjectManager()->withProjects($projects)->build();
 
         $planning_tracker = mock('Tracker');
+        $planning_tracker = aMockTracker()->withId($this->planning->getPlanningTrackerId())->build();
         $this->planning->setPlanningTracker($planning_tracker);
-        stub($planning_tracker)->getId()
-                               ->returns($this->planning->getPlanningTrackerId());
         
         $planning_factory = aMockPlanningFactory()->withPlanning($this->planning)->build();
         $tracker_factory  = aMockTrackerFactory()->build();
