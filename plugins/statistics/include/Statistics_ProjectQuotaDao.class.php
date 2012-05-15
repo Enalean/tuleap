@@ -78,7 +78,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getAllCustomQuota($list = array(), $offset = null, $count = null, $sort = null) {
+    public function getAllCustomQuota($list = array(), $offset = null, $count = null, $sort = null, $sortSens = null) {
         $condition = '';
         $order     = '';
         if (!empty($list)) {
@@ -92,10 +92,18 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         if (isset($sort)) {
             switch ($sort) {
                 case 'quota':
-                    $order = "ORDER BY ".self::REQUEST_SIZE;
+                    if (!empty($sortSens)) {
+                        $order = "ORDER BY ".self::REQUEST_SIZE." ".$sortSens;
+                    } else {
+                         $order = "ORDER BY ".self::REQUEST_SIZE;
+                    }
                 break;
                 case 'date':
-                     $order = "ORDER BY ".self::REQUEST_DATE;
+                    if (!empty($sortSens)) {
+                        $order = "ORDER BY ".self::REQUEST_DATE." ".$sortSens;
+                    } else {
+                         $order = "ORDER BY ".self::REQUEST_DATE;
+                    }
                 break;
                 default:
                     $order = "ORDER BY ".self::REQUEST_SIZE;
