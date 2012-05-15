@@ -24,67 +24,45 @@ require_once 'common/project/UGroupManager.class.php';
 require_once 'common/user/UserManager.class.php';
 
 class Git_GitoliteMembershipPgm {
+    public static $status = array(
+            User::STATUS_RESTRICTED => 'site_restricted',
+            User::STATUS_ACTIVE     => 'site_active'
+    );
     
-    public function getGroups($sshUserName) {
-        $groups = array();
-        $user = $this->getUserManager()->getUserByUserName($sshUserName);
-        if ($user && ($user->isActive() || $user->isRestricted())) {
-            // Special groups depending of status
-            switch ($user->getStatus()) {
-                case User::STATUS_RESTRICTED:
-                    $groups[] = 'site_restricted';
-                    break;
-                case User::STATUS_ACTIVE:
-                    $groups[] = 'site_active';
-                    break;
+    
+    public function getGroups($userName) {
+        $user = $this->getValidUserByName($userName);
+        if (!$user) {
+            return array();
+        }
+        $groups = array(self::$status[$user->getStatus()]);
+        
+        // Dynamic groups
+        $user_projects = $user->getProjects(true);
+        foreach($user_projects as $user_project) {
+            $project_name = strtolower($user_project['unix_group_name']);
+            $group_id     = $user_project['group_id'];
+            $groups[] = $project_name.'_project_members';
+            if ($user->isMember($group_id, 'A')) {
+                $groups[] = $project_name.'_project_admin';
             }
-
-            // Dynamic groups
-            $pm = $this->getProjectManager();
-            foreach ($user->getUserGroupData() as $groupId => $row) {
-                $project = $pm->getProject($groupId);
-                if ($project) {
-                    $groups[] = $project->getUnixName().'_project_members';
-                    if ($user->isMember($groupId, 'A')) {
-                        $groups[] = $project->getUnixName().'_project_admin';
-                    }
-                }
-            }
-
-            // Static groups
-            $ugm = $this->getUGroupManager();
-            foreach ($ugm->getByUserId($user) as $row) {
-                $groups[] = 'ug_'.$row['ugroup_id'];
-            }
+        }
+        
+        // Static groups
+        $ugroups = $user->getAllUgroups();
+        foreach ($ugroups as $row) {
+            $groups[] = 'ug_'.$row['ugroup_id'];
         }
         return $groups;
     }
-
-    /**
-     * Wrapper for UserManager
-     *
-     * @return UserManager
-     */
-    protected function getUserManager() {
-        return UserManager::instance();
+    
+    protected function getValidUserByName($username) {
+        $user = UserManager::instance()->getUserByUserName($username);
+        if ($user && isset(self::$status[$user->getStatus()])) {
+            return $user;
+        }
+        return false;
     }
 
-    /**
-     * Wrapper for ProjectManager
-     *
-     * @return ProjectManager
-     */
-    protected function getProjectManager() {
-        return ProjectManager::instance();
-    }
-
-    /**
-     * Wrapper for ProjectManager
-     *
-     * @return UGroupManager
-     */
-    protected function getUGroupManager() {
-        return new UGroupManager();
-    }
 }
 ?>
