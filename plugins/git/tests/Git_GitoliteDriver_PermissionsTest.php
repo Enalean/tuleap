@@ -35,10 +35,14 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
     protected $repository_id = 200;
     protected $admin_dir     = '/tmp/gitolite-admin-permissions';
     protected $admin_ref_dir = '/tmp/gitolite-admin-permissions-ref';
+    protected $oldCwd;
     public function setUp() {
         parent::setUp();
+        
         $this->project_id++;
         $this->repository_id++;
+        
+        $this->oldCwd     = getcwd();
         
         $this->project    = new MockProject();
         $this->project->setReturnValue('getId', $this->project_id);
@@ -55,7 +59,8 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
 
     public function tearDown() {
         parent::tearDown();
-        system('rm -Rf '.$this->admin_dir);
+        chdir($this->oldCwd);
+        system('rm -Rf '. $this->admin_dir);
         PermissionsManager::clearInstance();
     }
 
