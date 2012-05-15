@@ -1,3 +1,8 @@
+Version 5.0.4 (Monday, May 15th 2012)
+   * Added missing jars after migration: chardet, jing and codendi_auth
+
+Version 5.0.3 (Monday, May 14th 2012)
+   * Generate an intermediate release to test git migration.
 Version 5.0.3 (Monday, May 14th 2012)
    * Generate an intermediate release to test git migration.
 
