@@ -1,0 +1,41 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once 'common/versioning/IRevisionDecorator.class.php';
+
+class SVN_SoapRevisionDecorator implements IRevisionDecorator {
+
+    /**
+     * Decorates a raw SVN revision to match the expected format in SOAP API.
+     * 
+     * @param array $raw_revision A non decorated revision.
+     * 
+     * @return array A decorated copy of the revision.
+     */
+    public function decorate(array $raw_revision) {
+        list($revision, $commit_id, $description, $date, $whoid) = $raw_revision;
+        
+        return array('revision' => $revision,
+                     'author'   => $whoid,
+                     'date'     => $date,               // TODO: format date
+                     'message'  => trim($description)); // TODO: should we trim description ?
+    }
+}
+?>

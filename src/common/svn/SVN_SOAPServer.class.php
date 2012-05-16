@@ -18,6 +18,9 @@
  */
 
 require_once 'SVN_RepositoryListing.class.php';
+require_once 'SVN_Log.class.php';
+require_once 'SVN_LogQuery.class.php';
+require_once 'SVN_SoapRevisionDecorator.class.php';
 require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 /**
@@ -65,7 +68,7 @@ class SVN_SOAPServer {
     }
     
     /**
-     * Retrieves the SVN commits of the project visible by the requesting user.
+     * Retrieves the SVN revisions of the project visible by the requesting user.
      * 
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
@@ -75,19 +78,20 @@ class SVN_SOAPServer {
      * @return String The list of commits
      */
     public function getSvnLog($session_key, $group_id, $limit, $author_id) {
-        $user      = $this->soap_request_validator->continueSession($session_key);
-        $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
-        $commits   = $this->svn_repository_listing->getCommits($user, $project, $limit, $author_id);
-        
-        $output = "\n";
-        while ($row = db_fetch_array($commits[0])) {
-            list($revision, $commit_id, $description, $date, $whoid) = $row;
+        try {
+            $this->soap_request_validator->continueSession($session_key);
             
-            $description = trim($description);
+            $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
+            $svn_log   = new SVN_Log($project);
+            $query     = new SVN_LogQuery($limit, $author_id);
+            $decorator = new SVN_SoapRevisionDecorator();
+            $revisions   = $svn_log->getDecoratedRevisions($query, $decorator);
+
+            return print_r($revisions, true);
             
-            $output .= "$revision $whoid $date $description\n";
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
-        return $output;
     }
 }
 
