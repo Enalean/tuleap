@@ -47,13 +47,13 @@ class SVN_SOAPServer {
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
      * 
-     * @return String The list of directories
+     * @return ArrayOfString The list of directories
      */
     public function getSvnPath($session_key, $group_id, $path) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
-            return implode("\n", $this->svn_repository_listing->getSvnPath($current_user, $project, $path));
+            return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
