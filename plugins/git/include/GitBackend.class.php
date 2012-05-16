@@ -395,8 +395,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitShellIndex[] = $row['month']." ".$row['year'];
                 $gitShell[]      = intval($row['count']);
             }
-        $formatter->addLine($gitShellIndex);
-        $formatter->addLine($gitShell);
+            $formatter->addLine($gitShellIndex);
+            $formatter->addLine($gitShell);
         }
         $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -404,8 +404,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitoliteIndex[] = $row['month']." ".$row['year'];
                 $gitolite[]      = intval($row['count']);
             }
-        $formatter->addLine($gitoliteIndex);
-        $formatter->addLine($gitolite);
+            $formatter->addLine($gitoliteIndex);
+            $formatter->addLine($gitolite);
         }
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
@@ -423,11 +423,11 @@ class GitBackend extends Backend implements Git_Backend_Interface {
                 $gitUsers[]   = intval($row['users']);
                 $gitRepo[]    = intval($row['repositories']);
             }
-        $formatter->addLine($gitIndex);
-        $formatter->addLine($gitPushes);
-        $formatter->addLine($gitCommits);
-        $formatter->addLine($gitUsers);
-        $formatter->addLine($gitRepo);
+            $formatter->addLine($gitIndex);
+            $formatter->addLine($gitPushes);
+            $formatter->addLine($gitCommits);
+            $formatter->addLine($gitUsers);
+            $formatter->addLine($gitRepo);
         }
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
