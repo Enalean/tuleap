@@ -64,13 +64,25 @@ class SVN_SOAPServer {
      * 
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * @param Integer $limit       Optional - Maximum commits count (defaults to 50)
+     * @param Integer $author_id   Optional - Commit author user id to filter with (defaults to no filter)
      * 
-     * @return array 
+     * @return String The list of commits
      */
-    public function getSvnLog($session_key, $group_id) {
-        $user    = $this->soap_request_validator->continueSession($session_key);
-        $project = $this->soap_request_validator->getProjectById($group_id);
-        return $this->svn_repository_listing->getCommits($user, $project);
+    public function getSvnLog($session_key, $group_id, $limit, $author_id) {
+        $user      = $this->soap_request_validator->continueSession($session_key);
+        $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
+        $commits   = $this->svn_repository_listing->getCommits($user, $project, $limit, $author_id);
+        
+        $output = "\n";
+        while ($row = db_fetch_array($commits[0])) {
+            list($revision, $commit_id, $description, $date, $whoid) = $row;
+            
+            $description = trim($description);
+            
+            $output .= "$revision $whoid $date $description\n";
+        }
+        return $output;
     }
 }
 
