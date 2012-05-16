@@ -116,7 +116,7 @@ class SVN_RepositoryListing_SubversionRepositoryTest extends TuleapTestCase {
  */
 class SVN_RevisionsSource {
     public function getRevisions(&$project, $chunksz, $_commiter = '') {
-        // svn_get_revisions($project, $offset, $chunksz, '', $_commiter, '', '', 0, false);
+//        svn_get_revisions($project, $offset, $chunksz, '', $_commiter, '', '', 0, false);
     }
 }
 

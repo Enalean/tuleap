@@ -59,9 +59,17 @@ class SVN_SOAPServer {
         }
     }
     
-    public function getSvnLog($sessionHash, $groupId) {
-        $user    = $this->soap_request_validator->continueSession($sessionHash);
-        $project = $this->soap_request_validator->getProjectById($groupId);
+    /**
+     * Retrieves the SVN commits of the project visible by the requesting user.
+     * 
+     * @param String  $session_key Session key of the requesting user
+     * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * 
+     * @return array 
+     */
+    public function getSvnLog($session_key, $group_id) {
+        $user    = $this->soap_request_validator->continueSession($session_key);
+        $project = $this->soap_request_validator->getProjectById($group_id);
         return $this->svn_repository_listing->getCommits($user, $project);
     }
 }
