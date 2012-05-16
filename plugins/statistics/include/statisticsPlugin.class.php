@@ -36,6 +36,8 @@ class StatisticsPlugin extends Plugin {
         $this->_addHook('admin_toolbar_data',     'admin_toolbar_data',     false);
         $this->_addHook('usergroup_data',         'usergroup_data',         false);
         $this->_addHook('groupedit_data',         'groupedit_data',         false);
+        $this->_addHook('soap',                   'soap',                   false);
+
     }
 
     function getPluginInfo() {
@@ -176,6 +178,9 @@ class StatisticsPlugin extends Plugin {
         }
     }
     
+    function soap($params) {
+        require_once('soap.php');
+    }
 
 }
 
