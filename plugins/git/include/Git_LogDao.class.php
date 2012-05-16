@@ -152,6 +152,8 @@ class Git_LogDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalPushes($projectId, $startDate, $endDate) {
+        $startDate = $this->da->quoteSmart($startDate);
+        $endDate   = $this->da->quoteSmart($endDate);
         if (!empty($projectId)) {
             $projectFilter = " AND project_id = ".$this->da->escapeInt($projectId);
         } else {
@@ -164,7 +166,8 @@ class Git_LogDao extends DataAccessObject {
                 SUM(commits_number) AS commits_count, 
                 COUNT(DISTINCT(user_id)) AS users
                 FROM plugin_git_log JOIN plugin_git USING(repository_id)
-                WHERE push_date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")".$projectFilter."
+                WHERE push_date BETWEEN UNIX_TIMESTAMP(".$startDate.") AND UNIX_TIMESTAMP(".$endDate.")
+                ".$projectFilter."
                 GROUP BY year, month";
         return $this->retrieve($sql);
     }
