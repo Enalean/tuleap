@@ -323,15 +323,15 @@ class Git_GitoliteDriver {
         if (!$dar || $dar->isError()) {
             return;
         }
-        $permissions   = '';
+        $project_config   = '';
         $notification_manager = $this->getPostReceiveMailManager();
         foreach ($dar as $row) {
-            $repository   = $this->buildRepositoryFromRow($row, $project, $notification_manager);
-            $permissions .= $this->fetchAllConfigPermissions($project, $repository);  
+            $repository      = $this->buildRepositoryFromRow($row, $project, $notification_manager);
+            $project_config .= $this->fetchReposConfig($project, $repository);  
         }
         
         $config_file = $this->getProjectPermissionConfFile($project);
-        if ($this->writeGitConfig($config_file, $permissions)) {
+        if ($this->writeGitConfig($config_file, $project_config)) {
             return $this->commitConfigFor($project);
         }
     }
@@ -349,13 +349,13 @@ class Git_GitoliteDriver {
         return $this->gitAdd($config_file);
     }
     
-    protected function fetchAllConfigPermissions($project, $repository) {
-        $permissions  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
-        $permissions .= $this->fetchMailHookConfig($project, $repository);
-        $permissions .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        $permissions .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
-        $permissions .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
-        return $permissions . PHP_EOL;
+    protected function fetchReposConfig($project, $repository) {
+        $repo_config  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+        $repo_config .= $this->fetchMailHookConfig($project, $repository);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        return $repo_config . PHP_EOL;
     }
     
     protected function buildRepositoryFromRow($row, $project, $notification_manager = null) {
