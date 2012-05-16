@@ -24,22 +24,22 @@ require_once('common/dao/ProjectDao.class.php');
  * Provide access to projects
  */
 class ProjectManager {
-    
+
     /**
      * The Projects dao used to fetch data
      */
     protected $_dao;
-    
+
     /**
      * stores the fetched projects
      */
     protected $_cached_projects;
-    
+
     /**
      * Hold an instance of the class
      */
     private static $_instance;
-    
+
     /**
      * A private constructor; prevents direct creation of object
      */
@@ -47,7 +47,7 @@ class ProjectManager {
     //    $this->_dao = $this->getDao();
         $this->_cached_projects = array();
     }
-    
+
     /**
      * ProjectManager is a singleton
      * @return ProjectManager
@@ -59,17 +59,17 @@ class ProjectManager {
         }
         return self::$_instance;
     }
-    
+
     /**
      * @return ProjectDao
      */
     public function _getDao() {
         if (!isset($this->_dao)) {
-            $this->_dao = new Statistics_ProjectQuotaDao(CodendiDataAccess::instance());
+            $this->_dao = new ProjectDao(CodendiDataAccess::instance());
         }
         return $this->_dao;
     }
-    
+
     /**
      * @param $group_id int The id of the project to look for
      * @return Project
@@ -81,7 +81,7 @@ class ProjectManager {
         }
         return $this->_cached_projects[$group_id];
     }
-    
+
     /**
      * @param $group_id int The id of the project to look for
      * @return Project
@@ -89,14 +89,14 @@ class ProjectManager {
     protected function createProjectInstance($group_id_or_row) {
         return new Project($group_id_or_row);
     }
-    
+
     /**
      * Clear the cache for project $group_id
      */
     public function clear($group_id) {
         unset($this->_cached_projects[$group_id]);
     }
-    
+
     public function getProjectsByStatus($status) {
         $projects = array();
         $dao = new ProjectDao(CodendiDataAccess::instance());
@@ -105,17 +105,17 @@ class ProjectManager {
         }
         return $projects;
     }
-    
+
     /**
      * Look for project with name like given one
-     * 
+     *
      * @param String  $name
      * @param Integer $limit
      * @param Integer $nbFound
      * @param User    $user
      * @param Boolean $isMember
      * @param Boolean $isAdmin
-     * 
+     *
      * @return Array of Project
      */
     public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false) {
@@ -126,17 +126,17 @@ class ProjectManager {
         foreach($dar as $row) {
             $projects[] = $this->getAndCacheProject($row);
         }
-        return $projects; 
+        return $projects;
     }
 
     /**
      * Try to find the project that match what can be entred in autocompleter
-     * 
+     *
      * This can be either:
      * - The autocomplter result: Public Name (unixname)
      * - The group id: 101
      * - The project unix name: unixname
-     * 
+     *
      * @return Project
      */
     public function getProjectFromAutocompleter($name) {
@@ -160,12 +160,12 @@ class ProjectManager {
         }
         return false;
     }
-    
+
     /**
      * Create new Project object from row or get it from cache if already built
      *
      * @param Array $row
-     * 
+     *
      * @return Project
      */
     protected function getAndCacheProject($row) {
@@ -178,9 +178,9 @@ class ProjectManager {
 
     /**
      * Return the project that match given unix name
-     *  
+     *
      * @param String $name
-     * 
+     *
      * @return Project
      */
     public function getProjectByUnixName($name) {
@@ -194,9 +194,9 @@ class ProjectManager {
 
     /**
      * Make project available
-     * 
+     *
      * @param Project $project
-     * 
+     *
      * @return Boolean
      */
     public function activate(Project $project) {
@@ -219,10 +219,10 @@ class ProjectManager {
 
     /**
      * Rename project
-     * 
+     *
      * @param Project $project
      * @param String  $new_name
-     * 
+     *
      * @return Boolean
      */
     public function renameProject($project,$new_name){
@@ -234,21 +234,21 @@ class ProjectManager {
 
     /**
      * Return true if project id is cached
-     * 
+     *
      * @param Integer $group_id
-     * 
+     *
      * @return Boolean
      */
     public function isCached($group_id) {
         return (isset($this->_cached_projects[$group_id]));
     }
-    
+
     /**
-     * Filled the ugroups to be notified when admin action is needed 
-     * 
+     * Filled the ugroups to be notified when admin action is needed
+     *
      * @param Integer $groupId
      * @param Array   $ugroups
-     * 
+     *
      * @return Boolean
      */
     public function setMembershipRequestNotificationUGroup($groupId, $ugroups) {
@@ -259,9 +259,9 @@ class ProjectManager {
     /**
      * Returns the ugroups to be notified when admin action is needed
      * If no ugroup is assigned, it returns the ugroup project admin
-     * 
+     *
      * @param Integer $groupId
-     * 
+     *
      * @return DataAceesResult
      */
     public function getMembershipRequestNotificationUGroup($groupId) {
@@ -287,9 +287,9 @@ class ProjectManager {
 
     /**
      * Returns the message to be displayed to requester asking access for a given project
-     * 
+     *
      * @param Integer $groupId
-     * 
+     *
      * @return DataAceesResult
      */
     public function getMessageToRequesterForAccessProject($groupId) {
@@ -299,10 +299,10 @@ class ProjectManager {
 
     /**
      * Defines the message to be displayed to requester asking access for a given project
-     * 
+     *
      * @param Integer $groupId
      * @param String  $message
-     * 
+     *
      */
     public function setMessageToRequesterForAccessProject($groupId, $message) {
         $dao = $this->_getDao();
