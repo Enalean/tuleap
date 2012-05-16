@@ -17,7 +17,7 @@
  */
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/ProjectQuota.class.php';
+require_once dirname(__FILE__).'/../include/ProjectQuotaHtml.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -31,13 +31,13 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
 }
 
 $request = HTTPRequest::instance();
-$pq      = new ProjectQuota();
-$pq->HandleRequest($request);
+$pqHtml      = new ProjectQuotaHtml();
+$pqHtml->HandleRequest($request);
 
 $title = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
 $GLOBALS['HTML']->header(array('title' => $title));
 echo '<h1>'.$title.'</h1>';
-echo $pq->displayProjectQuota($request);
+echo $pqHtml->displayProjectQuota($request);
 $GLOBALS['HTML']->footer(array());
 
 ?>

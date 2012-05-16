@@ -65,7 +65,7 @@ class ProjectManager {
      */
     public function _getDao() {
         if (!isset($this->_dao)) {
-            $this->_dao = new ProjectDao(CodendiDataAccess::instance());
+            $this->_dao = new Statistics_ProjectQuotaDao(CodendiDataAccess::instance());
         }
         return $this->_dao;
     }

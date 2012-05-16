@@ -80,7 +80,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    public function getAllCustomQuota($list = array(), $offset = null, $count = null, $sort = null, $sortSens = null) {
+    public function getAllCustomQuota($list, $offset, $count, $sort, $sortSens) {
         $condition = '';
         $order     = '';
         if (!empty($list)) {
