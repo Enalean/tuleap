@@ -71,7 +71,7 @@ class MailingListDao extends DataAccessObject {
      */
     function deleteList($listId) {
         $listId = $this->da->escapeInt($listId);
-        $sql="UPDATE mail_group_list SET is_public=9 ".
+        $sql="DELETE FROM mail_group_list ".
              " WHERE group_list_id=".$listId;
         return $this->update($sql);
     }
