@@ -38,7 +38,7 @@ if (!isset($argv[1])) {
 }
 
 $pgm = new ExternalPermissions();
-$groups = $pgm->getGroups($argv[1]);
+$groups = $pgm->getUserGroups($argv[1]);
 if (count($groups) > 0) {
     echo implode(' ', $groups).PHP_EOL;
 }

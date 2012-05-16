@@ -34,7 +34,7 @@ class ExternalPermissions {
         User::STATUS_ACTIVE     => 'site_active'
     );
     
-    public function getGroups($userName) {
+    public function getUserGroups($userName) {
         $user = $this->getValidUserByName($userName);
         if (!$user) {
             return array();
