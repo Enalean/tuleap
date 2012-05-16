@@ -179,6 +179,7 @@ class Docman_Item {
             $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
             $this->isObsolete = ($date < $time);
         }
+        return $this->isObsolete;
     }
 
     public function initFromRow(&$row) {
