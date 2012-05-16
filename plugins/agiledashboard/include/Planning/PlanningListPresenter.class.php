@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_IndexPresenter {
+class Planning_ListPresenter {
     public $group_id;
     
     public function __construct(array $plannings, $group_id) {

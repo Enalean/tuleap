@@ -23,12 +23,26 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactPlannificationPresenter.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/MilestonePresenter.class.php';
 
-class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
-    
-    protected $user;
-    
+abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
+
+    protected function getAnArtifact($artifact_id, $children = array(), $tracker = null) {
+        if (!$tracker) {
+            $tracker = stub('Tracker')->userCanView()->returns(true);
+        }
+        
+        $artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns($children);
+        stub($artifact)->getId()->returns($artifact_id);
+        stub($artifact)->getTitle()->returns('Artifact ' . $artifact_id);
+        stub($artifact)->fetchDirectLinkToArtifact()->returns('');
+        stub($artifact)->getTracker()->returns($tracker);
+        return $artifact;
+    }
+
+}
+
+class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common {
     
     public function setUp() {
         parent::setUp();
@@ -70,12 +84,17 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
     
-    protected function getAPresenter() {
-        return new Planning_ArtifactPlanificationPresenter(
+    protected function getAPresenter(TreeNode $planned_artifacts_tree = null) {
+        $milestone = new Planning_Milestone($this->planning->getGroupId(),
+                                            $this->planning,
+                                            $this->artifact,
+                                            $planned_artifacts_tree);
+        
+        return new Planning_MilestonePresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,
-            $this->artifact,                                                                                                                                                        
+            $milestone,
             $this->user,
             'planning['. (int)$this->planning->getId() .']='
         );
@@ -97,15 +116,6 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
             $node->addChild($node_child);
         }
         return $node;
-    }
-    
-    protected function getAnArtifact($artifact_id, $children = array()) {
-        $artifact = mock('Tracker_Artifact');
-        stub($artifact)->getUniqueLinkedArtifacts()->returns($children);
-        stub($artifact)->getId()->returns($artifact_id);
-        stub($artifact)->getTitle()->returns('Artifact '.$artifact_id);
-        stub($artifact)->fetchDirectLinkToArtifact()->returns('');
-        return $artifact;
     }
     
     protected function assertEqualTreeNodes($node1, $node2) {
@@ -137,16 +147,15 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
         
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
-
-        
-        $presenter = $this->getAPresenter();
         
         $node33 = $this->getATreeNode(33);
         $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node33, $node34, $node36));
+
+        $presenter = $this->getAPresenter($node_parent);
         
-        $result = $presenter->plannedArtifactsTree();
+        $result = $presenter->plannedArtifactsTree($node_parent);
         $this->assertEqualTreeNodes($node_parent, $result);
     }
     
@@ -164,15 +173,44 @@ class Planning_ArtifactPlanificationPresenterTest extends TuleapTestCase {
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
     
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
-    
-    
-        $presenter = $this->getAPresenter();
-    
+        
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));
     
+        $presenter = $this->getAPresenter($node_parent);
+    
         $result = $presenter->plannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
+    }
+}
+
+class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_MilestonePresenter_Common {
+    private $sprint_artifact;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user                = mock('User');
+        $this->planning            = mock('Planning');
+        $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
+        $this->artifacts_to_select = array();
+        $this->sprint_artifact     = null;
+
+        $this->presenter = new Planning_MilestonePresenter(
+                        $this->planning,
+                        $this->content_view,
+                        $this->artifacts_to_select,
+                        new Planning_NoMilestone('123', $this->planning),
+                        $this->user,
+                        ''
+        );
+    }
+
+    public function itDisplaysDestinationOnlyIfUserCanAccessTheTracker() {
+        $sprint_tracker            = stub('Tracker')->userCanView()->returns(false);
+        
+        $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
+
+        $this->assertNull($this->presenter->plannedArtifactsTree());
     }
 }
 ?>

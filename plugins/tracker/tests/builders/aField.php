@@ -23,7 +23,7 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
 
 function aTextField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');

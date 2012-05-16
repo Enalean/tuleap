@@ -23,7 +23,7 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once dirname(__FILE__).'/../../include/Planning/Controller.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/PlanningController.class.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('PlanningFactory');
