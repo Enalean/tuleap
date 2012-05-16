@@ -428,7 +428,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
 
         $gitLogDao = new Git_LogDao();
-        $dar       = $gitLogDao->totalPushes( $formatter->groupId, $formatter->startDate, $formatter->endDate);
+        $dar       = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitIndex[]   = $row['month']." ".$row['year'];

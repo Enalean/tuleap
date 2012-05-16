@@ -145,13 +145,13 @@ class Git_LogDao extends DataAccessObject {
     /**
      * Count all Git pushes for the given period
      *
-     * @param Integer $projectId Id of the project we want to retrieve its git stats
      * @param String $startDate Period start date
      * @param String $endDate   Period end date
+	 * @param Integer $projectId Id of the project we want to retrieve its git stats
      *
      * @return DataAccessResult
      */
-    function totalPushes($projectId, $startDate, $endDate) {
+    function totalPushes($startDate, $endDate, $projectId = null) {
         $startDate     = $this->da->quoteSmart($startDate);
         $endDate       = $this->da->quoteSmart($endDate);
         $projectFilter = "";
