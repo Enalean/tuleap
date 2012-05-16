@@ -27,7 +27,18 @@ require_once('common/dao/UGroupUserDao.class.php');
  * 
  */
 class UGroup {
-
+    
+    const NONE               = 100;
+    const ANONYMOUS          = 1;
+    const REGISTERED         = 2;
+    const PROJECT_MEMBERS    = 3;
+    const PROJECT_ADMIN      = 4;
+    const FILE_MANAGER_ADMIN = 11;
+    const DOCUMENT_TECH      = 12;
+    const DOCUMENT_ADMIN     = 13;
+    const WIKI_ADMIN         = 14;
+    const TRACKER_ADMIN      = 15;
+    
     protected $id;
     protected $group_id;
     protected $name;
