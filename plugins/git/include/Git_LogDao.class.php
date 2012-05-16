@@ -154,9 +154,10 @@ class Git_LogDao extends DataAccessObject {
     function totalPushes($startDate, $endDate, $projectId = null) {
         $startDate     = $this->da->quoteSmart($startDate);
         $endDate       = $this->da->quoteSmart($endDate);
+        $projectId     = $this->da->escapeInt($projectId);
         $projectFilter = "";
         if (!empty($projectId)) {
-            $projectFilter = " AND project_id = ".$this->da->escapeInt($projectId);
+            $projectFilter = " AND project_id = ".$projectId;
         }
         $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(push_date), '%M') AS month,
                     YEAR(FROM_UNIXTIME(push_date)) AS year, 

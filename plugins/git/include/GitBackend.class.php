@@ -420,7 +420,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      *
      * @return void
      */
-    public function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
+    private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
         $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
