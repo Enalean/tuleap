@@ -34,8 +34,8 @@ class ExternalPermissions {
         User::STATUS_ACTIVE     => 'site_active'
     );
     
-    public static function getUserGroups($userName) {
-        $user = self::getValidUserByName($userName);
+    public static function getUserGroups($user_name) {
+        $user = self::getValidUserByName($user_name);
         if (!$user) {
             return array();
         }
@@ -67,8 +67,8 @@ class ExternalPermissions {
         return $groups;
     } 
     
-    protected static function getValidUserByName($username) {
-        $user = UserManager::instance()->getUserByUserName($username);
+    protected static function getValidUserByName($user_name) {
+        $user = UserManager::instance()->getUserByUserName($user_name);
         if ($user && isset(self::$status[$user->getStatus()])) {
             return $user;
         }
