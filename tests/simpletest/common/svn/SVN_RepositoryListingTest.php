@@ -108,18 +108,6 @@ class SVN_RepositoryListing_SubversionRepositoryTest extends TuleapTestCase {
     }
 }
 
-/**
- * Wrapper for svn_get_revisions.
- * 
- * Q: Why is it useful?
- * A: To set expectations in tests :) 
- */
-class SVN_RevisionsSource {
-    public function getRevisions(&$project, $chunksz, $_commiter = '') {
-//        svn_get_revisions($project, $offset, $chunksz, '', $_commiter, '', '', 0, false);
-    }
-}
-
 function whatever() {
     return new stdClass();
 }
