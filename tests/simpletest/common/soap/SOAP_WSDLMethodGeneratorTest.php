@@ -22,7 +22,7 @@ require_once 'common/soap/SOAP_WSDLMethodGenerator.class.php';
 
 require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
-class SOAP_WSDLMethodGeneratorTest extends UnitTestCase {
+class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
     
     function testExtractCommentShouldContainsComment() {
         $comment = $this->GivenTheCommentOfAddProject();
@@ -76,6 +76,16 @@ class SOAP_WSDLMethodGeneratorTest extends UnitTestCase {
     function testExtractReturnTypeBoolean() {
         $gen = $this->GivenGenerator('returnBoolean');
         $this->assertEqual($gen->getReturnType(), array('returnBoolean' => 'xsd:boolean'));
+    }
+    
+    function itExtractReturnTypeArrayOfString() {
+        $gen = $this->GivenGenerator('returnArrayOfString');
+        $this->assertEqual($gen->getReturnType(), array('returnArrayOfString' => 'tns:ArrayOfstring'));
+    }
+    
+    function itThrowAnExceptionOnUnknownTypes() {
+        $this->expectException('Exception');
+        $this->GivenGenerator('returnUnknownType');
     }
     
     private function assertDoesntContain($reference, $search) {

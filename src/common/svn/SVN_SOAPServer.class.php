@@ -18,6 +18,9 @@
  */
 
 require_once 'SVN_RepositoryListing.class.php';
+require_once 'SVN_Log.class.php';
+require_once 'SVN_LogQuery.class.php';
+require_once 'SVN_SoapRevisionDecorator.class.php';
 require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 /**
@@ -41,48 +44,54 @@ class SVN_SOAPServer {
     }
     
     /**
-     * Get stuff
+     * Returns the content of a directory in Subversion according to user permissions
+     * 
+     * <ul>
+     *   <li>If user cannot see the content it gets an empty array.</li>
+     *   <li>The returned content is relative (/project/tags) gives array("1.0", "2.0").</li>
+     * </ul>
      * 
      * @param String  $session_key Session key of the desired project admin
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
      * 
-     * @return String The list of directories
+     * @return ArrayOfString The list of directories
      */
     public function getSvnPath($session_key, $group_id, $path) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
-            return implode("\n", $this->svn_repository_listing->getSvnPath($current_user, $project, $path));
+            return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
     
     /**
-     * Retrieves the SVN commits of the project visible by the requesting user.
+     * Retrieves the SVN revisions of the project visible by the requesting user.
      * 
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
-     * @param Integer $limit       Optional - Maximum commits count (defaults to 50)
-     * @param Integer $author_id   Optional - Commit author user id to filter with (defaults to no filter)
+     * @param Integer $limit       Optional - Maximum revisions returned (defaults to 50)
+     * @param Integer $author_id   Optional - Author user id to filter with (defaults to no filter)
      * 
-     * @return String The list of commits
+     * @return ArrayOfRevision The list of revisions
      */
     public function getSvnLog($session_key, $group_id, $limit, $author_id) {
-        $user      = $this->soap_request_validator->continueSession($session_key);
-        $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
-        $commits   = $this->svn_repository_listing->getCommits($user, $project, $limit, $author_id);
-        
-        $output = "\n";
-        while ($row = db_fetch_array($commits[0])) {
-            list($revision, $commit_id, $description, $date, $whoid) = $row;
+        try {
+            $this->soap_request_validator->continueSession($session_key);
             
-            $description = trim($description);
+            $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
+            $svn_log   = new SVN_Log($project);
+            $query     = new SVN_LogQuery($limit, $author_id);
+            $decorator = new SVN_SoapRevisionDecorator();
+            $revisions   = $svn_log->getDecoratedRevisions($query, $decorator);
+
+            return $revisions;
             
-            $output .= "$revision $whoid $date $description\n";
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
-        return $output;
     }
 }
 

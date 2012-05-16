@@ -49,6 +49,31 @@ $server->wsdl->addComplexType(
     'xsd:int'
 );
 
+$server->wsdl->addComplexType(
+    'Revision',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'revision' => array('name'=>'revision', 'type' => 'xsd:string'),
+        'author'   => array('name'=>'author',   'type' => 'xsd:string'),
+        'date'     => array('name'=>'date',     'type' => 'xsd:string'),
+        'message'  => array('name'=>'message',  'type' => 'xsd:string'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfRevision',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Revision[]')),
+    'tns:Revision'
+);
+
 }
 
 ?>

@@ -190,6 +190,12 @@ class SOAP_WSDLMethodGenerator {
             case 'boolean':
             case 'bool':
                 return 'xsd:boolean';
+            case 'arrayofstring':
+                return 'tns:ArrayOfstring';
+            case 'arrayofrevision':
+                return 'tns:ArrayOfRevision';
+            default:
+                throw new Exception("Unknown type $docType");
         }
     }
 }

@@ -19,35 +19,14 @@
 
 require_once 'SVN_PermissionsManager.class.php';
 
-/**
- * Wrapper for svn_get_revisions.
- * 
- * Q: Why is it useful?
- * A: To set expectations in tests :) 
- */
-class SVN_RevisionsSource {
-    public function getRevisions(&$project, $limit, $author_id) {
-        $limit     = isset($limit)     ? $limit     : 50;
-        $author_id = isset($author_id) ? $author_id : '';
-        
-        return svn_get_revisions($project, 0, $limit, '', $author_id, '', '', 0, false);
-    }
-}
-
 class SVN_RepositoryListing {
     /**
      * @var SVN_PermissionsManager
      */
     private $svn_permissions_manager;
     
-    /**
-     * @var SVN_RevisionsSource
-     */
-    private $revision_source;
-    
-    public function __construct(SVN_PermissionsManager $svn_permissions_manager, SVN_RevisionsSource $revision_source = null) {
+    public function __construct(SVN_PermissionsManager $svn_permissions_manager) {
         $this->svn_permissions_manager = $svn_permissions_manager;
-        $this->revision_source         = $revision_source ? $revision_source : new SVN_RevisionsSource();
     }
 
     public function getSvnPath(User $user, Project $project, $svn_path) {
@@ -75,10 +54,6 @@ class SVN_RepositoryListing {
             return trim(preg_replace($match_path_regex, '', $line), '/');
         }
         return '';
-    }
-
-    public function getCommits(User $user, Project $project, $limit, $author_id) {
-        return $this->revision_source->getRevisions($project, $limit, $author_id);
     }
 }
 

@@ -108,39 +108,4 @@ class SVN_RepositoryListing_SubversionRepositoryTest extends TuleapTestCase {
     }
 }
 
-function whatever() {
-    return new stdClass();
-}
-
-class SVN_Repository_CommitListingTest extends TuleapTestCase {
-    
-    protected $EMPTY_COMMIT_LIST;
-    
-    public function setUp() {
-        parent::setUp();
-        
-        $this->EMPTY_COMMIT_LIST = array(array(), -1);
-        
-        $this->user                = mock('User');
-        $this->project             = mock('Project');
-        $this->revisions_source    = mock('SVN_RevisionsSource');
-        $this->permissions_manager = mock('SVN_PermissionsManager');
-        $this->repo_listing        = new SVN_RepositoryListing($this->permissions_manager,
-                                                               $this->revisions_source);
-    }
-    
-    public function itReturnsMatchingCommitsWhenRequesterHasReadAccessToTheRepository() {
-        $limit     = 10;
-        $author_id = 123;
-        $commits   = whatever();
-        
-        $this->revisions_source->expectOnce('getRevisions', array($this->project, $limit, $author_id));
-        stub($this->revisions_source)->getRevisions()->returns($commits);
-        
-        $actual_commits = $this->repo_listing->getCommits($this->user, $this->project, $limit, $author_id);
-        $this->assertIdentical($commits, $actual_commits);
-    }
-    
-}
-
 ?>
