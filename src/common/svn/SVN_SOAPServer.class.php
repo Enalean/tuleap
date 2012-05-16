@@ -72,10 +72,10 @@ class SVN_SOAPServer {
      * 
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
-     * @param Integer $limit       Optional - Maximum commits count (defaults to 50)
-     * @param Integer $author_id   Optional - Commit author user id to filter with (defaults to no filter)
+     * @param Integer $limit       Optional - Maximum revisions returned (defaults to 50)
+     * @param Integer $author_id   Optional - Author user id to filter with (defaults to no filter)
      * 
-     * @return String The list of commits
+     * @return ArrayOfRevision The list of revisions
      */
     public function getSvnLog($session_key, $group_id, $limit, $author_id) {
         try {
@@ -87,7 +87,7 @@ class SVN_SOAPServer {
             $decorator = new SVN_SoapRevisionDecorator();
             $revisions   = $svn_log->getDecoratedRevisions($query, $decorator);
 
-            return print_r($revisions, true);
+            return $revisions;
             
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
