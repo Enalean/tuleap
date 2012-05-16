@@ -21,7 +21,7 @@
 
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
-require_once 'common/permission/PermissionsManager.class.php';
+require_once 'common/permission/ExternalPermissions.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'exceptions/Git_Command_Exception.class.php';
@@ -46,6 +46,11 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
+    public static $permissions_types = array(
+        Git::PERM_READ  => ' R  ',
+        Git::PERM_WRITE => ' RW ',
+        Git::PERM_WPLUS => ' RW+'
+    );
 
     public function repoFullName(GitRepository $repo, $unix_name) {
         return unixPathJoin(array($unix_name, $repo->getFullName()));
@@ -247,47 +252,14 @@ class Git_GitoliteDriver {
     }
     
     public function fetchConfigPermissions($project, $repository, $permission_type) {
-        $types = array(
-                Git::PERM_READ  => ' R  ',
-                Git::PERM_WRITE => ' RW ',
-                Git::PERM_WPLUS => ' RW+'
-        );
-        
-        if (!isset($types[$permission_type])) {
+        if (!isset(self::$permissions_types[$permission_type])) {
             return '';
         }
-        
-        $users = PermissionsManager::instance()->getAuthorizedUgroupIds($repository->getId(), $permission_type);
-        array_walk($users, array($this, 'ugroupId2GitoliteFormat'), $project);
-        $users = array_filter($users);
-        if (count($users) == 0) {
+        $repository_groups = ExternalPermissions::getProjectObjectGroups($project, $repository->getId(), $permission_type);
+        if (count($repository_groups) == 0) {
             return '';
         }
-        return $types[$permission_type] . ' = ' . implode(' ', $users) . PHP_EOL; 
-    }
-
-    /**
-     * Convert given ugroup id to a format managed by ExternalPermissionsTest
-     *
-     * @param String $ug UGroupId
-     */
-    protected function ugroupId2GitoliteFormat(&$ugroup, $key, $project) {
-        if ($ugroup > 100) {
-            $ugroup = '@ug_'. $ugroup;
-            return false;
-        } 
-        $project_name = $project->getUnixName();
-        $ugroups = array(
-                $GLOBALS['UGROUP_REGISTERED']      => '@site_active',
-                $GLOBALS['UGROUP_PROJECT_MEMBERS'] => '@' . $project_name . '_project_members',
-                $GLOBALS['UGROUP_PROJECT_ADMIN']   => '@' . $project_name . '_project_admin'
-        );
-        if (isset($ugroups[$ugroup])) {
-            $ugroup = $ugroups[$ugroup];
-        } else {
-            $ugroup = null;
-        }
-        return false;
+        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups) . PHP_EOL; 
     }
     
     /**

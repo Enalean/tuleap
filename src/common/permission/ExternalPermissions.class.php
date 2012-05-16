@@ -19,9 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/project/ProjectManager.class.php';
-require_once 'common/project/UGroupManager.class.php';
 require_once 'common/user/UserManager.class.php';
+require_once 'common/permission/PermissionsManager.class.php';
+require_once 'common/project/UGroup.class.php';
 
 /**
  * Return groups of a user given by name to use them externally
@@ -32,6 +32,12 @@ class ExternalPermissions {
     public static $status = array(
         User::STATUS_RESTRICTED => 'site_restricted',
         User::STATUS_ACTIVE     => 'site_active'
+    );
+    
+    public static $ugroups = array(
+                UGroup::REGISTERED      => '@site_active',
+                UGroup::PROJECT_MEMBERS => '@%s_project_members',
+                UGroup::PROJECT_ADMIN   => '@%s_project_admin'
     );
     
     public static function getUserGroups($user_name) {
@@ -71,6 +77,39 @@ class ExternalPermissions {
         $user = UserManager::instance()->getUserByUserName($user_name);
         if ($user && isset(self::$status[$user->getStatus()])) {
             return $user;
+        }
+        return false;
+    }
+    /**
+     * 
+     * 
+     * @param Project $project
+     * @param integer $object_id
+     * @param string  $permission_type
+     * 
+     * @return array of groups converted to string
+     */
+    public static function getProjectObjectGroups(Project $project, $object_id, $permission_type) {
+        $ugroup_ids   = PermissionsManager::instance()->getAuthorizedUgroupIds($object_id, $permission_type);
+        $project_name = $project->getUnixName(); 
+        array_walk($ugroup_ids, array('ExternalPermissions', 'ugroupIdToString'), $project_name);
+        return array_filter($ugroup_ids);
+    }
+    
+    /**
+     * Convert given ugroup id to a format managed by ExternalPermissions
+     *
+     * @param String $ug UGroupId
+     */
+    protected static function ugroupIdToString(&$ugroup, $key, $project_name) {
+        if ($ugroup > 100) {
+            $ugroup = '@ug_'. $ugroup;
+            return false;
+        } 
+        if (isset(self::$ugroups[$ugroup])) {
+            $ugroup = sprintf(self::$ugroups[$ugroup], $project_name);
+        } else {
+            $ugroup = null;
         }
         return false;
     }
