@@ -34,19 +34,19 @@ class ExternalPermissions {
         User::STATUS_ACTIVE     => 'site_active'
     );
     
-    public function getUserGroups($userName) {
-        $user = $this->getValidUserByName($userName);
+    public static function getUserGroups($userName) {
+        $user = self::getValidUserByName($userName);
         if (!$user) {
             return array();
         }
         $groups = array(self::$status[$user->getStatus()]);
-        $groups = $this->appendProjectGroups($user, $groups);
-        $groups = $this->appendUgroups($user, $groups);
+        $groups = self::appendProjectGroups($user, $groups);
+        $groups = self::appendUgroups($user, $groups);
         
         return $groups;        
     }
     
-    protected function appendProjectGroups($user, array $groups = array()) {
+    protected static function appendProjectGroups($user, array $groups = array()) {
         $user_projects = $user->getProjects(true);
         foreach($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -59,7 +59,7 @@ class ExternalPermissions {
         return $groups;
     }
     
-    protected function appendUgroups($user, array $groups = array()) {
+    protected static function appendUgroups($user, array $groups = array()) {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $groups[] = 'ug_'.$row['ugroup_id'];
@@ -67,7 +67,7 @@ class ExternalPermissions {
         return $groups;
     } 
     
-    protected function getValidUserByName($username) {
+    protected static function getValidUserByName($username) {
         $user = UserManager::instance()->getUserByUserName($username);
         if ($user && isset(self::$status[$user->getStatus()])) {
             return $user;

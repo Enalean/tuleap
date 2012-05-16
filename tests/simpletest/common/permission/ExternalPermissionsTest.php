@@ -38,7 +38,6 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $userManager = new MockUserManager();
         $userManager->setReturnValue('getUserByUserName', $this->user);
         UserManager::setInstance($userManager);
-        $this->membership = new ExternalPermissions();
     }
     
     public function tearDown() {
@@ -55,7 +54,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user->setReturnValue('isMember', false);
         $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
         
-        $groups = $this->membership->getUserGroups('john_do');
+        $groups = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_active','gpig1_project_members');
         $this->assertEqual($expected, $groups);
     }
@@ -71,7 +70,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user->setReturnValue('isMember', true);
         $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
         
-        $groups   = $this->membership->getUserGroups('john_do');
+        $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
         $this->assertEqual($expected, $groups);
     }
@@ -82,7 +81,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user->setReturnValue('isMember', false);
         $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar(array('ugroup_id'=>304)));
         
-        $groups   = $this->membership->getUserGroups('john_do');
+        $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_active','ug_304');
         $this->assertEqual($expected, $groups);
     }
@@ -93,7 +92,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user->setReturnValue('isMember', false);
         $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
         
-        $groups   = $this->membership->getUserGroups('john_do');
+        $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_restricted');
         $this->assertEqual($expected, $groups);
     }
@@ -105,7 +104,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user->setReturnValue('isMember', false);
         $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
     
-        $groups = $this->membership->getUserGroups('john_do');
+        $groups = ExternalPermissions::getUserGroups('john_do');
         $this->assertEqual(array(), $groups);
     }
     
