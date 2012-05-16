@@ -63,10 +63,9 @@ class SOAP_RequestValidator {
     }
 
     public function assertUserCanAccessProject(User $user, Project $project) {
-        
         if (($project->isPublic() && $user->isRestricted() && ! $user->isMember($project->getGroupId())) ||
             (! $project->isPublic() && ! $user->isMember($project->getGroupId()))) {
-            throw new Exception('Invalid session', '3001');
+            throw new Exception('User do not have access to the project', '3002');
         }
     }
     
