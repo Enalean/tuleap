@@ -41,7 +41,12 @@ class SVN_SOAPServer {
     }
     
     /**
-     * Get stuff
+     * Returns the content of a directory in Subversion according to user permissions
+     * 
+     * <ul>
+     *   <li>If user cannot see the content it gets an empty array.</li>
+     *   <li>The returned content is relative (/project/tags) gives array("1.0", "2.0").</li>
+     * </ul>
      * 
      * @param String  $session_key Session key of the desired project admin
      * @param Integer $group_id    ID of the project the subversion repository belongs to
