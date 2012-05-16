@@ -9,6 +9,7 @@ require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 // define fault code constants
 define('PLUGIN_STATISTICS_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
+
 if (defined('NUSOAP')) {
     //
     // Function definition
@@ -40,10 +41,19 @@ if (defined('NUSOAP')) {
      * @return int the disk used
      *              or a soap fault if :
      *              - group_id does not match with a valid project
+     *              - user is not site admin
      */
     function getDiskUsageByProject($session_key, $group_id) {
-        $user    = $this->soap_request_validator->continueSession($session_key);
-        $project = $this->soap_request_validator->getProjectById($group_id);
+        try {
+            $soap_request_validator = new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance());
+            $user    = $soap_request_validator->continueSession($session_key);
+            $project = $soap_request_validator->getProjectById($group_id);
+            $dum = new Statistics_DiskUsageManager();
+            return $dum->returnTotalProjectSize($group_id);
+            
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
     
     $GLOBALS['server']->addFunction(
