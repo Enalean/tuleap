@@ -61,6 +61,14 @@ class SOAP_RequestValidator {
         }
         throw new SoapFault('3001', 'Invalid session');
     }
+
+    public function assertUserCanAccessProject(User $user, Project $project) {
+        
+        if (($project->isPublic() && $user->isRestricted() && ! $user->isMember($project->getGroupId())) ||
+            (! $project->isPublic() && ! $user->isMember($project->getGroupId()))) {
+            throw new Exception('Invalid session', '3001');
+        }
+    }
     
     public function getProjectById($project_id, $method_name) {
         return $this->project_manager->getGroupByIdForSoap($project_id, $method_name);
@@ -69,6 +77,7 @@ class SOAP_RequestValidator {
     public function getProjectByName($project_name, $method_name) {
         return $this->project_manager->getGroupByIdForSoap($project_name, $method_name, true);
     }
+
 }
 
 ?>

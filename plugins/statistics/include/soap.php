@@ -48,7 +48,7 @@ if (defined('NUSOAP')) {
             $soap_request_validator = new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance());
             $user    = $soap_request_validator->continueSession($session_key);
             $project = $soap_request_validator->getProjectById($group_id);
-            $dum = new Statistics_DiskUsageManager();
+            $dum     = new Statistics_DiskUsageManager();
             return $dum->returnTotalProjectSize($group_id);
             
         } catch (Exception $e) {
