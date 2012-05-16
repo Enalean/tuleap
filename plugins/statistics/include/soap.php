@@ -11,17 +11,28 @@ require_once 'common/soap/SOAP_RequestValidator.class.php';
 define('PLUGIN_STATISTICS_SOAP_FAULT_UNAVAILABLE_PLUGIN', '3020');
 
 if (defined('NUSOAP')) {
+    $GLOBALS['server']->wsdl->addComplexType(
+        'ProjectDiskStat',
+        'complexType',
+        'struct',
+        'sequence',
+        '',
+        array(
+            'total' => array('name'=>'total', 'type' => 'xsd:int'),
+            'quota' => array('name'=>'quota', 'type' => 'xsd:int')
+        )
+     );
     //
     // Function definition
     //
     $GLOBALS['server']->register(
-        'getDiskUsageByProject', // method name
+        'getProjectDiskStats', // method name
         array('sessionKey'=>'xsd:string', // input parameters
               'group_id'=>'xsd:int'
         ),
-        array('return'=>'xsd:int'), // output parameters
+        array('return'=>'tns:ProjectDiskStat'), // output parameters
         $GLOBALS['uri'], // namespace
-        $GLOBALS['uri'].'#getDiskUsageByProject', // soapaction
+        $GLOBALS['uri'].'#getProjectDiskStats', // soapaction
         'rpc', // style
         'encoded', // use
         'Returns an int corresponding to the space occupied by group ID on the disk.
@@ -34,7 +45,7 @@ if (defined('NUSOAP')) {
     //
 
     /**
-     * getDiskUsageByProject - get disk used by a project
+     * getProjectDiskStats - Get disk used by a project
      *
      * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
      * @param int $group_id the ID of the group we want to attach the file
@@ -43,13 +54,16 @@ if (defined('NUSOAP')) {
      *              - group_id does not match with a valid project
      *              - user is not site admin
      */
-    function getDiskUsageByProject($session_key, $group_id) {
+    function getProjectDiskStats($session_key, $group_id) {
         try {
             $soap_request_validator = new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance());
             $user    = $soap_request_validator->continueSession($session_key);
             $project = $soap_request_validator->getProjectById($group_id);
-            $dum     = new Statistics_DiskUsageManager();
-            return $dum->returnTotalProjectSize($group_id);
+            $soap_request_validator->assertUserCanAccessProject($user, $project);
+            
+            $dum = new Statistics_DiskUsageManager();
+            return array("total" => $dum->returnTotalProjectSize($group_id),
+                         "quota" => $dum->getProperty('allowed_quota') * 1024 * 1024 * 1024);
             
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -58,7 +72,7 @@ if (defined('NUSOAP')) {
     
     $GLOBALS['server']->addFunction(
         array(
-            'getDiskUsageByProject',
+            'getProjectDiskStats',
         )
     );
 }
