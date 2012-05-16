@@ -407,6 +407,20 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             $formatter->addLine($gitoliteIndex);
             $formatter->addLine($gitolite);
         }
+        $this->retrieveLoggedPushesStatistics($formatter);
+        $content = $formatter->getCsvContent();
+        $formatter->clearContent();
+        return $content;
+    }
+
+    /**
+     * Retrieve logged pushes statistics for CSV export
+     *
+     * @param Statistics_Formatter $formatter instance of statistics formatter class
+     *
+     * @return void
+     */
+    public function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
         $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
@@ -429,9 +443,6 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             $formatter->addLine($gitUsers);
             $formatter->addLine($gitRepo);
         }
-        $content = $formatter->getCsvContent();
-        $formatter->clearContent();
-        return $content;
     }
 }
 
