@@ -19,21 +19,102 @@
 
 require_once 'common/project/UGroup.class.php';
 
-class UGroupTest extends TuleapTestCase {
+class UGroup_AddUserTest extends TuleapTestCase {
     
-    function itAddUserIntoStaticGroupWithLegacyMethod() {
+    public function setUp() {
+        parent::setUp();
+        $this->user_id = 400;
+        $this->user    = stub('User')->getId()->returns($this->user_id);
+    }
+    
+    function itAddUserIntoStaticGroup() {
         $ugroup_id = 200;
         $group_id  = 300;
-        $user_id   = 400;
         
-        $ugroup = TestHelper::getPartialMock('UGroup', array('addUserToGroup'));
+        $ugroup = TestHelper::getPartialMock('UGroup', array('addUserToStaticGroup', 'exists'));
+        stub($ugroup)->exists()->returns(true);
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
-        $user = stub('User')->getId()->returns($user_id);
+        $ugroup->expectOnce('addUserToStaticGroup', array($group_id, $ugroup_id, $this->user_id));
         
-        $ugroup->expectOnce('addUserToGroup', array($group_id, $ugroup_id, $user_id));
+        $ugroup->addUser($this->user);
+    }
+    
+    function itThrowAnExceptionIfStaticUGroupDoesntExist() {
+        $ugroup_id = 200;
+        $group_id  = 300;
+        
+        $ugroup = TestHelper::getPartialMock('UGroup', array('exists'));
+        stub($ugroup)->exists()->returns(false);
+        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
+        
+        $this->expectException(new UGroup_Invalid_Exception());
+        
+        $ugroup->addUser($this->user);
+    }
+    
+    function itAddUserIntoDynamicGroup() {
+        $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
+        $group_id  = 300;
+        
+        $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
+        
+        $dao = mock('UserGroupDao');
+        stub($ugroup)->_getUserGroupDao()->returns($dao);
+        
+        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
+        
+        
+        $dao->expectOnce('updateUserGroupFlags', array($this->user_id, $group_id, 'wiki_flags = 2'));
+        
+        $ugroup->addUser($this->user);
+    }
+    
+    function itThrowAnExceptionIfThereIsNoGroupId() {
+        $ugroup_id = 200;
+        
+        $ugroup = new UGroup(array('ugroup_id' => $ugroup_id));
+        
+        $this->expectException();
+        
+        $ugroup->addUser($this->user);
+    }
+    
+    function itThrowAnExceptionIfThereIsNoUGroupId() {
+        $group_id  = 300;
+        
+        $ugroup = new UGroup(array('group_id' => $group_id));
+        
+        $this->expectException();
+        
+        $ugroup->addUser($this->user);
+    }
+
+    function itThrowAnExceptionIfUserIsNotValid() {
+        $group_id  = 300;
+        $ugroup_id = 200;
+        
+        $ugroup = new UGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
+        
+        $this->expectException();
+        
+        $user = anAnonymousUser()->build();
         
         $ugroup->addUser($user);
+    }
+}
+
+class UGroup_DynamicGroupTest extends TuleapTestCase {
+    function itConvertDynamicGroupIdToCorrespondingDatabaseField() {
+        //$this->assertEqual(UGroup::getFieldForUGroupId())
+        $this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
+        $this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
+        $this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
+                //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
+        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
+        ////forum admin
+        /// SVN
+        // News
     }
 }
 

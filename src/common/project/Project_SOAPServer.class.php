@@ -234,15 +234,15 @@ class Project_SOAPServer {
      */
     public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId) {
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
-        if ($this->userManager->getUserById($userId)) {
-            $ugroup = new UGroup();
-            if ($ugroup->exists($groupId, $ugroupId)) {
-                ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
-                $this->feedbackToSoapFault();
-                return true;
-            } else {
-                throw new SoapFault('3301', "User Group ($ugroupId) does not exist");
+        if ($user = $this->userManager->getUserById($userId)) {
+            try {
+                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup->addUser($user);
+            }  catch (Exception $e) {
+                throw new SoapFault((string) $e->getCode(), $e->getMessage());
             }
+            $this->feedbackToSoapFault();
+            return true;
         } else {
             throw new SoapFault('3203', "Invalid user id $userId");
         }

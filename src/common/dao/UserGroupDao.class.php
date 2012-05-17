@@ -94,6 +94,19 @@ class UserGroupDao extends DataAccessObject {
                    " WHERE group_id = ".$groupId;
         return $this->update($sql);
     }
+    
+    function updateUserGroupFlags($user_id, $group_id, $flag) {
+        if ($flag == '') {
+            return false;
+        }
+        $user_id  = $this->da->escapeInt($user_id);
+        $group_id = $this->da->escapeInt($group_id);
+        $sql = "UPDATE user_group
+                SET $flag
+                WHERE group_id = $group_id
+                  AND user_id = $user_id";
+        return $this->update($sql);
+    }
 }
 
 ?>

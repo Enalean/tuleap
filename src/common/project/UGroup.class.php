@@ -20,8 +20,10 @@
 
 require_once('common/dao/UGroupDao.class.php');
 require_once('common/dao/UGroupUserDao.class.php');
+require_once('common/dao/UserGroupDao.class.php');
 require_once('common/user/User.class.php');
 require_once('www/project/admin/ugroup_utils.php');
+require_once('UGroup_Invalid_Exception.class.php');
 
 /**
  *
@@ -29,6 +31,9 @@ require_once('www/project/admin/ugroup_utils.php');
  * 
  */
 class UGroup {
+    const PROJECT_ADMIN      = 4;
+    const FILE_MANAGER_ADMIN = 11;
+    const WIKI_ADMIN         = 14;
 
     protected $id;
     protected $group_id;
@@ -40,6 +45,7 @@ class UGroup {
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
+    protected $_usergroupdao;
 
     public function __construct($row = null) {
         $this->id            = isset($row['ugroup_id'])            ? $row['ugroup_id']            : 0;
@@ -47,24 +53,31 @@ class UGroup {
         $this->description   = isset($row['description'])          ? $row['description']          : null;
         $this->group_id      = isset($row['group_id'])             ? $row['group_id']             : 0;
         if ($this->id < 100) {
-            $is_dynamic = true;
+            $this->is_dynamic = true;
         } else {
-            $is_dynamic = false;
+            $this->is_dynamic = false;
         }
     }
 
     protected function _getUGroupDao() {
         if (!$this->_ugroupdao) {
-            $this->_ugroupdao = new UGroupDao(CodendiDataAccess::instance());
+            $this->_ugroupdao = new UGroupDao();
         }
         return $this->_ugroupdao;
     }
 
     protected function _getUGroupUserDao() {
         if (!$this->_ugroupuserdao) {
-            $this->_ugroupuserdao = new UGroupUserDao(CodendiDataAccess::instance());
+            $this->_ugroupuserdao = new UGroupUserDao();
         }
         return $this->_ugroupuserdao;
+    }
+    
+    protected function _getUserGroupDao() {
+        if (!$this->_usergroupdao) {
+            $this->_usergroupdao = new UserGroupDao();
+        }
+        return $this->_usergroupdao;
     }
 
     public function getName() {
@@ -135,11 +148,51 @@ class UGroup {
     }
     
     public function addUser(User $user) {
-        $this->addUserToGroup($this->group_id, $this->id, $user->getId());
+        $this->assertProjectUGroupAndUserValidity($user);
+        if ($this->is_dynamic) {
+            $this->addUserToDynamicGroup($user);
+        } else {
+            if ($this->exists($this->group_id, $this->id)) {
+                $this->addUserToStaticGroup($this->group_id, $this->id, $user->getId());
+            } else {
+                throw new UGroup_Invalid_Exception();
+            }
+        }
     }
     
-    protected function addUserToGroup($group_id, $ugroup_id, $user_id) {
+    private function assertProjectUGroupAndUserValidity($user) {
+        if (!$this->group_id) {
+            throw new Exception('Invalid group_id');
+        }
+        if (!$this->id) {
+            throw new UGroup_Invalid_Exception();
+        }
+        if ($user->isAnonymous()) {
+            throw new Exception('Invalid user');
+        }
+    }
+    
+    protected function addUserToStaticGroup($group_id, $ugroup_id, $user_id) {
         ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
+    }
+    
+    protected function addUserToDynamicGroup(User $user) {
+        $dao  = $this->_getUserGroupDao();
+        $flag = $this->getFieldForUGroupId($this->id);
+        $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
+    }
+    
+    public function getFieldForUGroupId($id) {
+        switch ($id) {
+            case self::PROJECT_ADMIN:
+                return "admin_flags = 'A'";
+            case self::FILE_MANAGER_ADMIN:
+                return 'file_flags = 2';
+            case self::WIKI_ADMIN:
+                return 'wiki_flags = 2';
+            default:
+                throw new UGroup_Invalid_Exception();
+        }
     }
 }
 ?>
