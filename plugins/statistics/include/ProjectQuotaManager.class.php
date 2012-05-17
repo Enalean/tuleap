@@ -29,19 +29,20 @@ class ProjectQuotaManager {
     protected $_dao;
 
 
-	/**
+    /**
      * A private constructor; prevents direct creation of object
      */
     private function __construct() {
         $this->_dao = $this->_getDao();
     }
-	/**
+    /**
      * Hold an instance of the class
      */
     private static $_instance;
 
-	/**
+    /**
      * ProjectManager is a singleton
+     *
      * @return ProjectManager
      */
     public static function instance() {
@@ -53,7 +54,7 @@ class ProjectQuotaManager {
     }
 
 
-	/**
+    /**
      * List all projects having custom quota
      *
      * @param Array  $list     List of projects Id corresponding to a filter
@@ -146,7 +147,7 @@ class ProjectQuotaManager {
         }
     }
 
-	/**
+    /**
      * @return Dao
      */
     public function _getDao() {

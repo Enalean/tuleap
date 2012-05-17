@@ -24,7 +24,7 @@ require_once 'ProjectQuotaManager.class.php';
 class ProjectQuotaHtml {
 
     public    $pm;
-	protected $pqm;
+    protected $pqm;
 
     /**
      * Constructor of the class
@@ -32,7 +32,7 @@ class ProjectQuotaHtml {
      * @return Void
      */
     public function __construct() {
-	    $this->pqm = ProjectQuotaManager::instance();
+        $this->pqm = ProjectQuotaManager::instance();
         $this->pm  = ProjectManager::instance();
     }
 
