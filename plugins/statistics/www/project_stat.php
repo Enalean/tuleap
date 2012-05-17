@@ -102,7 +102,7 @@ if ($project && !$project->isError()) {
     $usedProportion = $duMgr->returnTotalProjectSize($groupId);
     $allowedQuota   = $duMgr->getProperty('allowed_quota');
     $pqm            = ProjectQuotaManager::instance();
-    $res            = $pqm->_dao->getProjectCustomQuota($groupId);
+    $res            = $pqm->getProjectCustomQuota($groupId);
     if ($res && !$res->isError() && $res->rowCount() == 1) {
         $row          = $res->getRow();
         $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];

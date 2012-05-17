@@ -75,6 +75,17 @@ class ProjectQuotaManager {
     }
 
     /**
+     * Retrieve custom quota for a given project
+     *
+     * @param int $groupId ID of the project we want to retrieve its custom quota
+     *
+     * @return DataAccessResult
+     */
+    public function getProjectCustomQuota($groupId) {
+        return $this->_dao->getProjectCustomQuota($groupId);
+    }
+
+    /**
      * Add custom quota for a project
      *
      * @param String  $project    Project for which quota will be customized

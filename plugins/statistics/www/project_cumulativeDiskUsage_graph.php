@@ -59,7 +59,7 @@ if ($func == 'usage') {
     //Retreive the config param & convert it to bytes
     $quota    = $duMgr->getProperty('allowed_quota');
     $pqm      = ProjectQuotaManager::instance();
-    $res      = $pqm->_dao->getProjectCustomQuota($groupId);
+    $res      = $pqm->getProjectCustomQuota($groupId);
     if ($res && !$res->isError() && $res->rowCount() == 1) {
         $row   = $res->getRow();
         $quota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
