@@ -97,6 +97,29 @@ $server->wsdl->addComplexType(
     'tns:Commiter'
 );
 
+$server->wsdl->addComplexType(
+    'SvnPathInfo',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'path'         => array('name'=> 'path',         'type' => 'xsd:string'),
+        'commit_count' => array('name'=> 'commit_count', 'type' => 'xsd:int'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfSvnPathInfo',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:SvnPathInfo[]')),
+    'tns:SvnPathInfo'
+);
+
 }
 
 ?>

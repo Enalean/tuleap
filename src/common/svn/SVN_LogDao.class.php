@@ -22,16 +22,39 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 class SVN_LogDao extends DataAccessObject {
     
     public function searchCommiters($group_id, $start_date, $end_date) {
-        $group_id   = $this->da->escapeInt($group_id);
-        $start_date = $this->da->escapeInt($start_date);
-        $end_date   = $this->da->escapeInt($end_date);
+        $group_id  = $this->da->escapeInt($group_id);
+        $date_stmt = $this->inBetweenDatesStatement($start_date, $end_date);
         $sql = "SELECT whoid, count(1) as commit_count
                 FROM svn_commits
                 WHERE group_id = $group_id
-                  AND date >= $start_date
-                  AND date <= $end_date
+                    $date_stmt
                 GROUP BY whoid";
         return $this->retrieve($sql);
+    }
+    
+    public function searchTopModifiedFiles($group_id, $start_date, $end_date, $limit) {
+        $group_id   = $this->da->escapeInt($group_id);
+        $limit      = $this->da->escapeInt($limit);
+        $date_stmt  = $this->inBetweenDatesStatement($start_date, $end_date);
+        $sql = "SELECT CONCAT(dir,file) as path, count(1) as commit_count
+                FROM svn_commits 
+                    JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)
+                    JOIN svn_files ON (svn_files.id = svn_checkins.fileid)
+                    JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)
+                 WHERE group_id = $group_id 
+                     $date_stmt
+                 GROUP BY path
+                 ORDER BY commit_count DESC
+                 LIMIT $limit";
+        return $this->retrieve($sql);
+    }
+    
+    private function inBetweenDatesStatement($start_date, $end_date) {
+        $start_date = $this->da->escapeInt($start_date);
+        $end_date   = $this->da->escapeInt($end_date);
+        $sql = "AND date >= $start_date
+                AND date <= $end_date";
+        return $sql;
     }
 }
 

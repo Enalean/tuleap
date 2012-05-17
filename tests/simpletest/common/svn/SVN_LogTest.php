@@ -77,6 +77,41 @@ class SVN_LogTest_Commiters extends TuleapTestCase {
     }
 }
 
+class SVN_LogTest_TopModifiedFiles extends TuleapTestCase {
+    private $group_id = 590;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->svn_log = TestHelper::getPartialMock('SVN_Log', array('getDao'));
+        
+        $this->dao = stub('SVN_LogDao')->searchTopModifiedFiles()->returns(array());
+        stub($this->svn_log)->getDao()->returns($this->dao);
+        
+        $project        = stub('Project')->getID()->returns($this->group_id);
+        $this->svn_log->__construct($project);
+    }
+    
+    function itFetchFromDatabaseWithValidrequest() {
+        $start_date = 0;
+        $end_date   = 200;
+        $limit      = 10;
+        
+        $this->dao->expectOnce('searchTopModifiedFiles', array($this->group_id, $start_date, $end_date, $limit));
+        
+        $this->svn_log->getTopModifiedFiles($start_date, $end_date, $limit);
+    }
+    
+    function itThrowAnExceptionWhenLimitIsNegative() {
+        $start_date = 0;
+        $end_date   = 200;
+        $limit      = -1;
+        
+        $this->expectException();
+        
+        $this->svn_log->getTopModifiedFiles($start_date, $end_date, $limit);
+    }
+}
+
 class SVN_LogTest extends TuleapTestCase {
 //    public function itDelegatesSvnRevisionsRetrievalTo_svn_get_revisions() {
 //        

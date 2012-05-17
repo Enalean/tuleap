@@ -87,6 +87,22 @@ class SVN_Log {
         return $stats;
     }
     
+    public function getTopModifiedFiles($start_date, $end_date, $limit) {
+        $this->assertPeriodValidity($start_date, $end_date);
+        
+        if ($limit <= 0) {
+            throw new Exception("limit must be a positive number");
+        }
+        
+        $stats = array();
+        $dao   = $this->getDao();
+        $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $start_date, $end_date, $limit);
+        foreach ($dar as $row) {
+            $stats[] = array('path' => $row['path'], 'commit_count' => $row['commit_count']);
+        }
+        return $stats;
+    }
+    
     private function assertPeriodValidity($start_date, $end_date) {
         if ($start_date < 0) {
             throw new Exception('Start date cannot be negative');

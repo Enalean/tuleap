@@ -104,7 +104,7 @@ class SVN_SOAPServer {
      * 
      * @return ArrayOfCommiter
      */
-    public function getSvnStatsUser($session_key, $group_id, $start_date, $end_date) {
+    public function getSvnStatsUsers($session_key, $group_id, $start_date, $end_date) {
         try {
             $this->soap_request_validator->continueSession($session_key);
             
@@ -113,6 +113,31 @@ class SVN_SOAPServer {
             $revisions = $svn_log->getCommiters($start_date, $end_date);
 
             return $revisions;
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+    
+    /**
+     * Return top most modified files during the given period
+     * 
+     * @param String  $session_key Session key of the requesting user
+     * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * @param Integer $start_date  Start of period (unix timestamp)
+     * @param Integer $end_date    End of period   (unix timestamp)
+     * @param Integer $limit       Max number of files to return
+     * 
+     * @return ArrayOfSvnPathInfo
+     */
+    public function getSvnStatsFiles($session_key, $group_id, $start_date, $end_date, $limit) {
+        try {
+            $this->soap_request_validator->continueSession($session_key);
+            
+            $project = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
+            $svn_log = new SVN_Log($project);
+            $files   = $svn_log->getTopModifiedFiles($start_date, $end_date, $limit);
+
+            return $files;
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
