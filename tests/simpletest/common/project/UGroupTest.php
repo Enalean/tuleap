@@ -104,12 +104,110 @@ class UGroup_AddUserTest extends TuleapTestCase {
     }
 }
 
+class UGroup_RemoveUserTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->user_id = 400;
+        $this->user    = stub('User')->getId()->returns($this->user_id);
+    }
+    
+    function itRemoveUserFromStaticGroup() {
+        $ugroup_id = 200;
+        $group_id  = 300;
+        
+        $ugroup = TestHelper::getPartialMock('UGroup', array('removeUserFromStaticGroup', 'exists'));
+        stub($ugroup)->exists()->returns(true);
+        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
+        
+        $ugroup->expectOnce('removeUserFromStaticGroup', array($group_id, $ugroup_id, $this->user_id));
+        
+        $ugroup->removeUser($this->user);
+    }
+    
+    function itThrowAnExceptionIfStaticUGroupDoesntExist() {
+        $ugroup_id = 200;
+        $group_id  = 300;
+        
+        $ugroup = TestHelper::getPartialMock('UGroup', array('exists'));
+        stub($ugroup)->exists()->returns(false);
+        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
+        
+        $this->expectException(new UGroup_Invalid_Exception());
+        
+        $ugroup->removeUser($this->user);
+    }
+    
+    function itRemoveUserIntoDynamicGroup() {
+        $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
+        $group_id  = 300;
+        
+        $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
+        
+        $dao = mock('UserGroupDao');
+        stub($ugroup)->_getUserGroupDao()->returns($dao);
+        
+        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
+        
+        
+        $dao->expectOnce('updateUserGroupFlags', array($this->user_id, $group_id, 'wiki_flags = 0'));
+        
+        $ugroup->removeUser($this->user);
+    }
+    
+    function itThrowAnExceptionIfThereIsNoGroupId() {
+        $ugroup_id = 200;
+        
+        $ugroup = new UGroup(array('ugroup_id' => $ugroup_id));
+        
+        $this->expectException();
+        
+        $ugroup->removeUser($this->user);
+    }
+    
+    function itThrowAnExceptionIfThereIsNoUGroupId() {
+        $group_id  = 300;
+        
+        $ugroup = new UGroup(array('group_id' => $group_id));
+        
+        $this->expectException();
+        
+        $ugroup->removeUser($this->user);
+    }
+
+    function itThrowAnExceptionIfUserIsNotValid() {
+        $group_id  = 300;
+        $ugroup_id = 200;
+        
+        $ugroup = new UGroup(array('group_id' => $group_id, 'ugroup_id' => $ugroup_id));
+        
+        $this->expectException();
+        
+        $user = anAnonymousUser()->build();
+        
+        $ugroup->removeUser($user);
+    }
+}
+
 class UGroup_DynamicGroupTest extends TuleapTestCase {
-    function itConvertDynamicGroupIdToCorrespondingDatabaseField() {
+    
+    function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
         //$this->assertEqual(UGroup::getFieldForUGroupId())
         $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
         $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
         $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
+                //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
+        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
+        ////forum admin
+        /// SVN
+        // News
+    }
+    
+    function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
+        //$this->assertEqual(UGroup::getFieldForUGroupId())
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 0');
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
                 //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
         //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
         ////forum admin

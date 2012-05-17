@@ -194,5 +194,41 @@ class UGroup {
                 throw new UGroup_Invalid_Exception();
         }
     }
+    
+    public function removeUser(User $user) {
+        $this->assertProjectUGroupAndUserValidity($user);
+        if ($this->is_dynamic) {
+            $this->removeUserFromDynamicGroup($user);
+        } else {
+            if ($this->exists($this->group_id, $this->id)) {
+                $this->removeUserFromStaticGroup($this->group_id, $this->id, $user->getId());
+            } else {
+                throw new UGroup_Invalid_Exception();
+            }
+        }
+    }
+    
+    protected function removeUserFromStaticGroup($group_id, $ugroup_id, $user_id) {
+        ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
+    }
+    
+    protected function removeUserFromDynamicGroup(User $user) {
+        $dao  = $this->_getUserGroupDao();
+        $flag = $this->getRemoveFlagForUGroupId($this->id);
+        $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
+    }
+    
+    public function getRemoveFlagForUGroupId($id) {
+        switch ($id) {
+            case self::PROJECT_ADMIN:
+                return "admin_flags = ''";
+            case self::FILE_MANAGER_ADMIN:
+                return 'file_flags = 0';
+            case self::WIKI_ADMIN:
+                return 'wiki_flags = 0';
+            default:
+                throw new UGroup_Invalid_Exception();
+        }
+    }
 }
 ?>
