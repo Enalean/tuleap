@@ -20,6 +20,8 @@
 
 require_once('common/dao/UGroupDao.class.php');
 require_once('common/dao/UGroupUserDao.class.php');
+require_once('common/user/User.class.php');
+require_once('www/project/admin/ugroup_utils.php');
 
 /**
  *
@@ -130,6 +132,14 @@ class UGroup {
     public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
         $dao = $this->_getUGroupUserDao();
         return $dao->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
+    }
+    
+    public function addUser(User $user) {
+        $this->addUserToGroup($this->group_id, $this->id, $user->getId());
+    }
+    
+    protected function addUserToGroup($group_id, $ugroup_id, $user_id) {
+        ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
     }
 }
 ?>
