@@ -65,7 +65,7 @@ plugin_statistics	date	Date
 plugin_statistics	set_quota	Définir un quota personnalisé pour un projet
 plugin_statistics	invalid_action	Action invalide
 plugin_statistics	invalid_project	Projet invalide
-plugin_statistics	invalid_quota	Quota invalide
+plugin_statistics	invalid_quota	Vous avez dépassé le maximum de quota permis
 plugin_statistics	invalid_motivation	Vous avez dépassez la taille maximale de la Motivation
 plugin_statistics	nothing_to_delete	Rien a supprimer
 plugin_statistics	delete_error	Une erreur est survenue lors de la suppression
