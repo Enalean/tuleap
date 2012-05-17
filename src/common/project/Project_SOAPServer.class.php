@@ -241,6 +241,33 @@ class Project_SOAPServer {
             throw new SoapFault('0', "Invalid user id $userId");
         }
     }
+    
+    /**
+     * Remove User from User Group
+     * 
+     * @param String  $sessionKey The project admin session hash
+     * @param Integer $groupId    The Project id where the User Group is defined
+     * @param Integer $ugroupId   The User Group where the user should be removed
+     * @param Integer $userId     The user id to remove
+     * 
+     * @return Boolean 
+     */
+    public function removeUserFromUGroup($sessionKey, $groupId, $ugroupId, $userId) {
+        $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
+        if ($this->userManager->getUserById($userId)) {
+            $ugroup = new UGroup();
+            if ($ugroup->exists($groupId, $ugroupId)) {
+                ugroup_remove_user_from_ugroup($groupId, $ugroupId, $userId);
+                $this->feedbackToSoapFault();
+                return true;
+            } else {
+                throw new SoapFault('0', "User Group ($ugroupId) does not exist");
+            }
+        } else {
+            throw new SoapFault('0', "Invalid user id $userId");
+        }
+    }
+    
     /**
      * Return a user member of project
      * 
