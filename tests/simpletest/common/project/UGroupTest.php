@@ -138,19 +138,38 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         $ugroup->removeUser($this->user);
     }
     
-    function itRemoveUserIntoDynamicGroup() {
+    function itRemoveUserFromDynamicGroup() {
         $ugroup_id = $GLOBALS['UGROUP_WIKI_ADMIN'];
         $group_id  = 300;
         
         $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
         
-        $dao = mock('UserGroupDao');
+        $project_admin_dar = TestHelper::arrayToDar(array('Admin1'), array('Admin2'));
+        $dao = stub('UserGroupDao')->returnProjectAdminsByGroupId($group_id)->returns($project_admin_dar);
         stub($ugroup)->_getUserGroupDao()->returns($dao);
         
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
         
         
         $dao->expectOnce('updateUserGroupFlags', array($this->user_id, $group_id, 'wiki_flags = 0'));
+        
+        $ugroup->removeUser($this->user);
+    }
+    
+    function itIsNotPossibleToRemoveAllAdminsOfAProject() {
+        $ugroup_id = $GLOBALS['UGROUP_PROJECT_ADMIN'];
+        $group_id  = 300;
+        
+        $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
+        
+        $project_admin_dar = TestHelper::arrayToDar(array('LastAdmin'));
+        $dao = stub('UserGroupDao')->returnProjectAdminsByGroupId($group_id)->returns($project_admin_dar);
+        stub($ugroup)->_getUserGroupDao()->returns($dao);
+        
+        $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
+        
+        $dao->expectNever('updateUserGroupFlags');
+        $this->expectException();
         
         $ugroup->removeUser($this->user);
     }

@@ -214,8 +214,11 @@ class UGroup {
     
     protected function removeUserFromDynamicGroup(User $user) {
         $dao  = $this->_getUserGroupDao();
-        $flag = $this->getRemoveFlagForUGroupId($this->id);
-        $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
+        if ($dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() > 1) {
+            $flag = $this->getRemoveFlagForUGroupId($this->id);
+            return $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
+        }
+        throw new Exception('Impossible to remove last admin of the project');
     }
     
     public function getRemoveFlagForUGroupId($id) {
