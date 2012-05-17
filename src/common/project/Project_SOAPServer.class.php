@@ -191,7 +191,7 @@ class Project_SOAPServer {
     public function addProjectMember($sessionKey, $groupId, $userLogin) {
         $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $result  = account_add_user_to_group($project->getID(), $userLogin);
-        return $this->feedbackToSoapFault($result);
+        return $this->returnFeedbackToSoapFault($result);
     }
 
     /**
@@ -213,9 +213,34 @@ class Project_SOAPServer {
         $project   = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $userToAdd = $this->getProjectMember($project, $userLogin);
         $result    = account_remove_user_from_group($groupId, $userToAdd->getId());
-        return $this->feedbackToSoapFault($result);
+        return $this->returnFeedbackToSoapFault($result);
     }
 
+    /**
+     * Add user to a User Group
+     * 
+     * @param String  $sessionKey The project admin session hash
+     * @param Integer $groupId    The Project id where the User Group is defined
+     * @param Integer $ugroupId   The User Group where the user should be added
+     * @param Integer $userId     The user id to add
+     * 
+     * @return Boolean 
+     */
+    public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId) {
+        $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
+        if ($this->userManager->getUserById($userId)) {
+            $ugroup = new UGroup();
+            if ($ugroup->exists($groupId, $ugroupId)) {
+                ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
+                $this->feedbackToSoapFault();
+                return true;
+            } else {
+                throw new SoapFault('0', "User Group ($ugroupId) does not exist");
+            }
+        } else {
+            throw new SoapFault('0', "Invalid user id $userId");
+        }
+    }
     /**
      * Return a user member of project
      * 
@@ -256,24 +281,33 @@ class Project_SOAPServer {
     }
     
     /**
-     * Transform errors from feedback errors into SoapFault
+     * Transform errors from feedback errors into SoapFault and return a boolean value accordingly
      *
      * @throws SoapFault
      * @param Boolean $result Result of initial command
      *
      * @return Boolean
      */
-    private function feedbackToSoapFault($result) {
+    private function returnFeedbackToSoapFault($result) {
         if (!$result) {
-            if ($GLOBALS['Response']->feedbackHasErrors()) {
-                foreach ($GLOBALS['Response']->_feedback->logs as $log) {
-                    if ($log['level'] == 'error') {
-                        throw new SoapFault('3100', $log['msg']);
-                    }
+            $this->feedbackToSoapFault();
+        }
+        return $result;
+    }
+    
+    /**
+     * Transform errors from feedback errors into SoapFault
+     *
+     * @throws SoapFault
+     */
+    private function feedbackToSoapFault() {
+        if ($GLOBALS['Response']->feedbackHasErrors()) {
+            foreach ($GLOBALS['Response']->_feedback->logs as $log) {
+                if ($log['level'] == 'error') {
+                    throw new SoapFault('3100', $log['msg']);
                 }
             }
         }
-        return $result;
     }
 
     /**
