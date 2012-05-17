@@ -219,6 +219,12 @@ class Project_SOAPServer {
     /**
      * Add user to a User Group
      * 
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3201, Permission denied: need to be project admin
+     *   * 3203, Invalid user id
+     *   * 3301, User Group doesn't exist
+     * 
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId    The Project id where the User Group is defined
      * @param Integer $ugroupId   The User Group where the user should be added
@@ -235,15 +241,21 @@ class Project_SOAPServer {
                 $this->feedbackToSoapFault();
                 return true;
             } else {
-                throw new SoapFault('0', "User Group ($ugroupId) does not exist");
+                throw new SoapFault('3301', "User Group ($ugroupId) does not exist");
             }
         } else {
-            throw new SoapFault('0', "Invalid user id $userId");
+            throw new SoapFault('3203', "Invalid user id $userId");
         }
     }
     
     /**
      * Remove User from User Group
+     * 
+     * * Error codes:
+     *   * 3000, Invalid project id
+     *   * 3201, Permission denied: need to be project admin
+     *   * 3203, Invalid user id
+     *   * 3301, User Group doesn't exist
      * 
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId    The Project id where the User Group is defined
@@ -261,10 +273,10 @@ class Project_SOAPServer {
                 $this->feedbackToSoapFault();
                 return true;
             } else {
-                throw new SoapFault('0', "User Group ($ugroupId) does not exist");
+                throw new SoapFault('3301', "User Group ($ugroupId) does not exist");
             }
         } else {
-            throw new SoapFault('0', "Invalid user id $userId");
+            throw new SoapFault('3203', "Invalid user id $userId");
         }
     }
     
