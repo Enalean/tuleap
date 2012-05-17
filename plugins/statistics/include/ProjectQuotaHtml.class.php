@@ -90,7 +90,7 @@ class ProjectQuotaHtml {
         $output          .= '<form method="get" >';
         $output          .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
         $output          .= '</form>';
-        $count            = 5;
+        $count            = 50;
         $res              = $this->pqm->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
         $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
@@ -131,10 +131,15 @@ class ProjectQuotaHtml {
     /**
      * Render pagination for project quota display
      *
+     * @param int    $offset   From where the result will be displayed.
+     * @param int    $count    How many results are returned.
+     * @param String $sortBy   Order result set according to this parameter
+     * @param String $orderBy  Specifiy if the result set sort is ascending or descending
+     * @param Array  $list     List of projects Id corresponding to a given filter
+     *
      * @return Array
      */
     public function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
-        //@Todo: Update docBlock, set $count var at plugin conf level
         $params       = array(); 
         $foundRowsRes = $this->pqm->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
