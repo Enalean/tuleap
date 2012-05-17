@@ -28,6 +28,10 @@ class ProjectQuotaManager {
      */
     protected $_dao;
 
+    /**
+     * ProjectManager instance
+     */
+    protected $pm;
 
     /**
      * A private constructor; prevents direct creation of object

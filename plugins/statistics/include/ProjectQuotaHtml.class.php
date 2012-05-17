@@ -23,7 +23,14 @@ require_once 'ProjectQuotaManager.class.php';
  */
 class ProjectQuotaHtml {
 
-    public    $pm;
+    /**
+     * ProjectManager instance
+     */
+    protected $pm;
+
+    /**
+     * ProjectQuotaManager instance
+     */
     protected $pqm;
 
     /**
@@ -32,8 +39,8 @@ class ProjectQuotaHtml {
      * @return Void
      */
     public function __construct() {
-        $this->pqm = ProjectQuotaManager::instance();
         $this->pm  = ProjectManager::instance();
+        $this->pqm = ProjectQuotaManager::instance();
     }
 
     /**
@@ -101,13 +108,13 @@ class ProjectQuotaHtml {
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
             $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
-            $output   .= html_build_list_table_top($titles);
-            $output   .= '<form method="post" >';
-            $purifier  = Codendi_HTMLPurifier::instance();
+            $output  .= html_build_list_table_top($titles);
+            $output  .= '<form method="post" >';
+            $purifier = Codendi_HTMLPurifier::instance();
+            $um       = UserManager::instance();
             foreach ($res as $row) {
                 $project     = $this->pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
                 $projectName = (empty($project)) ? '' : $project->getPublicName();
-                $um          = UserManager::instance();
                 $user        = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
                 $username    = (empty($user)) ? '' : $user->getUserName();
                 $output     .= '<tr class="'. util_get_alt_row_color($i++) .'">';
