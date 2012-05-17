@@ -106,26 +106,20 @@ class ProjectQuotaHtml {
             $purifier  = Codendi_HTMLPurifier::instance();
             foreach ($res as $row) {
                 $project     = $this->pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
-                $projectName = '';
-                if ($project) {
-                    $projectName = $project->getPublicName();
-                }
-                $um       = UserManager::instance();
-                $user     = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
-                $userName = '';
-                if ($user) {
-                    $username = $user->getUserName();
-                }
-                $output  .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output  .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_BASIC, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td><td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
-                $output  .= '</tr>';
+                $projectName = (empty($project)) ? '' : $project->getPublicName();
+                $um          = UserManager::instance();
+                $user        = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
+                $username    = (empty($user)) ? '' : $user->getUserName();
+                $output     .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+                $output     .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_BASIC, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td><td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output     .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $output .= '<input type="hidden" name ="action" value="delete" />';
-            $output .= '<td></td><td></td><td></td><td></td><td></td><td><input type="submit" /></td>';
+            $output .= '<td colspan="5" ><td><input type="submit" /></td>';
             $output .= '</tr>';
             $output .= '</form>';
-            $output .= '<tr><td>'.$prevHref.'</td><td></td><td></td><td></td><td></td><td>'.$nextHref.'</td></tr>';
+            $output .= '<tr><td>'.$prevHref.'</td><td colspan="4" ></td><td>'.$nextHref.'</td></tr>';
             $output .= '</table><br>';
         } else {
             $output .= $GLOBALS['Language']->getText('plugin_statistics', 'no_projects');
@@ -141,10 +135,10 @@ class ProjectQuotaHtml {
      */
     public function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
         //@Todo: Update docBlock, set $count var at plugin conf level
-        $params   = array(); 
+        $params       = array(); 
         $foundRowsRes = $this->pqm->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
-        $prevHref = '&lt;Previous';
+        $prevHref     = '&lt;Previous';
         if ($offset > 0) {
             $prevOffset = $offset - $count;
             if ($prevOffset < 0) {
@@ -153,8 +147,8 @@ class ProjectQuotaHtml {
             $prevHref = '<a href="?sort='.$sortBy.'&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
         }
         $params['prevHref'] = $prevHref;
-        $nextHref = 'Next&gt;';
-        $nextOffset = $offset + $count;
+        $nextHref           = 'Next&gt;';
+        $nextOffset         = $offset + $count;
         if ($nextOffset >= $foundRows) {
             $nextOffset = null;
         } else {
