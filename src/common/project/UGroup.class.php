@@ -178,11 +178,11 @@ class UGroup {
     
     protected function addUserToDynamicGroup(User $user) {
         $dao  = $this->_getUserGroupDao();
-        $flag = $this->getFieldForUGroupId($this->id);
+        $flag = $this->getAddFlagForUGroupId($this->id);
         $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
     
-    public function getFieldForUGroupId($id) {
+    public function getAddFlagForUGroupId($id) {
         switch ($id) {
             case self::PROJECT_ADMIN:
                 return "admin_flags = 'A'";

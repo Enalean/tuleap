@@ -107,9 +107,9 @@ class UGroup_AddUserTest extends TuleapTestCase {
 class UGroup_DynamicGroupTest extends TuleapTestCase {
     function itConvertDynamicGroupIdToCorrespondingDatabaseField() {
         //$this->assertEqual(UGroup::getFieldForUGroupId())
-        $this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
-        $this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
-        $this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
+        $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
+        $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
+        $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
                 //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
         //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
         ////forum admin
