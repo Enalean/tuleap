@@ -34,6 +34,7 @@ class ProjectQuotaManager {
      */
     private function __construct() {
         $this->_dao = $this->_getDao();
+        $this->pm   = ProjectManager::instance();
     }
     /**
      * Hold an instance of the class
