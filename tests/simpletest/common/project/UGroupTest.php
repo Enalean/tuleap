@@ -144,12 +144,10 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
         
         $ugroup = TestHelper::getPartialMock('UGroup', array('_getUserGroupDao'));
         
-        $project_admin_dar = TestHelper::arrayToDar(array('Admin1'), array('Admin2'));
-        $dao = stub('UserGroupDao')->returnProjectAdminsByGroupId($group_id)->returns($project_admin_dar);
+        $dao = mock('UserGroupDao');
         stub($ugroup)->_getUserGroupDao()->returns($dao);
         
         $ugroup->__construct(array('ugroup_id' => $ugroup_id, 'group_id' => $group_id));
-        
         
         $dao->expectOnce('updateUserGroupFlags', array($this->user_id, $group_id, 'wiki_flags = 0'));
         
@@ -211,27 +209,27 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
 class UGroup_DynamicGroupTest extends TuleapTestCase {
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
-        //$this->assertEqual(UGroup::getFieldForUGroupId())
         $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = 'A'");
         $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 2');
         $this->assertEqual(UGroup::getAddFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 2');
-                //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
+        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
         //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
-        ////forum admin
-        /// SVN
-        // News
+        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::FORUM_ADMIN),                   "forum_flags = 2");
+        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::SVN_ADMIN),                     "svn_flags = 2");
+        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::NEWS_ADMIN),                    "news_flags = 2");
+        $this->assertEqual(UGroup::getAddFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 1");
     }
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForRemove() {
-        //$this->assertEqual(UGroup::getFieldForUGroupId())
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_PROJECT_ADMIN']),      "admin_flags = ''");
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_FILE_MANAGER_ADMIN']), 'file_flags = 0');
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId($GLOBALS['UGROUP_WIKI_ADMIN']),         'wiki_flags = 0');
-                //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
+        //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_TECH'], 'doc_flags = '));
         //$this->assertEqual(UGroup::getFieldForUGroupId($GLOBALS['UGROUP_DOCUMENT_ADMIN'], ''));
-        ////forum admin
-        /// SVN
-        // News
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::FORUM_ADMIN),                   "forum_flags = 0");
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::SVN_ADMIN),                     "svn_flags = 0");
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_ADMIN),                    "news_flags = 0");
+        $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
     }
 }
 

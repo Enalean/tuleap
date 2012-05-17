@@ -34,6 +34,10 @@ class UGroup {
     const PROJECT_ADMIN      = 4;
     const FILE_MANAGER_ADMIN = 11;
     const WIKI_ADMIN         = 14;
+    const FORUM_ADMIN        = 16;
+    const NEWS_ADMIN         = 17;
+    const NEWS_EDITOR        = 18;
+    const SVN_ADMIN          = 19;
 
     protected $id;
     protected $group_id;
@@ -190,6 +194,14 @@ class UGroup {
                 return 'file_flags = 2';
             case self::WIKI_ADMIN:
                 return 'wiki_flags = 2';
+            case self::SVN_ADMIN:
+                return 'svn_flags = 2';
+            case self::FORUM_ADMIN:
+                return 'forum_flags = 2';
+            case self::NEWS_ADMIN:
+                return 'news_flags = 2';
+            case self::NEWS_EDITOR:
+                 return 'news_flags = 1';
             default:
                 throw new UGroup_Invalid_Exception();
         }
@@ -214,11 +226,11 @@ class UGroup {
     
     protected function removeUserFromDynamicGroup(User $user) {
         $dao  = $this->_getUserGroupDao();
-        if ($dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() > 1) {
-            $flag = $this->getRemoveFlagForUGroupId($this->id);
-            return $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
+        if ($this->id == self::PROJECT_ADMIN && $dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() <= 1) {
+            throw new Exception('Impossible to remove last admin of the project');
         }
-        throw new Exception('Impossible to remove last admin of the project');
+        $flag = $this->getRemoveFlagForUGroupId($this->id);
+        return $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
     
     public function getRemoveFlagForUGroupId($id) {
@@ -229,6 +241,13 @@ class UGroup {
                 return 'file_flags = 0';
             case self::WIKI_ADMIN:
                 return 'wiki_flags = 0';
+            case self::SVN_ADMIN:
+                return 'svn_flags = 0';
+            case self::FORUM_ADMIN:
+                return 'forum_flags = 0';
+            case self::NEWS_ADMIN:
+            case self::NEWS_EDITOR:
+                 return 'news_flags = 0';
             default:
                 throw new UGroup_Invalid_Exception();
         }
