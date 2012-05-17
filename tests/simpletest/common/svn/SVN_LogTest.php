@@ -82,13 +82,17 @@ class SVN_LogTest_TopModifiedFiles extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->svn_log = TestHelper::getPartialMock('SVN_Log', array('getDao'));
+        $this->svn_log = TestHelper::getPartialMock('SVN_Log', array('getDao', 'getForbiddenPaths'));
         
         $this->dao = stub('SVN_LogDao')->searchTopModifiedFiles()->returns(array());
         stub($this->svn_log)->getDao()->returns($this->dao);
         
+        stub($this->svn_log)->getForbiddenPaths()->returns('forbidden_path');
+        
         $project        = stub('Project')->getID()->returns($this->group_id);
         $this->svn_log->__construct($project);
+        
+        $this->user = mock('User');
     }
     
     function itFetchFromDatabaseWithValidrequest() {
@@ -96,9 +100,9 @@ class SVN_LogTest_TopModifiedFiles extends TuleapTestCase {
         $end_date   = 200;
         $limit      = 10;
         
-        $this->dao->expectOnce('searchTopModifiedFiles', array($this->group_id, $start_date, $end_date, $limit));
+        $this->dao->expectOnce('searchTopModifiedFiles', array($this->group_id, $start_date, $end_date, $limit, 'forbidden_path'));
         
-        $this->svn_log->getTopModifiedFiles($start_date, $end_date, $limit);
+        $this->svn_log->getTopModifiedFiles($this->user, $start_date, $end_date, $limit);
     }
     
     function itThrowAnExceptionWhenLimitIsNegative() {
@@ -108,7 +112,7 @@ class SVN_LogTest_TopModifiedFiles extends TuleapTestCase {
         
         $this->expectException();
         
-        $this->svn_log->getTopModifiedFiles($start_date, $end_date, $limit);
+        $this->svn_log->getTopModifiedFiles($this->user, $start_date, $end_date, $limit);
     }
 }
 

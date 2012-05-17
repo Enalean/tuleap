@@ -23,6 +23,7 @@ require_once 'SVN_LogQuery.class.php';
 require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/versioning/IRevisionDecorator.class.php';
+require_once 'common/user/User.class.php';
 
 /**
  * The SVN log of a project.
@@ -87,16 +88,17 @@ class SVN_Log {
         return $stats;
     }
     
-    public function getTopModifiedFiles($start_date, $end_date, $limit) {
+    public function getTopModifiedFiles(User $user, $start_date, $end_date, $limit) {
         $this->assertPeriodValidity($start_date, $end_date);
-        
         if ($limit <= 0) {
             throw new Exception("limit must be a positive number");
         }
         
+        $where_forbidden = $this->getForbiddenPaths($user);
+        
         $stats = array();
         $dao   = $this->getDao();
-        $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $start_date, $end_date, $limit);
+        $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $start_date, $end_date, $limit, $where_forbidden);
         foreach ($dar as $row) {
             $stats[] = array('path' => $row['path'], 'commit_count' => $row['commit_count']);
         }
@@ -110,6 +112,22 @@ class SVN_Log {
         if($end_date <= $start_date) {
             throw new Exception('Start Date must be before End Date');
         }
+    }
+    
+    /**
+     * Return SVN path the user is not allowed to see
+     * 
+     * @param User $user
+     * 
+     * @return string 
+     */
+    protected function getForbiddenPaths($user) {
+        $forbidden = svn_utils_get_forbidden_paths($user->getName(), $this->project->getUnixName(false));
+        $where_forbidden = "";
+        foreach ($forbidden as $no_access => $v) {
+            $where_forbidden .= " AND svn_dirs.dir not like '".db_es(substr($no_access,1))."%'";
+        }
+        return $where_forbidden;
     }
     
     /**

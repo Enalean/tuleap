@@ -2,7 +2,7 @@
 
 $host         = 'shunt.cro.enalean.com';
 $soap_client  = new SoapClient("http://$host/soap/codendi.wsdl.php?wsdl");
-$session_hash = $soap_client->login('manuel', 'manuel')->session_hash;
+$session_hash = $soap_client->login('nicolas', 'nicolas')->session_hash;
 $svn_client   = new SoapClient("http://$host/soap/svn/?wsdl", array('cache_wsdl' => WSDL_CACHE_NONE));
 
 $start_date = mktime(0, 0, 0, 3, 1, 2012);

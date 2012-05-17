@@ -131,11 +131,11 @@ class SVN_SOAPServer {
      */
     public function getSvnStatsFiles($session_key, $group_id, $start_date, $end_date, $limit) {
         try {
-            $this->soap_request_validator->continueSession($session_key);
+            $user = $this->soap_request_validator->continueSession($session_key);
             
             $project = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
             $svn_log = new SVN_Log($project);
-            $files   = $svn_log->getTopModifiedFiles($start_date, $end_date, $limit);
+            $files   = $svn_log->getTopModifiedFiles($user, $start_date, $end_date, $limit);
 
             return $files;
         } catch (Exception $e) {

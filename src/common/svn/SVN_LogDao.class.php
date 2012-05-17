@@ -32,7 +32,7 @@ class SVN_LogDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchTopModifiedFiles($group_id, $start_date, $end_date, $limit) {
+    public function searchTopModifiedFiles($group_id, $start_date, $end_date, $limit, $where_forbidden) {
         $group_id   = $this->da->escapeInt($group_id);
         $limit      = $this->da->escapeInt($limit);
         $date_stmt  = $this->inBetweenDatesStatement($start_date, $end_date);
@@ -43,6 +43,7 @@ class SVN_LogDao extends DataAccessObject {
                     JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)
                  WHERE group_id = $group_id 
                      $date_stmt
+                     $where_forbidden
                  GROUP BY path
                  ORDER BY commit_count DESC
                  LIMIT $limit";
