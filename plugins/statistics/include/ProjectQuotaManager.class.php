@@ -26,7 +26,7 @@ class ProjectQuotaManager {
     /**
      * The Projects dao used to fetch data
      */
-    public $_dao;
+    protected $_dao;
 
     /**
      * ProjectManager instance
