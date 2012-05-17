@@ -87,29 +87,15 @@ class ProjectQuotaHtml {
             }
             $projectFilterParam = '&amp;project_filter='.$filter;
         }
-        $output      .= '<form method="get" >';
-        $output      .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-        $output      .= '</form>';
-        $count        = 50;
-        $res          = $this->pqm->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
-        $foundRowsRes = $this->pqm->getAllCustomQuota($list);
-        $foundRows    = $foundRowsRes->rowCount();
-        // Prepare Navigation bar
-        $prevHref = '&lt;Previous';
-        if ($offset > 0) {
-            $prevOffset = $offset - $count;
-            if ($prevOffset < 0) {
-                $prevOffset = 0;
-            }
-            $prevHref = '<a href="?sort='.$sortBy.'&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
-        }
-        $nextHref = 'Next&gt;';
-        $nextOffset = $offset + $count;
-        if ($nextOffset >= $foundRows) {
-            $nextOffset = null;
-        } else {
-            $nextHref = '<a href="?sort='.$sortBy.'&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
-        }
+        $output          .= '<form method="get" >';
+        $output          .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
+        $output          .= '</form>';
+        $count            = 5;
+        $res              = $this->pqm->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
+
+        $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
+        $nextHref = $paginationParams['nextHref'];
+        $prevHref = $paginationParams['prevHref'];
         ($orderBy == "ASC")? $orderBy = "DESC":$orderBy = "ASC";
 
         if ($res && !$res->isError() && $res->rowCount() > 0) {
@@ -146,6 +132,36 @@ class ProjectQuotaHtml {
         }
         $output .= $this->renderNewCustomQuotaForm();
         return $output;
+    }
+
+    /**
+     * Render pagination for project quota display
+     *
+     * @return Array
+     */
+    public function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
+        //@Todo: Update docBlock, set $count var at plugin conf level
+        $params   = array(); 
+        $foundRowsRes = $this->pqm->getAllCustomQuota($list);
+        $foundRows    = $foundRowsRes->rowCount();
+        $prevHref = '&lt;Previous';
+        if ($offset > 0) {
+            $prevOffset = $offset - $count;
+            if ($prevOffset < 0) {
+                $prevOffset = 0;
+            }
+            $prevHref = '<a href="?sort='.$sortBy.'&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$prevOffset.'">'.$prevHref.'</a>';
+        }
+        $params['prevHref'] = $prevHref;
+        $nextHref = 'Next&gt;';
+        $nextOffset = $offset + $count;
+        if ($nextOffset >= $foundRows) {
+            $nextOffset = null;
+        } else {
+            $nextHref = '<a href="?sort='.$sortBy.'&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$nextOffset.'">'.$nextHref.'</a>';
+        }
+        $params['nextHref'] = $nextHref;
+        return $params;
     }
 
     /**
