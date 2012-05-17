@@ -194,6 +194,8 @@ class SOAP_WSDLMethodGenerator {
                 return 'tns:ArrayOfstring';
             case 'arrayofrevision':
                 return 'tns:ArrayOfRevision';
+            case 'arrayofcommiter':
+                return 'tns:ArrayOfCommiter';
             default:
                 throw new Exception("Unknown type $docType");
         }

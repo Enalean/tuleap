@@ -74,6 +74,29 @@ $server->wsdl->addComplexType(
     'tns:Revision'
 );
 
+$server->wsdl->addComplexType(
+    'Commiter',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'user_id'      => array('name'=> 'user_id',      'type' => 'xsd:int'),
+        'commit_count' => array('name'=> 'commit_count', 'type' => 'xsd:int'),
+    )
+);
+
+$server->wsdl->addComplexType(
+    'ArrayOfCommiter',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:Commiter[]')),
+    'tns:Commiter'
+);
+
 }
 
 ?>

@@ -27,6 +27,56 @@ class SVN_LogTest_NullDecorator implements IRevisionDecorator {
     }
 }
 
+class SVN_LogTest_Commiters extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->svn_log = TestHelper::getPartialMock('SVN_Log', array('getDao'));
+        
+        $this->dao = stub('SVN_LogDao')->searchCommiters()->returns(array());
+        stub($this->svn_log)->getDao()->returns($this->dao);
+        
+        $this->svn_log->__construct(mock('Project'));
+    }
+    
+    function itFetchFromDatabaseWithValidrequest() {
+        $start_date = 0;
+        $end_date   = 200;
+        
+        $this->dao->expectOnce('searchCommiters', array('*', $start_date, $end_date));
+        
+        $this->svn_log->getCommiters($start_date, $end_date);
+    }
+    
+    function itThrowAnExceptionWhenStartDateIsNegative() {
+        $start_date = -1;
+        $end_date   = 200;
+        
+        $this->expectException();
+        
+        $this->svn_log->getCommiters($start_date, $end_date);
+    }
+    
+    
+    function itThrowAnExceptionWhenEndDateIsBeforeStartDate() {
+        $start_date = 200;
+        $end_date   = 100;
+        
+        $this->expectException();
+        
+        $this->svn_log->getCommiters($start_date, $end_date);
+    }
+    
+    function itThrowAnExceptionWhenPeriodIsNull() {
+        $start_date = 200;
+        $end_date   = 200;
+        
+        $this->expectException();
+        
+        $this->svn_log->getCommiters($start_date, $end_date);
+    }
+}
+
 class SVN_LogTest extends TuleapTestCase {
 //    public function itDelegatesSvnRevisionsRetrievalTo_svn_get_revisions() {
 //        

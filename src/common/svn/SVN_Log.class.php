@@ -20,6 +20,7 @@
 
 require_once 'database.php';
 require_once 'SVN_LogQuery.class.php';
+require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/versioning/IRevisionDecorator.class.php';
 
@@ -67,6 +68,35 @@ class SVN_Log {
     }
     
     /**
+     * Returns the commiters on given period with their commit count
+     * 
+     * @param Integer $start_date
+     * @param Integer $end_date
+     * 
+     * @return Array
+     */
+    public function getCommiters($start_date, $end_date) {
+        $this->assertPeriodValidity($start_date, $end_date);
+        
+        $stats = array();
+        $dao   = $this->getDao();
+        $dar   = $dao->searchCommiters($this->project->getID(), $start_date, $end_date);
+        foreach ($dar as $row) {
+            $stats[] = array('user_id' => $row['whoid'], 'commit_count' => $row['commit_count']);
+        }
+        return $stats;
+    }
+    
+    private function assertPeriodValidity($start_date, $end_date) {
+        if ($start_date < 0) {
+            throw new Exception('Start date cannot be negative');
+        }
+        if($end_date <= $start_date) {
+            throw new Exception('Start Date must be before End Date');
+        }
+    }
+    
+    /**
      * Same as getRawRevisionsAndCount(), but retrieves only the revisions,
      * without the revisions count.
      * 
@@ -98,6 +128,10 @@ class SVN_Log {
                                  '',
                                  0,
                                  false);
+    }
+    
+    protected function getDao() {
+        return new SVN_LogDao();
     }
 }
 ?>

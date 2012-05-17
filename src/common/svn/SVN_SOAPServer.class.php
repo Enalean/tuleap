@@ -93,6 +93,30 @@ class SVN_SOAPServer {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
+    
+    /**
+     * Returns the list of active users (commiters) between start_date and end_date
+     * 
+     * @param String  $session_key Session key of the requesting user
+     * @param Integer $group_id    ID of the project the subversion repository belongs to
+     * @param Integer $start_date  Start of period (unix timestamp)
+     * @param Integer $end_date    End of period   (unix timestamp)
+     * 
+     * @return ArrayOfCommiter
+     */
+    public function getSvnStatsUser($session_key, $group_id, $start_date, $end_date) {
+        try {
+            $this->soap_request_validator->continueSession($session_key);
+            
+            $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
+            $svn_log   = new SVN_Log($project);
+            $revisions = $svn_log->getCommiters($start_date, $end_date);
+
+            return $revisions;
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
 }
 
 ?>
