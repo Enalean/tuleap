@@ -20,7 +20,7 @@
 
 require 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_DiskUsageGraph.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_ProjectQuotaDao.class.php';
+require_once dirname(__FILE__).'/../include/ProjectQuotaManager.class.php';
 
 // First, check plugin availability
 $pluginManager = PluginManager::instance();
@@ -58,8 +58,8 @@ $graph = new Statistics_DiskUsageGraph($duMgr);
 if ($func == 'usage') {
     //Retreive the config param & convert it to bytes
     $quota    = $duMgr->getProperty('allowed_quota');
-    $quotaDao = new Statistics_ProjectQuotaDao();
-    $res      = $quotaDao->getProjectCustomQuota($groupId);
+    $pqm      = ProjectQuotaManager::instance();
+    $res      = $pqm->_dao->getProjectCustomQuota($groupId);
     if ($res && !$res->isError() && $res->rowCount() == 1) {
         $row   = $res->getRow();
         $quota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];

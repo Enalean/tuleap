@@ -22,7 +22,7 @@
  */
 
 require_once 'Statistics_DiskUsageOutput.class.php';
-require_once 'Statistics_ProjectQuotaDao.class.php';
+require_once 'ProjectQuotaManager.class.php';
 require_once 'common/chart/Chart.class.php';
 
 class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
@@ -293,8 +293,8 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
         $allowedQuota = $this->_dum->getProperty('allowed_quota');
-        $quotaDao     = new Statistics_ProjectQuotaDao();
-        $res          = $quotaDao->getProjectCustomQuota($groupId);
+        $pqm          = ProjectQuotaManager::instance();
+        $res          = $pqm->_dao->getProjectCustomQuota($groupId);
         if ($res && !$res->isError() && $res->rowCount() == 1) {
             $row          = $res->getRow();
             $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
@@ -302,7 +302,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         if ($allowedQuota) {
             $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $allowedQuota.'GiB')).'</p></div>';
         } else {
-            $html = '<LABEL><b>';
+            $html  = '<LABEL><b>';
             $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
             $html .= '</b></LABEL>';
             $html .= $this->sizeReadable($totalSize);
@@ -310,11 +310,11 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
         $html .= '<div style="text-align:center"><p>';
         $graph = '<img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=progress&group_id='.$groupId.'" title="Project total disk usage graph" />';
-        $user = UserManager::instance()->getCurrentUser();
+        $user  = UserManager::instance()->getCurrentUser();
         $project = ProjectManager::instance()->getProject($groupId);
         if ($project->userIsAdmin($user)) {
             $pluginManager = PluginManager::instance();
-            $p = $pluginManager->getPluginByName('statistics');
+            $p     = $pluginManager->getPluginByName('statistics');
             $html .= '<a href="'.$p->getPluginPath().'/project_stat.php?group_id='.$groupId.'">'.$graph.'<a>';
         } else {
             $html .= $graph;
