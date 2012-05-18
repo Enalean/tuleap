@@ -59,7 +59,7 @@ class SOAP_RequestValidator {
         if ($user->isLoggedIn()) {
             return $user;
         }
-        throw new SoapFault('3001', 'Invalid session');
+        throw new Exception('Invalid session', '3001');
     }
 
     public function assertUserCanAccessProject(User $user, Project $project) {

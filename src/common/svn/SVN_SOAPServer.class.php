@@ -151,7 +151,7 @@ class SVN_SOAPServer {
         if ($user) {
             return $user;
         } else {
-            throw new Exception("Invalid user id", '4005');
+            throw new Exception("Invalid user id", '3005');
         }
     }
 }
