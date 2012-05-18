@@ -31,51 +31,27 @@ class SVN_LogQuery {
     private $limit;
     
     /**
-     * @var int
+     * @var string
      */
-    private $author_id;
+    private $author_name;
     
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    
-    public function __construct($limit, $author_id) {
-        $this->limit     = $limit;
-        $this->author_id = $author_id;
-        
-        $this->user_manager = UserManager::instance();
+    public function __construct($limit, $author_name) {
+        $this->limit       = $limit;
+        $this->author_name = $author_name;
     }
     
     /**
-     * Use for testing purposes only.
-     */
-    public function setUserManager(UserManager $user_manager) {
-        $this->user_manager = $user_manager;
-    }
-    
-    /**
-     * Retrieve the revisions limit (50 by default).
-     * 
      * @return int
      */
     public function getLimit() {
-        if (! $this->limit) {
-            $this->limit = 50;
-        }
         return $this->limit;
     }
     
     /**
-     * Retrieve name of user matching input author id.
-     * Returns an empty string if no user matches the id.
-     * 
      * @return string
      */
     public function getAuthorName() {
-        $author = $this->user_manager->getUserById($this->author_id);
-        
-        return $author ? $author->getUserName() : '';
+        return $this->author_name;
     }
 }
 ?>

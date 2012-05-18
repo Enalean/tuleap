@@ -72,18 +72,19 @@ class SVN_SOAPServer {
      * 
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
-     * @param Integer $limit       Optional - Maximum revisions returned (defaults to 50)
-     * @param Integer $author_id   Optional - Author user id to filter with (defaults to no filter)
+     * @param Integer $limit       Maximum revisions returned
+     * @param Integer $author_name Author name to filter with (empty string means no filter)
      * 
      * @return ArrayOfRevision The list of revisions
      */
-    public function getSvnLog($session_key, $group_id, $limit, $author_id) {
+    public function getSvnLog($session_key, $group_id, $limit, $author_name) {
         try {
             $this->soap_request_validator->continueSession($session_key);
             
             $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $svn_log   = new SVN_LogFactory($project);
-            $query     = new SVN_LogQuery($limit, $author_id);
+            
+            $query     = new SVN_LogQuery($limit, $author_name);
             $decorator = new SVN_SoapRevisionDecorator();
             $revisions   = $svn_log->getDecoratedRevisions($query, $decorator);
 
