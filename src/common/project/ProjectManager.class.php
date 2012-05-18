@@ -61,6 +61,20 @@ class ProjectManager {
     }
     
     /**
+     * ProjectManager is a singleton need this to test
+     */
+    public static function setInstance($instance) {
+        self::$_instance = $instance;
+    }
+    /**
+     * ProjectManager is a singleton need this to clean after tests
+     * @return ProjectManager
+     */
+    public static function clearInstance() {
+        self::$_instance = null;
+    }
+    
+    /**
      * @return ProjectDao
      */
     public function _getDao() {
