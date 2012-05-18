@@ -151,6 +151,15 @@ class UGroup {
         return $dao->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
     }
     
+    /**
+     * Add the given user to the group
+     * 
+     * This method can add to any group, either dynamic or static.
+     * 
+     * @param User $user
+     * 
+     * @throws UGroup_Invalid_Exception 
+     */
     public function addUser(User $user) {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
@@ -186,6 +195,15 @@ class UGroup {
         $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
     
+    /**
+     * Convert a dynamic ugroup_id into it's DB table update to add someone to a given group
+     * 
+     * @param Integer $id
+     *
+     * @throws UGroup_Invalid_Exception 
+     * 
+     * @return String
+     */
     public function getAddFlagForUGroupId($id) {
         switch ($id) {
             case self::PROJECT_ADMIN:
@@ -207,6 +225,14 @@ class UGroup {
         }
     }
     
+    /**
+     * Remove given user from user group
+     * 
+     * This method can remove from any group, either dynamic or static.
+     * 
+     * @param User $user
+     * @throws UGroup_Invalid_Exception 
+     */
     public function removeUser(User $user) {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
@@ -233,6 +259,13 @@ class UGroup {
         return $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
     
+    /**
+     * Convert a dynamic ugroup_id into it's DB table update to remove someone from given group
+     * 
+     * @param type $id
+     * @return string
+     * @throws UGroup_Invalid_Exception 
+     */
     public function getRemoveFlagForUGroupId($id) {
         switch ($id) {
             case self::PROJECT_ADMIN:
