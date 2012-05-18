@@ -29,7 +29,7 @@ local_module_directory="codendi-src";
 port="80";
 sys_org_name="Tuleap";
 sys_long_org_name="Tuleap";
-sniff_svn="true"
+sniff_svn="false"
 
 ##
 ## Parse options
