@@ -28,7 +28,7 @@ require_once 'common/soap/SOAP_RequestValidator.class.php';
  */
 class SVN_SOAPServer {
     /**
-     * @var ProjectManager 
+     * @var SOAP_RequestValidator 
      */
     private $soap_request_validator;
     
