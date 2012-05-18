@@ -132,7 +132,7 @@ class BackendMailingList extends Backend {
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
                 system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. $list->getListName() .' >/dev/null');
-                $this->_getMailingListDao()->deleteList($group_list_id);
+                $this->_getMailingListDao()->deleteListDefinitively($group_list_id);
                 return true;
             }
         }
@@ -162,8 +162,8 @@ class BackendMailingList extends Backend {
         $res = $this->_getMailingListDao()->searchByProject($projectId);
         if ($res && !$res->isError()) {
             while ($row = $res->getRow()) {
-                if ($this->_getMailingListDao()->markListAsDeleted($row['group_list_id'])) {
-                    $deleteStatus = $this->markListAsDeleted($row['group_list_id']) && $deleteStatus;
+                if ($this->_getMailingListDao()->deleteList($row['group_list_id'])) {
+                    $deleteStatus = $this->deleteList($row['group_list_id']) && $deleteStatus;
                 } else {
                     $deleteStatus = false;
                 }

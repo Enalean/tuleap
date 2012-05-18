@@ -69,12 +69,12 @@ class MailingListDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function markListAsDeleted($listId) {
+    function deleteList($listId) {
         $listId = $this->da->escapeInt($listId);
-        $sql="DELETE FROM mail_group_list ".
+        $sql="UPDATE mail_group_list SET is_public=9 ".
              " WHERE group_list_id=".$listId;
         return $this->update($sql);
-    }
+	}
 
 	/**
      * Delete the list
@@ -83,7 +83,7 @@ class MailingListDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function deleteList($listId) {
+    function deleteListDefinitively($listId) {
         $listId = $this->da->escapeInt($listId);
         $sql="DELETE FROM mail_group_list ".
              " WHERE group_list_id=".$listId;
