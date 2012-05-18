@@ -28,7 +28,7 @@ require_once 'common/user/User.class.php';
 /**
  * The SVN log of a project.
  */
-class SVN_Log {
+class SVN_LogFactory {
     
     /**
      * @var Project

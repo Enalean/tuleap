@@ -53,7 +53,7 @@ class SVN_SOAPServerTest extends TuleapTestCase {
 //        $soap_request_valid->expectOnce('continueSession', array($session_hash));
 //        $soap_request_valid->expectOnce('getProjectById', array($group_id, 'getSvnLog'));
 //        
-//        $svn_log = mock('SVN_Log');
+//        $svn_log = mock('SVN_LogFactory');
 //        $server  = new SVN_SOAPServer($soap_request_valid, $svn_log);
 //        
 //        $server->getSvnLog($session_hash, $group_id);

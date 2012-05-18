@@ -18,7 +18,7 @@
  */
 
 require_once 'SVN_RepositoryListing.class.php';
-require_once 'SVN_Log.class.php';
+require_once 'SVN_LogFactory.class.php';
 require_once 'SVN_LogQuery.class.php';
 require_once 'SVN_SoapRevisionDecorator.class.php';
 require_once 'common/soap/SOAP_RequestValidator.class.php';
@@ -82,7 +82,7 @@ class SVN_SOAPServer {
             $this->soap_request_validator->continueSession($session_key);
             
             $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
-            $svn_log   = new SVN_Log($project);
+            $svn_log   = new SVN_LogFactory($project);
             $query     = new SVN_LogQuery($limit, $author_id);
             $decorator = new SVN_SoapRevisionDecorator();
             $revisions   = $svn_log->getDecoratedRevisions($query, $decorator);
@@ -109,7 +109,7 @@ class SVN_SOAPServer {
             $this->soap_request_validator->continueSession($session_key);
             
             $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
-            $svn_log   = new SVN_Log($project);
+            $svn_log   = new SVN_LogFactory($project);
             $revisions = $svn_log->getCommiters($start_date, $end_date);
 
             return $revisions;
@@ -134,7 +134,7 @@ class SVN_SOAPServer {
             $user = $this->soap_request_validator->continueSession($session_key);
             
             $project = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
-            $svn_log = new SVN_Log($project);
+            $svn_log = new SVN_LogFactory($project);
             $files   = $svn_log->getTopModifiedFiles($user, $start_date, $end_date, $limit);
 
             return $files;

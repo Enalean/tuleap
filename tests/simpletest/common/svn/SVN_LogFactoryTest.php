@@ -19,19 +19,19 @@
  */
 
 require_once 'common/project/Project.class.php';
-require_once 'common/svn/SVN_Log.class.php';
+require_once 'common/svn/SVN_LogFactory.class.php';
 
-class SVN_LogTest_NullDecorator implements IRevisionDecorator {
+class SVN_LogFactoryTest_NullDecorator implements IRevisionDecorator {
     public function decorate(array $revision) {
         return $revision;
     }
 }
 
-class SVN_LogTest_Commiters extends TuleapTestCase {
+class SVN_LogFactoryTest_Commiters extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->svn_log = TestHelper::getPartialMock('SVN_Log', array('getDao'));
+        $this->svn_log = TestHelper::getPartialMock('SVN_LogFactory', array('getDao'));
         
         $this->dao = stub('SVN_LogDao')->searchCommiters()->returns(array());
         stub($this->svn_log)->getDao()->returns($this->dao);
@@ -77,12 +77,12 @@ class SVN_LogTest_Commiters extends TuleapTestCase {
     }
 }
 
-class SVN_LogTest_TopModifiedFiles extends TuleapTestCase {
+class SVN_LogFactoryTest_TopModifiedFiles extends TuleapTestCase {
     private $group_id = 590;
     
     public function setUp() {
         parent::setUp();
-        $this->svn_log = TestHelper::getPartialMock('SVN_Log', array('getDao', 'getForbiddenPaths'));
+        $this->svn_log = TestHelper::getPartialMock('SVN_LogFactory', array('getDao', 'getForbiddenPaths'));
         
         $this->dao = stub('SVN_LogDao')->searchTopModifiedFiles()->returns(array());
         stub($this->svn_log)->getDao()->returns($this->dao);
@@ -116,21 +116,21 @@ class SVN_LogTest_TopModifiedFiles extends TuleapTestCase {
     }
 }
 
-class SVN_LogTest extends TuleapTestCase {
+class SVN_LogFactoryTest extends TuleapTestCase {
 //    public function itDelegatesSvnRevisionsRetrievalTo_svn_get_revisions() {
 //        
 //        
 //        $limit     = null;
 //        $author_id = '';
 //        $query     = new SVN_LogQuery($limit, $author_id);
-//        $decorator = new SVN_LogTest_NullDecorator();
+//        $decorator = new SVN_LogFactoryTest_NullDecorator();
 //        $revisions = array(array('3', '3', 'Added makefile',    '1337144142', '109'),
 //                           array('2', '2', 'Added main module', '1337141908', '108'),
 //                           array('1', '1', 'Added README',      '1337140135', '108'),
 //                           -1);
 //        
 //        $project = mock('Project');
-//        $svn_log = TestHelper::getPartialMock('SVN_Log', array('getRawRevisionsAndCount'));
+//        $svn_log = TestHelper::getPartialMock('SVN_LogFactory', array('getRawRevisionsAndCount'));
 //        $svn_log->__construct($project);
 //        
 //        $svn_log->expectOnce('getRawRevisionsAndCount', array($query));
