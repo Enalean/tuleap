@@ -259,8 +259,8 @@ class Docman_Item {
         case 'status':
             $status      = $this->getStatus();
             $status_list = array();
-            if($status !== null) {
-                $status_list = array(Docman_MetadataListOfValuesElementFactory::getStatusList($status));
+            if ($status !== null) {
+                $status_list[] = Docman_MetadataListOfValuesElementFactory::getStatusList($status);
             }
             $value = new ArrayIterator($status_list);
             break;
@@ -285,8 +285,8 @@ class Docman_Item {
         $metadata       = null; // can't refactor with early return as it returns value by ref :(
         if($metadata_value !== null) {
             $metadata = Docman_MetadataFactory::getHardCodedMetadataFromLabel($label, $metadata_value);
-        } elseif(isset($this->_metadata[$label])) {
-            return $this->_metadata[$label];
+        } elseif (isset($this->_metadata[$label])) {
+            $metadata = $this->_metadata[$label];
         }
         return $metadata;
     }
