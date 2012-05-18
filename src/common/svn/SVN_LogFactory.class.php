@@ -47,13 +47,13 @@ class SVN_LogFactory {
     /**
      * Retrieves latests SVN revisions.
      * 
-     * @param string $limit       Limit results count (e.g. 50)
-     * @param string $author_name Author name to filter on (empty string => no filtering)
+     * @param string $limit  Limit results count (e.g. 50)
+     * @param User   $author Author to filter on (provide a user without name if you want no filtering)
      * 
      * @return array
      */
-    public function getRevisions($limit, $author_name) {
-        $raw_revisions = $this->getRawRevisions($limit, $author_name);
+    public function getRevisions($limit, User $author) {
+        $raw_revisions = $this->getRawRevisions($limit, $author);
         $revisions     = array();
         
         while($raw_revision = db_fetch_array($raw_revisions)) {
@@ -121,7 +121,7 @@ class SVN_LogFactory {
      * 
      * @return string 
      */
-    protected function getForbiddenPaths($user) {
+    protected function getForbiddenPaths(User $user) {
         $forbidden = svn_utils_get_forbidden_paths($user->getName(), $this->project->getUnixName(false));
         $where_forbidden = "";
         foreach ($forbidden as $no_access => $v) {
@@ -134,8 +134,8 @@ class SVN_LogFactory {
      * Same as getRawRevisionsAndCount(), but retrieves only the revisions,
      * without the revisions count.
      */
-    private function getRawRevisions($limit, $author_name) {
-        list($raw_revisions, $count) = $this->getRawRevisionsAndCount($limit, $author_name);
+    private function getRawRevisions($limit, User $author) {
+        list($raw_revisions, $count) = $this->getRawRevisionsAndCount($limit, $author);
         return $raw_revisions;
     }
     
@@ -144,12 +144,12 @@ class SVN_LogFactory {
      * 
      * Wraps svn_get_revisions for testing purpose.
      */
-    public function getRawRevisionsAndCount($limit, $author_name) {
+    public function getRawRevisionsAndCount($limit, User $author) {
         return svn_get_revisions($this->project,
                                  0,
                                  $limit,
                                  '',
-                                 $author_name,
+                                 $author->getUserName(),
                                  '',
                                  '',
                                  0,

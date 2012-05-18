@@ -72,17 +72,18 @@ class SVN_SOAPServer {
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param Integer $limit       Maximum revisions returned
-     * @param Integer $author_name Author name to filter with (empty string means no filter)
+     * @param Integer $author_id   Author id to filter with (-1 means no filter)
      * 
      * @return ArrayOfRevision The list of revisions
      */
-    public function getSvnLog($session_key, $group_id, $limit, $author_name) {
+    public function getSvnLog($session_key, $group_id, $limit, $author_id) {
         try {
             $this->soap_request_validator->continueSession($session_key);
             
+            $author    = $this->getUser($author_id);
             $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $svn_log   = new SVN_LogFactory($project);
-            $revisions = $svn_log->getRevisions($limit, $author_name);
+            $revisions = $svn_log->getRevisions($limit, $author);
 
             return $revisions;
             
@@ -137,6 +138,20 @@ class SVN_SOAPServer {
             return $files;
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    private function getUser($author_id) {
+        if ($author_id == -1) {
+            $no_user_in_particular = new User(array('user_name' => ''));
+            return $no_user_in_particular;
+        } 
+        
+        $user = UserManager::instance()->getUserById($author_id);
+        if ($user) {
+            return $user;
+        } else {
+            throw new Exception("Invalid user id", '4005');
         }
     }
 }
