@@ -21,6 +21,7 @@ require_once 'SVN_RepositoryListing.class.php';
 require_once 'SVN_LogFactory.class.php';
 require_once 'SVN_LogQuery.class.php';
 require_once 'common/soap/SOAP_RequestValidator.class.php';
+require_once 'common/date/TimeInterval.class.php';
 
 /**
  * Wrapper for subversion related SOAP methods
@@ -108,7 +109,7 @@ class SVN_SOAPServer {
             
             $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
             $svn_log   = new SVN_LogFactory($project);
-            $revisions = $svn_log->getCommiters($start_date, $end_date);
+            $revisions = $svn_log->getCommiters(TimeInterval::fromUnixTimestamps($start_date, $end_date));
 
             return $revisions;
         } catch (Exception $e) {
@@ -133,7 +134,7 @@ class SVN_SOAPServer {
             
             $project = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
             $svn_log = new SVN_LogFactory($project);
-            $files   = $svn_log->getTopModifiedFiles($user, $start_date, $end_date, $limit);
+            $files   = $svn_log->getTopModifiedFiles($user, TimeInterval::fromUnixTimestamps($start_date, $end_date), $limit);
 
             return $files;
         } catch (Exception $e) {
@@ -155,5 +156,7 @@ class SVN_SOAPServer {
         }
     }
 }
+
+
 
 ?>

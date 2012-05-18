@@ -23,6 +23,7 @@ require_once 'SVN_LogQuery.class.php';
 require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
+require_once 'common/date/TimeInterval.class.php';
 
 /**
  * The SVN log of a project.
@@ -76,42 +77,26 @@ class SVN_LogFactory {
      * 
      * @return Array
      */
-    public function getCommiters($start_date, $end_date) {
-        $this->assertPeriodValidity($start_date, $end_date);
-        
+    public function getCommiters(TimeInterval $interval) {
         $stats = array();
         $dao   = $this->getDao();
-        $dar   = $dao->searchCommiters($this->project->getID(), $start_date, $end_date);
+        $dar   = $dao->searchCommiters($this->project->getID(), $interval);
         foreach ($dar as $row) {
             $stats[] = array('user_id' => $row['whoid'], 'commit_count' => $row['commit_count']);
         }
         return $stats;
     }
     
-    public function getTopModifiedFiles(User $user, $start_date, $end_date, $limit) {
-        $this->assertPeriodValidity($start_date, $end_date);
-        if ($limit <= 0) {
-            throw new Exception("limit must be a positive number");
-        }
-        
+    public function getTopModifiedFiles(User $user, TimeInterval $interval, $limit) {
         $where_forbidden = $this->getForbiddenPaths($user);
         
         $stats = array();
         $dao   = $this->getDao();
-        $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $start_date, $end_date, $limit, $where_forbidden);
+        $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $interval, $limit, $where_forbidden);
         foreach ($dar as $row) {
             $stats[] = array('path' => $row['path'], 'commit_count' => $row['commit_count']);
         }
         return $stats;
-    }
-    
-    private function assertPeriodValidity($start_date, $end_date) {
-        if ($start_date < 0) {
-            throw new Exception('Start date cannot be negative');
-        }
-        if($end_date <= $start_date) {
-            throw new Exception('Start Date must be before End Date');
-        }
     }
     
     /**
