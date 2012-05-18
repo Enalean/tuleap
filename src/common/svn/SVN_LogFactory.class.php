@@ -22,7 +22,6 @@ require_once 'database.php';
 require_once 'SVN_LogQuery.class.php';
 require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
-require_once 'common/svn/SVN_IRevisionDecorator.class.php';
 require_once 'common/user/User.class.php';
 
 /**
@@ -48,24 +47,25 @@ class SVN_LogFactory {
     /**
      * Retrieves SVN revisions matching the given $query.
      * 
-     * Revisions are decorated using the given $decorator.
-     * 
-     * @param SVN_LogQuery       $query
-     * @param SVN_IRevisionDecorator $decorator
+     * @param SVN_LogQuery $query
      * 
      * @return array
      */
-    public function getDecoratedRevisions(SVN_LogQuery     $query,
-                                          SVN_IRevisionDecorator $decorator) {
+    public function getRevisions(SVN_LogQuery $query) {
         
-        $raw_revisions       = $this->getRawRevisions($query);
-        $decorated_revisions = array();
+        $raw_revisions = $this->getRawRevisions($query);
+        $revisions     = array();
         
-        while($revision = db_fetch_array($raw_revisions)) {
-            $decorated_revisions[] = $decorator->decorate($revision);
+        while($raw_revision = db_fetch_array($raw_revisions)) {
+            list($revision, $commit_id, $description, $date, $whoid) = $raw_revision;
+            
+            $revisions[] = array('revision' => $revision,
+                                 'author'   => $whoid,
+                                 'date'     => $date,
+                                 'message'  => trim($description));
         }
         
-        return $decorated_revisions;
+        return $revisions;
     }
     
     /**

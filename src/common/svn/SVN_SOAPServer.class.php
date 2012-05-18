@@ -20,7 +20,6 @@
 require_once 'SVN_RepositoryListing.class.php';
 require_once 'SVN_LogFactory.class.php';
 require_once 'SVN_LogQuery.class.php';
-require_once 'SVN_SoapRevisionDecorator.class.php';
 require_once 'common/soap/SOAP_RequestValidator.class.php';
 
 /**
@@ -85,8 +84,7 @@ class SVN_SOAPServer {
             $svn_log   = new SVN_LogFactory($project);
             
             $query     = new SVN_LogQuery($limit, $author_name);
-            $decorator = new SVN_SoapRevisionDecorator();
-            $revisions   = $svn_log->getDecoratedRevisions($query, $decorator);
+            $revisions   = $svn_log->getRevisions($query);
 
             return $revisions;
             
