@@ -311,7 +311,7 @@ Requires: %{PKG_NAME}-plugin-tracker, %{PKG_NAME}-plugin-cardwall
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
 tool on top of Tracker.
 
-%package 
+%package plugin-fulltextsearch
 Summary: Full-Text Search
 Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
