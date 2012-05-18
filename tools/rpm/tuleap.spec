@@ -311,6 +311,14 @@ Requires: %{PKG_NAME}-plugin-tracker, %{PKG_NAME}-plugin-cardwall
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
 tool on top of Tracker.
 
+%package 
+Summary: Full-Text Search
+Group: Development/Tools
+Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
+Release: 1%{?dist}
+%description plugin-fulltextsearch
+Allows documents of the docman to be searched in a full-text manner.
+
 #
 ## Themes
 #
@@ -859,6 +867,10 @@ fi
 %files plugin-agiledashboard
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/agiledashboard
+
+%files plugin-fulltextsearch
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/fulltextsearch
 
 #
 # Themes
