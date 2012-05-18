@@ -34,40 +34,46 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->client      = mock('ElasticSearchFakeClient');
-        $this->actions     = TestHelper::getPartialMock('FullTextSearchActions', array('fileContentEncode'));
-        $this->actions->__construct($this->client);
-        $this->params      = aSetOfParameters();
+        $this->client  = mock('ElasticSearchFakeClient');
+        $this->actions = new FullTextSearchActions($this->client);
+        $this->item = aDocman_File()
+            ->withId(101)
+            ->withTitle('Coin')
+            ->withDescription('Duck typing')
+            ->withGroupId(200)
+            ->withPermissions(array(3, 102))
+            ->build();
+
+        $version = stub('Docman_Version')
+            ->getPath()
+            ->returns(dirname(__FILE__) .'/_fixtures/file.txt');
+
+        $this->params = aSetOfParameters()
+            ->withItem($this->item)
+            ->withVersion($version)
+            ->build();
     }
     
     public function itCallIndexOnClientWithRightParameters() {
-        $this->params->item->withId(100)
-            ->withGroupId(200)
-            ->withPermissions(array(3, 102))
-        ;
-        
-        $expected_path = '/dir/file.php';
-        $this->params->version->setReturnValue('getPath', $expected_path);
-        $this->actions->setReturnValue('fileContentEncode', $expected_path);
-        
-        
-        $this->client->expectOnce('index', $this->params->getClientIndexParameters());
-        
-        $this->actions->indexNewDocument($this->params->build());
+        $expected = array(
+                          array(
+                                'title'       => 'Coin',
+                                'description' => 'Duck typing',
+                                'file'        => 'aW5kZXggbWUK',
+                                'permissions' => array(200 => array(3, 102)),
+                               ),
+                          101
+                         );
+        $this->client->expectOnce('index', $expected);
+
+        $this->actions->indexNewDocument($this->params);
     }
-    
     
     public function itCanDeleteADocumentFromItsId() {
-        $expected_id = 101;
-        $this->params->item->withId($expected_id);
-                
+        $expected_id = $this->item->getId();
         $this->client->expectOnce('delete', array($expected_id));
 
-        $this->actions->delete($this->params->build());
+        $this->actions->delete($this->params);
     }
-    
-    
-    
-    
 }
 ?>

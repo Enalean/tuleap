@@ -33,28 +33,25 @@ class Parameters_Builder {
     public $user;
     
     public function __construct() {
-        $this->item    = aDocman_File();
-        $this->version = mock('Docman_Version');
-        $this->user    = mock('User');
+        $this->user = mock('User');
+    }
+
+    public function withItem($item) {
+        $this->item = $item;
+        return $this;
+    }
+
+    public function withVersion($version) {
+        $this->version = $version;
+        return $this;
     }
     
     public function build() {
         return array(
-                'item'    => $this->item->build(),
+                'item'    => $this->item,
                 'version' => $this->version,
                 'user'    => $this->user
         );
-    }
-    
-    public function getClientIndexParameters() {
-        $expected_permissions = $this->item->permissions;
-        $expected_datas       = array(
-                'title'       => $this->item->title,
-                'description' => $this->item->description,
-                'file'        => $this->version->getPath(),
-                'permissions' => array($this->item->group_id => $this->item->permissions)
-        );
-        return array($expected_datas, $this->item->item_id);
     }
 }
 ?>
