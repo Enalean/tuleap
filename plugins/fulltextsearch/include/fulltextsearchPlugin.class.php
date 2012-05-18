@@ -27,11 +27,6 @@ class fulltextsearchPlugin extends Plugin {
     public function fulltextsearchPlugin($id) {
         $this->Plugin($id);
                 
-        $this->_addHook('javascript_file', 'jsFile', false);
-        $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook('site_admin_external_tool_hook', 'site_admin_external_tool_hook', false);
-        $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
-        
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
@@ -45,10 +40,20 @@ class fulltextsearchPlugin extends Plugin {
         return $this->actions;
     }
     
+    /**
+     * Event triggered when a document is created
+     * 
+     * @param array $params
+     */
     public function plugin_docman_after_new_document($params) {
         $this->getActions()->indexNewDocument($params);
     }
     
+    /**
+     * Event triggered when a document is deleted
+     *
+     * @param array $params
+     */
     public function plugin_docman_event_del($params) {
         $this->getActions()->delete($params);
     }
@@ -56,17 +61,18 @@ class fulltextsearchPlugin extends Plugin {
     private function getSearchClient() {
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         if (!file_exists($client_path)) {
-            $GLOBALS['Response']->addFeedback('error', "PHP Client Library not found");
-            $GLOBALS['HTML']->redirect('/docman/?group_id='.$this->getId());
+            $error_message = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'client_library_not_found');
+            $GLOBALS['Response']->addFeedback('error', $error_message);
+            $GLOBALS['HTML']->redirect('/docman/?group_id=' . $this->getId());
             return null;
         }
         
-        $client_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $client_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         
         require_once($client_path.'/ElasticSearchClient.php');
+        $transport   = new ElasticSearchTransportHTTP($server_host, $server_port);
         
-        $transport   = new ElasticSearchTransportHTTP($client_host, $client_port);
         return new ElasticSearchClient($transport, 'tuleap', 'docman');
     }
     
@@ -78,48 +84,8 @@ class fulltextsearchPlugin extends Plugin {
         return $this->pluginInfo;
     }
     
-    
-    public function cssFile($params) {
-        // Only show the stylesheet if we're actually in the fulltextsearch pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 
-        ) {
-            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
-        }
-    }
-    
-    public function jsFile($params) {
-        // Only include the js files if we're actually in the IM pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            echo '<script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>'."\n";
-        }
-    }
-    
-    public function site_admin_external_tool_hook($params) {
-       global $Language;
-       echo '<li><a href="externaltools.php?tool=solr">' .
-            $GLOBALS['Language']->getText('plugin_fulltextsearch','link_fulltextsearch_admin_tool') .
-            '</a></li>';
-    }
-        
-    public function site_admin_external_tool_selection_hook($params) {
-        /*if ($params['tool'] == 'solr') {
-            $solr_server = $this->getPluginInfo()->getPropVal('solr_server');
-            $solr_port   = $this->getPluginInfo()->getPropVal('solr_port');
-            $solr_path   = $this->getPluginInfo()->getPropVal('solr_path');
-            $params['title'] = "Full text Search  Administration";
-            $params['src']   = 'http://' . $solr_server . ':' . $solr_port . $solr_path . '/admin/';
-        }*/
-    }
-    
     public function process() {
-        require_once('FullTextSearch.class.php');
-        $controller = new FullTextSearch($this->actions);
-        $controller->process();
+        // called by controller
     }
 }
 
