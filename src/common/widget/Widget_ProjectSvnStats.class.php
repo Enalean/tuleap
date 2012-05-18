@@ -88,14 +88,22 @@ class Widget_ProjectSvnStats extends Widget {
             
             $nb_commiters = count($stats);
             
+            $legendRatio = $nb_commiters/10;
+            ($legendRatio < 1)? $chartWidth  = 400 : $chartWidth  = 500;
+            $chartHeigh  = 300+16*$nb_commiters;
+            //Legend default X and Y positions given as fractions
+            ($legendRatio < 1)? $legend_x_position = 0.1 : $legend_x_position = 0.01;
+            $legend_y_position = 0.5;
+
             //Build the chart
-            $chartWidth = 400;
-            $chartHeigh = 300+16*$nb_commiters;
             $c = new Chart($chartWidth, $chartHeigh);
             $c->SetScale('textlin');
             $c->img->SetMargin(40,20,20,80+16*$nb_commiters);
             $c->xaxis->SetTickLabels($dates);
-            $c->legend->Pos(0.1, 0.5, 'left', 'top');
+            $c->legend->Pos($legend_x_position, $legend_y_position, 'left', 'top');
+            if ($legendRatio > 1) {
+                $c->legend->setColumns(2);
+            }
 
             $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
