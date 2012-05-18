@@ -18,37 +18,57 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+/**
+ * Class responsible to send requests to an indexation server 
+ */
 class FullTextSearchActions {
-    
+    /**
+     * Client library
+     * Object that must have "index" and "delete" methods
+     * 
+     * @var Object
+     */
     protected $client;
     
     public function __construct($client) {
         $this->client = $client;
     }
-    
+    /**
+     * Index a new document with permissions
+     * 
+     * @param array $params parameters of the docman event
+     */
     public function indexNewDocument($params) {
-        $item_id = $params['item']->getId();
-        $group_id= $params['item']->getGroupId();
-        $user    = $params['user'];
-        
+        $item_id     = $params['item']->getId();
+        $group_id    = $params['item']->getGroupId();
+        $user        = $params['user'];
         $permissions = $params['item']->getPermissions();
-        
         $indexed_datas = array(
     		'title'       => $params['item']->getTitle(),
     		'description' => $params['item']->getDescription(),
-            'file'        => $this->file_content_encode($params['version']->getPath()), 
+            'file'        => $this->fileContentEncode($params['version']->getPath()), 
             'permissions' => array($group_id => $permissions)
         );
         
         $this->client->index($indexed_datas, $item_id);
     }
     
+    /**
+     * Remove an indexed document
+     * 
+     * @param array $params
+     */
     public function delete($params) {
         $this->client->delete($params['item']->getId());
     }
     
-    protected function file_content_encode($file_name) {
+    /**
+     * Get file contents and encode them with base64
+     * 
+     * @param string $file_name
+     * @return string
+     */
+    protected function fileContentEncode($file_name) {
         return base64_encode(file_get_contents($file_name));
     }
     

@@ -34,8 +34,8 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->client      = new MockElasticSearchFakeClient();
-        $this->actions     = TestHelper::getPartialMock('FullTextSearchActions', array('file_content_encode'));
+        $this->client      = mock('ElasticSearchFakeClient');
+        $this->actions     = TestHelper::getPartialMock('FullTextSearchActions', array('fileContentEncode'));
         $this->actions->__construct($this->client);
         $this->params      = aSetOfParameters();
     }
@@ -43,12 +43,12 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     public function itCallIndexOnClientWithRightParameters() {
         $this->params->item->withId(100)
             ->withGroupId(200)
-            ->withPermissions(array('PLUGIN_DOCMAN_READ' =>  array(3, 102)))
+            ->withPermissions(array(3, 102))
         ;
         
         $expected_path = '/dir/file.php';
-        $this->params->version->setReturnValue('getPath',     $expected_path);
-        $this->actions->setReturnValue('file_content_encode', $expected_path);
+        $this->params->version->setReturnValue('getPath', $expected_path);
+        $this->actions->setReturnValue('fileContentEncode', $expected_path);
         
         
         $this->client->expectOnce('index', $this->params->getClientIndexParameters());
