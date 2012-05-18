@@ -34,25 +34,14 @@ class Docman_File_Builder {
     public $description = 'description';
     public $permissions = array();
     
-    /**
-     * identical as FullTextSearchActions::permissions_values
-     */
-    public static function getExpectedPermissions($permissions) {
-        $permissions_values = array();
-        foreach($permissions as $permission) {
-            $permissions_values = array_merge($permissions_values, array_values($permission));
-        }
-        return $permissions_values;
-    }
-    
     public function build() {
-        $docman_file = new MockDocman_File();
-        $docman_file->setReturnValue('getId', $this->item_id);
-        $docman_file->setReturnValue('getGroupId', $this->group_id);
-        $docman_file->setReturnValue('getTitle', $this->title);
-        $docman_file->setReturnValue('getDescription', $this->description);
-        $expected_permissions = self::getExpectedPermissions($this->permissions);
-        $docman_file->setReturnValue('getPermissions', $expected_permissions);
+        $docman_file = mock('Docman_File');
+        stub($docman_file)->getId()->returns($this->item_id);
+        stub($docman_file)->getGroupId()->returns($this->group_id);
+        stub($docman_file)->getTitle()->returns($this->title);
+        stub($docman_file)->getDescription()->returns($this->description);
+        stub($docman_file)->getDescription()->returns($this->description);
+        stub($docman_file)->getPermissions()->returns($this->permissions);
         return $docman_file;
     }
     

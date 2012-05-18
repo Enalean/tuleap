@@ -23,9 +23,6 @@ require_once DOCMAN_INCLUDE_PATH.'/Docman_Version.class.php';
 require_once 'common/user/User.class.php';
 
 
-Mock::generate('Docman_Version');
-Mock::generate('User');
-
 function aSetOfParameters() {
     return new Parameters_Builder();
 }
@@ -37,8 +34,8 @@ class Parameters_Builder {
     
     public function __construct() {
         $this->item    = aDocman_File();
-        $this->version = new MockDocman_Version();
-        $this->user    = new MockUser();
+        $this->version = mock('Docman_Version');
+        $this->user    = mock('User');
     }
     
     public function build() {
@@ -50,12 +47,12 @@ class Parameters_Builder {
     }
     
     public function getClientIndexParameters() {
-        $expected_permissions = $this->item->getExpectedPermissions($this->item->permissions);
+        $expected_permissions = $this->item->permissions;
         $expected_datas       = array(
                 'title'       => $this->item->title,
                 'description' => $this->item->description,
                 'file'        => $this->version->getPath(),
-                'permissions' => array($this->item->group_id => $expected_permissions)
+                'permissions' => array($this->item->group_id => $this->item->permissions)
         );
         return array($expected_datas, $this->item->item_id);
     }
