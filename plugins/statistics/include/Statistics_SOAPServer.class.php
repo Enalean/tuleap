@@ -66,7 +66,7 @@ class Statistics_SOAPServer {
      * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
      * @param int    $group_id   the ID of the group we want statistics
      *
-     * @return string of statistics
+     * @return ArrayOfStatistics
      */
     function getProjectDiskStats($session_key, $group_id) {
         try {

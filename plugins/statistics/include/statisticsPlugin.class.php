@@ -28,15 +28,15 @@ class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('cssfile',                'cssFile',                false);
-        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
-        $this->_addHook('root_daily_start',       'root_daily_start',       false);
-        $this->_addHook('widget_instance',        'widget_instance',        false);
-        $this->_addHook('widgets',                'widgets',                false);
-        $this->_addHook('admin_toolbar_data',     'admin_toolbar_data',     false);
-        $this->_addHook('usergroup_data',         'usergroup_data',         false);
-        $this->_addHook('groupedit_data',         'groupedit_data',         false);
-
+        $this->_addHook('cssfile',                  'cssFile',                false);
+        $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        $this->_addHook('root_daily_start',         'root_daily_start',       false);
+        $this->_addHook('widget_instance',          'widget_instance',        false);
+        $this->_addHook('widgets',                  'widgets',                false);
+        $this->_addHook('admin_toolbar_data',       'admin_toolbar_data',     false);
+        $this->_addHook('usergroup_data',           'usergroup_data',         false);
+        $this->_addHook('groupedit_data',           'groupedit_data',         false);
+        $this->_addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
     }
 
     function getPluginInfo() {
@@ -222,6 +222,12 @@ class StatisticsPlugin extends Plugin {
         $uri = $this->getSoapUri();
         $viewer = new SOAP_WSDLViewer();
         $viewer->render($uri .'/?wsdl');
+    }
+    
+    public function wsdl_doc2soap_types($params) {
+        $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
+            'arrayofstatistics' => 'tns:ArrayOfStatistics',
+        ));
     }
 }
 
