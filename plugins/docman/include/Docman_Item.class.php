@@ -169,15 +169,14 @@ class Docman_Item {
      * Convenient accessors
      */
     public function isObsolete() {
-        if($this->isObsolete != null) {
-            return $this->isObsolete;
-        }
-        $this->isObsolete = false;
-        $date = $this->getObsolescenceDate();
-        if($date > 0) {
-            $today = getdate();
-            $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
-            $this->isObsolete = ($date < $time);
+        if ($this->isObsolete == null) {
+            $this->isObsolete = false;
+            $date = $this->getObsolescenceDate();
+            if($date > 0) {
+                $today = getdate();
+                $time  = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
+                $this->isObsolete = ($date < $time);
+            }
         }
         return $this->isObsolete;
     }
