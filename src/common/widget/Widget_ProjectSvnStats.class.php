@@ -89,19 +89,25 @@ class Widget_ProjectSvnStats extends Widget {
             $nb_commiters = count($stats);
             
             $legendRatio = $nb_commiters/10;
+            //Adjust the chart heigh and width to fit two columns legend, in case we have more than 10 commiters
             ($legendRatio < 1)? $chartWidth  = 400 : $chartWidth  = 500;
-            $chartHeigh  = 300+16*$nb_commiters;
+            ($legendRatio < 1)? $chartHeigh  = 300+16*$nb_commiters*(1/$legendRatio) : $chartHeigh  = 300+(16+$legendRatio)*$nb_commiters;
             //Legend default X and Y positions given as fractions
             ($legendRatio < 1)? $legend_x_position = 0.1 : $legend_x_position = 0.01;
-            $legend_y_position = 0.5;
+            ($legendRatio < 1)? $legend_y_position = 0.99 : $legend_y_position = 0.5;;
+            //Trying to customise image bottom margin according commiters numbe
+            ($legendRatio > 2)? $customImageMargin = 80+(16-$legendRatio+1)*$nb_commiters : $customImageMargin = 100+18*$nb_commiters;
+            ($legendRatio < 1)? $imgBottomMargin = 100+16*$nb_commiters*(1/$legendRatio) : $imgBottomMargin = $customImageMargin;
+            //Align legend according to commiters number, this should take in consideration X and Y positions of the legend
+            ($legendRatio < 1)? $legendAlign = 'bottom' : $legendAlign = 'top';
 
             //Build the chart
             $c = new Chart($chartWidth, $chartHeigh);
             $c->SetScale('textlin');
-            $c->img->SetMargin(40,20,20,80+16*$nb_commiters);
+            $c->img->SetMargin(40,20,20,$imgBottomMargin);
             $c->xaxis->SetTickLabels($dates);
-            $c->legend->Pos($legend_x_position, $legend_y_position, 'left', 'top');
-            if ($legendRatio > 1) {
+            $c->legend->Pos($legend_x_position, $legend_y_position, 'left', $legendAlign);
+            if ($legendRatio >= 1) {
                 $c->legend->setColumns(2);
             }
 
