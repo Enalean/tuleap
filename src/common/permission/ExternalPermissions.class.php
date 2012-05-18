@@ -39,7 +39,13 @@ class ExternalPermissions {
                 UGroup::PROJECT_MEMBERS => '@%s_project_members',
                 UGroup::PROJECT_ADMIN   => '@%s_project_admin'
     );
-    
+    /**
+     * Return User groups
+     * 
+     * @param string $user_name
+     * 
+     * return array
+     */
     public static function getUserGroups($user_name) {
         $user = self::getValidUserByName($user_name);
         if (!$user) {
@@ -51,8 +57,13 @@ class ExternalPermissions {
         
         return $groups;        
     }
-    
-    protected static function appendProjectGroups($user, array $groups = array()) {
+    /**
+     * Append project groups of user to secod parameter 
+     * 
+     * @param User  $user
+     * @param array $groups
+     */
+    protected static function appendProjectGroups( User $user, array $groups = array()) {
         $user_projects = $user->getProjects(true);
         foreach($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -64,15 +75,28 @@ class ExternalPermissions {
         }
         return $groups;
     }
-    
-    protected static function appendUgroups($user, array $groups = array()) {
+    /**
+     * Append ugroups of user to second parameter
+     * 
+     * @param User  $user
+     * @param array $groups
+     * 
+     * return array
+     */
+    protected static function appendUgroups( User $user, array $groups = array()) {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $groups[] = 'ug_'.$row['ugroup_id'];
         }
         return $groups;
     } 
-    
+    /**
+     * return an user if it's active or restricted
+     * 
+     * @param string $user_name
+     * 
+     * @return User if exists false otherwise
+     */
     protected static function getValidUserByName($user_name) {
         $user = UserManager::instance()->getUserByUserName($user_name);
         if ($user && isset(self::$status[$user->getStatus()])) {
@@ -80,8 +104,10 @@ class ExternalPermissions {
         }
         return false;
     }
+    
     /**
-     * 
+     * Return a list of groups with permissions of type $permissions_type
+     * for the given object of a given project 
      * 
      * @param Project $project
      * @param integer $object_id
@@ -91,7 +117,7 @@ class ExternalPermissions {
      */
     public static function getProjectObjectGroups(Project $project, $object_id, $permission_type) {
         $ugroup_ids   = PermissionsManager::instance()->getAuthorizedUgroupIds($object_id, $permission_type);
-        $project_name = $project->getUnixName(); 
+        $project_name = $project->getUnixName();
         array_walk($ugroup_ids, array('ExternalPermissions', 'ugroupIdToString'), $project_name);
         return array_filter($ugroup_ids);
     }
@@ -99,7 +125,7 @@ class ExternalPermissions {
     /**
      * Convert given ugroup id to a format managed by ExternalPermissions
      *
-     * @param String $ug UGroupId
+     * @param String $ugroup UGroupId
      */
     protected static function ugroupIdToString(&$ugroup, $key, $project_name) {
         if ($ugroup > 100) {

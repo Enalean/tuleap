@@ -24,19 +24,19 @@ require_once 'common/user/User.class.php';
 
 Mock::generate('ProjectManager');
 Mock::generate('Project');
-Mock::generate('UserManager');
-Mock::generate('User');
 
 class ExternalPermissionsTest extends TuleapTestCase {
     
     protected $membership;
+    protected $user_stub;
     protected $user;
     
     public function setUp() {
         parent::setUp();
-        $this->user = new MockUser();
-        $userManager = new MockUserManager();
-        $userManager->setReturnValue('getUserByUserName', $this->user);
+        $this->user      = mock('User');
+        $this->user_stub = stub($this->user);
+        $userManager     = mock('UserManager');
+        stub($userManager)->getUserByUserName()->returns($this->user);
         UserManager::setInstance($userManager);
     }
     
@@ -46,15 +46,15 @@ class ExternalPermissionsTest extends TuleapTestCase {
     }
     
     public function itIsProjectMember() {
-        $this->user->setReturnValue('getStatus', 'A');
+        $this->user_stub->getStatus()->returns('A');
         $userProjects = array(
                 array('group_id'=>101, 'unix_group_name'=>'gpig1')
         );
-        $this->user->setReturnValue('getProjects', $userProjects);
-        $this->user->setReturnValue('isMember', false);
-        $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
+        $this->user_stub->getProjects()->returns($userProjects);
+        $this->user_stub->isMember()->returns(false);
+        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups = ExternalPermissions::getUserGroups('john_do');
+        $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_active','gpig1_project_members');
         $this->assertEqual($expected, $groups);
     }
@@ -62,13 +62,13 @@ class ExternalPermissionsTest extends TuleapTestCase {
     
     
     public function itIsProjectAdmin() {
-        $this->user->setReturnValue('getStatus', 'A');
+        $this->user_stub->getStatus()->returns('A');
         $userProjects = array(
                 array('group_id'=>102, 'unix_group_name'=>'gpig2')
         );
-        $this->user->setReturnValue('getProjects', $userProjects);
-        $this->user->setReturnValue('isMember', true);
-        $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
+        $this->user_stub->getProjects()->returns($userProjects);
+        $this->user_stub->isMember()->returns(true);
+        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
         $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
@@ -76,10 +76,10 @@ class ExternalPermissionsTest extends TuleapTestCase {
     }
     
     public function itIsMemberOfAStaticUgroup() {
-        $this->user->setReturnValue('getStatus', 'A');
-        $this->user->setReturnValue('getProjects', array());
-        $this->user->setReturnValue('isMember', false);
-        $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar(array('ugroup_id'=>304)));
+        $this->user_stub->getStatus()->returns('A');
+        $this->user_stub->getProjects()->returns(array());
+        $this->user_stub->isMember()->returns(false);
+        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar(array('ugroup_id'=>304)));
         
         $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_active','ug_304');
@@ -87,10 +87,10 @@ class ExternalPermissionsTest extends TuleapTestCase {
     }
     
     public function itIsRestricted() {
-        $this->user->setReturnValue('getStatus', 'R');
-        $this->user->setReturnValue('getProjects', array());
-        $this->user->setReturnValue('isMember', false);
-        $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
+        $this->user_stub->getStatus()->returns('R');
+        $this->user_stub->getProjects()->returns(array());
+        $this->user_stub->isMember()->returns(false);
+        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
         $groups   = ExternalPermissions::getUserGroups('john_do');
         $expected = array('site_restricted');
@@ -99,10 +99,10 @@ class ExternalPermissionsTest extends TuleapTestCase {
     
     
     public function itIsNeitherRestrictedNorActive() {
-        $this->user->setReturnValue('getStatus', 'Not exists');
-        $this->user->setReturnValue('getProjects', array());
-        $this->user->setReturnValue('isMember', false);
-        $this->user->setReturnValue('getAllUgroups', TestHelper::arrayToDar());
+        $this->user_stub->getStatus()->returns('Not exists');
+        $this->user_stub->getProjects()->returns(array());
+        $this->user_stub->isMember()->returns(false);
+        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
     
         $groups = ExternalPermissions::getUserGroups('john_do');
         $this->assertEqual(array(), $groups);
