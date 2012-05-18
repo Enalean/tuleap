@@ -1,8 +1,12 @@
 <?php
+
 // the path of elastic text search PHP client library
 $fulltextsearch_path = '/usr/local/share/php/elasticsearch';
+
 // elastic search server hostname
 $fulltextsearch_host = 'localhost';
+
 // elastic search server port
 $fulltextsearch_port = 9200;
+
 ?>
