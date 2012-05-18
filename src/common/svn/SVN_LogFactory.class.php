@@ -19,7 +19,6 @@
  */
 
 require_once 'database.php';
-require_once 'SVN_LogQuery.class.php';
 require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
