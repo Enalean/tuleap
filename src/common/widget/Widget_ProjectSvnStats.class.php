@@ -93,7 +93,7 @@ class Widget_ProjectSvnStats extends Widget {
             $c->SetScale('textlin');
             $c->img->SetMargin(40,20,20,80+16*$nb_commiters);
             $c->xaxis->SetTickLabels($dates);
-            $c->legend->Pos(0.1,0.95,'left','bottom');
+            $c->legend->Pos(0.1, 0.5, 'left', 'top');
             
             $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
