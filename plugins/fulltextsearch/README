@@ -22,11 +22,8 @@ Start the elasticsearch server:
 
     $ ./bin/elasticsearch
 
-Install the elasticsearch PHP client:
-
-    $ mkdir -p /usr/local/share/php
-    $ cd /usr/local/share/php
-    $ git clone git://github.com/nervetattoo/elasticsearch.git
+The elasticsearch PHP client should have been installed during installation of
+this plugin. See http://github.com/nervetattoo/elasticsearch for details.
 
 Create the index:
 
