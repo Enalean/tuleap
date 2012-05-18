@@ -317,7 +317,7 @@ class Git_GitoliteDriver {
         } else {
             switch ($ug) {
                 case $GLOBALS['UGROUP_REGISTERED']:
-                    $ug = '@site_active';
+                    $ug = '@site_active '.'@'.$project->getUnixName().'_project_members';
                     break;
                 case $GLOBALS['UGROUP_PROJECT_MEMBERS'];
                     $ug = '@'.$project->getUnixName().'_project_members';
