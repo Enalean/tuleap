@@ -35,8 +35,22 @@ if (defined('NUSOAP')) {
         $GLOBALS['uri'].'#getProjectDiskStats', // soapaction
         'rpc', // style
         'encoded', // use
-        'Returns an int corresponding to the space occupied by group ID on the disk.
-         Returns a soap fault if the group ID does not match with a valid project.' // documentation
+        'Returns the amount of disk space used by the project.
+        
+        <code>
+        Returned format:
+        array(
+            "total" => total size in bytes,
+            "quota" => allowed size in bytes
+        )
+        </code>
+        
+        Example:
+        array(
+            "total" => 2560,
+            "quota" => 52428800,
+        )
+        -> On a quota of 50MB (52428800 bytes), 2.5kB are used.' // documentation
     );
 
 } else {
@@ -49,7 +63,7 @@ if (defined('NUSOAP')) {
      *
      * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
      * @param int $group_id the ID of the group we want to attach the file
-     * @return int the disk used
+     * @return array the disk space used
      *              or a soap fault if :
      *              - group_id does not match with a valid project
      *              - user is not site admin
@@ -62,9 +76,16 @@ if (defined('NUSOAP')) {
             $soap_request_validator->assertUserCanAccessProject($user, $project);
             
             $dum = new Statistics_DiskUsageManager();
-            return array("total" => $dum->returnTotalProjectSize($group_id),
-                         "quota" => $dum->getProperty('allowed_quota') * 1024 * 1024 * 1024);
             
+            $total = $dum->returnTotalProjectSize($group_id);
+            
+            $allowed_quota_in_GB = $dum->getProperty('allowed_quota');
+            $allowed_quota       = $allowed_quota_in_GB * 1024 * 1024 * 1024;
+            
+            return array(
+                'total' => $total,
+                'quota' => $allowed_quota
+            );
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
