@@ -82,9 +82,7 @@ class SVN_SOAPServer {
             
             $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $svn_log   = new SVN_LogFactory($project);
-            
-            $query     = new SVN_LogQuery($limit, $author_name);
-            $revisions   = $svn_log->getRevisions($query);
+            $revisions = $svn_log->getRevisions($limit, $author_name);
 
             return $revisions;
             

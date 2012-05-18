@@ -45,15 +45,15 @@ class SVN_LogFactory {
     }
     
     /**
-     * Retrieves SVN revisions matching the given $query.
+     * Retrieves latests SVN revisions.
      * 
-     * @param SVN_LogQuery $query
+     * @param string $limit       Limit results count (e.g. 50)
+     * @param string $author_name Author name to filter on (empty string => no filtering)
      * 
      * @return array
      */
-    public function getRevisions(SVN_LogQuery $query) {
-        
-        $raw_revisions = $this->getRawRevisions($query);
+    public function getRevisions($limit, $author_name) {
+        $raw_revisions = $this->getRawRevisions($limit, $author_name);
         $revisions     = array();
         
         while($raw_revision = db_fetch_array($raw_revisions)) {
@@ -133,13 +133,9 @@ class SVN_LogFactory {
     /**
      * Same as getRawRevisionsAndCount(), but retrieves only the revisions,
      * without the revisions count.
-     * 
-     * @param SVN_LogQuery $query
-     * 
-     * @return mixed Some db result object
      */
-    private function getRawRevisions(SVN_LogQuery $query) {
-        list($raw_revisions, $count) = $this->getRawRevisionsAndCount($query);
+    private function getRawRevisions($limit, $author_name) {
+        list($raw_revisions, $count) = $this->getRawRevisionsAndCount($limit, $author_name);
         return $raw_revisions;
     }
     
@@ -147,17 +143,13 @@ class SVN_LogFactory {
      * XXX: USE IN TESTS ONLY !!!
      * 
      * Wraps svn_get_revisions for testing purpose.
-     * 
-     * @param SVN_LogQuery $query
-     * 
-     * @return array 
      */
-    public function getRawRevisionsAndCount(SVN_LogQuery $query) {
+    public function getRawRevisionsAndCount($limit, $author_name) {
         return svn_get_revisions($this->project,
                                  0,
-                                 $query->getLimit(),
+                                 $limit,
                                  '',
-                                 $query->getAuthorName(),
+                                 $author_name,
                                  '',
                                  '',
                                  0,
