@@ -70,7 +70,10 @@ class FullTextSearchActions {
      * @return string
      */
     private function fileContentEncode($file_name) {
-        return base64_encode(file_get_contents($file_name));
+        if (is_file($file_name)) {
+            return base64_encode(file_get_contents($file_name));
+        }
+        return '';
     }
     
 }
