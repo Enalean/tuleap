@@ -1,3 +1,8 @@
+Version 2.5.2 (Tuleap 5.2)
+    * Fix bug with restricted users. They had no access to repositories when
+      repo where available to 'registered_users'. They of course still need to
+      be project members to access repository.
+
 Version 2.5.1 (Tuleap 5.1)
     * Select of git repository in Continuous Integration interface is done with a selectbox (contrib STMicroelectronics).
 
