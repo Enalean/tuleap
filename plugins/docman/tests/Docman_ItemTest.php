@@ -40,6 +40,7 @@ class Docman_ItemTest extends TuleapTestCase {
         $this->project             = mock('Project');
         stub($this->project_manager)->getProject()->returns($this->project);
         stub($this->project)->getUnixName()->returns('gpig');
+        stub($this->project)->getID()->returns($this->item_id + 1000);
         PermissionsManager::setInstance($this->permissions_manager);
         ProjectManager::setInstance($this->project_manager);
     }
@@ -49,6 +50,7 @@ class Docman_ItemTest extends TuleapTestCase {
         $this->item_id++;
         PermissionsManager::clearInstance();
         ProjectManager::clearInstance();
+        Docman_ItemFactory::clearInstance($this->project->getID());
     }
     
     
@@ -66,6 +68,40 @@ class Docman_ItemTest extends TuleapTestCase {
         $expected_permissions = ExternalPermissions::getProjectObjectGroups($this->project, $this->item_id, '');
         $permissions = $this->docman_item->getPermissions();
         $this->assertEqual($expected_permissions, $permissions);
+    }
+    
+    Public function itReturnsIntersectionWithParentsPermissionsIfItHasParents() {
+        Docman_ItemFactory::setInstance($this->project->getID(), mock('Docman_ItemFactory'));
+        $parent_id          = $this->item_id + 200;
+        $parent             = new Docman_Item();
+        $parent->setId($parent_id);
+        $permissions_type   = 'PLUGIN_DOCMAN_%';
+        $this->docman_item->setParentId($parent_id);
+        
+        $parent_permissions = array(
+                UGroup::PROJECT_MEMBERS,
+                UGroup::PROJECT_ADMIN,
+                203
+        );
+        $child_permissions  = array(
+                UGroup::REGISTERED,
+                UGroup::PROJECT_MEMBERS,
+                UGroup::PROJECT_ADMIN,
+                103
+        );
+        
+        stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     $permissions_type)->returns($parent_permissions);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, $permissions_type)->returns($child_permissions);
+        
+        $expected_permissions = array_intersect(
+                ExternalPermissions::getProjectObjectGroups($this->project, $this->item_id, $permissions_type),
+                ExternalPermissions::getProjectObjectGroups($this->project, $parent_id,     $permissions_type)
+        );
+        $permissions = $this->docman_item->getPermissions();
+        $this->assertEqual($expected_permissions, $permissions);
+        
+        
     }
     
 }

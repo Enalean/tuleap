@@ -356,8 +356,13 @@ class Docman_Item {
     public function getPermissions() {
         require_once 'common/permission/ExternalPermissions.class.php';
         require_once 'common/project/ProjectManager.class.php';
-        $project = ProjectManager::instance()->getProject($this->groupId);
-        return ExternalPermissions::getProjectObjectGroups($project, $this->id, "PLUGIN_DOCMAN_%");
+        require_once 'Docman_ItemFactory.class.php';
+        $project     = ProjectManager::instance()->getProject($this->groupId);
+        $permissions = ExternalPermissions::getProjectObjectGroups($project, $this->id, "PLUGIN_DOCMAN_%");
+        if ($this->parentId && ($parent = Docman_ItemFactory::instance($project->getID())->getItemFromDb($this->parentId))) {
+            $permissions = array_intersect($permissions, $parent->getPermissions()); 
+        }
+        return $permissions; 
     }
 }
 
