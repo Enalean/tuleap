@@ -132,8 +132,7 @@ class BackendMailingList extends Backend {
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
                 system($GLOBALS['mailman_bin_dir']. '/rmlist -a '. $list->getListName() .' >/dev/null');
-                $this->_getMailingListDao()->deleteListDefinitively($group_list_id);
-                return true;
+                return $this->_getMailingListDao()->deleteListDefinitively($group_list_id);
             }
         }
         return false;
