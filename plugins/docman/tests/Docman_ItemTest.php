@@ -21,43 +21,49 @@
  */
 require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
-Mock::generate('PermissionsManager');
+require_once 'common/project/ProjectManager.class.php';
+require_once 'common/project/UGroup.class.php';
 
 class Docman_ItemTest extends TuleapTestCase {
     protected $permissions_manager;
+    protected $project_manager;
+    protected $project;
     protected $docman_item;
+    protected $item_id = 100;
     
     public function setUp() {
         parent::setUp();
-        $this->docman_item = new Docman_Item();
-        $this->permissions_manager = new MockPermissionsManager();
+        $this->docman_item         = new Docman_Item();
+        $this->docman_item->setId($this->item_id);
+        $this->permissions_manager = mock('PermissionsManager');
+        $this->project_manager     = mock('ProjectManager');
+        $this->project             = mock('Project');
+        stub($this->project_manager)->getProject()->returns($this->project);
+        stub($this->project)->getUnixName()->returns('gpig');
         PermissionsManager::setInstance($this->permissions_manager);
+        ProjectManager::setInstance($this->project_manager);
     }
     
     public function tearDown() {
         parent::tearDown();
+        $this->item_id++;
         PermissionsManager::clearInstance();
+        ProjectManager::clearInstance();
     }
     
     
     public function itReturnsPermissionsThanksToPermissionsManager() {
-        $item_id = 10;
-        $this->docman_item->setId($item_id);
-        
-        $this->permissions_manager->setReturnValue('getPermissionsAndUgroupsByObjectid', array());
-        $this->permissions_manager->expectOnce('getPermissionsAndUgroupsByObjectid', array($item_id, array()));
+        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array());
+        $this->permissions_manager->expectOnce('getAuthorizedUgroupIds', array($this->item_id, "PLUGIN_DOCMAN_%"));
         
         $this->docman_item->getPermissions();
     }
     
-    public function itReturnsPermissionsAfterReducingArrayToValues() {
-        $permissions = array(
-                'PLUGIN_DOCMAN_READ' =>  array(3, 102),
-                'PLUGIN_DOCMAN_WRITE' =>  array(103, 2),
-        );
-        $this->permissions_manager->setReturnValue('getPermissionsAndUgroupsByObjectid', $permissions);
+    public function itReturnsPermissionsGivenByExternalPermissions_GetProjectObjectGroups() {
+        $permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($permissions);
         
-        $expected_permissions = array(3, 102, 103, 2);
+        $expected_permissions = ExternalPermissions::getProjectObjectGroups($this->project, $this->item_id, '');
         $permissions = $this->docman_item->getPermissions();
         $this->assertEqual($expected_permissions, $permissions);
     }

@@ -354,13 +354,10 @@ class Docman_Item {
     }
     
     public function getPermissions() {
-        require_once 'common/permission/PermissionsManager.class.php';
-        $permissions = PermissionsManager::instance()->getPermissionsAndUgroupsByObjectid($this->id, array());
-        $permissions_values = array();
-        foreach($permissions as $permission) {
-            $permissions_values = array_merge($permissions_values, array_values($permission));
-        }
-        return $permissions_values;
+        require_once 'common/permission/ExternalPermissions.class.php';
+        require_once 'common/project/ProjectManager.class.php';
+        $project = ProjectManager::instance()->getProject($this->groupId);
+        return ExternalPermissions::getProjectObjectGroups($project, $this->id, "PLUGIN_DOCMAN_%");
     }
 }
 
