@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/versioning/IRevisionDecorator.class.php';
+require_once 'common/svn/SVN_IRevisionDecorator.class.php';
 
-class SVN_SoapRevisionDecorator implements IRevisionDecorator {
+class SVN_SoapRevisionDecorator implements SVN_IRevisionDecorator {
 
     /**
      * Decorates a raw SVN revision to match the expected format in SOAP API.

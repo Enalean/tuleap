@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface IRevisionDecorator {
+interface SVN_IRevisionDecorator {
     
     /**
      * Decorates an SVN revision.

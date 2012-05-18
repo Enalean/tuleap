@@ -22,7 +22,7 @@ require_once 'database.php';
 require_once 'SVN_LogQuery.class.php';
 require_once 'SVN_LogDao.class.php';
 require_once 'common/project/Project.class.php';
-require_once 'common/versioning/IRevisionDecorator.class.php';
+require_once 'common/svn/SVN_IRevisionDecorator.class.php';
 require_once 'common/user/User.class.php';
 
 /**
@@ -51,12 +51,12 @@ class SVN_LogFactory {
      * Revisions are decorated using the given $decorator.
      * 
      * @param SVN_LogQuery       $query
-     * @param IRevisionDecorator $decorator
+     * @param SVN_IRevisionDecorator $decorator
      * 
      * @return array
      */
     public function getDecoratedRevisions(SVN_LogQuery     $query,
-                                          IRevisionDecorator $decorator) {
+                                          SVN_IRevisionDecorator $decorator) {
         
         $raw_revisions       = $this->getRawRevisions($query);
         $decorated_revisions = array();
