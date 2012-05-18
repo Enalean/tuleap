@@ -34,14 +34,28 @@ class EventManager {
     }
     
     /**
+     * Holds an instance of the class
+     * @var EventManager
+     */
+    private static $instance;
+    
+    /**
+     * Allows clear instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstance() {
+        self::$instance = null;
+    }
+    
+    /**
+     * The singleton method
+     * 
      * @return EventManager
      */
     public static function instance() {
-        static $_eventmanager_instance;
-        if (!$_eventmanager_instance) {
-            $_eventmanager_instance = new EventManager();
+        if (! self::$instance) {
+            self::$instance = new EventManager();
         }
-        return $_eventmanager_instance;
+        return self::$instance;
     }
     
     function addListener($event, $listener, $callback, $recallEvent, $priority) {

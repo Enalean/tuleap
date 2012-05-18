@@ -49,6 +49,13 @@ class SOAP_WSDLGeneratorFixtures {
     public function returnUnknownType() {
         
     }
+
+    /**
+     * @return ArrayOfPluginTypes
+     */
+    public function returnArrayOfPluginTypes() {
+        
+    }
 }
 
 ?>

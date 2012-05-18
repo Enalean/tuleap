@@ -24,6 +24,10 @@ require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
 class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
     
+    function tearDown() {
+        EventManager::clearInstance();
+    }
+    
     function testExtractCommentShouldContainsComment() {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertContains($comment, 'Create a new project');
@@ -88,6 +92,14 @@ class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
         $this->GivenGenerator('returnUnknownType');
     }
     
+    function itAsksToPluginsForUnkownTypes() {
+        $plugin = new SOAP_WSDLMethodGeneratorTest_FakePlugin();
+        EventManager::instance()->addListener(Event::WSDL_DOC2SOAP_TYPES, $plugin, 'wsdl_doc2soap_types', false, 0);
+        
+        $gen = $this->GivenGenerator('returnArrayOfPluginTypes');
+        $this->assertEqual($gen->getReturnType(), array('returnArrayOfPluginTypes' => 'tns:ArrayOfStats'));
+    }
+    
     private function assertDoesntContain($reference, $search) {
         $this->assertTrue(strpos($reference, $search) === false);
     }
@@ -114,6 +126,14 @@ class SOAP_WSDLMethodGeneratorTest extends TuleapTestCase {
     private function GivenGenerator($methodName) {
         $class = new ReflectionClass('SOAP_WSDLGeneratorFixtures');
         return new SOAP_WSDLMethodGenerator($class->getMethod($methodName));
+    }
+}
+
+class SOAP_WSDLMethodGeneratorTest_FakePlugin {
+    function wsdl_doc2soap_types($params) {
+        $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
+            'arrayofplugintypes' => 'tns:ArrayOfStats'
+        ));
     }
 }
 
