@@ -36,7 +36,6 @@ class StatisticsPlugin extends Plugin {
         $this->_addHook('admin_toolbar_data',     'admin_toolbar_data',     false);
         $this->_addHook('usergroup_data',         'usergroup_data',         false);
         $this->_addHook('groupedit_data',         'groupedit_data',         false);
-        $this->_addHook('soap',                   'soap',                   false);
 
     }
 
@@ -178,10 +177,52 @@ class StatisticsPlugin extends Plugin {
         }
     }
     
-    function soap($params) {
-        require_once('soap.php');
+    public function processSOAP(Codendi_Request $request) {
+        $uri           = $this->getSoapUri();
+        $service_class = 'Statistics_SOAPServer';
+        require_once $service_class .'.class.php';
+        
+        if ($request->exist('wsdl')) {
+            $this->dumpWSDL($uri, $service_class);
+        } else {
+            $this->instantiateSOAPServer($uri, $service_class);
+        }
     }
-
+    
+    private function dumpWSDL($uri, $service_class) {
+        require_once 'common/soap/SOAP_NusoapWSDL.class.php';
+        $wsdlGen = new SOAP_NusoapWSDL($service_class, 'TuleapStatisticsAPI', $uri);
+        $wsdlGen->dumpWSDL();
+    }
+    
+    private function instantiateSOAPServer($uri, $service_class) {
+        require_once 'common/soap/SOAP_RequestValidator.class.php';
+        require_once 'Statistics_DiskUsageManager.class.php';
+        $user_manager           = UserManager::instance();
+        $project_manager        = ProjectManager::instance();
+        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
+        $disk_usage_manager     = new Statistics_DiskUsageManager();
+        
+        $server = new SoapServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
+        $server->setClass($service_class, $soap_request_validator, $disk_usage_manager);
+        $server->handle();
+    }
+    
+    private function getSoapUri() {
+        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
+            $protocol = "https";
+        } else {
+            $protocol = "http";
+        }
+        return $protocol.'://'.$GLOBALS['sys_default_domain'].'/plugins/statistics/soap';
+    }
+    
+    public function renderWSDL() {
+        require_once 'common/soap/SOAP_WSDLViewer.class.php';
+        $uri = $this->getSoapUri();
+        $viewer = new SOAP_WSDLViewer();
+        $viewer->render($uri .'/?wsdl');
+    }
 }
 
 ?>
