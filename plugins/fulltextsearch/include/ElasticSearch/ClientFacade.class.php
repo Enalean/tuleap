@@ -17,23 +17,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once dirname(__FILE__) .'/../FullTextSearch/ISearchAndIndexDocuments.class.php';
+
 /**
- * Fake a client
- * Methods here represents the expected client library interface 
+ * Base class to interact with ElasticSearch 
  */
-class ElasticSearchFakeClient {
+class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocuments {
+
     /**
-     * Index a new document
+     * @var ElasticSearchClient
      */
-    public function index() {
-        
+    private $client;
+
+    public function __construct(ElasticSearchClient $client) {
+        $this->client = $client;
     }
-    
+
     /**
-     * delete a document
+     * @see ISearchAndIndexDocuments::index
      */
-    public function delete() {
-        
+    public function index(array $document, $id = false) {
+        $this->client->index($document, $id);
+    }
+
+    /**
+     * @see ISearchAndIndexDocuments::delete
+     */
+    public function delete($id = false) {
+        $this->client->delete($id);
     }
 }
 ?>

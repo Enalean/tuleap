@@ -19,13 +19,8 @@
  */
 
 require_once dirname(__FILE__).'/Constants.php';
-require_once dirname(__FILE__).'/clients/ElasticSearchFakeClient.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
-
 require_once dirname(__FILE__).'/../include/FullTextSearchActions.class.php';
-
-Mock::generate('ElasticSearchFakeClient');
-
 
 class FullTextSearchActionsTests extends TuleapTestCase {
     protected $client;
@@ -34,7 +29,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->client  = mock('ElasticSearchFakeClient');
+        $this->client  = mock('FullTextSearch_ISearchAndIndexDocuments');
         $this->actions = new FullTextSearchActions($this->client);
         $this->item = aDocman_File()
             ->withId(101)

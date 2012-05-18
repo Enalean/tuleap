@@ -18,21 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'FullTextSearch/ISearchAndIndexDocuments.class.php';
+
 /**
  * Class responsible to send requests to an indexation server 
  */
 class FullTextSearchActions {
+
     /**
-     * Client library
-     * Object that must have "index" and "delete" methods
-     * 
-     * @var Object
+     * @var FullTextSearch_ISearchAndIndexDocuments 
      */
     protected $client;
     
-    public function __construct($client) {
+    public function __construct(FullTextSearch_ISearchAndIndexDocuments $client) {
         $this->client = $client;
     }
+
     /**
      * Index a new document with permissions
      * 

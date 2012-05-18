@@ -60,20 +60,12 @@ class fulltextsearchPlugin extends Plugin {
     
     private function getSearchClient() {
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        if (!file_exists($client_path)) {
-            $error_message = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'client_library_not_found');
-            $GLOBALS['Response']->addFeedback('error', $error_message);
-            $GLOBALS['HTML']->redirect('/docman/?group_id=' . $this->getId());
-            return null;
-        }
-        
         $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         
-        require_once($client_path.'/ElasticSearchClient.php');
-        $transport   = new ElasticSearchTransportHTTP($server_host, $server_port);
-        
-        return new ElasticSearchClient($transport, 'tuleap', 'docman');
+        require_once 'ElasticSearch/ClientFactory.class.php';
+        $factory = new ElasticSearch_ClientFactory();
+        return $factory->build($client_path, $server_host, $server_port);
     }
     
     public function getPluginInfo() {
