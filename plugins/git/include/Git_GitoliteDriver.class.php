@@ -250,40 +250,6 @@ class Git_GitoliteDriver {
             throw new Git_Command_Exception($cmd, $output, $retVal);
         }
     }
-    
-    public function fetchConfigPermissions($project, $repository, $permission_type) {
-        if (!isset(self::$permissions_types[$permission_type])) {
-            return '';
-        }
-        $repository_groups = ExternalPermissions::getProjectObjectGroups($project, $repository->getId(), $permission_type);
-        if (count($repository_groups) == 0) {
-            return '';
-        }
-        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups) . PHP_EOL; 
-    }
-    
-    /**
-     * Returns post-receive-email hook config in gitolite format
-     *
-     * @param Project $project
-     * @param GitRepository $repository
-     */
-    public function fetchMailHookConfig($project, $repository) {
-        $conf  = '';
-        $conf .= ' config hooks.showrev = "'. $repository->getPostReceiveShowRev(). '"';
-        $conf .= PHP_EOL;
-        if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
-            $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';
-        } else {
-            $conf .= ' config hooks.mailinglist = ""';
-        }
-        $conf .= PHP_EOL;
-        if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
-            $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
-            $conf .= PHP_EOL;
-        }
-        return $conf;
-    }
 
     /**
      * Save on filesystem all permission configuration for a project
@@ -308,28 +274,6 @@ class Git_GitoliteDriver {
         }
     }
     
-    protected function commitConfigFor($project) {
-        if ($this->updateMainConfIncludes($project)) {
-            return $this->gitCommit('Update: '.$project->getUnixName());
-        }
-    }
-    
-    protected function writeGitConfig($config_file, $config_datas) {
-        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
-            return false;
-        }
-        return $this->gitAdd($config_file);
-    }
-    
-    protected function fetchReposConfig($project, $repository) {
-        $repo_config  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
-        $repo_config .= $this->fetchMailHookConfig($project, $repository);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
-        return $repo_config . PHP_EOL;
-    }
-    
     protected function buildRepositoryFromRow($row, $project, $notification_manager = null) {
         $repository_id = $row[GitDao::REPOSITORY_ID];
         $repository = new GitRepository();
@@ -346,12 +290,68 @@ class Git_GitoliteDriver {
         return $repository;
     }
     
+    protected function fetchReposConfig($project, $repository) {
+        $repo_config  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+        $repo_config .= $this->fetchMailHookConfig($project, $repository);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        return $repo_config . PHP_EOL;
+    }
+    
+    /**
+     * Returns post-receive-email hook config in gitolite format
+     *
+     * @param Project $project
+     * @param GitRepository $repository
+     */
+    public function fetchMailHookConfig($project, $repository) {
+        $conf  = '';
+        $conf .= ' config hooks.showrev = "'. $repository->getPostReceiveShowRev(). '"';
+        $conf .= PHP_EOL;
+        if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
+            $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';
+        } else {
+            $conf .= ' config hooks.mailinglist = ""';
+        }
+        $conf .= PHP_EOL;
+        if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
+            $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
+            $conf .= PHP_EOL;
+        }
+        return $conf;
+    }
+    
+    public function fetchConfigPermissions($project, $repository, $permission_type) {
+        if (!isset(self::$permissions_types[$permission_type])) {
+            return '';
+        }
+        $repository_groups = ExternalPermissions::getProjectObjectGroups($project, $repository->getId(), $permission_type);
+        if (count($repository_groups) == 0) {
+            return '';
+        }
+        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups) . PHP_EOL; 
+    }
+    
     protected function getProjectPermissionConfFile($project) {
         $prjConfDir = 'conf/projects';
         if (!is_dir($prjConfDir)) {
             mkdir($prjConfDir);
         }
         return $prjConfDir.'/'.$project->getUnixName().'.conf';
+    }
+    
+    protected function writeGitConfig($config_file, $config_datas) {
+        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
+            return false;
+        }
+        return $this->gitAdd($config_file);
+    }
+    
+    protected function commitConfigFor($project) {
+        if ($this->updateMainConfIncludes($project)) {
+            return $this->gitCommit('Update: '.$project->getUnixName());
+        }
     }
 
     /**
