@@ -1,1 +1,4 @@
+plugin_fulltextsearch	plugin_name	Full-Text Search
+plugin_fulltextsearch	plugin_description	Full-Text Search capabilities on Tuleap (docman for now)
+
 plugin_fulltextsearch	client_library_not_found	Client library is required.

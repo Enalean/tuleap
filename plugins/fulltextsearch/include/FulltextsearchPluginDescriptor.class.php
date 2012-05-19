@@ -24,7 +24,11 @@ require_once 'common/plugin/PluginDescriptor.class.php';
 class FulltextsearchPluginDescriptor extends PluginDescriptor {
     
     function __construct() {
-        parent::__construct('full text search', false, 'full text search');
+        parent::__construct(
+                            $GLOBALS['Language']->getText('plugin_fulltextsearch', 'plugin_name'),
+                            false,
+                            $GLOBALS['Language']->getText('plugin_fulltextsearch', 'plugin_description')
+                           );
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

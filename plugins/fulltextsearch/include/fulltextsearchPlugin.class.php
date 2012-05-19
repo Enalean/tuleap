@@ -34,7 +34,7 @@ class fulltextsearchPlugin extends Plugin {
     
     private function getActions() {
         if (!isset($this->actions) && ($search_client = $this->getSearchClient())) {
-            require_once dirname(__FILE__).'/FullTextSearchActions.class.php';
+            require_once 'FullTextSearchActions.class.php';
             $this->actions = new FullTextSearchActions($search_client);
         }
         return $this->actions;
@@ -74,10 +74,6 @@ class fulltextsearchPlugin extends Plugin {
             $this->pluginInfo = new FulltextsearchPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-    
-    public function process() {
-        // called by controller
     }
 }
 
