@@ -32,7 +32,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
     }
     
-    protected function getActions() {
+    private function getActions() {
         if (!isset($this->actions) && ($search_client = $this->getSearchClient())) {
             require_once dirname(__FILE__).'/FullTextSearchActions.class.php';
             $this->actions = new FullTextSearchActions($search_client);
