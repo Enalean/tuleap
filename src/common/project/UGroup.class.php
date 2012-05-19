@@ -39,34 +39,34 @@ class UGroup {
     const WIKI_ADMIN         = 14;
     const TRACKER_ADMIN      = 15;
     
-    protected $ugroup_id   = 0;
-    protected $group_id    = 0;
-    protected $name        = null;
-    protected $description = null;
-    protected $is_dynamic  = true;
+    protected $ugroup_id    = 0;
+    protected $group_id     = 0;
+    protected $name         = null;
+    protected $description  = null;
+    protected $is_dynamic   = true;
 
-    protected $members     = null;
-    protected $members_name= null;
+    protected $members      = null;
+    protected $members_name = null;
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
 
     public function __construct($row = null) {
-        $properties_in_row = array_intersect(array_keys($row), array('ugroup_id', 'name', 'description', 'group_id'));
-        foreach ($properties_in_row as $property) {
-            $this->$property = $row[$property];
-        }
-        $this->is_dynamic = $this->ugroup_id < 100;
+        $this->id          = isset($row['ugroup_id'])   ? $row['ugroup_id']   : 0;
+        $this->name        = isset($row['name'])        ? $row['name']        : null;
+        $this->description = isset($row['description']) ? $row['description'] : null;
+        $this->group_id    = isset($row['group_id'])    ? $row['group_id']    : 0;
+        $this->is_dynamic  = $this->id < 100;
     }
 
-    protected function UGroupDao() {
+    protected function getUGroupDao() {
         if (!$this->_ugroupdao) {
             $this->_ugroupdao = new UGroupDao(CodendiDataAccess::instance());
         }
         return $this->_ugroupdao;
     }
 
-    protected function UGroupUserDao() {
+    protected function getUGroupUserDao() {
         if (!$this->_ugroupuserdao) {
             $this->_ugroupuserdao = new UGroupUserDao(CodendiDataAccess::instance());
         }
@@ -82,15 +82,14 @@ class UGroup {
      * WARNING: this does not work currently with dynamic ugroups
      */
     public function getMembers() {
-        if ($this->members) {
-            return $this->members;
-        }
-        $this->members = array();
-        $dar           = $this->UGroupUserDao()->searchUserByStaticUGroupId($this->ugroup_id);
-        foreach($dar as $row) {
-            $currentUser        = new User($row);
-            $this->members[]    = $currentUser;
-            $this->members_name = $currentUser->getUserName();
+        if (! $this->members) {
+            $this->members = array();
+            $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+            foreach($dar as $row) {
+                $currentUser          = new User($row);
+                $this->members[]      = $currentUser;
+                $this->members_name[] = $currentUser->getUserName();
+            }
         }
         return $this->members;
     }
@@ -113,7 +112,7 @@ class UGroup {
     * @return boolean
     */
     public function exists($groupId, $ugroupId) {
-        return $this->UGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+        return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
     /**
@@ -125,7 +124,7 @@ class UGroup {
      * @return Data Access Result
      */
     public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
-        return $this->UGroupUserDao()->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
+        return $this->getUGroupUserDao()->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
     }
 }
 ?>
