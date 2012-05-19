@@ -55,8 +55,9 @@ class ExternalPermissions {
         $groups = self::appendProjectGroups($user, $groups);
         $groups = self::appendUgroups($user, $groups);
         
-        return $groups;        
+        return $groups;
     }
+
     /**
      * Append project groups of user to secod parameter 
      * 
@@ -75,6 +76,7 @@ class ExternalPermissions {
         }
         return $groups;
     }
+
     /**
      * Append ugroups of user to second parameter
      * 
@@ -90,6 +92,7 @@ class ExternalPermissions {
         }
         return $groups;
     } 
+
     /**
      * return an user if it's active or restricted
      * 
