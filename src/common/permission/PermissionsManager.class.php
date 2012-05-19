@@ -101,10 +101,11 @@ class PermissionsManager {
     * @access public
     * 
     * @param  int     $object_id  The id of the object
-    * @param  array   $ugroups    A list of ugroups we want to see in permissions
+    *
+    * @return array
     */
-    public function getPermissionsAndUgroupsByObjectid($object_id, $ugroups) {
-        $this->retrievePermissions($object_id); //Why don't we pass $ugroups ???
+    public function getPermissionsAndUgroupsByObjectid($object_id) {
+        $this->retrievePermissions($object_id);
         $perms = array();
         if (isset($this->_permissions[$object_id])) {
             foreach($this->_permissions[$object_id] as $ugroup_id => $permissions) {

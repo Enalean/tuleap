@@ -29,15 +29,25 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->client  = mock('FullTextSearch_ISearchAndIndexDocuments');
-        $this->actions = new FullTextSearchActions($this->client);
+        $this->client        = mock('FullTextSearch_ISearchAndIndexDocuments');
+        $permissions_manager = mock('Docman_PermissionsManager');
+
+        $this->actions = TestHelper::getPartialMock('FullTextSearchActions', array('getDocmanPermissionsManager'));
+        $this->actions->__construct($this->client);
+        stub($this->actions)
+            ->getDocmanPermissionsManager()
+            ->returns($permissions_manager);
+
         $this->item = aDocman_File()
             ->withId(101)
             ->withTitle('Coin')
             ->withDescription('Duck typing')
             ->withGroupId(200)
-            ->withPermissions(array(3, 102))
             ->build();
+
+        stub($permissions_manager)
+            ->exportPermissions($this->item)
+            ->returns(array(3, 102));
 
         $version = stub('Docman_Version')
             ->getPath()

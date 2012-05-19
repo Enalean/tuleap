@@ -41,7 +41,6 @@ class Docman_File_Builder {
         stub($docman_file)->getTitle()->returns($this->title);
         stub($docman_file)->getDescription()->returns($this->description);
         stub($docman_file)->getDescription()->returns($this->description);
-        stub($docman_file)->getPermissions()->returns($this->permissions);
         return $docman_file;
     }
     

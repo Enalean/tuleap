@@ -23,6 +23,9 @@
 require_once('Docman_PermissionsManagerDao.class.php');
 require_once('Docman_SubItemsWritableVisitor.class.php');
 require_once('Docman_LockFactory.class.php');
+require_once 'common/permission/ExternalPermissions.class.php';
+require_once 'common/project/ProjectManager.class.php';
+require_once 'Docman_ItemFactory.class.php';
 
 class Docman_PermissionsManager {
     protected $groupId;
@@ -634,7 +637,22 @@ class Docman_PermissionsManager {
         }
         return $userArray;
     }
-
+    
+    /**
+     * Returns permissions of an item in a human readable format
+     *
+     * @param Docman_Item $item
+     *
+     * @return array
+     */
+    public function exportPermissions(Docman_Item $item) {
+        $project     = ProjectManager::instance()->getProject($item->getGroupId());
+        $permissions = ExternalPermissions::getProjectObjectGroups($project, $item->getId(), "PLUGIN_DOCMAN_%");
+        if ($item->getParentId() && ($parent = Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId()))) {
+            $permissions = array_intersect($permissions, $this->exportPermissions($parent)); 
+        }
+        return $permissions; 
+    }
 }
 
 ?>

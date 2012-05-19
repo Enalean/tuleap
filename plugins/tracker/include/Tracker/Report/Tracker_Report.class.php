@@ -210,7 +210,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $ugroups              = $user->getUgroups($group_id, $instances);
         $static_ugroups       = $user->getStaticUgroups($group_id);
         $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
-        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId(), $ugroups);
+        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
         
