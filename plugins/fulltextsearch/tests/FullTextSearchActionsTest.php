@@ -52,12 +52,12 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     public function itCallIndexOnClientWithRightParameters() {
         $expected = array(
                           array(
+                                'id'          => 101,
                                 'title'       => 'Coin',
                                 'description' => 'Duck typing',
                                 'file'        => 'aW5kZXggbWUK',
                                 'permissions' => array(200 => array(3, 102)),
                                ),
-                          101
                          );
         $this->client->expectOnce('index', $expected);
 

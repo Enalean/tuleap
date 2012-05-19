@@ -45,13 +45,14 @@ class FullTextSearchActions {
         $user        = $params['user'];
         $permissions = $params['item']->getPermissions();
         $indexed_datas = array(
-                'title'       => $params['item']->getTitle(),
-                'description' => $params['item']->getDescription(),
-                'file'        => $this->fileContentEncode($params['version']->getPath()),
-                'permissions' => array($group_id => $permissions)
+            'id'          => $item_id,
+            'title'       => $params['item']->getTitle(),
+            'description' => $params['item']->getDescription(),
+            'file'        => $this->fileContentEncode($params['version']->getPath()),
+            'permissions' => array($group_id => $permissions)
         );
         
-        $this->client->index($indexed_datas, $item_id);
+        $this->client->index($indexed_datas);
     }
     
     /**
