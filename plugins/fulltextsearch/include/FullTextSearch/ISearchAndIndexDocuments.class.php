@@ -42,3 +42,4 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      */
     public function delete($id = false);
 }
+?>
