@@ -35,9 +35,9 @@ class ExternalPermissions {
     );
     
     public static $ugroups = array(
-                UGroup::REGISTERED      => '@site_active',
-                UGroup::PROJECT_MEMBERS => '@%s_project_members',
-                UGroup::PROJECT_ADMIN   => '@%s_project_admin'
+        UGroup::REGISTERED      => '@site_active',
+        UGroup::PROJECT_MEMBERS => '@%s_project_members',
+        UGroup::PROJECT_ADMIN   => '@%s_project_admin'
     );
     /**
      * Return User groups
