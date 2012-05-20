@@ -39,7 +39,7 @@ class UGroup {
     const WIKI_ADMIN         = 14;
     const TRACKER_ADMIN      = 15;
     
-    protected $ugroup_id    = 0;
+    protected $id    = 0;
     protected $group_id     = 0;
     protected $name         = null;
     protected $description  = null;
