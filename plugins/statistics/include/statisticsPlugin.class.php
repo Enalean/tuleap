@@ -218,10 +218,10 @@ class StatisticsPlugin extends Plugin {
     }
     
     public function renderWSDL() {
-        require_once 'common/soap/SOAP_WSDLViewer.class.php';
+        require_once 'common/soap/SOAP_WSDLRenderer.class.php';
         $uri = $this->getSoapUri();
-        $viewer = new SOAP_WSDLViewer();
-        $viewer->render($uri .'/?wsdl');
+        $wsdl_renderer = new SOAP_WSDLRenderer();
+        $wsdl_renderer->render($uri .'/?wsdl');
     }
     
     public function wsdl_doc2soap_types($params) {
