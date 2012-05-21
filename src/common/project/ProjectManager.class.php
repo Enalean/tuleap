@@ -365,6 +365,17 @@ class ProjectManager {
     }
 
     /**
+     * Assert given groupid is valid, otherwise throw exception
+     *
+     * @param Integer $groupId    Id of the project
+     * @param String  $method     Name of the callback method
+     * @param Boolean $byUnixName Optional, Search the project by its unix name instead of its id
+     */
+    public function checkGroupIdForSoap($groupId, $method, $byUnixName = false) {
+        $this->getGroupByIdForSoap($groupId, $method, $byUnixName);
+    }
+    
+    /**
      * Check if the user can access the project $group,
      * regarding the restricted access
      *

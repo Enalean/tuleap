@@ -26,12 +26,16 @@ class SVN_Apache_ModMysqlTest extends UnitTestCase {
         $GLOBALS['sys_dbhost'] = 'db_server';
         $GLOBALS['sys_dbname'] = 'db';
         $GLOBALS['svn_prefix'] = '/svnroot';
+        $GLOBALS['sys_dbauth_user']   = 'dbauth_user';
+        $GLOBALS['sys_dbauth_passwd'] = 'dbauth_passwd';
     }
     
     function tearDown() {
         unset($GLOBALS['sys_dbname']);
         unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['svn_prefix']);
+        unset($GLOBALS['sys_dbauth_user']);
+        unset($GLOBALS['sys_dbauth_passwd']);
     }
     
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {

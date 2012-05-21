@@ -17,36 +17,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- * Ease creation of User object
- * 
- * $user = aUser()->withId(123)->withUserName('pouet')->build();
- * 
- * @return \UserTestBuilder 
- */
-function aUser() {
-    return new UserTestBuilder();
-}
-
-function anAnonymousUser() {
-    return aUser()->withId(0);
-}
-
-class UserTestBuilder {
-    private $params = array('language_id' => 'en_US');
+class SVN_PermissionsManager {
     
-    function withUserName($name) {
-        $this->params['user_name'] = $name;
-        return $this;
-    }
-    
-    function withId($id) {
-        $this->params['user_id'] = $id;
-        return $this;
-    }
-    
-    function build() {
-        return new User($this->params);
+    public function userCanRead(User $user, Project $project, $svnpath) {
+        include_once 'www/svn/svn_utils.php';
+        return svn_utils_check_access($user->getUserName(), $project->getUnixName(), $svnpath);
     }
 }
 

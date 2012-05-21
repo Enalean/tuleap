@@ -2,4 +2,7 @@
 src/www/scripts/combined/*
 *.swo
 *~
+src/utils/*.pyc
+src/utils/cvs1/*.pyc
+src/utils/svn/*.pyc
 .settings

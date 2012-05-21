@@ -2,6 +2,7 @@
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -17,37 +18,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- * Ease creation of User object
- * 
- * $user = aUser()->withId(123)->withUserName('pouet')->build();
- * 
- * @return \UserTestBuilder 
- */
-function aUser() {
-    return new UserTestBuilder();
+if ($argc < 3) {
+    die("Usage: ".$argv[0]." projectId user_group_id member_1 [member_2] [...]\n");
 }
 
-function anAnonymousUser() {
-    return aUser()->withId(0);
+$serverUrl = 'http://shunt.cro.enalean.com';
+
+// Establish connexion to the server
+$soapLogin = new SoapClient($serverUrl.'/soap/?wsdl', 
+                            array('cache_wsdl' => WSDL_CACHE_NONE));
+
+
+$requesterSessionHash = $soapLogin->login('manuel', 'manuel')->session_hash;
+
+$soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl', 
+                              array('cache_wsdl' => WSDL_CACHE_NONE));
+
+$prjId         = $argv[1];
+$user_group_id = $argv[2];
+for($i = 3; $i < $argc; $i++) {
+    var_dump($soapProject->addUserToUGroup($requesterSessionHash, $prjId, $user_group_id, $argv[$i]));
 }
 
-class UserTestBuilder {
-    private $params = array('language_id' => 'en_US');
-    
-    function withUserName($name) {
-        $this->params['user_name'] = $name;
-        return $this;
-    }
-    
-    function withId($id) {
-        $this->params['user_id'] = $id;
-        return $this;
-    }
-    
-    function build() {
-        return new User($this->params);
-    }
-}
+$soapLogin->logout($requesterSessionHash);
 
 ?>
