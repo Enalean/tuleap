@@ -371,7 +371,7 @@ class ProjectManager {
      * @param String  $method     Name of the callback method
      * @param Boolean $byUnixName Optional, Search the project by its unix name instead of its id
      */
-    function checkGroupIdForSoap($groupId, $method, $byUnixName = false) {
+    public function checkGroupIdForSoap($groupId, $method, $byUnixName = false) {
         $this->getGroupByIdForSoap($groupId, $method, $byUnixName);
     }
     
