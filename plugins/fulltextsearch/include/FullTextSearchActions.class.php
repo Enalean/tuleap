@@ -52,13 +52,16 @@ class FullTextSearchActions {
         $item_id     = $params['item']->getId();
         $group_id    = $params['item']->getGroupId();
         $user        = $params['user'];
-        $permissions = $this->getDocmanPermissionsManager($group_id)->exportPermissions($params['item']);
+        //$permissions = $this->getDocmanPermissionsManager($group_id)->exportPermissions($params['item']);
         $indexed_datas = array(
             'id'          => $item_id,
             'title'       => $params['item']->getTitle(),
             'description' => $params['item']->getDescription(),
             'file'        => $this->fileContentEncode($params['version']->getPath()),
-            'permissions' => array($group_id => $permissions)
+            //'permissions' => array($group_id => $permissions)  // This doesn't work. 
+                                                                 // Exported permissions are not right.
+                                                                 // Commented out to not give false hope 
+                                                                 // to our beta testers
         );
         
         $this->client->index($indexed_datas);
