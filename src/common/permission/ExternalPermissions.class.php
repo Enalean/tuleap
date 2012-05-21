@@ -52,45 +52,47 @@ class ExternalPermissions {
             return array();
         }
         $groups = array(self::$status[$user->getStatus()]);
-        $groups = self::appendProjectGroups($user, $groups);
-        $groups = self::appendUgroups($user, $groups);
+        $groups = self::appendDynamicUGroups($user, $groups);
+        $groups = self::appendStaticUgroups($user, $groups);
         
         return $groups;
     }
 
     /**
-     * Append project groups of user to secod parameter 
+     * Append project dynamic ugroups of user
      * 
      * @param User  $user
-     * @param array $groups
+     * @param array $user_ugroups
+     *
+     * @return array the new array of user's ugroup
      */
-    protected static function appendProjectGroups( User $user, array $groups = array()) {
+    protected static function appendDynamicUGroups( User $user, array $user_ugroups = array()) {
         $user_projects = $user->getProjects(true);
-        foreach($user_projects as $user_project) {
+        foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
             $group_id     = $user_project['group_id'];
-            $groups[] = $project_name.'_project_members';
+            $user_ugroups[] = $project_name.'_project_members';
             if ($user->isMember($group_id, 'A')) {
-                $groups[] = $project_name.'_project_admin';
+                $user_ugroups[] = $project_name.'_project_admin';
             }
         }
-        return $groups;
+        return $user_ugroups;
     }
 
     /**
-     * Append ugroups of user to second parameter
+     * Append project static ugroups of user
      * 
      * @param User  $user
-     * @param array $groups
+     * @param array $user_ugroups
      * 
-     * return array
+     * @return array the new array of user's ugroup
      */
-    protected static function appendUgroups( User $user, array $groups = array()) {
+    protected static function appendStaticUgroups( User $user, array $user_ugroups = array()) {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
-            $groups[] = 'ug_'.$row['ugroup_id'];
+            $user_ugroups[] = 'ug_'.$row['ugroup_id'];
         }
-        return $groups;
+        return $user_ugroups;
     } 
 
     /**
