@@ -90,12 +90,12 @@ class Widget_ProjectSvnStats extends Widget {
             
             $legendRatio = $nb_commiters/10;
             //Adjust the chart heigh and width to fit two columns legend, in case we have more than 10 commiters
-            ($legendRatio < 1)? $chartWidth  = 400 : $chartWidth  = 500;
+            ($legendRatio < 1)? $chartWidth  = 400 : $chartWidth  = 550;
             ($legendRatio < 1)? $chartHeigh  = 300+16*$nb_commiters*(1/$legendRatio) : $chartHeigh  = 300+(16+$legendRatio)*$nb_commiters;
             //Legend default X and Y positions given as fractions
             ($legendRatio < 1)? $legend_x_position = 0.1 : $legend_x_position = 0.01;
             ($legendRatio < 1)? $legend_y_position = 0.99 : $legend_y_position = 0.5;;
-            //Trying to customise image bottom margin according commiters numbe
+            //Trying to customise image bottom margin according to commiters number
             ($legendRatio > 2)? $customImageMargin = 80+(16-$legendRatio+1)*$nb_commiters : $customImageMargin = 100+18*$nb_commiters;
             ($legendRatio < 1)? $imgBottomMargin = 100+16*$nb_commiters*(1/$legendRatio) : $imgBottomMargin = $customImageMargin;
             //Align legend according to commiters number, this should take in consideration X and Y positions of the legend
