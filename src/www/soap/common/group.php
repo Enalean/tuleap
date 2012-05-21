@@ -286,19 +286,26 @@ function getGroupUgroups($sessionKey, $group_id) {
 }
 
 function getProjectGroupsAndUsers($session_key, $group_id) {
-    if (session_continue($session_key)) {
-        try {
-            ProjectManager::instance()->checkGroupIdForSoap($group_id, 'getProjectGroupsAndUsers');
-            
-            $ugroups     = ugroup_get_ugroups_with_members($group_id);
-            $dyn_members = ugroup_get_all_dynamic_members($group_id);
-            
-            return ugroups_to_soap(array_merge($dyn_members, $ugroups));
-        } catch (SoapFault $e) {
-            return $e;
-        }
-    } else {
-        return new SoapFault(invalid_session_fault, 'Invalid Session', 'getProjectGroupsAndUsers');
+    try {
+        require_once 'common/soap/SOAP_RequestValidator.class.php';
+
+        $project_manager        = ProjectManager::instance();
+        $user_manager           = UserManager::instance();
+        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
+
+        $user    = $soap_request_validator->continueSession($session_key);
+        $project = $soap_request_validator->getProjectById($group_id, 'getProjectGroupsAndUsers');
+
+        $soap_request_validator->assertUserCanAccessProject($user, $project);
+
+        $ugroups     = ugroup_get_ugroups_with_members($group_id);
+        $dyn_members = ugroup_get_all_dynamic_members($group_id);
+
+        return ugroups_to_soap(array_merge($dyn_members, $ugroups));
+    } catch (SoapFault $e) {
+        return $e;
+    } catch (Exception $e) {
+        throw new SoapFault((string) $e->getCode(), $e->getMessage());
     }
 }
 
