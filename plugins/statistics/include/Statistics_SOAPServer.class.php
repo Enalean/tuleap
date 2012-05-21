@@ -79,15 +79,19 @@ class Statistics_SOAPServer {
             $total = $this->disk_usage_manager->returnTotalProjectSize($group_id);
             
             $allowed_quota_in_GB = $this->disk_usage_manager->getProperty('allowed_quota');
-            $allowed_quota       = $allowed_quota_in_GB * 1024 * 1024 * 1024;
+            $allowed_quota_in_B  = $this->gigabytesToBytes($allowed_quota_in_GB);
             
             return array(
                 'total' => $total,
-                'quota' => $allowed_quota
+                'quota' => $allowed_quota_in_B
             );
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
+    }
+    
+    private function gigabytesToBytes($gigabytes) {
+        return $gigabytes * 1024 * 1024 * 1024;
     }
 }
 ?>
