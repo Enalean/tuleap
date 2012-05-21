@@ -66,8 +66,9 @@ class FullTextSearchActionsTests extends TuleapTestCase {
                                 'title'       => 'Coin',
                                 'description' => 'Duck typing',
                                 'file'        => 'aW5kZXggbWUK',
-                                'permissions' => array(200 => array(3, 102)),
+                                //'permissions' => array(200 => array(3, 102)),
                                ),
+                          101
                          );
         $this->client->expectOnce('index', $expected);
 
