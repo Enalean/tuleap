@@ -20,7 +20,6 @@
 
 require_once 'pre.php';
 
-// First, check plugin availability
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
