@@ -64,7 +64,7 @@ class FullTextSearchActions {
                                                                  // to our beta testers
         );
         
-        $this->client->index($indexed_datas);
+        $this->client->index($indexed_datas, $item_id);
     }
     
     /**
