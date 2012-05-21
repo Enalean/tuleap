@@ -1,9 +1,13 @@
 Version 5.1 (Not released yet)
+   == Enhancement ==
+   * Add new methodis in the SOAP api (get the statistics of a project, view svn
+   top commiters, access to user groups of a project, ...)
+
    == Plugins ==
    * AgileDashboard v0.19
    * Tracker v5.7.13
    * Git v2.5.3
-   * Statistics v0.10
+   * Statistics v0.11
 
   == Bug fix ==
   * Fix bug with IE7 and drag'n drop in scriptaculous.
