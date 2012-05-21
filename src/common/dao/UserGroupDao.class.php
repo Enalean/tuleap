@@ -95,7 +95,7 @@ class UserGroupDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function updateUserGroupFlags($user_id, $group_id, $flag) {
+    public function updateUserGroupFlags($user_id, $group_id, $flag) {
         if ($flag == '') {
             return false;
         }
