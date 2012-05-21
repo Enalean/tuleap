@@ -60,6 +60,8 @@ class SVN_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
+            $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
+            
             return $this->svn_repository_listing->getSvnPath($current_user, $project, $path);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -78,10 +80,11 @@ class SVN_SOAPServer {
      */
     public function getSvnLog($session_key, $group_id, $limit, $author_id) {
         try {
-            $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
+            $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
             $author    = $this->getUser($author_id);
-            $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $svn_log   = new SVN_LogFactory($project);
             $revisions = $svn_log->getRevisions($limit, $author);
 
@@ -104,9 +107,10 @@ class SVN_SOAPServer {
      */
     public function getSvnStatsUsers($session_key, $group_id, $start_date, $end_date) {
         try {
-            $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
+            $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
-            $project   = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
             $svn_log   = new SVN_LogFactory($project);
             $revisions = $svn_log->getCommiters(TimeInterval::fromUnixTimestamps($start_date, $end_date));
 
@@ -129,11 +133,12 @@ class SVN_SOAPServer {
      */
     public function getSvnStatsFiles($session_key, $group_id, $start_date, $end_date, $limit) {
         try {
-            $user = $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
+            $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
-            $project = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
             $svn_log = new SVN_LogFactory($project);
-            $files   = $svn_log->getTopModifiedFiles($user, TimeInterval::fromUnixTimestamps($start_date, $end_date), $limit);
+            $files   = $svn_log->getTopModifiedFiles($current_user, TimeInterval::fromUnixTimestamps($start_date, $end_date), $limit);
 
             return $files;
         } catch (Exception $e) {
