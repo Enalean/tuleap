@@ -33,14 +33,14 @@ function example($host, $user, $pass, $group_id) {
         );
         
         // Establish connexion to the server...
-        $soap = new SoapClient($host .'/soap/?wsdl', $soap_options);
+        $soap = new SoapClient("http://$host/soap/?wsdl", $soap_options);
         // ...and get the session hash of the user.
         $session_hash = $soap->login($user, $pass)->session_hash;
         
         
         //Get statistics
         echo "Retrieving statistics for project $group_id\n";
-        $soap  = new SoapClient($host .'/plugins/statistics/soap/?wsdl', $soap_options);
+        $soap  = new SoapClient("http://$host/plugins/statistics/soap/?wsdl", $soap_options);
         $stats = $soap->getProjectDiskStats($session_hash, $group_id);
         print_r($stats);
 
