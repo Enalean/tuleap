@@ -305,7 +305,7 @@ function getProjectGroupsAndUsers($session_key, $group_id) {
     } catch (SoapFault $e) {
         return $e;
     } catch (Exception $e) {
-        throw new SoapFault((string) $e->getCode(), $e->getMessage());
+        return new SoapFault((string) $e->getCode(), $e->getMessage());
     }
 }
 
