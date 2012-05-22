@@ -27,7 +27,7 @@ require_once('Docman_Item.class.php');
 class Docman_Document extends Docman_Item {
     
     function Docman_Document($data = null) {
-        parent::Docman_Item($data);
+        parent::__construct($data);
     }
     
     function accept(&$visitor, $params = array()) {

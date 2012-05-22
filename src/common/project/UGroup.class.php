@@ -31,46 +31,51 @@ require_once('UGroup_Invalid_Exception.class.php');
  * 
  */
 class UGroup {
+    
+    const NONE               = 100;
+    const ANONYMOUS          = 1;
+    const REGISTERED         = 2;
+    const PROJECT_MEMBERS    = 3;
     const PROJECT_ADMIN      = 4;
     const FILE_MANAGER_ADMIN = 11;
+    const DOCUMENT_TECH      = 12;
+    const DOCUMENT_ADMIN     = 13;
     const WIKI_ADMIN         = 14;
+    const TRACKER_ADMIN      = 15;
     const FORUM_ADMIN        = 16;
     const NEWS_ADMIN         = 17;
     const NEWS_EDITOR        = 18;
     const SVN_ADMIN          = 19;
+    
+    protected $id    = 0;
+    protected $group_id     = 0;
+    protected $name         = null;
+    protected $description  = null;
+    protected $is_dynamic   = true;
 
-    protected $id;
-    protected $group_id;
-    protected $name;
-    protected $description;
-    protected $is_dynamic;
-
-    protected $members=null;
+    protected $members      = null;
+    protected $members_name = null;
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
     protected $_usergroupdao;
 
     public function __construct($row = null) {
-        $this->id            = isset($row['ugroup_id'])            ? $row['ugroup_id']            : 0;
-        $this->name          = isset($row['name'])                 ? $row['name']                 : null;
-        $this->description   = isset($row['description'])          ? $row['description']          : null;
-        $this->group_id      = isset($row['group_id'])             ? $row['group_id']             : 0;
-        if ($this->id < 100) {
-            $this->is_dynamic = true;
-        } else {
-            $this->is_dynamic = false;
-        }
+        $this->id          = isset($row['ugroup_id'])   ? $row['ugroup_id']   : 0;
+        $this->name        = isset($row['name'])        ? $row['name']        : null;
+        $this->description = isset($row['description']) ? $row['description'] : null;
+        $this->group_id    = isset($row['group_id'])    ? $row['group_id']    : 0;
+        $this->is_dynamic  = $this->id < 100;
     }
 
-    protected function _getUGroupDao() {
+    protected function getUGroupDao() {
         if (!$this->_ugroupdao) {
             $this->_ugroupdao = new UGroupDao();
         }
         return $this->_ugroupdao;
     }
 
-    protected function _getUGroupUserDao() {
+    protected function getUGroupUserDao() {
         if (!$this->_ugroupuserdao) {
             $this->_ugroupuserdao = new UGroupUserDao();
         }
@@ -93,12 +98,13 @@ class UGroup {
      * WARNING: this does not work currently with dynamic ugroups
      */
     public function getMembers() {
-        if (!$this->members) {
-            $this->members=array();
-            $ugroupuser_dao =& $this->_getUGroupUserDao();
-            $dar =& $ugroupuser_dao->searchUserByStaticUGroupId($this->id);
+        if (! $this->members) {
+            $this->members = array();
+            $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
             foreach($dar as $row) {
-                $this->members[]=new User($row);
+                $currentUser          = new User($row);
+                $this->members[]      = $currentUser;
+                $this->members_name[] = $currentUser->getUserName();
             }
         }
         return $this->members;
@@ -109,20 +115,8 @@ class UGroup {
      * WARNING: this does not work currently with dynamic ugroups
      */
     public function getMembersUserName() {
-        $username_array=array();
-        if (!$this->members) {
-            $ugroupuser_dao =& $this->_getUGroupUserDao();
-            $dar =& $ugroupuser_dao->searchUserByStaticUGroupId($this->id);
-            foreach($dar as $row) {
-                $username_array[]=$row['user_name'];
-            }
-        } else {
-            // If ugroup members already initialized
-            foreach($this->members as $user) {
-                $username_array[]=$user->getUserName();
-            }
-        }
-        return $username_array;
+        $this->getMembers();
+        return $this->members_name;
     }
 
     /**
@@ -133,9 +127,8 @@ class UGroup {
     *
     * @return boolean
     */
-    function exists($groupId, $ugroupId) {
-        $dao = $this->_getUGroupDao();
-        return $dao->checkUGroupValidityByGroupId($groupId, $ugroupId);
+    public function exists($groupId, $ugroupId) {
+        return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
     /**
@@ -147,8 +140,7 @@ class UGroup {
      * @return Data Access Result
      */
     public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
-        $dao = $this->_getUGroupUserDao();
-        return $dao->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
+        return $this->getUGroupUserDao()->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
     }
     
     /**

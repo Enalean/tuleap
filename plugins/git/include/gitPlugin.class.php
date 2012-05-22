@@ -295,6 +295,7 @@ class GitPlugin extends Plugin {
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -309,6 +310,7 @@ class GitPlugin extends Plugin {
     function permission_get_object_fullname($params) {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -323,6 +325,7 @@ class GitPlugin extends Plugin {
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -339,6 +342,7 @@ class GitPlugin extends Plugin {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                    require_once('GitRepository.class.php');
                     $repository = new GitRepository();
                     $repository->setId($params['object_id']);
                     try {
@@ -407,6 +411,7 @@ class GitPlugin extends Plugin {
      * @return Void
      */
     public function collect_ci_triggers($params) {
+        require_once('Git_Ci.class.php');
         $ci = new Git_Ci();
         $triggers = $ci->retrieveTriggers($params);
         $params['services'][] = $triggers;
@@ -452,6 +457,7 @@ class GitPlugin extends Plugin {
                 $vJobId = new Valid_Uint('job_id');
                 $vJobId->required();
                 if($params['request']->valid($vJobId)) {
+                    require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
                     $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
