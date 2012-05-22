@@ -322,6 +322,11 @@ class Git_GitoliteDriver {
         return $conf;
     }
     
+    /**
+     * Fetch the gitolite readable conf for permissions on a repository
+     *
+     * @return string
+     */
     public function fetchConfigPermissions($project, $repository, $permission_type) {
         if (!isset(self::$permissions_types[$permission_type])) {
             return '';
