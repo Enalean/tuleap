@@ -88,18 +88,22 @@ class Widget_ProjectSvnStats extends Widget {
             
             $nb_commiters = count($stats);
             
+            // Legend ratio is computed in order to specify the number of text columns to use in the legend text box. 
+            // For graphs which have a large number of plots (say 10 items) it might be necessary to specify 2 (or more columns) to avoid that the legend box become too large and hide the image.
             $legendRatio = $nb_commiters/10;
             //Adjust the chart heigh and width to fit two columns legend, in case we have more than 10 commiters
             ($legendRatio < 1)? $chartWidth  = 400 : $chartWidth  = 550;
             ($legendRatio < 1)? $chartHeigh  = 300+16*$nb_commiters*(1/$legendRatio) : $chartHeigh  = 300+(16+$legendRatio)*$nb_commiters;
-            //Legend default X and Y positions given as fractions
+            // Legend default X and Y positions given as fractions
             ($legendRatio < 1)? $legend_x_position = 0.1 : $legend_x_position = 0.01;
             ($legendRatio < 1)? $legend_y_position = 0.99 : $legend_y_position = 0.5;;
-            //Trying to customise image bottom margin according to commiters number
+            // Customise image bottom margin according to commiters number
+            // Specify marging between the image bottom and the legend top according to computed legend ratio(less than 10, between 10 and 20 or more than 20 legend items, etc...).
             ($legendRatio > 2)? $customImageMargin = 80+(16-$legendRatio+1)*$nb_commiters : $customImageMargin = 100+18*$nb_commiters;
             ($legendRatio < 1)? $imgBottomMargin = 100+16*$nb_commiters*(1/$legendRatio) : $imgBottomMargin = $customImageMargin;
             //Align legend according to commiters number, this should take in consideration X and Y positions of the legend
             ($legendRatio < 1)? $legendAlign = 'bottom' : $legendAlign = 'top';
+            // @TODO: Centralize stuff at Chart class level to properly render a Jpgraph chart with a large number of legend items
 
             //Build the chart
             $c = new Chart($chartWidth, $chartHeigh);
