@@ -26,6 +26,10 @@ require_once 'common/project/UGroup.class.php';
 /**
  * Return groups of a user given by name to use them externally
  *
+ * FIXME: Find a better name as it does not deal with external permissions 
+ *        and the description is not coherent with the name.
+ * FIXME: To not write purely static class. Use OOP. DDD Service or not.
+ * FIXME: switch protected to private (there is no inheritance for now, yagni, toussa...)
  */
 class ExternalPermissions {
     
