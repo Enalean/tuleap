@@ -34,8 +34,8 @@ class ExternalPermissions {
         User::STATUS_ACTIVE     => 'site_active'
     );
     
-    public static $ugroups = array(
-        UGroup::REGISTERED      => '@site_active',
+    public static $ugroups_templates = array(
+        UGroup::REGISTERED      => '@site_active @%s_project_members',
         UGroup::PROJECT_MEMBERS => '@%s_project_members',
         UGroup::PROJECT_ADMIN   => '@%s_project_admin'
     );
@@ -137,8 +137,8 @@ class ExternalPermissions {
             $ugroup = '@ug_'. $ugroup;
             return false;
         } 
-        if (isset(self::$ugroups[$ugroup])) {
-            $ugroup = sprintf(self::$ugroups[$ugroup], $project_name);
+        if (isset(self::$ugroups_templates[$ugroup])) {
+            $ugroup = sprintf(self::$ugroups_templates[$ugroup], $project_name);
         } else {
             $ugroup = null;
         }

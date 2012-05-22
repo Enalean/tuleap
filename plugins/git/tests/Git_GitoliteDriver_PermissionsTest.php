@@ -85,7 +85,7 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
     public function itReturnsSiteActiveIfUserGroupIsRegistered() {
         PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_REGISTERED']));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertPattern('/=\s@site_active$/', $result);
+        $this->assertPattern('/=\s@site_active @'. $this->project->getUnixName() .'_project_members$/', $result);
     }
     
     public function itReturnsProjectNameWithProjectMemberIfUserIsProjectMember() {
@@ -123,7 +123,7 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
     public function itReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups() {
         PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(666, $GLOBALS['UGROUP_REGISTERED']));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
-        $this->assertIdentical(' R   = @ug_666 @site_active' . PHP_EOL, $result);
+        $this->assertIdentical(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . PHP_EOL, $result);
     }
 
 }
