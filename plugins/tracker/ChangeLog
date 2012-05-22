@@ -1,3 +1,6 @@
+Version 5.7.14 - Tuleap 5.1
+    * remove unused variable
+
 Version 5.7.13 - Tuleap 5.1
     * Finish permissions checking on cross tracker search.
 

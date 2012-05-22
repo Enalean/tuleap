@@ -4,10 +4,12 @@ Version 5.1 (Not released yet)
    top commiters, access to user groups of a project, ...)
 
    == Plugins ==
+   * Docman v2.54.5
    * AgileDashboard v0.19
-   * Tracker v5.7.13
+   * Tracker v5.7.14
    * Git v2.5.3
    * Statistics v0.11
+   * New plugin: Fulltextsearch v0.1
 
   == Bug fix ==
   * Fix bug with IE7 and drag'n drop in scriptaculous.

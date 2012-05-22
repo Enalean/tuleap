@@ -1,4 +1,4 @@
 Version 0.1 (Tuleap 5.1)
     * First version of the plugin
     ** index/delete a document in ElasticSearch when it is added/removed in the docman
-    ** Only title, description, permissions and content of pdf files are indexed
+    ** Only title, description and content of pdf files are indexed
