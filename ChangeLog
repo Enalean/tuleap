@@ -1,3 +1,7 @@
+Version 5.2 (Not Released Yet)
+	== Plugins ==
+	* Cardwall: 0.5.1
+
 Version 5.1 (Wednesday, May 23rd 2012)
    == Enhancement ==
    * Add new methods in the SOAP api (get the statistics of a project, view svn
