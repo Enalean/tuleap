@@ -161,6 +161,7 @@ require_once('Docman_ApprovalTableReviewerFactory.class.php');
                                  $table->getDescription(),
                                  $table->getStatus(),
                                  $table->getNotification(),
+                                 $table->getRepeatNotification(),
                                  $table->getOwner());
     }
 
@@ -168,13 +169,15 @@ require_once('Docman_ApprovalTableReviewerFactory.class.php');
      * Update table in the database and the internal table object
      * - status
      * - notification
+     * - repeatNotification
      * - description
      */
-    function updateTable($status, $notification, $description, $owner) {
+    function updateTable($status, $notification, $repeatNotification, $description, $owner) {
         $table =& $this->getTable();
         if($table !== null) {
             $table->setStatus($status);
             $table->setNotification($notification);
+            $table->setRepeatNotification($repeatNotification);
             $table->setDescription($description);
             $table->setOwner($owner);
             return $this->_updateTable($table);

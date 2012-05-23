@@ -1091,9 +1091,12 @@ class Docman_Controller extends Controler {
                 $this->_actionParams['item']   = $item;
 
                 // Settings
-                $this->_actionParams['status'] = (int) $this->request->get('status');
-                $this->_actionParams['description'] = $this->request->get('description');
+                $this->_actionParams['status']       = (int) $this->request->get('status');
+                $this->_actionParams['description']  = $this->request->get('description');
                 $this->_actionParams['notification'] = (int) $this->request->get('notification');
+                $this->_actionParams['reminder']     = $this->request->get('reminder');
+                $this->_actionParams['occurence']    = (int) $this->request->get('occurence');
+                $this->_actionParams['period']       = (int) $this->request->get('period');
 
                 // Users
                 $this->_actionParams['user_list'] = $this->request->get('user_list');

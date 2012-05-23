@@ -42,22 +42,24 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
     var $description;
     var $status;
     var $notification;
+    var $repeatNotification;
 
     var $approvalState;
     var $customizable;
     var $reviewers;
 
     function Docman_ApprovalTable() {
-        $this->id           = null;
-        $this->date         = null;
-        $this->owner        = null;
-        $this->description  = null;
-        $this->status       = null;
-        $this->notification = null;
+        $this->id                 = null;
+        $this->date               = null;
+        $this->owner              = null;
+        $this->description        = null;
+        $this->status             = null;
+        $this->notification       = null;
+        $this->repeatNotification = null;
 
-        $this->approvalState = null;
-        $this->customizable = true;
-        $this->reviewers = array();
+        $this->approvalState      = null;
+        $this->customizable       = true;
+        $this->reviewers          = array();
     }
 
     function setId($v) {
@@ -108,6 +110,14 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
         return $this->notification;
     }
 
+    function setRepeatNotification($v) {
+        $this->repeatNotification = $v;
+    }
+
+    function getRepeatNotification() {
+        return $this->repeatNotification;
+    }
+
     function setCustomizable($v) {
         $this->customizable = $v;
     }
@@ -127,6 +137,7 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
         if(isset($row['description'])) $this->description = $row['description'];
         if(isset($row['status']))      $this->status = $row['status'];
         if(isset($row['notification'])) $this->notification = $row['notification'];
+        if(isset($row['notification_occurence'])) $this->repeatNotification = $row['notification_occurence'];
         $this->approvalState = $this->computeApprovalState($row);
     }
 
