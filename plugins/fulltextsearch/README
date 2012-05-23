@@ -7,7 +7,7 @@ This plugin is still in heavy development: do not use in production!
 Development setup
 -----------------
 
-Install elasticsearch:
+Install elasticsearch server:
 
     $ cd /opt
     $ wget --no-check-certificate https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.0.tar.gz
@@ -21,9 +21,6 @@ Install the elasticsearch attachments plugin:
 Start the elasticsearch server:
 
     $ ./bin/elasticsearch
-
-The elasticsearch PHP client should have been installed during installation of
-this plugin. See http://github.com/nervetattoo/elasticsearch for details.
 
 Create the index:
 
@@ -43,6 +40,11 @@ uploaded file:
 
     $ curl 'localhost:9200/tuleap/docman/_search?q=Foo'
 
+Monitoring
+----------
+
+You can install elasticsearch-head to monitor your ElasticSearch cluster.
+See more information on http://mobz.github.com/elasticsearch-head/
 
 References
 ----------

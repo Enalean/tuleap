@@ -1,22 +1,23 @@
-Version 5.1 (Not released yet)
+Version 5.1 (Wednesday, May 23rd 2012)
    == Enhancement ==
-   * Add new methodis in the SOAP api (get the statistics of a project, view svn
+   * Add new methods in the SOAP api (get the statistics of a project, view svn
    top commiters, access to user groups of a project, ...)
 
    == Plugins ==
+   * New plugin: Fulltextsearch v0.2
+     DISCLAIMER: plugin in beta, do not use it on production servers.
    * Docman v2.54.5
    * AgileDashboard v0.19
    * Tracker v5.7.14
    * Git v2.5.4
    * Statistics v0.11
-   * New plugin: Fulltextsearch v0.1
 
   == Bug fix ==
   * Fix bug with IE7 and drag'n drop in scriptaculous.
-  * Definitevely delete mailing list in the db (Contrib STMicroelectronics)
+  * Definitively delete mailing list in the db (Contrib STMicroelectronics)
 
   == Development ==
-  * Check release with git
+  * Check release with git (since now Tuleap sources are under git!)
   * jQuery support: Now Tuleap support jQuery as an alternative of
     Prototypejs/Scriptaculous.
   * Bootstrap support: Introduce dropdown plugin from Bootstrap to replace

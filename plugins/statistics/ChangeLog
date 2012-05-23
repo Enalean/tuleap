@@ -2,7 +2,7 @@ Version 0.11 (Tuleap 5.1)
 	* Provide access to statistics through SOAP API
 
 Version 0.10 (Tuleap 5.1)
-	* Fix the SVN & CVS sql requests
+	* Fix the SVN & CVS sql requests (contrib STMicroelectronics)
 
 Version 0.9
     * Export SVN and CVS statistics to CSV.
