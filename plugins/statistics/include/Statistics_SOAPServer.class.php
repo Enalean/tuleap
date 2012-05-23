@@ -44,14 +44,20 @@ class Statistics_SOAPServer {
      *  Returned format:
      *  <code>
      *  array(
-     *      "total" => total size in bytes,
-     *      "quota" => allowed size in bytes
+            "services" => array('service name 1' => total size in bytes,
+                                'service name 2' => total size in bytes
+                          ),
+     *      "total"    => total size in bytes,
+     *      "quota"    => allowed size in bytes
      *  )
      *  </code>
      *  
      *  Example:
      *  <code>
      *  array(
+            "services" => array('svn' => 60,
+                                'docman' => 2500
+                          ),
      *      "total" => 2560,
      *      "quota" => 52428800,
      *  )
@@ -81,9 +87,15 @@ class Statistics_SOAPServer {
             $allowed_quota_in_GB = $this->disk_usage_manager->getProperty('allowed_quota');
             $allowed_quota_in_B  = $this->gigabytesToBytes($allowed_quota_in_GB);
             
+            $size_by_service     = array();
+            if ($this->userHasAdminPrivileges($user, $group_id)) {
+                $size_by_service     = $this->disk_usage_manager->returnTotalServiceSizeByProject($group_id);
+            }
+            
             return array(
-                'total' => $total,
-                'quota' => $allowed_quota_in_B
+                'services' => $size_by_service,
+                'total'    => $total,
+                'quota'    => $allowed_quota_in_B
             );
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -92,6 +104,10 @@ class Statistics_SOAPServer {
     
     private function gigabytesToBytes($gigabytes) {
         return $gigabytes * 1024 * 1024 * 1024;
+    }
+    
+    private function userHasAdminPrivileges($user, $group_id){
+        return ($user->isSuperUser() || $user->isMember($group_id, 'A'));
     }
 }
 ?>
