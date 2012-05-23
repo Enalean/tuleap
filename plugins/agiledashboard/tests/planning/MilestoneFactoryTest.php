@@ -26,33 +26,57 @@ class MilestoneFactoryTest extends TuleapTestCase {
         $this->group_id    = 12;
         $this->planning_id = 34;
         $this->artifact_id = 56;
-        
+
         $this->user              = mock('User');
         $planning                = aPlanning()->withId($this->planning_id)->build();
-        $this->artifact          = stub('Tracker_Artifact')->getUniqueLinkedArtifacts($this->user)->returns(array());
         $planning_factory        = mock('PlanningFactory');
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->artifact          = stub('Tracker_Artifact')->getUniqueLinkedArtifacts($this->user)->returns(array());
         $this->milestone_factory = new Planning_MilestoneFactory($planning_factory, $this->artifact_factory);
-        
+
         stub($planning_factory)->getPlanningWithTrackers($this->planning_id)->returns($planning);
     }
-    
+
     public function itCanRetrievesAMilestoneWithItsPlanningItsArtifactAndItsPlannedItems() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
-        
+
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $this->artifact_id);
-        
+
         $this->assertEqual($milestone->getArtifact(), $this->artifact);
-        
+
         // TODO: merge tree-related presenter tests in factory tests
     }
-    
+
     public function itReturnsNoMilestoneWhenThereIsNoArtifact() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns(null);
-        
+
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $this->artifact_id);
-        
+
         $this->assertIsA($milestone, 'Planning_NoMilestone');
+    }
+
+    public function itCanSetMilestonesWithaHierarchyDepthGreaterThan2() {
+        $artifact_id   = 100;
+        $root_artifact = stub('Tracker_Artifact')->getId()->returns($artifact_id);
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($root_artifact);
+
+        $depth3_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array());
+        stub($depth3_artifact)->getId()->returns(3);
+        $depth2_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($depth3_artifact));
+        stub($depth2_artifact)->getId()->returns(2);
+        $depth1_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($depth2_artifact));
+        stub($depth1_artifact)->getId()->returns(1);
+        stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
+
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $artifact_id);
+        $tree_node = $milestone->getPlannedArtifacts();
+        $this->assertTrue($tree_node->hasChildren());
+        $tree_node1 = $tree_node->getChild(0);
+        $this->assertTrue($tree_node1->hasChildren());
+        $tree_node2 = $tree_node1->getChild(0);
+        $this->assertTrue($tree_node2->hasChildren());
+        $tree_node3 = $tree_node2->getChild(0);
+        $this->assertEqual(3, $tree_node3->getId());
     }
 }
 ?>
