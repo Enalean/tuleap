@@ -175,12 +175,24 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<td>';
         // @TODO: i18n
         $html .= '<h4>Mail reminder occurence:</h4>';
-        $html .= '<input type="checkbox" id="reminder" name="reminder" />';
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td>';
+        $html .= '<span id="reminder" ></span><input onclick="toggle_occurence()" type="checkbox" name="reminder" /></span>';
         $html .= 'Send a mail reminder to approver(s) ';
-        $html .= '<span>Every ';
-        $html .= '<input size="2" name="occurence" />';
+        $html .= '</td>';
+        $html .= '<td>';
+        $html .= '<span id="occurence_form" >Every ';
+        $html .= '<input size="2" name="occurence" /> ';
         $html .= html_build_select_box_from_arrays(array(86400, 604800), array('Days', 'Weeks'), 'period', null, false);
         $html .= '</span>';
+        $js   .= 'function toggle_occurence() {
+                      Effect.toggle(\'occurence_form\', \'slide\', { duration: 0 });
+                      Effect.toggle(\'reminder\', \'slide\', { duration: 0 });
+                  }
+                  Element.toggle(\'occurence_form\', \'slide\', { duration: 0 });';
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         $html .= '</td>';
         $html .= '</tr>';
 
