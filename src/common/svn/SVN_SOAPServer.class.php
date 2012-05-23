@@ -50,6 +50,11 @@ class SVN_SOAPServer {
      *   <li>The returned content is relative (/project/tags) gives array("1.0", "2.0").</li>
      * </ul>
      * 
+     * Error codes:
+     * * 3001, Invalid session (wrong $sessionKey)
+     * * 3002, User do not have access to the project
+     * * 
+     *
      * @param String  $session_key Session key of the desired project admin
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
@@ -67,15 +72,50 @@ class SVN_SOAPServer {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
-    
+
     /**
      * Retrieves the SVN revisions of the project visible by the requesting user.
-     * 
+     *  
+     *  Returned format:
+     *  <code>
+     *  array(
+     *      array(
+     *          "revision"  => Revision number,
+     *          "author"    => User id,
+     *          "date"      => timestamp,
+     *          "message"   => commit message,
+     *      )
+     *  )
+     *  </code>
+     *  
+     *  Example:
+     *  <code>
+     *  array(
+     *      array(
+     *          "revision"  => 12214,
+     *          "author"    => 123,
+     *          "date"      => 1337788549,
+     *          "message"   => "Fix bug #456",
+     *      )
+     *      array(
+     *          "revision"  => 12213,
+     *          "author"    => 123,
+     *          "date"      => 1337788530,
+     *          "message"   => "Fix bug #789",
+     *      )
+     *  )
+     *  </code>
+     *
+     *
+     * Error codes:
+     * * 3001, Invalid session (wrong $sessionKey)
+     * * 3002, User do not have access to the project
+     * * 3005, Invalid user id
+     *
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param Integer $limit       Maximum revisions returned
-     * @param Integer $author_id   Author id to filter with (-1 means no filter)
-     * 
+     *
      * @return ArrayOfRevision The list of revisions
      */
     public function getSvnLog($session_key, $group_id, $limit, $author_id) {
