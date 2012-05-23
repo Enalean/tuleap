@@ -1,3 +1,6 @@
+Version 2.5.4 (Tuleap 5.1)
+    * Fix typo in fr_FR L10n
+
 Version 2.5.3 (Tuleap 5.1)
     * Add Git pushs stats in statistics plugin
 
