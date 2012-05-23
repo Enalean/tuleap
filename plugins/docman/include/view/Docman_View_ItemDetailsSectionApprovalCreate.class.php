@@ -179,19 +179,27 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td>';
-        $html .= '<span id="reminder" ></span><input onclick="toggle_occurence()" type="checkbox" name="reminder" /></span>';
+        $occurence = $this->table->getNotificationOccurence();
+        if ($occurence) {
+            $checked = 'checked="true"';
+        } else {
+            $checked = '';
+        }
+        $html .= '<span id="reminder" ></span><input onclick="toggle_occurence()" type="checkbox" name="reminder" '.$checked.' /></span>';
         $html .= 'Send a mail reminder to approver(s) ';
         $html .= '</td>';
         $html .= '<td>';
         $html .= '<span id="occurence_form" >Every ';
-        $html .= '<input size="2" name="occurence" /> ';
-        $html .= html_build_select_box_from_arrays(array(86400, 604800), array('Days', 'Weeks'), 'period', null, false);
+        $html .= '<input size="2" name="occurence" value="'.$occurence.'" /> ';
+        $html .= html_build_select_box_from_arrays(array(1, 7), array('Days', 'Weeks'), 'period', null, false);
         $html .= '</span>';
         $js   .= 'function toggle_occurence() {
                       Effect.toggle(\'occurence_form\', \'slide\', { duration: 0 });
                       Effect.toggle(\'reminder\', \'slide\', { duration: 0 });
-                  }
-                  Element.toggle(\'occurence_form\', \'slide\', { duration: 0 });';
+                  }';
+        if (!$occurence) {
+            $js .= 'Element.toggle(\'occurence_form\', \'slide\', { duration: 0 });';
+        }
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         $html .= '</td>';
         $html .= '</tr>';
