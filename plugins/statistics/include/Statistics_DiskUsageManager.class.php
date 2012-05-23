@@ -350,7 +350,18 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-
+    
+    public function returnTotalServiceSizeByProject($group_id) {
+        $dao  = $this->_getDao();
+        $recentDate = $dao->searchMostRecentDate();
+        $size_per_services = $dao->searchSizePerService($recentDate, $group_id);
+        $services = array();
+        foreach ($size_per_services as $row) {
+            $services[$row['service']] = $row['size'];
+        }
+        return $services;
+    }
+    
     public function returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate ){
         $dao = $this->_getDao();
         $res = array();
