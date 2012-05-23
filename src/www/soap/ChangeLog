@@ -1,3 +1,11 @@
+5.1 - Tuleap 5.1
+	What's new?
+	===========
+	* getSvnPath: Returns the content of a directory in Subversion according to user permissions
+	* getSvnLog: Retrieves the SVN revisions of the project visible by the requesting user
+	* getProjectGroupsAndUsers: Returns all groups defined in project both dynamic and static (aka user group).
+	* getProjectDiskStats: Returns the amount of disk space used by the project.
+
 4.3 - Tuleap 4.0.26
         What Changed?
 	============
