@@ -42,7 +42,7 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
     var $description;
     var $status;
     var $notification;
-    var $repeatNotification;
+    var $notificationOccurence;
 
     var $approvalState;
     var $customizable;
@@ -55,7 +55,7 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
         $this->description        = null;
         $this->status             = null;
         $this->notification       = null;
-        $this->repeatNotification = null;
+        $this->notificationOccurence = null;
 
         $this->approvalState      = null;
         $this->customizable       = true;
@@ -110,12 +110,12 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
         return $this->notification;
     }
 
-    function setRepeatNotification($v) {
-        $this->repeatNotification = $v;
+    function setNotificationOccurence($v) {
+        $this->notificationOccurence = $v;
     }
 
-    function getRepeatNotification() {
-        return $this->repeatNotification;
+    function getNotificationOccurence() {
+        return $this->notificationOccurence;
     }
 
     function setCustomizable($v) {
@@ -137,7 +137,7 @@ define('PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL', 2);
         if(isset($row['description'])) $this->description = $row['description'];
         if(isset($row['status']))      $this->status = $row['status'];
         if(isset($row['notification'])) $this->notification = $row['notification'];
-        if(isset($row['notification_occurence'])) $this->repeatNotification = $row['notification_occurence'];
+        if(isset($row['notification_occurence'])) $this->notificationOccurence = $row['notification_occurence'];
         $this->approvalState = $this->computeApprovalState($row);
     }
 
