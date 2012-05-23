@@ -94,7 +94,7 @@ class LDAP {
                     // OpenLdap 2.2.x, we have to check that this ressource is
                     // valid with a bind, If bind success: that's great, if
                     // not, this is a connexion failure.
-                    if(@ldap_bind($this->ds)) {
+                    if($this->ldap_bind()) {
                         return true;
                     }
                 }
