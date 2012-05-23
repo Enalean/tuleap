@@ -1695,7 +1695,7 @@ class Docman_Actions extends Actions {
     /**
      * @access private
      */
-    function _approval_update_settings(&$atf, $sStatus, $notification, $repeatNotification, $description, $owner) {
+    function _approval_update_settings(&$atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
         $table =& $atf->getTable();
         $newOwner = false;
         if(!$table->isCustomizable()) {
@@ -1726,7 +1726,7 @@ class Docman_Actions extends Actions {
         }
 
         // Update settings
-        $updated = $atf->updateTable($sStatus, $notification, $repeatNotification, $description, $newOwner);
+        $updated = $atf->updateTable($sStatus, $notification, $notificationOccurence, $description, $newOwner);
         if($updated) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
         }
@@ -1862,11 +1862,11 @@ class Docman_Actions extends Actions {
         $notification = $this->_controler->_actionParams['notification'];
         $reminder     = $this->_controler->_actionParams['reminder'];
         if ($reminder) {
-            $occurence          = $this->_controler->_actionParams['occurence'];
-            $period             = $this->_controler->_actionParams['period'];
-            $repeatNotification = $occurence * $period;
+            $occurence             = $this->_controler->_actionParams['occurence'];
+            $period                = $this->_controler->_actionParams['period'];
+            $notificationOccurence = $occurence * $period;
         } else {
-            $repeatNotification = 0;
+            $notificationOccurence = 0;
         }
         $description  = $this->_controler->_actionParams['description'];
         $usUserList   = $this->_controler->_actionParams['user_list'];
@@ -1900,7 +1900,7 @@ class Docman_Actions extends Actions {
         }
 
         if($tableEditable) {
-            $this->_approval_update_settings($atf, $sStatus, $notification, $repeatNotification, $description, $owner);
+            $this->_approval_update_settings($atf, $sStatus, $notification, $notificationOccurence, $description, $owner);
             $table =& $atf->getTable();
             if(!$table->isClosed()) {
                 $atrf =& new Docman_ApprovalTableReviewerFactory($table, $item, $this->_controler->notificationsManager);
