@@ -171,6 +171,18 @@ extends Docman_View_ItemDetailsSectionApproval {
         }
         $html .= '</td>';
         $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td>';
+        // @TODO: i18n
+        $html .= '<h4>Mail reminder occurence:</h4>';
+        $html .= '<input type="checkbox" id="reminder" name="reminder" />';
+        $html .= 'Send a mail reminder to approver(s) ';
+        $html .= '<span>Every ';
+        $html .= '<input size="2" name="occurence" />';
+        $html .= html_build_select_box_from_arrays(array(86400, 604800), array('Days', 'Weeks'), 'period', null, false);
+        $html .= '</span>';
+        $html .= '</td>';
+        $html .= '</tr>';
 
         if(!$this->table->isClosed()) {
             if($this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
