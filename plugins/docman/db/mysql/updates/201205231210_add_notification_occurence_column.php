@@ -49,7 +49,7 @@ EOT;
      * @return Void
      */
     public function up() {
-        $sql = "ALTER TABLE plugin_docman_approval ADD COLUMN notification_occurence INT(11) DEFAULT 0 AFTER auto_status";
+        $sql = "ALTER TABLE plugin_docman_approval ADD COLUMN notification_occurence INT(11) DEFAULT 0 AFTER notification";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column notification_occurence to the table plugin_docman_approval');

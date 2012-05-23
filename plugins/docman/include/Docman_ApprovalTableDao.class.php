@@ -96,7 +96,7 @@ require_once('Docman_ItemDao.class.php');
         return $this->update($sql);
     }
 
-    function updateTable($tableId, $description=null, $status=null, $notification=null, $owner=null) {
+    function updateTable($tableId, $description=null, $status=null, $notification=null, $repeatNotification=null, $owner=null) {
         $_updStmt = '';
         if($description !== null) {
             $_updStmt .= sprintf('description = %s',
@@ -115,6 +115,15 @@ require_once('Docman_ItemDao.class.php');
             }
             $_updStmt .= sprintf('notification = %d', $notification); 
         }
+
+        if($repeatNotification !== null) {
+            if($_updStmt != '') {
+                $_updStmt .= ',';
+            }
+            $_updStmt .= sprintf('notification_occurence = %d', $repeatNotification); 
+        }
+
+
 
         if($owner !== null) {
             if($_updStmt != '') {
