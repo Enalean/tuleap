@@ -54,18 +54,10 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         $requestedSize       = $this->da->escapeInt($requestedSize);
         $exceptionMotivation = $this->da->quoteSmart($exceptionMotivation);
         $requestDate         = $_SERVER['REQUEST_TIME'];
-        $query               = "REPLACE INTO ".$this->getTable()." (".self::GROUP_ID.",
-                                             ".self::REQUESTER_ID.",
-                                             ".self::REQUEST_SIZE.",
-                                             ".self::EXCEPTION_MOTIVATION.",
-                                             ".self::REQUEST_DATE."
-                                             ) values (
-                                             $groupId,
-                                             $requesterId,
-                                             $requestedSize,
-                                             $exceptionMotivation,
-                                             $requestDate
-                                             )";
+        $query               = "REPLACE INTO plugin_statistics_disk_quota_exception 
+                                (group_id, requester_id, requested_size, exception_motivation, request_date)
+                                VALUES
+                                ($groupId, $requesterId, $requestedSize, $exceptionMotivation, $requestDate)";
         return $this->update($query);
     }
 
