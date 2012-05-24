@@ -325,6 +325,20 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableDao {
         $dar = $this->retrieve($sql);
         return ($dar && !$dar->isError() && $dar->rowCount() == 1);
     }
+
+    /**
+     * Get all approval tables that may send reminder notification
+     *
+     * @return DataAccessResult
+     */
+    function getTablesForReminder() {
+        $sql  = 'SELECT * from plugin_docman_approval
+                 WHERE status = 1
+                   AND notification != 0
+                   AND notification_occurence != 0';
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>
