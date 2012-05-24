@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('Docman_ApprovalTableDao.class.php');
 
 /**
  * Remind users that didn't review documents yet
@@ -30,7 +31,13 @@ class Docman_ApprovalTableReminder {
      * @return Void
      */
     function remindApprovers() {
-        
+        $dao = new Docman_ApprovalTableDao();
+        $dar = $dao->getTablesForReminder();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                // @TODO: Create table objects, then remind if needed
+            }
+        }
     }
 
 }
