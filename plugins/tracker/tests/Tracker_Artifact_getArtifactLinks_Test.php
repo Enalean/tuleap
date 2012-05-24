@@ -87,7 +87,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      *   - art 3
      * - art 2 (should be hidden)
      */
-    public function tReturnsOnlyOneIfTwoLinksIdentical() {
+    public function itReturnsOnlyOneIfTwoLinksIdentical() {
         $artifact3 = $this->giveMeAnArtifactWithChildren();
         $artifact2 = $this->giveMeAnArtifactWithChildren();
         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
