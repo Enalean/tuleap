@@ -618,7 +618,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
                 $transition_id = $this->getTransitionId($from, $value->getId());
-                if (isset($submitted_values) && !empty($submitted_values)) {
+                if (!empty($submitted_values)) {
                     $selected = in_array($id, array_values($submitted_values)) ? 'selected="selected"' : '';
                 } else {
                     $selected = isset($selected_values[$id]) ? 'selected="selected"' : '';
