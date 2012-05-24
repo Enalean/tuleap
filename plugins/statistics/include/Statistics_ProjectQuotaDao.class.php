@@ -76,15 +76,16 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      * @param int    $offset   From where the result will be displayed.
      * @param int    $count    How many results are returned.
      * @param String $sort     Order result set according to this parameter
-     * @param String $sortSens Specifiy if the result set sort is ascending or descending
+     * @param String $sortSens Specifiy if the result set sort order is ascending or descending
      *
      * @return DataAccessResult
      */
     public function getAllCustomQuota($list, $offset, $count, $sort, $sortSens) {
         $condition = '';
         $order     = '';
+        $list      = $this->da->escapeIntImplode($list);
         if (!empty($list)) {
-            $condition = "WHERE ".self::GROUP_ID." IN (".join(', ', $list).")";
+            $condition = "WHERE ".self::GROUP_ID." IN ($list)";
         }
         if (isset($offset) && isset($count)) {
             $limit = " LIMIT ".$this->da->escapeInt($offset).", ".$this->da->escapeInt($count);
@@ -99,21 +100,23 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
                     } else {
                          $order = "ORDER BY ".self::REQUEST_SIZE;
                     }
-                break;
+                    break;
                 case 'date':
                     if (!empty($sortSens)) {
                         $order = "ORDER BY ".self::REQUEST_DATE." ".$sortSens;
                     } else {
                          $order = "ORDER BY ".self::REQUEST_DATE;
                     }
-                break;
+                    break;
                 default:
                     $order = "ORDER BY ".self::REQUEST_SIZE;
             }
         }
         $sql = "SELECT *
-                FROM ".$this->getTable()."
-                ".$condition.$order.$limit;
+        FROM plugin_statistics_disk_quota_exception
+        $condition
+        $order
+        $limit";
         return $this->retrieve($sql);
     }
 
@@ -140,8 +143,9 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
      * @return Boolean
      */
     public function deleteCustomQuota($projects) {
+        $projects = $this->da->escapeIntImplode($projects);
         $sql = "DELETE FROM ".$this->getTable()."
-                WHERE ".self::GROUP_ID." IN (".join(', ', $projects).")";
+                WHERE ".self::GROUP_ID." IN ($projects)";
         return $this->update($sql);
     }
 

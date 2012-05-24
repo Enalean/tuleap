@@ -26,7 +26,7 @@ class ProjectQuotaManager {
     /**
      * The Projects dao used to fetch data
      */
-    protected $_dao;
+    protected $dao;
 
     /**
      * ProjectManager instance
@@ -37,13 +37,13 @@ class ProjectQuotaManager {
      * A private constructor; prevents direct creation of object
      */
     private function __construct() {
-        $this->_dao = $this->_getDao();
+        $this->dao = $this->getDao();
         $this->pm   = ProjectManager::instance();
     }
     /**
      * Hold an instance of the class
      */
-    private static $_instance;
+    private static $instance;
 
     /**
      * ProjectManager is a singleton
@@ -51,11 +51,11 @@ class ProjectQuotaManager {
      * @return ProjectManager
      */
     public static function instance() {
-        if (!isset(self::$_instance)) {
+        if (!isset(self::$instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$instance = new $c;
         }
-        return self::$_instance;
+        return self::$instance;
     }
 
 
@@ -71,7 +71,7 @@ class ProjectQuotaManager {
      * @return DataAccessResult
      */
     public function getAllCustomQuota($list = array(), $offset = null, $count = null, $sort = null, $sortSens = null) {
-        return $this->_dao->getAllCustomQuota($list, $offset, $count, $sort, $sortSens);
+        return $this->dao->getAllCustomQuota($list, $offset, $count, $sort, $sortSens);
     }
 
     /**
@@ -82,7 +82,7 @@ class ProjectQuotaManager {
      * @return DataAccessResult
      */
     public function getProjectCustomQuota($groupId) {
-        return $this->_dao->getProjectCustomQuota($groupId);
+        return $this->dao->getProjectCustomQuota($groupId);
     }
 
     /**
@@ -120,7 +120,7 @@ class ProjectQuotaManager {
                 if ($quota > $maxQuota) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
                 } else {
-                    if ($this->_dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
+                    if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                         $historyDao = new ProjectHistoryDao();
                         $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
@@ -155,7 +155,7 @@ class ProjectQuotaManager {
                 $names[] = $name;
                 $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $projectId);
             }
-            if ($this->_dao->deleteCustomQuota($list)) {
+            if ($this->dao->deleteCustomQuota($list)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', array(join(', ', $names))));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
@@ -166,11 +166,11 @@ class ProjectQuotaManager {
     /**
      * @return Dao
      */
-    public function _getDao() {
-        if (!isset($this->_dao)) {
-            $this->_dao = new Statistics_ProjectQuotaDao(CodendiDataAccess::instance());
+    public function getDao() {
+        if (!isset($this->dao)) {
+            $this->dao = new Statistics_ProjectQuotaDao();
         }
-        return $this->_dao;
+        return $this->dao;
     }
 }
 
