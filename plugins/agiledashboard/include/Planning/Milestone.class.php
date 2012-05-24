@@ -43,6 +43,11 @@ class Planning_Milestone {
      */
     private $planned_artifacts;
     
+    /**
+     * @var array of Planning_Milestone
+     */
+    private $sub_milestones = array();
+    
     public function __construct(                 $group_id,
                                 Planning         $planning,
                                 Tracker_Artifact $artifact          = null,
@@ -63,6 +68,17 @@ class Planning_Milestone {
      */
     public function getArtifact() {
         return $this->artifact;
+    }
+    
+    /**
+     * @return array of Planning_Milestone
+     */
+    public function getSubMilestones() {
+        return $this->sub_milestones;
+    }
+    
+    public function addSubMilestones(array $new_sub_milestones) {
+        $this->sub_milestones = array_merge($this->sub_milestones, $new_sub_milestones);
     }
     
     /**

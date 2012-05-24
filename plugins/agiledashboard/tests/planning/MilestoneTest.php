@@ -70,5 +70,55 @@ class MilestoneTest extends TuleapTestCase {
         $this->assertNull($this->milestone->getArtifact());
         $this->assertNull($this->milestone->getArtifactId());
     }
+    
+    public function itHasNoSubMilestonesInitially() {
+        $this->milestone = new Planning_Milestone($this->group_id,
+                                                  $this->planning,
+                                                  $this->artifact);
+        $this->assertIdentical($this->milestone->getSubMilestones(), array());
+    }
+}
+
+require_once dirname(__FILE__).'/../builders/aMilestone.php';
+
+class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
+    
+    public function setUp() {
+        $this->group_id  = 123;
+        $this->planning  = mock('Planning');
+        $this->artifact  = mock('Tracker_Artifact');
+        $this->milestone = new Planning_Milestone($this->group_id,
+                                                  $this->planning,
+                                                  $this->artifact);
+    }
+    
+    public function itHasNoSubMilestones() {
+        $this->assertIdentical($this->milestone->getSubMilestones(), array());
+    }
+    
+    public function itAcceptsNewSubMilestones() {
+        $sub_milestone_1 = aMilestone()->withinTheSameProjectAs($this->milestone)->build();
+        $sub_milestone_2 = aMilestone()->withinTheSameProjectAs($this->milestone)->build();
+        
+        $this->milestone->addSubMilestones(array($sub_milestone_1, $sub_milestone_2));
+        $this->assertIdentical($this->milestone->getSubMilestones(),
+                               array($sub_milestone_1, $sub_milestone_2));
+    }
+}
+
+class Planning_Milestone_WithSubMilestones extends TuleapTestCase {
+    public function itCanBeAddedNewSubMilestones() {
+        $sub_milestone_1 = aMilestone()->build();
+        $sub_milestone_2 = aMilestone()->withinTheSameProjectAs($sub_milestone_1)->build();
+        $sub_milestone_3 = aMilestone()->withinTheSameProjectAs($sub_milestone_1)->build();
+        $sub_milestone_4 = aMilestone()->withinTheSameProjectAs($sub_milestone_1)->build();
+        $this->milestone = aMilestone()->withinTheSameProjectAs($sub_milestone_1)
+                                       ->withSubMilestones(array($sub_milestone_1, $sub_milestone_2))->build();
+        
+        $this->milestone->addSubMilestones(array($sub_milestone_3, $sub_milestone_4));
+        
+        $this->assertIdentical($this->milestone->getSubMilestones(),
+                               array($sub_milestone_1, $sub_milestone_2, $sub_milestone_3, $sub_milestone_4));
+    }
 }
 ?>
