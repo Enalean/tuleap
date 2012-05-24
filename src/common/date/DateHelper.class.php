@@ -106,5 +106,30 @@ class DateHelper {
         }
         return $user_date;
     }
+
+    /**
+     * Calculate difference between two dates in days
+     *
+     * @param Integer $start Timestamp of the start date
+     * @param Integer $end   Timestamp of the end date
+     *
+     * @return Integer
+     */
+    function dateDiffInDays($start, $end) {
+        return (int) round(($end - $start) / 86400);
+    }
+
+    /**
+     * Decide whetehr a distance in days respects a period
+     *
+     * @param Integer $distance Distance in days
+     * @param Integer $period   Period to respect
+     *
+     * @return Boolean
+     */
+    function isPeriodicallyDistant($distance, $period) {
+        return is_int($distance / $period);
+    }
+
 }
 ?>
