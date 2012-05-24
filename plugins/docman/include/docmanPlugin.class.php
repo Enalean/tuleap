@@ -23,6 +23,7 @@
  * 
  */
 require_once('common/plugin/Plugin.class.php');
+require_once('Docman_ApprovalTableReminder.class.php');
 
 class DocmanPlugin extends Plugin {
     /**
@@ -302,6 +303,8 @@ class DocmanPlugin extends Plugin {
     function codendiDaily() {
         $controler = $this->getHTTPController();
         $controler->notifyFuturObsoleteDocuments();
+        $reminder = new Docman_ApprovalTableReminder();
+        $reminder->remindApprovers();
     }
 
     function process() {
