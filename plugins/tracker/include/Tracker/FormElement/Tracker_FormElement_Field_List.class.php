@@ -598,11 +598,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $html .= 'name="'. $name .'" ';
         }
         $html .= $size . $multiple .'>';
-       
         $from = $this->getSelectedValue($selected_values);
         if ($from == null && !isset($submitted_values)) { 
                $selected = isset($selected_values[100]) ? 'selected="selected"' : '';
-        }else {
+        } else {
                $selected = ($submitted_values=='100') ? 'selected="selected"' : '';
         }
 
@@ -619,10 +618,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
                 $transition_id = $this->getTransitionId($from, $value->getId());
-                if (isset($submitted_values)) {
+                if (isset($submitted_values) && !empty($submitted_values)) {
                     $selected = in_array($id, array_values($submitted_values)) ? 'selected="selected"' : '';
                 } else {
-                     $selected = isset($selected_values[$id]) ? 'selected="selected"' : '';
+                    $selected = isset($selected_values[$id]) ? 'selected="selected"' : '';
                 }
                 if ($this->userCanMakeTransition($transition_id)) {
                     if (!$value->isHidden()) {
