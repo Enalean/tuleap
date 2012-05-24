@@ -173,7 +173,6 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '</tr>';
         $html .= '<tr>';
         $html .= '<td>';
-        // @TODO: i18n
         $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_occurence_title').'</h4>';
         $html .= '</td>';
         $html .= '</tr>';
