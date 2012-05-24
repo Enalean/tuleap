@@ -20,6 +20,7 @@
 
 require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'PlanningPresenter.class.php';
+require_once 'MilestoneLinkPresenter.class.php';
 
 /**
  * Provides the presentation logic for a planning milestone.
@@ -185,7 +186,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     }
     
     public function getHierarchyChildren() {
-        return $this->milestone->getSubMilestones();
+        return array_map(array($this, 'getMilestoneLinkPresenter'), $this->milestone->getSubMilestones());
+    }
+    
+    private function getMilestoneLinkPresenter(Planning_Milestone $milestone) {
+        return new Planning_MilestoneLinkPresenter($milestone);
     }
     
     /**

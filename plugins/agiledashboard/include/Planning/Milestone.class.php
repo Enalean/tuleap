@@ -77,18 +77,6 @@ class Planning_Milestone {
         return $this->sub_milestones;
     }
     
-    public function getUri() {
-        return $this->artifact->getUri();
-    }
-    
-    public function getXRef() {
-        return $this->artifact->getXRef();
-    }
-    
-    public function getTitle() {
-        return $this->artifact->getTitle();
-    }
-    
     public function hasSubMilestones() {
         return ! empty($this->sub_milestones);
     }
