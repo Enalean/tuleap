@@ -47,6 +47,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     private $current_user;
     
     /**
+     * @var array
+     */
+    private $hierarchy_children;
+    
+    /**
      * @var string
      */
     public $planning_redirect_parameter;
@@ -78,6 +83,10 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
+        $this->hierarchy_children          = array();
+        if ($this->hasSelectedArtifact()) {
+            $this->hierarchy_children = $this->milestone->getArtifact()->getHierarchyLinkedArtifacts($this->current_user);
+        }
     }
     
     /**
@@ -98,6 +107,12 @@ class Planning_MilestonePresenter extends PlanningPresenter {
             
             if ($root_node) {
                 Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
+            }
+            foreach ($root_node->getChildren() as $node) {
+                $data = $node->getData();
+                if (in_array($data['artifact'], $this->hierarchy_children)) {
+                    $root_node->removeChild(null, $node);
+                }
             }
         }
         return $root_node;
@@ -178,6 +193,14 @@ class Planning_MilestonePresenter extends PlanningPresenter {
             }
         }
         return false;
+    }
+    
+    public function hasHierarchyChildren() {
+        return !empty($this->hierarchy_children);
+    }
+    
+    public function getHierarchyChildren() {
+        return array_values($this->hierarchy_children);
     }
     
     /**

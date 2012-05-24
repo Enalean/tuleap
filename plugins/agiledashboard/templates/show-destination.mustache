@@ -17,6 +17,14 @@
                 {{#hasChildren}}
                     {{> cards}}
                 {{/hasChildren}}
+                {{#hasHierarchyChildren}}
+                    <hr />
+                    <ul>
+                        {{#getHierarchyChildren}}
+                            <li><a href="{{getUri}}">{{getXRef}} - {{getTitle}}</a></li>
+                        {{/getHierarchyChildren}}
+                    </ul>
+                {{/hasHierarchyChildren}}
             </div>
         {{/canDrop}}
     </div>
