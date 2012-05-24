@@ -1,3 +1,6 @@
+Version 5.7.15 - Tuleap 5.2
+    * fix sla #627: Default values are not taken into account for Select Boxes fields
+
 Version 5.7.14 - Tuleap 5.1
     * remove unused variable
 
