@@ -424,12 +424,14 @@ class CLI_Action {
         static $recursive_id = 1;
         
         foreach ($result as $row) {
-            foreach ($row as $colname => $value) {
-                if (!isset($titles[$colname])) {
-                    if (!isset($fieldnames[$colname])) {
-                        $titles[$colname] = $colname;
-                    } else {
-                        $titles[$colname] = $fieldnames[$colname];
+            if ((is_object($row) && get_class($row) === 'stdClass') || is_array($row)) {
+                foreach ($row as $colname => $value) {
+                    if (!isset($titles[$colname])) {
+                        if (!isset($fieldnames[$colname])) {
+                            $titles[$colname] = $colname;
+                        } else {
+                            $titles[$colname] = $fieldnames[$colname];
+                        }
                     }
                 }
             }
@@ -439,30 +441,32 @@ class CLI_Action {
         $rowArrays = array();
         $result2 = array();
         foreach ($result as $i => $row) {
-            foreach ($row as $colname => $value) {
-                if (is_array($value)) {
-                    $lengths[$colname] = strlen($titles[$colname]) + 2;
-                    $rowArrays[$i][0][$colname] = $value;
-                } else {
-                    $lines = explode("\n", $value);
-                
-                    foreach ($lines as $j => $line) {
-                        if (!isset($lengths[$colname]) || $lengths[$colname] < strlen($line)+2) {
-                            $lengths[$colname] = max(strlen($line), strlen($titles[$colname]));
-                            $lengths[$colname] += 2;
-                        }
-
-                        if (!isset($rowArrays[$i][$j])) {
-                            foreach ($titles as $colname2 => $v) {
-                                $rowArrays[$i][$j][$colname2] = '';
+            if ((is_object($row) && get_class($row) === 'stdClass') || is_array($row)) {
+                foreach ($row as $colname => $value) {
+                    if (is_array($value)) {
+                        $lengths[$colname] = strlen($titles[$colname]) + 2;
+                        $rowArrays[$i][0][$colname] = $value;
+                    } else {
+                        $lines = explode("\n", $value);
+                    
+                        foreach ($lines as $j => $line) {
+                            if (!isset($lengths[$colname]) || $lengths[$colname] < strlen($line)+2) {
+                                $lengths[$colname] = max(strlen($line), strlen($titles[$colname]));
+                                $lengths[$colname] += 2;
                             }
+
+                            if (!isset($rowArrays[$i][$j])) {
+                                foreach ($titles as $colname2 => $v) {
+                                    $rowArrays[$i][$j][$colname2] = '';
+                                }
+                            }
+                            $rowArrays[$i][$j][$colname] = $line;
                         }
-                        $rowArrays[$i][$j][$colname] = $line;
                     }
                 }
-            }
-            foreach ($rowArrays[$i] as $row) {
-                $result2[] = $row;
+                foreach ($rowArrays[$i] as $row) {
+                    $result2[] = $row;
+                }
             }
         }
         $result = $result2;
@@ -487,22 +491,24 @@ class CLI_Action {
         $recursive_items = array();
         // now show the values
         foreach ($result as $row) {
-            foreach ($row as $colname => $value) {
-                // recursively show the multi dimensional array
-                if (is_array($value)) {
-                    if (array_key_exists($colname, $fieldnames)) $rec_titles = $fieldnames[$colname];
-                    else $rec_titles = array();
-                    $recursive_items[$recursive_id] = array("titles" => $rec_titles, "values" => $value);
-                    // show the reference # instead
-                    $value = "[".$recursive_id."]";
-                    $recursive_id++;
+            if ((is_object($row) && get_class($row) === 'stdClass') || is_array($row)) {
+                foreach ($row as $colname => $value) {
+                    // recursively show the multi dimensional array
+                    if (is_array($value)) {
+                        if (array_key_exists($colname, $fieldnames)) $rec_titles = $fieldnames[$colname];
+                        else $rec_titles = array();
+                        $recursive_items[$recursive_id] = array("titles" => $rec_titles, "values" => $value);
+                        // show the reference # instead
+                        $value = "[".$recursive_id."]";
+                        $recursive_id++;
+                    }
+                    
+                    $length = $lengths[$colname];
+                    if (is_array($value)) continue;
+                    echo "| ".$value.str_repeat(" ", $length-strlen($value)-1);
                 }
-                
-                $length = $lengths[$colname];
-                if (is_array($value)) continue;
-                echo "| ".$value.str_repeat(" ", $length-strlen($value)-1);
+                echo "|\n";
             }
-            echo "|\n";
         }
         
         // show last line
