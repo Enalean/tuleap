@@ -38,6 +38,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $this->factory   = mock('Tracker_FormElementFactory');
         $this->changeset = mock('Tracker_Artifact_Changeset');
         $this->artifact  = anArtifact()
+            ->withId($this->current_id + 100)
             ->withTracker($this->tracker)
             ->withFormElementFactory($this->factory)
             ->withChangesets(array($this->changeset))
@@ -86,22 +87,16 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      *   - art 3
      * - art 2 (should be hidden)
      */
-    public function itReturnsOnlyOneIfTwoLinksIdentical() {
-        $artifact2         = mock('Tracker_Artifact');
-        stub($artifact2)->getLinkedArtifacts()->returns(array());
+    public function tReturnsOnlyOneIfTwoLinksIdentical() {
+        $artifact3 = $this->giveMeAnArtifactWithChildren();
+        $artifact2 = $this->giveMeAnArtifactWithChildren();
+        $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
-        $artifact3         = mock('Tracker_Artifact');
-        stub($artifact3)->getLinkedArtifacts()->returns(array());
-
-        $artifact1         = mock('Tracker_Artifact');
-        stub($artifact1)->getLinkedArtifacts()->returns(array($artifact2, $artifact3));
-
-        $expected_list     = array($artifact1, $artifact2);
-        $field             = mock('Tracker_FormElement_Field_ArtifactLink');
-        stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns($expected_list);
+        $field     = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns(array($artifact1, $artifact2));
         stub($field)->userCanRead($this->user)->returns(true);
 
-        stub($this->factory)->getUsedArtifactLinkFields()->returns(array($field));
+        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
 
         $expected_result = array($artifact1);
         $this->assertEqual($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
@@ -112,11 +107,48 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      * - art 1
      *     - art 2
      *     - art 3
-     * - art 4
-     *     - art 2 (should be hidden)
+     *         -art 4
+     * - art 4 (should be hidden)
      */
-     public function itReturnsOnlyOneIfTwoLinksIdenticalISubHierarchies() {
+     public function itReturnsOnlyOneIfTwoLinksIdenticalInSubHierarchies() {
+         $artifact4 = $this->giveMeAnArtifactWithChildren();
+         $artifact3 = $this->giveMeAnArtifactWithChildren($artifact4);
+         $artifact2 = $this->giveMeAnArtifactWithChildren();
+         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
 
+         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
+         stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns(array($artifact1, $artifact4));
+         stub($field)->userCanRead($this->user)->returns(true);
+         stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
+
+         $expected_result = array($artifact1);
+         $this->assertEqual($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
+     }
+
+     /**
+      *
+      * @param $child1 optional artifact link field child
+      * @param $child2 optional artifact link field child ...
+      *
+      * @return Tracker_Artifact
+      */
+     public function giveMeAnArtifactWithChildren() {
+         $children  = func_get_args();
+         $this->current_id++;
+         $tracker   = aTracker()->withId($this->current_id)->build();
+         $changeset = mock('Tracker_Artifact_Changeset');
+         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
+         stub($field)->getLinkedArtifacts($changeset, $this->user)->returns($children);
+         stub($field)->userCanRead($this->user)->returns(true);
+         stub($this->factory)->getUsedArtifactLinkFields($tracker)->returns(array($field));
+
+         return anArtifact()
+             ->withId($this->current_id + 100)
+             ->withTracker($tracker)
+             ->withFormElementFactory($this->factory)
+             ->withChangesets(array($changeset))
+             ->build()
+         ;
      }
 }
 ?>
