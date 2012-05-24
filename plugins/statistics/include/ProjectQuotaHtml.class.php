@@ -26,12 +26,12 @@ class ProjectQuotaHtml {
     /**
      * ProjectManager instance
      */
-    protected $pm;
+    protected $projectManager;
 
     /**
      * ProjectQuotaManager instance
      */
-    protected $pqm;
+    protected $projectQuotaManager;
 
     /**
      * Constructor of the class
@@ -39,8 +39,8 @@ class ProjectQuotaHtml {
      * @return Void
      */
     public function __construct() {
-        $this->pm  = ProjectManager::instance();
-        $this->pqm = ProjectQuotaManager::instance();
+        $this->projectManager      = ProjectManager::instance();
+        $this->projectQuotaManager = ProjectQuotaManager::instance();
     }
 
     /**
@@ -84,7 +84,7 @@ class ProjectQuotaHtml {
 
         $list = array();
         if ($filter) {
-            $result   = $this->pm->returnAllProjects(0, 20, false, $filter);
+            $result   = $this->projectManager->returnAllProjects(0, 20, false, $filter);
             $projects = $result['projects'];
             foreach ($projects as $entry) {
                 $list[] = $entry['group_id'];
@@ -98,7 +98,7 @@ class ProjectQuotaHtml {
         $output          .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
         $output          .= '</form>';
         $count            = 50;
-        $res              = $this->pqm->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
+        $res              = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
         $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
         $nextHref = $paginationParams['nextHref'];
@@ -113,7 +113,7 @@ class ProjectQuotaHtml {
             $purifier = Codendi_HTMLPurifier::instance();
             $um       = UserManager::instance();
             foreach ($res as $row) {
-                $project     = $this->pm->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
+                $project     = $this->projectManager->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
                 $projectName = (empty($project)) ? '' : $project->getPublicName();
                 $user        = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
                 $username    = (empty($user)) ? '' : $user->getUserName();
@@ -148,7 +148,7 @@ class ProjectQuotaHtml {
      */
     public function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
         $params       = array(); 
-        $foundRowsRes = $this->pqm->getAllCustomQuota($list);
+        $foundRowsRes = $this->projectQuotaManager->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
         $prevHref     = '&lt;Previous';
         if ($offset > 0) {
@@ -242,7 +242,7 @@ class ProjectQuotaHtml {
                     if ($request->valid($validMotivation)) {
                         $motivation = $request->get('motivation');
                     }
-                    $this->pqm->addQuota($project, $requester, $quota, $motivation);
+                    $this->projectQuotaManager->addQuota($project, $requester, $quota, $motivation);
                     break;
                 case 'delete' :
                     $list       = $request->get('delete_quota');
@@ -250,13 +250,13 @@ class ProjectQuotaHtml {
                     $validProjectId = new Valid_UInt();
                     foreach ($list as $projectId) {
                         if ($validProjectId->validate($projectId)) {
-                            $project = $this->pm->getProject($projectId);
+                            $project = $this->projectManager->getProject($projectId);
                             if ($project) {
                                 $projects[$project->getId()] = $project->getPublicName();
                             }
                         }
                     }
-                    $this->pqm->deleteCustomQuota($projects);
+                    $this->projectQuotaManager->deleteCustomQuota($projects);
                     break;
                 default :
                     break;
