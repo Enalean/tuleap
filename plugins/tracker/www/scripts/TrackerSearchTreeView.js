@@ -24,7 +24,6 @@
                 this.collapseAll();
                 this.root.select('.node-tree').invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
                 this.root.select('.node-content').invoke('observe', 'dblclick', _eventOnNode.bindAsEventListener(this));
-                this.expandAll();
             }
         },
 
