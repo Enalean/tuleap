@@ -174,7 +174,7 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<tr>';
         $html .= '<td>';
         // @TODO: i18n
-        $html .= '<h4>Mail reminder occurence:</h4>';
+        $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_occurence_title').'</h4>';
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '<tr>';
@@ -186,12 +186,13 @@ extends Docman_View_ItemDetailsSectionApproval {
             $checked = '';
         }
         $html .= '<span id="reminder" ></span><input onclick="toggle_occurence()" type="checkbox" name="reminder" '.$checked.' /></span>';
-        $html .= 'Send a mail reminder to approver(s) ';
-        $html .= '</td>';
+        $html .= ' ';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_send_to_approvers');
+        $html .= ' </td>';
         $html .= '<td>';
-        $html .= '<span id="occurence_form" >Every ';
+        $html .= '<span id="occurence_form" > '.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_every');
         $html .= '<input size="2" name="occurence" value="'.$occurence.'" /> ';
-        $html .= html_build_select_box_from_arrays(array(1, 7), array('Days', 'Weeks'), 'period', null, false);
+        $html .= html_build_select_box_from_arrays(array(1, 7), array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_days'), $GLOBALS['Language']->getText('plugin_docman', 'details_approval_weeks')), 'period', null, false);
         $html .= '</span>';
         $js   .= 'function toggle_occurence() {
                       Effect.toggle(\'occurence_form\', \'slide\', { duration: 0 });

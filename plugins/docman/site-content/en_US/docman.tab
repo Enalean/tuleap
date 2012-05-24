@@ -317,6 +317,11 @@ plugin_docman	details_approval_table_help	Following table aims to organize the a
 plugin_docman	details_approval_table_version	Attached to document version:
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
+plugin_docman	details_approval_occurence_title	Mail reminder occurence
+plugin_docman	details_approval_send_to_approvers	Send a mail reminder to approver(s)
+plugin_docman	details_approval_every	Every
+plugin_docman	details_approval_days	Days
+plugin_docman	details_approval_weeks	Weeks
 plugin_docman	details_delete	Delete
 plugin_docman	details_delete_cancel	No, I do not want to delete it
 plugin_docman	details_delete_confirm	Yes, I am sure!
