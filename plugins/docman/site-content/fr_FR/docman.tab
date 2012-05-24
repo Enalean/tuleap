@@ -317,6 +317,11 @@ plugin_docman	details_approval_table_help	La table suivante a pour but d'organis
 plugin_docman	details_approval_table_version	Associée à la version :
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
+plugin_docman	details_approval_occurence_title	Occurence de la notification par mail
+plugin_docman	details_approval_send_to_approvers	Envoyer un mail au(x) approbateur(s)
+plugin_docman	details_approval_every	Chaque
+plugin_docman	details_approval_days	Jours
+plugin_docman	details_approval_weeks	Semaines
 plugin_docman	details_delete	Suppression
 plugin_docman	details_delete_cancel	Non, je ne veux pas le supprimer
 plugin_docman	details_delete_confirm	Oui, je suis sûr !
