@@ -1978,7 +1978,7 @@ function setArtifactData($status_id, $close_date, $summary, $details, $severity,
                     $data [$field->getName()] = $value;
                 } elseif ($field->isDateField()) {
                     // Dates are internally stored in timestamp, but for update and create functions, date must be Y-m-d
-                    $value = date("Y-m-d", $extra_field['field_value']);
+					$value = date("Y-m-d", strtotime('+1 day', strtotime($extra_field['field_value'])));
                     $data [$field->getName()] = $value;
                 } else {
                     $data [$field->getName()] = $extra_field['field_value'];
