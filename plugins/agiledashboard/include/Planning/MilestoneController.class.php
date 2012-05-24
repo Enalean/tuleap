@@ -80,7 +80,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         $this->artifact_factory  = $artifact_factory;
         $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
-        $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifacts(
+        $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
                                        $this->getCurrentUser(),
                                        $request->get('group_id'),
                                        $request->get('planning_id'),

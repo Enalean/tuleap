@@ -29,6 +29,7 @@ require_once(dirname(__FILE__).'/../builders/aPlanning.php');
 require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
 require_once dirname(__FILE__).'/../builders/aPlanningController.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once dirname(__FILE__).'/../../include/Planning/ViewBuilder.class.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -354,10 +355,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         TrackerFactory::setInstance($tracker_factory);
         
         $milestone_factory = mock('Planning_MilestoneFactory');
-        stub($milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
-                                                                   $request->get('group_id'),
-                                                                   $request->get('planning_id'),
-                                                                   $request->get('aid'))
+        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
+                                                                                   $request->get('group_id'),
+                                                                                   $request->get('planning_id'),
+                                                                                   $request->get('aid'))
                                 ->returns($milestone);
         
         ob_start();

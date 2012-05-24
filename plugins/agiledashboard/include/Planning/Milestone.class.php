@@ -77,6 +77,22 @@ class Planning_Milestone {
         return $this->sub_milestones;
     }
     
+    public function getUri() {
+        return $this->artifact->getUri();
+    }
+    
+    public function getXRef() {
+        return $this->artifact->getXRef();
+    }
+    
+    public function getTitle() {
+        return $this->artifact->getTitle();
+    }
+    
+    public function hasSubMilestones() {
+        return ! empty($this->sub_milestones);
+    }
+    
     public function addSubMilestones(array $new_sub_milestones) {
         $this->sub_milestones = array_merge($this->sub_milestones, $new_sub_milestones);
     }
