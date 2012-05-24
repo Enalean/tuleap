@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/date/DateHelper.class.php');
 require_once('Docman_ApprovalTableDao.class.php');
+require_once('Docman_ApprovalTable.class.php');
 
 /**
  * Remind users that didn't review documents yet
@@ -33,12 +35,30 @@ class Docman_ApprovalTableReminder {
     function remindApprovers() {
         $dao = new Docman_ApprovalTableDao();
         $dar = $dao->getTablesForReminder();
+        $tables = array();
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                // @TODO: Create table objects, then remind if needed
+                $table = new Docman_ApprovalTable();
+                $table->initFromRow($row);
+                $distance = DateHelper::dateDiffInDays($table->getDate(), $_SERVER['REQUEST_TIME']);
+                var_dump($distance);
+                if ($distance > 0 && DateHelper::isPeriodicallyDistant($distance, $table->getNotificationOccurence())) {
+                    $this->sendNotificationToPendingApprovers($table);
+                }
             }
         }
     }
+
+    /**
+     * Send notification to pending approvers of the given table
+     *
+     * @param Docman_ApprovalTable $table Approval table
+     *
+     * @return Void
+     */
+     function sendNotificationToPendingApprovers($table) {
+         // @TODO: Send reminders to pending approvers
+     }
 
 }
 
