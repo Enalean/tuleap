@@ -96,6 +96,13 @@ class Planning_Milestone {
     }
     
     /**
+     * @return Planning
+     */
+    public function getPlanning() {
+        return $this->planning;
+    }
+    
+    /**
      * @return int
      */
     public function getPlanningId() {

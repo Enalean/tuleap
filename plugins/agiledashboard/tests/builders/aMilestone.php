@@ -37,6 +37,11 @@ class Test_Planning_MilestoneBuilder {
     private $planning;
     
     /**
+     * @var Tracker_Artifact
+     */
+    private $artifact;
+    
+    /**
      * @var array of Planning_Milestone
      */
     private $sub_milestones;
@@ -52,6 +57,11 @@ class Test_Planning_MilestoneBuilder {
         return $this;
     }
     
+    public function withArtifact(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
+        return $this;
+    }
+    
     public function withSubMilestones(array $sub_milestones) {
         $this->sub_milestones = $sub_milestones;
         return $this;
@@ -59,7 +69,8 @@ class Test_Planning_MilestoneBuilder {
     
     public function build() {
         $milestone = new Planning_Milestone($this->group_id,
-                                            $this->planning);
+                                            $this->planning,
+                                            $this->artifact);
         $milestone->addSubMilestones($this->sub_milestones);
         return $milestone;
     }

@@ -135,5 +135,30 @@ class Planning_MilestoneFactory {
             $parent_node->addChild($node);
         }
     }
+    
+    /**
+     * Retrieve the sub-milestones of the given milestone.
+     * 
+     * @param Planning_Milestone $milestone
+     * 
+     * @return array of Planning_Milestone
+     */
+    public function getSubMilestones(User $user, Planning_Milestone $milestone) {
+        $sub_milestones = array();
+        
+        foreach($milestone->getArtifact()->getHierarchyLinkedArtifacts($user) as $artifact) {
+            $sub_milestones[] = new Planning_Milestone($milestone->getGroupId(),
+                                                       $milestone->getPlanning(),
+                                                       $artifact);
+        }
+        
+        return $sub_milestones;
+    }
+    
+    public function getMilestoneWithPlannedArtifactsAndSubMilestones(User $user, $group_id, $planning_id, $artifact_id) {
+        $milestone = $this->getMilestoneWithPlannedArtifacts($user, $group_id, $planning_id, $artifact_id);
+        $milestone->addSubMilestones($this->getSubMilestones($user, $milestone));
+        return $milestone;
+    }
 }
 ?>
