@@ -146,7 +146,7 @@ class ProjectQuotaHtml {
      *
      * @return Array
      */
-    public function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
+    private function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
         $params       = array(); 
         $foundRowsRes = $this->projectQuotaManager->getAllCustomQuota($list);
         $foundRows    = $foundRowsRes->rowCount();
@@ -175,7 +175,7 @@ class ProjectQuotaHtml {
      *
      * @return String
      */
-    public function renderNewCustomQuotaForm() {
+    private function renderNewCustomQuotaForm() {
         $output  = '';
         $output .= '<table>';
         $output .= '<form method="post" >';

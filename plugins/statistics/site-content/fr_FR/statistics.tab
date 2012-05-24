@@ -66,11 +66,11 @@ plugin_statistics	set_quota	Définir un quota personnalisé pour un projet
 plugin_statistics	invalid_action	Action invalide
 plugin_statistics	invalid_project	Projet invalide
 plugin_statistics	invalid_quota	Vous avez dépassé le maximum de quota permis
-plugin_statistics	invalid_motivation	Vous avez dépassez la taille maximale de la Motivation
-plugin_statistics	nothing_to_delete	Rien a supprimer
+plugin_statistics	invalid_motivation	Vous avez dépassez la taille maximale de la motivation
+plugin_statistics	nothing_to_delete	Rien à supprimer
 plugin_statistics	delete_error	Une erreur est survenue lors de la suppression
 plugin_statistics	add_error	Une erreur est survenue lors de l'ajout
 plugin_statistics	no_project	Projet non trouvé
 plugin_statistics	quota_added	Le quota pour le projet "$1" est maintenant $2 GB
 plugin_statistics	quota_deleted	Quota supprimé pour $1
-plugin_statistics	no_search_result	Aucun résultat ne correspond a la recherche
+plugin_statistics	no_search_result	Aucun résultat ne correspond à la recherche
