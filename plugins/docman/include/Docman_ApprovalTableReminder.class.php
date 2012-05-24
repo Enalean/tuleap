@@ -41,7 +41,6 @@ class Docman_ApprovalTableReminder {
                 $table = new Docman_ApprovalTable();
                 $table->initFromRow($row);
                 $distance = DateHelper::dateDiffInDays($table->getDate(), $_SERVER['REQUEST_TIME']);
-                var_dump($distance);
                 if ($distance > 0 && DateHelper::isPeriodicallyDistant($distance, $table->getNotificationOccurence())) {
                     $this->sendNotificationToPendingApprovers($table);
                 }
