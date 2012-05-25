@@ -56,8 +56,18 @@ class Docman_ApprovalTableReminder {
      * @return Void
      */
      function sendNotificationToPendingApprovers($table) {
-         // @TODO: Send reminders to pending approvers
-     }
+        if($table->isEnabled() && $table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
+            switch ($table->getNotification()) {
+            case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
+                // @TODO: Notify all pending reviewers
+                break;
+            case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
+                // @TODO: Notify the pending reviewer
+                break;
+            default:
+            }
+        }
+    }
 
 }
 
