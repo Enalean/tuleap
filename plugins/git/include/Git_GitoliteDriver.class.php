@@ -332,8 +332,8 @@ class Git_GitoliteDriver {
             return '';
         }
         
-        $ugroup_manager    = new UGroupManager();
-        $repository_groups = $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
+        $ugroup_literalizer = new UGroupLiteralizer();
+        $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
         if (count($repository_groups) == 0) {
             return '';
         }

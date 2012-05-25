@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/project/UGroupManager.class.php';
+require_once 'common/project/UGroupLiteralizer.class.php';
 
-class UGroupManagerTest extends TuleapTestCase {
+class UGroupLiteralizerTest extends TuleapTestCase {
     
     protected $membership;
     protected $user_stub;
@@ -33,7 +33,7 @@ class UGroupManagerTest extends TuleapTestCase {
         $userManager     = mock('UserManager');
         stub($userManager)->getUserByUserName()->returns($this->user);
         UserManager::setInstance($userManager);
-        $this->ugroup_manager = new UGroupManager();
+        $this->ugroup_literalizer = new UGroupLiteralizer();
     }
     
     public function tearDown() {
@@ -50,7 +50,7 @@ class UGroupManagerTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups   = $this->ugroup_manager->getLiteralUserGroupsByUserName('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','gpig1_project_members');
         $this->assertEqual($expected, $groups);
     }
@@ -64,7 +64,7 @@ class UGroupManagerTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(true);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups   = $this->ugroup_manager->getLiteralUserGroupsByUserName('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
         $this->assertEqual($expected, $groups);
     }
@@ -75,7 +75,7 @@ class UGroupManagerTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar(array('ugroup_id'=>304)));
         
-        $groups   = $this->ugroup_manager->getLiteralUserGroupsByUserName('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','ug_304');
         $this->assertEqual($expected, $groups);
     }
@@ -86,7 +86,7 @@ class UGroupManagerTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups   = $this->ugroup_manager->getLiteralUserGroupsByUserName('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_restricted');
         $this->assertEqual($expected, $groups);
     }
@@ -98,7 +98,7 @@ class UGroupManagerTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
     
-        $groups = $this->ugroup_manager->getLiteralUserGroupsByUserName('john_do');
+        $groups = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $this->assertEqual(array(), $groups);
     }
 }
