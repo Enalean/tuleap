@@ -160,13 +160,13 @@ class Planning_MilestoneFactory {
         $sub_milestones     = array();
         
         if ($milestone_artifact) {
-            foreach($this->getSubMilestonesArtifacts($user, $milestone_artifact) as $artifact) {
-                $planning = $this->planning_factory->getPlanningByPlanningTracker($artifact->getTracker());
+            foreach($this->getSubMilestonesArtifacts($user, $milestone_artifact) as $sub_milestone_artifact) {
+                $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
 
                 if ($planning) {
                     $sub_milestones[] = new Planning_Milestone($milestone->getGroupId(),
-                                                            $planning,
-                                                            $artifact);
+                                                               $planning,
+                                                               $sub_milestone_artifact);
                 }
             }
         }
