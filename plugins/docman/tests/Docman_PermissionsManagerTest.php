@@ -821,7 +821,7 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         $this->docman_permissions_manager->exportPermissions($this->docman_item);
     }
     
-    public function itReturnsPermissionsGivenByExternalPermissions_GetProjectObjectGroups() {
+    public function itReturnsLiteralizedUgroupsDependingOnPermissions() {
         $permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
         stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($permissions);
         
