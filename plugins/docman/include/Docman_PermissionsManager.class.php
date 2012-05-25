@@ -652,7 +652,7 @@ class Docman_PermissionsManager {
         if ($item->getParentId() && ($parent = Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId()))) {
             $permissions = array_intersect($permissions, $this->exportPermissions($parent)); 
         }
-        return $permissions; 
+        return array_values($permissions);
     }
 }
 

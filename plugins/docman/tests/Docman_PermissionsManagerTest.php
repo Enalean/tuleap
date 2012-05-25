@@ -822,11 +822,15 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
     }
     
     public function itReturnsLiteralizedUgroupsDependingOnPermissions() {
-        $permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($permissions);
+        $authorized = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($authorized);
         
-        $ugroup_manager       = new UGroupManager();
-        $expected_permissions = $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($this->project, $this->item_id, '');
+        $expected_permissions = array(
+            '@site_active @gpig_project_members',
+            '@gpig_project_members',
+            '@gpig_project_admin',
+            '@ug_103',
+        );
         $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
         $this->assertEqual($expected_permissions, $permissions);
     }
@@ -840,26 +844,22 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         $this->docman_item->setParentId($parent_id);
         
         $parent_permissions = array(
-                UGroup::PROJECT_MEMBERS,
-                UGroup::PROJECT_ADMIN,
-                203
+            UGroup::PROJECT_MEMBERS,
+            UGroup::PROJECT_ADMIN,
+            203
         );
         $child_permissions  = array(
-                UGroup::REGISTERED,
-                UGroup::PROJECT_MEMBERS,
-                UGroup::PROJECT_ADMIN,
-                103
+            UGroup::REGISTERED,
+            UGroup::PROJECT_MEMBERS,
+            UGroup::PROJECT_ADMIN,
+            103
         );
         
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     $permissions_type)->returns($parent_permissions);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, $permissions_type)->returns($child_permissions);
         
-        $ugroup_manager = new UGroupManager();
-        $expected_permissions = array_intersect(
-            $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($this->project, $this->item_id, $permissions_type),
-            $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($this->project, $parent_id,     $permissions_type)
-        );
+        $expected_permissions = array('@gpig_project_members', '@gpig_project_admin');
         $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
         $this->assertEqual($expected_permissions, $permissions);
     }

@@ -190,7 +190,7 @@ class UGroupManager {
             $ugroup_ids[$key] = $this->ugroupIdToString($ugroup_id, $project_name);
         }
 
-        return array_filter($ugroup_ids);
+        return array_values(array_filter($ugroup_ids));
     }
 }
 ?>
