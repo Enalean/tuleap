@@ -111,9 +111,9 @@ class UGroupManager {
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
             $group_id     = $user_project['group_id'];
-            $user_ugroups[] = $project_name.'_project_members';
+            $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(UGroup::PROJECT_MEMBERS, $project_name);
             if ($user->isMember($group_id, 'A')) {
-                $user_ugroups[] = $project_name.'_project_admin';
+                $user_ugroups[] = $this->ugroupIdToStringWithoutArobase(UGroup::PROJECT_ADMIN, $project_name);
             }
         }
         return $user_ugroups;
@@ -166,6 +166,10 @@ class UGroupManager {
             $ugroup = sprintf(self::$literal_ugroups_templates[$ugroup_id], $project_name);
         }
         return $ugroup;
+    }
+    
+    private function ugroupIdToStringWithoutArobase($ugroup_id, $project_name) {
+        return str_replace('@', '', $this->ugroupIdToString($ugroup_id, $project_name));
     }
 }
 ?>
