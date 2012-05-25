@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,17 +15,12 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/permission/ExternalPermissions.class.php';
-require_once 'common/user/User.class.php';
+require_once 'common/project/UGroupLiteralizer.class.php';
 
-Mock::generate('ProjectManager');
-Mock::generate('Project');
-
-class ExternalPermissionsTest extends TuleapTestCase {
+class UGroupLiteralizerTest extends TuleapTestCase {
     
     protected $membership;
     protected $user_stub;
@@ -38,11 +33,12 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $userManager     = mock('UserManager');
         stub($userManager)->getUserByUserName()->returns($this->user);
         UserManager::setInstance($userManager);
+        $this->ugroup_literalizer = new UGroupLiteralizer();
     }
     
     public function tearDown() {
-        parent::tearDown();
         UserManager::clearInstance();
+        parent::tearDown();
     }
     
     public function itIsProjectMember() {
@@ -54,12 +50,10 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','gpig1_project_members');
         $this->assertEqual($expected, $groups);
     }
-    
-    
     
     public function itIsProjectAdmin() {
         $this->user_stub->getStatus()->returns('A');
@@ -70,7 +64,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(true);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
         $this->assertEqual($expected, $groups);
     }
@@ -81,7 +75,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar(array('ugroup_id'=>304)));
         
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','ug_304');
         $this->assertEqual($expected, $groups);
     }
@@ -92,7 +86,7 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
         
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_restricted');
         $this->assertEqual($expected, $groups);
     }
@@ -104,9 +98,8 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
     
-        $groups = ExternalPermissions::getUserGroups('john_do');
+        $groups = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $this->assertEqual(array(), $groups);
     }
-    
 }
 ?>

@@ -19,16 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once(dirname(__FILE__).'/../../include/Planning/MilestoneController.class.php');
-require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aField.php');
-require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCriteria.php');
-require_once(dirname(__FILE__).'/../builders/aPlanning.php');
-require_once(dirname(__FILE__).'/../builders/aPlanningFactory.php');
-require_once dirname(__FILE__).'/../builders/aPlanningController.php';
-require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
+$current_dir = dirname(__FILE__);
+
+require_once $current_dir.'/../../../tracker/include/constants.php';
+require_once $current_dir.'/../../include/Planning/MilestoneController.class.php';
+require_once $current_dir.'/../../include/Planning/Planning.class.php';
+require_once $current_dir.'/../../../tracker/tests/builders/aTracker.php';
+require_once $current_dir.'/../../../tracker/tests/builders/aField.php';
+require_once $current_dir.'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
+require_once $current_dir.'/../builders/aPlanning.php';
+require_once $current_dir.'/../builders/aPlanningFactory.php';
+require_once $current_dir.'/../builders/aPlanningController.php';
+require_once $current_dir.'/../../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once $current_dir.'/../../include/Planning/ViewBuilder.class.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -43,29 +46,29 @@ Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Planning_ViewBuilder');
 
 class Planning_MilestoneControllerTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
-        
+
         $this->request_uri = '/plugins/agiledashboard/';
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', array(), $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
-        
+
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
     }
-    
+
     public function tearDown() {
         parent::tearDown();
-        
-        
+
+
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
     }
-    
+
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
         $aid     = 987;
         $title   = "screen hangs with macos";
@@ -73,7 +76,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/No items yet/', $content);
         $this->assertPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
     }
-    
+
     public function itDisplaysTheArtifactTitleAndId() {
         $id             = 987;
         $title          = "screen hangs with macos and some escapable characters #<";
@@ -84,13 +87,13 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern("/art-$id/", $content);
         $this->assertPattern("/$expected_title/", $content);
     }
-    
+
     public function itDisplaysTheNameOfThePlanning() {
         $name    = $this->planning->getName();
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
         $this->assertPattern("/$name/", $content);
     }
-    
+
     public function itDisplaysASelectorOfArtifact() {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
         $this->assertPattern('/<select class="planning-artifact-chooser" name="aid"/', $content);
@@ -101,14 +104,14 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/<input type="hidden" name="action" value="show"/', $content);
         $this->assertPattern('/<input type="hidden" name="group_id" value="103"/', $content);
     }
-    
+
     public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
-        
+
         $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
-    
+
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
         $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
@@ -120,7 +123,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
             $this->GivenAnArtifactWithNoLinkedItem(123, 'Tutu'),
             $this->GivenAnArtifactWithNoLinkedItem(124, 'Tata')
         );
-        
+
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array_merge(array($artifact), $linked_items));
         $request  = aRequest()->with('aid', $id)
@@ -133,7 +136,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/Tutu/', $content);
         $this->assertPattern('/Tata/', $content);
     }
-    
+
     public function itDisplaysTheSearchContentView() {
         $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
         $semantic_criteria      = array('title' => 'bonjour', 'status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED);
@@ -143,7 +146,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                             ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expected_criteria);
     }
-    
+
     public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
         $shared_fields_criteria = $semantic_criteria = array();
         $expectedCriteria       = aCrossSearchCriteria()
@@ -152,7 +155,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                                   ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
-     
+
     public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
         $shared_fields_criteria = array('invalid parameter type');
         $semantic_criteria      = array('another invalid parameter type');
@@ -162,7 +165,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                                   ->build();
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
-    
+
 
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
         $project_id                = 1111;
@@ -190,12 +193,12 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $tracker_ids  = array();
         $view_builder = new MockPlanning_ViewBuilder();
         $expected_arguments = array(
-        	'*', 
-            $project, 
-            new EqualExpectation($expected_criteria), 
-            $already_linked_items, 
+            '*',
+            $project,
+            new EqualExpectation($expected_criteria),
+            $already_linked_items,
             $tracker_ids,
-            $this->planning, 
+            $this->planning,
             '*' // TODO an assert on planning_redirect_param
         );
         $view_builder->expectOnce('build', $expected_arguments);
@@ -233,7 +236,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($artifact)->getTracker()->returns($tracker);
         return $artifact;
     }
-    
+
     private function GivenAnArtifact($id, $title, $already_linked_items) {
         $artifact = new MockTracker_Artifact();
         $artifact->setReturnValue('getTitle', $title);
@@ -242,17 +245,17 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
         $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
         $artifact->setReturnValue('userCanView', true);
-        
+
         $tracker = stub('Tracker')->userCanView()->returns(true);
         stub($artifact)->getTracker()->returns($tracker);
 
         return $artifact;
     }
-    
+
     private function GivenAnArtifactWithNoLinkedItem($id, $title) {
         return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
     }
-    
+
     private function GivenAnArtifactFactory(array $artifacts = array()) {
         $open_artifacts = array(
             $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
@@ -266,36 +269,36 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
             $open_artifacts[] = $artifact;
         }
         $factory->setReturnValue(
-            'getOpenArtifactsByTrackerIdUserCanView', 
+            'getOpenArtifactsByTrackerIdUserCanView',
             $open_artifacts,
             array(aUser()->build(), $this->planning->getPlanningTrackerId()));
         return $factory;
     }
-    
+
     private function GivenAMilestone($artifact) {
         $milestone = mock('Planning_Milestone');
         $root_node = new TreeNode(array('id'    => $artifact->getId(),
                                         'title' => $artifact->getTitle()));
         $root_node->setId($artifact->getId());
-        
+
         stub($milestone)->getArtifact()->returns($artifact);
         stub($milestone)->getPlannedArtifacts()->returns($root_node);
         stub($milestone)->userCanView()->returns(true);
-        
+
         return $milestone;
     }
-    
+
     private function GivenNoMilestone($project_id = null) {
         if (! $project_id) {
             $project_id = $this->planning->getGroupId();
         }
         return new Planning_NoMilestone($project_id, $this->planning);
     }
-    
+
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
         $id    = 987;
         $title = 'Coin';
-        
+
         $artifact = $this->GivenAnArtifact($id, $title, array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $request  = aRequest()->with('aid', $id)
@@ -304,10 +307,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->withUri($this->request_uri)
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
-        
+
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
-    
+
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
@@ -317,10 +320,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->withUri($this->request_uri)
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
-        
+
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
-    
+
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $milestone = $this->GivenNoMilestone();
         $factory = $this->GivenAnArtifactFactory();
@@ -331,7 +334,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                              ->build();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory, $milestone);
     }
-    
+
     private function WhenICaptureTheOutputOfShowAction($request, $factory, $milestone) {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $content_view->setReturnValue('fetch', 'stuff');
@@ -339,30 +342,30 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $view_builder->setReturnValue('build', $content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array(), new MockTracker_CrossSearch_Search());
     }
-    
+
     private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $milestone, $view_builder, array $projects, $search) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
         $planning_factory = new MockPlanningFactory();
         $planning_tracker = mock('Tracker');
-        
+
         $this->planning->setPlanningTracker($planning_tracker);
         stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
         $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
-        
+
         $tracker_factory = new MockTrackerFactory();
         TrackerFactory::setInstance($tracker_factory);
-        
+
         $milestone_factory = mock('Planning_MilestoneFactory');
         stub($milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
                                                                    $request->get('group_id'),
                                                                    $request->get('planning_id'),
                                                                    $request->get('aid'))
                                 ->returns($milestone);
-        
+
         ob_start();
         $controller = new Planning_MilestoneController($request, $factory, $planning_factory, $milestone_factory);
-        
+
         $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();
         return $content;
