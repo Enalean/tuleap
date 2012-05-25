@@ -28,6 +28,7 @@ class MockArtifactBuilder {
     public function __construct() {
         $this->id       = 123;
         $this->tracker  = new MockTracker();
+        $this->title    = '';
         $this->artifact = new MockTracker_Artifact();
         $this->uri      = '';
         $this->xref     = '';
@@ -35,6 +36,11 @@ class MockArtifactBuilder {
 
     public function withId($id) {
         $this->id = $id;
+        return $this;
+    }
+    
+    public function withTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
         return $this;
     }
     

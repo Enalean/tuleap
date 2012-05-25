@@ -136,6 +136,25 @@ class PlanningFactory {
         return null;
     }
     
+    /**
+     * @param Tracker $planning_tracker 
+     * 
+     * @return Planning
+     */
+    public function getPlanningByPlanningTracker(Tracker $planning_tracker) {
+        $planning = $this->dao->searchByPlanningTrackerId($planning_tracker->getId())->getRow();
+        
+        if($planning) {
+            return new Planning($planning['id'],
+                                $planning['name'],
+                                $planning['group_id'],
+                                $planning['backlog_title'],
+                                $planning['plan_title'],
+                                array(),
+                                $planning['planning_tracker_id']);
+        }
+    }
+    
     public function getPlanningWithTrackers($planning_id) {
         $planning = $this->getPlanning($planning_id);
         

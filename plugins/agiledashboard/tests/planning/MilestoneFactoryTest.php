@@ -68,13 +68,22 @@ class MilestoneFactoryTest extends TuleapTestCase {
     }
     
     public function itCanRetrieveSubMilestonesOfAGivenMilestone() {
+        $sprints_tracker   = mock('Tracker');
+        $hackfests_tracker = mock('Tracker');
+        
+        $sprint_planning   = mock('Planning');
+        $hackfest_planning = mock('Planning');
+        
         $release_1_0   = mock('Tracker_Artifact');
-        $sprint_1      = mock('Tracker_Artifact');
-        $sprint_2      = mock('Tracker_Artifact');
-        $hackfest_2012 = mock('Tracker_Artifact');
+        $sprint_1      = aMockArtifact()->withTracker($sprints_tracker)->build();
+        $sprint_2      = aMockArtifact()->withTracker($sprints_tracker)->build();
+        $hackfest_2012 = aMockArtifact()->withTracker($hackfests_tracker)->build();
         
         stub($release_1_0)->getHierarchyLinkedArtifacts($this->user)
                           ->returns(array($sprint_1, $sprint_2, $hackfest_2012));
+        
+        stub($this->planning_factory)->getPlanningByPlanningTracker($sprints_tracker)->returns($sprint_planning);
+        stub($this->planning_factory)->getPlanningByPlanningTracker($hackfests_tracker)->returns($hackfest_planning);
         
         $milestone      = aMilestone()->withArtifact($release_1_0)->build();
         $sub_milestones = $this->milestone_factory->getSubMilestones($this->user, $milestone);
