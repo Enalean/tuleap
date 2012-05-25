@@ -73,10 +73,22 @@ class Planning_MilestoneFactory {
         
         if ($artifact) {
             $content_tree = $this->getPlannedArtifacts($user, $planning, $artifact, 1);
+            $this->removeSubMilestones($user, $artifact, $content_tree);
             
             return new Planning_Milestone($group_id, $planning, $artifact, $content_tree);
         } else {
             return new Planning_NoMilestone($group_id, $planning);
+        }
+    }
+    
+    private function removeSubMilestones(User $user, Tracker_Artifact $milestone_artifact, TreeNode $content_tree) {
+        $hierarchy_children_ids = $this->getSubMilestonesArtifactIds($user, $milestone_artifact);
+
+        foreach ($content_tree->getChildren() as $node) {
+            $data = $node->getData();
+            if (in_array($data['id'], $hierarchy_children_ids)) {
+                $content_tree->removeChild(null, $node);
+            }
         }
     }
     
@@ -146,7 +158,7 @@ class Planning_MilestoneFactory {
     public function getSubMilestones(User $user, Planning_Milestone $milestone) {
         $sub_milestones = array();
         
-        foreach($this->getSubMilestonesArtifacts($user, $milestone) as $artifact) {
+        foreach($this->getSubMilestonesArtifacts($user, $milestone->getArtifact()) as $artifact) {
             $sub_milestones[] = new Planning_Milestone($milestone->getGroupId(),
                                                        $milestone->getPlanning(),
                                                        $artifact);
@@ -155,8 +167,17 @@ class Planning_MilestoneFactory {
         return $sub_milestones;
     }
     
-    private function getSubMilestonesArtifacts(User $user, Planning_Milestone $milestone) {
-        return array_values($milestone->getArtifact()->getHierarchyLinkedArtifacts($user));
+    private function getSubMilestonesArtifacts(User $user, Tracker_Artifact $artifact) {
+        return array_values($artifact->getHierarchyLinkedArtifacts($user));
+    }
+    
+    private function getSubMilestonesArtifactIds(User $user, Tracker_Artifact $artifact) {
+        return array_map(array($this, 'getArtifactId'),
+                         $this->getSubMilestonesArtifacts($user, $artifact));
+    }
+    
+    private function getArtifactId(Tracker_Artifact $artifact) {
+        return $artifact->getId();
     }
     
     public function getMilestoneWithPlannedArtifactsAndSubMilestones(User $user, $group_id, $planning_id, $artifact_id) {

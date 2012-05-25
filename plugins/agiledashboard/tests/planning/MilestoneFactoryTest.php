@@ -31,11 +31,13 @@ class MilestoneFactoryTest extends TuleapTestCase {
         
         $this->user              = mock('User');
         $this->planning          = aPlanning()->withId($this->planning_id)->build();
-        $this->artifact          = stub('Tracker_Artifact')->getUniqueLinkedArtifacts($this->user)->returns(array());
+        $this->artifact          = mock('Tracker_Artifact');
         $this->planning_factory  = mock('PlanningFactory');
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
         $this->milestone_factory = new Planning_MilestoneFactory($this->planning_factory, $this->artifact_factory);
         
+        stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());
+        stub($this->artifact)->getHierarchyLinkedArtifacts($this->user)->returns(array());
         stub($this->planning_factory)->getPlanningWithTrackers($this->planning_id)->returns($this->planning);
     }
     
