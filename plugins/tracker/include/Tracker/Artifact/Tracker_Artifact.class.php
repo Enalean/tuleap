@@ -1211,9 +1211,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getLinkedArtifactsOfHierarchy(User $user) {
         $artifact_links = $this->getLinkedArtifacts($user);
-        foreach($artifact_links as $artifact_link) {
-            $sub_linked_artifacts = $artifact_link->getLinkedArtifactsOfHierarchy($user);
-            $artifact_links       = array_merge($artifact_links, $sub_linked_artifacts);
+        $allowed_trackers = $this->getHierarchyFactory()->getChildren($this->getTracker()->getId());
+        foreach ($artifact_links as $artifact_link) {
+            $tracker = $artifact_link->getTracker();
+            if (in_array($tracker, $allowed_trackers)) {
+                $sub_linked_artifacts = $artifact_link->getLinkedArtifactsOfHierarchy($user);
+                $artifact_links       = array_merge($artifact_links, $sub_linked_artifacts);
+            }
         }
 
         return $artifact_links;
@@ -1233,6 +1237,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ($sub_artifacts as $artifact) {
             $grandchild_artifacts = array_merge($grandchild_artifacts, $artifact->getLinkedArtifactsOfHierarchy($user));
         }
+        array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
 
