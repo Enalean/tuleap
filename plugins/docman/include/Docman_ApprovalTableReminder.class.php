@@ -81,11 +81,9 @@ class Docman_ApprovalTableReminder {
     function notifyAllAtOnce($table) {
         $nbNotif = 0;
         $this->populateReviewersList($table);
-        $rIter   = $table->getReviewerIterator();
-        if($rIter !== null) {
-            $rIter->rewind();
-            while($rIter->valid()) {
-                $reviewer = $rIter->current();
+        $reviewers   = $table->getReviewerArray();
+        if(!empty($reviewers)) {
+            foreach ($reviewers as $reviewer) {
                 switch($reviewer->getState()) {
                 case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
                 case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
@@ -94,7 +92,6 @@ class Docman_ApprovalTableReminder {
                         $nbNotif++;
                     }
                 }
-                $rIter->next();
             }
         } else {
             return false;
