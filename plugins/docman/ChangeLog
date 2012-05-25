@@ -1,3 +1,6 @@
+Version 2.25.6 - Tuleap 5.2
+    * Refactoring of "external permissions"
+
 Version 2.25.5 - Tuleap 5.0.3
     Allow docman document to be indexed by fulltextsearch plugin
 
