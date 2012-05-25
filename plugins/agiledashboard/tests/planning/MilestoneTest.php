@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
+require_once dirname(__FILE__).'/../builders/aMilestone.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 class MilestoneTest extends TuleapTestCase {
@@ -86,8 +87,6 @@ class MilestoneTest extends TuleapTestCase {
         $this->assertEqual($this->milestone->getTitle(), 'Foo');
     }
 }
-
-require_once dirname(__FILE__).'/../builders/aMilestone.php';
 
 class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
     
