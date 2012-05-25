@@ -149,5 +149,23 @@ class UGroupManager {
         }
         return false;
     }
+    
+    /**
+     * Convert ugroup id in a given project to a literal form
+     *
+     * @param int    $ugroup_id    The id of the ugroup
+     * @param string $project_name The unix group name of the project
+     * 
+     * @return string @ug_102 | @gpig_project_admin | @site_active @gpig_project_member | ... or null if not found
+     */
+    public function ugroupIdToString($ugroup_id, $project_name) {
+        $ugroup = null;
+        if ($ugroup_id > 100) {
+            $ugroup = '@ug_'. $ugroup_id;
+        } else if (isset(self::$literal_ugroups_templates[$ugroup_id])) {
+            $ugroup = sprintf(self::$literal_ugroups_templates[$ugroup_id], $project_name);
+        }
+        return $ugroup;
+    }
 }
 ?>

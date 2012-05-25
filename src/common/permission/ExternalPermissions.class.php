@@ -22,6 +22,7 @@
 require_once 'common/user/UserManager.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'common/project/UGroup.class.php';
+require_once 'common/project/UGroupManager.class.php';
 
 /**
  * Return groups of a user given by name to use them externally
@@ -50,28 +51,14 @@ class ExternalPermissions {
      * @return array of groups converted to string
      */
     public static function getProjectObjectGroups(Project $project, $object_id, $permission_type) {
-        $ugroup_ids   = PermissionsManager::instance()->getAuthorizedUgroupIds($object_id, $permission_type);
-        $project_name = $project->getUnixName();
-        array_walk($ugroup_ids, array('ExternalPermissions', 'ugroupIdToString'), $project_name);
-        return array_filter($ugroup_ids);
-    }
-    
-    /**
-     * Convert given ugroup id to a format managed by ExternalPermissions
-     *
-     * @param String $ugroup UGroupId
-     */
-    protected static function ugroupIdToString(&$ugroup, $key, $project_name) {
-        if ($ugroup > 100) {
-            $ugroup = '@ug_'. $ugroup;
-            return false;
-        } 
-        if (isset(self::$ugroups_templates[$ugroup])) {
-            $ugroup = sprintf(self::$ugroups_templates[$ugroup], $project_name);
-        } else {
-            $ugroup = null;
+        $ugroup_ids     = PermissionsManager::instance()->getAuthorizedUgroupIds($object_id, $permission_type);
+        $project_name   = $project->getUnixName();
+        $ugroup_manager = new UGroupManager();
+        foreach ($ugroup_ids as $key => $ugroup_id) {
+            $ugroup_ids[$key] = $ugroup_manager->ugroupIdToString($ugroup_id, $project_name);
         }
-        return false;
+
+        return array_filter($ugroup_ids);
     }
 
 }
