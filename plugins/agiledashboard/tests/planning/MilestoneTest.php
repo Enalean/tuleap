@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
-class MilestoneTest extends TuleapTestCase {
+class Planning_MilestoneTest extends TuleapTestCase {
     
     private $group_id;
     private $planning;

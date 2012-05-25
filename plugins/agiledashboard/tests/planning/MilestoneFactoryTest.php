@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../include/Planning/MilestoneFactory.class.p
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
 
-class MilestoneFactoryTest extends TuleapTestCase {
+class Planning_MilestoneFactoryTest extends TuleapTestCase {
     public function setUp() {
         $this->group_id    = 12;
         $this->planning_id = 34;
