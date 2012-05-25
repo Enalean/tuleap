@@ -112,7 +112,7 @@ class Planning_MilestoneFactory {
      * @param type $user
      * @param type $artifact
      * @param type $parent_node
-     * @param type $child_depth
+     * @param type $parents     The list of parents to prevent infinite recursion
      *
      * @return boolean
      */

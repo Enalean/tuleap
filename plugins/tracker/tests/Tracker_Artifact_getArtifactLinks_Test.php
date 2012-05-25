@@ -115,20 +115,20 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
      *         -art 4
      * - art 4 (should be hidden)
      */
-     public function itReturnsOnlyOneIfTwoLinksIdenticalInSubHierarchies() {
-         $artifact4 = $this->giveMeAnArtifactWithChildren();
-         $artifact3 = $this->giveMeAnArtifactWithChildren($artifact4);
-         $artifact2 = $this->giveMeAnArtifactWithChildren();
-         $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
-
-         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
-         stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns(array($artifact1, $artifact4));
-         stub($field)->userCanRead($this->user)->returns(true);
-         stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
-
-         $expected_result = array($artifact1);
-         $this->assertEqual($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
-     }
+    public function itReturnsOnlyOneIfTwoLinksIdenticalInSubHierarchies() {
+        $artifact4 = $this->giveMeAnArtifactWithChildren();
+        $artifact3 = $this->giveMeAnArtifactWithChildren($artifact4);
+        $artifact2 = $this->giveMeAnArtifactWithChildren();
+        $artifact1 = $this->giveMeAnArtifactWithChildren($artifact2, $artifact3);
+    
+        $field     = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns(array($artifact1, $artifact4));
+        stub($field)->userCanRead($this->user)->returns(true);
+        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
+    
+        $expected_result = array($artifact1);
+        $this->assertEqual($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
+    }
      
     /**
      * Artifact Links
@@ -199,52 +199,46 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         stub($artifact)->getAnArtifactLinkField()->returns($alfield);
     }
      
-     /**
-      *
-      * @param $child1 optional artifact link field child
-      * @param $child2 optional artifact link field child ...
-      *
-      * @return Tracker_Artifact
-      */
-     public function giveMeAnArtifactWithChildren() {
-         $children  = func_get_args();
-         $sub_trackers = array();
-         foreach ($children as $child) {
-             $sub_trackers[] = $child->getTracker();
-         }
-         
-         $this->current_id++;
-         $tracker   = aTracker()->withId($this->current_id)->build();
-         
-         $hierarchy_factory = mock('Tracker_HierarchyFactory');
-         stub($hierarchy_factory)->getChildren($tracker->getId())->returns($sub_trackers);
-         
-         $changeset = mock('Tracker_Artifact_Changeset');
-         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
-         stub($field)->getLinkedArtifacts($changeset, $this->user)->returns($children);
-         stub($field)->userCanRead($this->user)->returns(true);
-         stub($this->factory)->getUsedArtifactLinkFields($tracker)->returns(array($field));
-
-         $artifact_id = $this->current_id + 100;
-         $this->artifact_collaborators[$artifact_id] = array(
-             'field'     => $field,
-             'changeset' => $changeset,
-         );
-         
-         return anArtifact()
-             ->withId($artifact_id)
-             ->withTracker($tracker)
-             ->withFormElementFactory($this->factory)
-             ->withChangesets(array($changeset))
-             ->withHierarchyFactory($hierarchy_factory)
-             ->build()
-         ;
-     }
-     
-     private function updateChildrenOfArtifact(Tracker_Artifact $artifact, $children) {
-         $field     = $this->artifact_collaborators[$artifact->getId()]['field'];
-         $changeset = $this->artifact_collaborators[$artifact->getId()]['changeset'];
-         stub($field)->getLinkedArtifacts($changeset, $this->user)->returns($children);
-     }
+    /**
+     *
+     * @param $child1 optional artifact link field child
+     * @param $child2 optional artifact link field child ...
+     *
+     * @return Tracker_Artifact
+     */
+    public function giveMeAnArtifactWithChildren() {
+        $children  = func_get_args();
+        $sub_trackers = array();
+        foreach ($children as $child) {
+            $sub_trackers[] = $child->getTracker();
+        }
+        
+        $this->current_id++;
+        $tracker   = aTracker()->withId($this->current_id)->build();
+        
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getChildren($tracker->getId())->returns($sub_trackers);
+        
+        $changeset = mock('Tracker_Artifact_Changeset');
+        $field     = mock('Tracker_FormElement_Field_ArtifactLink');
+        stub($field)->getLinkedArtifacts($changeset, $this->user)->returns($children);
+        stub($field)->userCanRead($this->user)->returns(true);
+        stub($this->factory)->getUsedArtifactLinkFields($tracker)->returns(array($field));
+    
+        $artifact_id = $this->current_id + 100;
+        $this->artifact_collaborators[$artifact_id] = array(
+            'field'     => $field,
+            'changeset' => $changeset,
+        );
+        
+        return anArtifact()
+            ->withId($artifact_id)
+            ->withTracker($tracker)
+            ->withFormElementFactory($this->factory)
+            ->withChangesets(array($changeset))
+            ->withHierarchyFactory($hierarchy_factory)
+            ->build()
+        ;
+    }
 }
 ?>

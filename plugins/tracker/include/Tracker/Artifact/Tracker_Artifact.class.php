@@ -1197,11 +1197,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Array of Tracker_Artifact
      */
     public function getLinkedArtifacts(User $user) {
-        if (!($artifact_link_field = $this->getAnArtifactLinkField($user))) {
-            return array();
+        $artifact_links      = array();
+        $artifact_link_field = $this->getAnArtifactLinkField($user);
+        if ($artifact_link_field) {
+            $artifact_links = $artifact_link_field->getLinkedArtifacts($this->getLastChangeset(), $user);
         }
-        return $artifact_link_field->getLinkedArtifacts($this->getLastChangeset(), $user);
+        return $artifact_links;
     }
+
     /**
      * Get artifacts linked to the current artifact and sub artifacts
      *

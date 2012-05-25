@@ -37,8 +37,8 @@ if (!isset($argv[1])) {
     exit(1);
 }
 
-$ugroup_literlaizer = new UGroupLiteralizer();
-$groups = $ugroup_literlaizer->getUserGroupsForUserName($argv[1]);
+$ugroup_literalizer = new UGroupLiteralizer();
+$groups = $ugroup_literalizer->getUserGroupsForUserName($argv[1]);
 if (count($groups) > 0) {
     echo implode(' ', $groups).PHP_EOL;
 }

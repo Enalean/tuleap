@@ -26,12 +26,12 @@ require_once 'common/permission/PermissionsManager.class.php';
  */
 class UGroupLiteralizer {
     
-    private static $literal_user_status = array(
+    private static $user_status = array(
         User::STATUS_RESTRICTED => 'site_restricted',
         User::STATUS_ACTIVE     => 'site_active'
     );
     
-    private static $literal_ugroups_templates = array(
+    private static $ugroups_templates = array(
         UGroup::REGISTERED      => '@site_active @%s_project_members',
         UGroup::PROJECT_MEMBERS => '@%s_project_members',
         UGroup::PROJECT_ADMIN   => '@%s_project_admin'
@@ -49,7 +49,7 @@ class UGroupLiteralizer {
         if (!$user) {
             return array();
         }
-        $groups = array(self::$literal_user_status[$user->getStatus()]);
+        $groups = array(self::$user_status[$user->getStatus()]);
         $groups = $this->appendDynamicUGroups($user, $groups);
         $groups = $this->appendStaticUgroups($user, $groups);
         
@@ -102,7 +102,7 @@ class UGroupLiteralizer {
      */
     private function getValidUserByName($user_name) {
         $user = UserManager::instance()->getUserByUserName($user_name);
-        if ($user && isset(self::$literal_user_status[$user->getStatus()])) {
+        if ($user && isset(self::$user_status[$user->getStatus()])) {
             return $user;
         }
         return false;
@@ -120,8 +120,8 @@ class UGroupLiteralizer {
         $ugroup = null;
         if ($ugroup_id > 100) {
             $ugroup = '@ug_'. $ugroup_id;
-        } else if (isset(self::$literal_ugroups_templates[$ugroup_id])) {
-            $ugroup = sprintf(self::$literal_ugroups_templates[$ugroup_id], $project_name);
+        } else if (isset(self::$ugroups_templates[$ugroup_id])) {
+            $ugroup = sprintf(self::$ugroups_templates[$ugroup_id], $project_name);
         }
         return $ugroup;
     }
