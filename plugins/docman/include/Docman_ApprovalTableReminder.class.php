@@ -20,6 +20,7 @@
 
 require_once('common/date/DateHelper.class.php');
 require_once('Docman_ApprovalTableDao.class.php');
+require_once('Docman_ApprovalTableReviewerDao.class.php');
 require_once('Docman_ApprovalTable.class.php');
 
 /**
@@ -78,6 +79,7 @@ class Docman_ApprovalTableReminder {
      */
     function notifyAllAtOnce($table) {
         $nbNotif = 0;
+        // @TODO: fill reviewer iterator
         $rIter   = $table->getReviewerIterator();
         if($rIter !== null) {
             $rIter->rewind();
@@ -112,7 +114,7 @@ class Docman_ApprovalTableReminder {
      * @return Boolean
      */
     function notifyNextReviewer($table) {
-        $dao = new Docman_ApprovalTableReviewerDao();
+        $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getFirstReviewerByStatus($table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
         if($dar && !$dar->isError() && $dar->rowCount() > 0) {
             return false;
