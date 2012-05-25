@@ -144,16 +144,19 @@ class Planning_MilestoneFactory {
      * @return array of Planning_Milestone
      */
     public function getSubMilestones(User $user, Planning_Milestone $milestone) {
-        $sub_milestones     = array();
-        $children_artifacts = array_values($milestone->getArtifact()->getHierarchyLinkedArtifacts($user));
+        $sub_milestones = array();
         
-        foreach($children_artifacts as $artifact) {
+        foreach($this->getSubMilestonesArtifacts($user, $milestone) as $artifact) {
             $sub_milestones[] = new Planning_Milestone($milestone->getGroupId(),
                                                        $milestone->getPlanning(),
                                                        $artifact);
         }
         
         return $sub_milestones;
+    }
+    
+    private function getSubMilestonesArtifacts(User $user, Planning_Milestone $milestone) {
+        return array_values($milestone->getArtifact()->getHierarchyLinkedArtifacts($user));
     }
     
     public function getMilestoneWithPlannedArtifactsAndSubMilestones(User $user, $group_id, $planning_id, $artifact_id) {
