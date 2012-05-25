@@ -23,6 +23,21 @@ require_once 'UGroup.class.php';
 require_once 'common/dao/UGroupDao.class.php';
 
 class UGroupManager {
+    
+    public static $literal_user_status = array(
+        User::STATUS_RESTRICTED => 'site_restricted',
+        User::STATUS_ACTIVE     => 'site_active'
+    );
+    
+    public static $literal_ugroups_templates = array(
+        UGroup::REGISTERED      => '@site_active @%s_project_members',
+        UGroup::PROJECT_MEMBERS => '@%s_project_members',
+        UGroup::PROJECT_ADMIN   => '@%s_project_admin'
+    );
+    
+    /**
+     * @var UGroupDao
+     */
     protected $dao;
 
     /**
@@ -62,6 +77,77 @@ class UGroupManager {
             $this->dao = new UGroupDao(CodendiDataAccess::instance());
         }
         return $this->dao;
+    }
+
+    /**
+     * Return User groups in a litteral form
+     * 
+     * @param string $user_name
+     * 
+     * @return array Ex: array('site_active', 'gpig1_project_members')
+     */
+    public function getLiteralUserGroupsByUserName($user_name) {
+        $user = $this->getValidUserByName($user_name);
+        if (!$user) {
+            return array();
+        }
+        $groups = array(self::$literal_user_status[$user->getStatus()]);
+        $groups = $this->appendDynamicUGroups($user, $groups);
+        $groups = $this->appendStaticUgroups($user, $groups);
+        
+        return $groups;
+    }
+
+    /**
+     * Append project dynamic ugroups of user
+     * 
+     * @param User  $user
+     * @param array $user_ugroups
+     *
+     * @return array the new array of user's ugroup
+     */
+    protected function appendDynamicUGroups( User $user, array $user_ugroups = array()) {
+        $user_projects = $user->getProjects(true);
+        foreach ($user_projects as $user_project) {
+            $project_name = strtolower($user_project['unix_group_name']);
+            $group_id     = $user_project['group_id'];
+            $user_ugroups[] = $project_name.'_project_members';
+            if ($user->isMember($group_id, 'A')) {
+                $user_ugroups[] = $project_name.'_project_admin';
+            }
+        }
+        return $user_ugroups;
+    }
+
+    /**
+     * Append project static ugroups of user
+     * 
+     * @param User  $user
+     * @param array $user_ugroups
+     * 
+     * @return array the new array of user's ugroup
+     */
+    protected function appendStaticUgroups( User $user, array $user_ugroups = array()) {
+        $ugroups = $user->getAllUgroups();
+        foreach ($ugroups as $row) {
+            $user_ugroups[] = 'ug_'.$row['ugroup_id'];
+        }
+        return $user_ugroups;
+    } 
+
+    /**
+     * return an user if it's active or restricted
+     * 
+     * @param string $user_name
+     * 
+     * @return User if exists false otherwise
+     */
+    protected function getValidUserByName($user_name) {
+        $user = UserManager::instance()->getUserByUserName($user_name);
+        if ($user && isset(self::$literal_user_status[$user->getStatus()])) {
+            return $user;
+        }
+        return false;
     }
 }
 ?>
