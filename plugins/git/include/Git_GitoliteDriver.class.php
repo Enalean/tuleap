@@ -21,7 +21,7 @@
 
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
-require_once 'common/permission/ExternalPermissions.class.php';
+require_once 'common/project/UGroupManager.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'exceptions/Git_Command_Exception.class.php';
@@ -332,7 +332,7 @@ class Git_GitoliteDriver {
             return '';
         }
         
-        $ugroup_manager = new UGroupManager();
+        $ugroup_manager    = new UGroupManager();
         $repository_groups = $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
         if (count($repository_groups) == 0) {
             return '';

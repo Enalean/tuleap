@@ -825,7 +825,8 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         $permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
         stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($permissions);
         
-        $expected_permissions = ExternalPermissions::getProjectObjectGroups($this->project, $this->item_id, '');
+        $ugroup_manager       = new UGroupManager();
+        $expected_permissions = $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($this->project, $this->item_id, '');
         $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
         $this->assertEqual($expected_permissions, $permissions);
     }
@@ -854,9 +855,10 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     $permissions_type)->returns($parent_permissions);
         stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, $permissions_type)->returns($child_permissions);
         
+        $ugroup_manager = new UGroupManager();
         $expected_permissions = array_intersect(
-                ExternalPermissions::getProjectObjectGroups($this->project, $this->item_id, $permissions_type),
-                ExternalPermissions::getProjectObjectGroups($this->project, $parent_id,     $permissions_type)
+            $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($this->project, $this->item_id, $permissions_type),
+            $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($this->project, $parent_id,     $permissions_type)
         );
         $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
         $this->assertEqual($expected_permissions, $permissions);
