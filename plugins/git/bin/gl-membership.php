@@ -30,7 +30,7 @@
  */
 
 require_once 'pre.php';
-require_once 'common/permission/ExternalPermissions.class.php';
+require_once 'common/project/UGroupManager.class.php';
 
 if (!isset($argv[1])) {
     echo "Usage: ".$argv[0]." username".PHP_EOL;
