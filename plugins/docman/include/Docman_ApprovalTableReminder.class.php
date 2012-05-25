@@ -59,15 +59,99 @@ class Docman_ApprovalTableReminder {
         if($table->isEnabled() && $table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
             switch ($table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-                // @TODO: Notify all pending reviewers
+                $this->notifyAllAtOnce($table);
                 break;
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-                // @TODO: Notify the pending reviewer
+                $this->notifyNextReviewer($table);
                 break;
             default:
             }
         }
     }
+
+    /**
+     * Notify everybody in the same time
+     *
+     * @param Docman_ApprovalTable $table Approval table
+     *
+     * @return Boolean
+     */
+    function notifyAllAtOnce($table) {
+        $nbNotif = 0;
+        $rIter   = $table->getReviewerIterator();
+        if($rIter !== null) {
+            $rIter->rewind();
+            while($rIter->valid()) {
+                $reviewer = $rIter->current();
+                switch($reviewer->getState()) {
+                case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
+                case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                    $sent = $this->notifyIndividual($table, $reviewer->getId());
+                    if($sent) {
+                        $nbNotif++;
+                    }
+                }
+                $rIter->next();
+            }
+        } else {
+            return false;
+        }
+
+        if($nbNotif > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Action - Sequential notification
+     *
+     * @param Docman_ApprovalTable $table Approval table
+     *
+     * @return Boolean
+     */
+    function notifyNextReviewer($table) {
+        $dao = new Docman_ApprovalTableReviewerDao();
+        $dar = $dao->getFirstReviewerByStatus($table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
+        if($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            return false;
+        } else {
+            $dar = $dao->getFirstReviewerByStatus($table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
+            if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                $row = $dar->current();
+                return $this->notifyIndividual($table, $row['reviewer_id']);
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Remind a user about the document he is supposed to review
+     *
+     * @param Docman_ApprovalTable $table Approval table
+     * @param Integer              $reviewerId     Id of the reviewer
+     *
+     * @return Boolean
+     */
+    function notifyIndividual($table, $reviewerId) {
+        $um       = UserManager::instance();
+        $reviewer = $um->getUserById($reviewerId);
+        $mail     = $this->prepareMailReminder($table, $reviewer);
+        //return $mail->send();
+    }
+
+    /**
+     * Prepare the mail reminder
+     *
+     * @param Docman_ApprovalTable $table    Approval table
+     * @param User                 $reviewer User to remind
+     *
+     * @return Mail
+     */
+     function prepareMailReminder() {
+         // @TODO: Prepare the mail taking into consideration user preferences text/HTML and the language of her choice
+     }
 
 }
 
