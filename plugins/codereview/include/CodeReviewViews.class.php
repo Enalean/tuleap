@@ -91,12 +91,27 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
-
+    function displayFrameAdmin() {
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/admin/";
+        echo '<div id="codereview_iframe_div">';
+        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
+        echo '</div>';
+    }
+    
     /**
      * Display review request creation form
      *
      * @return Void
      */
+     function displayFramePublish() {
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$this->request->get('review_id');
+        //var_dump($url);
+        echo '<div id="codereview_iframe_div">';
+        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
+        echo '</div>';
+    }
     function reviewSubmission() {
         $project_manager = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);

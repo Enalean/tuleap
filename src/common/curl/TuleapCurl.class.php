@@ -54,6 +54,22 @@ class TuleapCurl {
         curl_close($ch);
         return array('return' => $return, 'status' => $status, 'error' => $error);
     }
+    
+    public function searchUser($url, $includeHeader = false,$authUser = null, $authPassword = null, $postfields = null,$username){
+        $exist='FALSE';
+        $result=$this->execute($url, $includeHeader,$authUser, $authPassword, $postfields);
+        $n=$result['total_results'];
+        var_dump($n);
+        for($i=0;$i<$n & $result['users'][$i]['username']!=$username;$i++);
+        //var_dump($result['users'][$i]['username']);
+        if ($result['users'][$i]['username']==$username){
+        var_dump("the user ".$username." is registred in RB");
+        $exist='TRUE';
+        }
+        else 
+        var_dump("the user ".$username." is not registred in rb");
+        return $exist;
+    }
 
 }
 

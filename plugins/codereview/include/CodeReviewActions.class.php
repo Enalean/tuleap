@@ -173,6 +173,48 @@ class CodeReviewActions extends Actions {
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
 }
 
+function validateRequest2() {
+        $status  = true;
+        $invalid = array();
+
+        $valid  = new Valid_String('codereview_server_url');
+        $server = trim($this->request->get('codereview_server_url'));
+        if ($this->request->valid($valid) && $server != '') {
+            $params['server'] = $server;
+        } else {
+            $status    = false;
+            $invalid[] = 'server';
+        }
+
+        $valid     = new Valid_String('codereview_rb_user');
+        $rbUser = trim($this->request->get('codereview_rb_user'));
+        if ($this->request->valid($valid) && $rbUser != '') {
+            $params['rb_user'] = $rbUser;
+        } else {
+            $status    = false;
+            $invalid[] = 'rb_user';
+        }
+
+        $valid  = new Valid_String('codereview_rb_password');
+        $rbPass = trim($this->request->get('codereview_rb_password'));
+        if ($this->request->valid($valid) && $rbPass != '') {
+            $params['rb_password'] = $rbPass;
+        } else {
+            $status    = false;
+            $invalid[] = 'rb_password';
+        }
+
+        $valid   = new Valid_String('review_id');
+        $review_id = trim($this->request->get('review_id'));
+        if ($this->request->valid($valid) && $review_id != '') {
+            $params['review_id'] = $review_id;
+        } else {
+            $status    = false;
+            $invalid[] = 'review_id';
+        }
+        return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
+}
+
     /**
     * Creates a new review request
     *
@@ -197,6 +239,22 @@ class CodeReviewActions extends Actions {
                 $this->updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
                 $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path);
                 $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);
+            } catch(CodeReviewException $exception) {
+                $GLOBALS['Response']->addFeedBack('error', $exception->getMessage());
+                $this->controller->view = 'displayFrame';
+            }
+        }
+    }
+    
+    function publishReviewRequest() {
+        $reviewRessources = $this->validateRequest2();
+        if ($reviewRessources['status']) {
+            $server          = $reviewRessources['params']['server'];
+            $rb_user         = $reviewRessources['params']['rb_user'];
+            $rb_password     = $reviewRessources['params']['rb_password'];
+            $review_id         = $reviewRessources['params']['review_id'];
+            try {
+                $this->publishReviewRequestDraft($server, $review_id, $rb_user, $rb_password);
             } catch(CodeReviewException $exception) {
                 $GLOBALS['Response']->addFeedBack('error', $exception->getMessage());
                 $this->controller->view = 'displayFrame';

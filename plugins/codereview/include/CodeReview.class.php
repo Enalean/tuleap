@@ -68,10 +68,35 @@ class CodeReview extends Controler {
      */
     function request() {
         $request = $this->getRequest();
+        $user=$this->getUser();
+        $username=$user->getUserName();
+        /*$usermail=$user->getEmail();
+        $userpwd=$user->getPassword()*/;
+        $userpwd=$user->getUserPw();
+        //var_dump($username);
+        //var_dump($userpwd);
+        
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
+        $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
+        $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
+        /******check if the Tuleap User is registred in reviewboard******/
+        $curl    = new TuleapCurl();
+        $exist = $curl->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
+        if ($exist=='FALSE'){
+         $curl    = new TuleapCurl();
+         $create = $curl->execute($url, false, $username, $userpwd, null);
+         var_dump("created");
+        }
         if ($this->getUser()->isLoggedIn()) {
+            if($username=="admin"){
+                 //var_dump("blablabla");
+                 $this->view = 'displayFrameAdmin';
+             }
+             else{
             $repositoryManager = new RepositoryManager($this->plugin, $request);
             $repositoryManager->addRepository($request);
-            $vAction = new Valid_WhiteList('action', array('add_review', 'submit_review'));
+            $vAction = new Valid_WhiteList('action', array('add_review', 'submit_review','publish_review','submit_publish'));
             $vAction->required();
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {
@@ -82,10 +107,19 @@ class CodeReview extends Controler {
                 // TODO: put some actions here
                 $this->action = 'createReviewRequest';
                 break;
+            case 'publish_review':
+                $this->view = 'reviewPublishing';
+                break;
+            case 'submit_publish':
+                // TODO: put some actions here
+                $this->action = 'publishReviewRequest';
+                $this->view ='displayFramePublish';
+                break;    
             default:
                 $this->view = 'displayFrame';
                 break;
             }
+         }
         } else {
             $this->view = 'displayFrame';
         }
