@@ -34,12 +34,6 @@ require_once 'common/project/UGroupManager.class.php';
  */
 class ExternalPermissions {
     
-    public static $ugroups_templates = array(
-        UGroup::REGISTERED      => '@site_active @%s_project_members',
-        UGroup::PROJECT_MEMBERS => '@%s_project_members',
-        UGroup::PROJECT_ADMIN   => '@%s_project_admin'
-    );
-    
     /**
      * Return a list of groups with permissions of type $permissions_type
      * for the given object of a given project 

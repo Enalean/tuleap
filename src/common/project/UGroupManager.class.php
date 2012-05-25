@@ -171,5 +171,25 @@ class UGroupManager {
     private function ugroupIdToStringWithoutArobase($ugroup_id, $project_name) {
         return str_replace('@', '', $this->ugroupIdToString($ugroup_id, $project_name));
     }
+    
+    /**
+     * Return a list of groups with permissions of type $permissions_type
+     * for the given object of a given project 
+     * 
+     * @param Project $project         The project
+     * @param integer $object_id       The identifier of the object
+     * @param string  $permission_type PLUGIN_GIT_READ | PLUGIN_DOCMAN_%
+     * 
+     * @return array of groups converted to string
+     */
+    public function getLiteralUGroupsThatHaveGivenPermissionOnObject(Project $project, $object_id, $permission_type) {
+        $ugroup_ids     = PermissionsManager::instance()->getAuthorizedUgroupIds($object_id, $permission_type);
+        $project_name   = $project->getUnixName();
+        foreach ($ugroup_ids as $key => $ugroup_id) {
+            $ugroup_ids[$key] = $this->ugroupIdToString($ugroup_id, $project_name);
+        }
+
+        return array_filter($ugroup_ids);
+    }
 }
 ?>

@@ -331,7 +331,9 @@ class Git_GitoliteDriver {
         if (!isset(self::$permissions_types[$permission_type])) {
             return '';
         }
-        $repository_groups = ExternalPermissions::getProjectObjectGroups($project, $repository->getId(), $permission_type);
+        
+        $ugroup_manager = new UGroupManager();
+        $repository_groups = $ugroup_manager->getLiteralUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
         if (count($repository_groups) == 0) {
             return '';
         }
