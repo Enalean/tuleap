@@ -181,11 +181,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         return false;
     }
     
-    public function hasHierarchyChildren() {
+    public function hasSubMilestones() {
         return $this->milestone->hasSubMilestones();
     }
     
-    public function getHierarchyChildren() {
+    public function getSubMilestones() {
         return array_map(array($this, 'getMilestoneLinkPresenter'), $this->milestone->getSubMilestones());
     }
     

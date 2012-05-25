@@ -17,14 +17,14 @@
                 {{#hasChildren}}
                     {{> cards}}
                 {{/hasChildren}}
-                {{#hasHierarchyChildren}}
+                {{#hasSubMilestones}}
                     <hr />
                     <ul>
-                        {{#getHierarchyChildren}}
+                        {{#getSubMilestones}}
                             <li><a href="{{getUri}}">{{getXRef}} - {{getTitle}}</a></li>
-                        {{/getHierarchyChildren}}
+                        {{/getSubMilestones}}
                     </ul>
-                {{/hasHierarchyChildren}}
+                {{/hasSubMilestones}}
             </div>
         {{/canDrop}}
     </div>
