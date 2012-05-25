@@ -171,6 +171,29 @@ extends Docman_View_ItemDetailsSectionApproval {
         }
         $html .= '</td>';
         $html .= '</tr>';
+
+        if(!$this->table->isClosed()) {
+            if($this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
+                if($this->table->isEnabled()) {
+                    $html .= '<tr>';
+                    $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_relaunch').'</td>';
+                    $vals = array('no',
+                                  'yes');
+                    $txts = array($GLOBALS['Language']->getText('global', 'no'),
+                                  $GLOBALS['Language']->getText('global', 'yes'));
+                    $html .= '<td>'.html_build_select_box_from_arrays($vals, $txts, 'resend_notif', 'no', false).'</td>';
+                    $html .= '</tr>';
+                }
+
+                $html .= '<tr>';
+                $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_email').'</td>';
+                $html .= '<td>';
+                $html .= '<a href="'.$this->url.'&action=approval_create&id='.$this->item->getId().'&section=view_notification_email">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_email_act').'</a>';
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+        }
+
         $html .= '<tr>';
         $html .= '<td>';
         $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_occurence_title').'</h4>';
@@ -204,27 +227,6 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '</td>';
         $html .= '</tr>';
 
-        if(!$this->table->isClosed()) {
-            if($this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
-                if($this->table->isEnabled()) {
-                    $html .= '<tr>';
-                    $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_relaunch').'</td>';
-                    $vals = array('no',
-                                  'yes');
-                    $txts = array($GLOBALS['Language']->getText('global', 'no'),
-                                  $GLOBALS['Language']->getText('global', 'yes'));
-                    $html .= '<td>'.html_build_select_box_from_arrays($vals, $txts, 'resend_notif', 'no', false).'</td>';
-                    $html .= '</tr>';
-                }
-
-                $html .= '<tr>';
-                $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_email').'</td>';
-                $html .= '<td>';
-                $html .= '<a href="'.$this->url.'&action=approval_create&id='.$this->item->getId().'&section=view_notification_email">'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_notif_email_act').'</a>';
-                $html .= '</td>';
-                $html .= '</tr>';
-            }
-        }
         $html .= '</table>';
         $html .= '</div>';
         return $html;
