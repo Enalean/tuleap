@@ -119,6 +119,20 @@ class Planning_Milestone {
     public function getPlannedArtifacts() {
         return $this->planned_artifacts;
     }
+    
+    /**
+     * @return string
+     */
+    public function getXRef() {
+        return $this->artifact->getXRef();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getTitle() {
+        return $this->artifact->getTitle();
+    }
 }
 
 /**

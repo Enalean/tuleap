@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 class MilestoneTest extends TuleapTestCase {
     
@@ -38,7 +38,8 @@ class MilestoneTest extends TuleapTestCase {
         
         $this->group_id  = 123;
         $this->planning  = aPlanning()->build();
-        $this->artifact  = anArtifact()->build();
+        $this->artifact  = aMockArtifact()->withTitle('Foo')
+                                          ->build();
         $this->milestone = new Planning_Milestone($this->group_id,
                                                   $this->planning,
                                                   $this->artifact);
@@ -76,6 +77,13 @@ class MilestoneTest extends TuleapTestCase {
                                                   $this->planning,
                                                   $this->artifact);
         $this->assertIdentical($this->milestone->getSubMilestones(), array());
+    }
+    
+    public function itHasATitle() {
+        $this->milestone = new Planning_Milestone($this->group_id,
+                                                  $this->planning,
+                                                  $this->artifact);
+        $this->assertEqual($this->milestone->getTitle(), 'Foo');
     }
 }
 

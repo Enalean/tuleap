@@ -26,23 +26,27 @@ require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.p
 class Planning_MilestoneLinkPresenterTest extends TuleapTestCase {
     
     public function setUp() {
-        $this->artifact  = aMockArtifact()->withTitle('Foo')
-                                          ->withUri('/bar/baz')
-                                          ->withXRef('qux#123')->build();
-        $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
+        $artifact        = aMockArtifact()->withId(123)
+                                          ->withTitle('Foo')
+                                          ->withXRef('milestone #123')
+                                          ->build();
+        $this->milestone = aMilestone()->withArtifact($artifact)
+                                       ->withGroupId(456)
+                                       ->withPlanningId(789)
+                                       ->build();
         $this->presenter = new Planning_MilestoneLinkPresenter($this->milestone);
     }
     
-    public function itHasAnUri() {
-        $this->assertEqual($this->presenter->getUri(), $this->artifact->getUri());
+    public function itHasAnUriPointingToThePlanningViewOfTheMilestone() {
+        $this->assertEqual($this->presenter->getUri(), '/plugins/agiledashboard/?group_id=456&action=show&planning_id=789&aid=123');
     }
     
-    public function itHasAnXRef() {
-        $this->assertEqual($this->presenter->getXRef(), $this->artifact->getXRef());
+    public function itHasAnXRefMatchingTheMilestoneUnderlyingArtifact() {
+        $this->assertEqual($this->presenter->getXRef(), 'milestone #123');
     }
     
-    public function itHasATitle() {
-        $this->assertEqual($this->presenter->getTitle(), $this->artifact->getTitle());
+    public function itHasATitleMatchingTheUnderlyingArtifact() {
+        $this->assertEqual($this->presenter->getTitle(), 'Foo');
     }
 }
 ?>

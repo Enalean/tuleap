@@ -29,6 +29,8 @@ class MockArtifactBuilder {
         $this->id       = 123;
         $this->tracker  = new MockTracker();
         $this->artifact = new MockTracker_Artifact();
+        $this->uri      = '';
+        $this->xref     = '';
     }
 
     public function withId($id) {

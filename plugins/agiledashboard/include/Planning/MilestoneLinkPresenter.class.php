@@ -30,15 +30,19 @@ class Planning_MilestoneLinkPresenter {
     }
     
     public function getUri() {
-        return $this->milestone->getArtifact()->getUri();
+        $group_id    = $this->milestone->getGroupId();
+        $planning_id = $this->milestone->getPlanningId();
+        $artifact_id = $this->milestone->getArtifactId();
+        
+        return "/plugins/agiledashboard/?group_id=$group_id&action=show&planning_id=$planning_id&aid=$artifact_id";
     }
     
     public function getXref() {
-        return $this->milestone->getArtifact()->getXref();
+        return $this->milestone->getXref();
     }
     
     public function getTitle() {
-        return $this->milestone->getArtifact()->getTitle();
+        return $this->milestone->getTitle();
     }
 }
 ?>

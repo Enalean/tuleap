@@ -62,6 +62,25 @@ class Test_Planning_MilestoneBuilder {
         return $this;
     }
     
+    public function withGroupId($group_id) {
+        $this->group_id = $group_id;
+        return $this;
+    }
+    
+    public function withPlanningId($planning_id) {
+        $this->withPlanning(aPlanning()->withId($planning_id)->build());
+        return $this;
+    }
+    
+    public function withXRef($xref) {
+        $this->artifact->withXRef($xref);
+    }
+    
+    public function withPlanning(Planning $planning) {
+        $this->planning = $planning;
+        return $this;
+    }
+    
     public function withSubMilestones(array $sub_milestones) {
         $this->sub_milestones = $sub_milestones;
         return $this;
