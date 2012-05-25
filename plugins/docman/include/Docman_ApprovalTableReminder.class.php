@@ -22,6 +22,7 @@ require_once('common/date/DateHelper.class.php');
 require_once('Docman_ApprovalTableDao.class.php');
 require_once('Docman_ApprovalTableReviewerDao.class.php');
 require_once('Docman_ApprovalTable.class.php');
+require_once('Docman_ApprovalTableReviewer.class.php');
 
 /**
  * Remind users that didn't review documents yet
@@ -79,7 +80,7 @@ class Docman_ApprovalTableReminder {
      */
     function notifyAllAtOnce($table) {
         $nbNotif = 0;
-        // @TODO: fill reviewer iterator
+        $this->populateReviewersList($table);
         $rIter   = $table->getReviewerIterator();
         if($rIter !== null) {
             $rIter->rewind();
@@ -151,8 +152,26 @@ class Docman_ApprovalTableReminder {
      *
      * @return Mail
      */
-     function prepareMailReminder() {
+     function prepareMailReminder($table, $reviewer) {
          // @TODO: Prepare the mail taking into consideration user preferences text/HTML and the language of her choice
+     }
+
+    /**
+     * Populate reviewers list of an approval table
+     *
+     * @param Docman_ApprovalTable $table Approval table
+     *
+     * @return Void
+     */
+     function populateReviewersList($table) {
+        $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
+        $dar = $dao->getReviewerList($table->getId());
+        foreach ($dar as $row) {
+            $reviewer = new Docman_ApprovalReviewer();
+            $reviewer->initFromRow($row);
+            $table->addReviewer($reviewer);
+            unset($reviewer);
+        }
      }
 
 }
