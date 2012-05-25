@@ -19,6 +19,7 @@
  */
 
 require_once 'Milestone.class.php';
+require_once 'NoMilestone.class.php';
 
 /**
  * Loads planning milestones from the persistence layer.

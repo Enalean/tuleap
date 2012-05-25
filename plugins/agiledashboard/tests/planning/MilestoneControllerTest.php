@@ -22,6 +22,7 @@
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once(dirname(__FILE__).'/../../include/Planning/MilestoneController.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
+require_once(dirname(__FILE__).'/../../include/Planning/NoMilestone.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aField.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCriteria.php');

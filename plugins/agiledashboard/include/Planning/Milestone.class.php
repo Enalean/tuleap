@@ -135,33 +135,4 @@ class Planning_Milestone {
     }
 }
 
-/**
- * Null-object pattern for planning milestones.
- */
-class Planning_NoMilestone extends Planning_Milestone {
-    
-    /**
-     * Instanciates a null-object compatible with the Planning_Milestone
-     * interface.
-     * 
-     * TODO:
-     *   - Rename to NullMilestone ?
-     *   - Use a NullPlanning object ?
-     *   - $group_id must die
-     * 
-     * @param int      $group_id
-     * @param Planning $planning 
-     */
-    public function __construct($group_id, Planning $planning) {
-        parent::__construct($group_id, $planning, null);
-    }
-    
-    /**
-     * @param User $user
-     * @return boolean 
-     */
-    public function userCanView(User $user) {
-        return true; // User can view milestone content, since it's empty.
-    }
-}
 ?>
