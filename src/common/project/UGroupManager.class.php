@@ -21,15 +21,16 @@
 
 require_once 'UGroup.class.php';
 require_once 'common/dao/UGroupDao.class.php';
+require_once 'common/permission/PermissionsManager.class.php';
 
 class UGroupManager {
     
-    public static $literal_user_status = array(
+    private static $literal_user_status = array(
         User::STATUS_RESTRICTED => 'site_restricted',
         User::STATUS_ACTIVE     => 'site_active'
     );
     
-    public static $literal_ugroups_templates = array(
+    private static $literal_ugroups_templates = array(
         UGroup::REGISTERED      => '@site_active @%s_project_members',
         UGroup::PROJECT_MEMBERS => '@%s_project_members',
         UGroup::PROJECT_ADMIN   => '@%s_project_admin'
@@ -38,7 +39,7 @@ class UGroupManager {
     /**
      * @var UGroupDao
      */
-    protected $dao;
+    private $dao;
 
     /**
      * Return all UGroups the user belongs to
@@ -72,7 +73,7 @@ class UGroupManager {
      *
      * @return UGroupDao
      */
-    protected function getDao() {
+    private function getDao() {
         if (!$this->dao) {
             $this->dao = new UGroupDao(CodendiDataAccess::instance());
         }
@@ -106,7 +107,7 @@ class UGroupManager {
      *
      * @return array the new array of user's ugroup
      */
-    protected function appendDynamicUGroups( User $user, array $user_ugroups = array()) {
+    private function appendDynamicUGroups( User $user, array $user_ugroups = array()) {
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -127,7 +128,7 @@ class UGroupManager {
      * 
      * @return array the new array of user's ugroup
      */
-    protected function appendStaticUgroups( User $user, array $user_ugroups = array()) {
+    private function appendStaticUgroups( User $user, array $user_ugroups = array()) {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $user_ugroups[] = 'ug_'.$row['ugroup_id'];
@@ -142,7 +143,7 @@ class UGroupManager {
      * 
      * @return User if exists false otherwise
      */
-    protected function getValidUserByName($user_name) {
+    private function getValidUserByName($user_name) {
         $user = UserManager::instance()->getUserByUserName($user_name);
         if ($user && isset(self::$literal_user_status[$user->getStatus()])) {
             return $user;
