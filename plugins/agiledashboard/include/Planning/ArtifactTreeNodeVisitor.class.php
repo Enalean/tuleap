@@ -71,7 +71,6 @@ class Planning_ArtifactTreeNodeVisitor {
     }
     
     private function buildNodeData(TreeNode $node, $row, Tracker_Artifact $artifact) {
-        $row['artifact']             = $artifact;
         $row['artifact_id']          = $artifact->getId();
         $row['title']                = $artifact->getTitle();
         $row['class']                = $this->classname;
