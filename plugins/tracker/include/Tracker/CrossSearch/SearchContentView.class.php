@@ -76,6 +76,7 @@ class Tracker_CrossSearch_SearchContentView {
         
         $html  = '';
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
+        $html .= $this->fetchResultActions();
         $html .= $this->fetchResults();
         
         return $html;
@@ -210,6 +211,10 @@ class Tracker_CrossSearch_SearchContentView {
                 || $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField 
                 || $report_field instanceof Tracker_CrossSearch_ArtifactReportField
         );
+    }
+
+    public function fetchResultActions() {
+        return '';
     }
 
 }

@@ -25,6 +25,9 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
+    private $renderer;
+    
+    // Presenter properties
     public $planning;
     public $planning_redirect_parameter = '';
 
@@ -40,12 +43,16 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
+        $this->renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
+    }
+    
+    public function fetchResultActions() {
+        return $this->renderer->render('backlog-actions', $this, true);
     }
     
     protected function fetchTable() {
         Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
-        $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
-        return $renderer->render('backlog', $this, true);
+        return $this->renderer->render('backlog', $this, true);
     }
 
     public function getChildren() {
@@ -58,6 +65,11 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     
     public function addLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
+    }
+
+    public function setRenderer($renderer) {
+        $this->renderer = $renderer;
+        
     }
 }
 ?>
