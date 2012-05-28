@@ -50,7 +50,7 @@ class ProjectQuotaHtml {
      *
      * @return Integer
      */
-    public function validateOffset($request) {
+    private function validateOffset($request) {
         $valid        = new Valid('offset');
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
         $valid->addRule(new Rule_Int());
@@ -70,7 +70,7 @@ class ProjectQuotaHtml {
      *
      * @return String
      */
-    public function validateProjectFilter($request) {
+    private function validateProjectFilter($request) {
         $validFilter        = new Valid_String('project_filter');
         $filter             = null;
         $projectFilterParam = null;
@@ -83,21 +83,19 @@ class ProjectQuotaHtml {
     }
 
     /**
-     * Display the list of projects having a custom quota
+     * Validate project quota ordering params used for display formatting.
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return String
+     * @return Array
      */
-    public function displayProjectQuota($request) {
-        $output = '';
-        $offset    = $this->validateOffset($request);
-        $filter    = $this->validateProjectFilter($request);
-
+    private function validateOrderByFilter($request) {
         $validSort = new Valid_String('sort');
         $sortBy    = null;
+        $validRequest = array();
         if ($request->valid($validSort)) {
             $sortBy  = $request->get('sort');
+            $validRequest['sort'] = $sortBy;
             $validOrderBy = new Valid_String('order');
             if ($request->valid($validOrderBy)) {
                 if ($request->get('order') == "ASC" || $request->get('order') == "DESC") {
@@ -105,8 +103,26 @@ class ProjectQuotaHtml {
                 } else {
                     $orderBy = null;
                 }
+                $validRequest['order'] = $orderBy;
             }
         }
+        return $validRequest;
+    }
+
+    /**
+     * Display the list of projects having a custom quota
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return String
+     */
+    public function displayProjectQuota($request) {
+        $output      = '';
+        $offset      = $this->validateOffset($request);
+        $filter      = $this->validateProjectFilter($request);
+        $orderParams = $this->validateOrderByFilter($request);
+        $sortBy      = $orderParams['sort'];
+        $orderBy     = $orderParams['order'];
 
         $list = array();
         if ($filter) {
