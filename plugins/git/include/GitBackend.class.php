@@ -433,6 +433,38 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $formatter->clearContent();
         return $content;
     }
+
+    /**
+     * Retrieve logged pushes statistics for CSV export
+     *
+     * @param Statistics_Formatter $formatter instance of statistics formatter class
+     *
+     * @return void
+     */
+    private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
+        $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
+        $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
+        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_users');
+        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
+
+        $gitLogDao = new Git_LogDao();
+        $dar       = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $gitIndex[]   = $row['month']." ".$row['year'];
+                $gitPushes[]  = intval($row['pushes_count']);
+                $gitCommits[] = intval($row['commits_count']);
+                $gitUsers[]   = intval($row['users']);
+                $gitRepo[]    = intval($row['repositories']);
+            }
+            $formatter->addLine($gitIndex);
+            $formatter->addLine($gitPushes);
+            $formatter->addLine($gitCommits);
+            $formatter->addLine($gitUsers);
+            $formatter->addLine($gitRepo);
+        }
+    }
 }
 
 ?>

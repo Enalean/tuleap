@@ -17,14 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
-require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__) . '/../../builders/aTracker.php';
+require_once dirname(__FILE__) . '/../../builders/anArtifact.php';
+require_once dirname(__FILE__) . '/../../builders/aField.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
-require_once 'Test_CriteriaBuilder.php';
+require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SemanticStatusReportField.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/CriteriaBuilder.class.php';
 
@@ -55,6 +56,12 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
         
         Tracker_ArtifactFactory::setInstance($this->artifact_factory);
         
+        $this->project              = new MockProject();
+        $this->report               = new MockTracker_Report();
+        $this->user                 = mock('User');
+        
+        stub($this->semantic_factory)->allTitlesAreReadable($this->user, $this->project)->returns(true);
+        stub($this->semantic_factory)->allStatusesAreReadable($this->user, $this->project)->returns(true);
     }
     
     public function tearDown() {
@@ -68,13 +75,6 @@ class Tracker_CrossSearch_CriteriaBuilderTest extends TuleapTestCase {
 }
 
 class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tracker_CrossSearch_CriteriaBuilderTest {
-        
-    public function setUp() {
-        parent::setUp();
-        $this->project               = new MockProject();
-        $this->report                = new MockTracker_Report();
-        $this->user                  = mock('User');        
-    }
     
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
         $this->shared_field_criteria = array();
@@ -116,6 +116,19 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSharedFieldCriteriaTest extends Tr
         
         return $criteria_builder->getSharedFieldsCriteria($this->user, $this->project, $this->report, $cross_search_criteria);
     }
+    
+    public function itRemovesFromQuerySharedFieldsThatAreNotReadableByUser() {
+        $this->shared_field_criteria = array('220' => array('values' => array('350')));
+        $cross_search_query = aCrossSearchCriteria()->withSharedFieldsCriteria($this->shared_field_criteria)->build();
+        
+        stub($this->form_element_factory)->getSharedFieldsReadableBy()->returns(array());
+        
+        $criteria_builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
+        $criteria = $criteria_builder->getSharedFieldsCriteria($this->user, $this->project, $this->report, $cross_search_query);
+                
+        $this->assertEqual($criteria, array());
+        $this->assertEqual($cross_search_query->getSharedFields(), array());
+    }
 
 }
 
@@ -137,8 +150,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
     
     public function testGetCriteriaAssemblesAllCriterias() {
         $criteria = $this->givenACriteriaWith_SharedField_SemanticTitle_SemanticStatus_Artifact();
-                
-        $this->assertEqual(count($criteria), 4);        
+        
+        $this->assertEqual(count($criteria), 4);
     }
     
     private function givenACriteriaWith_SharedField_SemanticTitle_SemanticStatus_Artifact() {
@@ -183,7 +196,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->withSemanticCriteria(array('title' => 'Foo', 'status' => ''))
                                 ->build();
-        $report_criteria       = $this->getSemanticCriteria($cross_search_criteria);
+        $report_criteria       = $this->getSemanticCriteria($this->user, $cross_search_criteria);
         
         $actual_field          = $report_criteria[0]->field;
         $expected_field        = new Tracker_CrossSearch_SemanticTitleReportField('Foo', $this->semantic_factory);
@@ -195,18 +208,51 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $cross_search_criteria = aCrossSearchCriteria()
                                 ->forOpenItems()
                                 ->build();
-        $report_criteria       = $this->getSemanticCriteria($cross_search_criteria);
+        $report_criteria       = $this->getSemanticCriteria($this->user, $cross_search_criteria);
         $actual_field          = $report_criteria[1]->field;
         $expected_field        = new Tracker_CrossSearch_SemanticStatusReportField(Tracker_CrossSearch_SemanticStatusReportField::STATUS_OPEN,
-                                                                                   new MockTracker_CrossSearch_SemanticValueFactory());
-        
+                                                                                   $this->semantic_factory);
         $this->assertEqual($expected_field, $actual_field);
     }
     
-    protected function getSemanticCriteria($cross_search_criteria) {
+    public function itDontBuildSemanticTitleCriteriaIfOneTitleIsNotReadable() {
+        $user = stub('User')->getId()->returns(uniqid());
+        stub($this->semantic_factory)->allTitlesAreReadable($user, $this->project)->returns(false);
+        stub($this->semantic_factory)->allStatusesAreReadable($user, $this->project)->returns(true);
+        
+        $cross_search_criteria = aCrossSearchCriteria()
+                                ->withSemanticCriteria(array('title' => 'Foo', 'status' => ''))
+                                ->forOpenItems()
+                                ->build();
+        $report_criteria       = $this->getSemanticCriteria($user, $cross_search_criteria);
+        
+        $this->assertEqual(count($report_criteria), 1);
+        $this->assertIsA($report_criteria[0]->field, 'Tracker_CrossSearch_SemanticStatusReportField');
+        $this->assertNotNull($cross_search_criteria->getStatus());
+        $this->assertNull($cross_search_criteria->getTitle());
+    }
+    
+    public function itDontBuildSemanticStatusCriteriaIfOneStatusIsNotReadable() {
+        $user = stub('User')->getId()->returns(uniqid());
+        stub($this->semantic_factory)->allTitlesAreReadable($user, $this->project)->returns(true);
+        stub($this->semantic_factory)->allStatusesAreReadable($user, $this->project)->returns(false);
+        
+        $cross_search_criteria = aCrossSearchCriteria()
+                                ->withSemanticCriteria(array('title' => 'Bar', 'status' => ''))
+                                ->forOpenItems()
+                                ->build();
+        $report_criteria       = $this->getSemanticCriteria($user, $cross_search_criteria);
+        
+        $this->assertEqual(count($report_criteria), 1);
+        $this->assertIsA($report_criteria[0]->field, 'Tracker_CrossSearch_SemanticTitleReportField');
+        $this->assertNull($cross_search_criteria->getStatus());
+        $this->assertNotNull($cross_search_criteria->getTitle());
+    }
+    
+    protected function getSemanticCriteria(User $user, $cross_search_criteria) {
         $builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $report  = new MockTracker_Report();
-        return $builder->getSemanticFieldsCriteria($report, $cross_search_criteria);
+        return $builder->getSemanticFieldsCriteria($user, $this->project, $report, $cross_search_criteria);
     }
 }
 
@@ -292,7 +338,106 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         
     }
     
+    public function _itRemovesFromQueryArtifactIdsThatAreNotReadableByUser() {
+        $user                    = mock('User');
+        $release_tracker_id      = 999;
+        $release_tracker         = aTracker()->withId($release_tracker_id)->build();
+        
+        $sprint_tracker_id       = 666;
+        $sprint_tracker          = aTracker()->withId($sprint_tracker_id)->build();
+        
+        $artifacts_ids           = array($release_tracker_id => array(1, 512), $sprint_tracker_id => array(33));
+        $query                   = aCrossSearchCriteria()->withArtifactIds($artifacts_ids)->build();
+        
+        $report                  = new MockTracker_Report();
+        
+        $artifact1               = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
+        
+        stub($this->artifact_factory)->getArtifactsByTrackerIdUserCanView($user, $release_tracker_id)
+                                     ->returns(array($artifact1));
+        stub($this->artifact_factory)->getArtifactsByTrackerIdUserCanView($user, $sprint_tracker_id)
+                                     ->returns(array());
+        
+        $this->planning_trackers = array($release_tracker, $sprint_tracker);
+        
+        $builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory,
+                                                           $this->semantic_factory,
+                                                           $this->planning_trackers);
+        
+        $builder->getArtifactLinkCriteria($user, $report, $query);
+        
+        $this->assertEqual($query->listArtifactIds(), array(1));
+    }
     
+}
+
+class Tracker_CrossSearch_CriteriaBuilder_AssertUserCanSearchOnArtifactTest extends Tracker_CrossSearch_CriteriaBuilderTest {
+    private $builder;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory,
+                                                                 $this->semantic_factory,
+                                                                 $this->planning_trackers);
+    }
+    
+    public function itEnsuresUserCannotSearchOnArtifactWhenHeCannotReadTheTitleField() {
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(false);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertFalse($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCanSearchOnArtifactWhenSheCanReadTheTitleField() {        
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(true);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertTrue($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCannotSearchOnArtifactWhenHeCannotReadTheArtifactLinkField() {
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(true);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns(null);
+        
+        $this->assertFalse($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCanSearchOnArtifactWhenHeCanReadTheArtifactLinkField() {
+        $title_field = stub('Tracker_FormElement_Field_Text')->userCanRead($this->user)->returns(true);
+        
+        $release_tracker = stub('Tracker')->getTitleField()->returns($title_field);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertTrue($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
+    
+    public function itEnsuresUserCannotSearchOnArtifactWhenItHasNoTitleField() {
+        $release_tracker = stub('Tracker')->getTitleField()->returns(null);
+        
+        $release = mock('Tracker_Artifact');
+        stub($release)->getTracker()->returns($release_tracker);
+        stub($release)->getAnArtifactLinkField($this->user)->returns('whatever');
+        
+        $this->assertFalse($this->builder->userCanSearchOnArtifact($this->user, $release));
+    }
 }
 
 ?>

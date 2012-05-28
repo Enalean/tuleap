@@ -322,32 +322,8 @@ class User {
                     case 'A' : //admin for this group
                         $is_member = ($group_perm['admin_flags'] && $group_perm['admin_flags'] === 'A');
                         break;
-                    case 'B1': //bug tech
-                        $is_member = ($group_perm['bug_flags'] == 1 || $group_perm['bug_flags'] == 2);
-                        break;
-                    case 'B2' : //bug admin
-                        $is_member = ($group_perm['bug_flags'] == 2 || $group_perm['bug_flags'] == 3);
-                        break;
-                    case 'P1' : //pm tech
-                        $is_member = ($group_perm['project_flags'] == 1 || $group_perm['project_flags'] == 2);
-                        break;
-                    case 'P2' : //pm admin
-                        $is_member = ($group_perm['project_flags'] == 2 || $group_perm['project_flags'] == 3);
-                        break;
-                    case 'C1' : //patch tech
-                        $is_member = ($group_perm['patch_flags'] == 1 || $group_perm['patch_flags'] == 2);
-                        break;
-                    case 'C2' : //patch admin
-                        $is_member = ($group_perm['patch_flags'] == 2 || $group_perm['patch_flags'] == 3);
-                        break;
                     case 'F2' : //forum admin
                         $is_member = ($group_perm['forum_flags'] == 2);
-                        break;
-                    case 'S1' : //support tech
-                        $is_member = ($group_perm['support_flags'] == 1 || $group_perm['support_flags'] == 2);
-                        break;
-                    case 'S2' : //support admin
-                        $is_member = ($group_perm['support_flags'] == 2 || $group_perm['support_flags'] == 3);
                         break;
                     case 'D1' : //document tech
                         $is_member = ($group_perm['doc_flags'] == 1 || $group_perm['doc_flags'] == 2);
@@ -442,6 +418,10 @@ class User {
 
     function isSuperUser() {
         return $this->isMember(1, 'A');
+    }
+    
+    public function getAllUgroups() {
+        return $this->getUGroupDao()->searchByUserId($this->user_id);
     }
     
     var $_ugroups;

@@ -17,10 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-define('TRACKER_BASE_URL', '/plugins/tracker');
-define('TRACKER_BASE_DIR', dirname(__FILE__));
-define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+if (!defined('TRACKER_BASE_DIR')) {
+    define('TRACKER_BASE_DIR', dirname(__FILE__));
+}
+if (!defined('TRACKER_EVENT_INCLUDE_CSS_FILE')) {
+    define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
+}
 
 /**
   * The trackers from a project have been duplicated in another project
@@ -31,8 +36,9 @@ define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
   *
   * No expected results
   */
-define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated');
-
+if (!defined('TRACKER_EVENT_TRACKERS_DUPLICATED')) {
+    define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated');
+}
 /**
   * An artifact has just been created/updated. Redirect to a plugin specific url if needed.
   *

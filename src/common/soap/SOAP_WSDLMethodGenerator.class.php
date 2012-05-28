@@ -30,9 +30,34 @@ class SOAP_WSDLMethodGenerator {
     private $parameters = array();
     private $returnType = array();
     
+    /**
+     * @var array map to know a soap type corresponding to a phpdoc type
+     */
+    private $doc2soap_types = array(
+        'string'             => 'xsd:string',
+        'integer'            => 'xsd:int',
+        'int'                => 'xsd:int',
+        'boolean'            => 'xsd:boolean',
+        'bool'               => 'xsd:boolean',
+        'arrayofstring'      => 'tns:ArrayOfstring',
+        'arrayofrevision'    => 'tns:ArrayOfRevision',
+        'arrayofcommiter'    => 'tns:ArrayOfCommiter',
+        'arrayofsvnpathinfo' => 'tns:ArrayOfSvnPathInfo',
+    );
+    
     public function __construct(ReflectionMethod $method) {
         $this->method = $method;
+        $this->augmentDoc2SoapTypes();
         $this->parseDocComment();
+    }
+    
+    private function augmentDoc2SoapTypes() {
+        EventManager::instance()->processEvent(
+            Event::WSDL_DOC2SOAP_TYPES, 
+            array(
+                'doc2soap_types' => &$this->doc2soap_types
+            )
+        );
     }
     
     /**
@@ -181,16 +206,10 @@ class SOAP_WSDLMethodGenerator {
      * @return String
      */
     private function docTypeToSoap($docType) {
-        switch(strtolower($docType)) {
-            case 'string':
-                return 'xsd:string';
-            case 'integer':
-            case 'int':
-                return 'xsd:int';
-            case 'boolean':
-            case 'bool':
-                return 'xsd:boolean';
+        if (isset($this->doc2soap_types[strtolower($docType)])) {
+            return $this->doc2soap_types[strtolower($docType)];
         }
+        throw new Exception("Unknown type $docType");
     }
 }
 

@@ -80,4 +80,16 @@ function ugroups_to_soap($ugroups) {
     return $return;
 }
 
+function user_to_soap(User $user = null, User $current_user) {
+    if ($user !== null && ($user->isActive() || $user->isRestricted())) {
+        if ($current_user->canSee($user)) {
+            return array('username'   => $user->getUserName(),
+                         'id'         => $user->getId(),
+                         'real_name'  => $user->getRealName(),
+                         'email'      => $user->getEmail(),
+                         'ldap_id'    => $user->getLdapId());
+        }
+    }
+}
+
 ?>
