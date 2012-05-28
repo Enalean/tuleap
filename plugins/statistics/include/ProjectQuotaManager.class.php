@@ -34,30 +34,12 @@ class ProjectQuotaManager {
     protected $pm;
 
     /**
-     * A private constructor; prevents direct creation of object
+     * ProjectQuotaManager constructor
      */
-    private function __construct() {
+    public function __construct() {
         $this->dao = $this->getDao();
         $this->pm   = ProjectManager::instance();
     }
-    /**
-     * Hold an instance of the class
-     */
-    private static $instance;
-
-    /**
-     * ProjectManager is a singleton
-     *
-     * @return ProjectManager
-     */
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
-    }
-
 
     /**
      * List all projects having custom quota
@@ -108,13 +90,15 @@ class ProjectQuotaManager {
                 $userId = null;
                 $um     = UserManager::instance();
                 $user   = $um->findUser($requester);
-                $userId = 100;
                 if ($user) {
+                    $userId = $user->getId();
+                } else {
+                    $user   = $um->getCurrentUser();
                     $userId = $user->getId();
                 }
                 $dum      = new Statistics_DiskUsageManager();
-                $maxQuota = $dum->getProperty('maximum_quota');
-                if (!$maxQuota) {
+                $maxQuota = intval($dum->getProperty('maximum_quota'));
+                if (!isset($maxQuota)) {
                     $maxQuota = 50;
                 }
                 if ($quota > $maxQuota) {

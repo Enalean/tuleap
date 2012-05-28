@@ -40,7 +40,7 @@ class ProjectQuotaHtml {
      */
     public function __construct() {
         $this->projectManager      = ProjectManager::instance();
-        $this->projectQuotaManager = ProjectQuotaManager::instance();
+        $this->projectQuotaManager = new ProjectQuotaManager();
     }
 
     /**
@@ -155,7 +155,7 @@ class ProjectQuotaHtml {
         $output          .= '<form method="get" >';
         $output          .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
         $output          .= '</form>';
-        $count            = 4;
+        $count            = 50;
         $res              = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
         $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
