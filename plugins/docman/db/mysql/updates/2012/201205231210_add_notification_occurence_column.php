@@ -21,7 +21,7 @@
 /**
  *
  */
-class b201205231210_update_add_notification_occurence_column extends ForgeUpgrade_Bucket {
+class b201205231210_add_notification_occurence_column extends ForgeUpgrade_Bucket {
 
     /**
      * Description of the bucket
