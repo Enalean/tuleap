@@ -19,23 +19,42 @@
  */
 
 require_once dirname(__FILE__).'/../../builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../builders/aMockArtifact.php';
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
+    //TODO this exercises the same code as itIncludesSearchResults but it documents something else, what to do?
     public function itDoesNotTryToRetrieveSharedFieldOriginForSemanticStatus() {
         $artifact          = $this->givenThereIsAnArtifact();
         $tree_of_artifacts = $this->buildTreeWithArtifact($artifact);
         $artifact_factory  = $this->buildAnArtifactFactoryThatReturns($artifact);
         
-        $this->thenItFetchsTheSearchContentView($tree_of_artifacts, $artifact_factory);
+        $this->fetchViewContent($tree_of_artifacts, $artifact_factory);
+    }
+    
+    public function itIncludesTheSearchCriteria() {
+        $criteria_markup = 'some report markup';
+        $report = stub('Tracker_Report')->fetchDisplayQuery()->returns($criteria_markup);
+
+        $output = $this->fetchViewContent(new TreeNode(), mock('Tracker_ArtifactFactory'), $report);
+        $this->assertStringContains($output, $criteria_markup);
+    }
+    
+    public function itIncludesTheSearchResults() {
+        $artifact          = $this->givenThereIsAnArtifact();
+        $artifact_factory  = $this->buildAnArtifactFactoryThatReturns($artifact);
+        $tree_of_artifacts = $this->buildTreeWithArtifact($artifact);
+        
+        $output = $this->fetchViewContent($tree_of_artifacts, $artifact_factory);
+        $this->assertStringContains($output, $artifact->getId());
     }
     
     private function givenThereIsAnArtifact() {
         return anArtifact()->withId(123)->withTracker(mock('Tracker'))->build();
     }
     
-    private function thenItFetchsTheSearchContentView($tree_of_artifacts, $artifact_factory) {
-        $report   = mock('Tracker_Report');
+    private function fetchViewContent($tree_of_artifacts, $artifact_factory, $report = null) {
+        $report   = $report ? $report : mock('Tracker_Report');
         $criteria = $this->buildCriteria($report);
         $factory  = $this->buildAFormElementFactory();
         $user     = mock('User');
@@ -45,7 +64,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
                                                               $artifact_factory,
                                                               $factory,
                                                               $user);
-        $html = $view->fetch();
+        return $view->fetch();
     }
     
     private function buildTreeWithArtifact($artifact) {
