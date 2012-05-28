@@ -670,11 +670,17 @@ class Docman_PermissionsManager {
     }
 
     private function mergeUgroupIds(array $parent_permissions, array $child_permissions) {
-        if (in_array(Ugroup::REGISTERED, $child_permissions) && in_array(Ugroup::PROJECT_MEMBERS, $parent_permissions)) {
-            $child_permissions = array_diff($child_permissions, array(Ugroup::REGISTERED));
-
+        $item_permissions = array();
+        foreach($child_permissions as $child_permission) {
+            if ($child_permission < 100) {
+                foreach ($parent_permissions as $parent_permission) {
+                    $item_permissions[] = max($parent_permission, $child_permission);
+                }
+            } elseif(in_array($child_permission, $parent_permissions)) {
+                $item_permissions[] = $child_permission;
+            }
         }
-        return array_merge($child_permissions, $parent_permissions);
+        return array_unique($item_permissions);
     }
 }
 
