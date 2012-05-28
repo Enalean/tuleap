@@ -113,8 +113,8 @@ class ProjectQuotaManager {
                     $userId = $user->getId();
                 }
                 $dum      = new Statistics_DiskUsageManager();
-                $maxQuota = intval($dum->getProperty('maximum_quota'));
-                if (!isset($maxQuota)) {
+                $maxQuota = $dum->getProperty('maximum_quota');
+                if (!$maxQuota) {
                     $maxQuota = 50;
                 }
                 if ($quota > $maxQuota) {
