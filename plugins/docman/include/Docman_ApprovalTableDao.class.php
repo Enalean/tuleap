@@ -339,7 +339,6 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableDao {
         $dar = $this->retrieve($sql);
         return ($dar && !$dar->isError() && $dar->rowCount() == 1);
     }
-
 }
 
 ?>

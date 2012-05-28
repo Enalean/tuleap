@@ -211,6 +211,8 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= ' ';
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_send_to_approvers');
         $html .= ' </td>';
+        $html .= ' </tr>';
+        $html .= ' <tr>';
         $html .= '<td>';
         $html .= '<span id="occurence_form" > '.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_every');
         $html .= '<input size="2" name="occurence" value="'.$occurence.'" /> ';
