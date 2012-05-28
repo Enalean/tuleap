@@ -44,15 +44,14 @@ class ProjectQuotaHtml {
     }
 
     /**
-     * Display the list of projects having a custom quota
+     * Validate project quota offset param used for display formatting.
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return String
+     * @return Integer
      */
-    public function displayProjectQuota($request) {
-        $output = '';
-        $valid  = new Valid('offset');
+    public function validateOffset($request) {
+        $valid        = new Valid('offset');
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
         $valid->addRule(new Rule_Int());
         $valid->addRule(new Rule_GreaterOrEqual(0));
@@ -61,13 +60,40 @@ class ProjectQuotaHtml {
         } else {
             $offset = 0;
         }
+        return $offset;
+    }
 
+    /**
+     * Validate project quota filtering param used for display formatting.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return String
+     */
+    public function validateProjectFilter($request) {
         $validFilter        = new Valid_String('project_filter');
         $filter             = null;
         $projectFilterParam = null;
         if ($request->valid($validFilter)) {
             $filter = $request->get('project_filter');
         }
+        $validRequest['project_filter'] = $filter;
+        $validSort = new Valid_String('sort');
+        return $filter;
+    }
+
+    /**
+     * Display the list of projects having a custom quota
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return String
+     */
+    public function displayProjectQuota($request) {
+        $output = '';
+        $offset    = $this->validateOffset($request);
+        $filter    = $this->validateProjectFilter($request);
+
         $validSort = new Valid_String('sort');
         $sortBy    = null;
         if ($request->valid($validSort)) {
@@ -97,7 +123,7 @@ class ProjectQuotaHtml {
         $output          .= '<form method="get" >';
         $output          .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
         $output          .= '</form>';
-        $count            = 50;
+        $count            = 4;
         $res              = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
         $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
