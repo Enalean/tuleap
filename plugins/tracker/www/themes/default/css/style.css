@@ -1018,6 +1018,13 @@ td.first-column {
     border: none;
 }
 
+.tracker-cross-search-result-actions {
+    margin: 0;
+    padding: .5em 1em;
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+}
+
 .node-indent {
     display:inline-block;
     vertical-align:top;

@@ -214,7 +214,13 @@ class Tracker_CrossSearch_SearchContentView {
     }
 
     public function fetchResultActions() {
-        return '';
+        $html  = '<p class="tracker-cross-search-result-actions">';
+        $html .= '  <a href="#" onclick="codendi.tracker.crossSearch.treeTable.collapseAll()">Collapse all</a>';
+        $html .= '  / ';
+        $html .= '  <a href="#" onclick="codendi.tracker.crossSearch.treeTable.expandAll()">Expand all</a>';
+        $html .= '</p>';
+        
+        return $html;
     }
 
 }
