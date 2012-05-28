@@ -110,6 +110,22 @@ class ProjectQuotaHtml {
     }
 
     /**
+     * Toggler used to sort records in a descending/ascending order.
+     *
+     * @param String $order Current order sens
+     *
+     * @return String
+     */
+    private function toggleOrderBy($order) {
+        if ($order == "ASC") {
+            $order = "DESC";
+        } else {
+            $order = "ASC";
+        }
+        return $order;
+    }
+
+    /**
      * Display the list of projects having a custom quota
      *
      * @param HTTPRequest $request HTTP request
@@ -145,7 +161,7 @@ class ProjectQuotaHtml {
         $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
         $nextHref = $paginationParams['nextHref'];
         $prevHref = $paginationParams['prevHref'];
-        ($orderBy == "ASC")? $orderBy = "DESC":$orderBy = "ASC";
+        $orderBy  = $this->toggleOrderBy($orderBy);
 
         if ($res && !$res->isError() && $res->rowCount() > 0) {
             $i        = 0;
