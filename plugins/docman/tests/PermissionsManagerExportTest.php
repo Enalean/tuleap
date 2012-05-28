@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+
 require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
@@ -28,9 +30,13 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
     protected $project;
     protected $docman_item;
     protected $item_id = 100;
+    protected $uniq_id = 200;
+    protected $literalizer;
+    const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
     public function setUp() {
         parent::setUp();
+        $this->literalizer         = new UGroupLiteralizer();
         $this->docman_item         = new Docman_Item();
         $this->docman_item->setId($this->item_id);
         $this->permissions_manager = mock('PermissionsManager');
@@ -38,7 +44,7 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         $this->project             = mock('Project');
         stub($this->project_manager)->getProject()->returns($this->project);
         stub($this->project)->getUnixName()->returns('gpig');
-        stub($this->project)->getID()->returns($this->item_id + 1000);
+        stub($this->project)->getID()->returns($this->uniqId());
         PermissionsManager::setInstance($this->permissions_manager);
         ProjectManager::setInstance($this->project_manager);
         $this->docman_permissions_manager = TestHelper::getPartialMock('Docman_PermissionsManager', array());
@@ -54,52 +60,97 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
 
     public function itReturnsPermissionsThanksToPermissionsManager() {
         stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array());
-        $this->permissions_manager->expectOnce('getAuthorizedUgroupIds', array($this->item_id, "PLUGIN_DOCMAN_%"));
-
+        $this->permissions_manager->expectOnce('getAuthorizedUgroupIds', array($this->item_id, self::PERMISSIONS_TYPE));
         $this->docman_permissions_manager->exportPermissions($this->docman_item);
     }
 
-    public function itReturnsLiteralizedUgroupsDependingOnPermissions() {
-        $authorized = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($authorized);
+    public function itReturnsValueOfExternalPermissions_GetProjectObjectGroupsIfItHasNoParents() {
+        $permissions = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($permissions);
 
-        $expected_permissions = array(
-            '@site_active @gpig_project_members',
-            '@gpig_project_members',
-            '@gpig_project_admin',
-            '@ug_103',
-        );
+        $expected    = $this->literalizer->getUGroupsThatHaveGivenPermissionOnObject($this->project, $this->item_id, self::PERMISSIONS_TYPE);
         $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
-        $this->assertEqual($expected_permissions, $permissions);
+        $this->assertEqual($expected, $permissions);
     }
 
-    public function itReturnsIntersectionWithParentsPermissionsIfItHasParents() {
+    public function itReturnsMembersPermissionsIfItemRequireRegisteredAndParentRequireMembers() {
         Docman_ItemFactory::setInstance($this->project->getID(), mock('Docman_ItemFactory'));
-        $parent_id          = $this->item_id + 200;
-        $parent             = new Docman_Item();
-        $parent->setId($parent_id);
-        $permissions_type   = 'PLUGIN_DOCMAN_%';
+        $parent    = $this->anItem();
+        $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions = array(
-            UGroup::PROJECT_MEMBERS,
-            UGroup::PROJECT_ADMIN,
-            203
-        );
-        $child_permissions  = array(
-            UGroup::REGISTERED,
-            UGroup::PROJECT_MEMBERS,
-            UGroup::PROJECT_ADMIN,
-            103
-        );
+        $parent_permissions = array(UGroup::PROJECT_MEMBERS);
+        $child_permissions  = array(UGroup::REGISTERED);
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     $permissions_type)->returns($parent_permissions);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, $permissions_type)->returns($child_permissions);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, self::PERMISSIONS_TYPE)->returns($child_permissions);
 
-        $expected_permissions = array('@gpig_project_members', '@gpig_project_admin');
+        //$expected_permissions = ExternalPermissions::getProjectObjectGroups($this->project, $parent_id, self::PERMISSIONS_TYPE);
+        $expected    = $this->literalizer->getUGroupsThatHaveGivenPermissionOnObject($this->project, $parent_id, self::PERMISSIONS_TYPE);
+
         $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
-        $this->assertEqual($expected_permissions, $permissions);
+        $this->assertEqual($expected, $permissions);
+    }
+
+    public function itReturnsMembersPermissionsIfItemRequireRegisteredAndParentParentRequireMembers() {
+        $project_id = $this->project->getID();
+        Docman_ItemFactory::setInstance($project_id, mock('Docman_ItemFactory'));
+        $parent           = $this->anItem();
+        $parent_id        = $parent->getId();
+        $parent_parent    = $this->anItem();
+        $parent_parent_id = $parent_parent->getId();
+        $this->docman_item->setParentId($parent_id);
+        $parent->setParentId($parent_parent_id);
+
+
+        $parent_parent_permissions = array(UGroup::PROJECT_MEMBERS);
+        $parent_permissions        = array(UGroup::REGISTERED);
+        $child_permissions         = array(UGroup::REGISTERED);
+
+        stub(Docman_ItemFactory::instance($project_id))->getItemFromDb($parent_id)->returns($parent);
+        stub(Docman_ItemFactory::instance($project_id))->getItemFromDb($parent_parent_id)->returns($parent_parent);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_parent_id, self::PERMISSIONS_TYPE)->returns($parent_parent_permissions);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,        self::PERMISSIONS_TYPE)->returns($parent_permissions);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id,    self::PERMISSIONS_TYPE)->returns($child_permissions);
+
+        //$expected_permissions = ExternalPermissions::getProjectObjectGroups($this->project, $parent_parent_id, self::PERMISSIONS_TYPE);
+        $expected    = $this->literalizer->getUGroupsThatHaveGivenPermissionOnObject($this->project, $parent_parent_id, self::PERMISSIONS_TYPE);
+        $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
+        $this->assertEqual($expected, $permissions);
+    }
+
+    private function anItem() {
+        $item = new Docman_Item();
+        $item->setId($this->uniqId());
+        return $item;
+    }
+
+    private function uniqId() {
+        $this->uniq_id++;
+        return $this->item_id + $this->uniq_id;
+    }
+
+
+
+    public function tReturnsMembersPermissionsIfItemRequireMembersAndParentRequireRegistered() {
+        Docman_ItemFactory::setInstance($this->project->getID(), mock('Docman_ItemFactory'));
+        $parent    = $this->anItem();
+        $parent_id = $parent->getId();
+        $this->docman_item->setParentId($parent_id);
+
+        $parent_permissions = array(UGroup::REGISTERED);
+        $child_permissions  = array(UGroup::PROJECT_MEMBERS);
+
+        stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     self::PERMISSIONS_TYPE)->returns($parent_permissions);
+        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, self::PERMISSIONS_TYPE)->returns($child_permissions);
+
+        //$expected_permissions = ExternalPermissions::getProjectObjectGroups($this->project, $this->item_id, self::PERMISSIONS_TYPE);
+        $expected    = $this->literalizer->getUGroupsThatHaveGivenPermissionOnObject($this->project, $this->item_id, self::PERMISSIONS_TYPE);
+
+        $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
+        $this->assertEqual($expected, $permissions);
     }
 }
 ?>
