@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Presents everything needed to render a link to the planning view of a
+ * milestone.
+ */
 class Planning_MilestoneLinkPresenter {
     
     /**
@@ -29,6 +33,9 @@ class Planning_MilestoneLinkPresenter {
         $this->milestone = $milestone;
     }
     
+    /**
+     * @return string The URL to the planning view of this milestone.
+     */
     public function getUri() {
         $group_id    = $this->milestone->getGroupId();
         $planning_id = $this->milestone->getPlanningId();
@@ -37,10 +44,16 @@ class Planning_MilestoneLinkPresenter {
         return "/plugins/agiledashboard/?group_id=$group_id&action=show&planning_id=$planning_id&aid=$artifact_id";
     }
     
+    /**
+     * @return string The cross-reference of this milestone's underlying artifact.
+     */
     public function getXref() {
         return $this->milestone->getXref();
     }
     
+    /**
+     * @return string The milestone title (i.e. the artifact's one).
+     */
     public function getTitle() {
         return $this->milestone->getTitle();
     }

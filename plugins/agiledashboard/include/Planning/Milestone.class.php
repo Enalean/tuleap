@@ -59,6 +59,9 @@ class Planning_Milestone {
         $this->planned_artifacts = $planned_artifacts;
     }
     
+    /**
+     * @return int The project identifier.
+     */
     public function getGroupId() {
         return $this->group_id;
     }
@@ -77,10 +80,19 @@ class Planning_Milestone {
         return $this->sub_milestones;
     }
     
+    /**
+     * @return Boolean True if milestone has at least 1 sub-milestone.
+     */
     public function hasSubMilestones() {
         return ! empty($this->sub_milestones);
     }
     
+    /**
+     * Adds some sub-milestones. Ignores milestones which are already a
+     * sub-milestone of the current one.
+     * 
+     * @param array $new_sub_milestones 
+     */
     public function addSubMilestones(array $new_sub_milestones) {
         $this->sub_milestones = array_merge($this->sub_milestones, $new_sub_milestones);
     }
