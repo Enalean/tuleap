@@ -21,15 +21,15 @@
 require_once 'FullTextSearch/ISearchAndIndexDocuments.class.php';
 require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsManager.class.php';
 /**
- * Class responsible to send requests to an indexation server 
+ * Class responsible to send requests to an indexation server
  */
 class FullTextSearchActions {
 
     /**
-     * @var FullTextSearch_ISearchAndIndexDocuments 
+     * @var FullTextSearch_ISearchAndIndexDocuments
      */
     protected $client;
-    
+
     public function __construct(FullTextSearch_ISearchAndIndexDocuments $client) {
         $this->client = $client;
     }
@@ -45,40 +45,38 @@ class FullTextSearchActions {
 
     /**
      * Index a new document with permissions
-     * 
+     *
      * @param array $params parameters of the docman event
      */
     public function indexNewDocument($params) {
         $item_id     = $params['item']->getId();
         $group_id    = $params['item']->getGroupId();
         $user        = $params['user'];
-        //$permissions = $this->getDocmanPermissionsManager($group_id)->exportPermissions($params['item']);
+        $permissions = $this->getDocmanPermissionsManager($group_id)->exportPermissions($params['item']);
         $indexed_datas = array(
             'id'          => $item_id,
+            'group_id'    => $group_id,
             'title'       => $params['item']->getTitle(),
             'description' => $params['item']->getDescription(),
-            'file'        => $this->fileContentEncode($params['version']->getPath()),
-            //'permissions' => array($group_id => $permissions)  // This doesn't work. 
-                                                                 // Exported permissions are not right.
-                                                                 // Commented out to not give false hope 
-                                                                 // to our beta testers
+            'permissions' => $permissions,
+            'file'        => $this->fileContentEncode($params['version']->getPath())
         );
-        
+
         $this->client->index($indexed_datas, $item_id);
     }
-    
+
     /**
      * Remove an indexed document
-     * 
+     *
      * @param array $params
      */
     public function delete($params) {
         $this->client->delete($params['item']->getId());
     }
-    
+
     /**
      * Get file contents and encode them with base64
-     * 
+     *
      * @param string $file_name
      * @return string
      */
@@ -88,6 +86,6 @@ class FullTextSearchActions {
         }
         return '';
     }
-    
+
 }
 ?>

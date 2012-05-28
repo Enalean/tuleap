@@ -26,7 +26,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
     protected $client;
     protected $actions;
     protected $params;
-    
+
     public function setUp() {
         parent::setUp();
         $this->client        = mock('FullTextSearch_ISearchAndIndexDocuments');
@@ -58,15 +58,16 @@ class FullTextSearchActionsTests extends TuleapTestCase {
             ->withVersion($version)
             ->build();
     }
-    
+
     public function itCallIndexOnClientWithRightParameters() {
         $expected = array(
                           array(
                                 'id'          => 101,
+                                'group_id'    => 200,
                                 'title'       => 'Coin',
                                 'description' => 'Duck typing',
+                                'permissions' => array(3, 102),
                                 'file'        => 'aW5kZXggbWUK',
-                                //'permissions' => array(200 => array(3, 102)),
                                ),
                           101
                          );
@@ -74,7 +75,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
 
         $this->actions->indexNewDocument($this->params);
     }
-    
+
     public function itCanDeleteADocumentFromItsId() {
         $expected_id = $this->item->getId();
         $this->client->expectOnce('delete', array($expected_id));
