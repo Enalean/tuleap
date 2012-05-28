@@ -22,6 +22,7 @@
 
 require_once('common/dao/SvnCommitsDao.class.php');
 require_once('common/chart/Chart.class.php');
+require_once('common/chart/ErrorChart.class.php');
 
 class Widget_ProjectSvnStats extends Widget {
     function __construct() {
@@ -134,12 +135,11 @@ class Widget_ProjectSvnStats extends Widget {
             
             $gbplot = new AccBarPlot($bars);
             $c->Add($gbplot);
-            echo $c->stroke();
         } else {
             $error = "No commits in the last $duration days";
-            $c     = new Chart(400, 300);
-            $c->displayMessage($error);
+            $c     = new ErrorChart("No logged commits", $error, 400, 300);
         }
+        echo $c->stroke();
     }
     
     protected function sortByTop($a, $b) {
