@@ -101,7 +101,7 @@ if ($project && !$project->isError()) {
     echo '<h2>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics').'</h2>';
     $usedProportion = $duMgr->returnTotalProjectSize($groupId);
     $allowedQuota   = $duMgr->getProperty('allowed_quota');
-    $pqm            = ProjectQuotaManager::instance();
+    $pqm            = new ProjectQuotaManager();
     $res            = $pqm->getProjectCustomQuota($groupId);
     if ($res && !$res->isError() && $res->rowCount() == 1) {
         $row          = $res->getRow();

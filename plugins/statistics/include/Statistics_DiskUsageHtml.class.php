@@ -293,7 +293,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
         $totalSize = $this->_dum->returnTotalProjectSize($groupId);
 
         $allowedQuota = $this->_dum->getProperty('allowed_quota');
-        $pqm          = ProjectQuotaManager::instance();
+        $pqm          = new ProjectQuotaManager();
         $res          = $pqm->getProjectCustomQuota($groupId);
         if ($res && !$res->isError() && $res->rowCount() == 1) {
             $row          = $res->getRow();
