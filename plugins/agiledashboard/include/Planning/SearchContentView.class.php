@@ -25,6 +25,9 @@ require_once 'ArtifactTreeNodeVisitor.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
+    /**
+     * @var TemplateRenderer
+     */
     private $renderer;
     
     // Presenter properties
@@ -67,7 +70,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
     }
 
-    public function setRenderer($renderer) {
+    public function setRenderer(TemplateRenderer $renderer) {
         $this->renderer = $renderer;
         
     }
