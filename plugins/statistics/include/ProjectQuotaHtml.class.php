@@ -17,6 +17,7 @@
  */
 
 require_once 'ProjectQuotaManager.class.php';
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
  * Management of custom quota by project
@@ -41,6 +42,7 @@ class ProjectQuotaHtml {
     public function __construct() {
         $this->projectManager      = ProjectManager::instance();
         $this->projectQuotaManager = new ProjectQuotaManager();
+        $this->csrf                = new CSRFSynchronizerToken('project_quota.php');
     }
 
     /**
@@ -237,6 +239,7 @@ class ProjectQuotaHtml {
         $output  = '';
         $output .= '<table>';
         $output .= '<form method="post" >';
+        $output .= $this->csrf->fetchHTMLInput();
         $output .= '<tr><td colspan="2"><b>'.$GLOBALS['Language']->getText('plugin_statistics', 'set_quota').'</b></td></tr>';
         $output .= '<tr>';
         $output .= '<td>'.$GLOBALS['Language']->getText('global', 'Project').' <span class="highlight">*</span></td><td><input id="project" name="project" /></td>';
@@ -276,6 +279,7 @@ class ProjectQuotaHtml {
             $action = $request->get('action');
             switch ($action) {
                 case 'add' :
+                    $this->csrf->check();
                     $validProject = new Valid_String('project');
                     $validProject->required();
                     $project = null;
@@ -303,6 +307,7 @@ class ProjectQuotaHtml {
                     $this->projectQuotaManager->addQuota($project, $requester, $quota, $motivation);
                     break;
                 case 'delete' :
+                    $this->csrf->check();
                     $list       = $request->get('delete_quota');
                     $projects   = array();
                     $validProjectId = new Valid_UInt();
