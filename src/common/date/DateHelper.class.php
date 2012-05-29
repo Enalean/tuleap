@@ -116,7 +116,7 @@ class DateHelper {
      * @return Integer
      */
     function dateDiffInDays($start, $end) {
-        return (int) round(($end - $start) / 86400);
+        return floor(($end - $start) / 86400);
     }
 
     /**
@@ -128,7 +128,7 @@ class DateHelper {
      * @return Boolean
      */
     function isPeriodicallyDistant($distance, $period) {
-        return is_int($distance / $period);
+        return ($distance % $period == 0);
     }
 
 }
