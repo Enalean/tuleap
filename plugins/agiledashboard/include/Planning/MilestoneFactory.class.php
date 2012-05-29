@@ -90,7 +90,7 @@ class Planning_MilestoneFactory {
      *
      * @return TreeNode
      */
-    private function getPlannedArtifacts(User             $user,
+    public function getPlannedArtifacts(User             $user,
                                          Planning         $planning,
                                          Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
@@ -138,7 +138,8 @@ class Planning_MilestoneFactory {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, 5454);
         foreach ($artifacts as $artifact) {
-            $milestones[] = new Planning_Milestone($group_id, $planning);
+            $content_tree = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $milestones[] = new Planning_Milestone($group_id, $planning, $artifact, $content_tree);
         }
         return $milestones;
     }
