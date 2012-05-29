@@ -72,9 +72,9 @@ class Planning_MilestoneFactory {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact) {
-            $content_tree = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
 
-            return new Planning_Milestone($group_id, $planning, $artifact, $content_tree);
+            return new Planning_Milestone($group_id, $planning, $artifact, $planned_artifacts);
         } else {
             return new Planning_NoMilestone($group_id, $planning);
         }
@@ -138,8 +138,8 @@ class Planning_MilestoneFactory {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
-            $content_tree = $this->getPlannedArtifacts($user, $planning, $artifact);
-            $milestones[] = new Planning_Milestone($group_id, $planning, $artifact, $content_tree);
+            $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $milestones[] = new Planning_Milestone($group_id, $planning, $artifact, $planned_artifacts);
         }
         return $milestones;
     }
