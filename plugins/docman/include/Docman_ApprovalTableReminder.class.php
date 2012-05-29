@@ -163,11 +163,13 @@ class Docman_ApprovalTableReminder {
      function populateReviewersList($table) {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getReviewerList($table->getId());
-        foreach ($dar as $row) {
-            $reviewer = new Docman_ApprovalReviewer();
-            $reviewer->initFromRow($row);
-            $table->addReviewer($reviewer);
-            unset($reviewer);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $reviewer = new Docman_ApprovalReviewer();
+                $reviewer->initFromRow($row);
+                $table->addReviewer($reviewer);
+                unset($reviewer);
+            }
         }
      }
 
