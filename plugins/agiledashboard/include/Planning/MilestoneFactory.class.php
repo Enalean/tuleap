@@ -132,5 +132,15 @@ class Planning_MilestoneFactory {
             $parent_node->addChild($node);
         }
     }
+
+    public function getOpenMilestones(User $user, $group_id, $planning_id) {
+        $milestones = array();
+        $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, 5454);
+        foreach ($artifacts as $artifact) {
+            $milestones[] = new Planning_Milestone($group_id, $planning);
+        }
+        return $milestones;
+    }
 }
 ?>
