@@ -637,51 +637,6 @@ class Docman_PermissionsManager {
         }
         return $userArray;
     }
-
-    private function getUgroupIdsPermissions(Docman_Item $item, UGroupLiteralizer $literalizer, Project $project) {
-        $permissions = $literalizer->getUgroupIds($item->getId(), 'PLUGIN_DOCMAN_%');
-        $parent_item = $this->getParentItem($item, $project);
-        if ($parent_item) {
-            $parent_permissions = $this->getUgroupIdsPermissions($parent_item, $literalizer, $project);
-            $permissions        = $this->mergeUgroupIds($parent_permissions, $permissions);
-        }
-        return array_values($permissions);
-    }
-
-
-
-    /**
-     * Returns permissions of an item in a human readable format
-     *
-     * @param Docman_Item $item
-     *
-     * @return array
-     */
-    public function exportPermissions(Docman_Item $item) {
-        $project     = ProjectManager::instance()->getProject($item->getGroupId());
-        $literalizer = new UGroupLiteralizer();
-        $ugroup_ids  = $this->getUgroupIdsPermissions($item, $literalizer, $project);
-        return $literalizer->ugroupIdsToString($ugroup_ids, $project);
-    }
-
-    private function getParentItem(Docman_Item $item, Project $project) {
-        if (! $item->getParentId()) return;
-        return Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId());
-    }
-
-    private function mergeUgroupIds(array $parent_permissions, array $child_permissions) {
-        $item_permissions = array();
-        foreach($child_permissions as $child_permission) {
-            if ($child_permission < 100) {
-                foreach ($parent_permissions as $parent_permission) {
-                    $item_permissions[] = max($parent_permission, $child_permission);
-                }
-            } elseif(in_array($child_permission, $parent_permissions)) {
-                $item_permissions[] = $child_permission;
-            }
-        }
-        return array_unique($item_permissions);
-    }
 }
 
 ?>

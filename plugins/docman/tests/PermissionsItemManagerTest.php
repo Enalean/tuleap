@@ -20,11 +20,12 @@
 
 
 require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
+require_once dirname(__FILE__).'/../include/Docman_PermissionsItemManager.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
 require_once 'common/project/UGroup.class.php';
 
-class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
+class Docman_PermissionsItemManager_Test extends TuleapTestCase {
     protected $permissions_manager;
     protected $project_manager;
     protected $project;
@@ -47,7 +48,7 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         stub($this->project)->getID()->returns($this->uniqId());
         PermissionsManager::setInstance($this->permissions_manager);
         ProjectManager::setInstance($this->project_manager);
-        $this->docman_permissions_manager = TestHelper::getPartialMock('Docman_PermissionsManager', array());
+        $this->docman_permissions_manager = new Docman_PermissionsItemManager();
     }
 
     public function tearDown() {
@@ -195,8 +196,8 @@ class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
         $parent_id = $parent->getId();
         $this->docman_item->setParentId($parent_id);
 
-        $parent_permissions  = array(102, 103);
-        $child_permissions   = array(102, 104);
+        $parent_permissions = array(102, 103);
+        $child_permissions  = array(102, 104);
 
 
         stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
