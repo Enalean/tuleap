@@ -30,6 +30,7 @@ class fulltextsearchPlugin extends Plugin {
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
+        $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
     }
 
     private function getActions() {
@@ -38,6 +39,15 @@ class fulltextsearchPlugin extends Plugin {
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
+    }
+
+    /**
+     * Event triggered when a document is updated
+     *
+     * @param array $params
+     */
+    public function plugin_docman_event_update($params) {
+        $this->getActions()->updateDocument($params);
     }
 
     /**
