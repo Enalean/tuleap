@@ -294,11 +294,7 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput {
 
         $allowedQuota = $this->_dum->getProperty('allowed_quota');
         $pqm          = new ProjectQuotaManager();
-        $res          = $pqm->getProjectCustomQuota($groupId);
-        if ($res && !$res->isError() && $res->rowCount() == 1) {
-            $row          = $res->getRow();
-            $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
-        }
+        $allowedQuota = $pqm->getProjectCustomQuota($groupId);
         if ($allowedQuota) {
             $html = '<div style="text-align:center"><p>'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $allowedQuota.'GiB')).'</p></div>';
         } else {

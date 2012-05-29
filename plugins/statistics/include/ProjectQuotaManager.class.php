@@ -61,10 +61,16 @@ class ProjectQuotaManager {
      *
      * @param int $groupId ID of the project we want to retrieve its custom quota
      *
-     * @return DataAccessResult
+     * @return Integer
      */
     public function getProjectCustomQuota($groupId) {
-        return $this->dao->getProjectCustomQuota($groupId);
+        $allowedQuota = null;
+        $res = $this->dao->getProjectCustomQuota($groupId);
+        if ($res && !$res->isError() && $res->rowCount() == 1) {
+            $row          = $res->getRow();
+            $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
+        }
+        return $allowedQuota;
     }
 
     /**
