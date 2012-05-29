@@ -76,7 +76,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         $condition = '';
         $order     = '';
         $list      = $this->da->escapeIntImplode($list);
-        $sortOrder = $this->da->quoteSmart($sortOrder);
+        $sortOrder = mysql_escape_string($sortOrder);
         if (!empty($list)) {
             $condition = "WHERE ".self::GROUP_ID." IN ($list)";
         }
