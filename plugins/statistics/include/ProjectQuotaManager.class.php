@@ -111,7 +111,7 @@ class ProjectQuotaManager {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
-                        $historyDao = new ProjectHistoryDao();
+                        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
                         $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
                     } else {
@@ -139,7 +139,7 @@ class ProjectQuotaManager {
             $names        = array();
             $dum          = new Statistics_DiskUsageManager();
             $defaultQuota = $dum->getProperty('allowed_quota');
-            $historyDao   = new ProjectHistoryDao();
+            $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
             foreach ($projects as $projectId => $name) {
                 $list[]  = $projectId;
                 $names[] = $name;
