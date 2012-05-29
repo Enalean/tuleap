@@ -136,7 +136,7 @@ class Planning_MilestoneFactory {
     public function getOpenMilestones(User $user, $group_id, $planning_id) {
         $milestones = array();
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
-        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, 5454);
+        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
             $content_tree = $this->getPlannedArtifacts($user, $planning, $artifact);
             $milestones[] = new Planning_Milestone($group_id, $planning, $artifact, $content_tree);

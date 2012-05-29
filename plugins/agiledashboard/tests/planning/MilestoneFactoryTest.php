@@ -129,8 +129,9 @@ class MileStoneFactory_getOpenMilestonesTest extends TuleapTestCase {
         $group_id         = 99;
         $planning_id      = 3333;
         $artifact         = anArtifact()->build();
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getOpenArtifactsByTrackerIdUserCanView()->returns(array($artifact));
-        $planning         = mock('Planning');
+        $tracker_id       = 7777777;
+        $planning         = aPlanning()->withPlanningTrackerId($tracker_id)->build();
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getOpenArtifactsByTrackerIdUserCanView($user, $tracker_id)->returns(array($artifact));
         $planning_factory = stub('PlanningFactory')->getPlanningWithTrackers($planning_id)->returns($planning);
         
         $planned_artifacts= new TreeNode('sdfkjasf');   
