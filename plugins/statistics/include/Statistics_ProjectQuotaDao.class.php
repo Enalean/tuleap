@@ -64,18 +64,19 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     /**
      * List all projects having custom quota
      *
-     * @param Array  $list     List of projects Id corresponding to a filter
-     * @param int    $offset   From where the result will be displayed.
-     * @param int    $count    How many results are returned.
-     * @param String $sort     Order result set according to this parameter
-     * @param String $sortSens Specifiy if the result set sort order is ascending or descending
+     * @param Array  $list      List of projects Id corresponding to a filter
+     * @param int    $offset    From where the result will be displayed.
+     * @param int    $count     How many results are returned.
+     * @param String $sort      Order result set according to this parameter
+     * @param String $sortOrder Specifiy if the result set sort order is ascending or descending
      *
      * @return DataAccessResult
      */
-    public function getAllCustomQuota($list, $offset, $count, $sort, $sortSens) {
+    public function getAllCustomQuota($list, $offset, $count, $sort, $sortOrder) {
         $condition = '';
         $order     = '';
         $list      = $this->da->escapeIntImplode($list);
+        $sortOrder = $this->da->quoteSmart($sortOrder);
         if (!empty($list)) {
             $condition = "WHERE ".self::GROUP_ID." IN ($list)";
         }
@@ -87,15 +88,15 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
         if (isset($sort)) {
             switch ($sort) {
                 case 'quota':
-                    if (!empty($sortSens)) {
-                        $order = "ORDER BY ".self::REQUEST_SIZE." ".$sortSens;
+                    if (!empty($sortOrder)) {
+                        $order = "ORDER BY ".self::REQUEST_SIZE." ".$sortOrder;
                     } else {
                          $order = "ORDER BY ".self::REQUEST_SIZE;
                     }
                     break;
                 case 'date':
-                    if (!empty($sortSens)) {
-                        $order = "ORDER BY ".self::REQUEST_DATE." ".$sortSens;
+                    if (!empty($sortOrder)) {
+                        $order = "ORDER BY ".self::REQUEST_DATE." ".$sortOrder;
                     } else {
                          $order = "ORDER BY ".self::REQUEST_DATE;
                     }
