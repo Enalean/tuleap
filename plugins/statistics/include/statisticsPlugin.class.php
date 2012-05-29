@@ -28,6 +28,7 @@ class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
+        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
         $this->_addHook('cssfile',                'cssFile',                false);
         $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('root_daily_start',       'root_daily_start',       false);
@@ -175,7 +176,15 @@ class StatisticsPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />'."\n";
         }
     }
-    
+
+    public function combined_scripts($params) {
+        $params['scripts'] = array_merge(
+            $params['scripts'],
+            array(
+                $this->getPluginPath().'/js/autocomplete.js',
+            )
+        );
+    }
 
 }
 

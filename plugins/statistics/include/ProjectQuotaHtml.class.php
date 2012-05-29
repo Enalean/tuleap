@@ -260,9 +260,6 @@ class ProjectQuotaHtml {
         $output .= '</form>';
         $output .= '</table>';
         $output .= '<p><span class="highlight">'.$GLOBALS['Language']->getText('plugin_docman', 'new_mandatory_help').'</span></p>';
-        $js      = "new ProjectAutoCompleter('project', '".util_get_dir_image_theme()."');";
-        $js     .= "new UserAutoCompleter('requester', '".util_get_dir_image_theme()."');";
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         return $output;
     }
 
