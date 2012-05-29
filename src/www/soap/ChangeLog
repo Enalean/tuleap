@@ -1,3 +1,9 @@
+5.2 - Tuleap 5.2
+	What's new?
+	===========
+	* getProjectDiskStats: Returns the disk space distribution accross
+	project's services.
+
 5.1 - Tuleap 5.1
 	What's new?
 	===========
