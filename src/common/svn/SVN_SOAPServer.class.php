@@ -53,7 +53,6 @@ class SVN_SOAPServer {
      * Error codes:
      * * 3001, Invalid session (wrong $sessionKey)
      * * 3002, User do not have access to the project
-     * * 
      *
      * @param String  $session_key Session key of the desired project admin
      * @param Integer $group_id    ID of the project the subversion repository belongs to
