@@ -88,22 +88,16 @@ class Widget_ProjectSvnStats extends Widget {
                 $dates[] = date('M d', $i);
             }
             
-            $nb_commiters = count($stats);
+            $nb_commiters    = count($stats);
             $widgetFormatter = new Widget_ProjectSvnStats_Layout($nb_commiters);
-            // Legend ratio is computed in order to specify the number of text columns to use in the legend text box. 
-            // For graphs which have a large number of plots (say 10 items) it might be necessary to specify 2 (or more columns) to avoid that the legend box become too large and hide the image.
-            $legendRatio = $widgetFormatter->legend_ratio;
-            //Adjust the chart heigh and width to fit two columns legend, in case we have more than 10 commiters
-            $chartWidth  = $widgetFormatter->getChartWidth();
-            $chartHeigh  = $widgetFormatter->getChartHeigh();
-            // Legend default X and Y positions given as fractions
+
+            $legendRatio       = $widgetFormatter->legend_ratio;
+            $chartWidth        = $widgetFormatter->getChartWidth();
+            $chartHeigh        = $widgetFormatter->getChartHeigh();
             $legend_x_position = $widgetFormatter->getLegendXPosition();
             $legend_y_position = $widgetFormatter->getLegendYPosition();
-            // Customise image bottom margin according to commiters number
-            // Specify marging between the image bottom and the legend top according to computed legend ratio(less than 10, between 10 and 20 or more than 20 legend items, etc...).
-            $imgBottomMargin = $widgetFormatter->getImageBottomMargin();
-            //Align legend according to commiters number, this should take in consideration X and Y positions of the legend
-            $legendAlign = $widgetFormatter->getLegendAlign();
+            $imgBottomMargin   = $widgetFormatter->getImageBottomMargin();
+            $legendAlign       = $widgetFormatter->getLegendAlign();
             // @TODO: Centralize stuff at Chart class level to properly render a Jpgraph chart with a large number of legend items
 
             //Build the chart
