@@ -43,20 +43,51 @@ class FullTextSearchActions {
      * @param array $params parameters of the docman event
      */
     public function indexNewDocument($params) {
-        $item_id     = $params['item']->getId();
-        $group_id    = $params['item']->getGroupId();
-        $user        = $params['user'];
-        $permissions = $this->permissions_manager->exportPermissions($params['item']);
-        $indexed_datas = array(
-            'id'          => $item_id,
-            'group_id'    => $group_id,
-            'title'       => $params['item']->getTitle(),
-            'description' => $params['item']->getDescription(),
-            'permissions' => $permissions,
-            'file'        => $this->fileContentEncode($params['version']->getPath())
-        );
+        $indexed_datas = $this->getIndexedDatas($params['item'], $params['version']);
+        $this->client->index($indexed_datas, $params['item']->getId());
+    }
 
-        $this->client->index($indexed_datas, $item_id);
+    public function updateDocument($params) {
+        $item         = $params['item'];
+        $new_data     = $params['new'];
+        $update_datas = array('script'=>'', 'params'=> array());
+        $updated      = false;
+        if ($this->titleUpdated($new_data['title'], $item)) {
+            $update_datas = $this->buildSetterDatas($update_datas, 'title', $new_data['title']);
+            $updated  = true;
+        }
+        if ($this->descriptionUpdated($new_data, $item)) {
+            $update_datas = $this->buildSetterDatas($update_datas, 'description', $new_data['description']);
+            $updated  = true;
+        }
+        if ($updated) {
+            $this->client->request($item->getid().'/_update', 'POST', $update_datas);
+        }
+    }
+
+    private function titleUpdated($data, Docman_Item $item) {
+        return isset($data['title']) && $data['title'] != $item->getTitle();
+    }
+
+    private function descriptionUpdated($data, Docman_Item $item) {
+        return isset($data['description']) && $data['description'] != $item->getDescription();
+    }
+
+    public function buildSetterDatas($current_data, $name, $value) {
+        $current_data['script']       .='ctx._source.'.$name.' = '.$name.';';
+        $current_data['params'][$name] = $value;
+        return $current_data;
+    }
+
+    private function getIndexedDatas(Docman_Item $item, Docman_Version $version) {
+        return array(
+            'id'          => $item->getId(),
+            'group_id'    => $item->getGroupId(),
+            'title'       => $item->getTitle(),
+            'description' => $item->getDescription(),
+            'permissions' => $this->permissions_manager->exportPermissions($item),
+            'file'        => $this->fileContentEncode($version->getPath())
+        );
     }
 
     /**
