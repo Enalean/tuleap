@@ -76,7 +76,6 @@ class Tracker_CrossSearch_SearchContentView {
         
         $html  = '';
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
-        $html .= $this->fetchResultActions();
         $html .= $this->fetchResults();
         
         return $html;
@@ -85,6 +84,7 @@ class Tracker_CrossSearch_SearchContentView {
     private function fetchResults() {  
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
+        $html .= $this->fetchResultActions();
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
@@ -214,13 +214,7 @@ class Tracker_CrossSearch_SearchContentView {
     }
 
     public function fetchResultActions() {
-        $html  = '<p class="tracker-cross-search-result-actions">';
-        $html .= '  <a href="#" onclick="codendi.tracker.crossSearch.treeTable.collapseAll()">Collapse all</a>';
-        $html .= '  / ';
-        $html .= '  <a href="#" onclick="codendi.tracker.crossSearch.treeTable.expandAll()">Expand all</a>';
-        $html .= '</p>';
-        
-        return $html;
+        return '<p class="tree-view-actions"></p>';
     }
 
 }

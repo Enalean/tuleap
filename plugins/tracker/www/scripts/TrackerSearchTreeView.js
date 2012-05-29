@@ -1,6 +1,6 @@
-var codendi = codendi || {};
-codendi.tracker = codendi.tracker || {};
-codendi.tracker.crossSearch = codendi.tracker.crossSearch || {};
+var codendi = codendi || { };
+codendi.tracker = codendi.tracker || { };
+codendi.tracker.crossSearch = codendi.tracker.crossSearch || { };
 
 /**
  * Add expand/collapse behaviour on a table element given by this ID in constructor.
@@ -16,8 +16,8 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
     /**
      * Called when object is constructed
      */
-    initialize : function(rootId) {
-        this.root = $(rootId);
+    initialize : function(root) {
+        this.root = $(root);
         if (this.root !== null ) {
             /* private method binded as event listener */
             function _eventOnNode(event) {
@@ -27,7 +27,28 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
             this.collapseAll();
             this.root.select('.node-tree').invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
             this.root.select('.node-content').invoke('observe', 'dblclick', _eventOnNode.bindAsEventListener(this));
+            this.insertTreeViewActions();
         }
+    },
+    
+    insertTreeViewActions: function() {
+        var expandAllLink = this.link('Expand all', function(event) {
+            this.expandAll();
+            Event.stop(event);
+        });
+        var collapseAllLink = this.link('Collapse all', function(event) {
+            this.collapseAll();
+            Event.stop(event);
+        });
+        
+        var treeViewActionsContainer = this.root.previous('.tree-view-actions');
+        treeViewActionsContainer.insert(expandAllLink);
+        treeViewActionsContainer.insert(' / ');
+        treeViewActionsContainer.insert(collapseAllLink);
+    },
+    
+    link: function(text, func) {
+        return new Element('a', {href: '#'}).update(text).observe('click', func.bind(this));
     },
 
     getChildren: function(TRElement) {
@@ -160,5 +181,7 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
 });
 
 Event.observe(window, 'load', function() {
-    codendi.tracker.crossSearch.treeTable = new codendi.tracker.crossSearch.TreeTable('treeTable');
+    $$('.tree-view').each(function (element) {
+        new codendi.tracker.crossSearch.TreeTable(element);
+    })
 });
