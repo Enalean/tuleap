@@ -114,6 +114,7 @@ class SVN_SOAPServer {
      * @param String  $session_key Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param Integer $limit       Maximum revisions returned
+     * @param Integer $author_id   Id of commit author
      *
      * @return ArrayOfRevision The list of revisions
      */
@@ -186,7 +187,7 @@ class SVN_SOAPServer {
     }
 
     private function getUser($author_id) {
-        if ($author_id == -1) {
+        if (! $author_id) {
             $no_user_in_particular = new User(array('user_name' => ''));
             return $no_user_in_particular;
         } 
