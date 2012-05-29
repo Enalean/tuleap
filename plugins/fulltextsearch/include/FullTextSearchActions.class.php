@@ -19,7 +19,7 @@
  */
 
 require_once 'FullTextSearch/ISearchAndIndexDocuments.class.php';
-require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsManager.class.php';
+require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
 /**
  * Class responsible to send requests to an indexation server
  */
@@ -29,19 +29,13 @@ class FullTextSearchActions {
      * @var FullTextSearch_ISearchAndIndexDocuments
      */
     protected $client;
+    protected $permissions_manager;
 
-    public function __construct(FullTextSearch_ISearchAndIndexDocuments $client) {
-        $this->client = $client;
+    public function __construct(FullTextSearch_ISearchAndIndexDocuments $client, Docman_PermissionsItemManager $permissions_manager) {
+        $this->client              = $client;
+        $this->permissions_manager = $permissions_manager;
     }
 
-    /**
-     * Wrapper for tests
-     *
-     * *@return Docman_PermissionsManager
-     */
-    protected function getDocmanPermissionsManager($group_id) {
-        return Docman_PermissionsManager::instance($group_id);
-    }
 
     /**
      * Index a new document with permissions
@@ -52,7 +46,7 @@ class FullTextSearchActions {
         $item_id     = $params['item']->getId();
         $group_id    = $params['item']->getGroupId();
         $user        = $params['user'];
-        $permissions = $this->getDocmanPermissionsManager($group_id)->exportPermissions($params['item']);
+        $permissions = $this->permissions_manager->exportPermissions($params['item']);
         $indexed_datas = array(
             'id'          => $item_id,
             'group_id'    => $group_id,

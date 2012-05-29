@@ -21,34 +21,34 @@
 require_once 'common/plugin/Plugin.class.php';
 
 class fulltextsearchPlugin extends Plugin {
-    
+
     private $actions;
-    
+
     public function fulltextsearchPlugin($id) {
         $this->Plugin($id);
-                
+
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
     }
-    
+
     private function getActions() {
         if (!isset($this->actions) && ($search_client = $this->getSearchClient())) {
             require_once 'FullTextSearchActions.class.php';
-            $this->actions = new FullTextSearchActions($search_client);
+            $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
     }
-    
+
     /**
      * Event triggered when a document is created
-     * 
+     *
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
         $this->getActions()->indexNewDocument($params);
     }
-    
+
     /**
      * Event triggered when a document is deleted
      *
@@ -57,17 +57,17 @@ class fulltextsearchPlugin extends Plugin {
     public function plugin_docman_event_del($params) {
         $this->getActions()->delete($params);
     }
-    
+
     private function getSearchClient() {
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        
+
         require_once 'ElasticSearch/ClientFactory.class.php';
         $factory = new ElasticSearch_ClientFactory();
         return $factory->build($client_path, $server_host, $server_port);
     }
-    
+
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
             require_once('FulltextsearchPluginInfo.class.php');
