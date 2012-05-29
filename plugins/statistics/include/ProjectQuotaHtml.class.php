@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ProjectQuotaManager.class.php';
+require_once('ProjectQuotaManager.class.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
@@ -75,12 +75,9 @@ class ProjectQuotaHtml {
     private function validateProjectFilter($request) {
         $validFilter        = new Valid_String('project_filter');
         $filter             = null;
-        $projectFilterParam = null;
         if ($request->valid($validFilter)) {
             $filter = $request->get('project_filter');
         }
-        $validRequest['project_filter'] = $filter;
-        $validSort = new Valid_String('sort');
         return $filter;
     }
 
