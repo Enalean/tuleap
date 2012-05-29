@@ -44,8 +44,9 @@ class Statistics_SOAPServer {
      *  Returned format:
      *  <code>
      *  array(
-     *      "services" => array('service name' => total size in bytes
-     *                    ),
+     *      "services" => array(
+     *          'service name' => total size in bytes
+     *      ),
      *      "total"    => total size in bytes,
      *      "quota"    => allowed size in bytes
      *  )
@@ -54,9 +55,10 @@ class Statistics_SOAPServer {
      *  Example:
      *  <code>
      *  array(
-     *      "services" => array('svn' => 60,
-     *                           'docman' => 2500
-     *                     ),
+     *      "services" => array(
+     *          'svn' => 60,
+     *          'docman' => 2500
+     *      ),
      *      "total" => 2560,
      *      "quota" => 52428800,
      *  )

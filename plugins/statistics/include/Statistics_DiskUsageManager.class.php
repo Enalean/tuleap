@@ -350,18 +350,25 @@ class Statistics_DiskUsageManager {
         }
         return false;
     }
-    
+
+    /**
+     * Get the disk cunsumption per service for a given project
+     *
+     * @param int $group_id The id of the project
+     *
+     * @return array
+     */
     public function returnTotalServiceSizeByProject($group_id) {
-        $dao  = $this->_getDao();
-        $recentDate = $dao->searchMostRecentDate();
+        $dao               = $this->_getDao();
+        $recentDate        = $dao->searchMostRecentDate();
         $size_per_services = $dao->searchSizePerService($recentDate, $group_id);
-        $services = array();
+        $services          = array();
         foreach ($size_per_services as $row) {
             $services[$row['service']] = $row['size'];
         }
         return $services;
     }
-    
+
     public function returnProjectEvolutionForPeriod($groupId, $startDate ,$endDate ){
         $dao = $this->_getDao();
         $res = array();
