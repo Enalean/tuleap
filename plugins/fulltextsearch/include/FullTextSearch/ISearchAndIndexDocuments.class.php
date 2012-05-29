@@ -41,5 +41,12 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      * @param array $options Parameters to pass to delete action
      */
     public function delete($id = false);
+
+    /**
+     * Perform a request
+     *
+     * @return array
+     */
+    public function request($path, $method, $payload, $verbose=false);
 }
 ?>

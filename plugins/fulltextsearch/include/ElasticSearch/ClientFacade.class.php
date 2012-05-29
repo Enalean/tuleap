@@ -21,7 +21,7 @@
 require_once dirname(__FILE__) .'/../FullTextSearch/ISearchAndIndexDocuments.class.php';
 
 /**
- * Base class to interact with ElasticSearch 
+ * Base class to interact with ElasticSearch
  */
 class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocuments {
 
@@ -46,6 +46,13 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
      */
     public function delete($id = false) {
         $this->client->delete($id);
+    }
+
+    /**
+     * @see ISearchAndIndexDocuments::delete
+     */
+    public function request($path, $method, $payload, $verbose=false) {
+        $this->client->request($path, $method, $payload, $verbose=false);
     }
 }
 ?>
