@@ -3,7 +3,7 @@
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Manuel Vacelet, 2006
- * 
+ *
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
@@ -42,19 +42,19 @@ require_once('www/project/admin/permissions.php');
 require_once('www/news/news_utils.php');
 
 class Docman_Actions extends Actions {
-    
+
     var $event_manager;
-    
+
     function __construct(&$controler, $view=null) {
         parent::Actions($controler);
         $this->event_manager =& $this->_getEventManager();
     }
-    
+
     function &_getEventManager() {
         $em =& EventManager::instance();
         return $em;
     }
-    
+
     function expandFolder() {
         $folderFactory = new Docman_FolderFactory();
         $folderFactory->expand($this->_getFolderFromRequest());
@@ -74,7 +74,7 @@ class Docman_Actions extends Actions {
         return $folder;
     }
 
-    //@todo need to check owner rights on parent    
+    //@todo need to check owner rights on parent
     function _checkOwnerChange($owner, &$user) {
         $ret_id = null;
 
@@ -93,7 +93,7 @@ class Docman_Actions extends Actions {
         }
         return $ret_id;
     }
-    
+
     private function _raiseMetadataChangeEvent(&$user, &$item, $group_id, $old, $new, $field) {
         $logEventParam = array('group_id' => $group_id,
                                'item'     => &$item,
@@ -149,7 +149,7 @@ class Docman_Actions extends Actions {
         $vFactory =& $this->_getVersionFactory();
 
         $uploadSucceded = false;
-        $newVersion     = null; 
+        $newVersion     = null;
 
         $_label     = '';
         $_changelog = '';
@@ -178,28 +178,28 @@ class Docman_Actions extends Actions {
         switch ($iFactory->getItemTypeForItem($item)) {
         case PLUGIN_DOCMAN_ITEM_TYPE_FILE:
             if ($request->exist('upload_content')) {
-                
+
                 if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
                     $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number, $request->get('chunk_offset'), $request->get('chunk_size'));
                 } else {
                     $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $number);
                 }
-                
+
                 if ($path) {
                     $uploadSucceded = true;
-                    
+
                     if ($request->exist('file_name')) {
                         $_filename = basename($request->get('file_name'));
                     } else {
                         $_filename = basename($path);
                     }
-                    
+
                     if ($request->exist('file_size')) {
                         $_filesize = $request->get('file_size');
                     } else {
                         $_filesize = filesize($path);
                     }
-                    
+
                     if ($request->exist('mime_type')) {
                         $_filetype = $request->get('mime_type');
                     } else {
@@ -239,22 +239,22 @@ class Docman_Actions extends Actions {
                                 'item'      => &$item,
                                 'new_value' => $this->_getUserManagerInstance()->getUserById($versionAuthor)->getName(),
                                 'user'      => &$user);
-                
+
                 $this->event_manager->processEvent('plugin_docman_event_set_version_author', $eArray);
             } else {
                 $versionAuthor = $userId;
             }
-            
+
             $date = '';
             if ($request->exist('date')) {
                 $date = $request->get('date');
-                
+
                 $eArray = array('group_id'  => $item->getGroupId(),
                                 'item'      => &$item,
-                                'old_value' => null, 
+                                'old_value' => null,
                                 'new_value' => $date,
                                 'user'      => &$user);
-                
+
                 $this->event_manager->processEvent('plugin_docman_event_set_version_date', $eArray);
             }
 
@@ -265,18 +265,18 @@ class Docman_Actions extends Actions {
                             'changelog' => $_changelog,
                             'filename'  => $_filename,
                             'filesize'  => $_filesize,
-                            'filetype'  => $_filetype, 
+                            'filetype'  => $_filetype,
                             'path'      => $path,
                             'date'      => $date);
             $vId = $vFactory->create($vArray);
-            
+
             // Create a new version object
             $vArray['id'] = $vId;
             $vArray['date'] = $_SERVER['REQUEST_TIME'];
             $newVersion = new Docman_Version($vArray);
-            
+
             $eArray = array('group_id' => $item->getGroupId(),
-                            'item'     => &$item, 
+                            'item'     => &$item,
                             'version'  => $vId,
                             'user'     => &$user);
             $this->event_manager->processEvent('plugin_docman_event_new_version',
@@ -311,11 +311,11 @@ class Docman_Actions extends Actions {
     function createFolder() {
         $this->createItem();
     }
-    
+
     function createDocument() {
-        $this->createItem();   
+        $this->createItem();
     }
-    
+
     function createItem() {
         $request =& $this->_controler->request;
         $item_factory =& $this->_getItemFactory();
@@ -323,11 +323,11 @@ class Docman_Actions extends Actions {
             $item = $request->get('item');
             $fs =& $this->_getFileStorage();
             if (
-                    $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE 
-                    || 
+                    $item['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+                    ||
                     (
-                        $this->_controler->getProperty('embedded_are_allowed') 
-                        && 
+                        $this->_controler->getProperty('embedded_are_allowed')
+                        &&
                         $request->exist('content')
                     )
                 )
@@ -345,7 +345,7 @@ class Docman_Actions extends Actions {
                 }
 
                 $user =& $this->_controler->getUser();
-                
+
                 // Change owner
                 $userId = $user->getId();
                 if (isset($item['owner'])) {
@@ -360,21 +360,21 @@ class Docman_Actions extends Actions {
                     $owner = $userId;
                 }
                 $item['user_id'] = $owner;
-                
+
                 // Change creation date
                 if (isset($item['create_date']) && $item['create_date'] != '') {
                     $create_date_changed = true;
                 } else {
                     $create_date_changed = false;
                 }
-                
+
                 // Change update date
                 if (isset($item['update_date']) && $item['update_date'] != '') {
                     $update_date_changed = true;
                 } else {
                     $update_date_changed = false;
                 }
-                
+
                 $item['group_id'] = $request->get('group_id');
                 $id = $item_factory->create($item, $request->get('ordering'));
                 if ($id) {
@@ -394,12 +394,12 @@ class Docman_Actions extends Actions {
                     if ($owner != $userId) {
                         $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['owner'], 'owner');
                     }
-                    
+
                     // Log change creation date
                     if ($create_date_changed) {
                         $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['create_date'], 'create_date');
                     }
-                    
+
                     // Log change update date
                     if ($update_date_changed) {
                         $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['update_date'], 'update_date');
@@ -410,13 +410,13 @@ class Docman_Actions extends Actions {
                         $info_item_created = 'info_folder_created';
                     }
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_document_created'));
-                    
+
                     $new_version = null;
                     if($item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE ||
                        $item['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                         $new_version = $this->_storeFile($new_item);
                     }
-                    
+
                     // Create metatata
                     if($request->exist('metadata')) {
                         $metadata_array = $request->get('metadata');
@@ -426,7 +426,7 @@ class Docman_Actions extends Actions {
                             $this->_controler->feedback->log('error', $mdvFactory->getErrorMessage());
                         }
                     }
-                    
+
                     //Submit News about this document
                     if ($request->exist('news')) {
                         if ($user->isMember($request->get('group_id'), 'A') || $user->isMember($request->get('group_id'), 'N1') || $user->isMember($request->get('group_id'), 'N2')) { //only for allowed people
@@ -439,10 +439,10 @@ class Docman_Actions extends Actions {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_create_news'));
                         }
                     }
-                    
+
                     $folderFactory = $this->_getFolderFactory();
                     $folderFactory->expand($parent);
-                    
+
                     // Warn users about watermarking
                     if($new_version !== null) {
                         $this->event_manager->processEvent('plugin_docman_after_new_document', array(
@@ -462,12 +462,12 @@ class Docman_Actions extends Actions {
         $request =& $this->_controler->request;
         if ($request->exist('item')) {
             $user =& $this->_controler->getUser();
-            
+
             $data = $request->get('item');
 
             $item_factory =& $this->_getItemFactory($request->get('group_id'));
             $item =& $item_factory->getItemFromDb($data['id']);
-            
+
             // Update Owner
             $ownerChanged = false;
             if(isset($data['owner'])) {
@@ -481,7 +481,7 @@ class Docman_Actions extends Actions {
                 }
                 unset($data['owner']);
             }
-            
+
             // Change creation date
             if (isset($data['create_date']) && $data['create_date'] != '') {
                 $old_create_date = $item->getCreateDate();
@@ -493,7 +493,7 @@ class Docman_Actions extends Actions {
             } else {
                 $create_date_changed = false;
             }
-            
+
             // Change update date
             if (isset($data['update_date']) && $data['update_date'] != '') {
                 $old_update_date = $item->getUpdateDate();
@@ -505,7 +505,7 @@ class Docman_Actions extends Actions {
             } else {
                 $update_date_changed = false;
             }
-            
+
             // Special handling of obsolescence date
             if(isset($data['obsolescence_date']) && $data['obsolescence_date'] != 0) {
                 if(preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
@@ -530,7 +530,7 @@ class Docman_Actions extends Actions {
 
             if($itemType == PLUGIN_DOCMAN_ITEM_TYPE_EMPTY && isset($data['item_type']) && $itemType != $data['item_type'] &&
                 ($data['item_type'] != PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE || $this->_controler->getProperty('embedded_are_allowed'))) {
-                
+
                 if($data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
                    || $data['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
                     $createFile = true;
@@ -540,8 +540,16 @@ class Docman_Actions extends Actions {
                 $data['item_type'] =  $itemType;
             }
 
-            $item_factory->update($data);
-            
+            $updated = $item_factory->update($data);
+            if ($updated) {
+                $this->event_manager->processEvent('plugin_docman_event_update', array(
+                    'group_id' => $request->get('group_id'),
+                    'item'     => $item,
+                    'new'      => $data,
+                    'user'     => $user)
+                );
+            }
+
             // Log the 'edit' event if link_url or wiki_page are set
             if (isset($data['link_url']) || isset($data['wiki_page'])) {
                 $this->event_manager->processEvent('plugin_docman_event_edit', array(
@@ -558,11 +566,11 @@ class Docman_Actions extends Actions {
             if($statusChanged) {
                $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_st, $data['status'], 'status');
             }
-            
+
             if($create_date_changed) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_create_date, $data['create_date'], 'create_date');
             }
-            
+
             if($update_date_changed) {
                 $this->_raiseMetadataChangeEvent($user, $item, $request->get('group_id'), $old_update_date, $data['update_date'], 'update_date');
             }
@@ -609,7 +617,7 @@ class Docman_Actions extends Actions {
                                     foreach ($metadata_array as $curr_metadata_value) {
                                         foreach ($itemIdArray as $curr_item_id) {
                                             $reference_manager->extractCrossRef($curr_metadata_value, $curr_item_id, ReferenceManager::REFERENCE_NATURE_DOCUMENT, $groupId);
-                                        }   
+                                        }
                                     }
                                 } else {
                                     $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'warning_no_item_recurse'));
@@ -634,10 +642,10 @@ class Docman_Actions extends Actions {
             $item_type = $item_factory->getItemTypeForItem($item);
             if ($item_type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $item_type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                 $new_version =& $this->_storeFile($item);
-                
+
                 // We update the update_date of the document only if no version date was given
                 if (!$request->existAndNonEmpty('date')) {
-                    $item_factory->update(array('id' => $item->getId()));    
+                    $item_factory->update(array('id' => $item->getId()));
                 }
 
                 // Manage lock
@@ -676,11 +684,11 @@ class Docman_Actions extends Actions {
     function _getItemFactory($groupId=null) {
         return new Docman_ItemFactory($groupId);
     }
-    
+
     function _getFolderFactory($groupId=null) {
         return new Docman_FolderFactory($groupId);
     }
-    
+
     protected $version_factory;
     function &_getVersionFactory() {
         if (!$this->version_factory) {
@@ -691,7 +699,7 @@ class Docman_Actions extends Actions {
     protected $permissions_manager;
     function &_getPermissionsManagerInstance(){
         if(!$this->permissions_manager){
-            $this->permissions_manager =& PermissionsManager::instance(); 
+            $this->permissions_manager =& PermissionsManager::instance();
         }
         return $this->permissions_manager;
     }
@@ -703,19 +711,19 @@ class Docman_Actions extends Actions {
     protected $userManager;
     function _getUserManagerInstance(){
         if(!$this->userManager){
-            $this->userManager = UserManager::instance(); 
+            $this->userManager = UserManager::instance();
         }
         return $this->userManager;
     }
-    
+
     /**
      * Perform paste operation after cut
-     * 
+     *
      * @param Docman_Item   $itemToMove    Item to move
      * @param Docman_Folder $newParentItem New parent item
      * @param User          $user          User who perform the paste
      * @param String        $ordering      Where the item should be paste within the new folder
-     * 
+     *
      * @return void
      */
     protected function _doCutPaste($itemToMove, $newParentItem, $user, $ordering) {
@@ -732,7 +740,7 @@ class Docman_Actions extends Actions {
                             $newParentItem->getId(),
                             $hp->purify($newParentItem->getTitle(), CODENDI_PURIFIER_CONVERT_HTML)
                             )
-                        ), 
+                        ),
                     CODENDI_PURIFIER_DISABLED);
                     $item_factory->delCopyPreference();
                     $item_factory->delCutPreference();
@@ -744,14 +752,14 @@ class Docman_Actions extends Actions {
 
     /**
      * Perform paste operation after a copy
-     * 
+     *
      * @param Docman_Item   $itemToPaste   Item to paste
      * @param Docman_Folder $newParentItem New parent item
      * @param User          $user          User who perform the paste
      * @param String        $ordering      Where the item should be paste within the new folder
-     * @param Boolean       $importMd      Do we need to import metadata from another project    
+     * @param Boolean       $importMd      Do we need to import metadata from another project
      * @param String        $dataRoot      Where the docman data stand on hard drive
-     * 
+     *
      * @return void
      */
     protected function _doCopyPaste($itemToPaste, $newParentItem, $user, $ordering, $importMd, $dataRoot) {
@@ -789,7 +797,7 @@ class Docman_Actions extends Actions {
         $itemFactory->delCopyPreference();
         $itemFactory->delCutPreference();
     }
-    
+
     function move() {
         $request =& $this->_controler->request;
         if ($request->exist('id')) {
@@ -850,13 +858,13 @@ class Docman_Actions extends Actions {
         $user = $this->_controler->getUser();
         $item = $this->_controler->_actionParams['item'];
         $hp   = Codendi_HTMLPurifier::instance();
-        
+
         //
         // Action
         $itemFactory =& $this->_getItemFactory();
 
         $itemFactory->delCopyPreference();
-        $itemFactory->delCutPreference();        
+        $itemFactory->delCutPreference();
         $itemFactory->setCopyPreference($item);
 
         //
@@ -867,13 +875,13 @@ class Docman_Actions extends Actions {
 
     /**
      * Perform paste action (after a copy or a cut)
-     * 
+     *
      * @param Docman_Item $itemToPaste
      * @param Docman_Item $newParentItem
      * @param String      $rank
      * @param Boolean     $importMd
      * @param String      $srcMode
-     * 
+     *
      * @return void
      */
 	function doPaste($itemToPaste, $newParentItem, $rank, $importMd, $srcMode) {
@@ -922,9 +930,9 @@ class Docman_Actions extends Actions {
     * This method is the direct action of the docman controler but can also be called internally (@see createItem)
     * To call it directly, you have to give two extra parameters (in $params):
     * - id : the id of the item
-    * - force : true if you want to bypass permissions checking (@see permission_add_ugroup). 
+    * - force : true if you want to bypass permissions checking (@see permission_add_ugroup).
     *           Pretty difficult to know if a user can update the permissions which does not exist for a new item...
-    * 
+    *
     * The asked permissions are given in the request, in the param 'permissions' as an array (ugroup => permission)
     *
     * Once the permissions on the top item are set (thanks to
@@ -942,31 +950,31 @@ class Docman_Actions extends Actions {
         $force = isset($params['force']) ? $params['force'] : false;
         if ($id && $request->exist('permissions')) {
             $user =& $this->_controler->getUser();
-            
+
             $item_factory =& $this->_getItemFactory();
             $item =& $item_factory->getItemFromDb($id);
             if ($item) {
                 $permission_definition = array(
                     100 => array(
-                        'order' => 0, 
+                        'order' => 0,
                         'type'  => null,
                         'label' => null,
                         'previous' => null
                     ),
                     1 => array(
-                        'order' => 1, 
+                        'order' => 1,
                         'type'  => 'PLUGIN_DOCMAN_READ',
                         'label' => permission_get_name('PLUGIN_DOCMAN_READ'),
                         'previous' => 0
                     ),
                     2 => array(
-                        'order' => 2, 
+                        'order' => 2,
                         'type'  => 'PLUGIN_DOCMAN_WRITE',
                         'label' => permission_get_name('PLUGIN_DOCMAN_WRITE'),
                         'previous' => 1
                     ),
                     3 => array(
-                        'order' => 3, 
+                        'order' => 3,
                         'type'  => 'PLUGIN_DOCMAN_MANAGE',
                         'label' => permission_get_name('PLUGIN_DOCMAN_MANAGE'),
                         'previous' => 2
@@ -991,7 +999,7 @@ class Docman_Actions extends Actions {
                         $updated = true;
                     }
                 }
-             
+
                 $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
 
                 // If requested by user, apply permissions recursively on sub items
@@ -1013,7 +1021,7 @@ class Docman_Actions extends Actions {
      * aims to clone the permissions set on the reference item ($params['id'])
      * on a given item ($data['item_id']).
      *
-     * Current user must have 'manage' permissions on the item to update its permissions. 
+     * Current user must have 'manage' permissions on the item to update its permissions.
      *
      * @see Docman_ItemFactory::breathFirst
      *
@@ -1031,20 +1039,20 @@ class Docman_Actions extends Actions {
 
     /**
     * Set the permission for a ugroup on an item.
-    * 
+    *
     * The difficult part of the algorithm comes from two point:
     * - There is a hierarchy between ugroups (@see ugroup_get_parent)
     * - There is a hierarchy between permissions (READ < WRITE < MANAGE)
-    * 
+    *
     * Let's see a scenario:
     * I've selected WRITE permission for Registered users and READ permission for Project Members
     * => Project Members ARE registered users therefore they have WRITE permission.
     * => WRITE is stronger than READ permission.
     * So the permissions wich will be set are: WRITE for registered and WRITE for project members
-    * 
-    * The force parameter must be set to true if you want to bypass permissions checking (@see permission_add_ugroup). 
+    *
+    * The force parameter must be set to true if you want to bypass permissions checking (@see permission_add_ugroup).
     * Pretty difficult to know if a user can update the permissions which does not exist for a new item...
-    * 
+    *
     * @param $group_id integer The id of the project
     * @param $item_id integer The id of the item
     * @param $permission_definition array The definission of the permission (pretty name, relations between perms, internal name, ...)
@@ -1060,22 +1068,22 @@ class Docman_Actions extends Actions {
     function _setPermission($group_id, $item_id, $permission_definition, $old_permissions, &$done_permissions, $ugroup_id, $wanted_permissions, &$history, $force = false) {
         //Do nothing if we have already choose a permission for ugroup
         if (!isset($done_permissions[$ugroup_id])) {
-            
+
             //if the ugroup has a parent
             if (($parent = ugroup_get_parent($ugroup_id)) !== false) {
-                
+
                 //first choose the permission for the parent
                 $this->_setPermission($group_id, $item_id, $permission_definition, $old_permissions, $done_permissions, $parent, $wanted_permissions, $history, $force);
-                
+
                 //is there a conflict between given permissions?
                 if ($parent = $this->_getBiggerOrEqualParent($permission_definition, $done_permissions, $parent, $wanted_permissions[$ugroup_id])) {
-                    
+
                     //warn the user that there was a conflict
                     $this->_controler->feedback->log(
-                        'warning', 
+                        'warning',
                         $GLOBALS['Language']->getText(
-                            'plugin_docman', 
-                            'warning_perms', 
+                            'plugin_docman',
+                            'warning_perms',
                             array(
                                 $old_permissions[$ugroup_id]['ugroup']['name'],
                                 $old_permissions[$parent]['ugroup']['name'],
@@ -1083,7 +1091,7 @@ class Docman_Actions extends Actions {
                             )
                         )
                     );
-                    
+
                     //remove permissions which was set for the ugroup
                     if (count($old_permissions[$ugroup_id]['permissions'])) {
                         foreach($old_permissions[$ugroup_id]['permissions'] as $permission => $nop) {
@@ -1091,15 +1099,15 @@ class Docman_Actions extends Actions {
                             $history[$permission] = true;
                         }
                     }
-                    
+
                     //The permission is none (default) for this ugroup
                     $done_permissions[$ugroup_id] = 100;
                 }
             }
-            
+
             //If the permissions have not been set (no parent || no conflict)
             if (!isset($done_permissions[$ugroup_id])) {
-                
+
                 //remove permissions if needed
                 $perms_cleared = false;
                 if (count($old_permissions[$ugroup_id]['permissions'])) {
@@ -1116,13 +1124,13 @@ class Docman_Actions extends Actions {
                         }
                     }
                 }
-                
+
                 //If the user set an explicit permission and there was no perms before or they have been removed
                 if ($wanted_permissions[$ugroup_id] != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)){
                     //Then give the permission
                     $permission = $permission_definition[$wanted_permissions[$ugroup_id]]['type'];
                     permission_add_ugroup($group_id, $permission, $item_id, $ugroup_id, $force);
-                    
+
                     $history[$permission] = true;
                     $done_permissions[$ugroup_id] = $wanted_permissions[$ugroup_id];
                 } else {
@@ -1224,7 +1232,7 @@ class Docman_Actions extends Actions {
         if ($item) {
             $type = $itemFactory->getItemTypeForItem($item);
             if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                $versions = $this->_getVersionFactory()->getAllVersionForItem($item); 
+                $versions = $this->_getVersionFactory()->getAllVersionForItem($item);
                 if (count($versions) > 1) {
                     $version = false;
                     foreach ($versions as $v) {
@@ -1274,7 +1282,7 @@ class Docman_Actions extends Actions {
             }
         }
     }
-    
+
     /**
     * @deprecated
     */
@@ -1284,7 +1292,7 @@ class Docman_Actions extends Actions {
 
         die('Install forbidden. Please contact administrator');
     }
-    
+
     function admin_set_permissions() {
         list ($return_code, $feedback) = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
         if (!$return_code) {
@@ -1310,7 +1318,7 @@ class Docman_Actions extends Actions {
                     $_name = trim($request->get('name'));
                     $md->setName($_name);
                 }
-                
+
                 // Description
                 if($md->canChangeDescription()) {
                     $_descr = $request->get('descr');
@@ -1388,20 +1396,20 @@ class Docman_Actions extends Actions {
         $mdrow['name'] = $_name;
         $mdrow['description'] = $_description;
         $mdrow['data_type'] = $_type;
-        //$mdrow['label'] = 
+        //$mdrow['label'] =
         $mdrow['required'] = false;
         $mdrow['empty_ok'] = $_emptyallowed;
-        
+
         if ($_type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             $mdrow['mul_val_ok'] = $_multiplevaluesallowed;
         } else {
             $mdrow['mul_val_ok'] = false;
         }
-        
+
         $mdrow['special'] = false;
         $mdrow['default_value'] = $_dfltvalue;
         $mdrow['use_it'] = $_useit;
-        
+
         $md =& $mdFactory->_createFromRow($mdrow);
 
         $mdId = $mdFactory->create($md);
@@ -1438,7 +1446,7 @@ class Docman_Actions extends Actions {
 
     function admin_create_love() {
         $request =& HTTPRequest::instance();
-        
+
         $_name         = $request->get('name');
         $_description  = $request->get('descr');
         $_rank         = $request->get('rank');
@@ -1448,13 +1456,13 @@ class Docman_Actions extends Actions {
 
         $mdFactory = new Docman_MetadataFactory($_gid);
         $md =& $mdFactory->getFromLabel($_mdLabel);
-        
-        if($md !== null 
-           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST 
+
+        if($md !== null
+           && $md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST
            && $md->getLabel() != 'status') {
 
             $loveFactory = new Docman_MetadataListOfValuesElementFactory($md->getId());
-            
+
             $love = new Docman_MetadataListOfValuesElement();
             $love->setName($_name);
             $love->setDescription($_description);
@@ -1521,7 +1529,7 @@ class Docman_Actions extends Actions {
                                                                           'loveid' => $love->getId());
         }
     }
-    
+
     function admin_import_metadata() {
         $groupId    = $this->_controler->_actionParams['sGroupId'];
         $srcGroupId = $this->_controler->_actionParams['sSrcGroupId'];
@@ -1529,11 +1537,11 @@ class Docman_Actions extends Actions {
         $pm = ProjectManager::instance();
         $srcGo = $pm->getProject($srcGroupId);
         if($srcGo != false &&
-           ($srcGo->isPublic() 
-            || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {            
+           ($srcGo->isPublic()
+            || (!$srcGo->isPublic() && $srcGo->userIsMember()))) {
             $mdFactory = new Docman_MetadataFactory($srcGo->getGroupId());
             $mdFactory->exportMetadata($groupId);
-            
+
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'admin_md_import_success', array($srcGo->getPublicName())));
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_generic'));
@@ -1731,7 +1739,7 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
         }
     }
-    
+
     /**
      * @access private
      */
@@ -2009,7 +2017,7 @@ class Docman_Actions extends Actions {
         $description = $this->_controler->_actionParams['description'];
         $image    = $this->_controler->_actionParams['sImage'];
 
-        
+
         $reportFactory = new Docman_ReportFactory($groupId);
         $r = $reportFactory->getReportById($reportId);
         if($r == null) {
@@ -2040,7 +2048,7 @@ class Docman_Actions extends Actions {
         $pm = ProjectManager::instance();
         $go = $pm->getProject($importGroupId);
         if($go != false &&
-           ($go->isPublic() 
+           ($go->isPublic()
             || (!$go->isPublic() && $go->userIsMember()))) {
             $srcReportFactory = new Docman_ReportFactory($importGroupId);
 
@@ -2072,14 +2080,14 @@ class Docman_Actions extends Actions {
             }
 
             if($importReportId !== null) {
-                // Import only one report                
+                // Import only one report
                 $report = $srcReportFactory->getReportById($importReportId);
-                
+
                 if($report !== null) {
                     // User can import Project wide reports or his own Individual reports.
                     if($report->getScope() == 'P' ||
                        ($report->getScope() == 'I' && $report->getUserId() == $user->getId())) {
-                        
+
                         $srcReportFactory->cloneReport($report, $groupId, $mdMap, $user, $forceScope, $itemMapping);
 
                         $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'report_clone_success'));
@@ -2106,8 +2114,8 @@ class Docman_Actions extends Actions {
             $lockFactory = new Docman_LockFactory();
             $dIF = $this->_getItemFactory();
             $canLock = true;
-            
-            // Cannot lock a wiki with a page already locked 
+
+            // Cannot lock a wiki with a page already locked
             if($dIF->getItemTypeForItem($item) == PLUGIN_DOCMAN_ITEM_TYPE_WIKI) {
                 $pagename = $item->getPagename();
                 $group_id = $item->getGroupId();
