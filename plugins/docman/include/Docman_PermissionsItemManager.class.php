@@ -25,11 +25,6 @@ require_once 'Docman_ItemFactory.class.php';
 class Docman_PermissionsItemManager {
     const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
-    private function getParentItem(Docman_Item $item, Project $project) {
-        if (! $item->getParentId()) return;
-        return Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId());
-    }
-
     private function mergeUgroupIds(array $parent_permissions, array $child_permissions) {
         $contains_anonymous = $this->oneContainsAnonymous($child_permissions, $parent_permissions);
         $item_permissions   = array_intersect($parent_permissions, $child_permissions);
@@ -73,7 +68,10 @@ class Docman_PermissionsItemManager {
         return array_values($permissions);
     }
 
-
+    private function getParentItem(Docman_Item $item, Project $project) {
+        if (! $item->getParentId()) return;
+        return Docman_ItemFactory::instance($project->getID())->getItemFromDb($item->getParentId());
+    }
 
     /**
      * Returns permissions of an item in a human readable format
