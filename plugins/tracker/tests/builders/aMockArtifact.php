@@ -29,6 +29,7 @@ class MockArtifactBuilder {
         $this->id       = 123;
         $this->tracker  = new MockTracker();
         $this->artifact = new MockTracker_Artifact();
+        $this->title    = '';
     }
 
     public function withId($id) {
@@ -36,9 +37,15 @@ class MockArtifactBuilder {
         return $this;
     }
     
+    public function withTitle($title) {
+        $this->title = $title;
+        return $this;
+    }
+    
     public function build() {
         $this->artifact->setReturnValue('getId', $this->id);
         $this->artifact->setReturnValue('getTracker', $this->tracker);
+        $this->artifact->setReturnValue('gettitle', $this->title);
         
         return $this->artifact;
     }

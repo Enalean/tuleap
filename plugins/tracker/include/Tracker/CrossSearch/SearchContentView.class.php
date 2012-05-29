@@ -84,6 +84,7 @@ class Tracker_CrossSearch_SearchContentView {
     private function fetchResults() {  
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
+        $html .= $this->fetchResultActions();
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
@@ -210,6 +211,10 @@ class Tracker_CrossSearch_SearchContentView {
                 || $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField 
                 || $report_field instanceof Tracker_CrossSearch_ArtifactReportField
         );
+    }
+
+    public function fetchResultActions() {
+        return '<p class="tree-view-actions"></p>';
     }
 
 }
