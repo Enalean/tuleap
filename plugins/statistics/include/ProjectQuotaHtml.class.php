@@ -52,7 +52,7 @@ class ProjectQuotaHtml {
      *
      * @return Integer
      */
-    private function validateOffset($request) {
+    private function validateOffset(HTTPRequest $request) {
         $valid        = new Valid('offset');
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
         $valid->addRule(new Rule_Int());
@@ -72,7 +72,7 @@ class ProjectQuotaHtml {
      *
      * @return String
      */
-    private function validateProjectFilter($request) {
+    private function validateProjectFilter(HTTPRequest $request) {
         $validFilter        = new Valid_String('project_filter');
         $filter             = null;
         if ($request->valid($validFilter)) {
@@ -88,7 +88,7 @@ class ProjectQuotaHtml {
      *
      * @return Array
      */
-    private function validateOrderByFilter($request) {
+    private function validateOrderByFilter(HTTPRequest $request) {
         $validSort = new Valid_String('sort');
         $sortBy    = null;
         $validRequest = array();
@@ -131,7 +131,7 @@ class ProjectQuotaHtml {
      *
      * @return String
      */
-    public function displayProjectQuota($request) {
+    public function displayProjectQuota(HTTPRequest $request) {
         $output      = '';
         $offset      = $this->validateOffset($request);
         $filter      = $this->validateProjectFilter($request);
@@ -267,7 +267,7 @@ class ProjectQuotaHtml {
      *
      * @return Void
      */
-    public function handleRequest($request) {
+    public function handleRequest(HTTPRequest $request) {
         $validAction = new Valid_WhiteList('action', array('add', 'delete'));
         if ($request->valid($validAction)) {
             $action = $request->get('action');
