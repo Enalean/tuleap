@@ -56,6 +56,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
 
+        $this->milestone_factory = mock('Planning_MilestoneFactory');
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
     }
@@ -125,7 +126,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         );
 
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
-        $factory  = $this->GivenAnArtifactFactory(array_merge(array($artifact), $linked_items));
+        $factory  = $this->GivenASetOfArtifacts(array_merge(array($artifact), $linked_items));
         $request  = aRequest()->with('aid', $id)
                               ->with('planning_id', $this->planning->getId())
                               ->withUri($this->request_uri)
@@ -184,7 +185,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items) {
         $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
-        return $this->GivenAnArtifactFactory(array($artifact));
+        return $this->GivenASetOfArtifacts(array($artifact));
     }
 
 
@@ -256,22 +257,29 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
     }
 
-    private function GivenAnArtifactFactory(array $artifacts = array()) {
+    private function GivenASetOfArtifacts(array $artifacts = array()) {
         $open_artifacts = array(
             $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
             $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
         );
 
+        // integrated tests part
         $factory  = new MockTracker_ArtifactFactory();
         Tracker_ArtifactFactory::setInstance($factory);
         foreach ($artifacts as $artifact) {
             $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
             $open_artifacts[] = $artifact;
         }
-        $factory->setReturnValue(
-            'getOpenArtifactsByTrackerIdUserCanView',
-            $open_artifacts,
-            array(aUser()->build(), $this->planning->getPlanningTrackerId()));
+        
+        // unit part (mocking the collaborator milestone_factory
+        $open_milestones = array();
+        foreach ($open_artifacts as $artifact) {
+            $open_milestones[] = new Planning_Milestone(0, mock('Planning'), $artifact);
+        }
+        $this->milestone_factory->setReturnValue(
+            'getOpenMilestones',
+            $open_milestones,
+            array(aUser()->build(), '*', $this->planning->getId()));
         return $factory;
     }
 
@@ -300,7 +308,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $title = 'Coin';
 
         $artifact = $this->GivenAnArtifact($id, $title, array());
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $factory  = $this->GivenASetOfArtifacts(array($artifact));
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())
                               ->with('planning_id', $this->planning->getId())
@@ -313,7 +321,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
-        $factory  = $this->GivenAnArtifactFactory(array($artifact));
+        $factory  = $this->GivenASetOfArtifacts(array($artifact));
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())
                               ->with('planning_id', $this->planning->getId())
@@ -326,7 +334,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $milestone = $this->GivenNoMilestone();
-        $factory = $this->GivenAnArtifactFactory();
+        $factory = $this->GivenASetOfArtifacts();
         $request = aRequest()->withUri($this->request_uri)
                              ->with('group_id', $this->planning->getGroupId())
                              ->with('planning_id', $this->planning->getId())
@@ -356,15 +364,14 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $tracker_factory = new MockTrackerFactory();
         TrackerFactory::setInstance($tracker_factory);
 
-        $milestone_factory = mock('Planning_MilestoneFactory');
-        stub($milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
                                                                    $request->get('group_id'),
                                                                    $request->get('planning_id'),
                                                                    $request->get('aid'))
                                 ->returns($milestone);
 
         ob_start();
-        $controller = new Planning_MilestoneController($request, $factory, $planning_factory, $milestone_factory);
+        $controller = new Planning_MilestoneController($request, $factory, $planning_factory, $this->milestone_factory);
 
         $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();
