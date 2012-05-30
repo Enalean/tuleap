@@ -316,14 +316,14 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
     
     public function itSavesChangesetInSourceArtifact() {
-        $artifact         = anArtifact()->build();
+        $modified_artifact_id = 223;
+        $modified_artifact    = anArtifact()->withId($modified_artifact_id)->build();
         $old_changeset    = null;
         $new_changeset_id = 4444;
         $submitted_value  = array('new_values' => '123, 124');
         $submitter        = aUser()->build();
         
         $artifact_123 = mock('Tracker_Artifact');
-        $artifact_123->expectOnce('linkArtifact');
         $artifact_124 = mock('Tracker_Artifact');
         
         $all_artifacts = array($artifact_123, $artifact_124);
@@ -334,7 +334,10 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         
         stub($field)->getArtifactsFromChangesetValue($submitted_value, $old_changeset)->returns($all_artifacts);
         
-        $field->saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter);
+        
+        $artifact_123->expectOnce('linkArtifact', array($modified_artifact_id, $submitter));
+        
+        $field->saveNewChangeset($modified_artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter);
     }
 }
 
