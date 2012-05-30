@@ -40,7 +40,6 @@ if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
         <link rel="stylesheet" href="http://<?php echo $default_domain; ?>/themes/common/css/style.css" type="text/css" />
         <link rel="stylesheet" href="http://<?php echo $default_domain; ?>/current_css.php" type="text/css" />
     </head>
-
     <body>
         <div class="container">
             <p>
@@ -49,7 +48,6 @@ if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
                 <a href="http://<?= $default_domain; ?>/contact.php"><b>Contact Us</b></a> |
                 <a href="http://<?= $default_domain; ?>/account/logout.php"><b>Logout</b></a>
             </p>
-
             <div class="hero-unit">
                 <img src="http://<?= $default_domain; ?>/themes/common/images/organization_logo.png" vspace="" hspace="7" border=0 alt="Organization logo">
 
