@@ -3015,7 +3015,7 @@ input.span1, textarea.span1, .uneditable-input.span1 {
   font-size: 24px;
   line-height: 36px;
 }
-.hero-unit {
+#homepage .hero-unit {
     background: #f3f4f6 url(../images/homepage/image-homepage-tuleap.png) no-repeat;
     min-height:220px;
 }
