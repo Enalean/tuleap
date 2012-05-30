@@ -99,6 +99,8 @@ class PlanningFactoryTest extends TuleapTestCase {
             array('id'                  => 1,
                   'name'                => $sprint_planning_name,
                   'group_id'            => 101,
+                  'backlog_title'       => 'Backlog',
+                  'plan_title'          => 'Plan',
                   'planning_tracker_id' => $sprint_tracker_id,
                   'backlog_tracker_id'  => $story_tracker_id)
         );
@@ -107,6 +109,8 @@ class PlanningFactoryTest extends TuleapTestCase {
         
         $dao->expectOnce('createPlanning', array($sprint_planning_name,
                                                  $group_id,
+                                                 'Backlog',
+                                                 'Plan',
                                                  $story_tracker_copy_id,
                                                  $sprint_tracker_copy_id));
         
