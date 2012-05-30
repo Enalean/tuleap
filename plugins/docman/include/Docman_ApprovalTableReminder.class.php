@@ -241,8 +241,7 @@ class Docman_ApprovalTableReminder {
         $comment     = '';
         $userComment = $table->getDescription();
         if($userComment != '') {
-            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
-            $comment .= "\n\n";
+            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
         }
 
         $notifStyle = '';
