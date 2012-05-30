@@ -41,5 +41,19 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      * @param array $options Parameters to pass to delete action
      */
     public function delete($id = false);
+
+    /**
+     * Update document datas
+     *
+     * @return array
+     */
+    public function update($item_id, $data);
+
+    /**
+     * make and append prepared request to currentData
+     *
+     * @return array
+     */
+    public function buildSetterData(array $current_data, $name, $value);
 }
 ?>
