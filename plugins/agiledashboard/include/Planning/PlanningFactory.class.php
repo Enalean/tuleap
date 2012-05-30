@@ -63,6 +63,8 @@ class PlanningFactory {
             
             $this->dao->createPlanning($row['name'],
                                        $group_id,
+                                       $row['backlog_title'],
+                                       $row['plan_title'],
                                        $backlog_tracker_ids,
                                        $planning_tracker_id);
         }
