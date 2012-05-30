@@ -18,7 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/TrackerManager.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/Tracker.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report_Criteria.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/Artifact/Tracker_Artifact.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+
+Mock::generate('Tracker_Report');
+Mock::generate('Tracker_ArtifactFactory');
+Mock::generate('Tracker_Artifact');
+Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
+Mock::generate('Tracker_Report_Criteria');
+Mock::generate('Tracker');
+Mock::generate('Tracker_CrossSearch_ArtifactReportField');
+Mock::generate('Tracker_CrossSearch_SemanticStatusReportField');
 
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
@@ -38,13 +54,11 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $report   = mock('Tracker_Report');
         $criteria = $this->buildCriteria($report);
         $factory  = $this->buildAFormElementFactory();
-        $user     = mock('User');
         $view     = new Tracker_CrossSearch_SearchContentView($report,
                                                               $criteria,
                                                               $tree_of_artifacts,
                                                               $artifact_factory,
-                                                              $factory,
-                                                              $user);
+                                                              $factory);
         $html = $view->fetch();
     }
     
@@ -77,13 +91,8 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $artifact_factory->expectOnce('getArtifactById', array($artifact->getId()));
         return $artifact_factory;
     }
-}
-
-class Tracker_CrossSearch_SearchContentView_ArtifactLinkTest extends TuleapTestCase {
-    private $view;
     
-    public function setUp() {
-        parent::setUp();
+    public function itUsesExtraColumnsFromArtifactRow() {
         $report            = new MockTracker_Report();
         
         $release_tracker_id = 743;
@@ -104,60 +113,45 @@ class Tracker_CrossSearch_SearchContentView_ArtifactLinkTest extends TuleapTestC
         
         $criteria = array($art_link_release_criterion, $art_link_sprint_criterion);
         
-        $this->sprint_id = '354';
-        $this->sprint    = stub('Tracker_Artifact')->getTitle()->returns('The planning known as Sprint');
+        $sprint_id = '354';
+        $sprint    = stub('Tracker_Artifact')->getTitle()->returns('The planning known as Sprint');
         
-        $this->release_id = '666';
-        $this->release    = stub('Tracker_Artifact')->getTitle()->returns('I release I can fly');
+        $release_id = '666';
+        $release    = stub('Tracker_Artifact')->getTitle()->returns('I release I can fly');
         
         $artifact_node = new TreeNode();
         $artifact_node->setId(1);
         $artifact_node->setData(array('id' => 123,
                                       'title' => 'foo',
                                       'last_changeset_id' => '567',
-                                      'art_link_'.$art_link_sprint_field_id => $this->sprint_id,
-                                      'art_link_'.$art_link_release_field_id => $this->release_id));
+                                      'art_link_'.$art_link_sprint_field_id => $sprint_id,
+                                      'art_link_'.$art_link_release_field_id => $release_id));
         
         $tree_of_artifacts = new TreeNode();
         $tree_of_artifacts->setId(0);
         $tree_of_artifacts->addChild($artifact_node);
         
-        $this->artifact_factory  = new MockTracker_ArtifactFactory();
+        $artifact_factory  = new MockTracker_ArtifactFactory();
         $factory           = new MockTracker_FormElementFactory();
         $tracker           = new MockTracker();
         $artifact          = new MockTracker_Artifact();
-        $this->user              = mock('User');
         
         $artifact->setReturnValue('getTracker', $tracker);
         
-        stub($this->artifact_factory)->getArtifactById(123)->returns($artifact);
-
-        $this->view = new Tracker_CrossSearch_SearchContentView($report,
-                                                                $criteria,
-                                                                $tree_of_artifacts,
-                                                                $this->artifact_factory,
-                                                                $factory,
-                                                                $this->user);
-    }
-    
-    public function itUsesExtraColumnsFromArtifactRow() {
-        stub($this->artifact_factory)->getArtifactByIdUserCanView($this->user, $this->sprint_id)->returns($this->sprint);
-        stub($this->artifact_factory)->getArtifactByIdUserCanView($this->user, $this->release_id)->returns($this->release);
+        stub($artifact_factory)->getArtifactById(123)->returns($artifact);
+        stub($artifact_factory)->getArtifactById($sprint_id)->returns($sprint);
+        stub($artifact_factory)->getArtifactById($release_id)->returns($release);
         
-        $html = $this->view->fetch();
+
+        $view = new Tracker_CrossSearch_SearchContentView($report,
+                                                          $criteria,
+                                                          $tree_of_artifacts,
+                                                          $artifact_factory,
+                                                          $factory);
+        $html = $view->fetch();
         
         $this->assertPattern('/The planning known as Sprint/', $html);
         $this->assertPattern('/I release I can fly/', $html);
-    }
-    
-    public function itDisplayNothingWhenThereAreNoArtifactToDisplay() {
-        stub($this->artifact_factory)->getArtifactByIdUserCanView($this->user, $this->sprint_id)->returns($this->sprint);
-        stub($this->artifact_factory)->getArtifactByIdUserCanView($this->user, $this->release_id)->returns(null);
-        
-        $html = $this->view->fetch();
-        
-        $this->assertPattern('/The planning known as Sprint/', $html);
-        $this->assertNoPattern('/I release I can fly/', $html);
     }
 }
 ?>

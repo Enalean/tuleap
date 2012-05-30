@@ -19,8 +19,8 @@
  */
 
 require_once dirname(__FILE__).'/../../../../include/Tracker/Chart/Data/LinkedArtifacts.class.php';
-require_once dirname(__FILE__).'/../../../builders/aTracker.php';
-require_once dirname(__FILE__).'/../../../builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__).'/../../../Test_Artifact_Builder.php';
 
 class Tracker_Chart_Burndown_Data_LinkedArtifactsTest extends TuleapTestCase {
     const EFFORT_FIELD_TYPE = 'float';

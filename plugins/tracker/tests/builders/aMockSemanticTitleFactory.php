@@ -29,15 +29,12 @@ class MockSemanticTitleFactoryBuilder {
         $this->factory = new MockTracker_Semantic_TitleFactory();
     }
     
-    public function withFieldForTracker($field, $tracker) {
-        $semantic = mock('Tracker_Semantic_Title');
-        stub($semantic)->getField()->returns($field);
-        stub($this->factory)->getByTracker($tracker)->returns($semantic);
-        return $this;
-    }
-    
     public function withNoFieldForTracker($tracker) {
-        $this->withFieldForTracker(null, $tracker);
+        $semantic_title = new MockTracker_Semantic_Status();
+        
+        $semantic_title->setReturnValue('getField', null);
+        $this->factory->setReturnValue('getByTracker', $semantic_title, array($tracker));
+        
         return $this;
     }
     

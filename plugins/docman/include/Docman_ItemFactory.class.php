@@ -76,32 +76,6 @@ class Docman_ItemFactory {
         return self::$instance[$group_id];
     }
 
-    /**
-     * Return a single instance of Docman_ItemFactory per group.
-     * 
-     * This is useful when you need to cache information across method calls
-     * 
-     * @param Integer $group_id Project id
-     * 
-     * @return Docman_ItemFactory
-     */
-    public static function setInstance($group_id, $instance) {
-        self::$instance[$group_id] = $instance;
-    }
-
-    /**
-     * Return a single instance of Docman_ItemFactory per group.
-     * 
-     * This is useful when you need to cache information across method calls
-     * 
-     * @param Integer $group_id Project id
-     * 
-     * @return Docman_ItemFactory
-     */
-    public static function clearInstance($group_id) {
-        self::$instance[$group_id] = null;
-    }
-
     function setGroupId($id) {
         $this->groupId = $id;
     }

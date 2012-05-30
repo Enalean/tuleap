@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../../include/constants.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
-require_once(dirname(__FILE__).'/../../builders/aTracker.php');
+require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 Mock::generate('Tracker');
 Mock::generate('Tracker_Hierarchy_HierarchicalTrackerFactory');
 Mock::generate('TrackerFactory');

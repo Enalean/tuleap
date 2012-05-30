@@ -49,7 +49,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     function totalRead($startDate, $endDate) {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
-                SUM(cvs_checkouts) + SUM(cvs_browse) AS count,
+                cvs_checkouts + cvs_browse AS count,
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
@@ -71,7 +71,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     function totalCommits($startDate, $endDate) {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
-                SUM(cvs_commits) + SUM(cvs_adds) AS count,
+                cvs_commits + cvs_adds AS count,
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
@@ -160,6 +160,27 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 GROUP BY user
                 ORDER BY count DESC
                 LIMIT 10";
+
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Number of CVS repo having handeled at least 1 commit
+     * in the given period
+     *
+     * @param String $startDate Period start date
+     * @param String $endDate   Period end date
+     *
+     * @return DataAccessResult
+     */
+    function repositoriesEvolutionForPeriod($startDate, $endDate) {
+        $sql = "SELECT MONTH(cc.comm_when) AS month,
+                YEAR(cc.comm_when) AS year ,
+                COUNT(DISTINCT(repositoryid)) AS repo_count
+                From cvs_commits cc
+                JOIN cvs_checkins c ON cc.id = c.commitid
+                WHERE cc.comm_when BETWEEN ".$this->da->quoteSmart($startDate)." AND ".$this->da->quoteSmart($endDate)."
+                GROUP BY year, month";
 
         return $this->retrieve($sql);
     }

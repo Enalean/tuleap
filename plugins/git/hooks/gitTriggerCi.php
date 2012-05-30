@@ -24,8 +24,8 @@
  * Usage: php gitTriggerCi.php --repo_location="/path/to/git/repository/repositoryName.git"
  */
 
-require_once('pre.php');
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
+require_once('pre.php');
 
 // Check script parameters
 if ($argc != 2) {

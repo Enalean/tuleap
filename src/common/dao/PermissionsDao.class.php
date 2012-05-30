@@ -87,7 +87,7 @@ class PermissionsDao extends DataAccessObject {
         $sql = 'SELECT '.$fields.' p.ugroup_id'.
                ' FROM permissions p '.$joins.
                ' WHERE p.object_id = '.$this->da->quoteSmart($objectId).
-               ' AND p.permission_type LIKE '.$this->da->quoteSmart($permissionType).
+               ' AND p.permission_type = '.$this->da->quoteSmart($permissionType).
                ' ORDER BY ugroup_id';
         return $this->retrieve($sql);
     }

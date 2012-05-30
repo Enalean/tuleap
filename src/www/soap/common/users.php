@@ -50,69 +50,39 @@ $server->register(
     $uri.'#checkUsersExistence',
     'rpc',
     'encoded',
-    'Returns the users that exist with their user name'
-);
-
-$server->register(
-    'getUserInfo',
-    array('sessionKey' =>'xsd:string',
-          'user_id'    =>'xsd:int'
-    ),
-    array('return' => 'tns:UserInfo'),
-    $uri,
-    $uri.'#getUserInfo',
-    'rpc',
-    'encoded',
-    'Returns the user info matching the given id'
+    'Returns the users that exist with their Codendi user name'
 );
 
 } else {
-
-function getUserInfo($sessionKey, $user_id) {
-    if (! session_continue($sessionKey)) {
-        return new SoapFault(invalid_session_fault, 'Invalid Session ', 'getUserInfo');
-    }
     
-    $user_manager = UserManager::instance();
-    $current_user = $user_manager->getCurrentUser();
-    $user_info    = array();
-    
-    try {
-        $user      = $user_manager->getUserById($user_id);
-        $user_info = user_to_soap($user, $current_user);
-        
-        if ($user_info) {
-            $user_info['identifier'] = $user_id;
-            return $user_info;
-        } else {
-            return new SoapFault('0', "Invalid user id: $user_id", 'getUserInfo');
-        }
-    } catch (Exception $e) {
-        return new SoapFault('0', $e->getMessage(), 'getUserInfo');
-    }
-}
-
 function checkUsersExistence($sessionKey, $users) {
     if (session_continue($sessionKey)){
-        try {
-            $existingUsers = array();
-            $um            = UserManager::instance();
-            $currentUser   = $um->getCurrentUser();
-
-            foreach ($users as $userIdentifier) {
-                $userObj  = $um->getUserByIdentifier($userIdentifier);
-                $userInfo = user_to_soap($userObj, $currentUser);
-
-                if ($userInfo) {
-                    $userInfo['identifier'] = $userIdentifier;
-                    $existingUsers[]        = $userInfo;
-                }
+        
+        $existingUsers = array();
+        
+        $um = UserManager::instance();
+        $currentUser = $um->getCurrentUser();
+        foreach ($users as $userIdentifier) {
+            try {
+                $userObj = $um->getUserByIdentifier($userIdentifier);
+        	    if ($userObj !== null && ($userObj->isActive() || $userObj->isRestricted())) {
+                    if ($currentUser->canSee($userObj)) {
+                        $userInfo = array();
+                        $userInfo['identifier'] = $userIdentifier;
+                        $userInfo['username']   = $userObj->getUserName();
+                        $userInfo['id']         = $userObj->getId();
+                        $userInfo['real_name']  = $userObj->getRealName();
+                        $userInfo['email']      = $userObj->getEmail();
+                        $userInfo['ldap_id']    = $userObj->getLdapId();
+                        $existingUsers[]        = $userInfo;
+                    }
+        	    }
+            } catch (Exception $e) {
+                throw new SoapFault('0', $e->getMessage(), 'checkUsersExistence');        
             }
-
-            return $existingUsers;
-        } catch (Exception $e) {
-            return new SoapFault('0', $e->getMessage(), 'checkUsersExistence');        
         }
+        
+        return $existingUsers;
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session ', 'checkUsersExistence');
     }
@@ -121,7 +91,6 @@ function checkUsersExistence($sessionKey, $users) {
 
 $server->addFunction(
         array(
-            'getUserInfo',
             'checkUsersExistence',
             ));
 

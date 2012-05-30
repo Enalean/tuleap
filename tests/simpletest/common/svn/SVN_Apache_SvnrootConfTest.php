@@ -13,8 +13,6 @@ class SVN_Apache_SvnrootConfTest extends UnitTestCase {
         $GLOBALS['sys_dbhost'] = 'db_server';
         $GLOBALS['sys_dbname'] = 'db';
         $GLOBALS['svn_prefix'] = '/bla';
-        $GLOBALS['sys_dbauth_user']   = 'dbauth_user';
-        $GLOBALS['sys_dbauth_passwd'] = 'dbauth_passwd';
     }
     
     function tearDown() {
@@ -23,8 +21,6 @@ class SVN_Apache_SvnrootConfTest extends UnitTestCase {
         unset($GLOBALS['sys_dbname']);
         unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['sys_dbauth_user']);
-        unset($GLOBALS['sys_dbauth_passwd']);
     }
     
     /**

@@ -53,12 +53,12 @@ class MockSemanticStatusFactoryBuilder {
      * Assumes only one mocked tracker.
      */
     private function getSemantic($tracker) {
-        if (! isset($this->semantic_status[$tracker->getId()])) {
-            $this->semantic_status[$tracker->getId()] = mock('Tracker_Semantic_Status');
-            stub($this->factory)->getByTracker($tracker)->returns($this->semantic_status[$tracker->getId()]);
+        if (! isset($this->semantic_status)) {
+            $this->semantic_status = new MockTracker_Semantic_Status();
+            $this->factory->setReturnValue('getByTracker', $this->semantic_status, array($tracker));
         }
         
-        return $this->semantic_status[$tracker->getId()];
+        return $this->semantic_status;
     }
     
     public function build() {

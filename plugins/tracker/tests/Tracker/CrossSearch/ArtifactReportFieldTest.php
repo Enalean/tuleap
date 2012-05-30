@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/../../../include/Tracker/TrackerManager.class.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/Report/Tracker_Report_Criteria.class.php';
-require_once dirname(__FILE__).'/../../builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../Test_Artifact_Builder.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/Artifact/Tracker_Artifact.class.php';
 
 Mock::generate('Tracker_Report_Criteria');

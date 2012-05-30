@@ -37,8 +37,7 @@ abstract class Tracker_CrossSearch_SemanticValueFactory_NoSemanticTest extends T
 
     protected function buildSemanticValueFactory($semantic_title_factory, $semantic_status_factory) {
         $artifact_factory       = aMockArtifactFactory()->withArtifact($this->artifact)->build();
-        $tracker_factory        = mock('TrackerFactory');
-        $semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory, $tracker_factory);
+        $semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
         return $semantic_value_factory;
     }
 }
@@ -104,83 +103,13 @@ class Tracker_CrossSearch_SemanticValueFactory_WhenSemanticStatusIsSet_Test exte
     }
     
     private function assertSemanticValueFactoryReturnsStatus($expected_status) {
-        $tracker_factory        = mock('TrackerFactory');
         $semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory($this->artifact_factory,
                                                                                 $this->semantic_title_factory,
-                                                                                $this->semantic_status_factory,
-                                                                                $tracker_factory);
+                                                                                $this->semantic_status_factory);
         $status = $semantic_value_factory->getStatus($this->artifact_id,
                                                      $this->changeset_id);
         $this->assertEqual($status, $expected_status);
     }
 }
 
-abstract class Tracker_CrossSearch_SemanticValueFactory_FieldAccessTest extends TuleapTestCase {
-    public function setUp() {
-        parent::setUp();
-        
-        $artifact_factory = aMockArtifactFactory()->build();
-        $tracker_factory  = mock('TrackerFactory');
-        
-        $group_id = 456;
-        $this->user    = mock('User');
-        $this->project = stub('Project')->getId()->returns($group_id);
-        
-        $trackers = array(
-            101 => stub('Tracker')->getId()->returns(101),
-            102 => stub('Tracker')->getId()->returns(102),
-            103 => stub('Tracker')->getId()->returns(103),
-        );
-        stub($tracker_factory)->getTrackersByGroupId($group_id)->returns($trackers);
-        
-        $this->field_title_102 = aMockField()->build();
-        $this->field_title_103 = aMockField()->build();
-        
-        $this->field_status_102 = aMockField()->build();
-        $this->field_status_103 = aMockField()->build();
-        
-        $this->semantic_title_factory  = aMockSemanticTitleFactory()
-            ->withNoFieldForTracker($trackers[101])
-            ->withFieldForTracker($this->field_title_102, $trackers[102])
-            ->withFieldForTracker($this->field_title_103, $trackers[103])
-            ->build();
-        
-        $this->semantic_status_factory = aMockSemanticStatusFactory()
-            ->withNoFieldForTracker($trackers[101])
-            ->withFieldForTracker($this->field_status_102, $trackers[102])
-            ->withFieldForTracker($this->field_status_103, $trackers[103])
-            ->build();
-        
-        $this->semantic_value_factory = new Tracker_CrossSearch_SemanticValueFactory(
-            $artifact_factory,
-            $this->semantic_title_factory,
-            $this->semantic_status_factory,
-            $tracker_factory
-        );
-    }
-    
-    public function itReturnsTrueIfAllStatusesAreReadable() {
-        stub($this->field_status_102)->userCanRead($this->user)->returns(true);
-        stub($this->field_status_103)->userCanRead($this->user)->returns(true);
-        $this->assertTrue($this->semantic_value_factory->allStatusesAreReadable($this->user, $this->project));
-    }
-    
-    public function itReturnsFalseIfOneStatusIsUnreadable() {
-        stub($this->field_status_102)->userCanRead($this->user)->returns(true);
-        stub($this->field_status_103)->userCanRead($this->user)->returns(false);
-        $this->assertFalse($this->semantic_value_factory->allStatusesAreReadable($this->user, $this->project));
-    }
-    
-    public function itReturnsTrueIfAllTitlesAreReadable() {
-        stub($this->field_title_102)->userCanRead($this->user)->returns(true);
-        stub($this->field_title_103)->userCanRead($this->user)->returns(true);
-        $this->assertTrue($this->semantic_value_factory->allTitlesAreReadable($this->user, $this->project));
-    }
-    
-    public function itReturnsFalseIfOneTitleIsUnreadable() {
-        stub($this->field_title_102)->userCanRead($this->user)->returns(true);
-        stub($this->field_title_103)->userCanRead($this->user)->returns(false);
-        $this->assertFalse($this->semantic_value_factory->allTitlesAreReadable($this->user, $this->project));
-    }
-}
 ?>

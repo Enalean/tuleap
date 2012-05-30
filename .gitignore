@@ -1,4 +1,3 @@
+*.swp
 src/www/scripts/combined/*
-src/utils/*.pyc
-src/utils/cvs1/*.pyc
-src/utils/svn/*.pyc
+*.swo

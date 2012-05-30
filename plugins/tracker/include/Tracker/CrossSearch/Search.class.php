@@ -77,20 +77,20 @@ class Tracker_CrossSearch_Search {
      * @param User                      $user                   The user who will see the search result
      * @param Project                   $project                The project where the search occurs
      * @param array                     $tracker_ids            The trackers to retrieve artifacts from.
-     * @param Tracker_CrossSearch_Query $query                  The query that artifacts should match (e.g. title).
+     * @param Tracker_CrossSearch_Query $criteria               The criteria that artifacts should match (e.g. title).
      * @param array                     $excluded_artifact_ids  Some (optional) artifacts to exclude.
      * @return TreeNode
      */
-    public function getHierarchicallySortedArtifacts(User $user, Project $project, $tracker_ids, Tracker_CrossSearch_Query $query, $excluded_artifact_ids = array()) {
+    public function getHierarchicallySortedArtifacts(User $user, Project $project, $tracker_ids, Tracker_CrossSearch_Query $criteria, $excluded_artifact_ids = array()) {
         $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
-        return $this->getMatchingArtifacts($user, $project, $tracker_ids, $hierarchy, $query, $excluded_artifact_ids);
+        return $this->getMatchingArtifacts($user, $project, $tracker_ids, $hierarchy, $criteria, $excluded_artifact_ids);
     }
     
-    public function getMatchingArtifacts(User $user, Project $project, array $tracker_ids, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Query $query, $excluded_artifact_ids = array()) {
-        $shared_fields   = $this->shared_field_factory->getSharedFields($query->getSharedFields());
-        $semantic_fields = $query->getSemanticCriteria();
+    public function getMatchingArtifacts(User $user, Project $project, array $tracker_ids, Tracker_Hierarchy $hierarchy, Tracker_CrossSearch_Query $criteria, $excluded_artifact_ids = array()) {
+        $shared_fields   = $this->shared_field_factory->getSharedFields($criteria->getSharedFields());
+        $semantic_fields = $criteria->getSemanticCriteria();
         
-        $artifacts = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
+        $artifacts = $this->dao->searchMatchingArtifacts($user, $project->getId(), $criteria, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
         return $this->result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
     }

@@ -22,7 +22,7 @@
 require_once dirname(__FILE__).'/../../include/Planning/ArtifactCreationController.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
+require_once dirname(__FILE__).'/../builders/planning.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 class Planning_ArtifactCreationControllerTest extends TuleapTestCase {

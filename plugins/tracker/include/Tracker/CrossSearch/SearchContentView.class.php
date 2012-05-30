@@ -48,24 +48,17 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
-    /**
-     * @var User
-     */
-    private $user;
-    
     public function __construct(Tracker_Report                   $report, 
                          array                            $criteria, 
                          TreeNode                         $tree_of_artifacts, 
                          Tracker_ArtifactFactory          $artifact_factory, 
-                         Tracker_FormElementFactory       $factory,
-                         User                             $user) {
+                         Tracker_FormElementFactory       $factory) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
         $this->factory           = $factory;
-        $this->user              = $user;
         $collapsable             = true;
         $treeVisitor             = new TreeNode_InjectSpanPaddingInTreeNodeVisitor($collapsable);
         $this->tree_of_artifacts->accept($treeVisitor);
@@ -178,9 +171,9 @@ class Tracker_CrossSearch_SearchContentView {
                 // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
                 $linked_artifact_ids = array_unique(explode(',', $row[$key]));
                 foreach ($linked_artifact_ids as $id) {
-                    $values[]= $this->getArtifactLinkTitle($id);
+                    $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
                 }
-                $value = implode(', ', array_filter($values));
+                $value = implode(', ', $values);
             }
             
         } else {
@@ -188,13 +181,6 @@ class Tracker_CrossSearch_SearchContentView {
         }
         
         return $value;
-    }
-    
-    private function getArtifactLinkTitle($id) {
-        if ($artifact = $this->artifact_factory->getArtifactByIdUserCanView($this->user, $id)) {
-            return $artifact->getTitle();
-        }
-        return '';
     }
     
     private function getFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
@@ -206,10 +192,9 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     private function isASharedField(Tracker_Report_Field $report_field) {
-        return !(  $report_field instanceof Tracker_CrossSearch_SemanticTitleReportField 
-                || $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField 
-                || $report_field instanceof Tracker_CrossSearch_ArtifactReportField
-        );
+        return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
+                 $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
+                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
     }
 
 }

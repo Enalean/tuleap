@@ -45,18 +45,10 @@ class UserManager {
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $userManager = __CLASS__;
-            self::$_instance = new $userManager();
+            $c = __CLASS__;
+            self::$_instance = new $c();
         }
         return self::$_instance;
-    }
-    
-    public static function setInstance($instance) {
-        self::$_instance = $instance;
-    }
-    
-    public static function clearInstance() {
-        self::$_instance = null;
     }
     
     /**

@@ -28,10 +28,6 @@ function aUser() {
     return new UserTestBuilder();
 }
 
-function anAnonymousUser() {
-    return aUser()->withId(0);
-}
-
 class UserTestBuilder {
     private $params = array('language_id' => 'en_US');
     

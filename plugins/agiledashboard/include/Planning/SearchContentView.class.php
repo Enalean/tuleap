@@ -23,6 +23,12 @@ require_once 'common/mustache/MustacheRenderer.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
 
+/**
+ * Display the left part of the planning view (cross-search criteria and post-it
+ * result).
+ * 
+ * This class is partially used as a Presenter by ArtifactPlannificationController
+ */
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     public $planning;
@@ -30,14 +36,13 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     public function __construct(Tracker_Report             $report,
                                 array                      $criteria,
-                                TreeNode                   $tree_of_artifacts, 
-                                Tracker_ArtifactFactory    $artifact_factory, 
+                                TreeNode                   $tree_of_artifacts,
+                                Tracker_ArtifactFactory    $artifact_factory,
                                 Tracker_FormElementFactory $factory,
-                                User                       $user,
                                 Planning                   $planning,
                                                            $planning_redirect_param) {
-        parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory, $user);
         
+        parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory);
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
     }

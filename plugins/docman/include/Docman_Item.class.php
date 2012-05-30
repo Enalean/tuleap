@@ -26,48 +26,49 @@ require_once('Docman_ItemAction.class.php');
  * Model/Controler and View layer of the application
  */
 class Docman_Item {
-    public $id               = null;
-    public $title            = null;
-    public $titlekey         = null;
-    public $description      = null;
     
-    public $createDate       = null;
-    public $updateDate       = null;
-    public $deleteDate       = null;
-    
-    public $rank             = null;
-    
-    public $parentId         = null;
-    public $groupId          = null;
-    public $ownerId          = null;
-    
-    public $status           = null;
+    function Docman_Item($data = null) {
+        $this->id          = null;
+        $this->title       = null;
+        $this->description = null;
+        $this->createDate  = null;
+        $this->updateDate  = null;
+        $this->deleteDate  = null;
+        $this->rank        = null;
+        $this->parentId    = null;
+        $this->groupId     = null;
+        $this->ownerId     = null;
+        $this->status      = null;
+        $this->obsolescenceDate = null;
+        
+        // Cache
+        $this->isObsolete = null;
 
-    public $obsolescenceDate = null;
-    public $isObsolete       = null;
-    
-    protected $_actions      = array();
-    protected $_metadata     = array();
-    public $pathId           = array();
-    public $pathTitle        = array();
-    
-    
-    
-    public function __construct($data = null) {
+        $this->_actions    = array();
+        $this->_metadata   = array();
+        $this->pathId      = array();
+        $this->pathTitle   = array();
+
+        $this->titlekey = null;
+
         if ($data) {
             $this->initFromRow($data);
         }
     }
 
-    public function setId($id) {
+    //{{{
+    var $id;
+    function setId($id) {
         $this->id = (int) $id;
     }
 
-    public function getId() {
+    function getId() {
         return $this->id;
     }
 
-    public function setTitle($title) { 
+    var $title;
+    var $titlekey;
+    function setTitle($title) { 
         if(strpos($title, '_lbl_key') !== FALSE) {
             $this->title = $GLOBALS['Language']->getText('plugin_docman', $title);
             $this->titlekey = $title;
@@ -76,112 +77,125 @@ class Docman_Item {
             $this->title = $title;
         }
     }
-    
-    public function getTitle($key=false) {
+    function getTitle($key=false) {
         if($key && $this->titlekey !== null) {
             return $this->titlekey;
         }
         return $this->title; 
     }
 
-    public function setDescription($description) { 
+    var $description;
+    function setDescription($description) { 
         $this->description = $description;
     }
 
-    public function getDescription() {
+    function getDescription() {
         return $this->description;
     }
 
-    public function setCreateDate($date) {
+    var $createDate;
+    function setCreateDate($date) {
         $this->createDate = (int) $date;
     }
 
-    public function getCreateDate() {
+    function getCreateDate() {
         return $this->createDate;
     }
 
-    public function setUpdateDate($date) {
+    var $updateDate;
+    function setUpdateDate($date) {
         $this->updateDate = (int) $date;
     }
 
-    public function getUpdateDate() {
+    function getUpdateDate() {
         return $this->updateDate;
     }
 
-    public function setDeleteDate($date) {
+    var $deleteDate;
+    function setDeleteDate($date) {
         $this->deleteDate = (int) $date;
     }
 
-    public function getDeleteDate() {
+    function getDeleteDate() {
         return $this->deleteDate;
     }
 
-    public function setRank($rank) {
+    var $rank;
+    function setRank($rank) {
         $this->rank = (int) $rank;
     }
 
-    public function getRank() {
+    function getRank() {
         return $this->rank;
     }
 
-    public function setParentId($id) {
+    var $parentId;
+    function setParentId($id) {
         $this->parentId = (int) $id;
     }
 
-    public function getParentId() {
+    function getParentId() {
         return $this->parentId;
     }
 
-    public function setGroupId($id) {
+    var $groupId;
+    function setGroupId($id) {
         $this->groupId = (int) $id;
     }
 
-    public function getGroupId() {
+    function getGroupId() {
         return $this->groupId;
     }
 
-    public function setOwnerId($id) {
+    var $ownerId;
+    function setOwnerId($id) {
         $this->ownerId = (int) $id;
     }
 
-    public function getOwnerId() {
+    function getOwnerId() {
         return $this->ownerId;
     }
 
-    public function setStatus($v) {
+    var $status;
+    function setStatus($v) {
         $this->status = (int) $v;
     }
-    
-    public function getStatus() {
+    function getStatus() {
         return $this->status;
     }
 
-    public function setObsolescenceDate($v) {
+    var $obsolescenceDate;
+    function setObsolescenceDate($v) {
         $this->obsolescenceDate = (int) $v;
         $this->isObsolete = null; // Clear cache
     }
-    
-    public function getObsolescenceDate() {
+    function getObsolescenceDate() {
         return $this->obsolescenceDate;
     }
 
     /*
      * Convenient accessors
      */
-    public function isObsolete() {
-        if ($this->isObsolete == null) {
-            $this->isObsolete = false;
+    var $isObsolete;
+    function isObsolete() {
+        if($this->isObsolete == null) {
             $date = $this->getObsolescenceDate();
             if($date > 0) {
                 $today = getdate();
-                $time  = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
-                $this->isObsolete = ($date < $time);
+                $time = mktime(0,0,1,$today['mon'], $today['mday'], $today['year']);
+                if($date < $time) {
+                    $this->isObsolete = true;
+                } else {
+                    $this->isObsolete = false;
+                }
+            } else {
+                $this->isObsolete = false;
             }
         }
         return $this->isObsolete;
     }
 
-    public function initFromRow(&$row) {
+    function initFromRow(&$row) {
         if (isset($row['item_id']))     $this->setId($row['item_id']);
         if (isset($row['title']))       $this->setTitle($row['title']);
         if (isset($row['description'])) $this->setDescription($row['description']);
@@ -196,7 +210,7 @@ class Docman_Item {
         if (isset($row['obsolescence_date'])) $this->setObsolescenceDate($row['obsolescence_date']);
     }
     
-    public function toRow() {
+    function toRow() {
         $row = array();
         $row['item_id']     = $this->getId();
         $row['title']       = $this->getTitle(true);
@@ -212,27 +226,28 @@ class Docman_Item {
         $row['obsolescence_date'] = $this->getObsolescenceDate();
         return $row;
     }
+    //}}}
     
-    public function accept(&$visitor, $params = array()) {
+    /* abstract */function accept(&$visitor, $params = array()) {
     }
 
-    public function addMetadata(&$metadata) {
-        $this->_metadata[$metadata->getLabel()] =& $metadata;
+    var $_metadata;
+    function addMetadata(&$md) {
+        $this->_metadata[$md->getLabel()] =& $md;
     }
-    
-    public function setMetadata(&$metadata) {
-        $this->_metadata =& $metadata;
+    function setMetadata(&$mda) {
+        $this->_metadata =& $mda;
     }
-    
-    public function &getMetadata() {
+    function &getMetadata() {
         return $this->_metadata;
     }
    
-    public function getMetadataIterator() {        
-        return new ArrayIterator($this->_metadata);
+    function &getMetadataIterator() {        
+        $i = new ArrayIterator($this->_metadata);
+        return $i;
     }
 
-    public function getHardCodedMetadataValue($label) {
+    function getHardCodedMetadataValue($label) {
         $value = null;
 
         switch($label) {
@@ -257,12 +272,14 @@ class Docman_Item {
             break;
 
         case 'status':
-            $status      = $this->getStatus();
-            $status_list = array();
-            if ($status !== null) {
-                $status_list[] = Docman_MetadataListOfValuesElementFactory::getStatusList($status);
+            $st = $this->getStatus();
+            if($st === null) {
+                $ea = array();
+            } else {
+                $status = Docman_MetadataListOfValuesElementFactory::getStatusList($st);
+                $ea = array($status);
             }
-            $value = new ArrayIterator($status_list);
+            $value = new ArrayIterator($ea);
             break;
 
         case 'obsolescence_date':
@@ -280,67 +297,69 @@ class Docman_Item {
     /**
      * 
      */
-    public function &getMetadataFromLabel($label) {
-        $metadata_value = $this->getHardCodedMetadataValue($label);
-        $metadata       = null; // can't refactor with early return as it returns value by ref :(
-        if($metadata_value !== null) {
-            $metadata = Docman_MetadataFactory::getHardCodedMetadataFromLabel($label, $metadata_value);
-        } elseif (isset($this->_metadata[$label])) {
-            $metadata = $this->_metadata[$label];
+    function &getMetadataFromLabel($label) {
+        $md = null;
+        $mdv = $this->getHardCodedMetadataValue($label);
+        if($mdv !== null) {
+            $md = Docman_MetadataFactory::getHardCodedMetadataFromLabel($label, $mdv);
+        } else {
+            if(isset($this->_metadata[$label])) {
+                $md = $this->_metadata[$label];
+            }
         }
-        return $metadata;
+        return $md;
     }
 
     /**
      * Update item's hardcoded values according to Metadata settings.
      */
-    public function updateHardCodedMetadata($metadata) {
-        switch($metadata->getLabel()) {
+    function updateHardCodedMetadata($md) {
+        switch($md->getLabel()) {
         case 'title':
-            $this->setTitle($metadata->getValue());
+            $this->setTitle($md->getValue());
             break;
         case 'description':
-            $this->setDescription($metadata->getValue());
+            $this->setDescription($md->getValue());
             break;
         case 'owner':
-            $this->setOwnerId($metadata->getValue());
+            $this->setOwnerId($md->getValue());
             break;
         case 'create_date':
-            $this->setCreateDate($metadata->getValue());
+            $this->setCreateDate($md->getValue());
             break;
         case 'update_date':
-            $this->setUpdateDate($metadata->getValue());
+            $this->setUpdateDate($md->getValue());
             break;
         case 'status':
-            // $metadata->getValue() return an array iterator
-            $this->setStatus($metadata->getValue()->current()->getId());
+            // $md->getValue() return an array iterator
+            $this->setStatus($md->getValue()->current()->getId());
             break;
         case 'obsolescence_date':
-            $this->setObsolescenceDate($metadata->getValue());
+            $this->setObsolescenceDate($md->getValue());
             break;
         case 'rank':
-            $this->setRank($metadata->getValue());
+            $this->setRank($md->getValue());
             break;
         }
     }
 
-    public function setPathId(&$path_id) {
-        $this->pathId =& $path_id;
+    var $pathId;
+    function setPathId(&$p) {
+        $this->pathId =& $p;
     }
-    
-    public function &getPathId() {
+    function &getPathId() {
         return $this->pathId;
     }
 
-    public function setPathTitle(&$path_title) {
-        $this->pathTitle =& $path_title;
+    var $pathTitle;
+    function setPathTitle(&$p) {
+        $this->pathTitle =& $p;
     }
-    
-    public function &getPathTitle() {
+    function &getPathTitle() {
         return $this->pathTitle;
     }
 
-    public function fireEvent($event, $user, $parent=null) {
+    function fireEvent($event, $user, $parent=null) {
         $params = array('group_id' => $this->getGroupId(),
                         'parent'   => $parent,
                         'item'     => $this,

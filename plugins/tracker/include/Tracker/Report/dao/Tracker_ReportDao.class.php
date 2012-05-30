@@ -172,7 +172,13 @@ class Tracker_ReportDao extends DataAccessObject {
         }
         
         // $sqls => SELECT UNION SELECT UNION SELECT ...
-        $sqls = $this->getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
+        $sqls = array();
+        //Does the user member of at least one group which has ACCESS_FULL or is super user?
+        if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
+            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
+        } else {
+            $sqls = $this->getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
+        }
         
         if (count($sqls) == 0) {
             return new DataAccessResultEmpty();
@@ -194,17 +200,6 @@ class Tracker_ReportDao extends DataAccessObject {
         }
     }
     
-    public function getSqlFragmentsAccordinglyToTrackerPermissions($user_is_superuser, $from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
-        $sqls = array();
-        //Does the user member of at least one group which has ACCESS_FULL or is super user?
-        if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
-            $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
-        } else {
-            $sqls = $this->getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
-        }
-        return $sqls;
-    }
-    
     public function getSqlFragmentForArtifactPermissions($user_is_superuser, array $ugroups) {
         $res = array('from' => '', 'where' => '');
         if(!$user_is_superuser) {
@@ -220,7 +215,7 @@ class Tracker_ReportDao extends DataAccessObject {
         return $res;
     }
     
-    private function getSqlFragmentsAccordinglyToAssigneeOrSubmitterAccessPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
+    private function getSqlFragmentAccordingToTrackerPermissions($from, $where, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id) {
         $sqls = array();
         
         //Does the user member of at least one group which has ACCESS_SUBMITTER ?
@@ -379,24 +374,5 @@ class Tracker_ReportDao extends DataAccessObject {
         return in_array($ugroupId, $dynamic_ugroups) &&
                in_array($ugroupId, $allowed_groups);
     }
-    
-    
-    // {{{ Those logging methods are here only for debugging purpose, to have 
-    //     metrics about execution time of the search requests.
-    //     Would be nice to have a real logging strategy in Tuleap.
-    private $time_start;
-    public function logStart($method, $query) {
-        $this->log($method, "searching for ". $query);
-        $this->time_start = microtime(1);
-    }
-    public function logEnd($method, $nb_matching) {
-        $time_taken = microtime(1) - $this->time_start;
-        $this->log($method, "\tNb matching: $nb_matching");
-        $this->log($method, "\tTime taken: $time_taken seconds");
-    }
-    private function log($method, $message) {
-        error_log(date('c') ." $method -> $message\n", 3, $GLOBALS['codendi_log'] .'/debug.log');
-    }
-    // }}}
 }
 ?>

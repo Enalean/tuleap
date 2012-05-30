@@ -19,9 +19,8 @@
  */
 require_once('Tracker_Semantic_Status.class.php');
 require_once('dao/Tracker_Semantic_StatusDao.class.php');
-require_once 'IRetrieveSemantic.class.php';
 
-class Tracker_Semantic_StatusFactory implements Tracker_Semantic_IRetrieveSemantic {
+class Tracker_Semantic_StatusFactory {
     
     /**
      * Hold an instance of the class
@@ -41,7 +40,7 @@ class Tracker_Semantic_StatusFactory implements Tracker_Semantic_IRetrieveSemant
         return self::$instance;
     }
     
-    public function getByTracker(Tracker $tracker) {
+    public function getByTracker($tracker) {
         return Tracker_Semantic_Status::load($tracker);
     }
     

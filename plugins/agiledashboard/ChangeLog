@@ -1,12 +1,3 @@
-Version 0.20 - Tuleap 5.2
-    * Refactoring of "external permissions"
-	* Display all sub hierarchy in the planning instead of just the first
-	level
-
-Version 0.19 - Tuleap 5.1
-    * Heavy refactoring of AgilePlannification now known as Milestone
-    * Take permissions on tracker cross search (v5.7.13) into account.
-
 Version 0.18 - Tuleap 5.1
     * Clean-up refactoring of view builder
 

@@ -1,6 +1,3 @@
-Version 1.5.3 - Tuleap 5.0.3
-    * added codendi_auth.jar that was missing since the migration to git
-    
 Version 1.5.2 - Tuleap 5.0
     * Remove unused test file
     

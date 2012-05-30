@@ -1,48 +1,18 @@
-Version 5.2 (Not Released Yet)
-	== Plugins ==
-	* Cardwall: 0.5.1
-	* Tracker: 5.7.16
-	* Agildashboard: 0.20
-	* Docman: 2.25.6
-	* Git: 2.5.5
-
-Version 5.1 (Wednesday, May 23rd 2012)
-   == Enhancement ==
-   * Add new methods in the SOAP api (get the statistics of a project, view svn
-   top commiters, access to user groups of a project, ...)
-
+Version 5.1 (Not released yet)
    == Plugins ==
-   * New plugin: Fulltextsearch v0.2
-     DISCLAIMER: plugin in beta, do not use it on production servers.
-   * Docman v2.54.5
-   * AgileDashboard v0.19
-   * Tracker v5.7.14
-   * Git v2.5.4
-   * Statistics v0.11
+   * AgileDashboard v0.18
+   * Tracker v5.7.12
 
   == Bug fix ==
   * Fix bug with IE7 and drag'n drop in scriptaculous.
-  * Definitively delete mailing list in the db (Contrib STMicroelectronics)
 
   == Development ==
-  * Check release with git (since now Tuleap sources are under git!)
+  * Check release with git
   * jQuery support: Now Tuleap support jQuery as an alternative of
     Prototypejs/Scriptaculous.
   * Bootstrap support: Introduce dropdown plugin from Bootstrap to replace
     our own implementation of dropdown panels. This improve compatibility with
     Internet Explorer.
-
-Version 5.0.4 (Monday, May 15th 2012)
-   * Added missing jars after migration: chardet, jing and codendi_auth
-
-Version 5.0.3 (Monday, May 14th 2012)
-   * Generate an intermediate release to test git migration.
-Version 5.0.3 (Monday, May 14th 2012)
-   * Generate an intermediate release to test git migration.
-
-Version 5.0.2 (Wednesday, May 9th 2012)
-   == Plugins ==
-   * Git 2.5
 
 Version 5.0.1 (Thursday, April 26th 2012)
    == Bug fix ==

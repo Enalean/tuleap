@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../builders/aTracker.php';
-require_once dirname(__FILE__) . '/../../builders/aField.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchController.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
@@ -27,7 +27,7 @@ require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class
 
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
-require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
+require_once 'Test_CriteriaBuilder.php';
 
 Mock::generate('ProjectManager');
 Mock::generate('Project');

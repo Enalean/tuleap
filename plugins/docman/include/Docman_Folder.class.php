@@ -31,7 +31,7 @@ require_once('common/collection/PrioritizedList.class.php');
 class Docman_Folder extends Docman_Item {
     
     function Docman_Folder($data = null) {
-        parent::__construct($data);
+        parent::Docman_Item($data);
         $this->_resetItems();
     }
     

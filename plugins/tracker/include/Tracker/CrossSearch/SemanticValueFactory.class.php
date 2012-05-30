@@ -19,10 +19,8 @@
  */
 
 require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../Semantic/IRetrieveSemantic.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_TitleFactory.class.php';
 require_once dirname(__FILE__).'/../Semantic/Tracker_Semantic_StatusFactory.class.php';
-require_once dirname(__FILE__).'/../TrackerFactory.class.php';
 
 /**
  * This factory provides a simple way to retrieve semantic values (e.g. title,
@@ -56,20 +54,18 @@ class Tracker_CrossSearch_SemanticValueFactory {
     
     public function __construct(Tracker_ArtifactFactory        $artifact_factory,
                                 Tracker_Semantic_TitleFactory  $semantic_title_factory,
-                                Tracker_Semantic_StatusFactory $semantic_status_factory,
-                                TrackerFactory                 $tracker_factory) {
+                                Tracker_Semantic_StatusFactory $semantic_status_factory) {
         
         $this->artifact_factory        = $artifact_factory;
         $this->semantic_title_factory  = $semantic_title_factory;
         $this->semantic_status_factory = $semantic_status_factory;
-        $this->tracker_factory         = $tracker_factory;
     }
     
     public function getTitle($artifact_id, $changeset_id) {
         $artifact = $this->getArtifact($artifact_id);
         $field    = $this->getField($artifact, $this->semantic_title_factory);
         
-        if ($field == null || !$field->userCanRead()) { 
+        if ($field == null) { 
             return ''; 
         }
         
@@ -130,25 +126,6 @@ class Tracker_CrossSearch_SemanticValueFactory {
      */
     private function getArtifact($artifact_id) {
         return $this->artifact_factory->getArtifactById($artifact_id);
-    }
-    
-    public function allSemanticFieldsAreReadable(User $user, Project $project, Tracker_Semantic_IRetrieveSemantic $factory) {
-        $trackers = $this->tracker_factory->getTrackersByGroupId($project->getId());
-        foreach ($trackers as $tracker) {
-            $field = $factory->getByTracker($tracker)->getField();
-            if ($field && ! $field->userCanRead($user)) {
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public function allTitlesAreReadable(User $user, Project $project) {
-        return $this->allSemanticFieldsAreReadable($user, $project, $this->semantic_title_factory);
-    }
-    
-    public function allStatusesAreReadable(User $user, Project $project) {
-        return $this->allSemanticFieldsAreReadable($user, $project, $this->semantic_status_factory);
     }
 }
 ?>

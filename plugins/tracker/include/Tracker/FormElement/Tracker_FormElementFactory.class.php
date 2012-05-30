@@ -802,16 +802,19 @@ class Tracker_FormElementFactory {
     }
     
     protected function userCanReadSharedField(User $user, Tracker_FormElement $field) {
-        return ($field->userCanRead($user) && $this->canReadAllTargets($user, $field));
+        // use || (OR) condition to avoid to enter canReadAtLeastOneTarget when possible:
+        return ($field->userCanRead($user) || $this->canReadAtleastOneTarget($user, $field));
     }
     
-    private function canReadAllTargets(User $user, Tracker_FormElement $field) {
-        foreach ($this->getSharedTargets($field) as $target_field) {
-            if (!$target_field->userCanRead($user)) {
-                return false;
+    private function canReadAtleastOneTarget(User $user, Tracker_FormElement $field) {
+        $targetFields = $this->getSharedTargets($field);
+        
+        foreach ($targetFields as $targetField) {
+            if ($targetField->userCanRead($user)) {
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     public function updateFormElement($form_element, $form_element_data) {

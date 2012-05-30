@@ -51,9 +51,7 @@ class SOAP_NusoapWSDL {
         
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
-            if ($method->getName() != '__construct') {
-                $this->appendOneMethod($server, $method);
-            }
+            $this->appendOneMethod($server, $method);
         }
     }
     

@@ -191,7 +191,7 @@ class Project_SOAPServer {
     public function addProjectMember($sessionKey, $groupId, $userLogin) {
         $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $result  = account_add_user_to_group($project->getID(), $userLogin);
-        return $this->returnFeedbackToSoapFault($result);
+        return $this->feedbackToSoapFault($result);
     }
 
     /**
@@ -213,73 +213,9 @@ class Project_SOAPServer {
         $project   = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         $userToAdd = $this->getProjectMember($project, $userLogin);
         $result    = account_remove_user_from_group($groupId, $userToAdd->getId());
-        return $this->returnFeedbackToSoapFault($result);
+        return $this->feedbackToSoapFault($result);
     }
 
-    /**
-     * Add user to a User Group
-     * 
-     * * Error codes:
-     *   * 3000, Invalid project id
-     *   * 3201, Permission denied: need to be project admin
-     *   * 3203, Invalid user id
-     *   * 3301, User Group doesn't exist
-     * 
-     * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId    The Project id where the User Group is defined
-     * @param Integer $ugroupId   The User Group where the user should be added
-     * @param Integer $userId     The user id to add
-     * 
-     * @return Boolean 
-     */
-    public function addUserToUGroup($sessionKey, $groupId, $ugroupId, $userId) {
-        $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
-        if ($user = $this->userManager->getUserById($userId)) {
-            try {
-                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
-                $ugroup->addUser($user);
-            }  catch (Exception $e) {
-                throw new SoapFault((string) $e->getCode(), $e->getMessage());
-            }
-            $this->feedbackToSoapFault();
-            return true;
-        } else {
-            throw new SoapFault('3203', "Invalid user id $userId");
-        }
-    }
-    
-    /**
-     * Remove User from User Group
-     * 
-     * * Error codes:
-     *   * 3000, Invalid project id
-     *   * 3201, Permission denied: need to be project admin
-     *   * 3203, Invalid user id
-     *   * 3301, User Group doesn't exist
-     * 
-     * @param String  $sessionKey The project admin session hash
-     * @param Integer $groupId    The Project id where the User Group is defined
-     * @param Integer $ugroupId   The User Group where the user should be removed
-     * @param Integer $userId     The user id to remove
-     * 
-     * @return Boolean 
-     */
-    public function removeUserFromUGroup($sessionKey, $groupId, $ugroupId, $userId) {
-        $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
-        if ($user = $this->userManager->getUserById($userId)) {
-            try {
-                $ugroup = new UGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
-                $ugroup->removeUser($user);
-            }  catch (Exception $e) {
-                throw new SoapFault((string) $e->getCode(), $e->getMessage());
-            }
-            $this->feedbackToSoapFault();
-            return true;
-        } else {
-            throw new SoapFault('3203', "Invalid user id $userId");
-        }
-    }
-    
     /**
      * Return a user member of project
      * 
@@ -320,33 +256,24 @@ class Project_SOAPServer {
     }
     
     /**
-     * Transform errors from feedback errors into SoapFault and return a boolean value accordingly
+     * Transform errors from feedback errors into SoapFault
      *
      * @throws SoapFault
      * @param Boolean $result Result of initial command
      *
      * @return Boolean
      */
-    private function returnFeedbackToSoapFault($result) {
+    private function feedbackToSoapFault($result) {
         if (!$result) {
-            $this->feedbackToSoapFault();
-        }
-        return $result;
-    }
-    
-    /**
-     * Transform errors from feedback errors into SoapFault
-     *
-     * @throws SoapFault
-     */
-    private function feedbackToSoapFault() {
-        if ($GLOBALS['Response']->feedbackHasErrors()) {
-            foreach ($GLOBALS['Response']->_feedback->logs as $log) {
-                if ($log['level'] == 'error') {
-                    throw new SoapFault('3100', $log['msg']);
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                foreach ($GLOBALS['Response']->_feedback->logs as $log) {
+                    if ($log['level'] == 'error') {
+                        throw new SoapFault('3100', $log['msg']);
+                    }
                 }
             }
         }
+        return $result;
     }
 
     /**

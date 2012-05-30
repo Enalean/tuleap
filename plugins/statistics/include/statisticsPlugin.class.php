@@ -28,15 +28,14 @@ class StatisticsPlugin extends Plugin {
 
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('cssfile',                  'cssFile',                false);
-        $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
-        $this->_addHook('root_daily_start',         'root_daily_start',       false);
-        $this->_addHook('widget_instance',          'widget_instance',        false);
-        $this->_addHook('widgets',                  'widgets',                false);
-        $this->_addHook('admin_toolbar_data',       'admin_toolbar_data',     false);
-        $this->_addHook('usergroup_data',           'usergroup_data',         false);
-        $this->_addHook('groupedit_data',           'groupedit_data',         false);
-        $this->_addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
+        $this->_addHook('cssfile',                'cssFile',                false);
+        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
+        $this->_addHook('root_daily_start',       'root_daily_start',       false);
+        $this->_addHook('widget_instance',        'widget_instance',        false);
+        $this->_addHook('widgets',                'widgets',                false);
+        $this->_addHook('admin_toolbar_data',     'admin_toolbar_data',     false);
+        $this->_addHook('usergroup_data',         'usergroup_data',         false);
+        $this->_addHook('groupedit_data',         'groupedit_data',         false);
     }
 
     function getPluginInfo() {
@@ -177,58 +176,7 @@ class StatisticsPlugin extends Plugin {
         }
     }
     
-    public function processSOAP(Codendi_Request $request) {
-        $uri           = $this->getSoapUri();
-        $service_class = 'Statistics_SOAPServer';
-        require_once $service_class .'.class.php';
-        
-        if ($request->exist('wsdl')) {
-            $this->dumpWSDL($uri, $service_class);
-        } else {
-            $this->instantiateSOAPServer($uri, $service_class);
-        }
-    }
-    
-    private function dumpWSDL($uri, $service_class) {
-        require_once 'common/soap/SOAP_NusoapWSDL.class.php';
-        $wsdlGen = new SOAP_NusoapWSDL($service_class, 'TuleapStatisticsAPI', $uri);
-        $wsdlGen->dumpWSDL();
-    }
-    
-    private function instantiateSOAPServer($uri, $service_class) {
-        require_once 'common/soap/SOAP_RequestValidator.class.php';
-        require_once 'Statistics_DiskUsageManager.class.php';
-        $user_manager           = UserManager::instance();
-        $project_manager        = ProjectManager::instance();
-        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
-        $disk_usage_manager     = new Statistics_DiskUsageManager();
-        
-        $server = new SoapServer($uri.'/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
-        $server->setClass($service_class, $soap_request_validator, $disk_usage_manager);
-        $server->handle();
-    }
-    
-    private function getSoapUri() {
-        if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
-            $protocol = "https";
-        } else {
-            $protocol = "http";
-        }
-        return $protocol.'://'.$GLOBALS['sys_default_domain'].'/plugins/statistics/soap';
-    }
-    
-    public function renderWSDL() {
-        require_once 'common/soap/SOAP_WSDLRenderer.class.php';
-        $uri = $this->getSoapUri();
-        $wsdl_renderer = new SOAP_WSDLRenderer();
-        $wsdl_renderer->render($uri .'/?wsdl');
-    }
-    
-    public function wsdl_doc2soap_types($params) {
-        $params['doc2soap_types'] = array_merge($params['doc2soap_types'], array(
-            'arrayofstatistics' => 'tns:ArrayOfStatistics',
-        ));
-    }
+
 }
 
 ?>

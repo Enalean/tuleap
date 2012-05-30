@@ -21,13 +21,6 @@
 require_once 'common/mvc2/Controller.class.php';
 require_once 'PlanningFactory.class.php';
 
-/**
- * Handles HTTP actions related to milestone artifact creation.
- * 
- * TODO:
- *   - Merge into MilestoneController ?
- *   - Use MilestoneController ?
- */
 class Planning_ArtifactCreationController extends MVC2_Controller {
 
     /**

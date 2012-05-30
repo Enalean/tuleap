@@ -26,8 +26,8 @@ function getSystemOutput($cmd) {
 
 function getCandidatePaths() {
     echo "Please check documentation/cli and documentation/user_guide manually!!".PHP_EOL;
-    $plugins     = getSystemOutput('find plugins -mindepth 1 -maxdepth 1 -type d');
-    $themes      = getSystemOutput('find src/www/themes -mindepth 1 -maxdepth 1 -type d ! -path *common');
+    $plugins     = getSystemOutput('find plugins -type d -depth 1');
+    $themes      = getSystemOutput('find src/www/themes -type d -depth 1 ! -path *common');
     $other_paths = array('cli', 'src/www/soap');
     return array_merge($other_paths, $plugins, $themes);
 }
@@ -37,7 +37,7 @@ require_once 'GitExec.class.php';
 
 $git_exec   = new GitExec();
 $tagFinder  = new LastReleaseFinder($git_exec);
-$last_release_number = $tagFinder->retrieveFrom('stable');
+$last_release_number = $tagFinder->retrieveFrom('origin');
 
 $check_release_reporter = new CheckReleaseReporter(
                               new NonIncrementedPathFinder($git_exec, $last_release_number,

@@ -1209,9 +1209,9 @@ grplist=`echo $grplist_name | cut -f$field_list -d" "`;
  
 cat <<EOM
  
------------------------------------
-W E L C O M E   T O   T U L E A P !
------------------------------------
+-------------------------------------
+W E L C O M E   T O   C O D E N D I !
+-------------------------------------
 
 You are currently in your user home directory: $HOME
 EOM

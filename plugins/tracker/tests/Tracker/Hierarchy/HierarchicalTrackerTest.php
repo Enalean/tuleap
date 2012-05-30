@@ -19,7 +19,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/HierarchicalTracker.class.php');
-require_once(dirname(__FILE__).'/../../builders/aTracker.php');
+require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 
 class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
 

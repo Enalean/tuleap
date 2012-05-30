@@ -58,28 +58,15 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         return Tracker_FormElementFactory::instance();
     }
     
-    /**
-     * @return Tracker_FormElement_Field
-     */
     private function getField() {
         $field = $this->getFormElementFactory()->getFormElementById($this->field_id);
         if ($field) {
+            $used  = array($this->field_id => $field);
             if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
                 $field = null;
             }
         }
         return $field;
-    }
-    
-    /**
-     * @return int
-     */
-    private function getFieldId() {
-        $field = $this->getField();
-        
-        if ($field) {
-            return $field->getId();
-        }
     }
     
     /**
@@ -113,7 +100,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         foreach($this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb')) as $formElement) {
             if ($formElement->userCanRead() && count($formElement->getAllValues())) {
                 $selected = '';
-                if ($formElement->getId() == $this->getFieldId()) {
+                if (isset($used[$formElement->getId()])) {
                     $selected = 'selected="selected"';
                     $one_selected = true;
                 }
