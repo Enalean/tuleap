@@ -133,6 +133,7 @@ class ProjectQuotaHtml {
      */
     public function displayProjectQuota(HTTPRequest $request) {
         $output      = '';
+        $count       = 50;
         $offset      = $this->validateOffset($request);
         $filter      = $this->validateProjectFilter($request);
         $orderParams = $this->validateOrderByFilter($request);
@@ -147,19 +148,30 @@ class ProjectQuotaHtml {
             }
             $projectFilterParam = '&amp;project_filter='.$filter;
         }
-        $output      .= '<form method="get" >';
-        $output      .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-        $output      .= '</form>';
-        $count        = 50;
-        $customQuotas = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
+        $output .= $this->fetchFilterForm();
+
+        $customQuotas = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
         if ($customQuotas && !$customQuotas->isError() && $customQuotas->rowCount() > 0) {
             $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
             $output .= '<br />';
         } else {
             $output .= $GLOBALS['Language']->getText('plugin_statistics', 'no_projects');
         }
+
         $output .= $this->renderNewCustomQuotaForm();
+        return $output;
+    }
+    
+    /**
+     * @return string html
+     */
+    private function fetchFilterForm() {
+        $output  = '';
+        $output .= '<form method="get">';
+        $output .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').' ';
+        $output .= '<input name="project_filter" /><input type="submit" />';
+        $output .= '</form>';
         return $output;
     }
 
