@@ -21,6 +21,7 @@
 require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 class MilestoneTest extends TuleapTestCase {
     
@@ -38,7 +39,9 @@ class MilestoneTest extends TuleapTestCase {
         
         $this->group_id  = 123;
         $this->planning  = aPlanning()->build();
-        $this->artifact  = anArtifact()->build();
+        $this->artifact  = anArtifact()
+                            ->withId(6666)
+                            ->build();
         $this->milestone = new Planning_Milestone($this->group_id,
                                                   $this->planning,
                                                   $this->artifact);
@@ -50,6 +53,12 @@ class MilestoneTest extends TuleapTestCase {
     
     public function itDelegatesArtifactIdRetrieval() {
         $this->assertEqual($this->milestone->getArtifactId(), $this->artifact->getId());
+    }
+    
+    public function itDelegatesArtifactTitleRetrieval() {
+        $artifact = aMockArtifact()->withTitle('a simple little artifact')->build();
+        $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
+        $this->assertEqual($milestone->getArtifactTitle(), $artifact->getTitle());
     }
     
     public function itMayHavePlannedArtifacts() {
