@@ -138,7 +138,7 @@ class Docman_ApprovalTableReminder {
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
         $mail     = $this->prepareMailReminder($table, $reviewer);
-        //return $mail->send();
+        return $this->sendMailReminder($mail, array($reviewer->getEmail()));
     }
 
     /**
@@ -153,17 +153,18 @@ class Docman_ApprovalTableReminder {
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($table->itemId);
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
+
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
         switch ($mailPrefs) {
             case Codendi_Mail_Interface::FORMAT_HTML :
-                $mail = $this->createHTMLMailForReviewer($reviewer, $subject);
+                $mail = $this->createHTMLMailForReviewer($table, $docmanItem, $subject);
                 break;
             case Codendi_Mail_Interface::FORMAT_TEXT :
-                $mail = $this->createMailForReviewer($table, $docmanItem);
+                $mail = $this->createMailForReviewer($table, $docmanItem, $subject);
                 break;
             default :
-                $mail = $this->createMailForReviewer($reviewer, $table, $docmanItem, $subject);
+                $mail = $this->createMailForReviewer($table, $docmanItem, $subject);
         }
         return $mail;
      }
@@ -173,10 +174,11 @@ class Docman_ApprovalTableReminder {
      *
      * @param User                 $reviewer User to remind
      * @param Docman_ApprovalTable $table    Approval table
+     * @param String               $subject
      *
      * @return Mail
      */
-    function createMailForReviewer($table, $docmanItem) {
+    function createMailForReviewer($table, $docmanItem, $subject) {
         $pm    = ProjectManager::instance();
         $group = $pm->getProject($docmanItem->getGroupId());
         $um    = UserManager::instance();
@@ -212,6 +214,7 @@ class Docman_ApprovalTableReminder {
                                                               $owner->getEmail()));
 
         $mail = new Mail();
+        $mail->setSubject($subject);
         $mail->setBody($body);
         return $mail;
     }
@@ -221,13 +224,15 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table    Approval table
      * @param User                 $reviewer User to remind
+     * @param String                 $subject
      *
      * @return Codendi_Mail
      */
-    function createHTMLMailForReviewer($reviewer, $subject) {
+    function createHTMLMailForReviewer($table, $docmanItem, $subject) {
         $body = '';
 
         $mail = new Codendi_Mail();
+        $mail->setSubject($subject);
         $mail->setBodyHtml($body);
         return $mail;
     }
@@ -236,14 +241,12 @@ class Docman_ApprovalTableReminder {
      * Send mail reminder to reviewers
      *
      * @param Codendi_Mail_Interface $mail
-     * @param String                 $subject
      * @param Array                  $to
      */
-    function sendMailReminder(Codendi_Mail_Interface $mail, $subject, array $to) {
+    function sendMailReminder(Codendi_Mail_Interface $mail, array $to) {
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo(join(',', $to));
-        $mail->setSubject($subject);
-        $mail->send();
+        return $mail->send();
     }
 
     /**
