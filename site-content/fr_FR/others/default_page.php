@@ -33,31 +33,29 @@ if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
 }
 
 ?>
-<HTML>
-<HEAD>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <TITLE>Bienvenue</TITLE>
-    <LINK rel="stylesheet" href="http://<?php echo $default_domain; ?>/themes/common/css/style.css" type="text/css" >
-    <LINK rel="stylesheet" href="http://<?php echo $default_domain; ?>/current_css.php" type="text/css" >
-</HEAD>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Bienvenue</title>
+        <link rel="stylesheet" href="http://<?php echo $default_domain; ?>/themes/common/css/style.css" type="text/css" />
+        <link rel="stylesheet" href="http://<?php echo $default_domain; ?>/current_css.php" type="text/css" />
+    </head>
 
-<BODY>
+    <body>
+        <div class="container">
+            <p>
+                <a href="http://<?= $default_domain; ?>/"><b>Accueil</b></a> |
+                <a href="http://<?= $default_domain; ?>/docs/site/about_codendi.php"><b>A propos</B></a> |
+                <a href="http://<?= $default_domain; ?>/contact.php"><B>Contactez-nous</b></a> |
+                <a href="http://<?= $default_domain; ?>/account/logout.php"><B>Se déconecter</b></a>
+            </p>
 
-    <div class="container">
-        <p>
-            <a href="http://<?= $default_domain; ?>/"><b>Accueil</b></a> |
-            <a href="http://<?= $default_domain; ?>/docs/site/about_codendi.php"><b>A propos</B></a> |
-            <a href="http://<?= $default_domain; ?>/contact.php"><B>Contactez-nous</b></a> |
-            <a href="http://<?= $default_domain; ?>/account/logout.php"><B>Se déconecter</b></a>
-        </p>
+            <div class="hero-unit">
+                <img src="http://<?= $default_domain; ?>/themes/common/images/organization_logo.png" vspace="" hspace="7" border=0 alt="Organization logo">
 
-        <div class="hero-unit">
-            <img src="http://<?= $default_domain; ?>/themes/common/images/organization_logo.png" vspace="" hspace="7" border=0 alt="Organization logo">
-
-            <h2>Bienvenue sur la page web du projet <?= $project_name ?></h2>
-            <p>Ce projet n'a pas encore créé son site Web. Rendez-nous visite prochainement ou allez sur la page <A href="http://<?= $default_domain; ?>/projects/<?= $project_name; ?>">Sommaire du projet</a></p>
+                <h2>Bienvenue sur la page web du projet <?= $project_name ?></h2>
+                <p>Ce projet n'a pas encore créé son site Web. Rendez-nous visite prochainement ou allez sur la page <A href="http://<?= $default_domain; ?>/projects/<?= $project_name; ?>">Sommaire du projet</a></p>
+            </div>
         </div>
-    </div>
-
-</BODY>
-</HTML>
+    </body>
+</html>
