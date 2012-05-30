@@ -139,7 +139,8 @@ class ProjectQuotaHtml {
         $sortBy      = $orderParams['sort'];
         $orderBy     = $orderParams['order'];
 
-        $list = array();
+        $list               = array();
+        $projectFilterParam = '';
         if ($filter) {
             $result   = $this->projectManager->returnAllProjects(0, 20, false, $filter);
             $projects = $result['projects'];
