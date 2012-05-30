@@ -53,8 +53,6 @@ class Planning_MilestoneController extends MVC2_Controller {
      * Instanciates a new controller.
      * 
      * TODO:
-     *   - $artifact_factory must die
-     *   - $tracker_factory must die
      *   - pass $request to actions (e.g. show).
      * 
      * @param Codendi_Request           $request
@@ -161,8 +159,8 @@ class Planning_MilestoneController extends MVC2_Controller {
      */
     private function getTrackerLinkedItems(array $available_milestones) {
         $linked_items = array();
-        foreach ($available_milestones as $artifact) {
-            $linked_items = array_merge($linked_items, $artifact->getLinkedArtifacts($this->getCurrentUser()));
+        foreach ($available_milestones as $milestone) {
+            $linked_items = array_merge($linked_items, $milestone->getLinkedArtifacts($this->getCurrentUser()));
         }
         return $linked_items;
     }

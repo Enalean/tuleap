@@ -80,6 +80,17 @@ class MilestoneFactoryTest extends TuleapTestCase {
         $tree_node3 = $tree_node2->getChild(0);
         $this->assertEqual(3, $tree_node3->getId());
     }
+    
+    public function itAddsTheArtifactsToTheTreeNodes() {
+        $root_aid   = 100;
+        $root_artifact = stub('Tracker_Artifact')->getId()->returns($root_aid);
+        stub($this->artifact_factory)->getArtifactById($root_aid)->returns($root_artifact);
+        $depth1_aid      = 9999;
+        $depth1_artifact = stub('Tracker_Artifact')->getId($depth1_aid)->getUniqueLinkedArtifacts()->returns(array());
+        stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
+        
+        $this->assertEqual($depth1_artifact, $root_node->getChild(0)->getData('artifact'));
+    }
 }
 
 class MileStoneFactory_getOpenMilestonesTest extends TuleapTestCase {
