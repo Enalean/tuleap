@@ -147,50 +147,61 @@ class ProjectQuotaHtml {
             }
             $projectFilterParam = '&amp;project_filter='.$filter;
         }
-        $output          .= '<form method="get" >';
-        $output          .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
-        $output          .= '</form>';
-        $count            = 50;
-        $res              = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
+        $output      .= '<form method="get" >';
+        $output      .= $GLOBALS['Language']->getText('plugin_statistics', 'search_projects').'<input name="project_filter" /><input type="submit" />';
+        $output      .= '</form>';
+        $count        = 50;
+        $customQuotas = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
         $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
         $nextHref = $paginationParams['nextHref'];
         $prevHref = $paginationParams['prevHref'];
         $orderBy  = $this->toggleOrderBy($orderBy);
 
-        if ($res && !$res->isError() && $res->rowCount() > 0) {
-            $i        = 0;
-            $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
-            $output  .= html_build_list_table_top($titles);
-            $output  .= '<form method="post" >';
-            $purifier = Codendi_HTMLPurifier::instance();
-            $um       = UserManager::instance();
-            foreach ($res as $row) {
-                $project     = $this->projectManager->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
-                $projectName = (empty($project)) ? '' : $project->getPublicName();
-                $user        = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
-                $username    = (empty($user)) ? '' : $user->getUserName();
-                $output     .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output     .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td>';
-                $output     .= '<td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td>';
-                $output     .= '<td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_BASIC, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td>';
-                $output     .= '<td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
-                $output     .= '</tr>';
-            }
-            $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-            $output .= '<input type="hidden" name ="action" value="delete" />';
-            $output .= '<td colspan="5" ><td><input type="submit" /></td>';
-            $output .= '</tr>';
-            $output .= '</form>';
-            $output .= '<tr><td>'.$prevHref.'</td><td colspan="4" ></td><td>'.$nextHref.'</td></tr>';
-            $output .= '</table><br>';
+        if ($customQuotas && !$customQuotas->isError() && $customQuotas->rowCount() > 0) {
+            $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $nextHref, $prevHref);
+            $output .= '<br />';
         } else {
             $output .= $GLOBALS['Language']->getText('plugin_statistics', 'no_projects');
         }
         $output .= $this->renderNewCustomQuotaForm();
         return $output;
     }
-    
+
+    /**
+     * @return string html
+     */
+    private function fetchCustomQuotaTable(Iterator $customQuotas, $orderBy, $projectFilterParam, $offset, $nextHref, $prevHref) {
+        $output   = '';
+        $i        = 0;
+        $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
+        $output  .= html_build_list_table_top($titles);
+        $output  .= '<form method="post" >';
+        $purifier = Codendi_HTMLPurifier::instance();
+        $um       = UserManager::instance();
+        foreach ($customQuotas as $row) {
+            $project     = $this->projectManager->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
+            $projectName = (empty($project)) ? '' : $project->getPublicName();
+            $user        = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
+            $username    = (empty($user)) ? '' : $user->getUserName();
+            
+            $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+            $output .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td>';
+            $output .= '<td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td>';
+            $output .= '<td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_BASIC, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td>';
+            $output .= '<td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+            $output .= '</tr>';
+        }
+        $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+        $output .= '<input type="hidden" name ="action" value="delete" />';
+        $output .= '<td colspan="5" ><td><input type="submit" /></td>';
+        $output .= '</tr>';
+        $output .= '</form>';
+        $output .= '<tr><td>'.$prevHref.'</td><td colspan="4" ></td><td>'.$nextHref.'</td></tr>';
+        $output .= '</table>';
+        return $output;
+    }
+
     /**
      * @param string $filter The filter
      *
