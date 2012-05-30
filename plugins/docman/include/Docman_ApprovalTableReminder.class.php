@@ -41,7 +41,7 @@ class Docman_ApprovalTableReminder {
         $tables = array();
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                $table = new Docman_ApprovalTable();
+                $table = new Docman_ApprovalTableItem();
                 $table->initFromRow($row);
                 $distance = DateHelper::dateDiffInDays($table->getDate(), $_SERVER['REQUEST_TIME']);
                 if ($distance > 0 && DateHelper::isPeriodicallyDistant($distance, $table->getNotificationOccurence())) {
