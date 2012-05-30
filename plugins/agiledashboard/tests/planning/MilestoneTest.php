@@ -78,6 +78,8 @@ class MilestoneTest extends TuleapTestCase {
         
         $this->assertNull($this->milestone->getArtifact());
         $this->assertNull($this->milestone->getArtifactId());
+        $this->assertNull($this->milestone->getArtifactTitle());
+        $this->assertTrue($this->milestone->userCanView(mock('User')), "any user should be able to read an empty milstone");
     }
 }
 ?>

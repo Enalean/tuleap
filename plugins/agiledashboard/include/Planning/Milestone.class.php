@@ -26,12 +26,12 @@ class Planning_Milestone {
     /**
      * @var int
      */
-    private $group_id;
+    protected $group_id;
     
     /**
      * @var Planning
      */
-    private $planning;
+    protected $planning;
     
     /**
      * @var Tracker_Artifact
@@ -53,7 +53,7 @@ class Planning_Milestone {
      */
     public function __construct(                 $group_id,
                                 Planning         $planning,
-                                Tracker_Artifact $artifact          = null,
+                                Tracker_Artifact $artifact,
                                 TreeNode         $planned_artifacts = null) {
         
         $this->group_id          = $group_id;
@@ -84,7 +84,7 @@ class Planning_Milestone {
      * @return int
      */
     public function getArtifactId() {
-        return $this->artifact ? $this->artifact->getId() : null;
+        return $this->artifact->getId();
     }
     
     public function getArtifactTitle() {
@@ -124,7 +124,9 @@ class Planning_NoMilestone extends Planning_Milestone {
      * @param Planning $planning 
      */
     public function __construct($group_id, Planning $planning) {
-        parent::__construct($group_id, $planning, null);
+        // not calling the super constructor allows us not enforce non nullity on the artifact
+        $this->group_id          = $group_id;
+        $this->planning          = $planning;
     }
     
     /**
@@ -134,5 +136,18 @@ class Planning_NoMilestone extends Planning_Milestone {
     public function userCanView(User $user) {
         return true; // User can view milestone content, since it's empty.
     }
+
+    /**
+     * @return int
+     */
+    public function getArtifactId() {
+        return null;
+    }
+    
+    public function getArtifactTitle() {
+        return null;
+    }
+    
+
 }
 ?>
