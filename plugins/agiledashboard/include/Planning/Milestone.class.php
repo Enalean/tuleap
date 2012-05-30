@@ -87,7 +87,24 @@ class Planning_Milestone {
         return $this->artifact->getId();
     }
     
+    /**
+     * @return string
+     */
     public function getArtifactTitle() {
+        return $this->artifact->getTitle();
+    }
+    
+    /**
+     * @return int
+     */
+    public function getId() {
+        return $this->artifact->getId();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getTitle() {
         return $this->artifact->getTitle();
     }
     
@@ -103,6 +120,10 @@ class Planning_Milestone {
      */
     public function getPlannedArtifacts() {
         return $this->planned_artifacts;
+    }
+    
+    public function getLinkedArtifacts() {
+        return $this->artifact->getLinkedArtifacts();
     }
 }
 

@@ -61,6 +61,16 @@ class MilestoneTest extends TuleapTestCase {
         $this->assertEqual($milestone->getArtifactTitle(), $artifact->getTitle());
     }
     
+    public function itDelegatesLinkedArtifactsRetrieval() {
+        $artifact1 = anArtifact()->withId(1111)->build();
+        $artifact2 = anArtifact()->withId(2222)->build();
+        $linkedArtifacts = array($artifact1, $artifact2);
+        $artifact = aMockArtifact()->withLinkedArtifacts($linkedArtifacts)->build();
+        $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
+        
+        $this->assertEqual($milestone->getLinkedArtifacts(), $linkedArtifacts);
+    }
+    
     public function itMayHavePlannedArtifacts() {
         $this->assertEqual($this->milestone->getPlannedArtifacts(), null);
         
