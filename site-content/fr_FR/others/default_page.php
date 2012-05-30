@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * 
+ *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -35,52 +35,29 @@ if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
 ?>
 <HTML>
 <HEAD>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<TITLE>Bienvenue</TITLE>
-<LINK rel="stylesheet" href="http://<?php echo $default_domain; ?>/codendi.css" type="text/css" >
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <TITLE>Bienvenue</TITLE>
+    <LINK rel="stylesheet" href="http://<?php echo $default_domain; ?>/themes/common/css/style.css" type="text/css" >
+    <LINK rel="stylesheet" href="http://<?php echo $default_domain; ?>/current_css.php" type="text/css" >
 </HEAD>
 
-<BODY bgcolor="#BCBCAD" link="#8b4020" vlink="#8b4020" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" marginheight="0" marginwidth="0">
+<BODY>
 
-<!-- top strip -->
-<TABLE width="100%" border=0 cellspacing=0 cellpadding=2 bgcolor="#BCBCAD">
-  <TR>
-    <TD><SPAN class=maintitlebar>&nbsp;&nbsp;
-      <A class=maintitlebar href="http://<?php echo $default_domain; ?>/"><B>Accueil</B></A> | 
-      <A class=maintitlebar href="http://<?php echo $default_domain; ?>/docs/site/about_codendi.php"><B>A propos</B></A> | 
-      <A class=maintitlebar href="http://<?php echo $default_domain; ?>/contact.php"><B>Contactez-nous</B></A> |
-      <A class=maintitlebar href="http://<?php echo $default_domain; ?>/account/logout.php"><B>Se déconecter</B></A></SPAN>
-    </TD>
-  </TR>
-</TABLE>
-<!-- end top strip -->
+    <div class="container">
+        <p>
+            <a href="http://<?= $default_domain; ?>/"><b>Accueil</b></a> |
+            <a href="http://<?= $default_domain; ?>/docs/site/about_codendi.php"><b>A propos</B></a> |
+            <a href="http://<?= $default_domain; ?>/contact.php"><B>Contactez-nous</b></a> |
+            <a href="http://<?= $default_domain; ?>/account/logout.php"><B>Se déconecter</b></a>
+        </p>
 
-<!-- top title table -->
-<TABLE width="100%" border=0 cellspacing=0 cellpadding=0 bgcolor="" valign="center">
-  <TR valign="top" bgcolor="#ece9e5">
-    <TD valign="center">
-      <A href="http://<?php echo $default_domain; ?>/">
-        <IMG src="http://<?php echo $default_domain; ?>/themes/common/images/organization_logo.png" vspace="" hspace="7" border=0 alt="Organization logo">
-      </A>
-    </TD>
-  </TR>
-</TABLE>
-<!-- end top title table -->
+        <div class="hero-unit">
+            <img src="http://<?= $default_domain; ?>/themes/common/images/organization_logo.png" vspace="" hspace="7" border=0 alt="Organization logo">
 
-<!-- center table -->
-<TABLE width="100%" border="0" cellspacing="0" cellpadding="2" bgcolor="#FFFFFF" align="center">
-  <TR>
-    <TD>
-      <CENTER><BR>
-      <H2>Bienvenue sur http://<?php print $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']; ?>/</H2>
-      <h3>Ce projet n'a pas encore créer son site Web.<BR>
-      Rendez-nous visite prochainement ou aller sur la page de <A href="http://<?php echo $default_domain; ?>/projects/<?php echo $project_name; ?>">Sommaire du projet</a><BR></h3>
-      </CENTER>
-    </TD>
-  </TR>
-</TABLE>
-<!-- end center table -->
+            <h2>Bienvenue sur la page web du projet <?= $project_name ?></h2>
+            <p>Ce projet n'a pas encore créé son site Web. Rendez-nous visite prochainement ou allez sur la page <A href="http://<?= $default_domain; ?>/projects/<?= $project_name; ?>">Sommaire du projet</a></p>
+        </div>
+    </div>
 
-<!-- end footer table -->
 </BODY>
 </HTML>
