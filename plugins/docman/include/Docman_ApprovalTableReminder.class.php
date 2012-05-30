@@ -24,6 +24,7 @@ require_once('Docman_ApprovalTableReviewerDao.class.php');
 require_once('Docman_ApprovalTable.class.php');
 require_once('Docman_ApprovalTableReviewer.class.php');
 require_once('common/mail/MailManager.class.php');
+require_once('Docman_ItemFactory.class.php');
 
 /**
  * Remind users that didn't review documents yet
@@ -149,6 +150,10 @@ class Docman_ApprovalTableReminder {
      * @return Mail
      */
      function prepareMailReminder($table, $reviewer) {
+        $itemFactory = new Docman_ItemFactory();
+        $docmanItem  = $itemFactory->getItemFromDb($table->itemId);
+        $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
+
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
         switch ($mailPrefs) {
