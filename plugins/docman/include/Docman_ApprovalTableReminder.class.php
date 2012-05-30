@@ -23,6 +23,7 @@ require_once('Docman_ApprovalTableDao.class.php');
 require_once('Docman_ApprovalTableReviewerDao.class.php');
 require_once('Docman_ApprovalTable.class.php');
 require_once('Docman_ApprovalTableReviewer.class.php');
+require_once('common/mail/MailManager.class.php');
 
 /**
  * Remind users that didn't review documents yet
@@ -149,7 +150,55 @@ class Docman_ApprovalTableReminder {
      */
      function prepareMailReminder($table, $reviewer) {
          // @TODO: Prepare the mail taking into consideration user preferences text/HTML and the language of her choice
+            $text_mail = $this->createMailForReviewer($reviewer, $subject);
+            $html_mail = $this->createHTMLMailForReviewer($reviewer, $subject);
      }
+
+    /**
+     * Creates the text mail body
+     *
+     * @param Docman_ApprovalTable $table    Approval table
+     * @param User                 $reviewer User to remind
+     *
+     * @return Mail
+     */
+    function createMailForReviewer($reviewer, $subject) {
+        $body = '';
+
+        $mail = new Mail();
+        $mail->setBody($body);
+        return $mail;
+    }
+
+    /**
+     * Creates the html mail body
+     *
+     * @param Docman_ApprovalTable $table    Approval table
+     * @param User                 $reviewer User to remind
+     *
+     * @return Codendi_Mail
+     */
+    function createHTMLMailForReviewer($reviewer, $subject) {
+        $body = '';
+
+        $mail = new Codendi_Mail();
+        $mail->setBodyHtml($body);
+        return $mail;
+}
+
+    /**
+     * Send mail reminder to reviewers
+     *
+     * @param Codendi_Mail_Interface $mail
+     * @param String                 $subject
+     * @param Array                  $to
+     */
+    function sendMailReminder(Codendi_Mail_Interface $mail, $subject, array $to) {
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo(join(',', $to));
+        $mail->setSubject($subject);
+        $mail->send();
+    }
 
     /**
      * Populate reviewers list of an approval table
