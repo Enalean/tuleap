@@ -149,9 +149,19 @@ class Docman_ApprovalTableReminder {
      * @return Mail
      */
      function prepareMailReminder($table, $reviewer) {
-         // @TODO: Prepare the mail taking into consideration user preferences text/HTML and the language of her choice
-            $text_mail = $this->createMailForReviewer($reviewer, $subject);
-            $html_mail = $this->createHTMLMailForReviewer($reviewer, $subject);
+        $mailMgr   = new MailManager();
+        $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
+        switch ($mailPrefs) {
+            case Codendi_Mail_Interface::FORMAT_HTML :
+                $mail = $this->createHTMLMailForReviewer($reviewer, $subject);
+                break;
+            case Codendi_Mail_Interface::FORMAT_TEXT :
+                $mail = $this->createMailForReviewer($reviewer, $subject);
+                break;
+            default :
+                $mail = $this->createMailForReviewer($reviewer, $subject);
+        }
+        return $mail;
      }
 
     /**
@@ -184,7 +194,7 @@ class Docman_ApprovalTableReminder {
         $mail = new Codendi_Mail();
         $mail->setBodyHtml($body);
         return $mail;
-}
+    }
 
     /**
      * Send mail reminder to reviewers
