@@ -43,25 +43,32 @@ class FullTextSearchActions {
      * @param array $params parameters of the docman event
      */
     public function indexNewDocument($params) {
-        $indexed_datas = $this->getIndexedDatas($params['item'], $params['version']);
-        $this->client->index($indexed_datas, $params['item']->getId());
+        $indexed_data = $this->getIndexedData($params['item'], $params['version']);
+        $this->client->index($indexed_data, $params['item']->getId());
     }
 
+    /**
+     * Update title and description if they've changed
+     * $params are kept as array to be compliant with others events,
+     * but we merely need event objects
+     *
+     * @param array $params
+     */
     public function updateDocument($params) {
         $item         = $params['item'];
         $new_data     = $params['new'];
-        $update_datas = array('script'=>'', 'params'=> array());
+        $update_data  = array('script'=>'', 'params'=> array());
         $updated      = false;
         if ($this->titleUpdated($new_data['title'], $item)) {
-            $update_datas = $this->buildSetterDatas($update_datas, 'title', $new_data['title']);
-            $updated  = true;
+            $update_data = $this->client->buildSetterDatas($update_data, 'title', $new_data['title']);
+            $updated     = true;
         }
         if ($this->descriptionUpdated($new_data, $item)) {
-            $update_datas = $this->buildSetterDatas($update_datas, 'description', $new_data['description']);
-            $updated  = true;
+            $update_data = $this->client->buildSetterDatas($update_data, 'description', $new_data['description']);
+            $updated     = true;
         }
         if ($updated) {
-            $this->client->request($item->getid().'/_update', 'POST', $update_datas);
+            $this->client->update($item->getid(), $update_data);
         }
     }
 
@@ -73,13 +80,7 @@ class FullTextSearchActions {
         return isset($data['description']) && $data['description'] != $item->getDescription();
     }
 
-    public function buildSetterDatas($current_data, $name, $value) {
-        $current_data['script']       .='ctx._source.'.$name.' = '.$name.';';
-        $current_data['params'][$name] = $value;
-        return $current_data;
-    }
-
-    private function getIndexedDatas(Docman_Item $item, Docman_Version $version) {
+    private function getIndexedData(Docman_Item $item, Docman_Version $version) {
         return array(
             'id'          => $item->getId(),
             'group_id'    => $item->getGroupId(),

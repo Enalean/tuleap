@@ -51,8 +51,18 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
     /**
      * @see ISearchAndIndexDocuments::delete
      */
-    public function request($path, $method, $payload, $verbose=false) {
-        $this->client->request($path, $method, $payload, $verbose=false);
+    public function update($item_id, $data) {
+        $this->client->request($item_id.'/_update', 'POST', $data);
+    }
+
+    /**
+     * make a parameter with name $nname and value $value
+     * then append it to current_data as script and var
+     */
+    public function buildSetterDatas($current_data, $name, $value) {
+        $current_data['script']       .='ctx._source.'.$name.' = '.$name.';';
+        $current_data['params'][$name] = $value;
+        return $current_data;
     }
 }
 ?>

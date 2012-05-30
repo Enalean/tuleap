@@ -43,10 +43,10 @@ interface FullTextSearch_ISearchAndIndexDocuments {
     public function delete($id = false);
 
     /**
-     * Perform a request
+     * Update document datas
      *
      * @return array
      */
-    public function request($path, $method, $payload, $verbose=false);
+    public function update($item_id, $data);
 }
 ?>
