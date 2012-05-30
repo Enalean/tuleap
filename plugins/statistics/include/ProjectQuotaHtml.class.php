@@ -153,13 +153,8 @@ class ProjectQuotaHtml {
         $count        = 50;
         $customQuotas = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
 
-        $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
-        $nextHref = $paginationParams['nextHref'];
-        $prevHref = $paginationParams['prevHref'];
-        $orderBy  = $this->toggleOrderBy($orderBy);
-
         if ($customQuotas && !$customQuotas->isError() && $customQuotas->rowCount() > 0) {
-            $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $nextHref, $prevHref);
+            $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
             $output .= '<br />';
         } else {
             $output .= $GLOBALS['Language']->getText('plugin_statistics', 'no_projects');
@@ -171,7 +166,12 @@ class ProjectQuotaHtml {
     /**
      * @return string html
      */
-    private function fetchCustomQuotaTable(Iterator $customQuotas, $orderBy, $projectFilterParam, $offset, $nextHref, $prevHref) {
+    private function fetchCustomQuotaTable(Iterator $customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
+        $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
+        $nextHref = $paginationParams['nextHref'];
+        $prevHref = $paginationParams['prevHref'];
+        $orderBy  = $this->toggleOrderBy($orderBy);
+
         $output   = '';
         $i        = 0;
         $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
