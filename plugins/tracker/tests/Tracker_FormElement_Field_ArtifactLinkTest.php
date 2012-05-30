@@ -312,4 +312,20 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     }
 }
 
+class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
+    
+    public function itSavesChangesetInSourceArtifact() {
+        $artifact         = anArtifact()->build();
+        $old_changeset    = null;
+        $new_changeset_id = 4444;
+        $submitted_value  = array('new_values' => '123, 124');
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('isSourceOfAssociation'));
+        stub($field)->isSourceOfAssociation(123)->returns(true);
+        stub($field)->isSourceOfAssociation(124)->returns(false);
+        
+        $field->saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value);
+    }
+}
+
 ?>

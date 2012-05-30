@@ -925,18 +925,31 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     /**
-     * Save the value and return the id
-     * 
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
+     * Save the value submitted by the user in the new changeset
      *
-     * @return int or array of int
+     * @param Tracker_Artifact           $artifact         The artifact
+     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
+     * @param int                        $new_changeset_id The id of the new changeset
+     * @param mixed                      $submitted_value  The value submitted by the user
+     * @param boolean $is_submission true if artifact submission, false if artifact update
+     *
+     * @return bool true if success
      */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        $success = true;
-        
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission = false, $bypass_permissions = false) {
+        $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
+        $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
+        foreach ($artifacts as $artifact_to_add) {
+            $artifact_id_already_linked = array();
+            if ($this->isSourceOfAssociation($artifact_to_add)) {
+                $artifact_id_already_linked[] = $artifact->getId();
+                $artifact_to_add->linkArtifact($artifact->getId(), $submitter);
+            }
+            //$submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        }
+        //parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission, $bypass_permissions);
+    }
+    
+    protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
         $new_values = (string)$value['new_values'];
         $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
         
@@ -950,34 +963,46 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
         
+        $artifacts = array();
         if (trim($new_values) != '') {
+            $af = $this->getArtifactFactory();
             $new_artifact_ids = array_diff(explode(',', $new_values), array_keys($removed_values));
             // We add new links to existing ones
             foreach ($new_artifact_ids as $new_artifact_id) {
                 if ( ! in_array($new_artifact_id, $artifact_ids)) {
-                    $artifact_ids[] = $new_artifact_id;
+                    $artifact = $af->getArtifactById($new_artifact_id);
+                    $artifacts[] = $artifact;
                 }
             }
         }
+        return $artifacts;
+    }
+    
+    /**
+     * Save the value and return the id
+     * 
+     * @param Tracker_Artifact                $artifact                The artifact
+     * @param int                             $changeset_value_id      The id of the changeset_value 
+     * @param mixed                           $value                   The value submitted by the user
+     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
+     *
+     * @return int or array of int
+     */
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+        $success = true;
+        
+        $artifacts = $this->getArtifactsFromChangesetValue($value, $previous_changesetvalue);
         
         $dao = $this->getValueDao();
         // we create the new changeset
-        foreach ($artifact_ids as $artifact_id) {
-            $artifact_id = trim ($artifact_id);
-            
-            $af = $this->getArtifactFactory();
-            $tf = $this->getTrackerFactory();
-            $art = $af->getArtifactById($artifact_id);
-            if ($art) {
-                $tracker_id = $art->getTrackerId();
-                $tracker = $tf->getTrackerById($tracker_id);
-                if ($tracker) {
-                    if  ( $dao->create($changeset_value_id, $artifact_id, $tracker->getItemName(), $tracker->getGroupId()) ) {
-                        // extract cross references
-                        $this->updateCrossReferences($artifact, $value);
-                    } else {
-                        $success = false;
-                    }
+        foreach ($artifacts as $artifact) {
+            $tracker = $artifact->getTracker();
+            if ($tracker) {
+                if ($dao->create($changeset_value_id, $artifact, $tracker->getItemName(), $tracker->getGroupId())) {
+                    // extract cross references
+                    $this->updateCrossReferences($artifact, $value);
+                } else {
+                    $success = false;
                 }
             }
         }

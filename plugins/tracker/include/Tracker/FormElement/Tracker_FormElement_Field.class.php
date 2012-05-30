@@ -760,11 +760,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         
         //Look for the previous value, if any
-        $previous_changesetvalue = null;
-        if ($old_changeset) {
-            $previous_changesetvalue = $old_changeset->getValue($this);
-        }
-        
+        $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {
             if ($submitted_value === null || !$hasPermission || !$this->hasChanges($previous_changesetvalue, $submitted_value)) {
                 //keep the old value
@@ -786,6 +782,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
         
         return $updated;
+    }
+    
+    protected function getPreviousChangesetValue($old_changeset) {
+        $previous_changesetvalue = null;
+        if ($old_changeset) {
+            $previous_changesetvalue = $old_changeset->getValue($this);
+        }
+        return $previous_changesetvalue;
     }
     
     /**
