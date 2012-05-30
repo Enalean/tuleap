@@ -60,11 +60,11 @@ class FullTextSearchActions {
         $update_data  = array('script'=>'', 'params'=> array());
         $updated      = false;
         if ($this->titleUpdated($new_data['title'], $item)) {
-            $update_data = $this->client->buildSetterDatas($update_data, 'title', $new_data['title']);
+            $update_data = $this->client->buildSetterData($update_data, 'title', $new_data['title']);
             $updated     = true;
         }
         if ($this->descriptionUpdated($new_data, $item)) {
-            $update_data = $this->client->buildSetterDatas($update_data, 'description', $new_data['description']);
+            $update_data = $this->client->buildSetterData($update_data, 'description', $new_data['description']);
             $updated     = true;
         }
         if ($updated) {

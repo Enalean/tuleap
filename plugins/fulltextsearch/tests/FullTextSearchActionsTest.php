@@ -21,6 +21,7 @@
 require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
 require_once dirname(__FILE__).'/../include/FullTextSearchActions.class.php';
+require_once dirname(__FILE__) .'/../include/ElasticSearch/ClientFacade.class.php';
 
 class FullTextSearchActionsTests extends TuleapTestCase {
     protected $client;
@@ -77,10 +78,14 @@ class FullTextSearchActionsTests extends TuleapTestCase {
         $expected_title = 'new title';
         $this->params['new'] = array('title' => $expected_title);
         $update_data = array('script'=>'', 'params'=> array());
-        $update_data = $this->actions->buildSetterDatas($update_data, 'title', $expected_title);
+        $update_data = array(
+            'script'=> 'ctx._source.title = title',
+            'params'=> array('title' => $expected_title)
+        );
+        stub($this->client)->buildSetterData('*', 'title', $expected_title)->returns($update_data);
 
-        $expected = array($item_id.'/_update', 'POST', $update_data);
-        $this->client->expectOnce('request', $expected);
+        $expected = array($item_id, $update_data);
+        $this->client->expectOnce('update', $expected);
 
         $this->actions->updateDocument($this->params);
         unset($this->params['new']);

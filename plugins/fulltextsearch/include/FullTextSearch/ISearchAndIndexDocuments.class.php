@@ -48,5 +48,12 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      * @return array
      */
     public function update($item_id, $data);
+
+    /**
+     * make and append prepared request to currentData
+     *
+     * @return array
+     */
+    public function buildSetterData(array $current_data, $name, $value);
 }
 ?>

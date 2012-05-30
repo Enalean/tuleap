@@ -59,7 +59,7 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
      * make a parameter with name $nname and value $value
      * then append it to current_data as script and var
      */
-    public function buildSetterDatas($current_data, $name, $value) {
+    public function buildSetterData(array $current_data, $name, $value) {
         $current_data['script']       .='ctx._source.'.$name.' = '.$name.';';
         $current_data['params'][$name] = $value;
         return $current_data;
