@@ -53,7 +53,7 @@ class Planning {
     /**
      * @var Array of int
      */
-    private $backlog_tracker_ids;
+    private $backlog_tracker_id;
     
     /**
      * @var int
@@ -68,15 +68,15 @@ class Planning {
     /**
      * @var array of Tracker
      */
-    private $backlog_trackers = array();
+    private $backlog_tracker = array();
     
-    function __construct($id, $name, $group_id, $backlog_title, $plan_title, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
+    function __construct($id, $name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id = null, $planning_tracker_id = null) {
         $this->id                  = $id;
         $this->name                = $name;
         $this->group_id            = $group_id;
         $this->plan_title          = $plan_title;
         $this->backlog_title       = $backlog_title;
-        $this->backlog_tracker_ids = $backlog_tracker_ids;
+        $this->backlog_tracker_id  = $backlog_tracker_id;
         $this->planning_tracker_id = $planning_tracker_id;
     }
     
@@ -116,10 +116,10 @@ class Planning {
     }
     
     /**
-     * @return array A list of tracker ids defined as backlog trackers
+     * @return int The id as the tracker used as backlog
      */
-    public function getBacklogTrackerIds() {
-        return $this->backlog_tracker_ids;
+    public function getBacklogTrackerId() {
+        return $this->backlog_tracker_id;
     }
     
     /**
@@ -146,19 +146,17 @@ class Planning {
     }
     
     /**
-     * TODO: Pass the backlog trackers at instanciation, and remove this setter.
-     * 
-     * @param array $backlog_trackers The trackers used as a backlog
+     * @param Tracker $backlog_tracker The tracker used as a backlog
      */
-    public function setBacklogTrackers(array $trackers) {
-        $this->backlog_trackers = $trackers;
+    public function setBacklogTracker(Tracker $backlog_tracker = null) {
+        $this->backlog_tracker = $backlog_tracker;
     }
     
     /**
-     * @return array of Tracker
+     * @return Tracker
      */
-    public function getBacklogTrackers() {
-        return $this->backlog_trackers;
+    public function getBacklogTracker() {
+        return $this->backlog_tracker;
     }
 }
 

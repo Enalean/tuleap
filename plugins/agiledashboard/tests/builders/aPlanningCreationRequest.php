@@ -21,11 +21,13 @@
 require_once 'common/include/Codendi_Request.class.php';
 
 class TestPlanningCreationRequestBuilder {
+    private $backlog_tracker_id;
+    
     public function __construct() {
         $this->group_id            = '123';
         $this->planning_name       = 'My Planning';
         $this->planning_tracker_id = '1';
-        $this->backlog_tracker_ids = array('2', '3');
+        $this->backlog_tracker_id  = '2';
     }
     
     public function withGroupId($group_id) {
@@ -38,8 +40,8 @@ class TestPlanningCreationRequestBuilder {
         return $this;
     }
     
-    public function withBacklogTrackerIds($backlog_tracker_ids) {
-        $this->backlog_tracker_ids = $backlog_tracker_ids;
+    public function withBacklogTrackerId($backlog_tracker_id) {
+        $this->backlog_tracker_id = $backlog_tracker_id;
         return $this;
     }
     
@@ -53,7 +55,7 @@ class TestPlanningCreationRequestBuilder {
             'group_id'            => $this->group_id,
             'planning_name'       => $this->planning_name,
             'planning_tracker_id' => $this->planning_tracker_id,
-            'backlog_tracker_ids' => $this->backlog_tracker_ids
+            'backlog_tracker_id'  => $this->backlog_tracker_id
         ));
     }
 }

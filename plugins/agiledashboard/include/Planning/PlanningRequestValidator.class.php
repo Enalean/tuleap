@@ -53,7 +53,7 @@ class Planning_RequestValidator {
      */
     public function isValid(Codendi_Request $request) {
         return $this->nameIsPresent($request)
-            && $this->atLeastOneBacklogTrackerIdIsPresentAndAllIdsArePositiveIntegers($request)
+            && $this->backlogTrackerIdIsPresentAndIsAPositiveIntegers($request)
             && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($request)
             && $this->planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($request);
     }
@@ -73,18 +73,18 @@ class Planning_RequestValidator {
     }
     
     /**
-     * Checks whether at least one backlog tracker id is present in the request,
-     * and is a valid positive integer.
+     * Checks whether a backlog tracker id is present in the request, and is
+     * a valid positive integer.
      * 
      * @param Codendi_Request $request The validated request.
      * 
      * @return bool
      */
-    private function atLeastOneBacklogTrackerIdIsPresentAndAllIdsArePositiveIntegers(Codendi_Request $request) {
-        $backlog_tracker_ids = new Valid_UInt('backlog_tracker_ids');
-        $backlog_tracker_ids->required();
+    private function backlogTrackerIdIsPresentAndIsAPositiveIntegers(Codendi_Request $request) {
+        $backlog_tracker_id = new Valid_UInt('backlog_tracker_id');
+        $backlog_tracker_id->required();
         
-        return $request->validArray($backlog_tracker_ids);
+        return $request->valid($backlog_tracker_id);
     }
     
     /**

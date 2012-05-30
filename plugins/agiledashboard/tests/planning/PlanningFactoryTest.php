@@ -56,8 +56,7 @@ class PlanningFactoryTest extends TuleapTestCase {
                                'planning_tracker_id' => $planning_tracker_id,
                                'backlog_title'       => 'Release Backlog',
                                'plan_title'          => 'Sprint Plan');
-        
-        $backlog_rows = array(array('tracker_id' => $backlog_tracker_id));
+        $backlog_row   = array('tracker_id'          => $backlog_tracker_id);
         
         stub($tracker_factory)->getTrackerById($planning_tracker_id)->returns($planning_tracker);
         stub($tracker_factory)->getTrackerById($backlog_tracker_id)->returns($backlog_tracker);
@@ -65,13 +64,13 @@ class PlanningFactoryTest extends TuleapTestCase {
         stub($planning_dao)->searchById($planning_id)->returns($planning_rows);
         stub($planning_rows)->getRow()->returns($planning_row);
         
-        stub($planning_dao)->searchBacklogTrackersById($planning_id)->returns($backlog_rows);
+        stub($planning_dao)->searchBacklogTrackerById($planning_id)->returns($backlog_row);
         
         $planning = $planning_factory->getPlanningWithTrackers($planning_id);
         
         $this->assertIsA($planning, 'Planning');
         $this->assertEqual($planning->getPlanningTracker(), $planning_tracker);
-        $this->assertEqual($planning->getBacklogTrackers(), array($backlog_tracker));
+        $this->assertEqual($planning->getBacklogTracker(), $backlog_tracker);
     }
     
     public function itDuplicatesPlannings() {
@@ -101,14 +100,14 @@ class PlanningFactoryTest extends TuleapTestCase {
                   'name'                => $sprint_planning_name,
                   'group_id'            => 101,
                   'planning_tracker_id' => $sprint_tracker_id,
-                  'backlog_tracker_ids' => "$story_tracker_id,$bug_tracker_id")
+                  'backlog_tracker_id'  => $story_tracker_id)
         );
         
         stub($dao)->searchByPlanningTrackerIds(array_keys($tracker_mapping))->returns($rows);
         
         $dao->expectOnce('createPlanning', array($sprint_planning_name,
                                                  $group_id,
-                                                 array($story_tracker_copy_id, $bug_tracker_copy_id),
+                                                 $story_tracker_copy_id,
                                                  $sprint_tracker_copy_id));
         
         $factory->duplicatePlannings($group_id, $tracker_mapping);
