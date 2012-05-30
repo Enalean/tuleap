@@ -58,8 +58,6 @@ class Planning_MilestoneFactory {
      *
      * Only objects that should be visible for the given user are loaded.
      *
-     * TODO: group_id should die.
-     *
      * @param User $user
      * @param int $group_id
      * @param int $planning_id
@@ -133,6 +131,14 @@ class Planning_MilestoneFactory {
         }
     }
 
+    /**
+     * Loads all open milestones for the given project (group_id) and planning
+     * 
+     * @param User $user
+     * @param type $group_id
+     * @param type $planning_id
+     * @return \Planning_Milestone 
+     */
     public function getOpenMilestones(User $user, $group_id, $planning_id) {
         $milestones = array();
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);

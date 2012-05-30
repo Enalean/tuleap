@@ -43,6 +43,14 @@ class Planning_Milestone {
      */
     private $planned_artifacts;
     
+    /**
+     * TODO: group_id should be replaced by project.
+     * 
+     * @param type $group_id
+     * @param Planning $planning
+     * @param Tracker_Artifact $artifact
+     * @param TreeNode $planned_artifacts 
+     */
     public function __construct(                 $group_id,
                                 Planning         $planning,
                                 Tracker_Artifact $artifact          = null,
