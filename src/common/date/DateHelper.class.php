@@ -116,7 +116,11 @@ class DateHelper {
      * @return Integer
      */
     function dateDiffInDays($start, $end) {
-        return floor(($end - $start) / 86400);
+        $hours        = 24;
+        $minutes      = 60;
+        $sconds       = 60;
+        $dayInSeconds = $hours * $minutes * $seconds;
+        return floor(($end - $start) / $dayInSeconds);
     }
 
     /**
