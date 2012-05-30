@@ -1,4 +1,7 @@
-Version 0.2 (Tuleap 5.1)
+Version 0.3 - Tuleap 5.2
+    * On document title/description update, update the corresponding index.
+
+Version 0.2 - Tuleap 5.1
     * First version of the plugin
     ** index/delete a document in ElasticSearch when it is added/removed in the docman
     ** Only title, description and content of pdf files are indexed

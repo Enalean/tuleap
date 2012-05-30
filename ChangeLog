@@ -6,10 +6,11 @@ Version 5.2 (Not Released Yet)
 	* Cardwall: 0.5.1
 	* Tracker: 5.7.16
 	* Agildashboard: 0.20
-	* Docman: 2.25.6
+	* Docman: 2.25.7
 	* Git: 2.5.5
 	* Ldap: 3.14
 	* Statistics: 0.13
+	* FullTextSearch: 0.3
 
 Version 5.1 (Wednesday, May 23rd 2012)
    == Enhancement ==
