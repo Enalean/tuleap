@@ -67,6 +67,7 @@ require_once 'common/include/Response.class.php';
 Mock::generate('Response');
 
 require_once dirname(__FILE__).'/builders/aField.php';
+require_once dirname(__FILE__).'/builders/anArtifact.php';
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     
@@ -319,12 +320,21 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $old_changeset    = null;
         $new_changeset_id = 4444;
         $submitted_value  = array('new_values' => '123, 124');
+        $submitter        = aUser()->build();
         
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('isSourceOfAssociation'));
-        stub($field)->isSourceOfAssociation(123)->returns(true);
-        stub($field)->isSourceOfAssociation(124)->returns(false);
+        $artifact_123 = mock('Tracker_Artifact');
+        $artifact_123->expectOnce('linkArtifact');
+        $artifact_124 = mock('Tracker_Artifact');
         
-        $field->saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value);
+        $all_artifacts = array($artifact_123, $artifact_124);
+        
+        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('isSourceOfAssociation', 'getArtifactsFromChangesetValue'));
+        stub($field)->isSourceOfAssociation($artifact_123)->returns(true);
+        stub($field)->isSourceOfAssociation($artifact_124)->returns(false);
+        
+        stub($field)->getArtifactsFromChangesetValue($submitted_value, $old_changeset)->returns($all_artifacts);
+        
+        $field->saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter);
     }
 }
 

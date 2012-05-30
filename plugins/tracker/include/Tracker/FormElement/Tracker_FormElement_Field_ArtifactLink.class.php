@@ -935,7 +935,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission = false, $bypass_permissions = false) {
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission = false, $bypass_permissions = false) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
         foreach ($artifacts as $artifact_to_add) {
