@@ -148,7 +148,7 @@ class Planning {
     /**
      * @param Tracker $backlog_tracker The tracker used as a backlog
      */
-    public function setBacklogTracker(Tracker $backlog_tracker = null) {
+    public function setBacklogTracker(Tracker $backlog_tracker) {
         $this->backlog_tracker = $backlog_tracker;
     }
     
