@@ -152,7 +152,7 @@ class Docman_ApprovalTableReminder {
      function prepareMailReminder($table, $reviewer) {
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($table->itemId);
-        $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
+        $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
 
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
@@ -229,7 +229,39 @@ class Docman_ApprovalTableReminder {
      * @return Codendi_Mail
      */
     function createHTMLMailForReviewer($table, $docmanItem, $subject) {
-        $body = '';
+        $pm    = ProjectManager::instance();
+        $group = $pm->getProject($docmanItem->getGroupId());
+        $um    = UserManager::instance();
+        $owner = $um->getUserById($table->owner);
+
+        $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
+        $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
+        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
+
+        $comment     = '';
+        $userComment = $table->getDescription();
+        if($userComment != '') {
+            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
+            $comment .= "\n\n";
+        }
+
+        $notifStyle = '';
+        switch($table->getNotification()) {
+        case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
+            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
+            break;
+        case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
+            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
+            break;
+        }
+        $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body', array($docmanItem->getTitle(), 
+                                                              $group->getPublicName(),
+                                                              $owner->getRealName(),
+                                                              $itemUrl,
+                                                              $comment,
+                                                              $notifStyle,
+                                                              $reviewUrl,
+                                                              $owner->getEmail()));
 
         $mail = new Codendi_Mail();
         $mail->setSubject($subject);
