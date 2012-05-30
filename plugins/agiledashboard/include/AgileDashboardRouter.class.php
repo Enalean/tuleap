@@ -162,12 +162,10 @@ class AgileDashboardRouter {
      * @return Planning_MilestoneController 
      */
     protected function buildMilestoneController(Codendi_Request $request) {
-        $artifact_factory  = $this->getArtifactFactory();
         $planning_factory  = $this->getPlanningFactory();
         $milestone_factory = $this->getMilestoneFactory();
         
         return new Planning_MilestoneController($request,
-                                                $artifact_factory,
                                                 $planning_factory,
                                                 $milestone_factory);
     }
@@ -266,24 +264,12 @@ class AgileDashboardRouter {
     }
 
     /**
-     * Builds a new Tracker_ArtifactFactory instance.
-     * 
-     * TODO:
-     *   - Use Planning_MilestoneFactory instead.
-     * 
-     * @return Tracker_ArtifactFactory
-     */
-    protected function getArtifactFactory() {
-        return Tracker_ArtifactFactory::instance();
-    }
-    
-    /**
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory 
      */
     protected function getMilestoneFactory() {
         return new Planning_MilestoneFactory($this->getPlanningFactory(),
-                                             $this->getArtifactFactory());
+                                             Tracker_ArtifactFactory::instance());
     }
 }
 
