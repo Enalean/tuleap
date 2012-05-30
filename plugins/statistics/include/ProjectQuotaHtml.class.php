@@ -138,15 +138,10 @@ class ProjectQuotaHtml {
         $orderParams = $this->validateOrderByFilter($request);
         $sortBy      = $orderParams['sort'];
         $orderBy     = $orderParams['order'];
+        $list        = $this->getListOfProjectsIds($filter);
 
-        $list               = array();
         $projectFilterParam = '';
         if ($filter) {
-            $result   = $this->projectManager->returnAllProjects(0, 20, false, $filter);
-            $projects = $result['projects'];
-            foreach ($projects as $entry) {
-                $list[] = $entry['group_id'];
-            }
             if (empty($list)) {
                 $output .= '<div id="feedback"><ul class="feedback_warning"><li>'.$GLOBALS['Language']->getText('plugin_statistics', 'no_search_result').'</li></ul></div>';
             }
@@ -176,7 +171,10 @@ class ProjectQuotaHtml {
                 $user        = $um->getUserById($row[Statistics_ProjectQuotaDao::REQUESTER_ID]);
                 $username    = (empty($user)) ? '' : $user->getUserName();
                 $output     .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                $output     .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td><td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td><td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_BASIC, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td><td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
+                $output     .= '<td><a href="project_stat.php?group_id='.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" >'.$projectName.'</a></td>';
+                $output     .= '<td>'.$username.'</td><td>'.$row[Statistics_ProjectQuotaDao::REQUEST_SIZE].' GB</td>';
+                $output     .= '<td><pre>'.$purifier->purify($row[Statistics_ProjectQuotaDao::EXCEPTION_MOTIVATION], CODENDI_PURIFIER_BASIC, $row[Statistics_ProjectQuotaDao::GROUP_ID]).'</pre></td>';
+                $output     .= '<td>'.strftime("%d %b %Y", $row[Statistics_ProjectQuotaDao::REQUEST_DATE]).'</td><td><input type="checkbox" name="delete_quota[]" value="'.$row[Statistics_ProjectQuotaDao::GROUP_ID].'" /></td>';
                 $output     .= '</tr>';
             }
             $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
@@ -191,6 +189,23 @@ class ProjectQuotaHtml {
         }
         $output .= $this->renderNewCustomQuotaForm();
         return $output;
+    }
+    
+    /**
+     * @param string $filter The filter
+     *
+     * @return array of int (groups ids)
+     */
+    private function getListOfProjectsIds($filter) {
+        $list = array();
+        if ($filter) {
+            $result   = $this->projectManager->getAllProjectsRows(0, 20, false, $filter);
+            $projects = $result['projects'];
+            foreach ($projects as $entry) {
+                $list[] = $entry['group_id'];
+            }
+        }
+        return $list;
     }
 
     /**

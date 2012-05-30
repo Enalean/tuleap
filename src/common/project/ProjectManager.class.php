@@ -428,12 +428,12 @@ class ProjectManager {
      *
      * @param Integer $offset    Offset
      * @param Integer $limit     Limit of the search
-     * @param String  $status    Statud of the projects to search
+     * @param String  $status    Status of the projects to search
      * @param String  $groupName Name to search
      *
-     * @return Array
+     * @return Array ('projects' => DataAccessResult, 'numrows' => int)
      */
-    public function returnAllProjects($offset, $limit, $status = false, $groupName = false) {
+    public function getAllProjectsRows($offset, $limit, $status = false, $groupName = false) {
         $dao = $this->_getDao();
         return $dao->returnAllProjects($offset, $limit, $status, $groupName);
     }
