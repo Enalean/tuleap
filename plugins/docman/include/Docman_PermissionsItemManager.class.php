@@ -22,35 +22,54 @@ require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'common/project/ProjectManager.class.php';
 require_once 'Docman_ItemFactory.class.php';
 
+/**
+ * This class is responsible to return authorized Ugroups for an item depending on its parents
+ *
+ */
 class Docman_PermissionsItemManager {
     const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
-    private function mergeUgroupIds(array $parent_permissions, array $child_permissions) {
-        $contains_anonymous = $this->oneContainsAnonymous($child_permissions, $parent_permissions);
-        $item_permissions   = array_intersect($parent_permissions, $child_permissions);
-        if ($this->isParentMoreRestrictive($parent_permissions, $child_permissions)) {
-            $remaining = $parent_permissions;
-        } else {
-            $remaining = $child_permissions;
-        }
-        $remaining = array_diff($remaining, $item_permissions);
-        foreach($remaining as $item_permission) {
-            if ($item_permission < 100 || $contains_anonymous) {
-                $item_permissions[] = $item_permission;
+    private function mergeUgroupIds(array $parent_ugroups_ids, array $child_ugroups_ids) {
+        $item_ugroups_ids   = array_intersect($parent_ugroups_ids, $child_ugroups_ids);
+        $more_restrictive   = $this->getMoreRestrictiveUgroup($parent_ugroups_ids, $child_ugroups_ids);
+        $remaining_ids      = array_diff($more_restrictive, $item_ugroups_ids);
+
+        $contains_anonymous = $this->oneContainsAnonymous($child_ugroups_ids, $parent_ugroups_ids);
+
+        foreach($remaining_ids as $item_ugroup_id) {
+            if ($item_ugroup_id < Ugroup::NONE || $contains_anonymous) {
+                $item_ugroups_ids[] = $item_ugroup_id;
             }
         }
-        return array_unique($item_permissions);
+        return array_unique($item_ugroups_ids);
     }
 
-    private function oneContainsAnonymous($child_permissions, $parent_permissions) {
-        return in_array(1, $child_permissions, true) || in_array(1, $parent_permissions, true);
+    private function getMoreRestrictiveUgroup($ugroups_ids1, $ugroups_ids2) {
+        $ugroups_ids1_lowest = $this->lowest($ugroups_ids1);
+        $ugroups_ids2_lowest = $this->lowest($ugroups_ids2);
+
+        if ($ugroups_ids1_lowest == $ugroups_ids2_lowest) {
+            return $this->getBiggestUgroupCollection($ugroups_ids1, $ugroups_ids2);
+        }
+
+        $ugroups_ids = $ugroups_ids1;
+        if ($ugroups_ids1_lowest < $ugroups_ids2_lowest) {
+            $ugroups_ids = $ugroups_ids2;
+        }
+        return $ugroups_ids;
     }
 
-    private function isParentMoreRestrictive($parent_permissions, $child_permissions) {
-        $parent_lowest = $this->lowest($parent_permissions);
-        $child_lowest  = $this->lowest($child_permissions);
-        return $parent_lowest > $child_lowest
-               || ($parent_lowest == $child_lowest && count($parent_permissions) > count($child_permissions));
+    private function getBiggestUgroupCollection($ugroups_ids1, $ugroups_ids2) {
+        $ugroups_ids = $ugroups_ids1;
+        if (count($ugroups_ids1) < count($ugroups_ids2)) {
+            $ugroups_ids = $ugroups_ids2;
+        }
+        return $ugroups_ids;
+    }
+
+    private function oneContainsAnonymous($child_ugroups_ids, $parent_ugroups_ids) {
+        return in_array(Ugroup::ANONYMOUS, $child_ugroups_ids, true)
+            || in_array(Ugroup::ANONYMOUS, $parent_ugroups_ids, true);
     }
 
     private function lowest($array) {
@@ -59,13 +78,13 @@ class Docman_PermissionsItemManager {
     }
 
     private function getUgroupIdsPermissions(Docman_Item $item, UGroupLiteralizer $literalizer, Project $project) {
-        $permissions = $literalizer->getUgroupIds($item->getId(), self::PERMISSIONS_TYPE);
+        $ugroups_ids = $literalizer->getUgroupIds($item->getId(), self::PERMISSIONS_TYPE);
         $parent_item = $this->getParentItem($item, $project);
         if ($parent_item) {
-            $parent_permissions = $this->getUgroupIdsPermissions($parent_item, $literalizer, $project);
-            $permissions        = $this->mergeUgroupIds($parent_permissions, $permissions);
+            $parent_ugroups_ids = $this->getUgroupIdsPermissions($parent_item, $literalizer, $project);
+            $ugroups_ids        = $this->mergeUgroupIds($parent_ugroups_ids, $ugroups_ids);
         }
-        return array_values($permissions);
+        return array_values($ugroups_ids);
     }
 
     private function getParentItem(Docman_Item $item, Project $project) {
@@ -74,7 +93,7 @@ class Docman_PermissionsItemManager {
     }
 
     /**
-     * Returns permissions of an item in a human readable format
+     * Returns ugroups of an item in a human readable format
      *
      * @param Docman_Item $item
      *
