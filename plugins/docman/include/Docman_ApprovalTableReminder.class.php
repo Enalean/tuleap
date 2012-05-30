@@ -84,9 +84,7 @@ class Docman_ApprovalTableReminder {
         $reviewers   = $table->getReviewerArray();
         if(!empty($reviewers)) {
             foreach ($reviewers as $reviewer) {
-                switch($reviewer->getState()) {
-                case PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET:
-                case PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED:
+                if ($reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET || $reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED) {
                     $sent = $this->notifyIndividual($table, $reviewer->getId());
                     if($sent) {
                         $nbNotif++;
