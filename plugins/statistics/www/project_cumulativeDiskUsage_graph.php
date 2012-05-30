@@ -58,7 +58,7 @@ $graph = new Statistics_DiskUsageGraph($duMgr);
 if ($func == 'usage') {
     //Retreive the config param & convert it to bytes
     $quota    = $duMgr->getProperty('allowed_quota');
-    $pqm      = ProjectQuotaManager::instance();
+    $pqm      = new ProjectQuotaManager();
     $res      = $pqm->getProjectCustomQuota($groupId);
     if ($res && !$res->isError() && $res->rowCount() == 1) {
         $row   = $res->getRow();
