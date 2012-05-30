@@ -97,20 +97,6 @@ class Planning_Milestone {
     /**
      * @return int
      */
-    public function getId() {
-        return $this->artifact->getId();
-    }
-    
-    /**
-     * @return string
-     */
-    public function getTitle() {
-        return $this->artifact->getTitle();
-    }
-    
-    /**
-     * @return int
-     */
     public function getPlanningId() {
         return $this->planning->getId();
     }
