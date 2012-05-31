@@ -108,6 +108,11 @@ class Planning_Milestone {
         return $this->planned_artifacts;
     }
     
+    /**
+     * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts() 
+     * @param User $user
+     * @return Array of Tracker_Artifact
+     */
     public function getLinkedArtifacts(User $user) {
         $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
         $root_node = $this->getPlannedArtifacts();
@@ -118,7 +123,7 @@ class Planning_Milestone {
         return $artifacts;
     }
 
-    public function addChildrenNodes($root_node, &$artifacts, $user) {
+    private function addChildrenNodes($root_node, &$artifacts, $user) {
         foreach ($root_node->getChildren() as $node) {
             $data = $node->getData();
             $artifact = $data['artifact'];
