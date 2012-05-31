@@ -315,29 +315,32 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
 
 class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+
+        $this->modified_artifact_id = 223;
+        $this->modified_artifact    = anArtifact()->withId($this->modified_artifact_id)->build();
+        $this->old_changeset    = null;
+        $this->new_changeset_id = 4444;
+        $this->submitted_value  = array('new_values' => '123, 124');
+        $this->submitter        = aUser()->build();
+        
+        $this->artifact_123 = mock('Tracker_Artifact');
+        $this->artifact_124 = mock('Tracker_Artifact');
+        
+        $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
+        
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('isSourceOfAssociation', 'getArtifactsFromChangesetValue'));
+        stub($this->field)->isSourceOfAssociation($this->artifact_123)->returns(true);
+        stub($this->field)->isSourceOfAssociation($this->artifact_124)->returns(false);
+        
+        stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);        
+    }
+    
     public function itSavesChangesetInSourceArtifact() {
-        $modified_artifact_id = 223;
-        $modified_artifact    = anArtifact()->withId($modified_artifact_id)->build();
-        $old_changeset    = null;
-        $new_changeset_id = 4444;
-        $submitted_value  = array('new_values' => '123, 124');
-        $submitter        = aUser()->build();
+        $this->artifact_123->expectOnce('linkArtifact', array($this->modified_artifact_id, $this->submitter));
         
-        $artifact_123 = mock('Tracker_Artifact');
-        $artifact_124 = mock('Tracker_Artifact');
-        
-        $all_artifacts = array($artifact_123, $artifact_124);
-        
-        $field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('isSourceOfAssociation', 'getArtifactsFromChangesetValue'));
-        stub($field)->isSourceOfAssociation($artifact_123)->returns(true);
-        stub($field)->isSourceOfAssociation($artifact_124)->returns(false);
-        
-        stub($field)->getArtifactsFromChangesetValue($submitted_value, $old_changeset)->returns($all_artifacts);
-        
-        
-        $artifact_123->expectOnce('linkArtifact', array($modified_artifact_id, $submitter));
-        
-        $field->saveNewChangeset($modified_artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter);
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
     }
 }
 
