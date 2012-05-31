@@ -72,6 +72,9 @@ class AgileDashboardRouter {
             case 'create':
                 $this->executeAction($controller, 'create');
                 break;
+            case 'edit':
+                $this->executeAction($controller, 'edit');
+                break;
             case 'delete':
                 $this->executeAction($controller, 'delete');
                 break;

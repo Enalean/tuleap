@@ -87,6 +87,10 @@ class Planning_Controller extends MVC2_Controller {
         }
     }
     
+    public function edit() {
+        $this->render('edit', null);
+    }
+    
     public function delete() {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));
