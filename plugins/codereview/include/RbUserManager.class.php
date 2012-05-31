@@ -25,7 +25,7 @@ require_once 'common/curl/TuleapCurl.class.php';
  */
 class RbUserManager {
 
- /**
+    /**
      * Search RB user
      *
      * @param String  $url           URL of the command to execute
@@ -37,10 +37,9 @@ class RbUserManager {
      *
      * @return Boolean
      */
-
-    public function searchUser($url, $includeHeader = false,$authUser = null, $authPassword = null, $postfields = null,$username){
-        $curl    = new TuleapCurl();
-        $result = $curl->execute($url, $includeHeader,$authUser, $authPassword, $postfields);
+    public function searchUser($url, $includeHeader = false, $authUser = null, $authPassword = null, $postfields = null, $username) {
+        $curl   = new TuleapCurl();
+        $result = $curl->execute($url, $includeHeader, $authUser, $authPassword, $postfields);
         $users  = $result['return']['users'];
         foreach ($users as $user) {
             if ($user['username'] == $username) {
@@ -48,7 +47,8 @@ class RbUserManager {
             }
         }
         return false;
-    
+    }
+
 }
-}
+
 ?>

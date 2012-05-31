@@ -77,43 +77,42 @@ class CodeReview extends Controler {
         $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
         $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
         /******check if the Tuleap User is registred in reviewboard******/
-        $rbusermanager    = new RbUserManager();
-        $exist = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
-        if (!$exist){
-         $curl    = new TuleapCurl();
+        $rbusermanager = new RbUserManager();
+        $exist         = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null, $username);
+        if (!$exist) {
+         $curl   = new TuleapCurl();
          $create = $curl->execute($url."/api/users/", false, $username, $userpwd, null);
         }
         if ($this->getUser()->isLoggedIn()) {
-            if($username=="admin"){
-                 $this->view = 'displayFrameAdmin';
-             }
-             else{
-            $repositoryManager = new RepositoryManager($this->plugin, $request);
-            $repositoryManager->addRepository($request);
-            $vAction = new Valid_WhiteList('action', array('add_review', 'submit_review','publish_review','submit_publish'));
-            $vAction->required();
-            $action = $request->getValidated('action', $vAction, false);
-            switch ($action) {
-            case 'add_review':
-                $this->view = 'reviewSubmission';
-                break;
-            case 'submit_review':
-                // TODO: put some actions here
-                $this->action = 'createReviewRequest';
-                break;
-            case 'publish_review':
-                $this->view = 'reviewPublishing';
-                break;
-            case 'submit_publish':
-                // TODO: put some actions here
-                $this->action = 'publishReviewRequest';
-                $this->view ='displayFramePublish';
-                break;    
-            default:
-                $this->view = 'displayFrame';
-                break;
+            if($username == "admin") {
+                $this->view = 'displayFrameAdmin';
+            } else {
+                $repositoryManager = new RepositoryManager($this->plugin, $request);
+                $repositoryManager->addRepository($request);
+                $vAction = new Valid_WhiteList('action', array('add_review', 'submit_review', 'publish_review', 'submit_publish'));
+                $vAction->required();
+                $action = $request->getValidated('action', $vAction, false);
+                switch ($action) {
+                case 'add_review':
+                    $this->view = 'reviewSubmission';
+                    break;
+                case 'submit_review':
+                    // TODO: put some actions here
+                    $this->action = 'createReviewRequest';
+                    break;
+                case 'publish_review':
+                    $this->view = 'reviewPublishing';
+                    break;
+                case 'submit_publish':
+                    // TODO: put some actions here
+                    $this->action = 'publishReviewRequest';
+                    $this->view ='displayFramePublish';
+                    break;    
+                default:
+                    $this->view = 'displayFrame';
+                    break;
+                }
             }
-         }
         } else {
             $this->view = 'displayFrame';
         }
