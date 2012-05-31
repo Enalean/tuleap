@@ -2296,6 +2296,24 @@ input.span2, textarea.span2, .uneditable-input.span2 {
 input.span1, textarea.span1, .uneditable-input.span1 {
   width: 50px;
 }
+.help-block,
+.help-inline {
+  color: #555555;
+}
+
+.help-block {
+  display: block;
+  margin-bottom: 9px;
+}
+
+.help-inline {
+  display: inline-block;
+  *display: inline;
+  padding-left: 5px;
+  vertical-align: middle;
+  *zoom: 1;
+}
+
 .hero-unit {
   padding: 60px;
   margin-bottom: 30px;
@@ -2872,6 +2890,17 @@ input.span1, textarea.span1, .uneditable-input.span1 {
   }
 }
 /* }}} */
+
+/* {{{ Customized bootstrap elements for tuleap TODO: use less framework */
+.help-block,
+.help-inline {
+  color: #999999; /* @grayLight */
+}
+.help-block {
+  margin-top: 0px;
+}
+/* }}} */
+
 /* {{{ homepage & footer customization */
 
 #homepage {
