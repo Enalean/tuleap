@@ -60,49 +60,7 @@ class MilestoneTest extends TuleapTestCase {
         $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
         $this->assertEqual($milestone->getArtifactTitle(), $artifact->getTitle());
     }
-    
-//    public function itDelegatesLinkedArtifactsRetrieval() {
-//        $artifact1 = anArtifact()->withId(1111)->build();
-//        $artifact2 = anArtifact()->withId(2222)->build();
-//        $linkedArtifacts = array($artifact1, $artifact2);
-//        $artifact = aMockArtifact()->withLinkedArtifacts($linkedArtifacts)->build();
-//        $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
-//        
-//        $this->assertEqual($milestone->getLinkedArtifacts(mock('User')), $linkedArtifacts);
-//    }
-//    
-    public function itGetsLinkedArtifactsTheRootLevelArtifact() {
-        $artifact = aMockArtifact()->withId(1111)->withUniqueLinkedArtifacts(array(aMockArtifact()->build()))->build();
-//        $planned_artifacts = aNode()->withArtifact($artifact)->build();
 
-        $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
-        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
-        $this->assertEqual(count($all_artifacts), 1);
-    }
-    
-    public function itGetsTheArtifactsOfAChildNode() {
-//        $root_artifact = aMockArtifact()->withId(1111)->withTitle('root artifact')->build();
-//        $child_artifact = aMockArtifact()->withId(1111)->withTitle('child artifact')->build();
-//        $planned_artifacts = aNode()->withArtifact($root_artifact)
-//                                    ->withChild(
-//                                        aNode()->withArtifact($child_artifact))
-//                             ->build();
-//
-//        
-//        $milestone = new Planning_Milestone(0, mock('Planning'), $root_artifact, $planned_artifacts);
-//        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
-//        $this->assertEqual(count($all_artifacts), 1);
-    }
-    
-    public function itGetsLinkedArtifactsOfThePlannedOnes4() {
-//        $root_node = aNode()->withChildren(
-//                                aNode()->withChild(aNode()),
-//                                aNode())
-//                     ->build();
-//        $all_artifacts = $milestone->getLinkedArtifacts();
-//        $this->assertEqual(count($all_artifacts), 4);
-    }
-    
     public function itMayHavePlannedArtifacts() {
         $this->assertEqual($this->milestone->getPlannedArtifacts(), null);
         
@@ -124,6 +82,68 @@ class MilestoneTest extends TuleapTestCase {
         $this->assertTrue($this->milestone->userCanView(mock('User')), "any user should be able to read an empty milstone");
     }
 }
+
+class Milestone_linkedArtifactTest extends TuleapTestCase {
+    
+    public function itGetsLinkedArtifactsTheRootLevelArtifact() {
+        $artifact      = aMockArtifact()->withId(1111)->withUniqueLinkedArtifacts(array(aMockArtifact()->build()))->build();
+
+        $milestone     = new Planning_Milestone(0, mock('Planning'), $artifact);
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $this->assertEqual(count($all_artifacts), 1);
+    }
+    
+    public function itGetsTheArtifactsChildNodes() {
+        $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
+        $child1_artifact   = aMockArtifact()->withId(1111)->withTitle('child artifact 1')->build();
+        $child2_artifact   = aMockArtifact()->withId(2222)->withTitle('child artifact 2')->build();
+        $planned_artifacts = aNode()->withArtifact($root_artifact)
+                                    ->withChildren(
+                                        aNode()->withArtifact($child1_artifact),
+                                        aNode()->withArtifact($child2_artifact))
+                                    ->build();
+
+        
+        $milestone = new Planning_Milestone(0, mock('Planning'), $root_artifact, $planned_artifacts);
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $this->assertEqual(count($all_artifacts), 2);
+    }
+    
+    public function itGetsTheArtifactsOfNestedChildNodes() {
+        $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
+        $depth1_artifact   = aMockArtifact()->withId(1111)->withTitle('depth 1 artifact')->build();
+        $depth2_artifact   = aMockArtifact()->withId(2222)->withTitle('depth 2 artifact')->build();
+        $planned_artifacts = aNode()->withArtifact($root_artifact)
+                                    ->withChild(
+                                        aNode()->withArtifact($depth1_artifact)
+                                               ->withChild(aNode()->withArtifact($depth2_artifact)))
+                                    ->build();
+
+        
+        $milestone = new Planning_Milestone(0, mock('Planning'), $root_artifact, $planned_artifacts);
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $this->assertEqual(count($all_artifacts), 2);
+    }
+    
+    public function itGetsTheLinkedArtifactsOfChildNodes() {
+        $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
+        $linked_artifact_1 = aMockArtifact()->build();
+        $linked_artifact_2 = aMockArtifact()->build();
+        $artifact          = aMockArtifact()->withId(1111)
+                                            ->withUniqueLinkedArtifacts(array($linked_artifact_1, $linked_artifact_2))
+                                            ->build();
+        $planned_artifacts = aNode()->withArtifact($root_artifact)
+                                    ->withChild(
+                                        aNode()->withArtifact($artifact))
+                                    ->build();
+
+        
+        $milestone = new Planning_Milestone(0, mock('Planning'), $root_artifact, $planned_artifacts);
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $this->assertEqual(count($all_artifacts), 3);
+    }
+}
+    
 
 class Test_TreeNode_Builder {
 
