@@ -212,10 +212,10 @@ function aNode() {
 class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
     
     public function setUp() {
-        $this->group_id  = 123;
+        $this->project  = stub('Project')->getID()->returns(123);
         $this->planning  = mock('Planning');
         $this->artifact  = mock('Tracker_Artifact');
-        $this->milestone = new Planning_Milestone($this->group_id,
+        $this->milestone = new Planning_Milestone($this->project,
                                                   $this->planning,
                                                   $this->artifact);
     }

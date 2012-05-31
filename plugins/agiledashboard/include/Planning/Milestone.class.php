@@ -93,8 +93,13 @@ class Planning_Milestone {
     public function getGroupId() {
         return ($this->project instanceof Project)? $this->project->getID() : $this->project;
     }
+    
+    //TODO remove
+    public function getProject() {
+        return $this->project;
+    }
 
-    /**
+        /**
      * @return Tracker_Artifact
      */
     public function getArtifact() {
