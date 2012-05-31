@@ -27,9 +27,9 @@ function aMilestone() {
 class Test_Planning_MilestoneBuilder {
     
     /**
-     * @var int
+     * @var Project
      */
-    private $group_id;
+    private $project;
     
     /**
      * @var Planning
@@ -47,14 +47,14 @@ class Test_Planning_MilestoneBuilder {
     private $sub_milestones;
     
     public function __construct() {
-        $this->group_id          = 123;
+        $this->project           = mock('Project');
         $this->planning          = aPlanning()->build();
         $this->sub_milestones    = array();
         $this->artifact          = anArtifact()->build();
     }
     
     public function withinTheSameProjectAs(Planning_Milestone $other_milestone) {
-        $this->group_id = $other_milestone->getGroupId();
+        $this->project = $other_milestone->getGroupId();
         return $this;
     }
     
@@ -63,8 +63,8 @@ class Test_Planning_MilestoneBuilder {
         return $this;
     }
     
-    public function withGroupId($group_id) {
-        $this->group_id = $group_id;
+    public function withGroup($project) {
+        $this->project = $project;
         return $this;
     }
     
@@ -88,7 +88,7 @@ class Test_Planning_MilestoneBuilder {
     }
     
     public function build() {
-        $milestone = new Planning_Milestone($this->group_id,
+        $milestone = new Planning_Milestone($this->project,
                                             $this->planning,
                                             $this->artifact);
         $milestone->addSubMilestones($this->sub_milestones);

@@ -26,9 +26,9 @@ class Planning_Milestone {
     /**
      * The project where the milestone is defined
      * 
-     * @var int
+     * @var Project
      */
-    protected $group_id;
+    protected $project;
     
     /**
      * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
@@ -36,6 +36,7 @@ class Planning_Milestone {
      * 
      * @var Planning
      */
+    
     protected $planning;
     
     /**
@@ -70,19 +71,17 @@ class Planning_Milestone {
     private $sub_milestones = array();
     
     /**
-     * TODO: group_id should be replaced by project.
-     * 
-     * @param type $group_id
+     * @param Project $project
      * @param Planning $planning
      * @param Tracker_Artifact $artifact
      * @param TreeNode $planned_artifacts 
      */
-    public function __construct(                 $group_id,
+    public function __construct(                 $project,
                                 Planning         $planning,
                                 Tracker_Artifact $artifact,
                                 TreeNode         $planned_artifacts = null) {
         
-        $this->group_id          = $group_id;
+        $this->project           = $project;
         $this->planning          = $planning;
         $this->artifact          = $artifact;
         $this->planned_artifacts = $planned_artifacts;
@@ -92,7 +91,7 @@ class Planning_Milestone {
      * @return int The project identifier.
      */
     public function getGroupId() {
-        return $this->group_id;
+        return ($this->project instanceof Project)? $this->project->getID() : $this->project;
     }
 
     /**
