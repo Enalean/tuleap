@@ -45,7 +45,7 @@ class MockArtifactBuilder {
     public function build() {
         $this->artifact->setReturnValue('getId', $this->id);
         $this->artifact->setReturnValue('getTracker', $this->tracker);
-        $this->artifact->setReturnValue('gettitle', $this->title);
+        $this->artifact->setReturnValue('getTitle', $this->title);
         
         return $this->artifact;
     }
