@@ -68,7 +68,7 @@ $group_id = isset($options['g']) ? (int)$options['g'] : '';
 
 
 while (!$host) {
-    fwrite(STDOUT, "\Hostname: ");
+    fwrite(STDOUT, "\nHostname: ");
     $host = rtrim(fgets(STDIN), "\n");
 }
 
@@ -87,7 +87,7 @@ while (!$pass) {
 }
 
 while (!$group_id) {
-    fwrite(STDOUT, "\Project id: ");
+    fwrite(STDOUT, "\nProject id: ");
     $group_id = (int)rtrim(fgets(STDIN), "\n");
 }
 example($host, $user, $pass, $group_id);

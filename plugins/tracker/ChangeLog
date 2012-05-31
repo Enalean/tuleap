@@ -1,3 +1,6 @@
+Version 5.7.17 - Tuleap 5.2
+    * Add API method for agiledashboard (retrieve hierarchy of linked artifacts).
+
 Version 5.7.16 - Tuleap 5.2
     * Refactoring of "external permissions"
 	* Collapse by default in cross search

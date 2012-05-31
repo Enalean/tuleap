@@ -44,14 +44,21 @@ class Statistics_SOAPServer {
      *  Returned format:
      *  <code>
      *  array(
-     *      "total" => total size in bytes,
-     *      "quota" => allowed size in bytes
+     *      "services" => array(
+     *          'service name' => total size in bytes
+     *      ),
+     *      "total"    => total size in bytes,
+     *      "quota"    => allowed size in bytes
      *  )
      *  </code>
      *  
      *  Example:
      *  <code>
      *  array(
+     *      "services" => array(
+     *          'svn' => 60,
+     *          'docman' => 2500
+     *      ),
      *      "total" => 2560,
      *      "quota" => 52428800,
      *  )
@@ -68,30 +75,48 @@ class Statistics_SOAPServer {
      *
      * @return ArrayOfStatistics
      */
-    function getProjectDiskStats($session_key, $group_id) {
+    function getProjectDiskStats($sessionKey, $group_id) {
         try {
-            $user    = $this->soap_request_validator->continueSession($session_key);
-            $project = $this->soap_request_validator->getProjectById($group_id);
-            $this->soap_request_validator->assertUserCanAccessProject($user, $project);
+            $user = $this->soap_request_validator->continueSession($sessionKey);
+            $this->assertUserCanAccessProject($user, $group_id);
             
-            $this->disk_usage_manager = new Statistics_DiskUsageManager();
+            return $this->getDiskStatsForUser($user, $group_id);
             
-            $total = $this->disk_usage_manager->returnTotalProjectSize($group_id);
-            
-            $allowed_quota_in_GB = $this->disk_usage_manager->getProperty('allowed_quota');
-            $allowed_quota_in_B  = $this->gigabytesToBytes($allowed_quota_in_GB);
-            
-            return array(
-                'total' => $total,
-                'quota' => $allowed_quota_in_B
-            );
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
     
+    private function getDiskStatsForUser(User $user, $group_id) {
+        $disk_stats = array(
+            'services' => array(),
+            'total'    => $this->disk_usage_manager->returnTotalProjectSize($group_id),
+            'quota'    => $this->getAllowedQuotaInBytes(),
+        );
+        
+        if ($this->userHasAdminPrivileges($user, $group_id)) {
+            $disk_stats['services'] = $this->disk_usage_manager->returnTotalServiceSizeByProject($group_id);
+        }
+        
+        return $disk_stats;
+    }
+    
+    private function assertUserCanAccessProject(User $user, $group_id) {
+        $project = $this->soap_request_validator->getProjectById($group_id);
+        $this->soap_request_validator->assertUserCanAccessProject($user, $project);
+    }
+    
+    private function getAllowedQuotaInBytes() {
+        $allowed_quota_in_GB = $this->disk_usage_manager->getProperty('allowed_quota');
+        return $this->gigabytesToBytes($allowed_quota_in_GB);
+    }
+    
     private function gigabytesToBytes($gigabytes) {
         return $gigabytes * 1024 * 1024 * 1024;
+    }
+    
+    private function userHasAdminPrivileges($user, $group_id){
+        return ($user->isSuperUser() || $user->isMember($group_id, 'A'));
     }
 }
 ?>

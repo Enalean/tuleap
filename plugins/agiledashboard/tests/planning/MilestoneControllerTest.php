@@ -24,6 +24,7 @@ $current_dir = dirname(__FILE__);
 require_once $current_dir.'/../../../tracker/include/constants.php';
 require_once $current_dir.'/../../include/Planning/MilestoneController.class.php';
 require_once $current_dir.'/../../include/Planning/Planning.class.php';
+require_once $current_dir.'/../../include/Planning/NoMilestone.class.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aTracker.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aField.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
@@ -357,10 +358,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         TrackerFactory::setInstance($tracker_factory);
 
         $milestone_factory = mock('Planning_MilestoneFactory');
-        stub($milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
-                                                                   $request->get('group_id'),
-                                                                   $request->get('planning_id'),
-                                                                   $request->get('aid'))
+        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
+                                                                                   $request->get('group_id'),
+                                                                                   $request->get('planning_id'),
+                                                                                   $request->get('aid'))
                                 ->returns($milestone);
 
         ob_start();
