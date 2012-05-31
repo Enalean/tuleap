@@ -924,6 +924,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return TrackerFactory::instance();
     }
     
+    protected function getTrackerChildrenFromHierarchy($tracker_id) {
+        return Tracker_HierarchyFactory::build()->getChildren($tracker_id);
+    }
+    
+    public function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
+        $children = $this->getTrackerChildrenFromHierarchy($artifact_to_check->getTracker()->getId());
+        return in_array($artifact_reference->getTracker(), $children);
+    }
+    
     /**
      * Save the value submitted by the user in the new changeset
      *
@@ -938,15 +947,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
+        $artifact_id_already_linked = array();
         foreach ($artifacts as $artifact_to_add) {
-            $artifact_id_already_linked = array();
-            if ($this->isSourceOfAssociation($artifact_to_add)) {
-                $artifact_id_already_linked[] = $artifact->getId();
-                $artifact_to_add->linkArtifact($artifact->getId(), $submitter);
+            if ($this->isSourceOfAssociation($artifact_to_add, $artifact)) {
+                if ($artifact_to_add->linkArtifact($artifact->getId(), $submitter)) {
+                    $artifact_id_already_linked[] = $artifact_to_add->getId();
+                }
             }
-            $submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
         }
-        //parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
+        $submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        //var_dump('propagate add of ', $submitted_value, " into ".$artifact->getId());
+        parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
     }
     
     /**

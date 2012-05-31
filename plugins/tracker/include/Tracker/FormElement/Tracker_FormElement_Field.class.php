@@ -749,7 +749,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
         $updated        = false;
         $save_new_value = false;
-        $dao            = new Tracker_Artifact_Changeset_ValueDao();
+        $dao            = $this->getChangesetValueDao();
         
         if ($bypass_permissions) {
             $hasPermission = true;
@@ -786,6 +786,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $updated;
     }
     
+    protected function getChangesetValueDao() {
+        return new Tracker_Artifact_Changeset_ValueDao();
+    }
+
+
     protected function getPreviousChangesetValue($old_changeset) {
         $previous_changesetvalue = null;
         if ($old_changeset) {
