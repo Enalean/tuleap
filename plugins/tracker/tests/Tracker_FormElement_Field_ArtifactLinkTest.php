@@ -342,6 +342,33 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
     }
+    
+    public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
+        $submitted_value  = array('new_values' => '123, 124');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => '124'));
+        
+        $submitted_value  = array('new_values' => '');
+        $artifact_id_already_linked = array();
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => ''));
+        
+        $submitted_value  = array('new_values' => '124, 123, 136');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => '124,136'));
+        
+        $submitted_value  = array('new_values' => '123');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => ''));
+        
+        $submitted_value  = array('new_values' => '124, 123');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => '124'));
+    }
 }
 
 ?>

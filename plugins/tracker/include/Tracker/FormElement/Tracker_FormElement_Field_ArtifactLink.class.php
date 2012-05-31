@@ -944,9 +944,28 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_id_already_linked[] = $artifact->getId();
                 $artifact_to_add->linkArtifact($artifact->getId(), $submitter);
             }
-            //$submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+            $submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
         }
         //parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission, $bypass_permissions);
+    }
+    
+    /**
+     * Remove from user submitted artifact links the artifact ids that where already
+     * linked after the direction checking
+     * 
+     * Should be private to the class but almost impossible to test in the context
+     * of saveNewChangeset.
+     * 
+     * @param Array $submitted_value
+     * @param Array $artifact_id_already_linked
+     * 
+     * @return Array 
+     */
+    public function removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked) {
+        $submitted_value = explode(',', $submitted_value['new_values']);
+        $submitted_value = array_map('trim', $submitted_value);
+        $submitted_value = array_diff($submitted_value, $artifact_id_already_linked);
+        return array('new_values' => implode(',', $submitted_value));
     }
     
     protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
