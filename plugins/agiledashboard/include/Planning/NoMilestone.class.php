@@ -25,7 +25,7 @@ require_once 'Milestone.class.php';
  */
 class Planning_NoMilestone extends Planning_Milestone {
     
-    public function __construct($project, Planning $planning) {
+    public function __construct(Project $project, Planning $planning) {
         // not calling the super constructor allows us not enforce non nullity on the artifact
         $this->project           = $project;
         $this->planning          = $planning;

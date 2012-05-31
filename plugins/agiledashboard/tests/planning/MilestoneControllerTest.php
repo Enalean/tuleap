@@ -299,7 +299,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $milestone;
     }
 
-    private function GivenNoMilestone($project = null) {
+    private function GivenNoMilestone($project) {
         return new Planning_NoMilestone($project, $this->planning);
     }
 
@@ -333,7 +333,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
     }
 
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $milestone = $this->GivenNoMilestone();
+        $milestone = $this->GivenNoMilestone(mock('Project'));
         $this->GivenASetOfArtifacts();
         $request = aRequest()->withUri($this->request_uri)
                              ->with('group_id', $this->planning->getGroupId())

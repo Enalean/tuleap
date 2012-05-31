@@ -91,7 +91,7 @@ class Planning_Milestone {
      * @return int The project identifier.
      */
     public function getGroupId() {
-        return ($this->project instanceof Project)? $this->project->getID() : $this->project;
+        return $this->project->getID();
     }
     
     //TODO remove
