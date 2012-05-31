@@ -955,8 +955,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
+        var_dump('remove', $artifact_id_already_linked);
         $submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
-        //var_dump('propagate add of ', $submitted_value, " into ".$artifact->getId());
+        var_dump('propagate add of ', $submitted_value, " into ".$artifact->getId());
         parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
     }
     

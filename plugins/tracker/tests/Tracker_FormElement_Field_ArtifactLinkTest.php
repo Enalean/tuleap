@@ -324,9 +324,10 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $this->new_changeset_id = 4444;
         $this->submitted_value  = array('new_values' => '123, 124');
         $this->submitter        = aUser()->build();
+        $this->new_changeset_value_id = 66666;
         
-        $this->artifact_123 = mock('Tracker_Artifact');
-        $this->artifact_124 = mock('Tracker_Artifact');
+        $this->artifact_123 = stub('Tracker_Artifact')->getId()->returns(123);
+        $this->artifact_124 = stub('Tracker_Artifact')->getId()->returns(124);
         
         $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
         
@@ -336,8 +337,8 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
                                                                                                   'getChangesetValueDao',
                                                                                                   'userCanUpdate',
                                                                                                   'isValid'));
-        
-        stub($this->field)->getChangesetValueDao()->returns(mock('Tracker_Artifact_Changeset_ValueDao'));
+        $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
+        stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
         stub($this->field)->userCanUpdate()->returns(true);
         stub($this->field)->isValid()->returns(true);
         
@@ -348,7 +349,13 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
     }
     
     public function itSavesChangesetInSourceArtifact() {
+        // First reverse link the artifact
         $this->artifact_123->expectOnce('linkArtifact', array($this->modified_artifact_id, $this->submitter));
+        stub($this->artifact_123)->linkArtifact()->returns(true);
+        
+        // Then update the artifact with other links
+        $remaining_submitted_value = array('new_values' => '124');
+        $this->field->expectOnce('saveValue', array($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null));
         
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
     }
