@@ -410,6 +410,8 @@ project_admin_utils	rename_request	Request project rename
 project_admin_utils	rename_done	Rename project done
 project_admin_utils	rename_with_error	Rename project with error(s)
 project_admin_utils	membership_request_updated	Membership ugroup delegation updated
+project_admin_utils	add_custom_quota	Request cutom disk quota
+project_admin_utils	restore_default_quota	Restore default disk quota
 # There must be one message here for each return value of
 # the permission_get_object_type function in www/project/admin/permissions.php
 project_admin_utils	perm_reset_for_field	Permission reset for field $1

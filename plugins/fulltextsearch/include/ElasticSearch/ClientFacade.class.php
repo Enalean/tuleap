@@ -21,7 +21,7 @@
 require_once dirname(__FILE__) .'/../FullTextSearch/ISearchAndIndexDocuments.class.php';
 
 /**
- * Base class to interact with ElasticSearch 
+ * Base class to interact with ElasticSearch
  */
 class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocuments {
 
@@ -46,6 +46,23 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
      */
     public function delete($id = false) {
         $this->client->delete($id);
+    }
+
+    /**
+     * @see ISearchAndIndexDocuments::delete
+     */
+    public function update($item_id, $data) {
+        $this->client->request($item_id.'/_update', 'POST', $data);
+    }
+
+    /**
+     * make a parameter with name $nname and value $value
+     * then append it to current_data as script and var
+     */
+    public function buildSetterData(array $current_data, $name, $value) {
+        $current_data['script']       .= "ctx._source.$name = $name;";
+        $current_data['params'][$name] = $value;
+        return $current_data;
     }
 }
 ?>

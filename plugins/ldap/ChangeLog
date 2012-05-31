@@ -1,3 +1,6 @@
+Version 3.14 - Tuleap 5.2
+    * Fix first bind done to check connexion validity. If anonymous bind is disabled, all bind should be authenticated otherwise server can disable the connexion. Thanks to Marc Dumais for investigation and report.
+
 Version 3.13 - Tuleap 5.0
     * Fix unit tests
 

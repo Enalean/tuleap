@@ -141,9 +141,13 @@ class TreeNode /*implements Visitable*/ {
      * 
      * @param int $key Id of child to remove.
      */
-    function removeChild($key) {
+    function removeChild($key, $object = null) {
+        if (!$key && $object && is_array($this->children)) {
+            $key = array_search($object, $this->children);
+        }
         if(isset($key) && is_int($key) && is_array($this->children) && array_key_exists($key, $this->children)) {
             unset($this->children[$key]);
+            $this->children = array_values($this->children);
         }
         else {
             trigger_error(get_class($this).'::removeChild => require: "int" given: "'.gettype($key).'"', E_USER_ERROR);
