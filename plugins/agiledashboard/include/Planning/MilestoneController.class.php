@@ -77,7 +77,7 @@ class Planning_MilestoneController extends MVC2_Controller {
 
     public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
         $project              = $manager->getProject($this->milestone->getGroupId());
-        $planning             = $this->getPlanning();
+        $planning             = $this->milestone->getPlanning();
         $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $this->milestone->getGroupId(), $planning->getId());
         $tracker_ids          = $planning->getBacklogTrackerIds();
         
@@ -153,7 +153,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     }
     
     /**
-     * @param array of Tracker_Artifact $available_milestones
+     * @param array of Planning_Milestone $available_milestones
      * 
      * @return array of Tracker_Artifact
      */
@@ -165,14 +165,6 @@ class Planning_MilestoneController extends MVC2_Controller {
         return $linked_items;
     }
  
-    /**
-     * @return Planning
-     */
-    private function getPlanning() {
-        $planning_id = $this->request->get('planning_id');
-        return $this->planning_factory->getPlanningWithTrackers($planning_id);
-    }
-
     /**
      * @return BreadCrumb_BreadCrumbGenerator
      */

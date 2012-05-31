@@ -293,6 +293,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($milestone)->getArtifact()->returns($artifact);
         stub($milestone)->getPlannedArtifacts()->returns($root_node);
         stub($milestone)->userCanView()->returns(true);
+        stub($milestone)->getPlanning()->returns($this->planning);
 
         return $milestone;
     }
