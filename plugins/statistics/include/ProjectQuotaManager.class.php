@@ -102,11 +102,7 @@ class ProjectQuotaManager {
                     $user   = $um->getCurrentUser();
                     $userId = $user->getId();
                 }
-                $dum      = new Statistics_DiskUsageManager();
-                $maxQuota = intval($dum->getProperty('maximum_quota'));
-                if (!isset($maxQuota)) {
-                    $maxQuota = 50;
-                }
+                $maxQuota = $this->getMaximumQuota();
                 if ($quota > $maxQuota) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
                 } else {
@@ -122,6 +118,20 @@ class ProjectQuotaManager {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'no_project'));
             }
         }
+    }
+    
+    /**
+     * Get the maximum quota defined for the plateform
+     *
+     * @return int
+     */
+    public function getMaximumQuota() {
+        $dum      = new Statistics_DiskUsageManager();
+        $maxQuota = intval($dum->getProperty('maximum_quota'));
+        if (!isset($maxQuota)) {
+            $maxQuota = 50;
+        }
+        return $maxQuota;
     }
 
     /**
