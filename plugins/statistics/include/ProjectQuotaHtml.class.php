@@ -185,11 +185,11 @@ class ProjectQuotaHtml {
 
         $output   = '';
         $i        = 0;
-        $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
-        $output  .= html_build_list_table_top($titles);
-        $output  .= '<form method="post" >';
         $purifier = Codendi_HTMLPurifier::instance();
         $um       = UserManager::instance();
+        $titles   = array($GLOBALS['Language']->getText('global', 'Project'), $GLOBALS['Language']->getText('plugin_statistics', 'requester'), '<a href="?sort=quota&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').'</a>', $GLOBALS['Language']->getText('plugin_statistics', 'motivation'), '<a href="?sort=date&amp;order='.$orderBy.$projectFilterParam.'&amp;offset='.$offset.'">'.$GLOBALS['Language']->getText('plugin_statistics', 'date').'</a>', $GLOBALS['Language']->getText('global', 'delete'));
+        $output  .= '<form method="post">';
+        $output  .= html_build_list_table_top($titles);
         foreach ($customQuotas as $row) {
             $project     = $this->projectManager->getProject($row[Statistics_ProjectQuotaDao::GROUP_ID]);
             $projectName = (empty($project)) ? '' : $project->getPublicName();
@@ -204,12 +204,13 @@ class ProjectQuotaHtml {
             $output .= '</tr>';
         }
         $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+        $output .= $this->csrf->fetchHTMLInput();
         $output .= '<input type="hidden" name ="action" value="delete" />';
         $output .= '<td colspan="5" ><td><input type="submit" /></td>';
         $output .= '</tr>';
-        $output .= '</form>';
         $output .= '<tr><td>'.$prevHref.'</td><td colspan="4" ></td><td>'.$nextHref.'</td></tr>';
         $output .= '</table>';
+        $output .= '</form>';
         return $output;
     }
 
