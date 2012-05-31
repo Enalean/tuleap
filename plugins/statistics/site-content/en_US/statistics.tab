@@ -59,6 +59,7 @@ plugin_statistics	quota_description	Custom quota for each project
 plugin_statistics	search_projects	Search projects
 plugin_statistics	no_projects	All projects have the default quota ($1 GB).
 plugin_statistics	quota	Quota
+plugin_statistics	max_quota	Maximum quota is $1 GB
 plugin_statistics	requester	Requester
 plugin_statistics	motivation	Motivation
 plugin_statistics	date	Date
