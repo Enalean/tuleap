@@ -109,7 +109,7 @@ class CodeReview extends Controler {
                     $this->view ='displayFramePublish';
                     break;    
                 default:
-                    $this->view = 'displayFrame';
+                    $this->view = 'displayFrameAccueil';
                     break;
                 }
             }

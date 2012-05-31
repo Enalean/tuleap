@@ -78,7 +78,17 @@ class CodeReviewViews extends Views {
     function _getTitle() {
         return $GLOBALS['Language']->getText('plugin_codereview', 'title');
     }
-
+    /**
+     * Displays Accueil frame
+     *
+     * @return Void
+     */
+    function displayFrameAccueil() {
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
+        echo'</br>';
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
+        echo'</br>';
+    }
     /**
      * Displays Review board frame
      *
