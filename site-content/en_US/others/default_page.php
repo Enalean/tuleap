@@ -44,7 +44,6 @@ if (preg_match('|^/www/(.*)/|',$_SERVER['REQUEST_URI'],$matches)) {
         <div class="container">
             <p>
                 <a href="http://<?= $default_domain; ?>/"><b>Home</b></a> |
-                <a href="http://<?= $default_domain; ?>/docs/site/about_codendi.php"><b>About</b></a> |
                 <a href="http://<?= $default_domain; ?>/contact.php"><b>Contact Us</b></a> |
                 <a href="http://<?= $default_domain; ?>/account/logout.php"><b>Logout</b></a>
             </p>
