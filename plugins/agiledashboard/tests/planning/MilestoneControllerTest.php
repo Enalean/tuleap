@@ -24,6 +24,7 @@ $current_dir = dirname(__FILE__);
 require_once $current_dir.'/../../../tracker/include/constants.php';
 require_once $current_dir.'/../../include/Planning/MilestoneController.class.php';
 require_once $current_dir.'/../../include/Planning/Planning.class.php';
+require_once $current_dir.'/../../include/Planning/NoMilestone.class.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aTracker.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aField.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
@@ -244,7 +245,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('fetchTitle', "#$id $title");
         $artifact->setReturnValue('getId', $id);
         $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
-        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
+        $artifact->setReturnValue('getUniqueLinkedArtifacts', $already_linked_items);
         $artifact->setReturnValue('userCanView', true);
 
         $tracker = stub('Tracker')->userCanView()->returns(true);
@@ -364,11 +365,11 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $tracker_factory = new MockTrackerFactory();
         TrackerFactory::setInstance($tracker_factory);
 
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifacts($request->getCurrentUser(),
-                                                                   $request->get('group_id'),
-                                                                   $request->get('planning_id'),
-                                                                   $request->get('aid'))
-                                ->returns($milestone);
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
+                                                                                        $request->get('group_id'),
+                                                                                        $request->get('planning_id'),
+                                                                                        $request->get('aid'))
+                                      ->returns($milestone);
 
         ob_start();
         $controller = new Planning_MilestoneController($request, $planning_factory, $this->milestone_factory);

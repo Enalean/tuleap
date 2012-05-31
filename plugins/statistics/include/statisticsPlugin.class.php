@@ -37,6 +37,7 @@ class StatisticsPlugin extends Plugin {
         $this->_addHook('usergroup_data',           'usergroup_data',         false);
         $this->_addHook('groupedit_data',           'groupedit_data',         false);
         $this->_addHook(Event::WSDL_DOC2SOAP_TYPES, 'wsdl_doc2soap_types',    false);
+        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
     }
 
     function getPluginInfo() {
@@ -229,6 +230,16 @@ class StatisticsPlugin extends Plugin {
             'arrayofstatistics' => 'tns:ArrayOfStatistics',
         ));
     }
+
+    public function combined_scripts($params) {
+        $params['scripts'] = array_merge(
+            $params['scripts'],
+            array(
+                $this->getPluginPath().'/js/autocomplete.js',
+            )
+        );
+    }
+
 }
 
 ?>

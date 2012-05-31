@@ -54,15 +54,15 @@ class SVN_SOAPServer {
      * * 3001, Invalid session (wrong $sessionKey)
      * * 3002, User do not have access to the project
      *
-     * @param String  $session_key Session key of the desired project admin
+     * @param String  $sessionKey Session key of the desired project admin
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param String  $path        Path to the directory to list (eg. '/tags')
      * 
      * @return ArrayOfString The list of directories
      */
-    public function getSvnPath($session_key, $group_id, $path) {
+    public function getSvnPath($sessionKey, $group_id, $path) {
         try {
-            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
@@ -111,16 +111,16 @@ class SVN_SOAPServer {
      * * 3002, User do not have access to the project
      * * 3005, Invalid user id
      *
-     * @param String  $session_key Session key of the requesting user
+     * @param String  $sessionKey  Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param Integer $limit       Maximum revisions returned
      * @param Integer $author_id   Id of commit author
      *
      * @return ArrayOfRevision The list of revisions
      */
-    public function getSvnLog($session_key, $group_id, $limit, $author_id) {
+    public function getSvnLog($sessionKey, $group_id, $limit, $author_id) {
         try {
-            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnLog');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
@@ -138,16 +138,16 @@ class SVN_SOAPServer {
     /**
      * Returns the list of active users (commiters) between start_date and end_date
      * 
-     * @param String  $session_key Session key of the requesting user
+     * @param String  $sessionKey Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param Integer $start_date  Start of period (unix timestamp)
      * @param Integer $end_date    End of period   (unix timestamp)
      * 
      * @return ArrayOfCommiter
      */
-    public function getSvnStatsUsers($session_key, $group_id, $start_date, $end_date) {
+    public function getSvnStatsUsers($sessionKey, $group_id, $start_date, $end_date) {
         try {
-            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsUser');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             
@@ -163,7 +163,7 @@ class SVN_SOAPServer {
     /**
      * Return top most modified files during the given period
      * 
-     * @param String  $session_key Session key of the requesting user
+     * @param String  $sessionKey Session key of the requesting user
      * @param Integer $group_id    ID of the project the subversion repository belongs to
      * @param Integer $start_date  Start of period (unix timestamp)
      * @param Integer $end_date    End of period   (unix timestamp)
@@ -171,9 +171,9 @@ class SVN_SOAPServer {
      * 
      * @return ArrayOfSvnPathInfo
      */
-    public function getSvnStatsFiles($session_key, $group_id, $start_date, $end_date, $limit) {
+    public function getSvnStatsFiles($sessionKey, $group_id, $start_date, $end_date, $limit) {
         try {
-            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSvnStatsFiles');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
             

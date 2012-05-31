@@ -71,6 +71,14 @@ class PlanningDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function searchByPlanningTrackerId($planning_tracker_id) {
+        $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
+        $sql = "SELECT * 
+                FROM plugin_agiledashboard_planning
+                WHERE planning_tracker_id = $planning_tracker_id";        
+        return $this->retrieve($sql);
+    }
+    
     function searchByPlanningTrackerIds(array $planning_tracker_ids) {
         $planning_tracker_ids = $this->da->escapeIntImplode($planning_tracker_ids);
         

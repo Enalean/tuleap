@@ -1,32 +1,33 @@
 <?php
 /**
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
- * 
+ *
  * Originally written by Manuel VACELET, 2006.
- * 
+ *
  * This file is a part of Codendi.
- * 
+ *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Codendi is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- * 
- * 
+ *
+ *
  */
 require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 require_once('common/user/User.class.php');
 
 Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', 'getDao', '_itemIsLockedForUser'));
 Mock::generate('User');
+Mock::generate('Project');
 Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManagerDao');
 Mock::generate('DataAccessResult');
@@ -50,7 +51,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         unset($this->refOnNull);
         unset($this->project);
     }
-    
+
     // Functional test (should never change)
     function testSuperUserHasAllAccess() {
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
@@ -93,9 +94,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
-        $pm =& new MockPermissionsManager($this);        
+        $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -109,7 +110,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->assertFalse($this->docmanPm->userCanRead($this->user, 123));
 
     }
-    
+
     // Functional test (should never change)
     function testWriteRightGivesReadRight() {
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
@@ -124,9 +125,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
-        $pm =& new MockPermissionsManager($this);        
+        $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -154,9 +155,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
-        $pm =& new MockPermissionsManager($this);        
+        $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_READ', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -179,9 +180,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
-        $pm =& new MockPermissionsManager($this);        
+        $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
 
@@ -193,7 +194,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
     function testUserCanWriteButItemIsLockedBySomeoneelse() {
         // item is locked
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', true);
-        
+
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         // user is not super admin
@@ -226,7 +227,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
         $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
@@ -253,7 +254,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
         $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
@@ -279,7 +280,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        // 
+        //
 
         $pm =& new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', false);
@@ -303,7 +304,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        //       
+        //
 
         // Read one object
         $pm1 =& new MockPermissionsManager($this);
@@ -316,9 +317,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         // Test cache read og this object
         $pm2 =& new MockPermissionsManager($this);
-        $pm2->expectNever('userHasPermission');        
+        $pm2->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanRead($this->user, '1515'));
-        
+
         // Read perm for another object
         $pm3 =& new MockPermissionsManager($this);
         $pm3->setReturnValue('userHasPermission', true);
@@ -328,21 +329,21 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         // Read 2nd time perm for second object
         $pm4 =& new MockPermissionsManager($this);
-        $pm4->expectNever('userHasPermission');        
+        $pm4->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '6667'));
-        
+
         // Read 3rd time first object perms
         $pm5 =& new MockPermissionsManager($this);
-        $pm5->expectNever('userHasPermission');        
+        $pm5->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanRead($this->user, '1515'));
 
         // Read 3rd time second object perms
         $pm6 =& new MockPermissionsManager($this);
-        $pm6->expectNever('userHasPermission');        
+        $pm6->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '6667'));
     }
 
-    function testCacheUserCanWrite() { 
+    function testCacheUserCanWrite() {
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         // user is not docman admin
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
@@ -353,7 +354,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        //       
+        //
 
         // Read one object
         $pm1 =& new MockPermissionsManager($this);
@@ -365,9 +366,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         // Test cache read og this object
         $pm2 =& new MockPermissionsManager($this);
-        $pm2->expectNever('userHasPermission');        
+        $pm2->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, '1515'));
-        
+
         // Read perm for another object
         $pm3 =& new MockPermissionsManager($this);
         $pm3->setReturnValue('userHasPermission', true);
@@ -377,17 +378,17 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         // Read 2nd time perm for second object
         $pm4 =& new MockPermissionsManager($this);
-        $pm4->expectNever('userHasPermission');        
+        $pm4->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '6667'));
-        
+
         // Read 3rd time first object perms
         $pm5 =& new MockPermissionsManager($this);
-        $pm5->expectNever('userHasPermission');        
+        $pm5->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanWrite($this->user, '1515'));
 
         // Read 3rd time second object perms
         $pm6 =& new MockPermissionsManager($this);
-        $pm6->expectNever('userHasPermission');        
+        $pm6->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, '6667'));
     }
 
@@ -402,7 +403,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         //
         // Start Test
-        //       
+        //
 
         // Read one object
         $pm1 =& new MockPermissionsManager($this);
@@ -413,9 +414,9 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         // Test cache read og this object
         $pm2 =& new MockPermissionsManager($this);
-        $pm2->expectNever('userHasPermission');        
+        $pm2->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanManage($this->user, '1515'));
-        
+
         // Read perm for another object
         $pm3 =& new MockPermissionsManager($this);
         $pm3->setReturnValue('userHasPermission', true);
@@ -425,17 +426,17 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         // Read 2nd time perm for second object
         $pm4 =& new MockPermissionsManager($this);
-        $pm4->expectNever('userHasPermission');        
+        $pm4->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '6667'));
-        
+
         // Read 3rd time first object perms
         $pm5 =& new MockPermissionsManager($this);
-        $pm5->expectNever('userHasPermission');        
+        $pm5->expectNever('userHasPermission');
         $this->assertFalse($this->docmanPm->userCanManage($this->user, '1515'));
 
         // Read 3rd time second object perms
         $pm6 =& new MockPermissionsManager($this);
-        $pm6->expectNever('userHasPermission');        
+        $pm6->expectNever('userHasPermission');
         $this->assertTrue($this->docmanPm->userCanManage($this->user, '6667'));
     }
 
@@ -520,13 +521,13 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         $this->user->setReturnValue('isSuperUser', false);
         $this->user->setReturnValue('getUgroups', 'test');
-        
+
         $itemId = 1515;
-        
+
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_WRITE', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
-        
+
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
@@ -537,13 +538,13 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->docmanPm->setReturnValue('_isUserDocmanAdmin', false);
         $this->user->setReturnValue('isSuperUser', false);
         $this->user->setReturnValue('getUgroups', 'test');
-        
+
         $itemId = 1515;
-        
+
         $pm = new MockPermissionsManager($this);
         $pm->setReturnValue('userHasPermission', true, array($itemId, 'PLUGIN_DOCMAN_MANAGE', 'test'));
         $this->docmanPm->setReturnReference('_getPermissionManagerInstance', $pm);
-        
+
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, true);
         $this->assertTrue($this->docmanPm->userCanManage($this->user, $itemId));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
@@ -612,7 +613,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
-    
+
     function testSetUserCannotReadButCanManage() {
         $itemId = 1515;
         $this->docmanPm->_setCanRead($this->user->getId(), $itemId, false);
@@ -702,7 +703,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
-    function testGetDocmanAdminUsersDynamicUgroup() {        
+    function testGetDocmanAdminUsersDynamicUgroup() {
         $dar = array(array('ugroup_id' => 101));
         $dao = new MockDocman_PermissionsManagerDao();
         $dao->setReturnValue('getDocmanAdminUgroups', $dar);
@@ -773,95 +774,8 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
                            'jane.doe@example.com' => 'fr_FR');
         $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
     }
-    
+
        //function testGetProjectAdminUsersSuccess() {
 }
 
-
-
-require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
-require_once 'common/permission/PermissionsManager.class.php';
-require_once 'common/project/ProjectManager.class.php';
-require_once 'common/project/UGroup.class.php';
-
-class Docman_PermissionsManager_ExportPermissionsTest extends TuleapTestCase {
-    protected $permissions_manager;
-    protected $project_manager;
-    protected $project;
-    protected $docman_item;
-    protected $item_id = 100;
-    
-    public function setUp() {
-        parent::setUp();
-        $this->docman_item         = new Docman_Item();
-        $this->docman_item->setId($this->item_id);
-        $this->permissions_manager = mock('PermissionsManager');
-        $this->project_manager     = mock('ProjectManager');
-        $this->project             = mock('Project');
-        stub($this->project_manager)->getProject()->returns($this->project);
-        stub($this->project)->getUnixName()->returns('gpig');
-        stub($this->project)->getID()->returns($this->item_id + 1000);
-        PermissionsManager::setInstance($this->permissions_manager);
-        ProjectManager::setInstance($this->project_manager);
-        $this->docman_permissions_manager = TestHelper::getPartialMock('Docman_PermissionsManager', array());
-    }
-    
-    public function tearDown() {
-        parent::tearDown();
-        $this->item_id++;
-        PermissionsManager::clearInstance();
-        ProjectManager::clearInstance();
-        Docman_ItemFactory::clearInstance($this->project->getID());
-    }
-    
-    public function itReturnsPermissionsThanksToPermissionsManager() {
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns(array());
-        $this->permissions_manager->expectOnce('getAuthorizedUgroupIds', array($this->item_id, "PLUGIN_DOCMAN_%"));
-        
-        $this->docman_permissions_manager->exportPermissions($this->docman_item);
-    }
-    
-    public function itReturnsLiteralizedUgroupsDependingOnPermissions() {
-        $authorized = array(UGroup::REGISTERED, UGroup::PROJECT_MEMBERS, UGroup::PROJECT_ADMIN, 103);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds()->returns($authorized);
-        
-        $expected_permissions = array(
-            '@site_active @gpig_project_members',
-            '@gpig_project_members',
-            '@gpig_project_admin',
-            '@ug_103',
-        );
-        $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
-        $this->assertEqual($expected_permissions, $permissions);
-    }
-    
-    Public function itReturnsIntersectionWithParentsPermissionsIfItHasParents() {
-        Docman_ItemFactory::setInstance($this->project->getID(), mock('Docman_ItemFactory'));
-        $parent_id          = $this->item_id + 200;
-        $parent             = new Docman_Item();
-        $parent->setId($parent_id);
-        $permissions_type   = 'PLUGIN_DOCMAN_%';
-        $this->docman_item->setParentId($parent_id);
-        
-        $parent_permissions = array(
-            UGroup::PROJECT_MEMBERS,
-            UGroup::PROJECT_ADMIN,
-            203
-        );
-        $child_permissions  = array(
-            UGroup::REGISTERED,
-            UGroup::PROJECT_MEMBERS,
-            UGroup::PROJECT_ADMIN,
-            103
-        );
-        
-        stub(Docman_ItemFactory::instance($this->project->getID()))->getItemFromDb($parent_id)->returns($parent);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($parent_id,     $permissions_type)->returns($parent_permissions);
-        stub($this->permissions_manager)->getAuthorizedUgroupIds($this->item_id, $permissions_type)->returns($child_permissions);
-        
-        $expected_permissions = array('@gpig_project_members', '@gpig_project_admin');
-        $permissions = $this->docman_permissions_manager->exportPermissions($this->docman_item);
-        $this->assertEqual($expected_permissions, $permissions);
-    }
-}
 ?>

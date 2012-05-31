@@ -24,24 +24,50 @@
 class Planning_Milestone {
     
     /**
+     * The project where the milestone is defined
+     * 
      * @var int
      */
     protected $group_id;
     
     /**
+     * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
+     * and the tracker that define the plan (ie. Release)
+     * 
      * @var Planning
      */
     protected $planning;
     
     /**
+     * The artifact that represent the milestone
+     * 
+     * For instance a Sprint or a Release
+     * 
      * @var Tracker_Artifact
      */
     private $artifact;
     
     /**
+     * The planned artifacts are the content of the milestone (stuff to be done)
+     * 
+     * Given current Milestone is a Sprint
+     * And I defined a Sprint planning that associate Stories to Sprints
+     * Then I will have an array of Sprint as planned artifacts.
+     * 
      * @var TreeNode
      */
     private $planned_artifacts;
+    
+    /**
+     * A sub-milestone is a decomposition of the current one.
+     * 
+     * Given current Milestone is a Release
+     * And there is a Parent/Child association between Release and Sprint
+     * Then $sub_milestone will be an array of sprint
+     * 
+     * @var array of Planning_Milestone
+     */
+    private $sub_milestones = array();
     
     /**
      * TODO: group_id should be replaced by project.
@@ -62,6 +88,9 @@ class Planning_Milestone {
         $this->planned_artifacts = $planned_artifacts;
     }
     
+    /**
+     * @return int The project identifier.
+     */
     public function getGroupId() {
         return $this->group_id;
     }
@@ -71,6 +100,30 @@ class Planning_Milestone {
      */
     public function getArtifact() {
         return $this->artifact;
+    }
+    
+    /**
+     * @return array of Planning_Milestone
+     */
+    public function getSubMilestones() {
+        return $this->sub_milestones;
+    }
+    
+    /**
+     * @return Boolean True if milestone has at least 1 sub-milestone.
+     */
+    public function hasSubMilestones() {
+        return ! empty($this->sub_milestones);
+    }
+    
+    /**
+     * Adds some sub-milestones. Ignores milestones which are already a
+     * sub-milestone of the current one.
+     * 
+     * @param array $new_sub_milestones 
+     */
+    public function addSubMilestones(array $new_sub_milestones) {
+        $this->sub_milestones = array_merge($this->sub_milestones, $new_sub_milestones);
     }
     
     /**
@@ -92,6 +145,21 @@ class Planning_Milestone {
      */
     public function getArtifactTitle() {
         return $this->artifact->getTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getXRef() {
+        return $this->artifact->getXRef();
+    }
+    
+
+    /**
+     * @return Planning
+     */
+    public function getPlanning() {
+        return $this->planning;
     }
     
     /**
@@ -134,48 +202,5 @@ class Planning_Milestone {
     }
 }
 
-/**
- * Null-object pattern for planning milestones.
- */
-class Planning_NoMilestone extends Planning_Milestone {
-    
-    /**
-     * Instanciates a null-object compatible with the Planning_Milestone
-     * interface.
-     * 
-     * TODO:
-     *   - Rename to NullMilestone ?
-     *   - Use a NullPlanning object ?
-     *   - $group_id must die
-     * 
-     * @param int      $group_id
-     * @param Planning $planning 
-     */
-    public function __construct($group_id, Planning $planning) {
-        // not calling the super constructor allows us not enforce non nullity on the artifact
-        $this->group_id          = $group_id;
-        $this->planning          = $planning;
-    }
-    
-    /**
-     * @param User $user
-     * @return boolean 
-     */
-    public function userCanView(User $user) {
-        return true; // User can view milestone content, since it's empty.
-    }
 
-    /**
-     * @return int
-     */
-    public function getArtifactId() {
-        return null;
-    }
-    
-    public function getArtifactTitle() {
-        return null;
-    }
-    
-
-}
 ?>

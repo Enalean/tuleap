@@ -155,7 +155,8 @@ class ProjectDao extends DataAccessObject {
      * @param Integer $limit
      * @param String  $status
      * @param String  $groupName
-     * @return Array
+     *
+     * @return Array ('projects' => DataAccessResult, 'numrows' => int)
      */
     public function returnAllProjects($offset, $limit, $status=false, $groupName=false) {
         $cond = array();
