@@ -69,7 +69,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     public function show(Planning_ViewBuilder $view_builder) {
         $project              = $this->milestone->getProject();
         $planning             = $this->milestone->getPlanning();
-        $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $project, $planning->getId());
+        $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $project, $planning);
         $tracker_ids          = $planning->getBacklogTrackerIds();
         
         $content_view         = $this->buildContentView($view_builder, $project, $tracker_ids, $available_milestones, $planning);

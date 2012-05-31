@@ -280,7 +280,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->milestone_factory->setReturnValue(
             'getOpenMilestones',
             $open_milestones,
-            array(aUser()->build(), '*', $this->planning->getId()));
+            array(aUser()->build(), '*', $this->planning));
         return $factory;
     }
 
