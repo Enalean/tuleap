@@ -61,14 +61,46 @@ class MilestoneTest extends TuleapTestCase {
         $this->assertEqual($milestone->getArtifactTitle(), $artifact->getTitle());
     }
     
-    public function itDelegatesLinkedArtifactsRetrieval() {
-        $artifact1 = anArtifact()->withId(1111)->build();
-        $artifact2 = anArtifact()->withId(2222)->build();
-        $linkedArtifacts = array($artifact1, $artifact2);
-        $artifact = aMockArtifact()->withLinkedArtifacts($linkedArtifacts)->build();
+//    public function itDelegatesLinkedArtifactsRetrieval() {
+//        $artifact1 = anArtifact()->withId(1111)->build();
+//        $artifact2 = anArtifact()->withId(2222)->build();
+//        $linkedArtifacts = array($artifact1, $artifact2);
+//        $artifact = aMockArtifact()->withLinkedArtifacts($linkedArtifacts)->build();
+//        $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
+//        
+//        $this->assertEqual($milestone->getLinkedArtifacts(mock('User')), $linkedArtifacts);
+//    }
+//    
+    public function itGetsLinkedArtifactsTheRootLevelArtifact() {
+        $artifact = aMockArtifact()->withId(1111)->withUniqueLinkedArtifacts(array(aMockArtifact()->build()))->build();
+//        $planned_artifacts = aNode()->withArtifact($artifact)->build();
+
         $milestone = new Planning_Milestone(0, mock('Planning'), $artifact);
-        
-        $this->assertEqual($milestone->getLinkedArtifacts(), $linkedArtifacts);
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $this->assertEqual(count($all_artifacts), 1);
+    }
+    
+    public function itGetsTheArtifactsOfAChildNode() {
+//        $root_artifact = aMockArtifact()->withId(1111)->withTitle('root artifact')->build();
+//        $child_artifact = aMockArtifact()->withId(1111)->withTitle('child artifact')->build();
+//        $planned_artifacts = aNode()->withArtifact($root_artifact)
+//                                    ->withChild(
+//                                        aNode()->withArtifact($child_artifact))
+//                             ->build();
+//
+//        
+//        $milestone = new Planning_Milestone(0, mock('Planning'), $root_artifact, $planned_artifacts);
+//        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+//        $this->assertEqual(count($all_artifacts), 1);
+    }
+    
+    public function itGetsLinkedArtifactsOfThePlannedOnes4() {
+//        $root_node = aNode()->withChildren(
+//                                aNode()->withChild(aNode()),
+//                                aNode())
+//                     ->build();
+//        $all_artifacts = $milestone->getLinkedArtifacts();
+//        $this->assertEqual(count($all_artifacts), 4);
     }
     
     public function itMayHavePlannedArtifacts() {
@@ -91,5 +123,58 @@ class MilestoneTest extends TuleapTestCase {
         $this->assertNull($this->milestone->getArtifactTitle());
         $this->assertTrue($this->milestone->userCanView(mock('User')), "any user should be able to read an empty milstone");
     }
+}
+
+class Test_TreeNode_Builder {
+
+    private $children;
+    private $data;
+    
+    public function __construct() {
+        $this->children = array();
+    }
+    
+    /**
+     * @return \Test_TreeNode_Builder 
+     */
+    public function withChildren() {
+        $args = func_get_args();
+        foreach ($args as $node_builder) {
+            $this->children[] = $node_builder->build();
+        }
+        return $this;
+    }
+
+    /**
+     * @return \Test_TreeNode_Builder 
+     */
+    public function withChild(Test_TreeNode_Builder $child_node_builder) {
+        $this->children[] = $child_node_builder->build();
+        return $this;
+    }
+
+    /**
+     * @return \Test_TreeNode_Builder 
+     */
+    public function withArtifact($artifact) {
+        $this->data['artifact'] = $artifact;
+        return $this;
+    }
+    
+    public function build() {
+        $node = new TreeNode();
+        $node->setChildren($this->children);
+        $node->setData($this->data);
+        return $node;
+    }
+
+
+}
+
+/**
+ * @return \Test_TreeNode_Builder 
+ */
+function aNode() {
+    return new Test_TreeNode_Builder();
 }
 ?>

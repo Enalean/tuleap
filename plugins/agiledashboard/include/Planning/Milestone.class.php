@@ -108,8 +108,24 @@ class Planning_Milestone {
         return $this->planned_artifacts;
     }
     
-    public function getLinkedArtifacts() {
-        return $this->artifact->getLinkedArtifacts();
+    public function getLinkedArtifacts(User $user) {
+        $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
+        $i = 0;
+        $root_node = $this->getPlannedArtifacts();
+//        $artifact = $root_node->getData('artifact');
+//         $artifacts[] = $artifact->getLinkedArtifacts($user);
+        // TODO get rid of this if, in favor of an empty treenode
+        if ($root_node) {
+            foreach ($root_node->getChildren() as $node) {
+                $artifact = $node->getData('artifact');
+                echo "made it $i times\n";
+                $artifacts[] = $artifact->getLinkedArtifacts($user);
+                $i++;
+                echo "made it $i times\n";
+
+            }
+        }
+        return $artifacts;
     }
 }
 
