@@ -26,10 +26,10 @@ Mock::generate('Tracker_Artifact');
 
 class MockArtifactBuilder {
     public function __construct() {
-        $this->id               = 123;
-        $this->tracker          = new MockTracker();
-        $this->artifact         = new MockTracker_Artifact();
-        $this->title            = '';
+        $this->id       = 123;
+        $this->tracker  = new MockTracker();
+        $this->title    = '';
+        $this->artifact = new MockTracker_Artifact();
         $this->linkedArtifacts  = array();
         $this->uniqueLinkedArtifacts  = array();
         $this->uri      = '';

@@ -1,3 +1,6 @@
+Version 0.22 - Tuleap 5.2
+     * One can add new content into backlog when the backlog is empty.
+
 Version 0.21 - Tuleap 5.2
      * Display planning sub-elements (eg. On release planning view, display sprints).
 

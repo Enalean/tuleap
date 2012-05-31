@@ -1,3 +1,8 @@
+Version 5.7.18 - Tuleap 5.2
+    * Add expand/collapse all on cross search
+    * Remove lab mode on cross-search
+    * One can add new content into backlog when the backlog is empty.
+
 Version 5.7.17 - Tuleap 5.2
     * Add API method for agiledashboard (retrieve hierarchy of linked artifacts).
 

@@ -85,9 +85,6 @@ class Tracker_CrossSearch_SearchView {
         $html .= $this->fetchTrackerHomeNav();
         $html .= '<div class="tracker_homenav_cross_search">';
         $html .= '<h1>'. $title .'</h1>';
-        $html .= '<p class="lab_features" title="'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature') .'">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature');
-        $html .= '</p>';
         
         if ($this->criteria) {
             $html .= $this->content_view->fetch();

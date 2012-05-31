@@ -471,10 +471,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            
-            if ($user->useLabFeatures()) {
-                $this->displayTrackerHomeNav($project);
-            }
+            $this->displayTrackerHomeNav($project);
             
             $html .= '<p>';
             if (count($trackers)) {
