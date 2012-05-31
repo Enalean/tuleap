@@ -56,17 +56,17 @@ class Planning_MilestoneController extends MVC2_Controller {
                                 ProjectManager            $project_manager) {
         
         parent::__construct('agiledashboard', $request);
-        
         $this->milestone_factory = $milestone_factory;
+        $project                 = $project_manager->getProject($request->get('group_id'));
         $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
                                        $this->getCurrentUser(),
-                                       $project_manager->getProject($request->get('group_id')),
+                                       $project,
                                        $request->get('planning_id'),
                                        $request->get('aid')
                                    );
     }
 
-    public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
+    public function show(Planning_ViewBuilder $view_builder) {
         $project              = $this->milestone->getProject();
         $planning             = $this->milestone->getPlanning();
         $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $project, $planning->getId());
@@ -161,7 +161,7 @@ class Planning_MilestoneController extends MVC2_Controller {
      */
     public function getBreadcrumbs($plugin_path) {
         $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, $this->milestone->getGroupId());
-        $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->getPlanning());
+        $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->milestone->getPlanning());
         $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
         return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
     }

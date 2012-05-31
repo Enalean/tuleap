@@ -243,7 +243,7 @@ class AgileDashboardRouter {
             $this->executeAction($controller, 'createArtifact');
         } else {
             $controller = $this->buildMilestoneController($request);
-            $action_arguments = array($this->getViewBuilder($request), ProjectManager::instance());
+            $action_arguments = array($this->getViewBuilder($request));
             $this->renderAction($controller, 'show', $request, $action_arguments);
         }
     }
