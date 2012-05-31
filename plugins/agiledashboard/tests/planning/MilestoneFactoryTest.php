@@ -81,15 +81,32 @@ class MilestoneFactoryTest extends TuleapTestCase {
         $this->assertEqual(3, $tree_node3->getId());
     }
     
-    public function itAddsTheArtifactsToTheTreeNodes() {
+    public function itAddsTheArtifactsToTheRootNode() {
+        $root_aid   = 100;
+        $root_artifact = stub('Tracker_Artifact')->getId()->returns($root_aid);
+        stub($this->artifact_factory)->getArtifactById($root_aid)->returns($root_artifact);
+        stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array());
+        
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $root_aid);
+        
+        $root_node = $milestone->getPlannedArtifacts();
+        $root_note_data = $root_node->getData();
+        $this->assertEqual($root_artifact, $root_note_data['artifact']);
+    }
+    
+    public function itAddsTheArtifactsToTheChildNodes() {
         $root_aid   = 100;
         $root_artifact = stub('Tracker_Artifact')->getId()->returns($root_aid);
         stub($this->artifact_factory)->getArtifactById($root_aid)->returns($root_artifact);
         $depth1_aid      = 9999;
-        $depth1_artifact = stub('Tracker_Artifact')->getId($depth1_aid)->getUniqueLinkedArtifacts()->returns(array());
+        $depth1_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array());
+        stub($depth1_artifact)->getId()->returns($depth1_aid);
         stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
         
-        $this->assertEqual($depth1_artifact, $root_node->getChild(0)->getData('artifact'));
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $root_aid);
+        
+        $child_node_data = $milestone->getPlannedArtifacts()->getChild(0)->getData();
+        $this->assertEqual($depth1_artifact, $child_node_data['artifact']);
     }
 }
 
