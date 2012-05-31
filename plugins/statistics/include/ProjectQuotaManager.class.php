@@ -84,10 +84,11 @@ class ProjectQuotaManager {
      * @return Void
      */
     public function addQuota($project, $requester, $quota, $motivation) {
+        $maxQuota = $this->getMaximumQuota();
         if (empty($project)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
         } elseif (empty($quota)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota', $maxQuota));
         } elseif (strlen($motivation) > 512) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_motivation'));
         } else {
@@ -102,9 +103,8 @@ class ProjectQuotaManager {
                     $user   = $um->getCurrentUser();
                     $userId = $user->getId();
                 }
-                $maxQuota = $this->getMaximumQuota();
                 if ($quota > $maxQuota) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota', $maxQuota));
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());

@@ -56,7 +56,7 @@ plugin_statistics	scm_repo_total	Total number of repositories containing commits
 
 plugin_statistics	quota_title	Project quota
 plugin_statistics	quota_description	Custom quota for each project
-plugin_statistics	search_projects	Search projects
+plugin_statistics	search_projects	Filter projects
 plugin_statistics	no_projects	All projects have the default quota ($1 GB).
 plugin_statistics	quota	Quota
 plugin_statistics	max_quota	Maximum quota is $1 GB
@@ -66,7 +66,7 @@ plugin_statistics	date	Date
 plugin_statistics	set_quota	Set custom quota for a project
 plugin_statistics	invalid_action	Invalid Action
 plugin_statistics	invalid_project	Invalid project
-plugin_statistics	invalid_quota	You exceeded the max allowed quota
+plugin_statistics	invalid_quota	Quota must be between 1 and $1 Gb
 plugin_statistics	invalid_motivation	You have exceeded  the maximal size of the Motivation
 plugin_statistics	nothing_to_delete	Nothing to delete
 plugin_statistics	delete_error	An error occured when deleting entries
