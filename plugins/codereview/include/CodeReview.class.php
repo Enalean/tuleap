@@ -22,6 +22,7 @@ require_once('common/mvc/Controler.class.php');
 require_once('CodeReviewViews.class.php');
 require_once('CodeReviewActions.class.php');
 require_once('RepositoryManager.class.php');
+require_once('RbUserManager.class.php');
 
 /**
  * codereview
@@ -70,27 +71,20 @@ class CodeReview extends Controler {
         $request = $this->getRequest();
         $user=$this->getUser();
         $username=$user->getUserName();
-        /*$usermail=$user->getEmail();
-        $userpwd=$user->getPassword()*/;
         $userpwd=$user->getUserPw();
-        //var_dump($username);
-        //var_dump($userpwd);
-        
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
         $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
         $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
         /******check if the Tuleap User is registred in reviewboard******/
-        $curl    = new TuleapCurl();
-        $exist = $curl->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
-        if ($exist=='FALSE'){
+        $rbusermanager    = new RbUserManager();
+        $exist = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
+        if (!$exist){
          $curl    = new TuleapCurl();
-         $create = $curl->execute($url, false, $username, $userpwd, null);
-         var_dump("created");
+         $create = $curl->execute($url."/api/users/", false, $username, $userpwd, null);
         }
         if ($this->getUser()->isLoggedIn()) {
             if($username=="admin"){
-                 //var_dump("blablabla");
                  $this->view = 'displayFrameAdmin';
              }
              else{
