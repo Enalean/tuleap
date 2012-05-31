@@ -32,11 +32,11 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
     },
     
     insertTreeViewActions: function() {
-        var expandAllLink = this.link('Expand all', function(event) {
+        var expandAllLink = this.link('expand_all', function(event) {
             this.expandAll();
             Event.stop(event);
         });
-        var collapseAllLink = this.link('Collapse all', function(event) {
+        var collapseAllLink = this.link('collapse_all', function(event) {
             this.collapseAll();
             Event.stop(event);
         });
@@ -47,7 +47,8 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
         treeViewActionsContainer.insert(collapseAllLink);
     },
     
-    link: function(text, func) {
+    link: function(textKey, func) {
+        var text = codendi.getText('tracker_crosssearch', textKey);
         return new Element('a', {href: '#'}).update(text).observe('click', func.bind(this));
     },
 
