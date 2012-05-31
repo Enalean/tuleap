@@ -59,16 +59,12 @@ class MilestoneFactoryTest extends TuleapTestCase {
 
     public function itCanSetMilestonesWithaHierarchyDepthGreaterThan2() {
         $artifact_id   = 100;
-        $root_artifact = stub('Tracker_Artifact')->getId()->returns($artifact_id);
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($root_artifact);
 
-        $depth3_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array());
-        stub($depth3_artifact)->getId()->returns(3);
-        $depth2_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($depth3_artifact));
-        stub($depth2_artifact)->getId()->returns(2);
-        $depth1_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($depth2_artifact));
-        stub($depth1_artifact)->getId()->returns(1);
-        stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
+        $depth3_artifact = $this->anArtifactWithId(3);
+        $depth2_artifact = $this->anArtifactWithIdAndUniqueLinkedArtifacts(2, array($depth3_artifact));
+        $depth1_artifact = $this->anArtifactWithIdAndUniqueLinkedArtifacts(1, array($depth2_artifact));
+        $root_artifact   = $this->anArtifactWithIdAndUniqueLinkedArtifacts($artifact_id, array($depth1_artifact));
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($root_artifact);
 
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $artifact_id);
         $tree_node = $milestone->getPlannedArtifacts();
@@ -98,15 +94,24 @@ class MilestoneFactoryTest extends TuleapTestCase {
         $root_aid   = 100;
         $root_artifact = stub('Tracker_Artifact')->getId()->returns($root_aid);
         stub($this->artifact_factory)->getArtifactById($root_aid)->returns($root_artifact);
-        $depth1_aid      = 9999;
-        $depth1_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array());
-        stub($depth1_artifact)->getId()->returns($depth1_aid);
+        $depth1_artifact = $this->anArtifactWithId(9999);
         stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
         
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $root_aid);
         
         $child_node_data = $milestone->getPlannedArtifacts()->getChild(0)->getData();
         $this->assertEqual($depth1_artifact, $child_node_data['artifact']);
+    }
+
+    public function anArtifactWithId($id) {
+        return aMockArtifact()->withId($id)->build();
+    }
+
+    public function anArtifactWithIdAndUniqueLinkedArtifacts($id, $linked_artifacts) {
+        return aMockArtifact()->withId($id)
+                              ->withUniqueLinkedArtifacts($linked_artifacts)
+                              ->build();
+        
     }
 }
 

@@ -31,20 +31,38 @@ class MockArtifactBuilder {
         $this->artifact         = new MockTracker_Artifact();
         $this->title            = '';
         $this->linkedArtifacts  = array();
+        $this->uniqueLinkedArtifacts  = array();
     }
 
+    /**
+     * @return \MockArtifactBuilder 
+     */
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
     
+    /**
+     * @return \MockArtifactBuilder 
+     */
     public function withTitle($title) {
         $this->title = $title;
         return $this;
     }
-    
+
+    /**
+     * @return \MockArtifactBuilder 
+     */
     public function withLinkedArtifacts($linkedArtifacts) {
         $this->linkedArtifacts = $linkedArtifacts;
+        return $this;
+    }
+    
+    /**
+     * @return \MockArtifactBuilder 
+     */
+    public function withUniqueLinkedArtifacts($uniqueLinkedArtifacts) {
+        $this->uniqueLinkedArtifacts = $uniqueLinkedArtifacts;
         return $this;
     }
     
@@ -53,6 +71,7 @@ class MockArtifactBuilder {
         $this->artifact->setReturnValue('getTracker', $this->tracker);
         $this->artifact->setReturnValue('gettitle', $this->title);
         $this->artifact->setReturnValue('getLinkedArtifacts', $this->linkedArtifacts);
+        $this->artifact->setReturnValue('getUniqueLinkedArtifacts', $this->uniqueLinkedArtifacts);
         
         return $this->artifact;
     }
