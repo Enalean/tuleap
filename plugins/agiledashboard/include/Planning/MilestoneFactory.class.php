@@ -60,13 +60,13 @@ class Planning_MilestoneFactory {
      * Only objects that should be visible for the given user are loaded.
      *
      * @param User $user
-     * @param int $group_id
+     * @param Project $project
      * @param int $planning_id
      * @param int $artifact_id
      *
      * @return Planning_Milestone
      */
-    public function getMilestoneWithPlannedArtifacts(User $user, $group_id, $planning_id, $artifact_id) {
+    public function getMilestoneWithPlannedArtifacts(User $user, $project, $planning_id, $artifact_id) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
@@ -74,9 +74,9 @@ class Planning_MilestoneFactory {
             $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
-            return new Planning_Milestone($group_id, $planning, $artifact, $planned_artifacts);
+            return new Planning_Milestone($project, $planning, $artifact, $planned_artifacts);
         } else {
-            return new Planning_NoMilestone($group_id, $planning);
+            return new Planning_NoMilestone($project, $planning);
         }
     }
 
@@ -238,20 +238,20 @@ class Planning_MilestoneFactory {
     }
 
     /**
-     * Loads all open milestones for the given project (group_id) and planning
+     * Loads all open milestones for the given project and planning
      * 
      * @param User $user
-     * @param type $group_id
+     * @param Project $project
      * @param type $planning_id
      * @return \Planning_Milestone 
      */
-    public function getOpenMilestones(User $user, $group_id, $planning_id) {
+    public function getOpenMilestones(User $user, $project, $planning_id) {
         $milestones = array();
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
             $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
-            $milestones[] = new Planning_Milestone($group_id, $planning, $artifact, $planned_artifacts);
+            $milestones[] = new Planning_Milestone($project, $planning, $artifact, $planned_artifacts);
         }
         return $milestones;
     }

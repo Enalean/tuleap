@@ -294,6 +294,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($milestone)->getPlannedArtifacts()->returns($root_node);
         stub($milestone)->userCanView()->returns(true);
         stub($milestone)->getPlanning()->returns($this->planning);
+        stub($milestone)->getProject()->returns(mock('Project'));
 
         return $milestone;
     }
@@ -357,13 +358,13 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         TrackerFactory::setInstance($tracker_factory);
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
-                                                                                        $request->get('group_id'),
+                                                                                        $project_manager->getProject($request->get('group_id')),
                                                                                         $request->get('planning_id'),
                                                                                         $request->get('aid'))
                                       ->returns($milestone);
 
         ob_start();
-        $controller = new Planning_MilestoneController($request, $this->milestone_factory);
+        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager);
 
         $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();

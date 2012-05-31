@@ -52,23 +52,24 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @param Planning_MilestoneFactory $milestone_factory 
      */
     public function __construct(Codendi_Request           $request,
-                                Planning_MilestoneFactory $milestone_factory) {
+                                Planning_MilestoneFactory $milestone_factory,
+                                ProjectManager            $project_manager) {
         
         parent::__construct('agiledashboard', $request);
         
         $this->milestone_factory = $milestone_factory;
         $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
                                        $this->getCurrentUser(),
-                                       $request->get('group_id'),
+                                       $project_manager->getProject($request->get('group_id')),
                                        $request->get('planning_id'),
                                        $request->get('aid')
                                    );
     }
 
     public function show(Planning_ViewBuilder $view_builder, ProjectManager $manager) {
-        $project              = $manager->getProject($this->milestone->getGroupId());
+        $project              = $this->milestone->getProject();
         $planning             = $this->milestone->getPlanning();
-        $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $this->milestone->getGroupId(), $planning->getId());
+        $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $project, $planning->getId());
         $tracker_ids          = $planning->getBacklogTrackerIds();
         
         $content_view         = $this->buildContentView($view_builder, $project, $tracker_ids, $available_milestones, $planning);

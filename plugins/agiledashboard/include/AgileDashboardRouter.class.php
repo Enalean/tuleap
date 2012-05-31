@@ -165,7 +165,8 @@ class AgileDashboardRouter {
         $milestone_factory = $this->getMilestoneFactory();
         
         return new Planning_MilestoneController($request,
-                                                $milestone_factory);
+                                                $milestone_factory,
+                                                $this->getProjectManager());
     }
     
     /**
@@ -247,6 +248,9 @@ class AgileDashboardRouter {
         }
     }
 
+    public function getProjectManager() {
+        return ProjectManager::instance();
+    }
     /**
      * Builds a new PlanningFactory instance.
      * 
