@@ -148,7 +148,7 @@ class Planning_MilestoneFactory {
         foreach ($linked_artifacts as $linked_artifact) {
             $artifact_node = new TreeNode(array('id' => $linked_artifact->getId()));
             $artifact_node->setId($linked_artifact->getId());
-            $this->addChildrenPlannedArtifacts($user, $linked_artifact, $node, $parents);
+            $this->addChildrenPlannedArtifacts($user, $linked_artifact, $artifact_node, $parents);
             $parent_node->addChild($artifact_node);
         }
     }

@@ -122,11 +122,18 @@ class Planning_MilestoneFactoryTest extends TuleapTestCase {
 
         $depth3_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array());
         stub($depth3_artifact)->getId()->returns(3);
+        stub($depth3_artifact)->getHierarchyLinkedArtifacts()->returns(array());
+        
         $depth2_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($depth3_artifact));
         stub($depth2_artifact)->getId()->returns(2);
+        stub($depth2_artifact)->getHierarchyLinkedArtifacts()->returns(array());
+        
         $depth1_artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($depth2_artifact));
         stub($depth1_artifact)->getId()->returns(1);
+        stub($depth1_artifact)->getHierarchyLinkedArtifacts()->returns(array());
+        
         stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
+        stub($root_artifact)->getHierarchyLinkedArtifacts()->returns(array());
 
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->group_id, $this->planning_id, $artifact_id);
         $tree_node = $milestone->getPlannedArtifacts();
