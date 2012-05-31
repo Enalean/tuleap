@@ -761,13 +761,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
                     foreach ($used_fields as $field) {
                         if (isset($fields_data[$field->getId()]) && $field->userCanSubmit()) {
-                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $is_submission);
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $workflow->bypassPermissions($field)) {
                             $bypass_perms  = true;
-                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $is_submission, $bypass_perms);
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
                         } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isRequired()) {
                             $fields_data[$field->getId()] = $field->getDefaultValue();
-                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $is_submission);
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         }
                     }
                     //Save the artifact
@@ -867,12 +867,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
                         foreach ($used_fields as $field) {
                             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $is_submission);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
                                 $bypass_perms  = true;
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $is_submission, $bypass_perms);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
                             } else {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $is_submission);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $submitter, $is_submission);
                             }
                         }
 

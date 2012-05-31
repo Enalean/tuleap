@@ -785,7 +785,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $field2->setReturnValue('isValid', true);
         $field2->setReturnValue('userCanSubmit', false);
         $workflow->setReturnValue('bypassPermissions', true, array($field2));
-        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', true, true));
+        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, true, true));
         $factory->setReturnValue('getUsedFields', array($field1, $field2));
 
         $art_factory = new MockTracker_ArtifactFactory();
@@ -851,7 +851,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $field2->setReturnValue('isValid', true);
         $field2->setReturnValue('userCanUpdate', false);
         $workflow->setReturnValue('bypassPermissions', true, array($field2));
-        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', false, true));
+        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, false, true));
         $factory->setReturnValue('getUsedFields', array($field1, $field2));
 
         $new_changeset = new MockTracker_Artifact_Changeset();

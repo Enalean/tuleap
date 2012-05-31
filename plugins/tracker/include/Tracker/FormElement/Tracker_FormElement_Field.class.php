@@ -736,15 +736,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Save the value submitted by the user in the new changeset
      *
-     * @param Tracker_Artifact           $artifact         The artifact
-     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
-     * @param int                        $new_changeset_id The id of the new changeset
-     * @param mixed                      $submitted_value  The value submitted by the user
-     * @param boolean $is_submission true if artifact submission, false if artifact update
+     * @param Tracker_Artifact           $artifact           The artifact
+     * @param Tracker_Artifact_Changeset $old_changeset      The old changeset. null if it is the first one
+     * @param int                        $new_changeset_id   The id of the new changeset
+     * @param mixed                      $submitted_value    The value submitted by the user
+     * @param User                       $submitter          The user who made the modification
+     * @param boolean                    $is_submission      True if artifact submission, false if artifact update
+     * @param boolean                    $bypass_permissions If true, permissions to update/submit the value on field is not checked
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission = false, $bypass_permissions = false) {
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
         $updated        = false;
         $save_new_value = false;
         $dao            = new Tracker_Artifact_Changeset_ValueDao();
