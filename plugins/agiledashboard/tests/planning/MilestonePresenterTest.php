@@ -200,7 +200,7 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
                         $this->planning,
                         $this->content_view,
                         $this->artifacts_to_select,
-                        new Planning_NoMilestone('123', $this->planning),
+                        new Planning_NoMilestone(mock('Project'), $this->planning),
                         $this->user,
                         ''
         );

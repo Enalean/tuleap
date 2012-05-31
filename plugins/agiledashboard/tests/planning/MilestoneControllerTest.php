@@ -132,7 +132,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->with('planning_id', $this->planning->getId())
                               ->withUri($this->request_uri)
                               ->build();
-        $milestone = $this->GivenNoMilestone();
+        $milestone = $this->GivenNoMilestone(mock('Project'));
 
         $content = $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
         $this->assertPattern('/Tutu/', $content);
@@ -178,7 +178,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items);
         $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
-        $milestone                 = $this->GivenNoMilestone($project_id);
+        $milestone                 = $this->GivenNoMilestone($project);
 
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array($project), new MockTracker_CrossSearch_Search());
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
@@ -298,11 +298,8 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $milestone;
     }
 
-    private function GivenNoMilestone($project_id = null) {
-        if (! $project_id) {
-            $project_id = $this->planning->getGroupId();
-        }
-        return new Planning_NoMilestone($project_id, $this->planning);
+    private function GivenNoMilestone($project = null) {
+        return new Planning_NoMilestone($project, $this->planning);
     }
 
     private function WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField() {
