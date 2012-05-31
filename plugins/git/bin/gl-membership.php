@@ -30,14 +30,15 @@
  */
 
 require_once 'pre.php';
-require_once 'common/permission/ExternalPermissions.class.php';
+require_once 'common/project/UGroupLiteralizer.class.php';
 
 if (!isset($argv[1])) {
     echo "Usage: ".$argv[0]." username".PHP_EOL;
     exit(1);
 }
 
-$groups = ExternalPermissions::getUserGroups($argv[1]);
+$ugroup_literalizer = new UGroupLiteralizer();
+$groups = $ugroup_literalizer->getUserGroupsForUserName($argv[1]);
 if (count($groups) > 0) {
     echo implode(' ', $groups).PHP_EOL;
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,22 +15,19 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/permission/ExternalPermissions.class.php';
-require_once 'common/user/User.class.php';
+require_once 'common/project/UGroupLiteralizer.class.php';
+require_once 'common/project/Project.class.php';
 
-Mock::generate('ProjectManager');
-Mock::generate('Project');
+class UGroupLiteralizerTest extends TuleapTestCase {
 
-class ExternalPermissionsTest extends TuleapTestCase {
-    
     protected $membership;
     protected $user_stub;
     protected $user;
-    
+    const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
+
     public function setUp() {
         parent::setUp();
         $this->user      = mock('User');
@@ -38,13 +35,14 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $userManager     = mock('UserManager');
         stub($userManager)->getUserByUserName()->returns($this->user);
         UserManager::setInstance($userManager);
+        $this->ugroup_literalizer = new UGroupLiteralizer();
     }
-    
+
     public function tearDown() {
-        parent::tearDown();
         UserManager::clearInstance();
+        parent::tearDown();
     }
-    
+
     public function itIsProjectMember() {
         $this->user_stub->getStatus()->returns('A');
         $userProjects = array(
@@ -53,14 +51,12 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->getProjects()->returns($userProjects);
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
-        
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','gpig1_project_members');
         $this->assertEqual($expected, $groups);
     }
-    
-    
-    
+
     public function itIsProjectAdmin() {
         $this->user_stub->getStatus()->returns('A');
         $userProjects = array(
@@ -69,44 +65,65 @@ class ExternalPermissionsTest extends TuleapTestCase {
         $this->user_stub->getProjects()->returns($userProjects);
         $this->user_stub->isMember()->returns(true);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
-        
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
         $this->assertEqual($expected, $groups);
     }
-    
+
     public function itIsMemberOfAStaticUgroup() {
         $this->user_stub->getStatus()->returns('A');
         $this->user_stub->getProjects()->returns(array());
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar(array('ugroup_id'=>304)));
-        
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_active','ug_304');
         $this->assertEqual($expected, $groups);
     }
-    
+
     public function itIsRestricted() {
         $this->user_stub->getStatus()->returns('R');
         $this->user_stub->getProjects()->returns(array());
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
-        
-        $groups   = ExternalPermissions::getUserGroups('john_do');
+
+        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $expected = array('site_restricted');
         $this->assertEqual($expected, $groups);
     }
-    
-    
+
+
     public function itIsNeitherRestrictedNorActive() {
         $this->user_stub->getStatus()->returns('Not exists');
         $this->user_stub->getProjects()->returns(array());
         $this->user_stub->isMember()->returns(false);
         $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
-    
-        $groups = ExternalPermissions::getUserGroups('john_do');
+
+        $groups = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
         $this->assertEqual(array(), $groups);
     }
-    
+
+    public function itCanTransformAnArrayWithUGroupMembersConstantIntoString() {
+        $ugroup_ids = array(Ugroup::PROJECT_MEMBERS);
+        $project    = mock('Project');
+        stub($project)->getUnixName()->returns('gpig');
+        $expected   = array('@gpig_project_members');
+        $result     = $this->ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
+
+        $this->assertEqual($expected, $result);
+    }
+
+    public function itCanReturnUgroupIdsFromAnItemAndItsPermissionTypes() {
+        $object_id = 100;
+        $expected  = array(Ugroup::PROJECT_MEMBERS);
+        $permissions_manager = mock('PermissionsManager');
+        stub($permissions_manager)->getAuthorizedUgroupIds($object_id, self::PERMISSIONS_TYPE)->returns($expected);
+        PermissionsManager::setInstance($permissions_manager);
+        $result = $this->ugroup_literalizer->getUgroupIds($object_id, self::PERMISSIONS_TYPE);
+        $this->assertEqual($expected, $result);
+        PermissionsManager::clearInstance();
+
+    }
 }
 ?>

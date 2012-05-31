@@ -23,7 +23,11 @@ require_once 'UGroup.class.php';
 require_once 'common/dao/UGroupDao.class.php';
 
 class UGroupManager {
-    protected $dao;
+    
+    /**
+     * @var UGroupDao
+     */
+    private $dao;
 
     /**
      * Return all UGroups the user belongs to
@@ -57,7 +61,7 @@ class UGroupManager {
      *
      * @return UGroupDao
      */
-    protected function getDao() {
+    private function getDao() {
         if (!$this->dao) {
             $this->dao = new UGroupDao(CodendiDataAccess::instance());
         }
