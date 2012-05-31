@@ -89,7 +89,7 @@ class CodeReview extends Controler {
             } else {
                 $repositoryManager = new RepositoryManager($this->plugin, $request);
                 $repositoryManager->addRepository($request);
-                $vAction = new Valid_WhiteList('action', array('add_review', 'submit_review', 'publish_review', 'submit_publish'));
+                $vAction = new Valid_WhiteList('action', array('add_review', 'dashboard', 'submit_review', 'login', 'publish_review', 'submit_publish', 'submit_login'));
                 $vAction->required();
                 $action = $request->getValidated('action', $vAction, false);
                 switch ($action) {
@@ -107,7 +107,14 @@ class CodeReview extends Controler {
                     // TODO: put some actions here
                     $this->action = 'publishReviewRequest';
                     $this->view ='displayFramePublish';
-                    break;    
+                    break;  
+                case 'login':
+                    $this->view = 'loginSubmission';
+                    break;
+                
+                case 'dashboard':
+                    $this->view = 'displayFrame';
+                    break;
                 default:
                     $this->view = 'displayFrameAccueil';
                     break;

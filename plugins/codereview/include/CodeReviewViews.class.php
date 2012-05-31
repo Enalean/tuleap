@@ -40,6 +40,13 @@ class CodeReviewViews extends Views {
     protected $request;
 
     /**
+     *
+     * @var User
+     */
+    protected $user;
+    /**
+
+    /**
      * Class constructor
      *
      * @param CodeReview $controller Plugin controller
@@ -49,6 +56,7 @@ class CodeReviewViews extends Views {
     public function __construct($controller) {
         $this->controller = $controller;
         $this->request    = $controller->getRequest();
+        $this->user       =$controller->getUser();
     }
 
     /**
@@ -84,9 +92,13 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFrameAccueil() {
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=login'>Login to reviewboard for the first time</a>";
+        echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
         echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
+        echo'</br>';
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
         echo'</br>';
     }
     /**
@@ -110,7 +122,7 @@ class CodeReviewViews extends Views {
     }
     
     /**
-     * Display review request creation form
+     * Display published review request 
      *
      * @return Void
      */
@@ -122,6 +134,11 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
+    /**
+     * Display review request creation form
+     *
+     * @return Void
+     */
     function reviewSubmission() {
         $project_manager = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
@@ -171,6 +188,28 @@ class CodeReviewViews extends Views {
         $formOptionalInput .= "  </p>";
 
         $form .= "   <input type=\"submit\" value=\"Add review request\" />";
+        $form .= " </form>";
+        print $form;
+    }
+    
+    /**
+     * Display published review request 
+     *
+     * @return Void
+     */
+    function loginSubmission() {
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
+        var_dump($url);
+        $form  = " <form id=\"loginsubmission\" target=\"codereview_iframe\" name=\"reviewAction\" method=\"POST\" action=$url>";
+        //$form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
+        $form .= "  <p>";
+        $form .= "   <input name=\"username\" value=".$this->user->getUserName()." type=\"hidden\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <input name=\"password\" value=".$this->user->getUserPw()." type=\"hidden\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "   <input type=\"submit\" value=\"Confirmer\" />";
         $form .= " </form>";
         print $form;
     }
