@@ -76,7 +76,7 @@ class Planning_Milestone {
      * @param Tracker_Artifact $artifact
      * @param TreeNode $planned_artifacts 
      */
-    public function __construct(                 $project,
+    public function __construct(Project          $project,
                                 Planning         $planning,
                                 Tracker_Artifact $artifact,
                                 TreeNode         $planned_artifacts = null) {

@@ -66,7 +66,7 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_Milestone
      */
-    public function getMilestoneWithPlannedArtifacts(User $user, $project, $planning_id, $artifact_id) {
+    public function getMilestoneWithPlannedArtifacts(User $user, Project $project, $planning_id, $artifact_id) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
@@ -169,7 +169,7 @@ class Planning_MilestoneFactory {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
 
                 if ($planning) {
-                    $sub_milestones[] = new Planning_Milestone($milestone->getGroupId(),
+                    $sub_milestones[] = new Planning_Milestone($milestone->getProject(),
                                                                $planning,
                                                                $sub_milestone_artifact);
                 }
@@ -245,7 +245,7 @@ class Planning_MilestoneFactory {
      * @param type $planning_id
      * @return \Planning_Milestone 
      */
-    public function getOpenMilestones(User $user, $project, $planning_id) {
+    public function getOpenMilestones(User $user, Project $project, $planning_id) {
         $milestones = array();
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());

@@ -54,7 +54,7 @@ class Test_Planning_MilestoneBuilder {
     }
     
     public function withinTheSameProjectAs(Planning_Milestone $other_milestone) {
-        $this->project = $other_milestone->getGroupId();
+        $this->project = $other_milestone->getProject();
         return $this;
     }
     
