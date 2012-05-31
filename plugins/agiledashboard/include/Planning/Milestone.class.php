@@ -94,7 +94,9 @@ class Planning_Milestone {
         return $this->project->getID();
     }
     
-    //TODO remove
+    /**
+     * @return Project
+     */
     public function getProject() {
         return $this->project;
     }
