@@ -1,3 +1,6 @@
+Version 5.7.19 - Tuleap 5.2 (Not released yet)
+    * Fix issue with project renderer widget.
+
 Version 5.7.18 - Tuleap 5.2
     * Add expand/collapse all on cross search
     * Remove lab mode on cross-search
