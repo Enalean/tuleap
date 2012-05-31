@@ -75,41 +75,37 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     public function getAllCustomQuota($list, $offset, $count, $sort, $sortOrder) {
         $condition = '';
         $order     = '';
+        $limit     = '';
         $list      = $this->da->escapeIntImplode($list);
-        $sortOrder = mysql_escape_string($sortOrder);
+
         if (!empty($list)) {
             $condition = "WHERE ".self::GROUP_ID." IN ($list)";
         }
+
         if (isset($offset) && isset($count)) {
             $limit = " LIMIT ".$this->da->escapeInt($offset).", ".$this->da->escapeInt($count);
-        } else {
-            $limit = '';
         }
+
         if (isset($sort)) {
+            $sortOrder = $sortOrder == 'DESC' ? 'DESC' : 'ASC';
+            $order = 'ORDER BY ';
             switch ($sort) {
                 case 'quota':
-                    if (!empty($sortOrder)) {
-                        $order = "ORDER BY ".self::REQUEST_SIZE." ".$sortOrder;
-                    } else {
-                         $order = "ORDER BY ".self::REQUEST_SIZE;
-                    }
+                    $order .= self::REQUEST_SIZE .' '. $sortOrder;
                     break;
                 case 'date':
-                    if (!empty($sortOrder)) {
-                        $order = "ORDER BY ".self::REQUEST_DATE." ".$sortOrder;
-                    } else {
-                         $order = "ORDER BY ".self::REQUEST_DATE;
-                    }
+                    $order .= self::REQUEST_DATE .' '. $sortOrder;
                     break;
                 default:
-                    $order = "ORDER BY ".self::REQUEST_SIZE;
+                    $order .= self::REQUEST_SIZE;
             }
         }
+
         $sql = "SELECT *
-        FROM plugin_statistics_disk_quota_exception
-        $condition
-        $order
-        $limit";
+                FROM plugin_statistics_disk_quota_exception
+                $condition
+                $order
+                $limit";
         return $this->retrieve($sql);
     }
 
