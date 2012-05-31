@@ -28,7 +28,10 @@ class MockArtifactBuilder {
     public function __construct() {
         $this->id       = 123;
         $this->tracker  = new MockTracker();
+        $this->title    = '';
         $this->artifact = new MockTracker_Artifact();
+        $this->uri      = '';
+        $this->xref     = '';
     }
 
     public function withId($id) {
@@ -36,9 +39,32 @@ class MockArtifactBuilder {
         return $this;
     }
     
+    public function withTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
+        return $this;
+    }
+    
+    public function withTitle($title) {
+        $this->title = $title;
+        return $this;
+    }
+    
+    public function withUri($uri) {
+        $this->uri = $uri;
+        return $this;
+    }
+    
+    public function withXRef($xref) {
+        $this->xref = $xref;
+        return $this;
+    }
+    
     public function build() {
         $this->artifact->setReturnValue('getId', $this->id);
         $this->artifact->setReturnValue('getTracker', $this->tracker);
+        $this->artifact->setReturnValue('getTitle', $this->title);
+        $this->artifact->setReturnValue('getUri', $this->uri);
+        $this->artifact->setReturnValue('getXRef', $this->xref);
         
         return $this->artifact;
     }
