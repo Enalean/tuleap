@@ -42,6 +42,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
+Mock::generatePartial('Planning_Controller', 'MockPlanning_Controller', array('render'));
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Tracker_CrossSearch_Search');
@@ -160,14 +161,14 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     public function itHasASelectBoxListingBacklogTrackers() {
         $this->assertPattern('/\<select name="backlog_tracker_id"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
-            $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
+            $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
     }
     
     public function itHasASelectBoxListingPlanningTrackers() {
         $this->assertPattern('/\<select name="planning_tracker_id"/', $this->output);
         foreach ($this->available_planning_trackers as $tracker) {
-            $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
+            $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
     }
 }
@@ -223,6 +224,29 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
         $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, 'Release Backlog', 'Sprint Plan', '2', '3'));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
         $this->create();
+    }
+}
+
+class Planning_Controller_EditTest extends TuleapTestCase {
+    
+    public function itRendersTheEditTemplate() {
+        $group_id         = 123;
+        $planning_id      = 456;
+        $planning         = aPlanning()->withGroupId($group_id)
+                                       ->withId($planning_id)->build();
+        $request          = aRequest()->with('planning_id', $planning_id)
+                                      ->with('action', 'edit')->build();
+        $planning_factory = mock('PlanningFactory');
+        $controller       = new MockPlanning_Controller();
+        
+        stub($planning_factory)->getPlanning($planning_id)->returns($planning);
+        stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
+        stub($planning_factory)->getAvailablePlanningTrackers($group_id)->returns(array());
+        
+        $controller->__construct($request, $planning_factory);
+        
+        $controller->expectOnce('render', array('edit', new IsAExpectation('Planning_FormPresenter')));
+        $controller->edit();
     }
 }
 

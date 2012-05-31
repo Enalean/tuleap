@@ -48,6 +48,11 @@ class Test_Planning_Builder {
         return $this;
     }
     
+    public function withGroupId($group_id) {
+        $this->group_id = $group_id;
+        return $this;
+    }
+    
     public function withPlanningTrackerId($planning_tracker_id) {
         $this->planning_tracker_id = $planning_tracker_id;
         return $this;

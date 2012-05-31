@@ -88,7 +88,10 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function edit() {
-        $this->render('edit', null);
+        $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
+        $presenter = $this->getFormPresenter($planning);
+        
+        $this->render('edit', $presenter);
     }
     
     public function delete() {

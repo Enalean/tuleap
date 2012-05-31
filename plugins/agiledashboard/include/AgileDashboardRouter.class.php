@@ -73,7 +73,7 @@ class AgileDashboardRouter {
                 $this->executeAction($controller, 'create');
                 break;
             case 'edit':
-                $this->executeAction($controller, 'edit');
+                $this->renderAction($controller, 'edit', $request);
                 break;
             case 'delete':
                 $this->executeAction($controller, 'delete');
@@ -98,6 +98,7 @@ class AgileDashboardRouter {
         $header_title = array(
             'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_index'),
             'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
+            'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
             'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
         );
         
@@ -150,7 +151,7 @@ class AgileDashboardRouter {
      * 
      * @return Planning_Controller 
      */
-    private function buildController(Codendi_Request $request) {
+    protected function buildController(Codendi_Request $request) {
         $planning_factory = new PlanningFactory(new PlanningDao(),
                                                 TrackerFactory::instance());
         
