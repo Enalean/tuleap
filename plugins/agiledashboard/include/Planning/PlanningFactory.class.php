@@ -137,6 +137,12 @@ class PlanningFactory {
     }
     
     /**
+     * Returns the planning that uses the given tracker as milestone's source
+     * 
+     * Example:
+     * - Given I pass Release tracker as parameter
+     * - Then I should get the Release planning (for instance Epic -> Release)
+     * 
      * @param Tracker $planning_tracker 
      * 
      * @return Planning

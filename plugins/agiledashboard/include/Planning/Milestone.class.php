@@ -24,26 +24,47 @@
 class Planning_Milestone {
     
     /**
+     * The project where the milestone is defined
+     * 
      * @var int
      */
     private $group_id;
     
     /**
+     * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
+     * and the tracker that define the plan (ie. Release)
+     * 
      * @var Planning
      */
     private $planning;
     
     /**
+     * The artifact that represent the milestone
+     * 
+     * For instance a Sprint or a Release
+     * 
      * @var Tracker_Artifact
      */
     private $artifact;
     
     /**
+     * The planned artifacts are the content of the milestone (stuff to be done)
+     * 
+     * Given current Milestone is a Sprint
+     * And I defined a Sprint planning that associate Stories to Sprints
+     * Then I will have an array of Sprint as planned artifacts.
+     * 
      * @var TreeNode
      */
     private $planned_artifacts;
     
     /**
+     * A sub-milestone is a decomposition of the current one.
+     * 
+     * Given current Milestone is a Release
+     * And there is a Parent/Child association between Release and Sprint
+     * Then $sub_milestone will be an array of sprint
+     * 
      * @var array of Planning_Milestone
      */
     private $sub_milestones = array();
