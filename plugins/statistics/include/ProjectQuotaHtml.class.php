@@ -149,10 +149,9 @@ class ProjectQuotaHtml {
             $projectFilterParam = '&amp;project_filter='.$filter;
         }
 
-        $output .= $this->fetchFilterForm();
-
         $customQuotas = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
         if ($customQuotas && !$customQuotas->isError() && $customQuotas->rowCount() > 0) {
+            $output .= $this->fetchFilterForm();
             $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
             $output .= '<br />';
         } else {
