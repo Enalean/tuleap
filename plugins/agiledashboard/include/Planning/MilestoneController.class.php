@@ -32,14 +32,6 @@ require_once 'MilestoneFactory.class.php';
 class Planning_MilestoneController extends MVC2_Controller {
     
     /**
-     * @var PlanningFactory
-     * 
-     * TODO: Use $milestone_factory instead, which should delegate to
-     *       Planning_Factory.
-     */
-    private $planning_factory;
-    
-    /**
      * @var Planning_MilestoneFactory
      */
     private $milestone_factory;
@@ -60,12 +52,10 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @param Planning_MilestoneFactory $milestone_factory 
      */
     public function __construct(Codendi_Request           $request,
-                                PlanningFactory           $planning_factory,
                                 Planning_MilestoneFactory $milestone_factory) {
         
         parent::__construct('agiledashboard', $request);
         
-        $this->planning_factory  = $planning_factory;
         $this->milestone_factory = $milestone_factory;
         $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
                                        $this->getCurrentUser(),

@@ -356,13 +356,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
     private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array $projects, $search) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
-        $planning_factory = new MockPlanningFactory();
-        $planning_tracker = mock('Tracker');
-
-        $this->planning->setPlanningTracker($planning_tracker);
-        stub($planning_tracker)->getId()->returns($this->planning->getPlanningTrackerId());
-        $planning_factory->setReturnValue('getPlanningWithTrackers', $this->planning, array($this->planning->getId()));
-
         $tracker_factory = new MockTrackerFactory();
         TrackerFactory::setInstance($tracker_factory);
 
@@ -373,7 +366,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                                       ->returns($milestone);
 
         ob_start();
-        $controller = new Planning_MilestoneController($request, $planning_factory, $this->milestone_factory);
+        $controller = new Planning_MilestoneController($request, $this->milestone_factory);
 
         $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();

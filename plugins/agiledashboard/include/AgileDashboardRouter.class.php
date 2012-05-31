@@ -162,11 +162,9 @@ class AgileDashboardRouter {
      * @return Planning_MilestoneController 
      */
     protected function buildMilestoneController(Codendi_Request $request) {
-        $planning_factory  = $this->getPlanningFactory();
         $milestone_factory = $this->getMilestoneFactory();
         
         return new Planning_MilestoneController($request,
-                                                $planning_factory,
                                                 $milestone_factory);
     }
     
