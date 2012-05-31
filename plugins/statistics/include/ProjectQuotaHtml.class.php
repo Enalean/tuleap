@@ -271,6 +271,7 @@ class ProjectQuotaHtml {
      * @return String
      */
     private function renderNewCustomQuotaForm() {
+        $max_quota = (int)$this->projectQuotaManager->getMaximumQuota();
         $output  = '';
         $output .= '<table>';
         $output .= '<form method="post" >';
@@ -284,7 +285,7 @@ class ProjectQuotaHtml {
         $output .= '</tr>';
         $output .= '<tr valign="top">';
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'quota').' (GB) <span class="highlight">*</span></td>';
-        $output .= '<td><input name="quota" /><p class="help-block">'. $GLOBALS['Language']->getText('plugin_statistics', 'max_quota', $this->projectQuotaManager->getMaximumQuota()) .'</p></td>';
+        $output .= '<td><input name="quota" type="number" min="0" max="'. $max_quota .'"/><p class="help-block">'. $GLOBALS['Language']->getText('plugin_statistics', 'max_quota', $max_quota) .'</p></td>';
         $output .= '</tr>';
         $output .= '<tr valign="top">';
         $output .= '<td>'.$GLOBALS['Language']->getText('plugin_statistics', 'motivation').'</td><td><textarea name="motivation" rows="5" cols="50" ></textarea></td>';
