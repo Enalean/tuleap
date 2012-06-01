@@ -179,8 +179,19 @@ class CLI_Action {
             $this->show_scalar($result, $fieldnames);
         }
     }
-    
-    
+
+    /**
+     * Check if the object returned by a SOAP call is valid
+     * @see CLI_Action::show_object()
+     *
+     * @param array $row Result of a SOAP call
+     *
+     * @return Boolean
+     */
+    private function isIterable($row) {
+        return (is_object($row) && get_class($row) === 'stdClass') || is_array($row);
+    }
+
     function show_object($result, $fieldnames = array()) {
         $titles = array();
         $lengths = array();
@@ -424,7 +435,7 @@ class CLI_Action {
         static $recursive_id = 1;
         
         foreach ($result as $row) {
-            if ((is_object($row) && get_class($row) === 'stdClass') || is_array($row)) {
+            if ($this->isIterable($row)) {
                 foreach ($row as $colname => $value) {
                     if (!isset($titles[$colname])) {
                         if (!isset($fieldnames[$colname])) {
@@ -441,7 +452,7 @@ class CLI_Action {
         $rowArrays = array();
         $result2 = array();
         foreach ($result as $i => $row) {
-            if ((is_object($row) && get_class($row) === 'stdClass') || is_array($row)) {
+            if ($this->isIterable($row)) {
                 foreach ($row as $colname => $value) {
                     if (is_array($value)) {
                         $lengths[$colname] = strlen($titles[$colname]) + 2;
@@ -491,7 +502,7 @@ class CLI_Action {
         $recursive_items = array();
         // now show the values
         foreach ($result as $row) {
-            if ((is_object($row) && get_class($row) === 'stdClass') || is_array($row)) {
+            if ($this->isIterable($row)) {
                 foreach ($row as $colname => $value) {
                     // recursively show the multi dimensional array
                     if (is_array($value)) {
