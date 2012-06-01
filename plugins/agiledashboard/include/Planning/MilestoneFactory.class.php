@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Milestone.class.php';
+require_once 'ArtifactMilestone.class.php';
 require_once 'NoMilestone.class.php';
 
 /**

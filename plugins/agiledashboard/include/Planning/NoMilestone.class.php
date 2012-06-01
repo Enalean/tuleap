@@ -23,7 +23,23 @@ require_once 'Milestone.class.php';
 /**
  * Null-object pattern for planning milestones.
  */
-class Planning_NoMilestone extends Planning_Milestone {
+class Planning_NoMilestone implements Planning_Milestone {
+    
+    /**
+     * The project where the milestone is defined
+     * 
+     * @var Project
+     */
+    private $project;
+    
+    /**
+     * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
+     * and the tracker that define the plan (ie. Release)
+     * 
+     * @var Planning
+     */
+    
+    private $planning;
     
     public function __construct(Project $project, Planning $planning) {
         // not calling the super constructor allows us not enforce non nullity on the artifact
@@ -55,6 +71,46 @@ class Planning_NoMilestone extends Planning_Milestone {
      */
     public function userCanView(User $user) {
         return true; // User can view milestone content, since it's empty.
+    }
+
+    public function addSubMilestones(array $new_sub_milestones) {
+        
+    }
+
+    public function getArtifact() {
+        
+    }
+
+    public function getGroupId() {
+        
+    }
+
+    public function getLinkedArtifacts(User $user) {
+        
+    }
+
+    public function getPlannedArtifacts() {
+        
+    }
+
+    public function getPlanning() {
+        return $this->planning;
+    }
+
+    public function getPlanningId() {
+        
+    }
+
+    public function getProject() {
+        return $this->project;
+    }
+
+    public function getSubMilestones() {
+        
+    }
+
+    public function hasSubMilestones() {
+        
     }
 
 

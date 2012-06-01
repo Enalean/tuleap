@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
 
 function aMilestone() {
     return new Test_Planning_MilestoneBuilder();

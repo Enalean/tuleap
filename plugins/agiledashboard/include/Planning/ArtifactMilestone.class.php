@@ -18,17 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Milestone.class.php';
+
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
-class Planning_ArtifactMilestone {
+class Planning_ArtifactMilestone implements Planning_Milestone {
     
     /**
      * The project where the milestone is defined
      * 
      * @var Project
      */
-    protected $project;
+    private $project;
     
     /**
      * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
@@ -37,7 +39,7 @@ class Planning_ArtifactMilestone {
      * @var Planning
      */
     
-    protected $planning;
+    private $planning;
     
     /**
      * The artifact that represent the milestone
