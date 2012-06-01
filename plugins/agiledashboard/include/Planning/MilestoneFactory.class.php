@@ -115,11 +115,11 @@ class Planning_MilestoneFactory {
                                          Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
 
-        $id               = $milestone_artifact->getId();
-        $backlog_trackers = $planning->getBacklogTrackers();
+        $id              = $milestone_artifact->getId();
+        $backlog_tracker = $planning->getBacklogTracker();
 
         $node = new TreeNode(array('id'                   => $id,
-                                   'allowedChildrenTypes' => $backlog_trackers));
+                                   'allowedChildrenTypes' => array($backlog_tracker)));
         $node->setId($id);
         $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, array());
         
