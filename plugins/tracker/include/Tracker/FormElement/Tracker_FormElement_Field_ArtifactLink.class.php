@@ -945,6 +945,29 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return bool true if success
      */
     public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
+        $submitted_value = $this->assertLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
+        parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
+    }
+    
+    /**
+     * Verify (and update if needed) that the link between what submitted the user ($submitted_values) and
+     * the current artifact is correct resp. the association definition.
+     * 
+     * Given I defined following hierarchy:
+     * Release
+     * `-- Sprint
+     * 
+     * If $artifact is a Sprint and I try to link a Release, this method detect
+     * it and update the corresponding Release with a link toward current sprint
+     * 
+     * @param Tracker_Artifact           $artifact
+     * @param Tracker_Artifact_Changeset $old_changeset
+     * @param mixed                      $submitted_value
+     * @param User                       $submitter
+     * 
+     * @return mixed The submitted value expurged from updated links
+     */
+    protected function assertLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, User $submitter) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
         $artifact_id_already_linked = array();
@@ -955,8 +978,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
-        $submitted_value = $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
-        parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
+        
+        return $this->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
     }
     
     /**
