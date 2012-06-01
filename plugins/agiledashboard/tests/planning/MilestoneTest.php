@@ -22,6 +22,7 @@ require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 class Planning_MilestoneTest extends TuleapTestCase {
@@ -153,60 +154,6 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
         $this->assertEqual(count($all_artifacts), 3);
     }
-}
-    
-
-class Test_TreeNode_Builder {
-
-    private $children;
-    private $data;
-    
-    public function __construct() {
-        $this->children = array();
-    }
-    
-    /**
-     * @return \Test_TreeNode_Builder 
-     */
-    public function withChildren() {
-        $args = func_get_args();
-        foreach ($args as $node_builder) {
-            $this->children[] = $node_builder->build();
-        }
-        return $this;
-    }
-
-    /**
-     * @return \Test_TreeNode_Builder 
-     */
-    public function withChild(Test_TreeNode_Builder $child_node_builder) {
-        $this->children[] = $child_node_builder->build();
-        return $this;
-    }
-
-    /**
-     * @return \Test_TreeNode_Builder 
-     */
-    public function withArtifact($artifact) {
-        $this->data['artifact'] = $artifact;
-        return $this;
-    }
-    
-    public function build() {
-        $node = new TreeNode();
-        $node->setChildren($this->children);
-        $node->setData($this->data);
-        return $node;
-    }
-
-
-}
-
-/**
- * @return \Test_TreeNode_Builder 
- */
-function aNode() {
-    return new Test_TreeNode_Builder();
 }
 
 class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
