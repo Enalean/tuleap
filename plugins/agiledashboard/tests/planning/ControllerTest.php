@@ -155,18 +155,18 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
     
     public function itHasATextFieldForTheName() {
-        $this->assertPattern('/<input type="text" name="planning_name"/', $this->output);
+        $this->assertPattern('/<input type="text" name="planning\[name\]"/', $this->output);
     }
     
     public function itHasASelectBoxListingBacklogTrackers() {
-        $this->assertPattern('/\<select name="backlog_tracker_id"/', $this->output);
+        $this->assertPattern('/\<select name="planning\[backlog_tracker_id\]"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
     }
     
     public function itHasASelectBoxListingPlanningTrackers() {
-        $this->assertPattern('/\<select name="planning_tracker_id"/', $this->output);
+        $this->assertPattern('/\<select name="planning\[planning_tracker_id\]"/', $this->output);
         foreach ($this->available_planning_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
@@ -197,9 +197,9 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
     public function setUp() {
         parent::setUp();
         
-        $this->request->set('planning_name', '');
-        $this->request->set('backlog_tracker_id', '');
-        $this->request->set('planning_tracker_id', '');
+        $this->request->set('planning[name]', '');
+        $this->request->set('planning[backlog_tracker_id]', '');
+        $this->request->set('planning[planning_tracker_id]', '');
     }
     
     public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
@@ -213,15 +213,16 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     public function setUp() {
         parent::setUp();
         
-        $this->request->set('planning_name', 'Release Planning');
-        $this->request->set('backlog_tracker_id', '2');
-        $this->request->set('planning_tracker_id', '3');
-        $this->request->set('planning_backlog_title', 'Release Backlog');
-        $this->request->set('planning_plan_title', 'Sprint Plan');
+        $this->planning_parameters = array('name'                => 'Release Planning',
+                                           'backlog_tracker_id'  => '2',
+                                           'planning_tracker_id' => '3',
+                                           'backlog_title'       => 'Release Backlog',
+                                           'plan_title'          => 'Sprint Plan');
+        $this->request->set('planning', $this->planning_parameters);
     }
     
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
-        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, 'Release Backlog', 'Sprint Plan', '2', '3'));
+        $this->planning_factory->expectOnce('createPlanning', array($this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
         $this->create();
     }

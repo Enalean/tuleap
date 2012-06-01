@@ -71,16 +71,10 @@ class Planning_Controller extends MVC2_Controller {
         $validator = new Planning_RequestValidator($this->planning_factory);
         
         if ($validator->isValid($this->request)) {
-            $planning_name          = $this->request->get('planning_name');
-            $planning_backlog_title = $this->request->get('planning_backlog_title');
-            $planning_plan_title    = $this->request->get('planning_plan_title');
-            $group_id               = $this->group_id;
-            $backlog_tracker_id     = $this->request->get('backlog_tracker_id');
-            $planning_tracker_id    = $this->request->get('planning_tracker_id');
+            $this->planning_factory->createPlanning($this->group_id,
+                                                    PlanningParameters::fromArray($this->request->get('planning')));
             
-            $this->planning_factory->createPlanning($planning_name , $group_id, $planning_backlog_title, $planning_plan_title, $backlog_tracker_id, $planning_tracker_id);
-            
-            $this->redirect(array('group_id' => $group_id));
+            $this->redirect(array('group_id' => $this->group_id));
         } else {
             // TODO: Error message should reflect validation detail
             $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));

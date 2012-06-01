@@ -21,6 +21,7 @@
 require_once 'PlanningFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'common/include/Codendi_Request.class.php';
+require_once 'PlanningParameters.class.php';
 
 /**
  * Validates planning creation requests.
@@ -52,54 +53,63 @@ class Planning_RequestValidator {
      * @return bool
      */
     public function isValid(Codendi_Request $request) {
-        return $this->nameIsPresent($request)
-            && $this->backlogTrackerIdIsPresentAndIsAPositiveIntegers($request)
-            && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($request)
-            && $this->planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($request);
+        $group_id            = $request->get('group_id');
+        $planning_parameters = $request->get('planning');
+        
+        if (! $planning_parameters) {
+            $planning_parameters = array();
+        }
+        
+        $planning_parameters = PlanningParameters::fromArray($planning_parameters);
+        
+        return $this->nameIsPresent($planning_parameters)
+            && $this->backlogTrackerIdIsPresentAndIsAPositiveIntegers($planning_parameters)
+            && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
+            && $this->planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($group_id, $planning_parameters);
     }
     
     /**
-     * Checks whether a name is present in the request.
+     * Checks whether name is present in the parameters.
      * 
-     * @param Codendi_Request $request The validated request.
+     * @param PlanningParameters $planning_parameters The validated parameters.
      * 
      * @return bool
      */
-    private function nameIsPresent(Codendi_Request $request) {
-        $name = new Valid_String('planning_name');
+    private function nameIsPresent(PlanningParameters $planning_parameters) {
+        $name = new Valid_String();
         $name->required();
         
-        return $request->valid($name);
+        return $name->validate($planning_parameters->name);
     }
     
     /**
-     * Checks whether a backlog tracker id is present in the request, and is
+     * Checks whether backlog tracker id is present in the parameters, and is
      * a valid positive integer.
      * 
-     * @param Codendi_Request $request The validated request.
+     * @param PlanningParameters $planning_parameters The validated parameters.
      * 
      * @return bool
      */
-    private function backlogTrackerIdIsPresentAndIsAPositiveIntegers(Codendi_Request $request) {
-        $backlog_tracker_id = new Valid_UInt('backlog_tracker_id');
+    private function backlogTrackerIdIsPresentAndIsAPositiveIntegers(PlanningParameters $planning_parameters) {
+        $backlog_tracker_id = new Valid_UInt();
         $backlog_tracker_id->required();
         
-        return $request->valid($backlog_tracker_id);
+        return $backlog_tracker_id->validate($planning_parameters->backlog_tracker_id);
     }
     
     /**
-     * Checks whether a planning tracker id is present in the request, and is
+     * Checks whether a planning tracker id is present in the parameters, and is
      * a valid positive integer.
      * 
-     * @param Codendi_Request $request The validated request.
+     * @param PlanningParameters $planning_parameters The validated parameters.
      * 
      * @return bool
      */
-    private function planningTrackerIdIsPresentAndIsAPositiveInteger(Codendi_Request $request) {
-        $planning_tracker_id = new Valid_UInt('planning_tracker_id');
+    private function planningTrackerIdIsPresentAndIsAPositiveInteger(PlanningParameters $planning_parameters) {
+        $planning_tracker_id = new Valid_UInt();
         $planning_tracker_id->required();
         
-        return $request->valid($planning_tracker_id);
+        return $planning_tracker_id->validate($planning_parameters->planning_tracker_id);
     }
     
     /**
@@ -107,13 +117,13 @@ class Planning_RequestValidator {
      * that is not already used as a planning tracker in the project identified
      * by the request group_id.
      * 
-     * @param Codendi_Request $request The validated request.
+     * @param int                $group_id The group id to check the existing planning trackers against.
+     * @param PlanningParameters $request  The validated parameters.
      * 
      * @return bool
      */
-    private function planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject(Codendi_Request $request) {
-        $group_id                     = $request->get('group_id');
-        $planning_tracker_id          = $request->get('planning_tracker_id');
+    private function planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($group_id, PlanningParameters $planning_parameters) {
+        $planning_tracker_id          = $planning_parameters->planning_tracker_id;
         $project_planning_tracker_ids = $this->factory->getPlanningTrackerIdsByGroupId($group_id);
         
         return ! in_array($planning_tracker_id, $project_planning_tracker_ids);
