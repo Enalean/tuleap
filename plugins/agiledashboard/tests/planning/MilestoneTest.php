@@ -43,7 +43,7 @@ class Planning_MilestoneTest extends TuleapTestCase {
         $this->planning  = aPlanning()->build();
         $this->artifact  = aMockArtifact()->withTitle('Foo')
                                           ->build();
-        $this->milestone = new Planning_Milestone($this->project,
+        $this->milestone = new Planning_ArtifactMilestone($this->project,
                                                   $this->planning,
                                                   $this->artifact);
     }
@@ -58,7 +58,7 @@ class Planning_MilestoneTest extends TuleapTestCase {
     
     public function itDelegatesArtifactTitleRetrieval() {
         $artifact = aMockArtifact()->withTitle('a simple little artifact')->build();
-        $milestone = new Planning_Milestone($this->project, mock('Planning'), $artifact);
+        $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $artifact);
         $this->assertEqual($milestone->getArtifactTitle(), $artifact->getTitle());
     }
 
@@ -66,7 +66,7 @@ class Planning_MilestoneTest extends TuleapTestCase {
         $this->assertEqual($this->milestone->getPlannedArtifacts(), null);
         
         $planned_artifacts = new TreeNode();
-        $this->milestone   = new Planning_Milestone($this->project,
+        $this->milestone   = new Planning_ArtifactMilestone($this->project,
                                                      $this->planning,
                                                      $this->artifact,
                                                      $planned_artifacts);
@@ -84,7 +84,7 @@ class Planning_MilestoneTest extends TuleapTestCase {
     }
 
     public function itHasATitle() {
-        $this->milestone = new Planning_Milestone($this->project,
+        $this->milestone = new Planning_ArtifactMilestone($this->project,
                                                   $this->planning,
                                                   $this->artifact);
         $this->assertEqual($this->milestone->getArtifactTitle(), 'Foo');
@@ -100,7 +100,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
     public function itGetsLinkedArtifactsOfTheRootLevelArtifact() {
         $artifact      = aMockArtifact()->withId(1111)->withUniqueLinkedArtifacts(array(aMockArtifact()->build()))->build();
 
-        $milestone     = new Planning_Milestone($this->project, mock('Planning'), $artifact);
+        $milestone     = new Planning_ArtifactMilestone($this->project, mock('Planning'), $artifact);
         $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
         $this->assertEqual(count($all_artifacts), 1);
     }
@@ -116,7 +116,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
                                     ->build();
 
         
-        $milestone = new Planning_Milestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
+        $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
         $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
         $this->assertEqual(count($all_artifacts), 2);
     }
@@ -132,7 +132,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
                                     ->build();
 
         
-        $milestone = new Planning_Milestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
+        $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
         $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
         $this->assertEqual(count($all_artifacts), 2);
     }
@@ -150,7 +150,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
                                     ->build();
 
         
-        $milestone = new Planning_Milestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
+        $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
         $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
         $this->assertEqual(count($all_artifacts), 3);
     }
@@ -162,7 +162,7 @@ class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
         $this->project  = stub('Project')->getID()->returns(123);
         $this->planning  = mock('Planning');
         $this->artifact  = mock('Tracker_Artifact');
-        $this->milestone = new Planning_Milestone($this->project,
+        $this->milestone = new Planning_ArtifactMilestone($this->project,
                                                   $this->planning,
                                                   $this->artifact);
     }

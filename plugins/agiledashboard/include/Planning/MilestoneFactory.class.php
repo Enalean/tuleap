@@ -74,7 +74,7 @@ class Planning_MilestoneFactory {
             $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
-            return new Planning_Milestone($project, $planning, $artifact, $planned_artifacts);
+            return new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
@@ -169,7 +169,7 @@ class Planning_MilestoneFactory {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($sub_milestone_artifact->getTracker());
 
                 if ($planning) {
-                    $sub_milestones[] = new Planning_Milestone($milestone->getProject(),
+                    $sub_milestones[] = new Planning_ArtifactMilestone($milestone->getProject(),
                                                                $planning,
                                                                $sub_milestone_artifact);
                 }
@@ -251,7 +251,7 @@ class Planning_MilestoneFactory {
         $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
             $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
-            $milestones[]      = new Planning_Milestone($project, $planning, $artifact, $planned_artifacts);
+            $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
         }
         return $milestones;
     }

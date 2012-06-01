@@ -275,7 +275,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         // unit part (mocking the collaborator milestone_factory
         $open_milestones = array();
         foreach ($open_artifacts as $artifact) {
-            $open_milestones[] = new Planning_Milestone(mock('Project'), mock('Planning'), $artifact);
+            $open_milestones[] = new Planning_ArtifactMilestone(mock('Project'), mock('Planning'), $artifact);
         }
         
         $user = aUser()->build();

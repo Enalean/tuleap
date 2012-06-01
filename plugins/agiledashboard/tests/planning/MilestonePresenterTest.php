@@ -86,7 +86,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
     }
     
     protected function getAPresenter(TreeNode $planned_artifacts_tree = null) {
-        $milestone = new Planning_Milestone(mock('Project'),
+        $milestone = new Planning_ArtifactMilestone(mock('Project'),
                                             $this->planning,
                                             $this->artifact,
                                             $planned_artifacts_tree);

@@ -21,7 +21,7 @@
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
-class Planning_Milestone {
+class Planning_ArtifactMilestone {
     
     /**
      * The project where the milestone is defined
