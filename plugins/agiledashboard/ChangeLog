@@ -1,3 +1,6 @@
+Version 0.26 - Tuleap 5.2 (Not released yet)
+     * Introduce base interface for \Planning\Milestone
+
 Version 0.25 - Tuleap 5.2 (Not released yet)
      * Fix merge issue at commit #ee35e7d7ba0f
 
