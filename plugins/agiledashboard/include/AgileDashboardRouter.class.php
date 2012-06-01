@@ -33,6 +33,8 @@ require_once 'Planning/ViewBuilder.class.php';
  * (e.g. PlanningController, MilestoneController...).
  * 
  * See AgileDashboardRouter::route()
+ * 
+ * TODO: Layout management should be extracted and moved to controllers or views.
  */
 class AgileDashboardRouter {
     
@@ -74,6 +76,9 @@ class AgileDashboardRouter {
                 break;
             case 'edit':
                 $this->renderAction($controller, 'edit', $request);
+                break;
+            case 'update':
+                $this->executeAction($controller, 'update');
                 break;
             case 'delete':
                 $this->executeAction($controller, 'delete');
