@@ -94,6 +94,14 @@ class Planning_Controller extends MVC2_Controller {
         $this->render('edit', $presenter);
     }
     
+    public function update() {
+        $this->planning_factory->updatePlanning($this->request->get('planning_id'),
+                                                $this->request->get('planning'));
+        
+        $this->redirect(array('group_id' => $this->request->get('group_id'),
+                              'action'   => 'index'));
+    }
+    
     public function delete() {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));

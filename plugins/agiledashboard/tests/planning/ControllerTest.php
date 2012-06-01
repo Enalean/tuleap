@@ -250,6 +250,23 @@ class Planning_Controller_EditTest extends TuleapTestCase {
     }
 }
 
+class Planning_Controller_ValidUpdateTest extends TuleapTestCase {
+    public function itUpdatesThePlanningAndRedirectToTheIndex() {
+        $group_id            = 456;
+        $planning_id         = 123;
+        $planning_parameters = array('name' => 'Foo', 'backlog_title' => 'Bar');
+        $request             = aRequest()->with('group_id', $group_id)
+                                         ->with('planning_id', $planning_id)
+                                         ->with('planning', $planning_parameters)->build();
+        $planning_factory    = mock('PlanningFactory');
+        $this->controller    = new Planning_Controller($request, $planning_factory);
+        
+        $planning_factory->expectOnce('updatePlanning', array($planning_id, $planning_parameters));
+        $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$group_id&action=index");
+        $this->controller->update();
+    }
+}
+
 class Planning_ControllerDeleteTest extends TuleapTestCase {
     public function itDeletesThePlanningAndRedirectsToTheIndex() {
         $group_id         = '34';
