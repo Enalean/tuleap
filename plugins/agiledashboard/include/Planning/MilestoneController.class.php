@@ -92,9 +92,9 @@ class Planning_MilestoneController extends MVC2_Controller {
         $project              = $manager->getProject($this->milestone->getGroupId());
         $planning             = $this->getPlanning();
         $available_milestones = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($this->getCurrentUser(), $planning->getPlanningTrackerId());
-        $tracker_ids          = $planning->getBacklogTrackerIds();
+        $backlog_tracker_id   = $planning->getBacklogTrackerId();
         
-        $content_view         = $this->buildContentView($view_builder, $project, $tracker_ids, $available_milestones, $planning);
+        $content_view         = $this->buildContentView($view_builder, $project, $backlog_tracker_id, $available_milestones, $planning);
         $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
         
         $this->render('show', $presenter);
@@ -131,14 +131,14 @@ class Planning_MilestoneController extends MVC2_Controller {
     
     private function buildContentView(Planning_ViewBuilder $view_builder,
                                       Project              $project = null,
-                                      array                $tracker_ids,
+                                                           $backlog_tracker_id,
                                       array                $available_milestones,
                                       Planning             $planning) {
         
         $tracker_linked_items  = $this->getTrackerLinkedItems($available_milestones);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
-
+        $tracker_ids           = $backlog_tracker_id ? array($backlog_tracker_id) : array();
         
         $view = $view_builder->build($this->getCurrentUser(), 
                                                  $project, 

@@ -157,9 +157,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->assertPattern('/<input type="text" name="planning_name"/', $this->output);
     }
     
-    public function itHasAMultiSelectBoxListingBacklogTrackers() {
-        
-        $this->assertPattern('/\<select multiple="multiple" name="backlog_tracker_ids\[\]"/', $this->output);
+    public function itHasASelectBoxListingBacklogTrackers() {
+        $this->assertPattern('/\<select name="backlog_tracker_id"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
         }
@@ -198,7 +197,7 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
         parent::setUp();
         
         $this->request->set('planning_name', '');
-        $this->request->set('backlog_tracker_ids', array());
+        $this->request->set('backlog_tracker_id', '');
         $this->request->set('planning_tracker_id', '');
     }
     
@@ -214,14 +213,14 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
         parent::setUp();
         
         $this->request->set('planning_name', 'Release Planning');
-        $this->request->set('backlog_tracker_ids', array('1', '2'));
+        $this->request->set('backlog_tracker_id', '2');
         $this->request->set('planning_tracker_id', '3');
         $this->request->set('planning_backlog_title', 'Release Backlog');
         $this->request->set('planning_plan_title', 'Sprint Plan');
     }
     
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
-        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, 'Release Backlog', 'Sprint Plan', array('1', '2'), '3'));
+        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, 'Release Backlog', 'Sprint Plan', '2', '3'));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
         $this->create();
     }

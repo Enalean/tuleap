@@ -39,7 +39,7 @@ class RequestValidator_MissingParameterTest extends RequestValidatorTest {
     }
     
     public function itRejectsTheRequestWhenBacklogTrackerIdsAreMissing() {
-        $request = aPlanningCreationRequest()->withBacklogTrackerIds(null)->build();
+        $request = aPlanningCreationRequest()->withBacklogTrackerId(null)->build();
         $this->assertFalse($this->validator->isValid($request));
     }
     
