@@ -55,7 +55,7 @@ class Planning_MilestoneLinkPresenter {
      * @return string The milestone title (i.e. the artifact's one).
      */
     public function getTitle() {
-        return $this->milestone->getTitle();
+        return $this->milestone->getArtifactTitle();
     }
 }
 ?>

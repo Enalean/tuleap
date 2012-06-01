@@ -31,13 +31,13 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
                                                    'renderAction',
                                                    'executeAction',
                                                    'getPlanningFactory',
+                                                   'getProjectManager',
                                                    'getArtifactFactory',
                                                    'getMilestoneFactory'));
         $this->router->__construct(mock('Plugin'));
         
         stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
-        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
-        stub($this->router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
+        stub($this->router)->getProjectManager()->returns(mock('ProjectManager'));
         stub($this->router)->getMilestoneFactory()->returns(mock('Planning_MilestoneFactory'));
     }
     
@@ -54,6 +54,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     }
 
     public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
+        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
         $request = new Codendi_Request(array('aid' => '-1'));
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $this->router->routeShowPlanning($request);

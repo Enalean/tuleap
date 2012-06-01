@@ -30,15 +30,23 @@ class MockArtifactBuilder {
         $this->tracker  = new MockTracker();
         $this->title    = '';
         $this->artifact = new MockTracker_Artifact();
+        $this->linkedArtifacts  = array();
+        $this->uniqueLinkedArtifacts  = array();
         $this->uri      = '';
         $this->xref     = '';
     }
 
+    /**
+     * @return \MockArtifactBuilder 
+     */
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
     
+    /**
+     * @return \MockArtifactBuilder 
+     */
     public function withTracker(Tracker $tracker) {
         $this->tracker = $tracker;
         return $this;
@@ -46,6 +54,22 @@ class MockArtifactBuilder {
     
     public function withTitle($title) {
         $this->title = $title;
+        return $this;
+    }
+
+    /**
+     * @return \MockArtifactBuilder 
+     */
+    public function withLinkedArtifacts($linkedArtifacts) {
+        $this->linkedArtifacts = $linkedArtifacts;
+        return $this;
+    }
+    
+    /**
+     * @return \MockArtifactBuilder 
+     */
+    public function withUniqueLinkedArtifacts($uniqueLinkedArtifacts) {
+        $this->uniqueLinkedArtifacts = $uniqueLinkedArtifacts;
         return $this;
     }
     
@@ -65,6 +89,8 @@ class MockArtifactBuilder {
         $this->artifact->setReturnValue('getTitle', $this->title);
         $this->artifact->setReturnValue('getUri', $this->uri);
         $this->artifact->setReturnValue('getXRef', $this->xref);
+        $this->artifact->setReturnValue('getLinkedArtifacts', $this->linkedArtifacts);
+        $this->artifact->setReturnValue('getUniqueLinkedArtifacts', $this->uniqueLinkedArtifacts);
         
         return $this->artifact;
     }
