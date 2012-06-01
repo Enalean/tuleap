@@ -28,12 +28,12 @@ require_once 'MilestoneLinkPresenter.class.php';
 class Planning_MilestonePresenter extends PlanningPresenter {
     
     /**
-     * @var array of Tracker_Artifact
+     * @var array of Planning_Milestone
      */
     private $available_milestones;
     
     /**
-     * @var Tracker_Artifact
+     * @var Planning_Milestone
      */
     private $milestone;
     
@@ -61,7 +61,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * 
      * @param Planning                              $planning                    The planning (e.g. Release planning, Sprint planning).
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
-     * @param array                                 $available_milestones        The artifacts with a displayable planning (e.g. Sprint 2, Release 1.0).
+     * @param array                                 $available_milestones        The available milestones for a given planning (e.g. Sprint 2, Release 1.0).
      * @param Tracker_Artifact                      $milestone                   The artifact with planning being displayed right now.
      * @param User                                  $current_user                The user to which the artifact plannification UI is presented.
      * @param string                                $planning_redirect_parameter The request parameter representing the artifact being planned, used for redirection (e.g: "planning[2]=123").
@@ -97,6 +97,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         if ($this->canAccessPlannedItem()) {
             $root_node = $this->milestone->getPlannedArtifacts();
             
+            //TODO use null object pattern while still possible?
             if ($root_node) {
                 Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
             }
@@ -131,11 +132,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $artifacts_data = array();
         $selected_id    = $this->milestone->getArtifactId();
         
-        foreach ($this->available_milestones as $artifact) {
+        foreach ($this->available_milestones as $milestone) {
             $artifacts_data[] = array(
-                'id'       => $artifact->getId(),
-                'title'    => $hp->purify($artifact->getTitle()),
-                'selected' => ($artifact->getId() == $selected_id) ? 'selected="selected"' : '',
+                'id'       => $milestone->getArtifactId(),
+                'title'    => $hp->purify($milestone->getArtifactTitle()),
+                'selected' => ($milestone->getArtifactId() == $selected_id) ? 'selected="selected"' : '',
             );
         }
         return $artifacts_data;
