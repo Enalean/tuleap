@@ -971,11 +971,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * 
      * @return Array 
      */
-    public function removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked) {
-        $submitted_value = explode(',', $submitted_value['new_values']);
-        $submitted_value = array_map('trim', $submitted_value);
-        $submitted_value = array_diff($submitted_value, $artifact_id_already_linked);
-        return array('new_values' => implode(',', $submitted_value));
+    public function removeArtifactsFromSubmittedValue($submitted_value, array $artifact_id_already_linked) {
+        $new_values = explode(',', $submitted_value['new_values']);
+        $new_values = array_map('trim', $new_values);
+        $new_values = array_diff($new_values, $artifact_id_already_linked);
+        $submitted_value['new_values'] = implode(',', $new_values);
+        return $submitted_value;
     }
     
     protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
@@ -992,16 +993,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
         
-        $artifacts = array();
         if (trim($new_values) != '') {
-            $af = $this->getArtifactFactory();
             $new_artifact_ids = array_diff(explode(',', $new_values), array_keys($removed_values));
             // We add new links to existing ones
             foreach ($new_artifact_ids as $new_artifact_id) {
                 if ( ! in_array($new_artifact_id, $artifact_ids)) {
-                    $artifact = $af->getArtifactById($new_artifact_id);
-                    $artifacts[] = $artifact;
+                    $artifact_ids[] = $new_artifact_id;
                 }
+            }
+        }
+        
+
+        /// Convert to ids
+        
+        
+        $artifacts = array();
+        $af = $this->getArtifactFactory();
+        foreach ($artifact_ids as $new_artifact_id) {
+            if ($artifact = $af->getArtifactById($new_artifact_id)) {
+                $artifacts[] = $artifact;
             }
         }
         return $artifacts;

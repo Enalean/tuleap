@@ -322,7 +322,9 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $this->modified_artifact    = anArtifact()->withId($this->modified_artifact_id)->build();
         $this->old_changeset    = null;
         $this->new_changeset_id = 4444;
-        $this->submitted_value  = array('new_values' => '123, 124');
+        $this->submitted_value  = array('new_values'     => '123, 124', 
+                                        'removed_values' => array(345 => array('345'),
+                                                                  346 => array('346')));
         $this->submitter        = aUser()->build();
         $this->new_changeset_value_id = 66666;
         
@@ -354,7 +356,9 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         stub($this->artifact_123)->linkArtifact()->returns(true);
         
         // Then update the artifact with other links
-        $remaining_submitted_value = array('new_values' => '124');
+        $remaining_submitted_value = array('new_values' => '124',
+                                           'removed_values' => array(345 => array('345'),
+                                                                     346 => array('346')));
         $this->field->expectOnce('saveValue', array($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null));
         
         $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
