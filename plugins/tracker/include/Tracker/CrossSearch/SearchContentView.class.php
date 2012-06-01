@@ -54,11 +54,11 @@ class Tracker_CrossSearch_SearchContentView {
     private $user;
     
     public function __construct(Tracker_Report                   $report, 
-                         array                            $criteria, 
-                         TreeNode                         $tree_of_artifacts, 
-                         Tracker_ArtifactFactory          $artifact_factory, 
-                         Tracker_FormElementFactory       $factory,
-                         User                             $user) {
+                                array                            $criteria, 
+                                TreeNode                         $tree_of_artifacts, 
+                                Tracker_ArtifactFactory          $artifact_factory, 
+                                Tracker_FormElementFactory       $factory,
+                                User                             $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;

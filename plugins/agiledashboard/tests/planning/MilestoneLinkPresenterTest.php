@@ -30,8 +30,9 @@ class Planning_MilestoneLinkPresenterTest extends TuleapTestCase {
                                           ->withTitle('Foo')
                                           ->withXRef('milestone #123')
                                           ->build();
+        $project = stub('Project')->getID()->returns(456);
         $this->milestone = aMilestone()->withArtifact($artifact)
-                                       ->withGroupId(456)
+                                       ->withGroup($project)
                                        ->withPlanningId(789)
                                        ->build();
         $this->presenter = new Planning_MilestoneLinkPresenter($this->milestone);

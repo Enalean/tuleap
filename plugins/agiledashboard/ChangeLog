@@ -1,3 +1,10 @@
+Version 0.24 - Tuleap 5.2 (Not released yet)
+     * Fix bug when artifacts are displayed on both side of the planning
+
+Version 0.23 - Tuleap 5.2 (Not released yet)
+     * Only one tracker can be selected for backlog
+     * Inherit columns titles definition from project templates
+
 Version 0.22 - Tuleap 5.2
      * One can add new content into backlog when the backlog is empty.
 

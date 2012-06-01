@@ -26,9 +26,9 @@ class Planning_Milestone {
     /**
      * The project where the milestone is defined
      * 
-     * @var int
+     * @var Project
      */
-    private $group_id;
+    protected $project;
     
     /**
      * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
@@ -36,7 +36,8 @@ class Planning_Milestone {
      * 
      * @var Planning
      */
-    private $planning;
+    
+    protected $planning;
     
     /**
      * The artifact that represent the milestone
@@ -69,12 +70,18 @@ class Planning_Milestone {
      */
     private $sub_milestones = array();
     
-    public function __construct(                 $group_id,
+    /**
+     * @param Project $project
+     * @param Planning $planning
+     * @param Tracker_Artifact $artifact
+     * @param TreeNode $planned_artifacts 
+     */
+    public function __construct(Project          $project,
                                 Planning         $planning,
-                                Tracker_Artifact $artifact          = null,
+                                Tracker_Artifact $artifact,
                                 TreeNode         $planned_artifacts = null) {
         
-        $this->group_id          = $group_id;
+        $this->project           = $project;
         $this->planning          = $planning;
         $this->artifact          = $artifact;
         $this->planned_artifacts = $planned_artifacts;
@@ -84,10 +91,17 @@ class Planning_Milestone {
      * @return int The project identifier.
      */
     public function getGroupId() {
-        return $this->group_id;
+        return $this->project->getID();
+    }
+    
+    /**
+     * @return Project
+     */
+    public function getProject() {
+        return $this->project;
     }
 
-    /**
+        /**
      * @return Tracker_Artifact
      */
     public function getArtifact() {
@@ -129,9 +143,24 @@ class Planning_Milestone {
      * @return int
      */
     public function getArtifactId() {
-        return $this->artifact ? $this->artifact->getId() : null;
+        return $this->artifact->getId();
     }
     
+    /**
+     * @return string
+     */
+    public function getArtifactTitle() {
+        return $this->artifact->getTitle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getXRef() {
+        return $this->artifact->getXRef();
+    }
+    
+
     /**
      * @return Planning
      */
@@ -154,18 +183,30 @@ class Planning_Milestone {
     }
     
     /**
-     * @return string
+     * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts() 
+     * @param User $user
+     * @return Array of Tracker_Artifact
      */
-    public function getXRef() {
-        return $this->artifact->getXRef();
+    public function getLinkedArtifacts(User $user) {
+        $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
+        $root_node = $this->getPlannedArtifacts();
+        // TODO get rid of this if, in favor of an empty treenode
+        if ($root_node) {
+            $this->addChildrenNodes($root_node, $artifacts, $user);
+        }
+        return $artifacts;
     }
-    
-    /**
-     * @return string
-     */
-    public function getTitle() {
-        return $this->artifact->getTitle();
+
+    private function addChildrenNodes(TreeNode $root_node, &$artifacts, $user) {
+        foreach ($root_node->getChildren() as $node) {
+            $data        = $node->getData();
+            $artifact    = $data['artifact'];
+            $artifacts[] = $artifact;
+            $artifacts   = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
+            $this->addChildrenNodes($node, $artifacts, $user);
+        }
     }
 }
+
 
 ?>

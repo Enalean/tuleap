@@ -162,14 +162,11 @@ class AgileDashboardRouter {
      * @return Planning_MilestoneController 
      */
     protected function buildMilestoneController(Codendi_Request $request) {
-        $artifact_factory  = $this->getArtifactFactory();
-        $planning_factory  = $this->getPlanningFactory();
         $milestone_factory = $this->getMilestoneFactory();
         
         return new Planning_MilestoneController($request,
-                                                $artifact_factory,
-                                                $planning_factory,
-                                                $milestone_factory);
+                                                $milestone_factory,
+                                                $this->getProjectManager());
     }
     
     /**
@@ -246,11 +243,14 @@ class AgileDashboardRouter {
             $this->executeAction($controller, 'createArtifact');
         } else {
             $controller = $this->buildMilestoneController($request);
-            $action_arguments = array($this->getViewBuilder($request), ProjectManager::instance());
+            $action_arguments = array($this->getViewBuilder($request));
             $this->renderAction($controller, 'show', $request, $action_arguments);
         }
     }
 
+    public function getProjectManager() {
+        return ProjectManager::instance();
+    }
     /**
      * Builds a new PlanningFactory instance.
      * 
@@ -266,24 +266,12 @@ class AgileDashboardRouter {
     }
 
     /**
-     * Builds a new Tracker_ArtifactFactory instance.
-     * 
-     * TODO:
-     *   - Use Planning_MilestoneFactory instead.
-     * 
-     * @return Tracker_ArtifactFactory
-     */
-    protected function getArtifactFactory() {
-        return Tracker_ArtifactFactory::instance();
-    }
-    
-    /**
      * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory 
      */
     protected function getMilestoneFactory() {
         return new Planning_MilestoneFactory($this->getPlanningFactory(),
-                                             $this->getArtifactFactory());
+                                             Tracker_ArtifactFactory::instance());
     }
 }
 
