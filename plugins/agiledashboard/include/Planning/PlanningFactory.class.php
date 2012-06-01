@@ -224,8 +224,8 @@ class PlanningFactory {
         return $this->dao->createPlanning($planning_name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id);
     }
     
-    public function updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id) {
-        return $this->dao->updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id);
+    public function updatePlanning($planning_id, PlanningParameters $planning_parameters) {
+        return $this->dao->updatePlanning($planning_id, $planning_parameters);
     }
     
     /**

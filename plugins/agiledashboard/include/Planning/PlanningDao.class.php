@@ -129,12 +129,12 @@ class PlanningDao extends DataAccessObject {
         return $tracker_dao->searchByGroupIdWithExcludedIds($group_id, $planning_tracker_ids);
     }
     
-    function updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id) {
+    function updatePlanning($planning_id, PlanningParameters $planning_parameters) {
         $planning_id         = $this->da->escapeInt($planning_id);
-        $planning_name       = $this->da->quoteSmart($planning_name);
-        $backlog_title       = $this->da->quoteSmart($backlog_title);
-        $plan_title          = $this->da->quoteSmart($plan_title);
-        $planning_tracker_id = $this->da->escapeInt($planning_tracker_id);
+        $planning_name       = $this->da->quoteSmart($planning_parameters->name);
+        $backlog_title       = $this->da->quoteSmart($planning_parameters->backlog_title);
+        $plan_title          = $this->da->quoteSmart($planning_parameters->plan_title);
+        $planning_tracker_id = $this->da->escapeInt($planning_parameters->planning_tracker_id);
         
         $sql = "UPDATE plugin_agiledashboard_planning
                 SET name                = $planning_name,
@@ -145,7 +145,7 @@ class PlanningDao extends DataAccessObject {
         $this->update($sql);
         
         $this->deletePlanningBacklogTracker($planning_id);
-        $this->createBacklogTrackers($planning_id, $backlog_tracker_id);
+        $this->createBacklogTracker($planning_id, $planning_parameters->backlog_tracker_id);
     }
     
     function deletePlanning($planning_id) {

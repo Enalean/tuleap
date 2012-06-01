@@ -14,7 +14,18 @@
             <input type="text" name="planning[plan_title]" id="planning_plan_title" value="{{planningPlanTitle}}" />
         </p>
         <p>
-            {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}
+            {{#__}}planning-allows-assignment||{{/__}}
+            <select name="planning[backlog_tracker_id]" style="vertical-align: top;">
+                {{#available_backlog_trackers}}
+                    <option value="{{getId}}" {{selectedIfBacklogTracker}}>{{getName}}</option>
+                {{/available_backlog_trackers}}
+            </select>
+            <select name="planning[planning_tracker_id]">
+                <option value=""/>
+                {{#available_planning_trackers}}
+                    <option value="{{getId}}" {{selectedIfPlanningTracker}}>{{getName}}</option>
+                {{/available_planning_trackers}}
+            </select>
         </p>
         <p>
             <input type="submit" value="{{btnSubmit}}"/>

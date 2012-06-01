@@ -21,6 +21,7 @@
 require_once 'PlanningFormPresenter.class.php';
 require_once 'PlanningListPresenter.class.php';
 require_once 'PlanningFactory.class.php';
+require_once 'PlanningParameters.class.php';
 require_once 'NotFoundException.class.php';
 require_once 'PlanningRequestValidator.class.php';
 require_once 'common/mvc2/Controller.class.php';
@@ -96,7 +97,7 @@ class Planning_Controller extends MVC2_Controller {
     
     public function update() {
         $this->planning_factory->updatePlanning($this->request->get('planning_id'),
-                                                $this->request->get('planning'));
+                                                PlanningParameters::fromArray($this->request->get('planning')));
         
         $this->redirect(array('group_id' => $this->request->get('group_id'),
                               'action'   => 'index'));
