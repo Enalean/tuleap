@@ -37,6 +37,7 @@ class Test_Planning_Builder {
     private $group_id           = '102';
     private $backlog_tracker_id = array();
     private $planning_tracker_id;
+    private $planning_tracker;
     
     public function withId($id) {
         $this->id = $id;
@@ -57,15 +58,27 @@ class Test_Planning_Builder {
         $this->planning_tracker_id = $planning_tracker_id;
         return $this;
     }
+    
+    public function withPlanningTracker($tracker) {
+        $this->planning_tracker    = $tracker;
+        $this->planning_tracker_id = $tracker->getId();
+        return $this;
+    }
         
     public function build() {
-        return new Planning($this->id,
-                            $this->name,
-                            $this->group_id,
-                            $this->backlog_title,
-                            $this->plan_title,
-                            $this->backlog_tracker_id,
-                            $this->planning_tracker_id);
+        $planning = new Planning($this->id,
+                                 $this->name,
+                                 $this->group_id,
+                                 $this->backlog_title,
+                                 $this->plan_title,
+                                 $this->backlog_tracker_id,
+                                 $this->planning_tracker_id);
+        
+        if ($this->planning_tracker) {
+            $planning->setPlanningTracker($this->planning_tracker);
+        }
+        
+        return $planning;
     }
 }
 

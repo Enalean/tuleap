@@ -83,7 +83,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function edit() {
-        $planning  = $this->planning_factory->getPlanning($this->request->get('planning_id'));
+        $planning  = $this->planning_factory->getPlanningWithTrackers($this->request->get('planning_id'));
         $presenter = $this->getFormPresenter($planning);
         
         $this->render('edit', $presenter);
@@ -106,7 +106,7 @@ class Planning_Controller extends MVC2_Controller {
         $group_id = $planning->getGroupId();
         
         $available_trackers          = $this->planning_factory->getAvailableTrackers($group_id);
-        $available_planning_trackers = $this->planning_factory->getAvailablePlanningTrackers($group_id);
+        $available_planning_trackers = $this->planning_factory->getAvailablePlanningTrackers($planning);
         
         return new Planning_FormPresenter($planning, $available_trackers, $available_planning_trackers);
     }
