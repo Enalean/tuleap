@@ -235,7 +235,7 @@ class MileStoneFactory_getOpenMilestonesTest extends TuleapTestCase {
     }
 
     public function newMileStoneFactory($planning_factory, $artifact_factory) {
-        $factory          = TestHelper::getPartialMock('Planning_MilestoneFactory', array('getPlannedArtifacts'));
+        $factory = TestHelper::getPartialMock('Planning_MilestoneFactory', array('getPlannedArtifacts'));
         $factory->__construct($planning_factory, $artifact_factory);
         return $factory;
     }

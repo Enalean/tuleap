@@ -277,10 +277,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         foreach ($open_artifacts as $artifact) {
             $open_milestones[] = new Planning_Milestone(mock('Project'), mock('Planning'), $artifact);
         }
-        $this->milestone_factory->setReturnValue(
-            'getOpenMilestones',
-            $open_milestones,
-            array(aUser()->build(), '*', $this->planning));
+        
+        $user = aUser()->build();
+        stub($this->milestone_factory)->getOpenMilestones($user, '*', $this->planning)->returns($open_milestones);
+        
         return $factory;
     }
 

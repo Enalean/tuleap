@@ -197,12 +197,12 @@ class Planning_Milestone {
         return $artifacts;
     }
 
-    private function addChildrenNodes($root_node, &$artifacts, $user) {
+    private function addChildrenNodes(TreeNode $root_node, &$artifacts, $user) {
         foreach ($root_node->getChildren() as $node) {
-            $data = $node->getData();
-            $artifact = $data['artifact'];
+            $data        = $node->getData();
+            $artifact    = $data['artifact'];
             $artifacts[] = $artifact;
-            $artifacts = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
+            $artifacts   = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
             $this->addChildrenNodes($node, $artifacts, $user);
         }
     }

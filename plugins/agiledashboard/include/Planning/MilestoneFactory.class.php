@@ -243,14 +243,15 @@ class Planning_MilestoneFactory {
      * @param User $user
      * @param Project $project
      * @param Planning $planning
-     * @return \Planning_Milestone 
+     * 
+     * @return Array of \Planning_Milestone 
      */
-    public function getOpenMilestones(User $user, Project $project, $planning) {
+    public function getOpenMilestones(User $user, Project $project, Planning $planning) {
         $milestones = array();
-        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
             $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
-            $milestones[] = new Planning_Milestone($project, $planning, $artifact, $planned_artifacts);
+            $milestones[]      = new Planning_Milestone($project, $planning, $artifact, $planned_artifacts);
         }
         return $milestones;
     }
