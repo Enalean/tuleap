@@ -16,13 +16,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-    class Widget_ProjectSvnStats_Layout {
-
-    /**
-     * For graphs which have a large number of plots (say 10 items) it might be necessary 
-     * to specify 2 (or more columns) to avoid that the legend box become too large and hide the image.
-     * Legend ratio is computed in order to specify the number of text columns to use in the legend text box. 
-     */
+/**
+ * For graphs which have a large number of plots (say 10 items) it might be necessary
+ * to specify 2 (or more columns) to avoid that the legend box become too large and hide the image.
+ * Legend ratio is computed in order to specify the number of text columns to use in the legend text box.
+ */
+class Widget_ProjectSvnStats_Layout {
 
     /**
      * The number of lgend plots
