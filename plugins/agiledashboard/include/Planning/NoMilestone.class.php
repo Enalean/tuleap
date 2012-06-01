@@ -38,11 +38,9 @@ class Planning_NoMilestone implements Planning_Milestone {
      * 
      * @var Planning
      */
-    
     private $planning;
     
     public function __construct(Project $project, Planning $planning) {
-        // not calling the super constructor allows us not enforce non nullity on the artifact
         $this->project  = $project;
         $this->planning = $planning;
     }
