@@ -87,7 +87,7 @@ class CodeReviewViews extends Views {
         return $GLOBALS['Language']->getText('plugin_codereview', 'title');
     }
     /**
-     * Displays Accueil frame
+     * Displays First Frame
      *
      * @return Void
      */
