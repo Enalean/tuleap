@@ -91,7 +91,7 @@ class CodeReviewViews extends Views {
      *
      * @return Void
      */
-    function displayFrameAccueil() {
+    function displayFirstFrame() {
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=login'>Login to reviewboard for the first time</a>";
         echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";

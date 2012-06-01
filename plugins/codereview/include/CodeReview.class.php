@@ -116,7 +116,7 @@ class CodeReview extends Controler {
                     $this->view = 'displayFrame';
                     break;
                 default:
-                    $this->view = 'displayFrameAccueil';
+                    $this->view = 'displayFirstFrame';
                     break;
                 }
             }
