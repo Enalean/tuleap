@@ -24,27 +24,27 @@ interface Planning_Milestone {
     /**
      * @return int The project identifier.
      */
-    function getGroupId();
+    public function getGroupId();
     
     /**
      * @return Project
      */
-    function getProject();
+    public function getProject();
 
         /**
      * @return Tracker_Artifact
      */
-    function getArtifact();
+    public function getArtifact();
     
     /**
      * @return array of Planning_Milestone
      */
-    function getSubMilestones();
+    public function getSubMilestones();
     
     /**
      * @return Boolean True if milestone has at least 1 sub-milestone.
      */
-    function hasSubMilestones();
+    public function hasSubMilestones();
     
     /**
      * Adds some sub-milestones. Ignores milestones which are already a
@@ -52,50 +52,50 @@ interface Planning_Milestone {
      * 
      * @param array $new_sub_milestones 
      */
-    function addSubMilestones(array $new_sub_milestones);
+    public function addSubMilestones(array $new_sub_milestones);
     
     /**
      * @return Boolean
      */
-    function userCanView(User $user);
+    public function userCanView(User $user);
     
     /**
      * @return int
      */
-    function getArtifactId();
+    public function getArtifactId();
     
     /**
      * @return string
      */
-    function getArtifactTitle();
+    public function getArtifactTitle();
 
     /**
      * @return string
      */
-    function getXRef();
+    public function getXRef();
     
 
     /**
      * @return Planning
      */
-    function getPlanning();
+    public function getPlanning();
     
     /**
      * @return int
      */
-    function getPlanningId();
+    public function getPlanningId();
     
     /**
      * @return TreeNode
      */
-    function getPlannedArtifacts();
+    public function getPlannedArtifacts();
     
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts() 
      * @param User $user
      * @return Array of Tracker_Artifact
      */
-    function getLinkedArtifacts(User $user);
+    public function getLinkedArtifacts(User $user);
     
 }
 
