@@ -40,6 +40,12 @@ class CodeReviewActions extends Actions {
     protected $request;
 
     /**
+     *
+     * @var Id Review Request
+     */
+    private $idreviewrequest;
+
+    /**
      * Class constructor
      *
      * @param CodeReview $controller Plugin controller
@@ -236,6 +242,7 @@ function validateRequest2() {
             $path            = "@".$reviewRessources['params']['diff_path'];
             try {
                 $reviewRequestId = $this->postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter);
+                $idreviewrequest=$reviewRequestId;
                 $this->updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done, $summary, $target_people, $description);
                 $this->CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path);
                 $this->publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password);

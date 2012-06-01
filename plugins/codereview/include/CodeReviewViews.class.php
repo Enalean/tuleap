@@ -21,6 +21,7 @@
 require_once('common/mvc/Views.class.php');
 require_once('common/include/HTTPRequest.class.php');
 require_once('RepositoryManager.class.php');
+require_once('CodeReviewActions.class.php');
 
 /**
  * CodeReviewViews
@@ -113,6 +114,11 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
+    /**
+     * Displays The Admin Interface of Review board 
+     *
+     * @return Void
+     */
     function displayFrameAdmin() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/admin/";
@@ -120,7 +126,6 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
-    
     /**
      * Display published review request 
      *
@@ -129,6 +134,22 @@ class CodeReviewViews extends Views {
      function displayFramePublish() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$this->request->get('review_id');
+        //var_dump($url);
+        echo '<div id="codereview_iframe_div">';
+        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
+        echo '</div>';
+    }
+    /**
+     * Display all review request 
+     *
+     * @return Void
+     */
+    function displayFrameReviewRequest() {
+        $action= new CodeReviewActions($this->controller,null);
+        $idrequest  =$action->getIdreviewrequest;
+        var_dump($idrequest);
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$idrequest."/";
         //var_dump($url);
         echo '<div id="codereview_iframe_div">';
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));

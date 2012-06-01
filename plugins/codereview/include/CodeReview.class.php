@@ -97,14 +97,13 @@ class CodeReview extends Controler {
                     $this->view = 'reviewSubmission';
                     break;
                 case 'submit_review':
-                    // TODO: put some actions here
                     $this->action = 'createReviewRequest';
+                    $this->view   = 'displayFrameReviewRequest';
                     break;
                 case 'publish_review':
                     $this->view = 'reviewPublishing';
                     break;
                 case 'submit_publish':
-                    // TODO: put some actions here
                     $this->action = 'publishReviewRequest';
                     $this->view ='displayFramePublish';
                     break;  
