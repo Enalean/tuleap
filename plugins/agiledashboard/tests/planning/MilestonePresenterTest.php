@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/MilestonePresenter.class.php';
 
 abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
@@ -86,7 +86,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
     }
     
     protected function getAPresenter(TreeNode $planned_artifacts_tree = null) {
-        $milestone = new Planning_Milestone(mock('Project'),
+        $milestone = new Planning_ArtifactMilestone(mock('Project'),
                                             $this->planning,
                                             $this->artifact,
                                             $planned_artifacts_tree);

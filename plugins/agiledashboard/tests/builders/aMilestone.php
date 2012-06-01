@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Planning/Milestone.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
 
 function aMilestone() {
     return new Test_Planning_MilestoneBuilder();
@@ -88,7 +88,7 @@ class Test_Planning_MilestoneBuilder {
     }
     
     public function build() {
-        $milestone = new Planning_Milestone($this->project,
+        $milestone = new Planning_ArtifactMilestone($this->project,
                                             $this->planning,
                                             $this->artifact);
         $milestone->addSubMilestones($this->sub_milestones);
