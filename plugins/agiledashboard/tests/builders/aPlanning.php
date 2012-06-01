@@ -30,12 +30,12 @@ function aPlanning() {
 }
 
 class Test_Planning_Builder {
-    private $id                  = '1';
-    private $name                = 'Test Planning';
-    private $backlog_title       = 'Release Backlog';
-    private $plan_title          = 'Sprint Plan';
-    private $group_id            = '102';
-    private $backlog_tracker_ids = array();
+    private $id                 = '1';
+    private $name               = 'Test Planning';
+    private $backlog_title      = 'Release Backlog';
+    private $plan_title         = 'Sprint Plan';
+    private $group_id           = '102';
+    private $backlog_tracker_id = array();
     private $planning_tracker_id;
     
     public function withId($id) {
@@ -59,7 +59,7 @@ class Test_Planning_Builder {
                             $this->group_id,
                             $this->backlog_title,
                             $this->plan_title,
-                            $this->backlog_tracker_ids,
+                            $this->backlog_tracker_id,
                             $this->planning_tracker_id);
     }
 }

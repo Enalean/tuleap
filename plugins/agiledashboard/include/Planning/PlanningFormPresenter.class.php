@@ -38,18 +38,18 @@ class Planning_FormPresenter extends PlanningPresenter {
     /**
      * @var Array of Tracker
      */
-    public $available_trackers;
+    public $available_backlog_trackers;
     
     /**
      * @var Array of Tracker
      */
     public $available_planning_trackers;
     
-    public function __construct(Planning $planning, array $available_trackers, array $available_planning_trackers) {
+    public function __construct(Planning $planning, array $available_backlog_trackers, array $available_planning_trackers) {
         parent::__construct($planning);
         
         $this->group_id                    = $planning->getGroupId();
-        $this->available_trackers          = $this->getPlanningTrackerPresenters($available_trackers);
+        $this->available_backlog_trackers  = $this->getPlanningTrackerPresenters($available_backlog_trackers);
         $this->available_planning_trackers = $this->getPlanningTrackerPresenters($available_planning_trackers);
     }
     

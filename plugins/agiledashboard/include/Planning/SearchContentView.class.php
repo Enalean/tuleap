@@ -63,7 +63,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
     
     public function allowedChildrenTypes() {
-        return $this->planning->getBacklogTrackers();
+        return $this->planning->getBacklogTracker();
     }
     
     public function addLabel() {
