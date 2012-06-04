@@ -928,6 +928,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return Tracker_HierarchyFactory::build()->getChildren($tracker_id);
     }
     
+    /**
+     * Return true if $artifact_to_check should be "son of" $artifact_reference
+     * 
+     * 
+     * When $artifact_to_check is a Release
+     * And  $artifact_reference is a Sprint
+     * And Release -> Sprint (in tracker hierarchy)
+     * Then return True
+     * 
+     * @param Tracker_Artifact $artifact_to_check
+     * @param Tracker_Artifact $artifact_reference
+     * 
+     * @return Boolean
+     */
     public function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
         $children = $this->getTrackerChildrenFromHierarchy($artifact_to_check->getTracker()->getId());
         return in_array($artifact_reference->getTracker(), $children);
