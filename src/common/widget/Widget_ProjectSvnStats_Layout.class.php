@@ -107,7 +107,7 @@ class Widget_ProjectSvnStats_Layout {
      */
     public function getImageBottomMargin() {
         $customImageMargin = $this->getCustomImageMargin();
-        return $this->hasOnlyOneColumn() ? $imgBottomMargin = 100+16*$this->nb_committer*(1/$this->legend_ratio) : $imgBottomMargin = $customImageMargin;
+        return $this->hasOnlyOneColumn() ? $imgBottomMargin = 100+18*$this->nb_committer : $imgBottomMargin = $customImageMargin;
     }
 
     /**
