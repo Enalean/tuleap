@@ -1003,7 +1003,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     protected function getArtifactsFromChangesetValue($value, $previous_changesetvalue = null) {
-        $new_values = (string)$value['new_values'];
+        $new_values     = (string)$value['new_values'];
         $removed_values = isset($value['removed_values']) ? $value['removed_values'] : array();
         
         // this array will be the one to save in the new changeset
@@ -1026,18 +1026,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
         }
         
-
-        /// Convert to ids
-        
-        
-        $artifacts = array();
-        $af = $this->getArtifactFactory();
-        foreach ($artifact_ids as $new_artifact_id) {
-            if ($artifact = $af->getArtifactById($new_artifact_id)) {
-                $artifacts[] = $artifact;
-            }
-        }
-        return $artifacts;
+        return $this->getArtifactFactory()->getArtifactsByArtifactIdList($artifact_ids);
     }
     
     /**

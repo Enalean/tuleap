@@ -117,6 +117,23 @@ class Tracker_ArtifactFactory {
     }
     
     /**
+     * Given a list of artifact ids, return corresponding artifact object if any
+     * 
+     * @param array $artifact_ids
+     * 
+     * @return array of Tracker_Artifact
+     */
+    public function getArtifactsByArtifactIdList(array $artifact_ids) {
+        $artifacts = array();
+        foreach ($artifact_ids as $artifact_id) {
+            if ($artifact = $this->getArtifactById($artifact_id)) {
+                $artifacts[$artifact_id] = $artifact;
+            }
+        }
+        return $artifacts;
+    }
+    
+    /**
      * Returns all the artifacts of the tracker with id $tracker_id the User $user can read
      *
      * @param User $user       User who want to access to artifacts
