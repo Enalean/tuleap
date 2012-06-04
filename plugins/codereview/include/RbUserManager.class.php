@@ -49,6 +49,26 @@ class RbUserManager {
         return false;
     }
 
+    /**
+     * Retrieve User rbsessionid
+     *
+     * @param String  $url           URL of the command to execute
+     * @param String  $authUser      Username for whom we retrieve his rbsessionid
+     * @param String  $authPassword  Password of the user
+     *
+     * @return String
+     */
+    public function retrieveRbSessionId($url, $authUser = null, $authPassword = null){
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $authUser.":".$authPassword); 
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $result = curl_exec($ch);
+        preg_match('/rbsessionid=(.*?);/', $result, $matches);
+        $rbsessionid = $matches[1];
+        return $rbsessionid;
+    }
 }
 
 ?>
