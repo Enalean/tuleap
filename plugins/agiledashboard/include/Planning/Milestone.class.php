@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,109 +19,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * A planning milestone (e.g.: Sprint, Release...)
- */
-class Planning_Milestone {
-    
-    /**
-     * The project where the milestone is defined
-     * 
-     * @var Project
-     */
-    protected $project;
-    
-    /**
-     * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
-     * and the tracker that define the plan (ie. Release)
-     * 
-     * @var Planning
-     */
-    
-    protected $planning;
-    
-    /**
-     * The artifact that represent the milestone
-     * 
-     * For instance a Sprint or a Release
-     * 
-     * @var Tracker_Artifact
-     */
-    private $artifact;
-    
-    /**
-     * The planned artifacts are the content of the milestone (stuff to be done)
-     * 
-     * Given current Milestone is a Sprint
-     * And I defined a Sprint planning that associate Stories to Sprints
-     * Then I will have an array of Sprint as planned artifacts.
-     * 
-     * @var TreeNode
-     */
-    private $planned_artifacts;
-    
-    /**
-     * A sub-milestone is a decomposition of the current one.
-     * 
-     * Given current Milestone is a Release
-     * And there is a Parent/Child association between Release and Sprint
-     * Then $sub_milestone will be an array of sprint
-     * 
-     * @var array of Planning_Milestone
-     */
-    private $sub_milestones = array();
-    
-    /**
-     * @param Project $project
-     * @param Planning $planning
-     * @param Tracker_Artifact $artifact
-     * @param TreeNode $planned_artifacts 
-     */
-    public function __construct(Project          $project,
-                                Planning         $planning,
-                                Tracker_Artifact $artifact,
-                                TreeNode         $planned_artifacts = null) {
-        
-        $this->project           = $project;
-        $this->planning          = $planning;
-        $this->artifact          = $artifact;
-        $this->planned_artifacts = $planned_artifacts;
-    }
-    
+interface Planning_Milestone {
+
     /**
      * @return int The project identifier.
      */
-    public function getGroupId() {
-        return $this->project->getID();
-    }
+    public function getGroupId();
     
     /**
      * @return Project
      */
-    public function getProject() {
-        return $this->project;
-    }
+    public function getProject();
 
         /**
      * @return Tracker_Artifact
      */
-    public function getArtifact() {
-        return $this->artifact;
-    }
+    public function getArtifact();
     
     /**
      * @return array of Planning_Milestone
      */
-    public function getSubMilestones() {
-        return $this->sub_milestones;
-    }
+    public function getSubMilestones();
     
     /**
      * @return Boolean True if milestone has at least 1 sub-milestone.
      */
-    public function hasSubMilestones() {
-        return ! empty($this->sub_milestones);
-    }
+    public function hasSubMilestones();
     
     /**
      * Adds some sub-milestones. Ignores milestones which are already a
@@ -128,85 +52,51 @@ class Planning_Milestone {
      * 
      * @param array $new_sub_milestones 
      */
-    public function addSubMilestones(array $new_sub_milestones) {
-        $this->sub_milestones = array_merge($this->sub_milestones, $new_sub_milestones);
-    }
+    public function addSubMilestones(array $new_sub_milestones);
     
     /**
      * @return Boolean
      */
-    public function userCanView(User $user) {
-        return $this->artifact->getTracker()->userCanView($user);
-    }
+    public function userCanView(User $user);
     
     /**
      * @return int
      */
-    public function getArtifactId() {
-        return $this->artifact->getId();
-    }
+    public function getArtifactId();
     
     /**
      * @return string
      */
-    public function getArtifactTitle() {
-        return $this->artifact->getTitle();
-    }
+    public function getArtifactTitle();
 
     /**
      * @return string
      */
-    public function getXRef() {
-        return $this->artifact->getXRef();
-    }
+    public function getXRef();
     
 
     /**
      * @return Planning
      */
-    public function getPlanning() {
-        return $this->planning;
-    }
+    public function getPlanning();
     
     /**
      * @return int
      */
-    public function getPlanningId() {
-        return $this->planning->getId();
-    }
+    public function getPlanningId();
     
     /**
      * @return TreeNode
      */
-    public function getPlannedArtifacts() {
-        return $this->planned_artifacts;
-    }
+    public function getPlannedArtifacts();
     
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts() 
      * @param User $user
      * @return Array of Tracker_Artifact
      */
-    public function getLinkedArtifacts(User $user) {
-        $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
-        $root_node = $this->getPlannedArtifacts();
-        // TODO get rid of this if, in favor of an empty treenode
-        if ($root_node) {
-            $this->addChildrenNodes($root_node, $artifacts, $user);
-        }
-        return $artifacts;
-    }
-
-    private function addChildrenNodes(TreeNode $root_node, &$artifacts, $user) {
-        foreach ($root_node->getChildren() as $node) {
-            $data        = $node->getData();
-            $artifact    = $data['artifact'];
-            $artifacts[] = $artifact;
-            $artifacts   = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
-            $this->addChildrenNodes($node, $artifacts, $user);
-        }
-    }
+    public function getLinkedArtifacts(User $user);
+    
 }
-
 
 ?>
