@@ -90,11 +90,20 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function update() {
-        $this->planning_factory->updatePlanning($this->request->get('planning_id'),
-                                                PlanningParameters::fromArray($this->request->get('planning')));
+        $validator = new Planning_RequestValidator($this->planning_factory);
         
-        $this->redirect(array('group_id' => $this->request->get('group_id'),
-                              'action'   => 'index'));
+        if ($validator->isValid($this->request)) {
+            $this->planning_factory->updatePlanning($this->request->get('planning_id'),
+                                                    PlanningParameters::fromArray($this->request->get('planning')));
+        
+            $this->redirect(array('group_id' => $this->request->get('group_id'),
+                                  'action'   => 'index'));
+        } else {
+            $this->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory'));
+            $this->redirect(array('group_id'    => $this->group_id,
+                                  'planning_id' => $this->request->get('planning_id'),
+                                  'action'      => 'edit'));
+        }
     }
     
     public function delete() {

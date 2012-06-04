@@ -266,8 +266,41 @@ class Planning_Controller_ValidUpdateTest extends TuleapTestCase {
         $planning_factory    = mock('PlanningFactory');
         $this->controller    = new Planning_Controller($request, $planning_factory);
         
+        // TODO: Inject validator into controller so that we can mock it and test it in isolation.
+        stub($planning_factory)->getPlanningTrackerIdsByGroupId($group_id)->returns(array());
+        
         $planning_factory->expectOnce('updatePlanning', array($planning_id, PlanningParameters::fromArray($planning_parameters)));
         $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$group_id&action=index");
+        $this->controller->update();
+    }
+}
+
+class Planning_Controller_InvalidUpdateTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        
+        $this->group_id         = 123;
+        $this->planning_id      = 456;
+        $planning_parameters    = array();
+        $request                = aRequest()->with('group_id', $this->group_id)
+                                            ->with('planning_id', $this->planning_id)
+                                            ->with('planning', $planning_parameters)->build();
+        $this->planning_factory = mock('PlanningFactory');
+        $this->controller       = new Planning_Controller($request, $this->planning_factory);
+    }
+    
+    public function itDoesNotUpdateThePlanning() {
+        $this->planning_factory->expectNever('updatePlanning');
+        $this->controller->update();
+    }
+    
+    public function itReRendersTheEditForm() {
+        $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$this->group_id&planning_id=$this->planning_id&action=edit");
+        $this->controller->update();
+    }
+    
+    public function itDisplaysTheRelevantErrorMessages() {
+        $this->expectFeedback('error', '*');
         $this->controller->update();
     }
 }
