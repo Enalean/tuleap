@@ -1,7 +1,10 @@
-Version 0.15 (Tuleap 5.2 - Not released yet)
+Version 0.16 (Tuleap 5.2
+    * Do not load Autocompleter if we aren't in plugin
+
+Version 0.15 (Tuleap 5.2
     * Follow-up to version 0.14. Export custom quota in soap api
 
-Version 0.14 (Tuleap 5.2 - Not released yet)
+Version 0.14 (Tuleap 5.2
     * possibility to change disk quota value for one project in order to be able
       to grant an exception to this project
 
