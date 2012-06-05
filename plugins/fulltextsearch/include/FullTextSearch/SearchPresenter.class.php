@@ -20,10 +20,16 @@
 class FullTextSearch_SearchPresenter {
     private $terms;
     private $query_result;
+    private $project_manager;
     
-    public function __construct($terms, $query_result) {
-        $this->terms        = $terms;
-        $this->query_result = $query_result;
+    public function __construct($terms, $query_result, ProjectManager $project_manager) {
+        $this->terms           = $terms;
+        $this->query_result    = $query_result;
+        $this->project_manager = $project_manager;
+    }
+    
+    public function has_results() {
+        return ($this->result_count() > 0);
     }
     
     public function terms() {
@@ -41,10 +47,14 @@ class FullTextSearch_SearchPresenter {
         $results = array();
         if (isset($this->query_result['hits']['hits'])) {
             foreach ($this->query_result['hits']['hits'] as $hit) {
-                var_dump($hit);
+                //var_dump($hit);
+                $project = $this->project_manager->getProject($hit['fields']['group_id']);
                 $results[] = array(
-                    'item_title' => $hit['fields']['title'],
-                    'url'        => '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details');
+                    'item_title'   => $hit['fields']['title'],
+                    'url'          => '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details',
+                    'permissions'  => implode(', ', $hit['fields']['permissions']),
+                    'project_name' => $project->getPublicName()
+                );
             }
         }
         return $results;

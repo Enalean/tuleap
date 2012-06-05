@@ -101,8 +101,9 @@ class fulltextsearchPlugin extends Plugin {
     public function process() {
         include_once 'FullTextSearch/SearchPresenter.class.php';
         
-        $user_manager = UserManager::instance();
-        $request      = HTTPRequest::instance();
+        $user_manager    = UserManager::instance();
+        $request         = HTTPRequest::instance();
+        $project_manager = ProjectManager::instance();
         
         // Grant access only to site admin
         if (!$user_manager->getCurrentUser()->isSuperUser()) {
@@ -112,7 +113,7 @@ class fulltextsearchPlugin extends Plugin {
         $terms         = $request->getValidated('query', 'string', '');
         $search_result = array();
         if ($terms) {
-            $client = $this->getSearchClient();
+            $client        = $this->getSearchClient();
             $search_result = $client->search(array(
                 'query' => array(
                     'term' => array(
@@ -128,7 +129,7 @@ class fulltextsearchPlugin extends Plugin {
             ));
         }
         
-        $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result);
+        $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result, $project_manager);
 
         $title = 'Full text search';
         $GLOBALS['HTML']->header(array('title' => $title));

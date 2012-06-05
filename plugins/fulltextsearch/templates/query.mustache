@@ -6,13 +6,27 @@
     </p>
 </form>
 
+{{#has_results}}
 
-<p>{{result_count}} document matches:
-    <ul>
-    {{#search_results}}
-        <li><a href="{{url}}">{{item_title}}</a></li>
-    {{/search_results}}
-    </ul>
+<p>{{result_count}} document(s) match:
+    <table border="1">
+        <thead>
+            <th>Document</th>
+            <th>Project</th>
+            <th>Permissions</th>
+        </thead>
+        <tbody>
+        {{#search_results}}
+            <tr>
+                <td><a href="{{url}}">{{item_title}}</a></td>
+                <td>{{project_name}}</td>
+                <td>{{permissions}}</td>
+            </tr>
+        {{/search_results}}
+        </tbody>
+    </table>
 </p>
 
 <p>Query took {{elapsed_time}}s</p>
+
+{{/has_results}}
