@@ -21,13 +21,16 @@
 require_once 'common/include/Codendi_Request.class.php';
 
 class TestPlanningCreationRequestBuilder {
-    private $backlog_tracker_id;
+    private $group_id;
+    private $planning_id;
+    private $planning;
     
     public function __construct() {
-        $this->group_id            = '123';
-        $this->planning_name       = 'My Planning';
-        $this->planning_tracker_id = '1';
-        $this->backlog_tracker_id  = '2';
+        $this->group_id    = '123';
+        $this->planning_id = null;
+        $this->planning    = array('name'                => 'My Planning',
+                                   'planning_tracker_id' => '1',
+                                   'backlog_tracker_id'  => '2');
     }
     
     public function withGroupId($group_id) {
@@ -35,27 +38,31 @@ class TestPlanningCreationRequestBuilder {
         return $this;
     }
     
+    public function withPlanningId($planning_id) {
+        $this->planning_id = $planning_id;
+        return $this;
+    }
+    
     public function withPlanningName($planning_name) {
-        $this->planning_name = $planning_name;
+        $this->planning['name'] = $planning_name;
         return $this;
     }
     
     public function withBacklogTrackerId($backlog_tracker_id) {
-        $this->backlog_tracker_id = $backlog_tracker_id;
+        $this->planning['backlog_tracker_id'] = $backlog_tracker_id;
         return $this;
     }
     
     public function withPlanningTrackerId($planning_tracker_id) {
-        $this->planning_tracker_id = $planning_tracker_id;
+        $this->planning['planning_tracker_id'] = $planning_tracker_id;
         return $this;
     }
     
     public function build() {
         return new Codendi_Request(array(
-            'group_id'            => $this->group_id,
-            'planning_name'       => $this->planning_name,
-            'planning_tracker_id' => $this->planning_tracker_id,
-            'backlog_tracker_id'  => $this->backlog_tracker_id
+            'group_id'    => $this->group_id,
+            'planning_id' => $this->planning_id,
+            'planning'    => $this->planning
         ));
     }
 }
