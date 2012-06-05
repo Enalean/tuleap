@@ -929,8 +929,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     /**
-     * Return true if $artifact_to_check should be "son of" $artifact_reference
+     * Return true if $artifact_to_check is "parent of" $artifact_reference
      * 
+     * @todo: take planning into account
      * 
      * When $artifact_to_check is a Release
      * And  $artifact_reference is a Sprint
@@ -960,7 +961,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      */
     public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
         $submitted_value = $this->assertLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
-        parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
+        return parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
     }
     
     /**

@@ -761,7 +761,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             }
         }
         
-        //Look for the previous value, if any
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {
             if ($submitted_value === null || !$hasPermission || !$this->hasChanges($previous_changesetvalue, $submitted_value)) {

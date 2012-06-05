@@ -117,7 +117,7 @@ class Tracker_ArtifactFactory {
     }
     
     /**
-     * Given a list of artifact ids, return corresponding artifact object if any
+     * Given a list of artifact ids, return corresponding artifact objects if any
      * 
      * @param array $artifact_ids
      * 
