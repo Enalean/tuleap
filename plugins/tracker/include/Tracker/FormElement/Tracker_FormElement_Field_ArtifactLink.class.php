@@ -924,8 +924,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return TrackerFactory::instance();
     }
     
-    protected function getTrackerChildrenFromHierarchy($tracker_id) {
-        return Tracker_HierarchyFactory::build()->getChildren($tracker_id);
+    protected function getTrackerChildrenFromHierarchy(Tracker $tracker) {
+        return Tracker_HierarchyFactory::build()->getChildren($tracker->getId());
     }
     
     /**
@@ -943,7 +943,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return Boolean
      */
     public function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
-        $children = $this->getTrackerChildrenFromHierarchy($artifact_to_check->getTracker()->getId());
+        $children = $this->getTrackerChildrenFromHierarchy($artifact_to_check->getTracker());
         return in_array($artifact_reference->getTracker(), $children);
     }
     
