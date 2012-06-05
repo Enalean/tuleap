@@ -1,12 +1,18 @@
 <h1>Full Text Search</h1>
 <form name="fts_query" method="get" action="?func=search">
     <p>Enter the terms you are looking for
-        <input type="text" name="query" value="" />
+        <input type="text" name="query" value="{{terms}}" />
         <input type="submit" />
     </p>
 </form>
-<ul>
-{{#search_results}}
-    <li><a href="">{{item_title}}</a></li>
-{{/search_results}}
-</ul>
+
+
+<p>{{result_count}} document matches:
+    <ul>
+    {{#search_results}}
+        <li><a href="{{url}}">{{item_title}}</a></li>
+    {{/search_results}}
+    </ul>
+</p>
+
+<p>Query took {{elapsed_time}}s</p>

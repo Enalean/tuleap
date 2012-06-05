@@ -18,13 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class FullTextSearch_SearchPresenter {
-
+    private $terms;
+    private $query_result;
+    
+    public function __construct($terms, $query_result) {
+        $this->terms        = $terms;
+        $this->query_result = $query_result;
+    }
+    
+    public function terms() {
+        return $this->terms;
+    }
+    
+    public function result_count() {
+        return $this->query_result['hits']['total'] - 1;
+    }
+    
     public function search_results() {
-        return array('item_title' => 'stuff');
+        $results = array();
+        array_shift($this->query_result['hits']['hits']);
+        foreach ($this->query_result['hits']['hits'] as $hit) {
+            var_dump($hit);
+            $results[] = array(
+                'item_title' => $hit['_source']['title'],
+                'url'        => '/plugins/docman/?group_id='.$hit['_source']['group_id'].'&id='.$hit['_source']['id'].'&action=details');
+        }
+        return $results;
     }
     
     public function elapsed_time() {
-        return "1";
+        return $this->query_result['time'];
     }
 
 }

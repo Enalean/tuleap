@@ -97,6 +97,31 @@ class fulltextsearchPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
+
+    public function process() {
+        include_once 'FullTextSearch/SearchPresenter.class.php';
+        
+        $user_manager = UserManager::instance();
+        $request      = HTTPRequest::instance();
+        
+        // Grant access only to site admin
+        if (!$user_manager->getCurrentUser()->isSuperUser()) {
+            header('Location: ' . get_server_url());
+        }
+
+        $terms = $request->get('query');
+        
+        $client = $this->getSearchClient();
+        $search_result = $client->search($terms);
+        
+        $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result);
+
+        $title = 'Full text search';
+        $GLOBALS['HTML']->header(array('title' => $title));
+        $renderer = new MustacheRenderer('../templates');
+        $renderer->render('query', $query_presenter);
+        $GLOBALS['HTML']->footer(array());
+    }
 }
 
 ?>
