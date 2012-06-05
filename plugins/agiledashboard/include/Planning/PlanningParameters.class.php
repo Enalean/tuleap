@@ -19,7 +19,7 @@
  */
 
 /**
- * Wraps up the planning parametrable aspects. 
+ * User-editable parameters of the planning.
  */
 class PlanningParameters {
     
@@ -41,7 +41,7 @@ class PlanningParameters {
         return $parameters;
     }
     
-    private function get($array, $key) {
+    private static function get($array, $key) {
         return array_key_exists($key, $array) ? $array[$key] : '';
     }
 }
