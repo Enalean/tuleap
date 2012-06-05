@@ -222,6 +222,20 @@ class TreeNode /*implements Visitable*/ {
         }
         return 'TreeNode #'. $this->id ." {\n $children_as_string }\n";
     }
+
+    public function flattenChildren() {
+        $flatten_children = array();
+        
+        foreach($this->getChildren() as $child) {
+            $flatten_children = array_merge($flatten_children, $child->flatten());
+        }
+        
+        return $flatten_children;
+    }
+    
+    private function flatten() {
+        return array_merge(array($this), $this->flattenChildren());
+    }
 }
 
 ?>
