@@ -60,7 +60,7 @@
   font-weight:bold;
   padding-bottom:10px;
 }
-.tracker_renderer_board.nifty ul li p.tracker_renderer_board_content {
+.tracker_renderer_board.nifty ul li div.tracker_renderer_board_content {
   font-family:"Reenie Beanie",arial,sans-serif;
   font-size:180%;
   height: 83%;

@@ -272,8 +272,15 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             foreach ($cards as $row) {
                 if (!$field || $row['col'] == $value->getId()) {
                     $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$row['id'] .'">';
-                    $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a></p>';
-                    $html .= '<p class="tracker_renderer_board_content"> '. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId()) .'</p>';
+                    // TODO: use mustache templates?
+                    $html .= '<div class="card">';
+                    $html .= '<div class="card-actions">';
+                    $html .= '<a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a>'; // TODO: Use artifact->getUrl or similar?
+                    $html .= '</div>';
+                    $html .= '<div class="tracker_renderer_board_content">';
+                    $html .= $hp->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId());
+                    $html .= '</div>';
+                    $html .= '</div>';
                     $html .= '</li>';
                 }
             }
