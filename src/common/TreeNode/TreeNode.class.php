@@ -236,6 +236,10 @@ class TreeNode /*implements Visitable*/ {
     private function flatten() {
         return array_merge(array($this), $this->flattenChildren());
     }
+    
+    public function getObject() {
+        
+    }
 }
 
 ?>
