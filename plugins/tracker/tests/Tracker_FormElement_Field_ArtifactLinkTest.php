@@ -313,6 +313,30 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     }
 }
 
+// Special class for test to expose 'isSourceOfAssociation method'
+class  Tracker_FormElement_Field_ArtifactLink_TestIsSourceOfAssociation extends  Tracker_FormElement_Field_ArtifactLink {
+    public function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
+        return parent::isSourceOfAssociation($artifact_to_check, $artifact_reference);
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_IsSourceOfAssociationTest extends TuleapTestCase {
+    
+    public function itIsSourceOfAssociationIfThereIsAHierarchyAndArtifactIsInParentTracker() {
+        $release_tracker = aTracker()->withId(123)->build();
+        $sprint_tracker  = aTracker()->withId(565)->build();
+        
+        $release = anArtifact()->withTracker($release_tracker)->build();
+        $sprint  = anArtifact()->withTracker($sprint_tracker)->build();
+        
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink_TestIsSourceOfAssociation', array('getTrackerChildrenFromHierarchy'));
+        
+        stub($this->field)->getTrackerChildrenFromHierarchy($release_tracker)->returns(array($sprint_tracker));
+        
+        $this->assertTrue($this->field->isSourceOfAssociation($release, $sprint));
+    }
+}
+
 class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
     
     public function setUp() {
@@ -334,7 +358,7 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
         
         $this->field = TestHelper::getPartialMock(
-            'Tracker_FormElement_Field_ArtifactLink', 
+            'Tracker_FormElement_Field_ArtifactLink_TestIsSourceOfAssociation', 
             array(
                 'isSourceOfAssociation',
                 'getArtifactsFromChangesetValue',
@@ -394,23 +418,6 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $artifact_id_already_linked = array(123);
         $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
         $this->assertEqual($submitted_value, array('new_values' => '124'));
-    }
-}
-
-class Tracker_FormElement_Field_ArtifactLink_IsSourceOfAssociationTest extends TuleapTestCase {
-    
-    public function itIsSourceOfAssociationIfThereIsAHierarchyAndArtifactIsInParentTracker() {
-        $release_tracker = aTracker()->withId(123)->build();
-        $sprint_tracker  = aTracker()->withId(565)->build();
-        
-        $release = anArtifact()->withTracker($release_tracker)->build();
-        $sprint  = anArtifact()->withTracker($sprint_tracker)->build();
-        
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('getTrackerChildrenFromHierarchy'));
-        
-        stub($this->field)->getTrackerChildrenFromHierarchy($release_tracker)->returns(array($sprint_tracker));
-        
-        $this->assertTrue($this->field->isSourceOfAssociation($release, $sprint));
     }
 }
 
