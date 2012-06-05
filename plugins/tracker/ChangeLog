@@ -1,7 +1,12 @@
-Version 5.7.20 - Tuleap 5.2 (Not released yet)
+Version 5.7.21 - Tuleap 5.2
+    * When a hierarchy is defined between 2 trackers, the linking between two
+      artifacts is always done with respect of hierarchy (ie the artifact that
+      belongs to the parent tracker will be updated to reference its son).
+
+Version 5.7.20 - Tuleap 5.2
     * Some stuff for the agiledashboard
 
-Version 5.7.19 - Tuleap 5.2 (Not released yet)
+Version 5.7.19 - Tuleap 5.2
     * Fix issue with project renderer widget.
 
 Version 5.7.18 - Tuleap 5.2
