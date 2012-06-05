@@ -8,6 +8,7 @@ plugin_agiledashboard	planning_destination_help	Drag'n drop content from backlog
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
 plugin_agiledashboard	planning_edit	Edit
+plugin_agiledashboard	planning_editing	Edit planning:
 plugin_agiledashboard	planning_name	Name
 plugin_agiledashboard	planning_backlog_title	Backlog title
 plugin_agiledashboard	planning_plan_title	Plan title
