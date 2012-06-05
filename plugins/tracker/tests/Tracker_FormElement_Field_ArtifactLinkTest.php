@@ -333,12 +333,17 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         
         $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
         
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink', array('isSourceOfAssociation', 
-                                                                                                  'getArtifactsFromChangesetValue',
-                                                                                                  'saveValue',
-                                                                                                  'getChangesetValueDao',
-                                                                                                  'userCanUpdate',
-                                                                                                  'isValid'));
+        $this->field = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_ArtifactLink', 
+            array(
+                'isSourceOfAssociation',
+                'getArtifactsFromChangesetValue',
+                'saveValue',
+                'getChangesetValueDao',
+                'userCanUpdate',
+                'isValid'
+            )
+        );
         $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
         stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
         stub($this->field)->userCanUpdate()->returns(true);
