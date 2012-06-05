@@ -24,13 +24,16 @@ class fulltextsearchPlugin extends Plugin {
 
     private $actions;
 
-    public function fulltextsearchPlugin($id) {
-        $this->Plugin($id);
+    public function __construct($id) {
+        parent::__construct($id);
 
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
+        
+        // site admin
+        $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
     }
 
     private function getActions() {
@@ -68,6 +71,15 @@ class fulltextsearchPlugin extends Plugin {
         $this->getActions()->delete($params);
     }
 
+    /**
+     * Event to display something in siteadmin interface
+     * 
+     * @param array $params 
+     */
+    public function site_admin_option_hook($params) {
+        echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
+    }
+    
     private function getSearchClient() {
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
