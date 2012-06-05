@@ -54,6 +54,7 @@ class Planning_RequestValidator {
      */
     public function isValid(Codendi_Request $request) {
         $group_id            = $request->get('group_id');
+        $planning_id         = $request->get('planning_id');
         $planning_parameters = $request->get('planning');
         
         if (! $planning_parameters) {
@@ -65,7 +66,7 @@ class Planning_RequestValidator {
         return $this->nameIsPresent($planning_parameters)
             && $this->backlogTrackerIdIsPresentAndIsAPositiveIntegers($planning_parameters)
             && $this->planningTrackerIdIsPresentAndIsAPositiveInteger($planning_parameters)
-            && $this->planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($group_id, $planning_parameters);
+            && $this->planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($group_id, $planning_id, $planning_parameters);
     }
     
     /**
@@ -114,15 +115,52 @@ class Planning_RequestValidator {
     
     /**
      * Checks whether the planning tracker id in the request points to a tracker
-     * that is not already used as a planning tracker in the project identified
-     * by the request group_id.
+     * that is not already used as a planning tracker in another planning of the
+     * project identified by the request group_id.
      * 
-     * @param int                $group_id The group id to check the existing planning trackers against.
-     * @param PlanningParameters $request  The validated parameters.
+     * @param int                $group_id            The group id to check the existing planning trackers against.
+     * @param int                $planning_id         The id of the planning to be updated.
+     * @param PlanningParameters $planning_parameters The validated parameters.
      * 
      * @return bool
      */
-    private function planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($group_id, PlanningParameters $planning_parameters) {
+    private function planningTrackerIsNotAlreadyUsedAsAPlanningTrackerInTheProject($group_id, $planning_id, PlanningParameters $planning_parameters) {
+        return ($this->planningTrackerIsTheCurrentOne($planning_id, $planning_parameters) ||
+                $this->trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, $planning_parameters));
+    }
+    
+    /**
+     * Checks the tracker planning id in $planning_parameters is the same as the one of the planning with the
+     * given $planning_id.
+     * 
+     * @param int                $planning_id         The planning with the current planning tracker id
+     * @param PlanningParameters $planning_parameters The parameters being validated
+     * 
+     * @return boolean 
+     */
+    private function planningTrackerIsTheCurrentOne($planning_id, PlanningParameters $planning_parameters) {
+        $planning = $this->factory->getPlanning($planning_id);
+        
+        if (! $planning) {
+            return false;
+        }
+        
+        $current_planning_tracker_id = $planning->getPlanningTrackerId();
+        $new_planning_tracker_id     = $planning_parameters->planning_tracker_id;
+
+        return ($new_planning_tracker_id == $current_planning_tracker_id);
+    }
+    
+    /**
+     * Checks the tracker planning id in $planning_parameters is not already used as a planning tracker in one of the
+     * plannings of the project with given $group_id.
+     * 
+     * @param int                $group_id            The project where to search for existing planning trackers
+     * @param PlanningParameters $planning_parameters The parameters being validated
+     * 
+     * @return boolean
+     */
+    private function trackerIsNotAlreadyUsedAsAPlanningTrackerInProject($group_id, PlanningParameters $planning_parameters) {
         $planning_tracker_id          = $planning_parameters->planning_tracker_id;
         $project_planning_tracker_ids = $this->factory->getPlanningTrackerIdsByGroupId($group_id);
         

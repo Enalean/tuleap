@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__).'/../../include/Planning/PlanningRequestValidator.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanningCreationRequest.php';
+require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
 class RequestValidatorTest extends TuleapTestCase {
     
@@ -54,28 +55,44 @@ class RequestValidator_NoMissingParameterTest extends RequestValidatorTest {
     public function setUp() {
         parent::setUp();
         
-        $this->group_id            = 45;
-        $this->planning_tracker_id = 67;
+        $this->group_id            = 12;
+        $this->release_planning_id = 34;
+        $this->releases_tracker_id = 56;
+        $this->sprints_tracker_id  = 78;
+        $this->holidays_tracker_id = 90;
         
-        $this->request = aPlanningCreationRequest()->withGroupId($this->group_id)
-                                                   ->withPlanningTrackerId($this->planning_tracker_id)
-                                                   ->build();
+        $this->release_planning = aPlanning()->withId($this->release_planning_id)
+                                             ->withPlanningTrackerId($this->releases_tracker_id)
+                                             ->build();
+        
+        stub($this->factory)->getPlanning($this->release_planning_id)
+                            ->returns($this->release_planning);
+        stub($this->factory)->getPlanningTrackerIdsByGroupId($this->group_id)
+                            ->returns(array($this->releases_tracker_id,
+                                            $this->sprints_tracker_id));
+    }
+    
+    private function aRequest() {
+        return aPlanningCreationRequest()->withGroupId($this->group_id)
+                                         ->withPlanningId($this->release_planning_id);
     }
     
     public function itValidatesTheRequestWhenPlanningTrackerIsNotUsedInAPlanningOfTheSameProject() {
-        stub($this->factory)
-            ->getPlanningTrackerIdsByGroupId($this->group_id)
-            ->returns(array());
+        $request = $this->aRequest()->withPlanningTrackerId($this->holidays_tracker_id)->build();
         
-        $this->assertTrue($this->validator->isValid($this->request));
+        $this->assertTrue($this->validator->isValid($request));
+    }
+    
+    public function itValidatesTheRequestWhenPlanningTrackerIsTheCurrentOne() {
+        $request = $this->aRequest()->withPlanningTrackerId($this->releases_tracker_id)->build();
+        
+        $this->assertTrue($this->validator->isValid($request));
     }
     
     public function itRejectsTheRequestWhenPlanningTrackerIsUsedInAPlanningOfTheSameProject() {
-        stub($this->factory)
-            ->getPlanningTrackerIdsByGroupId($this->group_id)
-            ->returns(array($this->planning_tracker_id));
+        $request = $this->aRequest()->withPlanningTrackerId($this->sprints_tracker_id)->build();
         
-        $this->assertFalse($this->validator->isValid($this->request));
+        $this->assertFalse($this->validator->isValid($request));
     }
 }
 ?>

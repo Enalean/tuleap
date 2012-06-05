@@ -22,17 +22,24 @@ require_once 'common/include/Codendi_Request.class.php';
 
 class TestPlanningCreationRequestBuilder {
     private $group_id;
+    private $planning_id;
     private $planning;
     
     public function __construct() {
-        $this->group_id            = '123';
-        $this->planning = array('name'                => 'My Planning',
-                                           'planning_tracker_id' => '1',
-                                           'backlog_tracker_id'  => '2');
+        $this->group_id    = '123';
+        $this->planning_id = null;
+        $this->planning    = array('name'                => 'My Planning',
+                                   'planning_tracker_id' => '1',
+                                   'backlog_tracker_id'  => '2');
     }
     
     public function withGroupId($group_id) {
         $this->group_id = $group_id;
+        return $this;
+    }
+    
+    public function withPlanningId($planning_id) {
+        $this->planning_id = $planning_id;
         return $this;
     }
     
@@ -53,8 +60,9 @@ class TestPlanningCreationRequestBuilder {
     
     public function build() {
         return new Codendi_Request(array(
-            'group_id' => $this->group_id,
-            'planning' => $this->planning
+            'group_id'    => $this->group_id,
+            'planning_id' => $this->planning_id,
+            'planning'    => $this->planning
         ));
     }
 }
