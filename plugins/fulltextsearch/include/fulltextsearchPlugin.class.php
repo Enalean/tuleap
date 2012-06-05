@@ -109,10 +109,24 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        $terms = $request->get('query');
-        
-        $client = $this->getSearchClient();
-        $search_result = $client->search($terms);
+        $terms         = $request->getValidated('query', 'string', '');
+        $search_result = array();
+        if ($terms) {
+            $client = $this->getSearchClient();
+            $search_result = $client->search(array(
+                'query' => array(
+                    'term' => array(
+                        'file' => $terms
+                     )
+                 ),
+                'fields' => array(
+                    'id',
+                    'group_id',
+                    'title',
+                    'permissions'
+                )
+            ));
+        }
         
         $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result);
 

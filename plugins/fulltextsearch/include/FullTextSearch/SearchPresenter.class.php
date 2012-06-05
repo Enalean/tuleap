@@ -31,23 +31,30 @@ class FullTextSearch_SearchPresenter {
     }
     
     public function result_count() {
-        return $this->query_result['hits']['total'] - 1;
+        if (isset($this->query_result['hits']['total'])) {
+            return $this->query_result['hits']['total'];
+        }
+        return 0;
     }
     
     public function search_results() {
         $results = array();
-        array_shift($this->query_result['hits']['hits']);
-        foreach ($this->query_result['hits']['hits'] as $hit) {
-            var_dump($hit);
-            $results[] = array(
-                'item_title' => $hit['_source']['title'],
-                'url'        => '/plugins/docman/?group_id='.$hit['_source']['group_id'].'&id='.$hit['_source']['id'].'&action=details');
+        if (isset($this->query_result['hits']['hits'])) {
+            foreach ($this->query_result['hits']['hits'] as $hit) {
+                var_dump($hit);
+                $results[] = array(
+                    'item_title' => $hit['fields']['title'],
+                    'url'        => '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details');
+            }
         }
         return $results;
     }
     
     public function elapsed_time() {
-        return $this->query_result['time'];
+        if (isset($this->query_result['time'])) {
+            return $this->query_result['time'];
+        }
+        return '';
     }
 
 }
