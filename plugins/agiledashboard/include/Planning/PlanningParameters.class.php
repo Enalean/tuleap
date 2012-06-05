@@ -41,7 +41,7 @@ class PlanningParameters {
         return $parameters;
     }
     
-    private function get($array, $key) {
+    private static function get($array, $key) {
         return array_key_exists($key, $array) ? $array[$key] : '';
     }
 }
