@@ -960,7 +960,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return bool true if success
      */
     public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
-        $submitted_value = $this->assertLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
+        $submitted_value = $this->updateLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
         return parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
     }
     
@@ -982,7 +982,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * 
      * @return mixed The submitted value expurged from updated links
      */
-    protected function assertLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, User $submitter) {
+    protected function updateLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, User $submitter) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
         $artifact_id_already_linked = array();
