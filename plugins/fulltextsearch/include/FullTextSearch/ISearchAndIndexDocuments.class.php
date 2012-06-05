@@ -55,5 +55,10 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      * @return array
      */
     public function buildSetterData(array $current_data, $name, $value);
+    
+    /**
+     * Search for data in the index
+     */
+    public function search($query);
 }
 ?>

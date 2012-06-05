@@ -64,5 +64,9 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
         $current_data['params'][$name] = $value;
         return $current_data;
     }
+    
+    public function search($query) {
+        return $this->client->search($query);
+    }
 }
 ?>
