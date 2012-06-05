@@ -70,7 +70,7 @@ class Widget_ProjectSvnStats_Layout {
      * @return Integer
      */
     private function getCustomImageMargin() {
-        return $this->hasMoreThanTwoColumns() ? $customImageMargin = 80+(16-$this->legend_ratio+1)*$this->nb_committer : $customImageMargin = 100+18*$this->nb_committer;
+        return $this->hasMoreThanTwoColumns() ? $customImageMargin = 80+(16-$this->legend_ratio)*$this->nb_committer : $customImageMargin = 125+15*(1/$this->legend_ratio)*$this->nb_committer;
     }
 
     /**
@@ -88,7 +88,7 @@ class Widget_ProjectSvnStats_Layout {
      * @return Float
      */
     public function getLegendXPosition() {
-        return $this->hasOnlyOneColumn() ? $legend_x_position = 0.1 : $legend_x_position = 0.01;
+        return $this->hasOnlyOneColumn() ? $legend_x_position = 0.1 : $legend_x_position = 0.05;
     }
 
     /**
@@ -97,7 +97,8 @@ class Widget_ProjectSvnStats_Layout {
      * @return Float
      */
     public function getLegendYPosition() {
-        return $this->hasOnlyOneColumn() ? $legend_y_position = 0.99 : $legend_y_position = 0.5;
+        $this->hasOnlyOneColumn() ? $y_position = 0.99 : $y_position = 0.645;
+        return $this->hasMoreThanTwoColumns() ? $legend_y_position = 0.6 : $legend_y_position = $y_position;
     }
 
     /**
