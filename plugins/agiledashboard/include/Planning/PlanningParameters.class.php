@@ -19,7 +19,7 @@
  */
 
 /**
- * Wraps up the planning parametrable aspects. 
+ * User-editable parameters of the planning.
  */
 class PlanningParameters {
     
