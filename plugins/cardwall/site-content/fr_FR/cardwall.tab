@@ -6,3 +6,10 @@ plugin_cardwall	title	Card Wall
 plugin_cardwall	warn_no_values	Il n'y a pas de valeur pour le champ $1. Choisissez-en un autre.
 plugin_cardwall	warn_please_choose	Sélectionnez un champ pour grouper les artefacts en colonnes.
 plugin_cardwall	nifty_view	affichage proche de la vraie vie
+
+plugin_cardwall	on_top_short_title	Card Wall
+plugin_cardwall	on_top_title	Card Wall
+plugin_cardwall	on_top_description	Gérer les options pour le card wall
+plugin_cardwall	on_top_enabled	Un cardwall existe maintenant au dessus de l'outil de suivi
+plugin_cardwall	on_top_disabled	Cardwall désactivé
+plugin_cardwall	on_top_label	Activer un cardwall au dessus de l'outil de suivi

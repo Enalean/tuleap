@@ -34,6 +34,8 @@ class cardwallPlugin extends Plugin {
             $this->_addHook('javascript_file',                   'jsFile',                            false);
             $this->_addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
             $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
+            $this->_addHook(TRACKER_EVENT_ADMIN_ITEMS,           'tracker_event_admin_items',         false);
+            $this->_addHook(TRACKER_EVENT_PROCESS,               'tracker_event_process',             false);
         }
     }
 
@@ -119,6 +121,85 @@ class cardwallPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
         }
+    }
+    
+    function tracker_event_admin_items($params) {
+        $params['items']['plugin_cardwall'] = array(
+            'url'         => TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&amp;func=admin-cardwall',
+            'short_title' => $GLOBALS['Language']->getText('plugin_cardwall','on_top_short_title'),
+            'title'       => $GLOBALS['Language']->getText('plugin_cardwall','on_top_title'),
+            'description' => $GLOBALS['Language']->getText('plugin_cardwall','on_top_description'),
+            'img'         => $this->getThemePath() .'/images/ic/48/sticky-note.png',
+        );
+    }
+    
+    function tracker_event_process($params) {
+        switch ($params['func']) {
+            case 'admin-cardwall':
+                if ($params['tracker']->userIsAdmin($params['user'])) {
+                    $this->displayAdminOnTop($params['tracker'], $params['layout']);
+                    $params['nothing_has_been_done'] = false;
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
+                }
+                break;
+            case 'admin-cardwall-update':
+                if ($params['tracker']->userIsAdmin($params['user'])) {
+                    $this->updateCardwallOnTop($params['tracker']->getId(), $params['request']->get('cardwall_on_top'));
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
+                }
+                break;
+        }
+    }
+    
+    private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout) {
+        $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
+        $checked = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
+        $html  = '';
+        $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker->getId() .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
+        $html .= $this->getCSRFToken($tracker->getId())->fetchHTMLInput();
+        $html .= '<p>';
+        $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
+        $html .= '<label class="checkbox">';
+        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
+        $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_label');
+        $html .= '</label>';
+        $html .= '</p>';
+        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '</form>';
+        echo $html;
+        $tracker->displayFooter($layout);
+    }
+    
+    private function updateCardwallOnTop($tracker_id, $is_enabled) {
+        $this->getCSRFToken($tracker_id)->check();
+        if ($is_enabled) {
+            $this->getOnTopDao()->enable($tracker_id);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
+        } else {
+            $this->getOnTopDao()->disable($tracker_id);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
+        }
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
+    }
+    
+    /**
+     * @return Cardwall_OnTopDao
+     */
+    private function getOnTopDao() {
+        require_once 'OnTopDao.class.php';
+        return new Cardwall_OnTopDao();
+    }
+    
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFToken($tracker_id) {
+        require_once 'common/include/CSRFSynchronizerToken.class.php';
+        return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
     }
 }
 
