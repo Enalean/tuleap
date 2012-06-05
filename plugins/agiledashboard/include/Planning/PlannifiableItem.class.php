@@ -21,7 +21,7 @@
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
-class Planning_PlannifiableItem {
+class Planning_Item {
     
     /**
      * @var Tracker_Artifact
@@ -30,10 +30,6 @@ class Planning_PlannifiableItem {
     
     public function __construct(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
-    }
-    
-    public function isPlannifiable() {
-        return true;
     }
 
     public function getEditUri() {
@@ -50,6 +46,20 @@ class Planning_PlannifiableItem {
 
     public function getId() {
         return $this->artifact->getId();
+    }
+}
+
+class Planning_PlannifiableItem extends Planning_Item {
+    
+    public function isPlannifiable() {
+        return true;
+    }
+}
+
+class Planning_BacklogItem extends Planning_Item {
+    
+    public function isPlannifiable() {
+        return false;
     }
 }
 
