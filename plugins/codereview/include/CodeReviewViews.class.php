@@ -93,11 +93,35 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFirstFrame() {
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=login'>Login to reviewboard for the first time</a>";
+       //$pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
+        var_dump($url);
+        $form  = " <form id=\"form\" target=\"_blank\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
+        //$form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
+        $form   .= "  <p>";
+        $form   .= "   <input name=\"username\" value=".$this->user->getUserName()." type=\"hidden\" size=\"24\" />";
+        $form   .= "  </p>";
+        $form   .= "  <p>";
+        $form   .= "   <input name=\"password\" value=".$this->user->getUserPw()." type=\"hidden\" size=\"24\" />";
+        $form   .= "  </p>";
+        $form   .= " </form>";
+        $script .="<script type=\"text/javascript\">";
+        $script .="function myfunc () {";
+        $script .="var frm = document.getElementById(\"form\");";
+        $script .="frm.submit();";
+        $script .="}";
+        $script .="window.onload = myfunc;";
+        $script .="</script>";
+        print $form;
+        print $script;
+        //echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=login'>Login to reviewboard for the first time</a>";
+        //echo'</br>';
         echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
         echo'</br>';
+        echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
+        echo'</br>';
         echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
         echo'</br>';
