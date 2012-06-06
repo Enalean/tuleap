@@ -125,14 +125,35 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         foreach ($this->milestone->getPlannedArtifacts()->getChildren() as $child) {
             $data     = $child->getData();
             $swimline = $data['artifact'];
-            $html .= '<tr>';
+            $html .= '<tr valign="top">';
             $html .= '<td>';
             $html .= $swimline->fetchTitle();
             $html .= '</td>';
             
-            
+            $cards = $child->getChildren();
             foreach ($values as $value) {
-                $html .= '<td>&nbsp;</td>';
+                $html .= '<td>';
+                $html .= '<ul>';
+                foreach ($cards as $row) {
+                    $data = $row->getData();
+                    $artifact = $data['artifact'];
+                    $artifact_status = $artifact->getStatus();
+                    if (!$field || $artifact_status === $value->getLabel() || $artifact_status === null && $value->getId() == 100) {
+                        $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$artifact->getId() .'">';
+                        // TODO: use mustache templates?
+                        $html .= '<div class="card">';
+                        $html .= '<div class="card-actions">';
+                        $html .= '<a href="'. TRACKER_BASE_URL .'/?aid='. (int)$artifact->getId() .'">#'. (int)$artifact->getId() .'</a>'; // TODO: Use artifact->getUrl or similar?
+                        $html .= '</div>';
+                        $html .= '<div class="tracker_renderer_board_content">';
+                        $html .= $hp->purify($artifact->getTitle(), CODENDI_PURIFIER_BASIC_NOBR, $artifact->getTracker()->getGroupId());
+                        $html .= '</div>';
+                        $html .= '</div>';
+                        $html .= '</li>';
+                    }
+                }
+                $html .= '</ul>&nbsp;';
+                $html .= '</td>';
             }
             
             $html .= '</tr>';
