@@ -54,7 +54,7 @@ EOT;
                     status TINYINT(1) DEFAULT 1,
                     PRIMARY KEY (reminder_id)
                 )';
-        $this->db->createTable('plugin_git_ci', $sql);
+        $this->db->createTable('tracker_reminder', $sql);
     }
 
     /**
