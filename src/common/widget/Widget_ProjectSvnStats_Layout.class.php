@@ -97,8 +97,14 @@ class Widget_ProjectSvnStats_Layout {
      * @return Float
      */
     public function getLegendYPosition() {
-        $this->hasOnlyOneColumn() ? $legend_y_position = 0.99 : $legend_y_position = 0.645;
-        return $this->hasMoreThanTwoColumns() ? 0.6 : $legend_y_position;
+        if ($this->hasMoreThanTwoColumns()) {
+            $legend_y_position = 0.6;
+        } else if ($this->hasOnlyOneColumn()) {
+            $legend_y_position = 0.99;
+        } else {
+            $legend_y_position = 0.645;
+        }
+        return $legend_y_position;
     }
 
     /**
@@ -129,5 +135,5 @@ class Widget_ProjectSvnStats_Layout {
         return $this->legend_ratio > 2;
     }
 
-    }
+}
 ?>
