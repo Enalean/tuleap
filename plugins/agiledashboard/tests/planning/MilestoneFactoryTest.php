@@ -22,6 +22,7 @@ require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.ph
 require_once dirname(__FILE__).'/../../include/Planning/MilestoneFactory.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
+require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
 
 abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
