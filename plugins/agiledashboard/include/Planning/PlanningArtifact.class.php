@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,16 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'PlanningItem.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
-class Planning_Item {
+class PlanningArtifact extends Planning_Item {
     
     /**
      * @var Tracker_Artifact
      */
     private $artifact;
     
-    public function __construct(Tracker_Artifact $artifact) {
+    public function __construct(Tracker_Artifact $artifact, Planning $planning) {
+        parent::__construct($planning);
+        
         $this->artifact = $artifact;
     }
 
@@ -47,20 +49,9 @@ class Planning_Item {
     public function getId() {
         return $this->artifact->getId();
     }
-}
-
-class Planning_PlannifiableItem extends Planning_Item {
     
     public function isPlannifiable() {
-        return true;
+        return ($this->artifact->getTrackerId() == $this->planning->getPlanningTrackerId());
     }
 }
-
-class Planning_BacklogItem extends Planning_Item {
-    
-    public function isPlannifiable() {
-        return false;
-    }
-}
-
 ?>
