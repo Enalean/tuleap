@@ -116,55 +116,16 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     public function process() {
-        include_once 'FullTextSearch/SearchPresenter.class.php';
-        
-        $user_manager    = UserManager::instance();
-        $request         = HTTPRequest::instance();
-        $project_manager = ProjectManager::instance();
-        
         // Grant access only to site admin
-        if (!$user_manager->getCurrentUser()->isSuperUser()) {
+        if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
             header('Location: ' . get_server_url());
         }
 
-        $client = $this->getSearchClient();
-        
-        $client->setType('');
-        $index_status = $client->request(array('_status'), 'GET', false);
-        
-        $terms         = $request->getValidated('query', 'string', '');
-        $search_result = array();
-        if ($terms) {
-            $client->setType('docman');
-            $search_result = $client->search(array(
-                'query' => array(
-                    'query_string' => array(
-                        'query' => $terms
-                     )
-                 ),
-                'fields' => array(
-                    'id',
-                    'group_id',
-                    'title',
-                    'permissions'
-                ),
-                'highlight' => array(
-                    'pre_tags'  => array('<em class="fts_word">'),
-                    'post_tags' => array('</em>'),
-                    'fields'    => array(
-                        'file' => new stdClass
-                    )
-                )
-            ));
-        }
-        
-        $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result, $index_status, $project_manager);
-
-        $title = 'Full text search';
-        $GLOBALS['HTML']->header(array('title' => $title, 'toptab' => 'admin'));
-        $renderer = new MustacheRenderer('../templates');
-        $renderer->render('query', $query_presenter);
-        $GLOBALS['HTML']->footer(array());
+        include_once 'FullTextSearch/SearchController.class.php';
+        $request         = HTTPRequest::instance();
+        $project_manager = ProjectManager::instance();
+        $controller      = new FullTextSearch_SearchController($request, $this->getSearchClient(), $project_manager);
+        $controller->search();
     }
 }
 
