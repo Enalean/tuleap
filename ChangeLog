@@ -16,6 +16,9 @@ Version 5.2 (Not Released Yet)
 	* Statistics: 0.15
 	* FullTextSearch: 0.4
 
+        == CLI ==
+        * Version 1.5.1
+
 Version 5.1 (Wednesday, May 23rd 2012)
    == Enhancement ==
    * Add new methods in the SOAP api (get the statistics of a project, view svn
