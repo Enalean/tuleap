@@ -18,20 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
- * Base class to interact with ElasticSearch
+ * Define the structure of result a search should return
  */
-abstract class ElasticSearch_ClientFacade {
-
+interface FullTextSearch_SearchResultCollection extends Countable {
     /**
-     * @var ElasticSearchClient
+     * Duration of search query
+     * 
+     * @return int
      */
-    protected $client;
+    public function getQueryTime();
     
-    public function __construct(ElasticSearchClient $client) {
-        $this->client = $client;
-    }
-    
+    /**
+     * Number of results
+     */
+    public function getResults();
 }
+
 ?>

@@ -32,7 +32,29 @@ class ElasticSearch_ClientFactory {
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function build($path_to_elasticsearch_client, $server_host, $server_port) {
+    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port) {
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port);
+        require_once 'IndexClientFacade.class.php';
+        return new ElasticSearch_IndexClientFacade($client);
+    }
+    
+    /**
+     * Build instance of ClientFacade
+     *
+     * @param string $path_to_elasticsearch_client /usr/share/elasticsearch
+     * @param string the host of the search server
+     * @param string the port of the search server
+     *
+     * @return ElasticSearch_ClientFacade
+     */
+    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, ProjectManager $project_manager) {
+        $type   = 'docman';
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $type);
+        require_once 'SearchClientFacade.class.php';
+        return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
+    }
+    
+    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $type='docman') {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
@@ -43,12 +65,9 @@ class ElasticSearch_ClientFactory {
         }
 
         require_once $client_path;
-        require_once 'ClientFacade.class.php'; //can't be moved to the top of the file for now
 
-        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);
-
-        $client = new ElasticSearchClient($transport, 'tuleap', 'docman');
-        return new ElasticSearch_ClientFacade($client);
+        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);        
+        return new ElasticSearchClient($transport, 'tuleap', $type);
     }
 }
 ?>

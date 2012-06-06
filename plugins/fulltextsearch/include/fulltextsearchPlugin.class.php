@@ -24,17 +24,23 @@ class fulltextsearchPlugin extends Plugin {
 
     private $actions;
 
-    public function fulltextsearchPlugin($id) {
-        $this->Plugin($id);
+    public function __construct($id) {
+        parent::__construct($id);
 
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
+        
+        // site admin
+        $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        
+        // style
+        $this->_addHook('cssfile', 'cssfile', false);
     }
 
     private function getActions() {
-        if (!isset($this->actions) && ($search_client = $this->getSearchClient())) {
+        if (!isset($this->actions) && ($search_client = $this->getIndexClient())) {
             require_once 'FullTextSearchActions.class.php';
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
@@ -68,22 +74,74 @@ class fulltextsearchPlugin extends Plugin {
         $this->getActions()->delete($params);
     }
 
-    private function getSearchClient() {
+    /**
+     * Event to display something in siteadmin interface
+     * 
+     * @param array $params 
+     */
+    public function site_admin_option_hook($params) {
+        echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
+    }
+    
+    /**
+     * Event to load css stylesheet
+     * 
+     * @param array $params 
+     */
+    public function cssfile($params) {
+        // Only show the stylesheet if we're actually in the FullTextSearch pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+    
+    private function getIndexClient() {
+        $factory     = $this->getClientFactory();
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-
-        require_once 'ElasticSearch/ClientFactory.class.php';
-        $factory = new ElasticSearch_ClientFactory();
-        return $factory->build($client_path, $server_host, $server_port);
+        return $factory->buildIndexClient($client_path, $server_host, $server_port);
     }
 
+    private function getSearchClient() {
+        $factory     = $this->getClientFactory();
+        $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, ProjectManager::instance());
+    }
+    
+    private function getClientFactory() {
+        require_once 'ElasticSearch/ClientFactory.class.php';
+        return new ElasticSearch_ClientFactory();
+    }
+    
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
             require_once('FulltextsearchPluginInfo.class.php');
             $this->pluginInfo = new FulltextsearchPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function process() {
+        // Grant access only to site admin
+        if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+            header('Location: ' . get_server_url());
+        }
+
+        include_once 'FullTextSearch/Controller/Search.class.php';
+        
+        $request    = HTTPRequest::instance();
+        $controller = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
+        switch ($request->get('func')) {
+            case 'search':
+                $controller->search();
+                break;
+            default:
+                $controller->index();
+        }
     }
 }
 

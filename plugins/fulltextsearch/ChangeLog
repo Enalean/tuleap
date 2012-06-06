@@ -1,3 +1,6 @@
+Version 0.4 - Tuleap 5.2
+    * First version of search interface available through site admin
+
 Version 0.3 - Tuleap 5.2
     * On document title/description update, update the corresponding index.
 
