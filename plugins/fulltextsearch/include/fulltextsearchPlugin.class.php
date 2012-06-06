@@ -40,7 +40,7 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getActions() {
-        if (!isset($this->actions) && ($search_client = $this->getSearchClient())) {
+        if (!isset($this->actions) && ($search_client = $this->getIndexClient())) {
             require_once 'FullTextSearchActions.class.php';
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
@@ -96,18 +96,27 @@ class fulltextsearchPlugin extends Plugin {
         }
     }
     
-    
-    private function getSearchClient() {
+    private function getIndexClient() {
+        $factory     = $this->getClientFactory();
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-
-        require_once 'ElasticSearch/ClientFactory.class.php';
-        $factory         = new ElasticSearch_ClientFactory();
-        $project_manager = ProjectManager::instance();
-        return $factory->build($client_path, $server_host, $server_port, $project_manager);
+        return $factory->buildIndexClient($client_path, $server_host, $server_port);
     }
 
+    private function getSearchClient() {
+        $factory     = $this->getClientFactory();
+        $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, ProjectManager::instance());
+    }
+    
+    private function getClientFactory() {
+        require_once 'ElasticSearch/ClientFactory.class.php';
+        return new ElasticSearch_ClientFactory();
+    }
+    
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
             require_once('FulltextsearchPluginInfo.class.php');
@@ -123,8 +132,9 @@ class fulltextsearchPlugin extends Plugin {
         }
 
         include_once 'FullTextSearch/Controller/Search.class.php';
-        $request         = HTTPRequest::instance();
-        $controller      = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
+        
+        $request    = HTTPRequest::instance();
+        $controller = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
         switch ($request->get('func')) {
             case 'search':
                 $controller->search();

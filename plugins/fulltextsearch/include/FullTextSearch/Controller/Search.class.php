@@ -31,7 +31,7 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     public function __construct(Codendi_Request            $request,
                                 ElasticSearch_ClientFacade $client) {
         parent::__construct('fulltextsearch', $request);
-        $this->client          = $client;
+        $this->client               = $client;
     }
     
     public function index() {

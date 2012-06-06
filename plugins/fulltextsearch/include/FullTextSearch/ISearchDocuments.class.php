@@ -21,43 +21,8 @@
 /**
  * Interface which define the base contract for index/search library clients
  */
-interface FullTextSearch_ISearchAndIndexDocuments {
+interface FullTextSearch_ISearchDocuments {
 
-    /**
-     * Index a new document or update it if existing
-     *
-     * @return array
-     * @param array $document
-     * @param mixed $id Optional
-     */
-    public function index(array $document, $id = false);
-
-    /**
-     * Flush this index/type combination
-     *
-     * 
-     * @param mixed $id If id is supplied, delete that id for this index
-     *                  if not wipe the entire index
-     * @param array $options Parameters to pass to delete action
-     * 
-     * @return array
-     */
-    public function delete($id = false);
-
-    /**
-     * Update document datas
-     *
-     * @return array
-     */
-    public function update($item_id, $data);
-
-    /**
-     * make and append prepared request to currentData
-     *
-     * @return array
-     */
-    public function buildSetterData(array $current_data, $name, $value);
-    
     /**
      * Search for data in the index
      * 

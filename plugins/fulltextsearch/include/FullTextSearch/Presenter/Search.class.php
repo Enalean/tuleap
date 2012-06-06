@@ -24,12 +24,10 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template = 'search';
 
     private $query_result;
-    private $project_manager;
     
     public function __construct($index_status, $terms, $query_result) {
         parent::__construct($index_status, $terms);
-        
-        $this->query_result    = $query_result;
+        $this->query_result = $query_result;
     }
     
     public function has_results() {
