@@ -61,15 +61,19 @@ interface FullTextSearch_ISearchAndIndexDocuments {
     /**
      * Search for data in the index
      * 
-     * @param array $query the query to perform on the server
+     * @param String $term terms
      * 
      * @return array
      */
-    public function search($query);
+    public function searchDocuments($query);
     
 
     /**
      * Return status of the index
+     * 
+     * The returned array is:
+     * array('size'   => string with human readable size
+     *       'nb_docs => integer, number of documents in index)
      * 
      * @return array 
      */

@@ -59,32 +59,9 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     private function getSearchResults($terms) {
         $search_result = array();
         if ($terms) {
-            $search_result = $this->client->search($this->getSearchQuery($terms));
+            $search_result = $this->client->searchDocuments($terms);
         }
         return $search_result;
-    }
-    
-    private function getSearchQuery($terms) {
-        return array(
-            'query' => array(
-                'query_string' => array(
-                    'query' => $terms
-                )
-            ),
-            'fields' => array(
-                'id',
-                'group_id',
-                'title',
-                'permissions'
-            ),
-            'highlight' => array(
-                'pre_tags' => array('<em class="fts_word">'),
-                'post_tags' => array('</em>'),
-                'fields' => array(
-                    'file' => new stdClass
-                )
-            )
-        );
     }
     
     private function renderWithHeaderAndFooter($presenter) {

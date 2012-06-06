@@ -72,18 +72,38 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
     }
     
     /**
-     * Execute a search query
-     * 
-     * @param mixed $query
-     * 
-     * @return array
+     * @see ISearchAndIndexDocuments::searchDocuments
      */
-    public function search($query) {
+    public function searchDocuments($terms) {
+        $query = $this->getSearchDocumentsQuery($terms);
         return $this->client->search($query);
     }
     
+    private function getSearchDocumentsQuery($terms) {
+        return array(
+            'query' => array(
+                'query_string' => array(
+                    'query' => $terms
+                )
+            ),
+            'fields' => array(
+                'id',
+                'group_id',
+                'title',
+                'permissions'
+            ),
+            'highlight' => array(
+                'pre_tags' => array('<em class="fts_word">'),
+                'post_tags' => array('</em>'),
+                'fields' => array(
+                    'file' => new stdClass
+                )
+            )
+        );
+    }
+    
     /**
-     * Execute a query directly 
+     * @see ISearchAndIndexDocuments::getStatus
      */
     public function getStatus() {
         $this->client->setType('');
