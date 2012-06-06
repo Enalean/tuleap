@@ -118,7 +118,7 @@ class DateHelper {
     function dateDiffInDays($start, $end) {
         $hours        = 24;
         $minutes      = 60;
-        $sconds       = 60;
+        $seconds       = 60;
         $dayInSeconds = $hours * $minutes * $seconds;
         return floor(($end - $start) / $dayInSeconds);
     }
