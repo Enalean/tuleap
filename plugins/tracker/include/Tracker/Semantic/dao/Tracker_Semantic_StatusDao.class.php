@@ -58,5 +58,11 @@ class Tracker_Semantic_StatusDao extends DataAccessObject {
         return true;
     }
     
+    public function delete($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = "DELETE FROM tracker_semantic_status
+                WHERE tracker_id = $tracker_id";
+        return $this->update($sql);
+    }
 }
 ?>
