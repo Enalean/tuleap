@@ -50,7 +50,7 @@ class FullTextSearch_SearchController extends MVC2_Controller {
         $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result, $index_status, $this->project_manager);
 
         $title = 'Full text search';
-        $GLOBALS['HTML']->header(array('title' => $title, 'toptab' => 'admin'));
+        $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
         $this->render('query', $query_presenter);
         $GLOBALS['HTML']->footer(array());
     }
