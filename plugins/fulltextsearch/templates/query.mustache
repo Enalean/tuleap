@@ -9,22 +9,15 @@
 {{#has_results}}
 
 <p>{{result_count}} document(s) match:
-    <table border="1">
-        <thead>
-            <th>Document</th>
-            <th>Project</th>
-            <th>Permissions</th>
-        </thead>
-        <tbody>
-        {{#search_results}}
-            <tr>
-                <td><a href="{{url}}">{{item_title}}</a></td>
-                <td>{{project_name}}</td>
-                <td>{{permissions}}</td>
-            </tr>
-        {{/search_results}}
-        </tbody>
-    </table>
+    {{#search_results}}
+    <div class="fts_result">
+        <div class="fts_title">
+            <a href="{{url}}">{{item_title}}</a> - {{project_name}}
+        </div>
+        <div class="fts_highlight">{{highlight}}...</div>
+        <div>Permissions: {{permissions}}</div>
+    </div>    
+    {{/search_results}}
 </p>
 
 <p>Query took {{elapsed_time}}s</p>

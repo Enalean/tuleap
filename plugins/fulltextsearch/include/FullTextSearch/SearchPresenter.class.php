@@ -47,13 +47,13 @@ class FullTextSearch_SearchPresenter {
         $results = array();
         if (isset($this->query_result['hits']['hits'])) {
             foreach ($this->query_result['hits']['hits'] as $hit) {
-                //var_dump($hit);
                 $project = $this->project_manager->getProject($hit['fields']['group_id']);
                 $results[] = array(
                     'item_title'   => $hit['fields']['title'],
                     'url'          => '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details',
                     'permissions'  => implode(', ', $hit['fields']['permissions']),
-                    'project_name' => $project->getPublicName()
+                    'project_name' => $project->getPublicName(),
+                    'highlight'    => isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : ''
                 );
             }
         }

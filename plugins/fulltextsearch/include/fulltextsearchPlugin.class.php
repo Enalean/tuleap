@@ -116,8 +116,8 @@ class fulltextsearchPlugin extends Plugin {
             $client        = $this->getSearchClient();
             $search_result = $client->search(array(
                 'query' => array(
-                    'term' => array(
-                        'file' => $terms
+                    'query_string' => array(
+                        'query' => $terms
                      )
                  ),
                 'fields' => array(
@@ -125,6 +125,11 @@ class fulltextsearchPlugin extends Plugin {
                     'group_id',
                     'title',
                     'permissions'
+                ),
+                'highlight' => array(
+                    'fields' => array(
+                        'file' => new stdClass
+                    )
                 )
             ));
         }
