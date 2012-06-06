@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_IndexPresenter {    
+class FullTextSearch_Presenter_Index {    
     public $template = 'index';
     
     private $index_status;

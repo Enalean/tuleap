@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IndexPresenter.class.php';
+require_once 'Index.class.php';
 
-class FullTextSearch_SearchPresenter extends FullTextSearch_IndexPresenter {
+class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template = 'search';
 
     private $query_result;

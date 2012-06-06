@@ -121,10 +121,10 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        include_once 'FullTextSearch/SearchController.class.php';
+        include_once 'FullTextSearch/Controller/Search.class.php';
         $request         = HTTPRequest::instance();
         $project_manager = ProjectManager::instance();
-        $controller      = new FullTextSearch_SearchController($request, $this->getSearchClient(), $project_manager);
+        $controller      = new FullTextSearch_Controller_Search($request, $this->getSearchClient(), $project_manager);
         switch ($request->get('func')) {
             case 'search':
                 $controller->search();

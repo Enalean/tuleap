@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchPresenter.class.php';
+require_once dirname(__FILE__).'/../Presenter/Search.class.php';
 require_once 'common/mvc2/Controller.class.php';
 
-class FullTextSearch_SearchController extends MVC2_Controller {
+class FullTextSearch_Controller_Search extends MVC2_Controller {
     
     /**
      * @var ElasticSearch_ClientFacade 
@@ -44,7 +44,7 @@ class FullTextSearch_SearchController extends MVC2_Controller {
     
     public function index() {
         $index_status  = $this->getIndexStatus();
-        $presenter = new FullTextSearch_IndexPresenter($index_status);
+        $presenter = new FullTextSearch_Presenter_Index($index_status);
         $this->renderWithHeaderAndFooter($presenter);
     }
     
@@ -52,7 +52,7 @@ class FullTextSearch_SearchController extends MVC2_Controller {
         $terms         = $this->request->getValidated('terms', 'string', '');
         $index_status  = $this->getIndexStatus();
         $search_result = $this->getSearchResults($terms);
-        $presenter     = new FullTextSearch_SearchPresenter($index_status, $terms, $search_result, $this->project_manager);
+        $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result, $this->project_manager);
         $this->renderWithHeaderAndFooter($presenter);
     }
     
