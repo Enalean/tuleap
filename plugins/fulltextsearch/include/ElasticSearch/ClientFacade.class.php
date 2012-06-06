@@ -35,6 +35,18 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
     }
 
     /**
+     * Change what types to act against
+     * 
+     * for instance 'docman' for '/tuleap/docman'
+     * or '' for '/tuleap'
+     * 
+     * @param type $type 
+     */
+    public function setType($type) {
+        $this->client->setType($type);
+    }
+    
+    /**
      * @see ISearchAndIndexDocuments::index
      */
     public function index(array $document, $id = false) {
@@ -65,8 +77,22 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
         return $current_data;
     }
     
+    /**
+     * Execute a search query
+     * 
+     * @param mixed $query
+     * 
+     * @return array
+     */
     public function search($query) {
         return $this->client->search($query);
+    }
+    
+    /**
+     * Execute a query directly 
+     */
+    public function request($path, $method, $payload) {
+        return $this->client->request($path, $method, $payload, $verbose = true);
     }
 }
 ?>

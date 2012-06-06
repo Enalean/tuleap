@@ -127,10 +127,15 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
+        $client = $this->getSearchClient();
+        
+        $client->setType('');
+        $index_status = $client->request(array('_status'), 'GET', false);
+        
         $terms         = $request->getValidated('query', 'string', '');
         $search_result = array();
         if ($terms) {
-            $client        = $this->getSearchClient();
+            $client->setType('docman');
             $search_result = $client->search(array(
                 'query' => array(
                     'query_string' => array(
@@ -153,10 +158,10 @@ class fulltextsearchPlugin extends Plugin {
             ));
         }
         
-        $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result, $project_manager);
+        $query_presenter = new FullTextSearch_SearchPresenter($terms, $search_result, $index_status, $project_manager);
 
         $title = 'Full text search';
-        $GLOBALS['HTML']->header(array('title' => $title));
+        $GLOBALS['HTML']->header(array('title' => $title, 'toptab' => 'admin'));
         $renderer = new MustacheRenderer('../templates');
         $renderer->render('query', $query_presenter);
         $GLOBALS['HTML']->footer(array());

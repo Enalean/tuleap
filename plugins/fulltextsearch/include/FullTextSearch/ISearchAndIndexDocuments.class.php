@@ -60,5 +60,10 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      * Search for data in the index
      */
     public function search($query);
+    
+    /**
+     * Execute a query directly 
+     */
+    public function request($path, $method, $payload);
 }
 ?>

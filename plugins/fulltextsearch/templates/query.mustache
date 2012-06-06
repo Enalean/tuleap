@@ -1,4 +1,12 @@
-<h1>Full Text Search</h1>
+<h1>Admin - Full Text Search</h1>
+
+<p>This interface provide a way to access elasticsearch index, it's only for
+site admin usage for the time being.</p>
+<p><ul>
+    <li>Index size: {{index_size}}</li>
+    <li>Number of indexed documents: {{nb_docs}}</li>
+</ul></p>
+
 <form name="fts_query" method="get" action="?func=search">
     <p>Enter the terms you are looking for
         <input type="text" name="query" value="{{terms}}" />
@@ -11,13 +19,13 @@
 <p>{{result_count}} document(s) match:
     <ol>
     {{#search_results}}
-    <li class="fts_result">
-        <div class="fts_title">
-            <a href="{{url}}">{{item_title}}</a> - {{project_name}}
-        </div>
-        <div class="fts_highlight">{{{highlight}}}...</div>
-        <div class="fts_permissions">Permissions: {{permissions}}</div>
-    </li>
+        <li class="fts_result">
+            <div class="fts_title">
+                <a href="{{url}}">{{item_title}}</a> - {{project_name}}
+            </div>
+            <div class="fts_highlight">{{{highlight}}}...</div>
+            <div class="fts_permissions">Permissions: {{permissions}}</div>
+        </li>
     {{/search_results}}
     </ol>
 </p>

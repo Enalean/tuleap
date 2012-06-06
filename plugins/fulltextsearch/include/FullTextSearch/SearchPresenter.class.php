@@ -17,15 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 class FullTextSearch_SearchPresenter {
     private $terms;
     private $query_result;
+    private $index_status;
     private $project_manager;
     
-    public function __construct($terms, $query_result, ProjectManager $project_manager) {
+    public function __construct($terms, $query_result, $index_status, ProjectManager $project_manager) {
         $this->terms           = $terms;
+        $this->index_status    = $index_status;
         $this->query_result    = $query_result;
         $this->project_manager = $project_manager;
+    }
+    
+    public function index_size() {
+        return $this->index_status['indices']['tuleap']['index']['size'];
+    }
+    
+    public function nb_docs() {
+        return $this->index_status['indices']['tuleap']['docs']['num_docs'];
     }
     
     public function has_results() {
