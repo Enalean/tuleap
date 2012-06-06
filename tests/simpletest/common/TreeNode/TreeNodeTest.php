@@ -19,6 +19,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class TreeNodeTest extends TuleapTestCase {
+    public function itMayWrapAnObject() {
+        $object = mock('stdClass');
+        $node   = new TreeNode();
+        
+        $node->setObject($object);
+        $this->assertEqual($object, $node->getObject());
+    }
+}
+
 class TreeNode_FlattenChildrenTest extends TuleapTestCase {
     
     public function itReturnsAnEmptyArrayWhenNoChildren() {

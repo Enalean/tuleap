@@ -36,6 +36,11 @@ class TreeNode /*implements Visitable*/ {
      * @type mixed
      */
     var $data;
+    
+    /**
+     * @var mixed
+     */
+    var $object;
 
     /**
      * @type array
@@ -238,7 +243,11 @@ class TreeNode /*implements Visitable*/ {
     }
     
     public function getObject() {
-        
+        return $this->object;
+    }
+    
+    public function setObject($object) {
+        $this->object = $object;
     }
 }
 
