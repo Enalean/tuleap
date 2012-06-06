@@ -34,6 +34,9 @@ class fulltextsearchPlugin extends Plugin {
         
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
+        
+        // style
+        $this->_addHook('cssfile', 'cssfile', false);
     }
 
     private function getActions() {
@@ -79,6 +82,20 @@ class fulltextsearchPlugin extends Plugin {
     public function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
     }
+    
+    /**
+     * Event to load css stylesheet
+     * 
+     * @param array $params 
+     */
+    public function cssfile($params) {
+        // Only show the stylesheet if we're actually in the FullTextSearch pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+    
     
     private function getSearchClient() {
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
@@ -127,7 +144,9 @@ class fulltextsearchPlugin extends Plugin {
                     'permissions'
                 ),
                 'highlight' => array(
-                    'fields' => array(
+                    'pre_tags'  => array('<em class="fts_word">'),
+                    'post_tags' => array('</em>'),
+                    'fields'    => array(
                         'file' => new stdClass
                     )
                 )

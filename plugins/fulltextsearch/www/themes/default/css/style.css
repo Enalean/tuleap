@@ -1,0 +1,15 @@
+.fts_result {
+    margin-bottom: 0.5em;
+}
+
+.fts_title {
+    font-size: 120%;
+}
+
+.fts_word {
+    font-weight: bold;
+}
+
+.fts_permissions {
+    color: #888;
+}

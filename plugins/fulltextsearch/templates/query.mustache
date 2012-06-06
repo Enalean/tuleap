@@ -9,15 +9,17 @@
 {{#has_results}}
 
 <p>{{result_count}} document(s) match:
+    <ol>
     {{#search_results}}
-    <div class="fts_result">
+    <li class="fts_result">
         <div class="fts_title">
             <a href="{{url}}">{{item_title}}</a> - {{project_name}}
         </div>
-        <div class="fts_highlight">{{highlight}}...</div>
-        <div>Permissions: {{permissions}}</div>
-    </div>    
+        <div class="fts_highlight">{{{highlight}}}...</div>
+        <div class="fts_permissions">Permissions: {{permissions}}</div>
+    </li>
     {{/search_results}}
+    </ol>
 </p>
 
 <p>Query took {{elapsed_time}}s</p>
