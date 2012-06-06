@@ -69,6 +69,7 @@ class Docman_ApprovalTableReminder {
                 $this->notifyNextReviewer($table);
                 break;
             default:
+                break;
             }
         }
     }
@@ -165,6 +166,7 @@ class Docman_ApprovalTableReminder {
                 break;
             default :
                 $mail = $this->createMailForReviewer($table, $docmanItem, $subject);
+                break;
         }
         return $mail;
      }
