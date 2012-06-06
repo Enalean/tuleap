@@ -94,7 +94,7 @@ class FullTextSearch_SearchController extends MVC2_Controller {
     }
     
     private function renderWithHeaderAndFooter($presenter) {
-        $GLOBALS['HTML']->header(array('title' => 'Full text search', 'toptab' => 'admin'));
+        $GLOBALS['HTML']->header(array('title' => 'Full text search', 'selected_top_tab' => 'admin'));
         $this->render($presenter->template, $presenter);
         $GLOBALS['HTML']->footer(array());
     }
