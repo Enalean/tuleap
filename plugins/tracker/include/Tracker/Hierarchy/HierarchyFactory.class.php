@@ -60,6 +60,16 @@ class Tracker_HierarchyFactory {
         return $children;
     }
     
+    public function getDescendantIds($tracker_id) {
+        $descendant_ids = array($tracker_id);
+        
+        foreach($this->getChildren($tracker_id) as $tracker) {
+            $descendant_ids = array_merge($descendant_ids, $this->getDescendantIds($tracker->getId()));
+        }
+        
+        return $descendant_ids;
+    }
+    
     public function getHierarchy($tracker_ids = array()) {
         $hierarchy             = new Tracker_Hierarchy();
         $search_tracker_ids    = $tracker_ids;
