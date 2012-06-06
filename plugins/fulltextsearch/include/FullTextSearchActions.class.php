@@ -26,7 +26,7 @@ require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemMan
 class FullTextSearchActions {
 
     /**
-     * @var FullTextSearch_ISearchAndIndexDocuments
+     * @var FullTextSearch_IIndexDocuments
      */
     protected $client;
     protected $permissions_manager;

@@ -24,21 +24,21 @@ require_once dirname(__FILE__) .'/../FullTextSearch/IIndexDocuments.class.php';
 class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_IIndexDocuments {
     
     /**
-     * @see ISearchAndIndexDocuments::index
+     * @see FullTextSearch_IIndexDocuments::index
      */
     public function index(array $document, $id = false) {
         $this->client->index($document, $id);
     }
 
     /**
-     * @see ISearchAndIndexDocuments::delete
+     * @see FullTextSearch_IIndexDocuments::delete
      */
     public function delete($id = false) {
         $this->client->delete($id);
     }
 
     /**
-     * @see ISearchAndIndexDocuments::delete
+     * @see FullTextSearch_IIndexDocuments::delete
      */
     public function update($item_id, $data) {
         $this->client->request($item_id.'/_update', 'POST', $data);
