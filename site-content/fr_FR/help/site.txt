@@ -1,34 +1,17 @@
-<?php
-/*
- * Copyright (c) Xerox, 2008. All Rights Reserved.
- *
- * Originally written by Nicolas Terray, 2008. Xerox Codendi Team.
- *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Codendi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-?>
 <h2>Aide</h2>
+
+<h3>Consultez la documentation Tuleap</a></h3>
+Vous avez une question sur Tuleap ou êtes bloqué?  
+Nous vous suggérons de commencer par regarder dans la documentation:
 <ul>
-    <li><a href="/documentation/user_guide/html/fr_FR/"><b>Index de l'aide</b></a></li>
-    <li><a href="/plugins/docman/?group_id=1">Documentation site</b></a></li>
-    <li><a href="/mail/?group_id=1">Canaux développeurs</b></a></li>
-    <li><a href="/forum/?group_id=1">Forums de discussions</b></a><br /></li>
-</ul>
-<ul>
-    <li><a href="/contact.php">Contactez-nous</b></a></li>
+	<li><a href="/documentation/user_guide/html/fr_FR/User_Guide.html">Guide Utilisateur</a></li>
+	<li><a href="/plugins/docman/?group_id=1">Autre documentation</li></a>
 </ul>
 
+<h3>Posez vos questions</h3>
+Question technique, problème, bug? Poster vos questions, obtenez des réponses en écrivant à la 
+liste de distribution <a href="/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel</a>. 
+Pour consulter les discussions actuelles ou en soumettre une nouvelle, <a href="/account/register.php">créer un compte utilisateur</a> sur Tuleap.
+
+<h3><a href="/contact.php">Contact Us</a></h3>
+Pour toutes autres besoins, <a href="/contact.php">contactez-nous</a>.

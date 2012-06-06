@@ -7,7 +7,7 @@
   <chapter id="ProjectAdministration">
     <title>Project Administration</title>
 
-    <para>Whenever you enter the Project Summary page of a given
+    <para>Whenever you enter the Project Dashboard of a given
     project or any of its service you&#39;ll see a menu item called
     Admin appears in the project menu.</para>
 
@@ -18,7 +18,7 @@
       <title>Project Administration Menu</title>
 
       <para>In addition to the project main menu that was introduced in the
-      description of the Project Summary page, the Project Administration page
+      description of the Project Dashboard, the Project Administration page
       has its own menu. This menu is not redundant with the page content right
       below. Except for 1 or 2 items the menu and the page content give access
       to distinct parts of the administration space. So pay attention to both
@@ -63,11 +63,11 @@
             <title>Sample of users import file</title>
                <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 johnd
-steve.robinson@xerox.com
+steve.robinson@company.com
 
-bob.johnson@xerox.com
+bob.johnson@company.com
 smith3
-john.smith@xerox.com</programlisting>
+john.smith@company.com</programlisting>
           </example>
           <para>The import process has two steps.
           First, it checks if the file is well formed, and it displays
@@ -212,7 +212,7 @@ john.smith@xerox.com</programlisting>
 	      not automatically be part of the newly registered project.
 	      A template project does not appear any more in the Software 
 	      Map and is excluded from project statistics on the &SYS_PRODUCT_NAME; Dashboard
-	      (see <xref linkend="TheCodendiDashboard" />) like the newest projects 
+	      (see <xref linkend="ThePlateformDashboard" />) like the newest projects 
 	      listing, most active projects, etc.
 	    </para>
 	  </listitem>
@@ -268,10 +268,8 @@ john.smith@xerox.com</programlisting>
           If you want the Home Page of your project to link to some other
           locations on the Intranet or on the Web, simply replace
           the default value with your own Web location. Do not confuse your
-          Project Home Page with your Project Summary page. The Project Home
-          Page actually points to real Web Site whereas the Public Summary
-          Page is just an entry point to access software related activities
-          and deliverables.</para>
+          Project Home Page with your Project Dashboard. The Project Home
+          Page actually points to real Web Site whereas the Project Dashboard page is just an entry point to monitor a project progress.</para>
 
 
     <section id="ServiceCreation">
@@ -332,7 +330,7 @@ john.smith@xerox.com</programlisting>
           Toggling this check box will simply disable (or enable)
           the service. Disabling a service just
           means that it no longer appears in the Service Bar and in the  
-          Project Summary page of your
+          Project Dashboard of your
           project but all existing data related to this service remains
           untouched. In other words, re-enabling the service will restore
           the service in the exact same state it was when you first
@@ -1301,8 +1299,7 @@ The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide th
         <listitem>
           <para>The &SYS_PRODUCT_NAME; users who downloaded documents, except for
           those documents marked as being accessible to anonymous
-          users in your Document Manager (see <xref
-          linkend="DocumentAdministration"/>).</para>
+          users in your Document Manager.</para>
         </listitem>
       </itemizedlist>
 
@@ -1326,7 +1323,7 @@ The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide th
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

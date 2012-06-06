@@ -1,3 +1,79 @@
+Version 5.7.21 - Tuleap 5.2
+    * When a hierarchy is defined between 2 trackers, the linking between two
+      artifacts is always done with respect of hierarchy (ie the artifact that
+      belongs to the parent tracker will be updated to reference its son).
+
+Version 5.7.20 - Tuleap 5.2
+    * Some stuff for the agiledashboard
+
+Version 5.7.19 - Tuleap 5.2
+    * Fix issue with project renderer widget.
+
+Version 5.7.18 - Tuleap 5.2
+    * Add expand/collapse all on cross search
+    * Remove lab mode on cross-search
+    * One can add new content into backlog when the backlog is empty.
+
+Version 5.7.17 - Tuleap 5.2
+    * Add API method for agiledashboard (retrieve hierarchy of linked artifacts).
+
+Version 5.7.16 - Tuleap 5.2
+    * Refactoring of "external permissions"
+	* Collapse by default in cross search
+
+Version 5.7.15 - Tuleap 5.2
+    * fix sla #627: Default values are not taken into account for Select Boxes fields
+
+Version 5.7.14 - Tuleap 5.1
+    * remove unused variable
+
+Version 5.7.13 - Tuleap 5.1
+    * Finish permissions checking on cross tracker search.
+
+Version 5.7.12 - Tuleap 5.1
+    * Clean-up refactoring of view builder
+
+Version 5.7.11 - Tuleap 5.1
+    * Refactoring of cross search view builder
+
+Version 5.7.10 - Tuleap 5.1
+    * Let the plugins that depends on trackers choose the redirection url after artifact update/creation
+    * Introduce 'immediate' parameter in api to link immediately a new artifact to another one.
+
+Version 5.7.9 - Tuleap 5.1
+    * Internal refactoring to manage creation of elements from AgileDashboard
+      plugin.
+
+Version 5.7.8 - Tuleap 5.1
+    * Check permissions
+
+Version 5.7.7 - Tuleap 5.0
+    * Fix fatal error when field does not exist
+
+Version 5.7.6 - Tuleap 5.0
+    * Allow trackers to be installed on servers having default storage engine
+	set to InnoDB 
+    * Fix search on attachments
+
+Version 5.7.5 - Tuleap 5.0
+    * Fix burndown bug when remaining_effort fall to 0.
+
+Version 5.7.4 - Tuleap 5.0
+    * Inherit shared fields and hierarchy from project templates
+
+Version 5.7.1 - Tuleap 5.0
+    * Fix bug when trying to add a shared field on a non existant field id + i18n.
+
+Version 5.7 - Tuleap 5.0
+    * Add a new field type "Burndown"
+      It displays a Burndown as a field. It takes its configuration from the
+      artifact itself (start_date and duration) and will pick-up data from
+      linked artifact (remaining_effort).
+      Its useful when you want to define a "Sprint" tracker in an Agile process.
+
+Version 5.6.3 - Tuleap 5.0
+    * Fix display of tree table on various screen configuration
+
 Version 5.6.1 - Tuleap 5.0
     * In cross search:
       * List only shared fields that belongs to an active tracker

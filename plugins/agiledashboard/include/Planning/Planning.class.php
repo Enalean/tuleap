@@ -41,21 +41,43 @@ class Planning {
     private $group_id;
     
     /**
+     * @var string
+     */
+    private $backlog_title;
+    
+    /**
+     * @var string
+     */
+    private $plan_title;
+    
+    /**
      * @var Array of int
      */
-    private $backlog_tracker_ids;
+    private $backlog_tracker_id;
     
     /**
      * @var int
      */
     private $planning_tracker_id;
     
-    function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $planning_tracker_id = null) {
+    /**
+     * @var Tracker
+     */
+    private $planning_tracker;
+    
+    /**
+     * @var array of Tracker
+     */
+    private $backlog_tracker = array();
+    
+    function __construct($id, $name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id = null, $planning_tracker_id = null) {
         $this->id                  = $id;
         $this->name                = $name;
         $this->group_id            = $group_id;
-        $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->planning_tracker_id  = $planning_tracker_id;
+        $this->plan_title          = $plan_title;
+        $this->backlog_title       = $backlog_title;
+        $this->backlog_tracker_id  = $backlog_tracker_id;
+        $this->planning_tracker_id = $planning_tracker_id;
     }
     
     /**
@@ -80,17 +102,61 @@ class Planning {
     }
     
     /**
-     * @return array A list of tracker ids defined as backlog trackers
+     * @return String the title of the backlog
      */
-    public function getBacklogTrackerIds() {
-        return $this->backlog_tracker_ids;
+    public function getBacklogTitle() {
+        return $this->backlog_title;
     }
     
     /**
-     * @return int The tracker id, the artifacts of which are supposed to be planned
+     * @return String the title of the plan
+     */
+    public function getPlanTitle() {
+        return $this->plan_title;
+    }
+    
+    /**
+     * @return int The id as the tracker used as backlog
+     */
+    public function getBacklogTrackerId() {
+        return $this->backlog_tracker_id;
+    }
+    
+    /**
+     * @return int The id of the tracker used as planning destination
      */
     public function getPlanningTrackerId() {
         return $this->planning_tracker_id;
+    }
+    
+    /**
+     * @return Tracker The tracker used as planning destination
+     */
+    public function getPlanningTracker() {
+        return $this->planning_tracker;
+    }
+    
+    /**
+     * TODO: Pass the planning tracker at instanciation, and remove this setter.
+     * 
+     * @param Tracker $planning_tracker The tracker used as planning destination
+     */
+    public function setPlanningTracker(Tracker $planning_tracker) {
+        $this->planning_tracker = $planning_tracker;
+    }
+    
+    /**
+     * @param Tracker $backlog_tracker The tracker used as a backlog
+     */
+    public function setBacklogTracker(Tracker $backlog_tracker) {
+        $this->backlog_tracker = $backlog_tracker;
+    }
+    
+    /**
+     * @return Tracker
+     */
+    public function getBacklogTracker() {
+        return $this->backlog_tracker;
     }
 }
 

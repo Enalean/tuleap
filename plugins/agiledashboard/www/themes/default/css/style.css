@@ -2,18 +2,23 @@
     display: none;
 }
 
+.agiledashboard label {
+    font-weight: bold;
+}
+
 .planning-backlog > table {
     width: 100%;
 }
-
+.planning-backlog .tracker_report_query {
+    z-index: inherit;
+}
 .agiledashboard .release_planner {
-    float: right;
     border: 1px solid lightgray;
     min-height: 200px;
     padding: 0 0.5em;
 }
 
-.planning-draggable {
+.planning-draggable > .card {
     cursor: move;
 }
 
@@ -27,41 +32,32 @@
 }
 
 .cards {
-    list-style-type: none;
-    padding-left: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cards .cards {
+  margin-left: 2em;
 }
 .card {
-    padding: 0.5em 1em;
+    padding: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
     margin-bottom: 1em;
-    border: 1px solid gray;
-    box-shadow: 1px 1px 2px 1px lightgray;
+    border:1px solid #B2B39D;
     background: #ffe;
     min-width: 200px;
 }
-.card > .cards > .card {
-    background: #ffd;
+
+.backlog-actions, 
+.card-actions {
+    float:right;
 }
 
-.card > .cards > .card > .cards > .card {
-    background: #ffc;
+.backlog-content {
+    clear:both;
+    padding-top: 0.5em;
 }
-
-.card > .cards > .card > .cards > .card > .cards > .card {
-    background: #ffb;
-}
-
-.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card {
-    background: #ffa;
-}
-
-.card > .cards > .card > .cards > .card > .cards > .card > .cards > .card  > .cards > .card {
-    background: #ff9;
-}
-
-.card-link {
-    text-align:right;
-}
-
 .release_planner {
     background: white;
 }
@@ -78,4 +74,29 @@
     padding: 0.5em 1em;
 }
 .planning-artifact-chooser > option {
+}
+
+.backlog-actions ul, 
+.card-actions ul {
+    list-style: none;
+    padding: 0.25em 0.5em;
+}
+.backlog-actions .caret, 
+.card-actions .caret {
+  margin-top: 6px;
+}
+.backlog-actions:hover .caret, 
+.card-actions:hover .caret {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.backlog-actions .dropdown.open .dropdown-toggle,
+.card-actions .dropdown.open .dropdown-toggle {
+    color: #005580;
+    background: none;
+}
+.agiledashboard hr {
+    border:0px; 
+    border-top:1px solid #ccc;
 }

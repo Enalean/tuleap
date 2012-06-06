@@ -210,7 +210,7 @@
 	les frontaux graphiques.</para>
       </section>
 
-      <section id="SettingUprapidSVNforCodendi">
+      <section id="SettingUprapidSVN">
 	<title>Configurer rapidSVN pour &SYS_PRODUCT_NAME;</title>
 
         <para>Comme indiqué précédemment, rapidSVN est le frontal
@@ -309,7 +309,7 @@
     </section>
   </section>
 
-  <section id="SubversionIntegrationinCodendi">
+  <section id="SubversionIntegration">
     <title>Intégration de Subversion dans &SYS_PRODUCT_NAME;</title>
 
     <section id="TheSubversionRepository">
@@ -1432,7 +1432,7 @@ http://svn.nom_projet.&SYS_DEFAULT_DOMAIN;/svnroot/nom_projet/tags/nom_projet-1.
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

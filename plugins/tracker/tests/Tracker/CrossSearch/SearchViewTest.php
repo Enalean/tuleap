@@ -18,11 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
 
-require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once(dirname(__FILE__).'/../../../include/constants.php');
+require_once dirname(__FILE__) . '/../../builders/aTracker.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 
@@ -152,9 +150,9 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $view = $this->GivenASearchView($service, $criteria, $artifacts, $root);
         
         $output = $this->renderAndGetContent($view);
-        
-        $this->assertPattern('%div class="tree-last tree-collapsable" id="tree-node-6"%', $output);
-        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $output);
+        $pattern  = '(.*)?(tree-node-6)(.*)?(node-indent)(.*)?(node-last-left)(.*)?(node-tree)(.*)?(node-indent)(.*)?(node-minus-tree)(.*)?(node-child)';
+        $pattern .= '(.*)?(tree-node-8)(.*)?(node-blank)(.*)?';
+        $this->assertPattern("%^$pattern$%ism", $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts, $root) {
@@ -164,8 +162,15 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $project            = new MockProject();
         $project->setReturnValue('getID', 110);
         $project->setReturnValue('getPublicName', 'gpig');
-        $tracker1           = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
+        
+        $tracker1 = mock('Tracker');
+        stub($tracker1)->userCanView()->returns(true);
+        stub($tracker1)->getId()->returns(101);
+        stub($tracker1)->getName()->returns('Stories');
+        stub($tracker1)->getProject()->returns($project);
+        
         $trackers           = array($tracker1);
+        
         
         $this->setContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
         $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $this->content_view);
@@ -225,13 +230,15 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     private function renderAndGetContent($view) {
         ob_start();
-        $view->render();
+        $user = aUser()->build();
+        $view->render($user);
         $output = ob_get_clean();
         return $output;
     }
 
     private function setContentView($report, $criteria, $root, $artifact_factory, $shared_factory) {
-        $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
+        $user = mock('User');
+        $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory, $user);
     }
 }
 

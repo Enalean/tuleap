@@ -24,6 +24,12 @@ class Codendi_FileTest extends UnitTestCase {
     protected $big_file;
     protected $no_sufficient_space;
     
+    public function tearDown() {
+        if (file_exists($this->big_file)) {
+            unlink($this->big_file);
+        }
+        parent::tearDown();
+    }
     function __construct($name = 'Codendi_File test') {
         parent::__construct($name);
         $this->small_file     = dirname(__FILE__) . '/_fixtures/small_file';

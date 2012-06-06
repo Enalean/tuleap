@@ -19,8 +19,9 @@
  */
 require_once('Tracker_Semantic_Title.class.php');
 require_once('dao/Tracker_Semantic_TitleDao.class.php');
+require_once 'IRetrieveSemantic.class.php';
 
-class Tracker_Semantic_TitleFactory {
+class Tracker_Semantic_TitleFactory implements Tracker_Semantic_IRetrieveSemantic {
     
     /**
      * Hold an instance of the class
@@ -40,7 +41,7 @@ class Tracker_Semantic_TitleFactory {
         return self::$instance;
     }
     
-    public function getByTracker($tracker) {
+    public function getByTracker(Tracker $tracker) {
         return Tracker_Semantic_Title::load($tracker);
     }
     

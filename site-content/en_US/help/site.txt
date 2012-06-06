@@ -1,34 +1,18 @@
-<?php
-/*
- * Copyright (c) Xerox, 2008. All Rights Reserved.
- *
- * Originally written by Nicolas Terray, 2008. Xerox Codendi Team.
- *
- * This file is a part of Codendi.
- *
- * Codendi is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * Codendi is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-?>
-<h2>Help</h2>
+
+<h2>Get help</h2>
+
+<h3>Access Tuleap documentation</a></h3>
+If you have a question about Tuleap usage or are stumped by an issue, you should first take a look at the documentation:
 <ul>
-    <li><a href="/documentation/user_guide/html/en_US/"><b>Help Index</b></a></li>
-    <li><a href="/plugins/docman/?group_id=1">Site Documentation</b></a></li>
-    <li><a href="/mail/?group_id=1">Developers Channels</b></a></li>
-    <li><a href="/forum/?group_id=1">Discussion Forums</b></a><br /></li>
+	<li><a href="/documentation/user_guide/html/en_US/User_Guide.html">User Guide</a></li>
+	<li><a href="/plugins/docman/?group_id=1">User Guide in french and Other resources</li></a>
 </ul>
-<ul>
-    <li><a href="/contact.php">Contact Us</b></a></li>
-</ul>
+
+<h3>Ask question</h3>
+Troubleshooting, find a bug? Post your questions and get answers in the <a href="/plugins/forumml/message.php?group_id=101&list=1">tuleap-devel mailing-list</a>
+To consult current discussions and post a new thread, create a <a href="/account/register.php">user account</a> on Tuleap.
+
+<h3>Contact Us</h3>
+For all other inquiries, <a href="/contact.php">get in touch</a> with us.
+
 

@@ -1,19 +1,32 @@
-<div id="art-{{destination_id}}" class="release_planner card {{getDestinationDroppableClass}}">
-    <div class="card-link">{{{destination_link}}}</div>
-    {{> select-destination}}
-    <p class="help">{{destinationHelp}}</p>
-    {{^canDrop}}
-    {{{errorCantDrop}}}
-    {{/canDrop}}
-    {{#canDrop}}
-    <div>
-        {{^getLinkedItems}}
-        No items yet
-        {{/getLinkedItems}}
-        {{#getLinkedItems}}
-            {{> cards}}
-        {{/getLinkedItems}}
+{{#plannedArtifactsTree}}
+    <div id="art-{{getId}}" class="release_planner card {{planningDroppableClass}}">
+        {{#getData}}
+            {{> card-actions}}
+        {{/getData}}
+        {{> select-destination}}
+        <hr />
+        <p class="help">{{plannedArtifactsHelp}}</p>
+        {{^canDrop}}
+            {{{errorCantDrop}}}
+        {{/canDrop}}
+        {{#canDrop}}
+            <div>
+                {{^hasChildren}}
+                    No items yet
+                {{/hasChildren}}
+                {{#hasChildren}}
+                    {{> cards}}
+                {{/hasChildren}}
+                {{#hasSubMilestones}}
+                    <hr />
+                    <ul>
+                        {{#getSubMilestones}}
+                            <li><a href="{{getUri}}">{{getXRef}} - {{getTitle}}</a></li>
+                        {{/getSubMilestones}}
+                    </ul>
+                {{/hasSubMilestones}}
+            </div>
+        {{/canDrop}}
     </div>
-    {{/canDrop}}
-</div>
+{{/plannedArtifactsTree}}
 <div style="clear: both"></div>

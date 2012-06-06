@@ -90,6 +90,20 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
+    
+    /**
+     * @return string the url of the form to submit a new artifact
+     */
+    public function getSubmitUrl() {
+        return TRACKER_BASE_URL .'/?tracker='. $this->getId() .'&func=new-artifact';
+    }
+    
+    /**
+     * @return string ~ 'Add new bug'
+     */
+    public function getAddNewLabel() {
+        return $GLOBALS['Language']->getText('plugin_tracker', 'add_a', $this->getItemName());
+    }
 
     /**
      * getGroupId - get this Tracker Group ID.
@@ -196,6 +210,19 @@ class Tracker implements Tracker_Dispatchable_Interface {
      */
     public function getFormElements() {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this);
+    }
+    
+    /**
+     * @param string $name
+     * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
+     *
+     * @return bool true if the tracker contains an element of the given name and type
+     */
+    public function hasFormElementWithNameAndType($name, $type) {
+        $form_element_factory = Tracker_FormElementFactory::instance();
+        $element              = $form_element_factory->getUsedFieldByName($this->getId(), $name);
+        
+        return $element !== null && in_array($form_element_factory->getType($element), (array)$type);
     }
 
     /**
@@ -512,6 +539,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $link = (int)$request->get('link-artifact-id');
                     if ($artifact = $this->createArtifact($layout, $request, $current_user)) {
+                        $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
+                        
+                        $artifact->summonArtifactRedirectors($request);
+                        
                         if ($request->isAjax()) {
                             header(json_header(array('aid' => $artifact->getId())));
                             exit;
@@ -522,13 +553,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                             $art_link = '<a href="'.TRACKER_BASE_URL.'/?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                             
-                            $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->getId();
-                            if ($request->get('submit_and_continue')) {
-                                $url_redirection .= '&func=new-artifact';
-                            }
-                            if ($request->get('submit_and_stay')) {
-                                $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact->getId();
-                            }
+                            $url_redirection = $this->redirectUrlAfterArtifactSubmission($request, $this->getId(), $artifact->getId());
                             $GLOBALS['Response']->redirect($url_redirection);
                         }
                     }
@@ -566,6 +591,15 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
         }
         return false;
+    }
+    
+    private function associateImmediatelyIfNeeded(Tracker_Artifact $new_artifact, $link_artifact_id, $doitnow, User $current_user) {
+        if ($link_artifact_id && $doitnow) {
+            $source_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link_artifact_id);
+            if ($source_artifact) {
+                $source_artifact->linkArtifact($new_artifact->getId(), $current_user);
+            }
+        }
     }
     
     private function getHierarchyController($request) {
@@ -736,7 +770,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $breadcrumbs = array(
                 array(
                         'title' => 'New artifact',
-                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=new-artifact',
+                        'url'   => $this->getSubmitUrl(),
                 ),
         );
         
@@ -747,12 +781,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
         if ($link) {
             echo '<html>';
             echo '<head>';
+            echo '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
             $GLOBALS['HTML']->displayStylesheetElements(array());
             $GLOBALS['HTML']->includeCalendarScripts();
             $GLOBALS['HTML']->displayJavascriptElements(array());
             echo '</head>';
             
             echo '<body>';
+            echo '<div class="main_body_row">';
             echo '<div class="contenttable">';
 
             $project = null;
@@ -765,8 +801,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'plugin_tracker', 
                         'linked_to', 
                         array(
-                            $link, 
-                            $artifact->getTracker()->getItemName(), 
+                            $artifact->fetchDirectLinkToArtifact(),
                             $layout->fetchTrackerSwitcher($current_user, ' ', $project, $this),
                         )
                     ),
@@ -782,12 +817,24 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
         }
         
-        $html .= '<form action="?'. http_build_query(array(
+        $query_parameters = array(
             'tracker'  => $this->id,
-            'func' => 'submit-artifact',
-            )) .'" method="POST" enctype="multipart/form-data">';
+            'func'     => 'submit-artifact',
+        );
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$query_parameters,
+            )
+        );
+        
+        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($query_parameters) .'" method="POST" enctype="multipart/form-data">';
         if ($link) {
             $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
+            if ($request->get('immediate')) {
+                $html .= '<input type="hidden" name="immediate" value="1" />';
+            }
         }
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
         $html .= '<table><tr><td>';
@@ -813,6 +860,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
         
         $trm = new Tracker_RulesManager($this);
         $html .= $trm->displayRulesAsJavascript();
+        
+        $html .= '</div></div>';
         
         echo $html;
         if (!$link) {
@@ -975,7 +1024,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $toolbar = array();
                 $toolbar[] = array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
-                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=new-artifact',
+                        'url'   => $this->getSubmitUrl(),
                         'class' => 'tracker-submit-new',
                 );
                 if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
@@ -1480,7 +1529,7 @@ EOS;
             //body
             $i = 0;
             $a_star_is_displayed = false;
-
+            $related_parts = array();
             //The select box for the ugroups or fields (depending $group_first)
             $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';
@@ -1910,7 +1959,7 @@ EOS;
      *
      * @return boolean true if the user can view the tracker.
      */
-    function userCanView($user = 0) {
+    public function userCanView($user = 0) {
         if (!is_a($user, 'User')) {
             $um = UserManager::instance();
             if (!$user) {
@@ -2970,6 +3019,33 @@ EOS;
     
     public function setSharedFormElementFactory(Tracker_SharedFormElementFactory $factory) {
         $this->sharedFormElementFactory = $factory;
+    }
+
+    public function redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id) {
+        $stay      = $request->get('submit_and_stay');
+        $continue  = $request->get('submit_and_continue');
+        
+        $redirect_params = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
+            array(
+                'request'          => $request,
+                'query_parameters' => &$redirect_params,
+            )
+        );
+        return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
+    }
+
+    private function calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue) {
+        $redirect_params = array();
+        $redirect_params['tracker']       = $tracker_id;
+        if ($continue) {
+            $redirect_params['func']      = 'new-artifact';
+        }
+        if ($stay) {
+            $redirect_params['aid']       = $artifact_id;
+        }
+        return array_filter($redirect_params);
     }
 
 }

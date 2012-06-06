@@ -18,10 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
-
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generatePartial('Tracker', 
@@ -152,6 +149,8 @@ Mock::generate('Tracker_Artifact');
 
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
+
+require_once dirname(__FILE__).'/builders/aTracker.php';
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
     public function exportToXML($root, &$xmlMapping, &$index) {
@@ -1660,5 +1659,50 @@ class TrackerTest extends TuleapTestCase {
         return array($tracker, $factory, $sharedFactory, $user);
     }
 }
+
+class Tracker_ArtifactSubmit_RedirectUrlTest extends TuleapTestCase {
+    public function itRedirectsToTheTrackerHomePageByDefault() {
+        $request_data = array();
+        $tracker_id   = 20;
+        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, null);
+        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $redirect_uri);
+    }
+    
+    public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified() {
+        $request_data = array('submit_and_stay' => true);
+        $artifact_id  = 66;
+        $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
+        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri);
+    }
+    
+    public function itRedirectsToNewArtifactCreationWhen_submitAndContinue_isSpecified() {
+        $request_data = array('submit_and_continue' => true);
+        $tracker_id  = 73;
+        $artifact_id = 66;
+        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
+        $this->assertStringBeginsWith($redirect_uri, TRACKER_BASE_URL);
+        $this->assertUriHasArgument($redirect_uri, 'func', 'new-artifact');
+        $this->assertUriHasArgument($redirect_uri, 'tracker', $tracker_id);
+    }
+
+    public function testSubmitAndContinue() {
+        $request_data = array('submit_and_continue' => true);
+        $tracker_id   = 73;
+        $artifact_id  = 66;
+        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
+        $this->assertUriHasArgument($redirect_uri, "func", 'new-artifact');
+    }
+    
+    private function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
+        $request = new Codendi_Request($request_data);
+        $tracker = aTracker()->withId($tracker_id)->build();
+        return $tracker->redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
+        
+    }
+
+
+}
+
+
 
 ?>

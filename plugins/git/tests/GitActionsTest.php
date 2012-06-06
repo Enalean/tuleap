@@ -424,8 +424,8 @@ class GitActionsTest extends TuleapTestCase {
         );
         
         $dao    = new MockGitDao();
-        $dao->setReturnValue('getProjectRepositoryList', $project_repos, array($projectId, false, null));
-        $dao->setReturnValue('getProjectRepositoryList', $sandra_repos, array($projectId, false, $userId));
+        $dao->setReturnValue('getProjectRepositoryList', $project_repos, array($projectId, false, true, null));
+        $dao->setReturnValue('getProjectRepositoryList', $sandra_repos, array($projectId, false, true, $userId));
         $dao->setReturnValue('getProjectRepositoriesOwners', $repo_owners, array($projectId));
         
         $controller = new MockGit();

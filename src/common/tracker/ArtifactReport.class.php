@@ -459,7 +459,7 @@ class ArtifactReport extends Error {
             $ugroups = $u->getUgroups($group_id, $instances);
             
             $pm          =& PermissionsManager::instance();
-            $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id, $ugroups);
+            $permissions = $pm->getPermissionsAndUgroupsByObjectid($this->group_artifact_id);
             
             if(!$u->isSuperUser() && !$u->isTrackerAdmin($group_id,$this->group_artifact_id)) {
                 //artifact permissions

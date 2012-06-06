@@ -29,7 +29,7 @@ require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
-require_once('CrossSearch/ViewBuilder.class.php');
+require_once('CrossSearch/SearchViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
 require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
@@ -173,7 +173,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                                 break;
                             case 'cross-search':
                                 $controller = $this->getCrossSearchController($request);
-                                $controller->search();
+                                $controller->search($user);
                                 break;
                             default:
                                 $this->displayAllTrackers($project, $user);
@@ -193,7 +193,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
-            $this->getCrossSearchViewBuilder($request->get('group_id'))
+            $this->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser())
         );
     }
     
@@ -241,7 +241,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
         } else {
             // Otherwise tries duplicate
-            $new_tracker = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $new_tracker = $duplicate['tracker'];
         }
 
         if ($new_tracker) {
@@ -470,10 +471,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            
-            if ($user->useLabFeatures()) {
-                $this->displayTrackerHomeNav($project);
-            }
+            $this->displayTrackerHomeNav($project);
             
             $html .= '<p>';
             if (count($trackers)) {
@@ -781,37 +779,21 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $delete_status;
     }
 
-    private function getCrossSearch(array $art_link_column_field_ids) {
-        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+    public function getCrossSearch(array $art_link_column_field_ids) {
+        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory());
         $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                  = new Tracker_CrossSearch_SearchDao();
         $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
         return $search;
     }
     
-    private function getArtifactLinkFieldsOfTrackers(Tracker_FormElementFactory $formElementFactory, array $planning_trackers) {
-        $art_link_field_ids = array();
-        foreach ($planning_trackers as $tracker) {
-            $fields = $formElementFactory->getUsedArtifactLinkFields($tracker);
-            if (count($fields)) { 
-                $art_link_field_ids[] = $fields[0]->getId();
-            }
-        }
-        return $art_link_field_ids;
-    }
-    
-    public function getCrossSearchViewBuilder($group_id) {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $planning_trackers  = $this->getPlanningTrackers($group_id);
-        $art_link_field_ids = $this->getArtifactLinkFieldsOfTrackers($form_element_factory, $planning_trackers);
-
-        $artifact_factory        = $this->getArtifactFactory();
-        $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
-        $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
-        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
-
-        $criteria_builder   = new Tracker_CrossSearch_CriteriaBuilder($form_element_factory, $semantic_value_factory, $planning_trackers);
-        return new Tracker_CrossSearch_ViewBuilder(
+    public function getCrossSearchViewBuilder($group_id, User $user) {
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
+        $art_link_field_ids      = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
+        $criteria_builder        = $this->getCriteriaBuilder($user, $planning_trackers);
+        
+        return new Tracker_CrossSearch_SearchViewBuilder(
             $form_element_factory, 
             $this->getTrackerFactory(), 
             $this->getCrossSearch($art_link_field_ids), 
@@ -829,23 +811,25 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      * @return Array of Integer
      */
-    private function getPlanningTrackers($group_id) {
+    private function getPlanningTrackers($group_id, User $user) {
         $trackers = array();
         @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
         if (class_exists('PlanningFactory')) {
-            $tracker_factory  = $this->getTrackerFactory();
-            $planning_factory = new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
-            foreach ($planning_factory->getPlannings($group_id) as $planning) {
-                $planning   = $planning_factory->getPlanning($planning->getId());
-                $tracker_id = $planning->getPlanningTrackerId();
-                if (!isset($trackers[$tracker_id])) {
-                    if ($tracker = $tracker_factory->getTrackerById($tracker_id)) {
-                        $trackers[$tracker_id] = $tracker;
-                    }
-                }
-            }
+            $planning_factory = new PlanningFactory(new PlanningDao(), $this->getTrackerFactory());
+            $trackers = $planning_factory->getPlanningTrackers($group_id, $user);
         }
         return $trackers;
+    }
+
+    public function getCriteriaBuilder($user, $trackers) {
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
+        $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
+        $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
+        $tracker_factory         = TrackerFactory::instance();
+        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory, $tracker_factory);
+
+        return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
+
     }
 }
 ?>

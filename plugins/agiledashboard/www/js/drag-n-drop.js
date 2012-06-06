@@ -17,7 +17,7 @@ var Planning = {
     },
 
     executeRequest: function (func, sourceId, targetId) {
-        var r = new Ajax.Request(Planning.trackerBaseUrl + '?func='+ func +'&linked-artifact-id=' + sourceId + '&aid=' + targetId, {
+        new Ajax.Request(Planning.trackerBaseUrl + '?func='+ func +'&linked-artifact-id=' + sourceId + '&aid=' + targetId, {
             onSuccess: Planning.reload,
             onFailure: Planning.errorOccured
         });
@@ -40,29 +40,31 @@ var Planning = {
     },
 
     loadDroppables: function (container) {
-        container.select('.planning-backlog').each(function(element) {
-            Droppables.add(element, {
-                hoverclass: 'planning-backlog-hover',
-                onDrop: Planning.removeItem,
-                accept: "planning-draggable-alreadyplanned"
+        (function ($j) {
+            $j(container).find('.planning-backlog').droppable({
+                hoverClass: 'planning-backlog-hover',
+                accept: '.planning-draggable-alreadyplanned',
+                drop: function (event, ui) {
+                    Planning.removeItem(ui.draggable.get(0), $j(this).get(0));
+                }
             });
-        });
-        container.select('.planning-droppable').each(function(element) {
-            Droppables.add(element, {
-                hoverclass: 'planning-droppable-hover',
-                onDrop: Planning.dropItem,
-                accept: "planning-draggable-toplan"
+            $j(container).find('.planning-droppable').droppable({
+                hoverClass: 'planning-droppable-hover',
+                accept: '.planning-draggable-toplan',
+                drop: function (event, ui) {
+                    Planning.dropItem(ui.draggable.get(0), $j(this).get(0));
+                }
             });
-        });
+        })(window.jQuery);
     },
 
     loadDraggables: function (container) {
-        container.select('.planning-draggable').each(function(element) {
-            new Draggable(element, {
-                revert: 'failure',
-                scroll: window
+        (function ($j) {
+            $j(container).find('.planning-draggable').draggable({
+                revert: 'invalid',
+                cursor: 'move'
             });
-        })
+        })(window.jQuery);
     }
 
 };

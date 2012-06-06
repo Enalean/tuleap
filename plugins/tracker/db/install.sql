@@ -122,6 +122,7 @@ CREATE TABLE tracker_field_date(
     default_value INT(11) NULL,
     default_value_type TINYINT(1) NULL
 );
+
 DROP TABLE IF EXISTS tracker_field_list;
 CREATE TABLE tracker_field_list(
     field_id INT(11) NOT NULL PRIMARY KEY,
@@ -279,7 +280,7 @@ CREATE TABLE tracker_fileinfo(
     filesize BIGINT UNSIGNED NOT NULL,
     filetype TEXT NOT NULL,
     FULLTEXT fltxt (description, filename)
-)AUTO_INCREMENT=101;
+)AUTO_INCREMENT=101 ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS tracker_report;
 CREATE TABLE tracker_report(

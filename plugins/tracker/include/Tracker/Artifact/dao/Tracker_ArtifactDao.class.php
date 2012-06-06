@@ -19,12 +19,12 @@
  */
 
 class Tracker_ArtifactDao extends DataAccessObject {
-    function __construct() {
+    public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_artifact';
     }
     
-    function searchById($id) {
+    public function searchById($id) {
         $id      = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -32,7 +32,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT *
                 FROM $this->table_name
@@ -43,7 +43,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * @param string $artifact_ids "2,14,15"
      */
-    function searchLastChangesetIds($artifact_ids, $ugroups) {
+    public function searchLastChangesetIds($artifact_ids, $ugroups) {
         $artifact_ids = explode(',', $artifact_ids); // array(2, 14, 15);
         $artifact_ids = array_map(array($this->da, 'escapeInt'), $artifact_ids); // array(2, 14, 15)
         $artifact_ids = implode(',', $artifact_ids); // 2,14,15
@@ -92,7 +92,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      *
      * @return DataAccessResult The result of the query
      */
-    function searchOpenSubmittedByUserId($user_id) {
+    public function searchOpenSubmittedByUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
@@ -127,7 +127,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      *
      * @return DataAccessResult The result of the query
      */
-    function searchOpenAssignedToUserId($user_id) {
+    public function searchOpenAssignedToUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
@@ -169,7 +169,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      *
      * @return DataAccessResult The result of the query
      */
-    function searchOpenSubmittedByOrAssignedToUserId($user_id) {
+    public function searchOpenSubmittedByOrAssignedToUserId($user_id) {
         $user_id = $this->da->escapeInt($user_id);
         $sql = "SELECT A.id AS id, A.tracker_id, A.use_artifact_permissions, C.id AS changeset_id, CVT.value AS title, A.submitted_by, A.submitted_on
                 FROM tracker_artifact AS A
@@ -205,7 +205,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
         
-    function searchStatsForTracker($tracker_id) {
+    public function searchStatsForTracker($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT R1.t AS last_creation, R2.t AS last_update, R3.t as nb_total, R4.t as nb_open
                 FROM (SELECT MAX(a.submitted_on) AS t
@@ -231,10 +231,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
     }
     
     
-    function quote_keyword($keyword) {
+    public function quote_keyword($keyword) {
         return $this->da->quoteSmart('%'. $keyword .'%');
     }
-    function searchByKeywords($tracker_id, $keywords, $criteria, $offset, $limit) {
+    
+    public function searchByKeywords($tracker_id, $keywords, $criteria, $offset, $limit) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $criteria   = $criteria === 'OR' ? 'OR' : 'AND'; //make sure that the request is not forged
         $offset     = $this->da->escapeInt($offset);
@@ -260,7 +261,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function create($tracker_id, $submitted_by, $use_artifact_permissions) {
+    public function create($tracker_id, $submitted_by, $use_artifact_permissions) {
         $tracker_id               = $this->da->escapeInt($tracker_id);
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
         $submitted_on             = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
@@ -277,7 +278,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return false;
     }
     
-    function save($id, $tracker_id, $use_artifact_permissions) {
+    public function save($id, $tracker_id, $use_artifact_permissions) {
         $id                       = $this->da->escapeInt($id);
         $tracker_id               = $this->da->escapeInt($tracker_id);
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
@@ -289,7 +290,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function delete($id) {
+    public function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }

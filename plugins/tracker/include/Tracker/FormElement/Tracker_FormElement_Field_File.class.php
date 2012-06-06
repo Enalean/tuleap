@@ -41,15 +41,18 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $a = 'A_'. $this->id;
                 $b = 'B_'. $this->id;
                 $c = 'C_'. $this->id;
-                //TODO: SQL injection !
+                
+                $da             = CodendiDataAccess::instance();
+                $criteria_value = $da->quoteSmart("%$criteria_value%");
+                
                 return " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_file AS $b ON ($b.changeset_value_id = $a.id)
                          INNER JOIN tracker_fileinfo AS $c ON (
                             $c.id = $b.fileinfo_id
                             AND (
-                                $c.description LIKE '%". $criteria_value['value'] ."%'
+                                $c.description LIKE ". $criteria_value ."
                                 OR
-                                $c.filename LIKE '%". $criteria_value['value'] ."%'
+                                $c.filename LIKE ". $criteria_value ."
                             )
                          ) ";
             }
@@ -113,7 +116,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $html = '<input type="text" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" value="';
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             $hp = Codendi_HTMLPurifier::instance();
-            $html .= $hp->purify($criteria_value['value'], CODENDI_PURIFIER_CONVERT_HTML);
+            $html .= $hp->purify($criteria_value, CODENDI_PURIFIER_CONVERT_HTML);
         }
         $html .= '" />';
         return $html;

@@ -48,30 +48,35 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
-    function __construct(Tracker_Report                   $report, 
-                         array                            $criteria, 
-                         TreeNode                         $tree_of_artifacts, 
-                         Tracker_ArtifactFactory          $artifact_factory, 
-                         Tracker_FormElementFactory       $factory) {
+    /**
+     * @var User
+     */
+    private $user;
+    
+    public function __construct(Tracker_Report                   $report, 
+                                array                            $criteria, 
+                                TreeNode                         $tree_of_artifacts, 
+                                Tracker_ArtifactFactory          $artifact_factory, 
+                                Tracker_FormElementFactory       $factory,
+                                User                             $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
         $this->factory           = $factory;
-        
-        $tree_visitor = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->tree_of_artifacts->accept($tree_visitor);
+        $this->user              = $user;
+        $collapsable             = true;
+        $treeVisitor             = new TreeNode_InjectSpanPaddingInTreeNodeVisitor($collapsable);
+        $this->tree_of_artifacts->accept($treeVisitor);
     }
     
     public function fetch() {
         $report_can_be_modified = false;
         
         $html  = '';
-        $html .= '<table cellpadding="0" cellspacing="0"><tr valign="top"><td>';
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         $html .= $this->fetchResults();
-        $html .= '</td></tr></table>';
         
         return $html;
     }
@@ -79,6 +84,7 @@ class Tracker_CrossSearch_SearchContentView {
     private function fetchResults() {  
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
+        $html .= $this->fetchResultActions();
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
@@ -91,7 +97,7 @@ class Tracker_CrossSearch_SearchContentView {
     
     protected function fetchTable() {
         $html  = '';
-        $html .= '<table cellspacing="1">';
+        $html .= '<table id="treeTable" class="tree-view">';
         $html .= $this->fetchTHead();
         $html .= $this->fetchTBody();
         $html .= '</table>';
@@ -104,10 +110,10 @@ class Tracker_CrossSearch_SearchContentView {
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         
         if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
-            $html .= '<td nowrap>';
+            $html .= '<tr id="tree-node-' . $row['id'] . '" class="' . html_get_alt_row_color($this->current_index++) . '" >';
+            $html .= '<td class="first-column">';
             $html .= $row['tree-padding'];
-            $html .= $artifact->fetchDirectLinkToArtifact();
+            $html .= sprintf($row['content-template'], $artifact->fetchDirectLinkToArtifact());
             $html .= '</td>';
             $html .= $this->fetchColumnsValues($artifact, $row);
             $html .= '</tr>';
@@ -173,9 +179,9 @@ class Tracker_CrossSearch_SearchContentView {
                 // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
                 $linked_artifact_ids = array_unique(explode(',', $row[$key]));
                 foreach ($linked_artifact_ids as $id) {
-                    $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
+                    $values[]= $this->getArtifactLinkTitle($id);
                 }
-                $value = implode(', ', $values);
+                $value = implode(', ', array_filter($values));
             }
             
         } else {
@@ -183,6 +189,13 @@ class Tracker_CrossSearch_SearchContentView {
         }
         
         return $value;
+    }
+    
+    private function getArtifactLinkTitle($id) {
+        if ($artifact = $this->artifact_factory->getArtifactByIdUserCanView($this->user, $id)) {
+            return $artifact->getTitle();
+        }
+        return '';
     }
     
     private function getFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
@@ -194,9 +207,14 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     private function isASharedField(Tracker_Report_Field $report_field) {
-        return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
-                 $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
-                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
+        return !(  $report_field instanceof Tracker_CrossSearch_SemanticTitleReportField 
+                || $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField 
+                || $report_field instanceof Tracker_CrossSearch_ArtifactReportField
+        );
+    }
+
+    public function fetchResultActions() {
+        return '<p class="tree-view-actions"></p>';
     }
 
 }

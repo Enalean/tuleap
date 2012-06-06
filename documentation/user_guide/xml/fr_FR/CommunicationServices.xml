@@ -8,17 +8,17 @@
 //
 -->
   <chapter id="CommunicationServices">
-    <title>Services de communication</title>
+    <title>Outils de communication</title>
 
     <para>L'un des objectifs de &SYS_PRODUCT_NAME; est de fournir aux développeurs
     des outils de développement et de gestion de projets
-    efficaces. D'autre part, le site &SYS_PRODUCT_NAME; devrait aussi devenir très
-    rapidement le canal de communication favori de tous les
-    utilisateurs puisqu'une communication efficace est capitale pour
+    efficaces. D'autre part, &SYS_PRODUCT_NAME; doit aussi devenir 
+    le canal de communication favori de tous les
+    utilisateurs puisqu'une collaboration et une communication efficace est capitale pour
     les équipes de projets et leurs communautés.</para>
 
     <para>A cette fin, &SYS_PRODUCT_NAME; propose un ensemble de services de
-    communication que l'équipe de projet peut personnaliser. Cela
+    communication intégrés, que l'équipe de projet peut personnaliser. Cela
     inclut les listes de diffusion, le service d'annonces (news),
     les forums Web et un plug-in de messagerie instantanée.</para>
 
@@ -41,7 +41,7 @@
       inscrire ni poster de messages.</para>
 
       <para>Dans le but de minimiser les conflits de nom entre listes
-      de diffusion des différents projets, leur nom suit le patron
+      de diffusion des différents projets, leur nom suit le modèle
       suivant :</para>
 
 <programlisting format="linespecific" linenumbering="unnumbered" width="80">
@@ -132,11 +132,11 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
     </section>
 
     <section id="NewsService">
-      <title>Service d'annonces</title>
+      <title>Annonces</title>
 
       <para>Le service d'annonces vient en complément du service de
-      listes de diffusion. Il vous permet de publier des annonces
-      relatives au projet. Tous les évènements survenant dans la vie
+      listes de diffusion. Il vous permet de publier les actualalités
+      du projet. Tous les évènements survenant dans la vie
       de votre projet peuvent faire l'objet d'une annonce : une
       nouvelle personne dans l'équipe, une nouvelle version du
       logiciel, des informations sur les technologies liées au projet
@@ -212,7 +212,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         <title>Plug-in de messagerie instantanée</title>
         
         <para>&SYS_PRODUCT_NAME; est associé à un serveur Jabber et contient un plug-in de 
-        messagerie instantanée (IM) permettant un certain niveau d'interaction
+        messagerie instantanée (IM) permettant un niveau d'interaction
         entre eux.</para>
         
         <para>Si le plug-in est actif, un compte de messagerie instantanée sera
@@ -229,7 +229,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
         
         <para>Le plug-in IM de &SYS_PRODUCT_NAME; contient un client Jabber intégré à l'interface
         web de votre projet. Ce client vous permet uniquement de dialoguer dans le salon de discussion
-        du projet (voir <xref linkend="CodendiMUCRooms" />).
+        du projet (voir <xref linkend="MUCRoomsIntegration" />).
         Bien entendu, chaque utilisateur est libre d'utiliser le client qui correspond le mieux a ses besoins. 
         Un certain nombre de client open source (et/ou gratuit) sont disponibles pour la plupart des
         plateformes, une liste non-exhaustive est disponible à l'url 
@@ -314,7 +314,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
             
         </section>
         
-        <section id="MUCRooms">
+        <section id="MUCRoomsIntegration">
             <title>Salon de discussion multi-utilisateurs (MUC)</title>
             <para>Comme il a été spécifié précédement,le plug-in de messagerie
             instantanée crée un salon de discussion multi-utilisateurs pour chaque projet.
@@ -325,7 +325,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
                 de votre projet, ou grâce à un client de messagerie instantanée.
             </para>
             
-            <section id="CodendiMUCRooms">
+            <section id="MUCRooms">
              <title>Salon de discussion dans l'interface web</title>
              <para>
              Pour entrer dans le salon de discussion de votre projet, il vous
@@ -589,7 +589,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

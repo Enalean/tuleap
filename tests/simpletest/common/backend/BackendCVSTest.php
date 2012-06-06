@@ -219,7 +219,7 @@ class BackendCVSTest extends UnitTestCase {
     public function testSetCVSPrivacy_private() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 2770));
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 02770));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
@@ -230,7 +230,7 @@ class BackendCVSTest extends UnitTestCase {
     public function testsetCVSPrivacy_public() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 2775));
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 02775));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');

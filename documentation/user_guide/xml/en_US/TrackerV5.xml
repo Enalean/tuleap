@@ -9,18 +9,17 @@
 -->
       
 <chapter id="TrackerV5Service">
-  <title>Tracker Service</title>
+  <title>Trackers and real-time Reports</title>
 
-  <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the new version (aka v5) of Tracker service.
+  <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the new generation (aka v5) of Tracker system.
   For documentation on the legacy tracker system (v3) see <xref linkend="TrackerService" />.</para>
 
-  <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and versatile
-  services offered to &SYS_PRODUCT_NAME; hosted projects. It allows for the tracking 
-  of various artifacts like bugs, tasks, requirements, etc... and a 
-  project can create and customize as many trackers as necessary.</para>
+  <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and flexible
+  service provided by &SYS_PRODUCT_NAME;. It allows tracking change management and
+  various artifacts like bugs, tasks, requirements, etc... . A project can create and customize as many trackers as necessary.</para>
 
   <para>All trackers, whether predefined at the site level or created
-  by a project can be fully customized. </para>
+  by a project, can be fully customized to your processes and business needs. </para>
 
   <section id="TrackerV5TrackerPrinciples">
     <title>Terminology and common features</title>
@@ -53,11 +52,11 @@
     <title>Entering the Tracker Service</title>
 
     <para>To enter the Tracker service of a given project, first go to
-    the Project Summary page (see <xref
+    the Project Dashboard (see <xref
 	linkend="AccessingAProjectSummaryPage" />) and either click
     the &#34;Trackers&#34; item in the Project Main Menu located in the
     upper part of the page or you can directly choose a tracker from the
-    trackers listed in the Public Area of the Project Summary page.</para>
+    trackers listed in the Public Area of the Project Dashboard.</para>
 
     <para>You will be presented with a list of trackers available for
     this particular project (see <xref linkend="TrackerV5WelcomeScreen"
@@ -356,7 +355,7 @@
       <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />.</para>
 
       <figure id="TrackerV5FigureASampleTrackerBrowsingScreen">
-	<title>A sample Tracker browsing screen</title>
+	<title>A Tracker browsing screen</title>
 
 	<mediaobject>
 	  <imageobject>
@@ -444,10 +443,12 @@
     &SYS_PRODUCT_NAME; is proposing two kinds of renderers : "Table" and "Charts".
     The "Table" renderer presents the list of matching artifacts using columns.
     The "Charts" renderer gives a graphical visualization of the results.
-    Depending on the project, users may enjoy the ability to 
+	The "Cardwall" renderer is an easy-to-understand view of the results.
+	
+    Users may enjoy the ability to 
 	choose from several graphical tracker renderers available in the renderer tabs section.
     
-    Depending on the project, users may enjoy the ability to choose from several tracker reports
+    Depending on the project, they may also enjoy the ability to choose from several tracker reports
 	by using the upper pull-down menu of the artifact browsing
 	screen. If no project or user specific tracker report has been
 	defined, the &SYS_PRODUCT_NAME; &#39;Default&#39; report is the only one
@@ -455,7 +456,7 @@
 
 
      <para>Any &SYS_PRODUCT_NAME; user with access to the tracker can define his
-	 own personal report, choosing his own search criteria and adding renderers (tables and charts). 
+	 own personal report, choosing his own search criteria and adding renderers (tables, charts, cardwall). 
      In this case the report is a personal one
 	 and is only visible to this particular user. On the contrary,
 	 tracker administrators have the ability to define project-wide
@@ -475,7 +476,7 @@
        the default tracker report or delete it.
       </para>
       <para>
-            Be careful! When you are tracker admin, updating a public report will
+            Be careful! When you are a tracker admin, updating a public report will
             update the report for every other tracker user. Keep this in mind 
             before saving your modifications.
       </para>
@@ -483,11 +484,11 @@
      <section id="TrackerV5ReportRendererAdd">
       <title>Adding a renderer</title>
       <para>
-       You can add as many renderers as you want in any tracker report. 
+       You can add as many renderers you want in any tracker report. 
        Renderer are ordered in tabs. Adding a renderer is easy: simply select 
        the [+] tab on the right of the renderer tabs (see 
        <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).
-       Select the kind of renderer you want to add (either table or charts), give 
+       Select the kind of renderer you want to add (either table, charts or cardwall), give 
        the renderer a name and a description, and select the submit button.
       </para>
       <tip>
@@ -501,8 +502,8 @@
      <section id="TrackerV5ReportRendererTable">
       <title>Table renderer</title>
        <para>
-        Table renderer is a textual renderer, usually displayed in a table.
-        Columns of the table are tracker fields, and rows of the table are 
+        Table renderer is displayed artifacts matching your search in a table.
+        Columns of the table are tracker fields and rows of the table are 
         the artifacts.
         <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />) shows an example 
         of a table renderer.
@@ -547,13 +548,28 @@
        </para>
      </section>
      
+	 <section id="TrackerV5ReportRendererTable">
+        <title></title>
+        <para>You can easily add, remove and move columns you want to display on your table as well was adding agregate functions at the bottom.
+          <figure id="TrackerV5FigureTable">
+          <title>Table render with aggregate functions</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackertable.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+	 
      <section id="TrackerV5ReportRendererCharts">
       <title>Charts renderer</title>
        <para>
         Charts renderer allows to add charts in your report.
         &SYS_PRODUCT_NAME; provides four kind of graphs: pie, bar, gantt and burndown charts.
         <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
-         <title>A sample charts renderer screen</title>
+         <title>Several charts in one tab</title>
             <mediaobject>
              <imageobject>
                <imagedata format="PNG"
@@ -582,6 +598,7 @@
           </figure>
         </para>
        </section>
+	   
        <section id="TrackerV5ReportRendererChartBar">
         <title>Bar Chart</title>
         <para>
@@ -596,6 +613,7 @@
           </figure>
         </para>
        </section>
+	   
        <section id="TrackerV5ReportRendererChartGantt">
         <title>Gantt Chart</title>
         <para>
@@ -610,6 +628,7 @@
           </figure>
         </para>
        </section>
+	   
        <tip>
         <title>Gantt charts</title>
         <para>
@@ -618,6 +637,7 @@
          be too large. Please chnage the time scale to week, month or year.
         </para>
        </tip>
+	   
        <section id="TrackerV5ReportRendererChartBurndown">
         <title>Burndown charts</title>
         <para>
@@ -632,6 +652,24 @@
           </figure>
         </para>
        </section>
+     	 
+	 <section id="TrackerV5ReportRendererCardwall">
+        <title>Cardwall</title>
+        <para>Cardwall provides and easy-to-understand and instantly updated view of your work status. 
+		Cardwall is very used in agile methods. It is very easy to update the status of an artifact: 
+		just drag'n drop a post-it from a column to another one.
+          <figure id="TrackerV5FigureBurndownChartEdition">
+          <title>Cardwall</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackercardwall.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+	   
      </section>
      
      <section id="TrackerV5ReportRendererUpdate">
@@ -865,13 +903,13 @@
         the default renderer of the default selected report.
         </para>
         <section>
-            <title>Linking an artifact</title>
+            <title>Linking artifacts</title>
             <para>Click on the sheet icon on the right hand side of the input text field. Then a modal window is opening.
             There one can check or unckeck artifacts. Tracker/Report can be selected, and search criteria specified to browse trackers.
             Once artifact selection is done, selected artifacts are added to the input text field (comma separated), and can be viewed in trackers tabs.
             Note that these advanced functionalities are not available at artifact creation.
             <figure id="TrackerV5HowToLinkAnArtifact">
-                <title>How to link an artifact</title>
+                <title>How to link artifacts?</title>
                     <mediaobject>
                         <imageobject>
                             <imagedata format="PNG"
@@ -937,6 +975,16 @@
     case of an update. It is then followed by a complete snapshot of
     the artifact. Web pointers are also included in the message to
     quickly and easily access the artifact form on &SYS_PRODUCT_NAME;.</para>
+	
+	<figure id="TrackerV5HowToLinkAnArtifact">
+                <title>Notification by email</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata format="PNG"
+                                fileref="../../screenshots/fr_FR/sc_emailnotification.png" width="15.3cm" />
+                        </imageobject>
+                    </mediaobject>
+             </figure>
 
   </section>
 
@@ -1347,7 +1395,7 @@
     </itemizedlist>
 
     <figure id="TrackerV5FigureCreateANewTracker">
-      <title>Creation of a new tracker (here a defect tracking system)</title>
+      <title>Creation of a new tracker</title>
       
       <mediaobject>
 	<imageobject>

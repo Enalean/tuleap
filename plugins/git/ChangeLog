@@ -1,3 +1,32 @@
+Version 2.5.5 - Tuleap 5.2
+    * Refactoring of "external permissions"
+
+Version 2.5.4 (Tuleap 5.1)
+    * Fix typo in fr_FR L10n
+
+Version 2.5.3 (Tuleap 5.1)
+    * Add Git pushs stats in statistics plugin (contrib STMicroelectronics)
+
+Version 2.5.2 (Tuleap 5.1)
+    * Fix bug with restricted users. They had no access to repositories when
+      repo where available to 'registered_users'. They of course still need to
+      be project members to access repository.
+
+Version 2.5.1 (Tuleap 5.1)
+    * Select of git repository in Continuous Integration interface is done with a selectbox (contrib STMicroelectronics).
+
+Version 2.5 (Tuleap 5.0.2)
+    * Fix require order
+
+Version 2.4 (Tuleap 5.0)
+    * Fix issues with gitphp: 'plain' commitdiff output & FRS Fixture filename (for Windows workstation users). (contrib STMicroelectronics).
+
+Version 2.3 (Tuleap 5.0)
+    * Add widgets for both project page (display graph with push on repositories) and personal page. (contrib STMicroelectronics).
+
+Version 2.2 (Tuleap 5.0)
+    * Link Git and Continuous Integration plugins. On git push, Tuleap can trigger a build on an hudson/jenkins CI server (contrib STMicroelectronics).
+
 Version 2.1.7 (Tuleap 4.0.28)
     * Display meaningful info when fork fails due to already exiting repo
     * Prevent usage of non alphanum characters in fork namespace

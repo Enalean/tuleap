@@ -28,8 +28,8 @@ require_once('common/wiki/lib/WikiAttachment.class.php');
 class BackendSystem extends Backend {
 
 
-    protected $needRefreshUserCache=false;
-    protected $needRefreshGroupCache=false;
+    protected $needRefreshUserCache = false;
+    protected $needRefreshGroupCache = false;
 
 
     /**
@@ -39,17 +39,27 @@ class BackendSystem extends Backend {
      *
      * NOTE: Don't need to update cache on deleted user since shadow information are not cached, 
      * so even if the cache is not refreshed, a deleted user won't be able to login
+     * 
      * @return true on success, false otherwise
      */
     public function refreshUserCache() {
         return (system("/usr/sbin/nscd --invalidate=passwd") !== false);
     }
-
-
+    
+    /**
+     * set if we need to refresh the user cache
+     * 
+     * @return null
+     */
     public function setNeedRefreshUserCache() {
-        $this->needRefreshUserCache=true;
+        $this->needRefreshUserCache = true;
     }
-
+    
+    /**
+     * Return if we need to refresh the user cache
+     * 
+     * @return boolean
+     */
     public function getNeedRefreshUserCache() {
         return $this->needRefreshUserCache;
     }
@@ -60,16 +70,27 @@ class BackendSystem extends Backend {
      * to update its group data.
      *
      * NOTE: Currently, we don't update group cache on deleted group, new user and deleted user
+     * 
      * @return true on success, false otherwise
      */
     public function refreshGroupCache() {
         return (system("/usr/sbin/nscd --invalidate=group") !== false);
     }
-
+    
+    /**
+     * set if we need to refresh the group cache
+     *
+     * @return null
+    */
     public function setNeedRefreshGroupCache() {
-        $this->needRefreshGroupCache=true;
+        $this->needRefreshGroupCache = true;
     }
 
+    /**
+     * Return if we need to refresh the groupo cache
+     * 
+     * @return boolean
+     */
     public function getNeedRefreshGroupCache() {
         return $this->needRefreshGroupCache;
     }
@@ -79,6 +100,7 @@ class BackendSystem extends Backend {
      * 
      * Should be used before modification of system (new user, project, etc)
      * 
+     * @return null
      */
     public function flushNscdAndFsCache() {
         $this->refreshGroupCache();
@@ -89,7 +111,9 @@ class BackendSystem extends Backend {
     /**
      * Ensure user home directory is created and has the right uid
      * 
-     * @param User $user 
+     * @param User $user the user we want to sanitize his home
+     * 
+     * @return null
      */
     public function userHomeSanityCheck(User $user) {
         if (!$this->userHomeExists($user->getUserName())) {
@@ -106,7 +130,7 @@ class BackendSystem extends Backend {
      * Also copy files from the skel directory to the new home directory.
      * If the directory already exists, nothing is done.
      * 
-     * @param User $user
+     * @param User $user the user we want to create a home
      * 
      * @return true if directory is successfully created, false otherwise
      */
@@ -134,9 +158,9 @@ class BackendSystem extends Backend {
     /**
      * Verify if given name exists as user home directory
      * 
-     * @param String $username
+     * @param String $username the user name to test if home exists
      * 
-     * @return Boolean
+     * @return boolean
      */
     public function userHomeExists($username) {
     	return (is_dir($GLOBALS['homedir_prefix']."/".$username));
@@ -145,9 +169,9 @@ class BackendSystem extends Backend {
     /**
      * Verify is user home directory has the right uid
      * 
-     * @param User $user 
+     * @param User $user the user needed to verify his home directory
      * 
-     * @return Boolean
+     * @return boolean
      */
     private function isUserHomeOwnedByUser(User $user) {
         $stat = stat($user->getUnixHomeDir());
@@ -162,7 +186,9 @@ class BackendSystem extends Backend {
     /**
      * Set user's uid/gid on its home directory (recursively)
      * 
-     * @param User $user 
+     * @param User $user user to set uid/gid
+     * 
+     * @return null
      */
     private function setUserHomeOwnership(User $user) {
         $this->recurseChownChgrp($user->getUnixHomeDir(), $user->getUserName(), $user->getUserName());
@@ -171,18 +197,21 @@ class BackendSystem extends Backend {
     /**
      * Create project home directory
      * If the directory already exists, nothing is done.
+     * 
+     * @param int $group_id a group id
+     * 
      * @return true if directory is successfully created, false otherwise
      */
     public function createProjectHome($group_id) {
-        $project=$this->getProjectManager()->getProject($group_id);
+        $project = $this->getProjectManager()->getProject($group_id);
         if (!$project) return false;
 
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
-        $projdir=$GLOBALS['grpdir_prefix']."/".$unix_group_name;
-        $ht_dir=$projdir."/htdocs";
-        $private_dir = $projdir .'/private';
-        $ftp_anon_dir=$GLOBALS['ftp_anon_dir_prefix']."/".$unix_group_name;
-        $ftp_frs_dir=$GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
+        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
+        $projdir         = $GLOBALS['grpdir_prefix']."/".$unix_group_name;
+        $ht_dir          = $projdir."/htdocs";
+        $private_dir     = $projdir .'/private';
+        $ftp_anon_dir    = $GLOBALS['ftp_anon_dir_prefix']."/".$unix_group_name;
+        $ftp_frs_dir     = $GLOBALS['ftp_frs_dir_prefix']."/".$unix_group_name;
 
         if (!is_dir($projdir)) {
         	// Lets create the group's homedir.
@@ -201,11 +230,9 @@ class BackendSystem extends Backend {
         } else {
             // Get directory stat 
             $stat = stat("$projdir");
-            if ($stat) {
-                if ($stat['gid'] != $project->getUnixGID()) {
-                    $this->log("Restoring ownership on project dir: $projdir", Backend::LOG_WARNING);
-                    $this->recurseChgrp($projdir,$unix_group_name);
-                }
+            if ($stat && $stat['gid'] != $project->getUnixGID()) {
+                $this->log("Restoring ownership on project dir: $projdir", Backend::LOG_WARNING);
+                $this->recurseChgrp($projdir,$unix_group_name);
             }
         }
 
@@ -256,7 +283,7 @@ class BackendSystem extends Backend {
             // Now lets create the group's ftp homedir for anonymous ftp space
             // This one must be owned by the project gid so that all project
             // admins can work on it (upload, delete, etc...)
-            if (mkdir($ftp_anon_dir,02775)) {
+            if (mkdir($ftp_anon_dir, 02775)) {
                 $this->chown($ftp_anon_dir, "dummy");
                 $this->chgrp($ftp_anon_dir, $unix_group_name);
                 chmod($ftp_anon_dir, 02775);
@@ -299,7 +326,7 @@ class BackendSystem extends Backend {
             // Get directory stat 
             $stat = stat("$private_dir");
             if ($stat) {
-                $dummy_user=posix_getpwnam('dummy');
+                $dummy_user = posix_getpwnam('dummy');
                 if ( ($stat['uid'] != $dummy_user['uid'])
                      || ($stat['gid'] != $project->getUnixGID()) ) {
                     $this->log("Restoring privacy on private dir: $private_dir", Backend::LOG_WARNING);
@@ -313,6 +340,9 @@ class BackendSystem extends Backend {
 
     /**
      * Archive the user home directory
+     * 
+     * @param int $user_id a user id needed to find the home dir to archive
+     * 
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveUserHome($user_id) {
@@ -334,6 +364,9 @@ class BackendSystem extends Backend {
 
     /**
      * Archive the project directory
+     * 
+     * @param int $group_id the group id used to find the home directory to archive 
+     * 
      * @return true if directory is successfully archived, false otherwise
      */
     public function archiveProjectHome($group_id) {
@@ -364,17 +397,17 @@ class BackendSystem extends Backend {
      * It would delete FTP directory content of the project
      * and create a Tarball in temp dir.
      *
-     * @param Integer $groupId the group id
+     * @param Integer $group_id the group id
      *
-     * @return Boolean
+     * @return boolean
      */
-    function archiveProjectFtp($groupId) {
-        $project=$this->getProjectManager()->getProject($groupId);
+    function archiveProjectFtp($group_id) {
+        $project = $this->getProjectManager()->getProject($group_id);
         if (!$project) {
             return false;
         }
         $anonymousFTP = $GLOBALS['ftp_anon_dir_prefix']."/".$project->getUnixName(false);
-        $backupfile = $GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-ftp.tgz";
+        $backupfile   = $GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-ftp.tgz";
         if (is_dir($anonymousFTP)) {
             system("cd ".$GLOBALS['ftp_anon_dir_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
             chmod($backupfile, 0600);
@@ -385,6 +418,8 @@ class BackendSystem extends Backend {
 
     /**
      * Remove deleted releases and released files
+     * 
+     * @return bool the status
      */
     public function cleanupFRS() {
         // Purge all deleted files older than 3 days old
@@ -419,6 +454,8 @@ class BackendSystem extends Backend {
 
     /**
      * dumps SSH authorized_keys into all users homedirs
+     * 
+     * @return boolean always true
      */
     public function dumpSSHKeys() {
         $userdao = new UserDao(CodendiDataAccess::instance());
@@ -431,7 +468,10 @@ class BackendSystem extends Backend {
     
     /**
      * dumps SSH authorized_keys for a user in its homedir
-     * @param User $user
+     * 
+     * @param User $user the user we want to dump his key
+     * 
+     * @return boolean if the ssh key was written
      */
     public function dumpSSHKeysForUser($user) {
         return $this->writeSSHKeys($user->getUserName(), $user->getAuthorizedKeys());
@@ -439,8 +479,11 @@ class BackendSystem extends Backend {
     
     /**
      * Write SSH authorized_keys into a user homedir
+     * 
+     * @param string $username the user name
      * @param string $ssh_keys from the db
-     * @param string $username
+     * 
+     * @return 
      */
     protected function writeSSHKeys($username, $ssh_keys) {
         $ssh_keys = str_replace('###', "\n", $ssh_keys);
@@ -481,11 +524,13 @@ class BackendSystem extends Backend {
     }
      /**
      * Check if repository of given project exists
-     * @param Project
+     * 
+     * @param Project $project project to test if home exist
+     * 
      * @return true is repository already exists, false otherwise
      */
-    function projectHomeExists($project) {
-        $unix_group_name=$project->getUnixName(false); // May contain upper-case letters
+    public function projectHomeExists($project) {
+        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
         $home_dir=$GLOBALS['grpdir_prefix']."/".$unix_group_name;
         if (is_dir($home_dir)) {
             return true;
@@ -495,16 +540,18 @@ class BackendSystem extends Backend {
     /**
      * Check if given name is not used by a repository or a file or a link under project directories
      * 
-     * @param String $name
-     * 
-     * @return false if repository or file  or link already exists:
+     * Return false if repository or file  or link already exists:
      **  with the same name under the grp_dir
      **  with its lower case name under the grp_dir 
      **  under FRS
      **  under ftp anon 
      * true otherwise
+     * 
+     * @param String $name the project name to test
+     * 
+     * @return boolean 
      */
-    function isProjectNameAvailable($name) {
+    public function isProjectNameAvailable($name) {
         $dir = $GLOBALS['grpdir_prefix']."/".$name;
         $frs = $GLOBALS['ftp_frs_dir_prefix']."/".$name;
         $ftp = $GLOBALS['ftp_anon_dir_prefix']."/".$name;
@@ -528,9 +575,9 @@ class BackendSystem extends Backend {
     /**
      * Check if given name is not used by a repository or a file or a link under user directory
      * 
-     * @param String $name
+     * @param String $name a user name to test availability
      * 
-     * @return false if repository or file  or link already exists, true otherwise
+     * @return boolean false if repository or file  or link already exists, true otherwise
      */
     function isUserNameAvailable($name) {
         $path = $GLOBALS['homedir_prefix']."/".$name;
@@ -541,10 +588,10 @@ class BackendSystem extends Backend {
     /**
      * Rename project home directory (following project unix_name change)
      * 
-     * @param Project $project
-     * @param String  $newName
+     * @param Project $project a project to rename
+     * @param String  $newName the new name of the project
      * 
-     * @return Boolean
+     * @return boolean
      */
     public function renameProjectHomeDirectory($project, $newName) {
         if (is_link($GLOBALS['grpdir_prefix'].'/'.$newName)) {
@@ -569,10 +616,10 @@ class BackendSystem extends Backend {
     /**
      * Rename Directory where the released files are located (following project unix_name change)
      * 
-     * @param Project $project
-     * @param String  $newName
+     * @param Project $project a project
+     * @param String  $newName a new name
      * 
-     * @return Boolean
+     * @return boolean
      */
     public function renameFileReleasedDirectory($project, $newName) {
         if (is_dir($GLOBALS['ftp_frs_dir_prefix'].'/'.$project->getUnixName(false))) {
@@ -585,10 +632,10 @@ class BackendSystem extends Backend {
     /**
      * Rename anon ftp project homedir (following project unix_name change)
      * 
-     * @param Project $project
-     * @param String  $newName
+     * @param Project $project a project
+     * @param String  $newName a new name
      * 
-     * @return Boolean
+     * @return boolean
      */
     public function renameAnonFtpDirectory($project, $newName) {
         if (is_dir($GLOBALS['ftp_anon_dir_prefix'].'/'.$project->getUnixName(false))){
@@ -601,10 +648,10 @@ class BackendSystem extends Backend {
     /**
      * Rename User home directory 
      * 
-     * @param User $user
-     * @param String  $newName
+     * @param User    $user    a user
+     * @param String  $newName the new name of user home directory
      * 
-     * @return Boolean
+     * @return boolean
      */
     public function renameUserHomeDirectory($user, $newName) {
         return rename($GLOBALS['homedir_prefix'].'/'.$user->getUserName(), $GLOBALS['homedir_prefix'].'/'.$newName);

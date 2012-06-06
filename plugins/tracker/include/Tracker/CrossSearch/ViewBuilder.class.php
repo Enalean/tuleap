@@ -24,22 +24,21 @@ require_once 'SemanticStatusReportField.class.php';
 require_once 'SemanticValueFactory.class.php';
 require_once 'CriteriaBuilder.class.php';
 
-class Tracker_CrossSearch_ViewBuilder {
+
+/**
+ * Base class for building view of type cross tracker search 
+ */
+abstract class Tracker_CrossSearch_ViewBuilder {
+
     /**
      * @var Tracker_FormElementFactory
      */
-    private $form_element_factory;
-    
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
+    protected $form_element_factory;
     
     /**
      * @var Tracker_CrossSearch_Search
      */
     private $search;
-
 
     /**
      * @var Tracker_CrossSearch_CriteriaBuilder
@@ -47,115 +46,52 @@ class Tracker_CrossSearch_ViewBuilder {
     private $criteria_builder;
     
     public function __construct(Tracker_FormElementFactory               $form_element_factory,
-                                TrackerFactory                           $tracker_factory,
                                 Tracker_CrossSearch_Search               $search,
                                 Tracker_CrossSearch_CriteriaBuilder      $criteria_builder) {
         
         $this->form_element_factory   = $form_element_factory;
-        $this->tracker_factory        = $tracker_factory;
         $this->search                 = $search;
         $this->criteria_builder       = $criteria_builder;
     }
     
-    /**
-     * @return Tracker_CrossSearch_SearchView 
-     */
-    public function buildView(Project $project, Tracker_CrossSearch_Query $request_criteria) {
-        $service      = $this->getService($project);
-        
-        $criteria     = $this->getCriteria($project, $request_criteria);
-        $trackers     = $this->getTrackers($project);
-        $content_view = $this->buildContentView($project, $request_criteria);
-        
-        return $this->getView($project, $service, $criteria, $trackers, $content_view);
-   
+    protected function getHierarchicallySortedArtifacts(User $user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids = array()) {
+        return $this->search->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
     }
     
     /**
-     * @return type Tracker_CrossSearch_SearchContentView
+     * Call getCriteria on this criteria_builder 
+     * 
+     * @param User                      $user			 	an user
+     * @param Project                   $project			a project
+     * @param Tracker_Report            $report				a tracker report
+     * @param Tracker_CrossSearch_Query $cross_search_query a cross search query
+     * 
+     * @return array of Tracker_Report_Criteria
      */
-    public function buildContentView(Project $project, Tracker_CrossSearch_Query $cross_search_criteria) {
-        $tracker_ids = $this->getTrackersIds($project);
-        
-        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView',
-                                             $project,
-                                             $cross_search_criteria,
-                                             array(),
-                                             $tracker_ids);
+    protected function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+        return $this->criteria_builder->getCriteria($user, $project, $report, $cross_search_query);
     }
     
-    public function buildCustomContentView($classname, Project $project, Tracker_CrossSearch_Query $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
-        $report    = $this->getReport();
-        $criteria  = $this->getCriteria($project, $request_criteria);
-        $artifacts = $this->search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
-        
-        return $this->getContentView($classname, $report, $criteria, $artifacts);
-    }
-
-    protected function getView(Project $project, Service $service, $criteria, $trackers, $content_view) {
-        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers, $content_view);
-    }
-    
-    private function getCriteria(Project $project, Tracker_CrossSearch_Query $request_criteria) {
-        return $this->criteria_builder->getCriteria($project, $this->getReport(), $request_criteria);
-    }
-    
-    /**
-     * @return Service
-     */
-    private function getService(Project $project) {
-        $service = $project->getService('plugin_tracker');
-        
-        if ($service) {
-            return $service;
-        } else {
-            $service_label = $GLOBALS['Language']->getText('plugin_tracker', 'title');
-            $error_message = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($service_label));
-            
-            throw new Tracker_CrossSearch_ServiceNotUsedException($error_message);
-        }
-    }
-    protected function getContentView($classname, Tracker_Report $report, $criteria, $artifacts) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        
-        return new $classname($report, $criteria, $artifacts, $artifact_factory, $this->form_element_factory);
-    }
-    
-    private function getReport() {
+    protected function getReport(User $user) {
         $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
-        $is_query_displayed = true;
+        $is_query_displayed = Toggler::shouldBeDisplayed($user, 'tracker_report_query_0', true);
         
         $report_id = $description = $current_renderer_id = $parent_report_id
-            = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
-            = 0;
+                   = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
+                   = 0;
         
-        $report = new Tracker_Report($report_id, 
-                                     $name, 
-                                     $description, 
-                                     $current_renderer_id, 
-                                     $parent_report_id, 
-                                     $user_id, 
-                                     $is_default, 
-                                     $tracker_id, 
-                                     $is_query_displayed, 
-                                     $updated_by, 
-                                     $updated_at);
-        return $report;
-    }
-
-    private function getTrackers(Project $project) {
-        return $this->tracker_factory->getTrackersByGroupId($project->getGroupId());
+        return new Tracker_Report($report_id, 
+                                  $name, 
+                                  $description, 
+                                  $current_renderer_id, 
+                                  $parent_report_id, 
+                                  $user_id, 
+                                  $is_default, 
+                                  $tracker_id, 
+                                  $is_query_displayed, 
+                                  $updated_by, 
+                                  $updated_at);
     }
     
-    public function getTrackersIds($project) {
-        $trackers    = $this->getTrackers($project);
-        $tracker_ids = array();
-        
-        foreach ($trackers as $tracker) {
-            $tracker_ids[] = $tracker->getId();
-        }
-        
-        return $tracker_ids;
-    }
 }
 ?>

@@ -255,6 +255,17 @@ class DataAccess {
     }
     
     /**
+     * Escape the ints, and implode them.
+     * 
+     * @param array $ints
+     * 
+     * $return string
+     */
+    public function escapeIntImplode(array $ints) {
+        return implode(',', array_map(array($this, 'escapeInt'), $ints));
+    }
+    
+    /**
      * Retrieves the number of rows from a result set.
      *
      * @param resource $result The result resource that is being evaluated. This result comes from a call to query().

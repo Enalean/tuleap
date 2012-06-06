@@ -66,6 +66,10 @@ class DataAccessTest extends UnitTestCase {
         $this->assertIdentical("'val1'''val2'", $da->quoteSmartImplode("'",array("val1","val2")), "Glue is not escaped");// Is this what we really expect??
    }
 
+   function testEscapeIntImplode() {
+       $da = new DataAccessTestVersion($this);
+       $this->assertIdentical('12,34,+5,-6,0', $da->escapeIntImplode(array(12, '34', '+5', '-6', 'crap')));
+   }
 
     function testIsInteger() {
         $input = '123';

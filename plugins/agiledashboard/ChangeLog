@@ -1,3 +1,57 @@
+Version 0.26 - Tuleap 5.2 (Not released yet)
+     * Introduce base interface for \Planning\Milestone
+
+Version 0.25 - Tuleap 5.2 (Not released yet)
+     * Fix merge issue at commit #ee35e7d7ba0f
+
+Version 0.24 - Tuleap 5.2 (Not released yet)
+     * Fix bug when artifacts are displayed on both side of the planning
+
+Version 0.23 - Tuleap 5.2 (Not released yet)
+     * Only one tracker can be selected for backlog
+     * Inherit columns titles definition from project templates
+
+Version 0.22 - Tuleap 5.2
+     * One can add new content into backlog when the backlog is empty.
+
+Version 0.21 - Tuleap 5.2
+     * Display planning sub-elements (eg. On release planning view, display sprints).
+
+Version 0.20 - Tuleap 5.2
+     * Refactoring of "external permissions"
+     * Display all sub hierarchy in the planning instead of just the first
+       level
+
+Version 0.19 - Tuleap 5.1
+    * Heavy refactoring of AgilePlannification now known as Milestone
+    * Take permissions on tracker cross search (v5.7.13) into account.
+
+Version 0.18 - Tuleap 5.1
+    * Clean-up refactoring of view builder
+
+Version 0.17 - Tuleap 5.1
+    * Allow to define a name for each planning pane (Backlog/Plan)
+    * Refactoring of view builder + rename to make code a little bit more readable.
+    * Fix issues with IE7
+
+Version 0.16 - Tuleap 5.1
+    * Some refactoring and polishing of version 0.16
+
+Version 0.15 - Tuleap 5.1
+    * Allow to create new elements from the Planning interface.
+      * For instance, for sprint planning: New sprints, new stories into the
+	current sprint, new tasks in planned stories, ...
+
+Version 0.14 - Tuleap 5.1
+    * Check permissions
+
+Version 0.13 - Tuleap 5.0
+    * Inherit planning definition from project templates
+
+Version 0.12 - Tuleap 5.0
+    * Adapt code after Tracker v5.7 update
+    * Planning view now takes into account user permissions on planning tracker and artifact_link field on planning tracker.
+
 Version 0.11 - Tuleap 5.0
     * Take into account cross search based on artifact link (see tracker 5.6 changelog for details)
 

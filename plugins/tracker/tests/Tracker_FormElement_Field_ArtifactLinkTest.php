@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('common/language/BaseLanguage.class.php');
+require_once 'common/language/BaseLanguage.class.php';
 Mock::generate('BaseLanguage');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php';
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
 Mock::generatePartial(
     'Tracker_FormElement_Field_ArtifactLink', 
     'Tracker_FormElement_Field_ArtifactLinkTestVersion', 
@@ -36,7 +36,9 @@ Mock::generatePartial(
         'getDao',
         'getRuleArtifactId'
     )
-);Mock::generatePartial(
+);
+
+Mock::generatePartial(
     'Tracker_FormElement_Field_ArtifactLink', 
     'Tracker_FormElement_Field_ArtifactLinkTestVersion_ForImport', 
     array(
@@ -46,23 +48,26 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php';
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php';
 Mock::generate('Tracker_Artifact_ChangesetValue_ArtifactLink');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 Mock::generate('Tracker_FormElement_Field_Value_ArtifactLinkDao');
 
-require_once('common/dao/include/DataAccessResult.class.php');
+require_once 'common/dao/include/DataAccessResult.class.php';
 Mock::generate('DataAccessResult');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_Valid_Rule.class.php');
+require_once dirname(__FILE__).'/../include/Tracker/Tracker_Valid_Rule.class.php';
 Mock::generate('Tracker_Valid_Rule_ArtifactId');
 
-require_once('common/include/Response.class.php');
+require_once 'common/include/Response.class.php';
 Mock::generate('Response');
+
+require_once dirname(__FILE__).'/builders/aField.php';
+require_once dirname(__FILE__).'/builders/anArtifact.php';
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     
@@ -222,21 +227,28 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $field = anArtifactLinkField()->build();
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('getValue', null, array($this));
+        $user = aUser()->build();
         
-        $artifacts = $field->getLinkedArtifacts($changeset);
+        $artifacts = $field->getLinkedArtifacts($changeset, $user);
         $this->assertIdentical(array(), $artifacts);
     }
 
     public function itCreatesAListOfArtifactsBasedOnTheIdsInTheChangesetField() {
-        $artifact_1 = anArtifact()->withId(123)->build();
-        $artifact_2 = anArtifact()->withId(345)->build();
+        $user = aUser()->build();
+        
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        stub($artifact_1)->userCanView()->returns(true);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView()->returns(true);
         
         $field = anArtifactLinkField()->build();
         $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
         
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
 
-        $artifacts          = $field->getLinkedArtifacts($changeset);
+        $artifacts          = $field->getLinkedArtifacts($changeset, $user);
         $expected_artifacts = array(
             $artifact_1,
             $artifact_2
@@ -245,7 +257,10 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     }
 
     public function itIgnoresIdsThatDontExist() {
-        $artifact = anArtifact()->withId(123)->build();
+        $user     = aUser()->build();
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getId()->returns(123);
+        stub($artifact)->userCanView()->returns(true);
         
         $field = anArtifactLinkField()->build();
         $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact)));
@@ -253,11 +268,32 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $non_existing_id = 666;
         $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, $non_existing_id));
         
-        $artifacts          = $field->getLinkedArtifacts($changeset);
+        $artifacts          = $field->getLinkedArtifacts($changeset, $user);
         $expected_artifacts = array($artifact);
         $this->assertEqual($expected_artifacts, $artifacts);
     }
 
+    public function itReturnsOnlyArtifactsAccessibleByGivenUser() {
+        $user = aUser()->build();
+        
+        $artifact_1 = mock('Tracker_Artifact');
+        stub($artifact_1)->getId()->returns(123);
+        $artifact_2 = mock('Tracker_Artifact');
+        stub($artifact_2)->getId()->returns(345);
+        stub($artifact_2)->userCanView($user)->returns(true);
+        
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+        
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $artifacts          = $field->getLinkedArtifacts($changeset, $user);
+        $expected_artifacts = array(
+            $artifact_2
+        );
+        $this->assertEqual($expected_artifacts, $artifacts);
+    }
+            
     private function GivenAChangesetValueWithArtifactIds($field, $ids) {
         $changeset_value = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
         $changeset_value->setReturnValue('getArtifactIds', $ids);
@@ -268,12 +304,120 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     }
 
     private function GivenAnArtifactFactory($artifacts) {
-        $factory = new MockTracker_ArtifactFactory();
+        $factory = mock('Tracker_ArtifactFactory');
         foreach ($artifacts as $a) {
             $factory->setReturnValue('getArtifactById', $a, array($a->getId()));
         }
         return $factory;
         
+    }
+}
+
+// Special class for test to expose 'isSourceOfAssociation method'
+class  Tracker_FormElement_Field_ArtifactLink_TestIsSourceOfAssociation extends  Tracker_FormElement_Field_ArtifactLink {
+    public function isSourceOfAssociation(Tracker_Artifact $artifact_to_check, Tracker_Artifact $artifact_reference) {
+        return parent::isSourceOfAssociation($artifact_to_check, $artifact_reference);
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_IsSourceOfAssociationTest extends TuleapTestCase {
+    
+    public function itIsSourceOfAssociationIfThereIsAHierarchyAndArtifactIsInParentTracker() {
+        $release_tracker = aTracker()->withId(123)->build();
+        $sprint_tracker  = aTracker()->withId(565)->build();
+        
+        $release = anArtifact()->withTracker($release_tracker)->build();
+        $sprint  = anArtifact()->withTracker($sprint_tracker)->build();
+        
+        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_ArtifactLink_TestIsSourceOfAssociation', array('getTrackerChildrenFromHierarchy'));
+        
+        stub($this->field)->getTrackerChildrenFromHierarchy($release_tracker)->returns(array($sprint_tracker));
+        
+        $this->assertTrue($this->field->isSourceOfAssociation($release, $sprint));
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+
+        $this->modified_artifact_id = 223;
+        $this->modified_artifact    = anArtifact()->withId($this->modified_artifact_id)->build();
+        $this->old_changeset    = null;
+        $this->new_changeset_id = 4444;
+        $this->submitted_value  = array('new_values'     => '123, 124', 
+                                        'removed_values' => array(345 => array('345'),
+                                                                  346 => array('346')));
+        $this->submitter        = aUser()->build();
+        $this->new_changeset_value_id = 66666;
+        
+        $this->artifact_123 = stub('Tracker_Artifact')->getId()->returns(123);
+        $this->artifact_124 = stub('Tracker_Artifact')->getId()->returns(124);
+        
+        $this->all_artifacts = array($this->artifact_123, $this->artifact_124);
+        
+        $this->field = TestHelper::getPartialMock(
+            'Tracker_FormElement_Field_ArtifactLink_TestIsSourceOfAssociation', 
+            array(
+                'isSourceOfAssociation',
+                'getArtifactsFromChangesetValue',
+                'saveValue',
+                'getChangesetValueDao',
+                'userCanUpdate',
+                'isValid'
+            )
+        );
+        $changeset_value_dao = stub('Tracker_Artifact_Changeset_ValueDao')->save()->returns($this->new_changeset_value_id);
+        stub($this->field)->getChangesetValueDao()->returns($changeset_value_dao);
+        stub($this->field)->userCanUpdate()->returns(true);
+        stub($this->field)->isValid()->returns(true);
+        
+        stub($this->field)->isSourceOfAssociation($this->artifact_123, $this->modified_artifact)->returns(true);
+        stub($this->field)->isSourceOfAssociation($this->artifact_124, $this->modified_artifact)->returns(false);
+        
+        stub($this->field)->getArtifactsFromChangesetValue($this->submitted_value, $this->old_changeset)->returns($this->all_artifacts);        
+    }
+    
+    public function itSavesChangesetInSourceArtifact() {
+        // First reverse link the artifact
+        $this->artifact_123->expectOnce('linkArtifact', array($this->modified_artifact_id, $this->submitter));
+        stub($this->artifact_123)->linkArtifact()->returns(true);
+        
+        // Then update the artifact with other links
+        $remaining_submitted_value = array('new_values' => '124',
+                                           'removed_values' => array(345 => array('345'),
+                                                                     346 => array('346')));
+        $this->field->expectOnce('saveValue', array($this->modified_artifact, $this->new_changeset_value_id, $remaining_submitted_value, null));
+        
+        $this->field->saveNewChangeset($this->modified_artifact, $this->old_changeset, $this->new_changeset_id, $this->submitted_value, $this->submitter);
+    }
+    
+    public function itRemovesFromSubmittedValuesArtifactsThatWereUpdatedByDirectionChecking() {
+        $submitted_value  = array('new_values' => '123, 124');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => '124'));
+        
+        $submitted_value  = array('new_values' => '');
+        $artifact_id_already_linked = array();
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => ''));
+        
+        $submitted_value  = array('new_values' => '124, 123, 136');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => '124,136'));
+        
+        $submitted_value  = array('new_values' => '123');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => ''));
+        
+        $submitted_value  = array('new_values' => '124, 123');
+        $artifact_id_already_linked = array(123);
+        $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
+        $this->assertEqual($submitted_value, array('new_values' => '124'));
     }
 }
 

@@ -12,7 +12,7 @@ require('../snippet/snippet_utils.php');
 
 snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'), 
 		     'header'=>$Language->getText('snippet_browse','s_browsing'),
-		     'help' => 'TheCodendiMainMenu.html#CodeSnippetBrowsing'));
+		     'help' => 'TheMainMenu.html#CodeSnippetBrowsing'));
 
 if ($by=='lang') {
 

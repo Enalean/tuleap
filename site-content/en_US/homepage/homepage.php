@@ -20,39 +20,43 @@
 // customized in etc/site-content homepage.tab, we display him
 // instead of following text.
 if ($Language->hasText('homepage', 'introduction')) {
-    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
+    echo stripcslashes($Language->getText('homepage', 'introduction', array($GLOBALS['sys_org_name'], $GLOBALS['sys_name'])));
     return;
 }
 
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+$main_content_span = 'span12';
+$login_input_span  = 'span3';
+if ($display_homepage_news) {
+    $main_content_span = 'span8';
+    $login_input_span  = 'span2';
 }
+
 ?>
 
-<div class="slogan">Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></div>
 
-<br><?= $GLOBALS['sys_name']?> is a <B>service to all <?= $GLOBALS['sys_org_name']?> software development teams</B>. <A href="/docs/site/about_codendi.php">[&nbsp;More about <?= $GLOBALS['sys_name']?>&nbsp;]</A>
+<div class="hero-unit">
+    <?php include($Language->getContent('homepage/homepage_herounit', null, null, '.php')); ?>
+</div>
 
-<P><?= $GLOBALS['sys_name']?> offers an easy access to a full featured and totally web-based project management environment.
-Using <?= $GLOBALS['sys_name']?> project teams can better focus on software development while making their community of users
-and developers grow. <A href="/plugins/docman/?group_id=1">[&nbsp;More on <?= $GLOBALS['sys_name']?> Services&nbsp;]</a><P>
-
-<u><B>Site Participation</B></u>
-
-<BR>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should
-<A href="/account/register.php">register as a site user</A>. It's easy and fast and it allows you to participate fully in all we have to offer.
-Also make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>"><?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.
-
-<P><u><B>Set Up Your Own Project</B></u><BR>After you <A href="/account/register.php">register as a site user</A>, you can <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
-It only takes a couple of minutes to get a fully working environment to share your code.
-
-<P><B><U>CLI</U></B><BR />This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> to access it through a command line client.
-You can download the <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
-
-<p>Thanks... and enjoy the site.</p>
+<div class="row-fluid">
+    <div class="<?= $main_content_span ?>">
+        <div class="row-fluid">
+            <div class="span6">
+                <?php include($Language->getContent('homepage/homepage_about', null, null, '.php')); ?>
+            </div>
+            <div class="span6">
+                <?php include($Language->getContent('homepage/homepage_interactions', null, null, '.php')); ?>
+            </div>
+        </div>
+        <?php include($Language->getContent('homepage/homepage_boxes', null, null, '.php')); ?>
+    </div>
+    <?php include($Language->getContent('homepage/homepage_news', null, null, '.php')); ?>
+</div>
 
 <?php
-// Because of to aggressive continuous integration check on closing tags...
+
+//tell the upper script that it should'nt display boxes
+$display_homepage_boxes = false;
+$display_homepage_news  = false;
+
 ?>

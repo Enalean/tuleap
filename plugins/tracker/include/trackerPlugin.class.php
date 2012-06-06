@@ -18,10 +18,7 @@
  */
 
 require_once('common/plugin/Plugin.class.php');
-
-define('TRACKER_BASE_URL', '/plugins/tracker');
-define('TRACKER_BASE_DIR', dirname(__FILE__));
-define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
+require_once 'constants.php';
 
 /**
  * trackerPlugin
@@ -33,6 +30,7 @@ class trackerPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
         
         $this->_addHook('cssfile',                             'cssFile',                           false);
+        $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
@@ -62,7 +60,13 @@ class trackerPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-
+    
+    public function javascript_file() {        
+        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
+        }
+    }
+    
     public function cssFile($params) {
         $include_tracker_css_file = false;
         EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
@@ -75,6 +79,7 @@ class trackerPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
+            echo '<!--[if lte IE 8]><link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/ieStyle.css" /><![endif]-->';
         }
     }
     
@@ -109,7 +114,10 @@ class trackerPlugin extends Plugin {
     }
     
     public function toggle($params) {
-        if (strpos($params['id'], 'tracker_report_query_') === 0) {
+        if ($params['id'] === 'tracker_report_query_0') {
+            Toggler::togglePreference($params['user'], $params['id']);
+            $params['done'] = true;
+        } else if (strpos($params['id'], 'tracker_report_query_') === 0) {
             require_once('Tracker/Report/Tracker_ReportFactory.class.php');
             $report_id = (int)substr($params['id'], strlen('tracker_report_query_'));
             $report_factory = Tracker_ReportFactory::instance();

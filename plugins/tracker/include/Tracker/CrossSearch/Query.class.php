@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php';
+
 /**
  * The criteria for a cross-tracker search.
  * Includes both semantic field criteria (e.g. title, status) and shared field
@@ -47,20 +49,63 @@ class Tracker_CrossSearch_Query {
         $this->artifact_ids           = $artifact_ids;
     }
     
+    /**
+     * Method to ease serialization of query parameters in logs.
+     * 
+     * DO NOT USE IT FOR ANY OTHER PURPOSES OR KITTENS WILL DIE SLOWLY AND PAINFULLY!
+     * 
+     * @return array
+     */
+    public function toArrayOfDoom() {
+        return array(
+            'shared_fields' => $this->shared_fields_criteria,
+            'semantic'      => $this->semantic_criteria,
+            'artifacts'     => $this->artifact_ids
+        );
+    }
+    
     public function getSharedFields() {
         return $this->shared_fields_criteria;
     }
     
+    /**
+     * Remove fields from request shared fields according to given list.
+     * 
+     * This is used to remove the fields the user cannot access (eg. if user
+     * attempt to forge URL).
+     * 
+     * @param array $blessed_field_ids 
+     */
+    public function purgeSharedFieldNotInList(array $blessed_field_ids) {
+        foreach ($this->shared_fields_criteria as $field_id => $value_ids) {
+            if (!isset($blessed_field_ids[$field_id])) {
+                unset($this->shared_fields_criteria[$field_id]);
+            }
+        } 
+    }
+
     public function getSemanticCriteria() {
         return $this->semantic_criteria;
     }
     
     public function getTitle() {
-        return $this->semantic_criteria['title'];
+        if (isset($this->semantic_criteria['title'])) {
+            return $this->semantic_criteria['title'];
+        }
     }
     
     public function getStatus() {
-        return $this->semantic_criteria['status'];
+        if (isset($this->semantic_criteria['status'])) {
+            return $this->semantic_criteria['status'];
+        }
+    }
+    
+    public function purgeTitle() {
+        unset($this->semantic_criteria['title']);
+    }
+    
+    public function purgeStatus() {
+        unset($this->semantic_criteria['status']);
     }
     
     /**
@@ -75,6 +120,24 @@ class Tracker_CrossSearch_Query {
         return $id_list;
     }
     
+    /**
+     * Remove artifact ids in requests that are not part of the given list
+     * 
+     * This is used to remove the artifact ids the user cannot access (eg. if user
+     * attempt to forge URL).
+     * 
+     * @param array $blessed_artifact_ids 
+     */
+    public function purgeArtifactIdsNotInList(array $blessed_artifact_ids) {
+        foreach ($this->artifact_ids as $tracker_id => $artifact_ids) {
+            foreach ($artifact_ids as $k => $artifact_id) {
+                if (!isset($blessed_artifact_ids[$artifact_id])) {
+                    unset($this->artifact_ids[$tracker_id][$k]);
+                }
+            }
+        }
+    }
+    
     //TODO : is it going to be used?
     public function getArtifactsOfTracker($tracker_id) {
         $artifacts = array();
@@ -84,6 +147,25 @@ class Tracker_CrossSearch_Query {
             }
         }
         return $artifacts;
+    }
+    
+    /**
+     * add the public property isSelected on each artifact of $artifact_list
+     * A selected artifact must be shwn as selected in the html select box of the view.
+     * An artifact is selected if it exists in this $artifacts_ids
+     * ///TODO: find a better to do this.
+     *  
+     * @param int   $tracker_id    the tracker id of artifacts 
+     * @param array $artifact_list an artifact list
+     * 
+     * @return array the artifact list 
+     */
+    public function setSelectedArtifacts($tracker_id, array $artifact_list) {
+        $selected = isset($this->artifact_ids[$tracker_id]);
+        foreach($artifact_list as $artifact) {
+            $artifact->isSelected = $selected && in_array($artifact->getId(), $this->artifact_ids[$tracker_id]);
+        }
+        return $artifact_list;
     }
 }
 ?>

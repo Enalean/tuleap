@@ -76,5 +76,43 @@ class Query_ArtifactTest extends TuleapTestCase {
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(132));
         $this->assertEqual(array(), $criteria->getArtifactsOfTracker(456));
     }
+    
+    public function itDoesntRemoveArtifactIdsThatAreInTheBlessedList() {
+        $query = $this->givenAnArtifactQuery(array('132' => array('1', '2'), '456' => array('3', '4')));
+        
+        $query->purgeArtifactIdsNotInList(array('1' => 0, '2' => 1, '3' => 4, '4' => 5));
+        
+        $this->assertEqual(array('1', '2', '3', '4'), $query->listArtifactIds());
+    }
+    
+    public function itRemovesArtifactIdsThatAreNotInTheBlessedList() {
+        $query = $this->givenAnArtifactQuery(array('132' => array('1', '2'), '456' => array('3', '4')));
+        
+        $query->purgeArtifactIdsNotInList(array('6' => 0));
+        
+        $this->assertEqual(array(), $query->listArtifactIds());
+    }
 }
+
+class Query_SharedFieldsTest extends TuleapTestCase {
+    
+    public function itDoesntRemoveSharedFieldsThatAreInTheBlessedList() {
+        $shared_field_request = array('220' => array('values' => array('350')));
+        $query = new Tracker_CrossSearch_Query($shared_field_request);
+        
+        $query->purgeSharedFieldNotInList(array(220 => true));
+        
+        $this->assertEqual($query->getSharedFields(), $shared_field_request);
+    }
+    
+    public function itRemovesSharedFieldsThatAreNotInTheBlessedList() {
+        $shared_field_request = array('220' => array('values' => array('350')));
+        $query = new Tracker_CrossSearch_Query($shared_field_request);
+        
+        $query->purgeSharedFieldNotInList(array(330 => true));
+        
+        $this->assertEqual($query->getSharedFields(), array());
+    }
+}
+
 ?>

@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/user/User.class.php';
 require_once 'common/project/Service.class.php';
 require_once 'SearchContentView.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
-require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
+require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
 
 require_once 'html.php';
 
@@ -68,7 +69,7 @@ class Tracker_CrossSearch_SearchView {
         $this->content_view      = $content_view;
     }
     
-    public function render() {
+    public function render(User $user) {
         $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
@@ -84,13 +85,10 @@ class Tracker_CrossSearch_SearchView {
         $html .= $this->fetchTrackerHomeNav();
         $html .= '<div class="tracker_homenav_cross_search">';
         $html .= '<h1>'. $title .'</h1>';
-        $html .= '<p class="lab_features" title="'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature') .'">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature');
-        $html .= '</p>';
         
         if ($this->criteria) {
             $html .= $this->content_view->fetch();
-            $html .= $this->fetchTrackerList();
+            $html .= $this->fetchTrackerList($user);
         } else {
             $html .= '<em>'. 'There is no shared field to query across your trackers' .'</em>';
         }
@@ -106,17 +104,18 @@ class Tracker_CrossSearch_SearchView {
         return $renderer->render('tracker-home-nav', $presenter);
     }
 
-    
-    private function fetchTrackerList() {
+    private function fetchTrackerList(User $user) {
         $html  = '';
         $html .= '<div class="tracker_homenav_list">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_title');
         if (count($this->trackers) > 0) {
             $html .= '<ul>';
             foreach($this->trackers as $tracker) {
-                $html .= '<li>';
-                $html .= $tracker->getName().' ('.$tracker->getProject()->getPublicName().')';
-                $html .= '</li>';
+                if ($tracker->userCanView($user)) {
+                    $html .= '<li>';
+                    $html .= $tracker->getName().' ('.$tracker->getProject()->getPublicName().')';
+                    $html .= '</li>';
+                }
             }
             $html .= '</ul>';
         } else {
@@ -126,6 +125,5 @@ class Tracker_CrossSearch_SearchView {
         
         return $html;
     }
-
 }
 ?>

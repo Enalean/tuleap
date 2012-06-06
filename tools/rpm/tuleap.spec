@@ -311,6 +311,15 @@ Requires: %{PKG_NAME}-plugin-tracker, %{PKG_NAME}-plugin-cardwall
 Agile Dashboard aims to provide an nice integration of Scrum/Kanban
 tool on top of Tracker.
 
+%package plugin-fulltextsearch
+Summary: Full-Text Search
+Group: Development/Tools
+Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, elasticsearch = 1.0.0
+%description plugin-fulltextsearch
+Allows documents of the docman to be searched in a full-text manner.
+
 %package plugin-codereview
 Summary: Code review Tool
 Group: Development/Tools
@@ -324,7 +333,6 @@ Provides: tuleap-plugin-codereview = %{version}
 %endif
 %description plugin-codereview
 Plugin to ease the code review based on reviewBoard tool
-
 
 #
 ## Themes
@@ -481,6 +489,7 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/git-log.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+%{__install} plugins/git/bin/git-ci.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
@@ -837,6 +846,7 @@ sh %{APP_DIR}/plugins/codereview/bin/install.sh
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-log.pl
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-ci.pl
 
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -879,6 +889,10 @@ sh %{APP_DIR}/plugins/codereview/bin/install.sh
 %files plugin-agiledashboard
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/agiledashboard
+
+%files plugin-fulltextsearch
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/fulltextsearch
 
 %files plugin-codereview
 %defattr(-,%{APP_USER},%{APP_USER},-)

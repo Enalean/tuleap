@@ -470,7 +470,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $read_only              = true;
         $id_suffix              = '';
         //Display the head of the table
-        $html .= $this->_fetchHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);        
+        $html .= $this->_fetchHead($extracolumn, $only_one_column, $with_sort_links, $use_data_from_db, $id_suffix, $store_in_session);
         //Display the body of the table
         $html .= $this->_fetchBody($matching_ids, $total_rows, $offset, $extracolumn, $only_one_column, $use_data_from_db, $pagination, $artifactlink_field_id, $prefill_removed_values, $only_rows, $read_only, $store_in_session);
         
@@ -899,9 +899,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     foreach($columns as $column) {
                         if($column['field']->isUsed()) {
-                            $html .= '<td class="tracker_report_table_column_'. $column['field']->id .'">';
-                            $html .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $row[$column['field']->name], $from_aid);
-                            $html .= '</td>';
+                            $field_name = $column['field']->name;
+                            $value      = isset($row[$field_name]) ? $row[$field_name] : null;
+                            $html      .= '<td class="tracker_report_table_column_'. $column['field']->id .'">';
+                            $html      .= $column['field']->fetchChangesetValue($row['id'], $row['changeset_id'], $value, $from_aid);
+                            $html      .= '</td>';
                         }
                     }
                     $html .= '</tr>';

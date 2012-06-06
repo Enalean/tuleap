@@ -27,23 +27,18 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterProjectAdministration SYSTEM "ProjectAdministration.xml">
 <!ENTITY ChapterTracker SYSTEM "Tracker.xml">
 <!ENTITY ChapterTrackerV5 SYSTEM "TrackerV5.xml">
-<!ENTITY ChapterBugTrackingSystem SYSTEM "BugTrackingSystem.xml">
-<!ENTITY ChapterTaskManager SYSTEM "TaskManager.xml">
 <!ENTITY ChapterFileRelease SYSTEM "FileRelease.xml">
 <!ENTITY ChapterVersionControlWithCVS SYSTEM "VersionControlWithCVS.xml">
 <!ENTITY ChapterVersionControlWithSubversion SYSTEM "VersionControlWithSubversion.xml">
 <!ENTITY ChapterVersionControlWithGit SYSTEM "VersionControlWithGit.xml">
-<!ENTITY ChapterPatchManager SYSTEM "PatchManager.xml">
-<!ENTITY ChapterDocumentManager SYSTEM "DocumentManager.xml">
 <!ENTITY ChapterDocumentManagerPlugin SYSTEM "DocumentManagerPlugin.xml">
-<!ENTITY ChapterTestManagerPlugin SYSTEM "TestManagerPlugin.xml">
 <!ENTITY ChapterContinuousIntegrationWithHudson SYSTEM "ContinuousIntegrationWithHudson.xml">
 <!ENTITY ChapterWiki SYSTEM "Wiki.xml">
-<!ENTITY ChapterSupportRequestManager SYSTEM "SupportRequestManager.xml">
 <!ENTITY ChapterCommunicationServices SYSTEM "CommunicationServices.xml">
 <!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
 <!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
 <!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
+<!ENTITY Chapterlegalnotice SYSTEM "LegalNotice.xml">
 
 <!-- Entity definition and inclusion for default and custom parameters
 (e.g. site name, server names, company name,etc.)
@@ -78,4 +73,5 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterProjectWebSite;
   &ChapterOtherServices;
   &ChapterTracker;
+  &Chapterlegalnotice;
 </book>

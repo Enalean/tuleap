@@ -28,6 +28,8 @@ Mock::generate('Response');
 require_once 'common/layout/Layout.class.php';
 Mock::generate('Layout');
 
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/user/UserTestBuilder.php';
+
 require_once 'MockBuilder.php';
 
 /**
@@ -132,6 +134,37 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertNotBlank($string) {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
+    }
+    
+    /**
+     * assert that $substring is present $string
+     * @param string $string
+     * @param string $substring
+     * @return boolean true if $substring is present in $string
+     */
+    protected function assertStringContains($string, $substring) {
+        return $this->assertPattern("/$substring/", $string);
+    }
+    
+    /**
+     * assert that uri has the specified parameters, no matter the possition in the uri
+     * @param type $uri
+     * @param type $param
+     * @param type $value 
+     */
+    protected function assertUriHasArgument($uri, $param, $value) {
+        $query_string = parse_url($uri, PHP_URL_QUERY);
+        parse_str($query_string, $args);
+        return $this->assertTrue(isset($args[$param]) && $args[$param] == $value);
+    }
+    
+    /**
+     * asserts that $string starts with the $start_sequence
+     * @param type $string
+     * @param type $start_sequence 
+     */
+    protected function assertStringBeginsWith($string, $start_sequence) {
+        return $this->assertPattern("%^$start_sequence%", $string);
     }
 }
 ?>

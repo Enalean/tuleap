@@ -7,7 +7,7 @@
 //
 -->
   <chapter id="CommunicationServices">
-    <title>Communication Services</title>
+    <title>Communication Tools</title>
 
     <para>One of the &SYS_PRODUCT_NAME; objectives is to provide developers with
     efficient software development and project management tools. In
@@ -135,7 +135,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
       of the news and its text body. You can type URLs in the body. &SYS_PRODUCT_NAME; will
       detect them and transform them into a hyperlink in the published
       version. You can also choose whether you want the news to be public this means
-      visible on your Project Summary page for all &SYS_PRODUCT_NAME; users or private 
+      visible on your Project Dashboard for all &SYS_PRODUCT_NAME; users or private 
       which means visible for your project members only.</para>
 
       <para>
@@ -198,7 +198,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
         
         <para>The &SYS_PRODUCT_NAME; IM plug-in comes with a Jabber client integrated
         into the web interface of your project. This client lets you chat into the project
-        MUC Room (see <xref linkend="CodendiMUCRooms" />).
+        MUC Room (see <xref linkend="MUCRoomsIntegration" />).
         Of course, each user can choose the client that best fits his or her needs. Several
         open source (and/or free) clients are available for the most common platforms,
         and you can find a list (non-exhaustive) of them at 
@@ -280,7 +280,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
             
         </section>
         
-        <section id="MUCRooms">
+        <section id="MUCRoomsIntegration">
             <title>Multi-User Chat Room (MUC)</title>
             <para>As stated before, the IM plug-in creates a multi-user chat
             room for each project. This room is named after the project name 
@@ -290,7 +290,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
                 or with a IM client.
             </para>
             
-            <section id="CodendiMUCRooms">
+            <section id="MUCRooms">
              <title>MUC Room with the web interface</title>
              <para>
              To enter the chat room of your project, you just need to clic on
@@ -541,7 +541,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

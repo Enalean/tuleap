@@ -3,7 +3,7 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING. 
 -->
 <chapter id="ContinuousIntegrationWithHudson">
-  <title>Continuous Integration With Hudson</title>
+  <title>Continuous Integration with Hudson/Jenkins</title>
   
   <section id="ContinuousIntegrationIntroduction">
     <title>Introduction to Continuous Integration</title>
@@ -26,7 +26,7 @@
     </para>
     <para>
         The tool responsible for this checking is a Continuous Integration tool
-        such as CruiseControl or Hudson.
+        such as CruiseControl or Hudson/Jenkins.
         This checking is called a <emphasis role="bold">Build</emphasis>.
         A build will correspond, according to your project, in a succession of
         steps, such as:
@@ -55,8 +55,8 @@
     
     <para>
         The continuous integration tool we decided to integrate in &SYS_PRODUCT_NAME; 
-        is <emphasis role="bold">Hudson</emphasis>, which is one of the actual best tool
-        . Hudson configuration can be easily done on the web interface,
+        is <emphasis role="bold">Hudson/Jenkins</emphasis>, which is one of the best tool. Jenkins is a fork of Hudson. So in this chapter we will use the name Hudson. It stands both for Hudson and Jenkins.
+		Hudson configuration can be easily done on the web interface,
         and there is a contextual help for each step of the configuration, which
         is really appreciable.
     </para>
@@ -528,7 +528,7 @@
   </section>
   
   
-  <section id="HudsonInCodendi">
+  <section id="HudsonIntegration">
     <title>Integration in &SYS_PRODUCT_NAME;</title>
     <para>
         As continuous integration is a good practice in software engineering,
@@ -559,12 +559,12 @@
             of your project, and then select the 'Add a job' link.
             You need then to give the URL of the Hudson job you want to associate
             with your project (for instance: http://[my_ci_server]:8080/hudson/job/[my_job]).
-            <figure id="HudsonAddJobInCodendi">
+            <figure id="HudsonAddJob">
               <title>Link Hudon job with your project</title>
               <mediaobject>
                 <imageobject>
                   <imagedata format="PNG"
-                    fileref="../../screenshots/en_US/sc_hudsonaddjobincodendi.png" width="14.5cm" />
+                    fileref="../../screenshots/en_US/sc_hudsonaddjob.png" width="14.5cm" />
                 </imageobject>
               </mediaobject>
             </figure>
@@ -589,7 +589,7 @@
         <para>
             When you select the Build tab of your project, you can see a table
             with all the jobs associated with your project.
-            <figure id="HudsonBrowseJobsInCodendi">
+            <figure id="HudsonBrowseJobs">
               <title>Hudson jobs associated with your project</title>
               <mediaobject>
                 <imageobject>

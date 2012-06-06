@@ -1,13 +1,23 @@
-<h2>{{createPlanning}}</h2>
-<form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
-    <p>
-        <label for="planning_name">{{planningName}}</label>
-        <input type="text" name="planning_name"/>
-    </p>
-    <p>
-        {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}
-    </p>
-    <p>
-        <input type="submit" value="{{btnSubmit}}"/>
-    </p>
-</form>
+<div class="agiledashboard">
+    <h2>{{createPlanning}}</h2>
+    <form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=create">
+        <p>
+            <label for="planning_name">{{planningNameFieldLabel}}</label><br />
+            <input type="text" name="planning_name" id="planning_name" value="Sprint Planning" />
+        </p>
+        <p>
+            <label for="planning_backlog_title">{{planningBacklogTitleFieldLabel}}</label><br />
+            <input type="text" name="planning_backlog_title" id="planning_backlog_title" value="Release Backlog" />
+        </p>
+        <p>
+            <label for="planning_plan_title">{{planningPlanTitleFieldLabel}}</label><br />
+            <input type="text" name="planning_plan_title" id="planning_plan_title" value="Sprint Plan" />
+        </p>
+        <p>
+            {{#__}}planning-allows-assignment|{{> select-backlog}}|{{> select-planning}}{{/__}}
+        </p>
+        <p>
+            <input type="submit" value="{{btnSubmit}}"/>
+        </p>
+    </form>
+</div>

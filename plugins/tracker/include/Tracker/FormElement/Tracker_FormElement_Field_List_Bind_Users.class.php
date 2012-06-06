@@ -20,6 +20,7 @@
 
 require_once('Tracker_FormElement_Field_List_Bind.class.php');
 require_once('Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
+
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
     protected $value_function;
     protected $values;
@@ -715,6 +716,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             } 
         }
         return $is_valid;
+    }
+    
+    /**
+     * @see Tracker_FormElement_Field_Shareable
+     */
+    public function fixOriginalValueIds(array $value_mapping) {
+        // Nothing to do: user value ids stay the same accross projects.
     }
 }
 ?>

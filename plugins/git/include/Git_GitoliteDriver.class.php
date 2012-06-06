@@ -21,7 +21,7 @@
 
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
-require_once 'common/permission/PermissionsManager.class.php';
+require_once 'common/project/UGroupManager.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'exceptions/Git_Command_Exception.class.php';
@@ -46,6 +46,11 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
+    public static $permissions_types = array(
+        Git::PERM_READ  => ' R  ',
+        Git::PERM_WRITE => ' RW ',
+        Git::PERM_WPLUS => ' RW+'
+    );
 
     public function repoFullName(GitRepository $repo, $unix_name) {
         return unixPathJoin(array($unix_name, $repo->getFullName()));
@@ -245,44 +250,55 @@ class Git_GitoliteDriver {
             throw new Git_Command_Exception($cmd, $output, $retVal);
         }
     }
-    
-    /**
-     * Fetch the gitolite readable conf for permissions on a repository
-     *
-     * @return string
-     */
-    public function fetchPermissions($project, $readers, $writers, $rewinders) {
-        $s = '';
-        
-        array_walk($readers,   array($this, 'ugroupId2GitoliteFormat'), $project);
-        array_walk($writers,   array($this, 'ugroupId2GitoliteFormat'), $project);
-        array_walk($rewinders, array($this, 'ugroupId2GitoliteFormat'), $project);
-        
-        $readers   = array_filter($readers);
-        $writers   = array_filter($writers);
-        $rewinders = array_filter($rewinders);
-        
-        // Readers
-        if (count($readers)) {
-            $s .= ' R   = '. implode(' ', $readers);
-            $s .= PHP_EOL;
-        }
-        
-        // Writers
-        if (count($writers)) {
-            $s .= ' RW  = '. implode(' ', $writers);
-            $s .= PHP_EOL;
-        }
-        
-        // Rewinders
-        if (count($rewinders)) {
-            $s .= ' RW+ = '. implode(' ', $rewinders);
-            $s .= PHP_EOL;
-        }
-        
-        return $s;
-    }
 
+    /**
+     * Save on filesystem all permission configuration for a project
+     *
+     * @param Project $project
+     */
+    public function dumpProjectRepoConf($project) {
+        $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
+        if (!$dar || $dar->isError()) {
+            return;
+        }
+        $project_config   = '';
+        $notification_manager = $this->getPostReceiveMailManager();
+        foreach ($dar as $row) {
+            $repository      = $this->buildRepositoryFromRow($row, $project, $notification_manager);
+            $project_config .= $this->fetchReposConfig($project, $repository);  
+        }
+        
+        $config_file = $this->getProjectPermissionConfFile($project);
+        if ($this->writeGitConfig($config_file, $project_config)) {
+            return $this->commitConfigFor($project);
+        }
+    }
+    
+    protected function buildRepositoryFromRow($row, $project, $notification_manager = null) {
+        $repository_id = $row[GitDao::REPOSITORY_ID];
+        $repository = new GitRepository();
+        $repository->setId($repository_id);
+        $repository->setName($row[GitDao::REPOSITORY_NAME]);
+        $repository->setProject($project);
+        if (! $notification_manager ) {
+            $notification_manager = $this->getPostReceiveMailManager();
+        }
+        $notified_mails = $notification_manager->getNotificationMailsByRepositoryId($repository_id);
+        $repository->setNotifiedMails($notified_mails);
+        $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
+        $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
+        return $repository;
+    }
+    
+    protected function fetchReposConfig($project, $repository) {
+        $repo_config  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+        $repo_config .= $this->fetchMailHookConfig($project, $repository);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        return $repo_config . PHP_EOL;
+    }
+    
     /**
      * Returns post-receive-email hook config in gitolite format
      *
@@ -307,91 +323,21 @@ class Git_GitoliteDriver {
     }
 
     /**
-     * Convert given ugroup id to a format managed by Git_GitoliteMembershipPgmTest
+     * Fetch the gitolite readable conf for permissions on a repository
      *
-     * @param String $ug UGroupId
+     * @return string
      */
-    protected function ugroupId2GitoliteFormat(&$ug, $key, $project) {
-        if ($ug > 100) {
-            $ug = '@ug_'. $ug;
-        } else {
-            switch ($ug) {
-                case $GLOBALS['UGROUP_REGISTERED']:
-                    $ug = '@site_active';
-                    break;
-                case $GLOBALS['UGROUP_PROJECT_MEMBERS'];
-                    $ug = '@'.$project->getUnixName().'_project_members';
-                    break;
-                case $GLOBALS['UGROUP_PROJECT_ADMIN']:
-                    $ug = '@'.$project->getUnixName().'_project_admin';
-                    break;
-                default:
-                    $ug = null;
-                    break;
-            }
+    public function fetchConfigPermissions($project, $repository, $permission_type) {
+        if (!isset(self::$permissions_types[$permission_type])) {
+            return '';
         }
-        return false;
-    }
-
-    /**
-     * Save on filesystem all permission configuration for a project
-     *
-     * @param Project $project
-     */
-    public function dumpProjectRepoConf($project) {
-        $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
-        if ($dar && !$dar->isError()) {
-            // Get perms
-            $perms    = '';
-            $pm       = $this->getPermissionsManager();
-            $notifMgr = $this->getPostReceiveMailManager();
-            foreach ($dar as $row) {
-                $repository = new GitRepository();
-                $repository->setId($row[GitDao::REPOSITORY_ID]);
-                $repository->setName($row[GitDao::REPOSITORY_NAME]);
-                $repository->setProject($project);
-                $repository->setNotifiedMails($notifMgr->getNotificationMailsByRepositoryId($row[GitDao::REPOSITORY_ID]));
-                $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
-                $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
-
-                // Name of the repo
-                $perms .= 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
-                
-                // Hook config
-                $perms .= $this->fetchMailHookConfig($project, $repository);
-
-                // Perms
-                $readers   = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_READ);
-                $writers   = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_WRITE);
-                $rewinders = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_WPLUS);
-                $perms    .= $this->fetchPermissions($project, $readers, $writers, $rewinders);
-
-                $perms .= PHP_EOL;
-            }
-
-            // Save into file
-            $confFile = $this->getProjectPermissionConfFile($project);
-            $written  = file_put_contents($confFile, $perms);
-            if ($written && strlen($perms) == $written) {
-                if ($this->gitAdd($confFile)) {
-                    if ($this->updateMainConfIncludes($project)) {
-                        return $this->gitCommit('Update: '.$project->getUnixName());
-                    }
-                }
-            }
+        
+        $ugroup_literalizer = new UGroupLiteralizer();
+        $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
+        if (count($repository_groups) == 0) {
+            return '';
         }
-    }
-
-    protected function getAuthorizedUgroupsId($id, $perm) {
-        $ug  = array();
-        $pm  = $this->getPermissionsManager();
-        $dar = $pm->getAuthorizedUgroups($id, $perm);
-        if ($dar && !$dar->isError()) {
-            foreach ($dar as $row) {
-                $ug[] = $row['ugroup_id'];
-            }
-        }
-        return $ug;
+        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups) . PHP_EOL; 
     }
     
     protected function getProjectPermissionConfFile($project) {
@@ -402,13 +348,17 @@ class Git_GitoliteDriver {
         return $prjConfDir.'/'.$project->getUnixName().'.conf';
     }
     
-    /**
-     * Wrapper for PermissionsManager
-     *
-     * @return PermissionsManager
-     */
-    protected function getPermissionsManager() {
-        return PermissionsManager::instance();
+    protected function writeGitConfig($config_file, $config_datas) {
+        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
+            return false;
+        }
+        return $this->gitAdd($config_file);
+    }
+    
+    protected function commitConfigFor($project) {
+        if ($this->updateMainConfIncludes($project)) {
+            return $this->gitCommit('Update: '.$project->getUnixName());
+        }
     }
 
     /**

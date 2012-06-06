@@ -13,6 +13,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
 "file:/usr/local/docbook-dtd/docbookx.dtd"
 [
+
 <!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
 %ParametersDefault;
 
@@ -37,6 +38,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
 <!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
 <!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
+<!ENTITY Chapterlegalnotice SYSTEM "LegalNotice.xml">
 
 <!-- Entity definition and inclusion for default and custom parameters
 (e.g. site name, server names, company name,etc.)
@@ -71,4 +73,5 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterProjectWebSite;
   &ChapterOtherServices;
   &ChapterTracker;
+  &Chapterlegalnotice;
 </book>

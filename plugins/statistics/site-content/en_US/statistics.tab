@@ -51,5 +51,31 @@ plugin_statistics	scm_cvs_read_user	Total number of users with CVS read access
 plugin_statistics	scm_cvs_total_commit	Total number of CVS commits
 plugin_statistics	scm_cvs_commit_project	Total number of projects with CVS commits
 plugin_statistics	scm_cvs_commit_user	Total number of users with CVS commits
-plugin_statistics	scm_repo_evolution	Number of repositories containing commits
 plugin_statistics	scm_repo_total	Total number of repositories containing commits
+plugin_statistics	scm_git_total_pushes	Total number of git pushes
+plugin_statistics	scm_git_total_commits	Total number of git commits
+plugin_statistics	scm_git_users	Total number of users
+plugin_statistics	scm_git_repositories	Total number of repositorires
+plugin_statistics	scm_repo_evolution	Number of repositories containing commits
+
+plugin_statistics	quota_title	Project quota
+plugin_statistics	quota_description	Custom quota for each project
+plugin_statistics	search_projects	Filter projects
+plugin_statistics	no_projects	All projects have the default quota ($1 GB).
+plugin_statistics	quota	Quota
+plugin_statistics	max_quota	Maximum quota is $1 GB
+plugin_statistics	requester	Requester
+plugin_statistics	motivation	Motivation
+plugin_statistics	date	Date
+plugin_statistics	set_quota	Set custom quota for a project
+plugin_statistics	invalid_action	Invalid Action
+plugin_statistics	invalid_project	Invalid project
+plugin_statistics	invalid_quota	Quota must be between 1 and $1 Gb
+plugin_statistics	invalid_motivation	You have exceeded  the maximal size of the Motivation
+plugin_statistics	nothing_to_delete	Nothing to delete
+plugin_statistics	delete_error	An error occured when deleting entries
+plugin_statistics	add_error	Anerror occured when adding the entry
+plugin_statistics	no_project	Project not found
+plugin_statistics	quota_added	Quota for project "$1" is now $2 GB
+plugin_statistics	quota_deleted	Quota deleted for $1
+plugin_statistics	no_search_result	No result correspond to the search

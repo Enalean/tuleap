@@ -58,16 +58,16 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
 class UserTest extends UnitTestCase {
 
     function testStatus() {
-        $u1 =& new UserTestVersion($this);
+        $u1 = new UserTestVersion($this);
         $u1->setReturnValue('getStatus', 'A');
-        $u2 =& new UserTestVersion($this);
+        $u2 = new UserTestVersion($this);
         $u2->setReturnValue('getStatus', 'S');
-        $u3 =& new UserTestVersion($this);
+        $u3 = new UserTestVersion($this);
         $u3->setReturnValue('getStatus', 'D');
-        $u4 =& new UserTestVersion($this);
+        $u4 = new UserTestVersion($this);
         $u4->setReturnValue('isAnonymous', false);
         $u4->setReturnValue('getStatus', 'R');
-        $u4 =& new UserTestVersion($this);
+        $u4 = new UserTestVersion($this);
         $u4->setReturnValue('isAnonymous', true);
         $u4->setReturnValue('getStatus', 'R');
         
@@ -93,13 +93,13 @@ class UserTest extends UnitTestCase {
     }
 
     function testUnixStatus() {
-        $u1 =& new UserTestVersion($this);
+        $u1 = new UserTestVersion($this);
         $u1->setReturnValue('getUnixStatus', 'A');
-        $u2 =& new UserTestVersion($this);
+        $u2 = new UserTestVersion($this);
         $u2->setReturnValue('getUnixStatus', 'S');
-        $u3 =& new UserTestVersion($this);
+        $u3 = new UserTestVersion($this);
         $u3->setReturnValue('getUnixStatus', 'D');
-        $u4 =& new UserTestVersion($this);
+        $u4 = new UserTestVersion($this);
         $u4->setReturnValue('getUnixStatus', 'N');
         
         $this->assertTrue($u1->hasActiveUnixAccount());
@@ -124,10 +124,10 @@ class UserTest extends UnitTestCase {
     }
     
     function testPreferences() {
-        $dao =& new MockUserPreferencesDao($this);
-        $dar =& new MockDataAccessResult($this);
+        $dao = new MockUserPreferencesDao($this);
+        $dar = new MockDataAccessResult($this);
         
-        $empty_dar =& new MockDataAccessResult($this);
+        $empty_dar = new MockDataAccessResult($this);
         $empty_dar->setReturnValue('getRow', false);
         $dar->setReturnValueAt(0, 'getRow', array('preference_value' => '123'));
         $dar->setReturnValueAt(1, 'getRow', false);
@@ -140,7 +140,7 @@ class UserTest extends UnitTestCase {
         $dao->setReturnValue('delete', true, array(666, 'existing_preference'));
         $dao->expectOnce('delete');
         
-        $user =& new UserTestVersion($this);
+        $user = new UserTestVersion($this);
         $user->setReturnReference('getPreferencesDao', $dao);
         $user->setReturnValue('getId', 666);
         
@@ -154,11 +154,11 @@ class UserTest extends UnitTestCase {
     }
     
     function testNone() {
-        $user_none =& new UserTestVersion($this);
+        $user_none = new UserTestVersion($this);
         $user_none->setReturnValue('getId', 100);
         $this->assertTrue($user_none->isNone());
         
-        $user =& new UserTestVersion($this);
+        $user = new UserTestVersion($this);
         $user->setReturnValue('getId', 666);
         $this->assertFalse($user->isNone());
     }

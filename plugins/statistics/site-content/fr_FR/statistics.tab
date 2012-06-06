@@ -51,5 +51,31 @@ plugin_statistics	scm_cvs_read_user	Nombre total d'utilisateurs avec des accès 
 plugin_statistics	scm_cvs_total_commit	Nombre total des commits CVS
 plugin_statistics	scm_cvs_commit_project	Nombre total de projets avec des commits CVS
 plugin_statistics	scm_cvs_commit_user	Nombre total d'utilisateurs avec des commits CVS
-plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un commit
 plugin_statistics	scm_repo_total	Nombre total des dépôts contenant au moins un commit
+plugin_statistics	scm_git_total_pushes	Nombre total des push git
+plugin_statistics	scm_git_total_commits	Nombre total des commits git
+plugin_statistics	scm_git_users	Nombre total des utilisateurs git
+plugin_statistics	scm_git_repositories	Nombre total des dépôts git
+plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un commit
+
+plugin_statistics	quota_title	Quota par projet
+plugin_statistics	quota_description	Quota personnalisé par projet
+plugin_statistics	search_projects	Filtrer les projets
+plugin_statistics	no_projects	Tous les projets ont le quota par défaut ($1 Go).
+plugin_statistics	quota	Quota
+plugin_statistics	max_quota	Le quota maximum est de $1 Go
+plugin_statistics	requester	Demandeur
+plugin_statistics	motivation	Motivation
+plugin_statistics	date	Date
+plugin_statistics	set_quota	Définir un quota personnalisé pour un projet
+plugin_statistics	invalid_action	Action invalide
+plugin_statistics	invalid_project	Projet invalide
+plugin_statistics	invalid_quota	Le quota doit être compris entre 1 et $1 Go
+plugin_statistics	invalid_motivation	Vous avez dépassez la taille maximale de la motivation
+plugin_statistics	nothing_to_delete	Rien à supprimer
+plugin_statistics	delete_error	Une erreur est survenue lors de la suppression
+plugin_statistics	add_error	Une erreur est survenue lors de l'ajout
+plugin_statistics	no_project	Projet non trouvé
+plugin_statistics	quota_added	Le quota pour le projet "$1" est maintenant $2 Go
+plugin_statistics	quota_deleted	Quota supprimé pour $1
+plugin_statistics	no_search_result	Aucun résultat ne correspond à la recherche

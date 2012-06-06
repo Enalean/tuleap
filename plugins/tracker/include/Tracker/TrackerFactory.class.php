@@ -22,6 +22,7 @@ require_once('Tracker.class.php');
 require_once('dao/TrackerDao.class.php');
 require_once('CannedResponse/Tracker_CannedResponseFactory.class.php');
 require_once('Semantic/Tracker_SemanticFactory.class.php');
+require_once dirname(__FILE__).'/../constants.php';
 
 class TrackerFactory {
 
@@ -50,22 +51,35 @@ class TrackerFactory {
         }
         return self::$_instance;
     }
+    
+    /**
+     * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
+     * 
+     * @param TrackerFactory $factory 
+     */
+    public static function setInstance(TrackerFactory $factory) {
+        self::$_instance = $factory;
+    }
+
+    /**
+     * Allows clear factory instance for test. DO NOT USE IT IN PRODUCTION!
+     */
+    public static function clearInstance() {
+        self::$_instance = null;
+    }
 
     /**
      * @param int $id the id of the tracker to retrieve
      * @return Tracker identified by id (null if not found)
      */
-    public function getTrackerById($id) {
-        if (!isset($this->trackers[$id])) {
-            $this->trackers[$id] = null;
-            $row = $this->getDao()
-                    ->searchById($id)
-                    ->getRow();
-            if ($row) {
-                $this->trackers[$id] = $this->getInstanceFromRow($row);
+    public function getTrackerById($tracker_id) {
+        if (!isset($this->trackers[$tracker_id])) {
+            $this->trackers[$tracker_id] = null;
+            if ($row = $this->getDao()->searchById($tracker_id)->getRow()) {
+                $this->getCachedInstanceFromRow($row);
             }
         }
-        return $this->trackers[$id];
+        return $this->trackers[$tracker_id];
     }
 
     /**
@@ -76,11 +90,22 @@ class TrackerFactory {
     public function getTrackersByGroupId($group_id) {
         $trackers = array();
         foreach($this->getDao()->searchByGroupId($group_id) as $row) {
-            if (!isset($this->trackers[$row['id']])) {
-                $this->trackers[$row['id']] = $this->getInstanceFromRow($row);
-            }
-            if ($this->trackers[$row['id']]) {
-                $trackers[$row['id']] = $this->trackers[$row['id']];
+            $tracker_id = $row['id'];
+            $trackers[$tracker_id] = $this->getCachedInstanceFromRow($row);
+        }
+        return $trackers;
+    }
+    
+    /**
+     * @return array of Tracker
+     */
+    public function getTrackersByGroupIdUserCanView($group_id, User $user) {
+        $trackers = array();
+        foreach($this->getDao()->searchByGroupId($group_id) as $row) {
+            $tracker_id = $row['id'];
+            $tracker    = $this->getCachedInstanceFromRow($row);
+            if($tracker->userCanView($user)) {
+                $trackers[$tracker_id] = $tracker; 
             }
         }
         return $trackers;
@@ -100,7 +125,8 @@ class TrackerFactory {
     }
 
     protected $dao;
-    /**
+
+   /**
      * @return TrackerDao
      */
     protected function getDao() {
@@ -109,6 +135,19 @@ class TrackerFactory {
         }
         return $this->dao;
     }
+    
+    /**
+     * @param array $row Raw data (typically from the db) of the tracker
+     *
+     * @return Tracker
+     */
+    private function getCachedInstanceFromRow($row) {
+        $tracker_id = $row['id'];
+        if (!isset($this->trackers[$tracker_id])) {
+            $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);
+        }
+        return $this->trackers[$tracker_id];
+    }
 
     /**
      * @param array the row identifing a tracker
@@ -116,18 +155,18 @@ class TrackerFactory {
      */
     public function getInstanceFromRow($row) {
         return new Tracker(
-                $row['id'],
-                $row['group_id'],
-                $row['name'],
-                $row['description'],
-                $row['item_name'],
-                $row['allow_copy'],
-                $row['submit_instructions'],
-                $row['browse_instructions'],
-                $row['status'],
-                $row['deletion_date'],
-                $row['instantiate_for_new_projects'],
-                $row['stop_notification']
+                    $row['id'],
+                    $row['group_id'],
+                    $row['name'],
+                    $row['description'],
+                    $row['item_name'],
+                    $row['allow_copy'],
+                    $row['submit_instructions'],
+                    $row['browse_instructions'],
+                    $row['status'],
+                    $row['deletion_date'],
+                    $row['instantiate_for_new_projects'],
+                    $row['stop_notification']
         );
     }
 
@@ -369,7 +408,7 @@ class TrackerFactory {
      * @param string  $itemname            the itemname of the new tracker
      * @param Array   $ugroup_mapping the ugroup mapping
      *
-     * @return int id on success, false on failure.
+     * @return mixed array(Tracker object, field_mapping array) or false on failure.
      */
     function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false) {
         
@@ -432,7 +471,7 @@ class TrackerFactory {
                 
                 $this->postCreateActions($tracker);
 
-                return $tracker;
+                return array('tracker' => $tracker, 'field_mapping' => $field_mapping);
             }
         }
         return false;
@@ -499,48 +538,64 @@ class TrackerFactory {
 
     /**
      * Duplicate all trackers from a project to another one
+     *
+     * Duplicate among others:
+     * - the trackers definition
+     * - the hierarchy
+     * - the shared fields
+     * - etc.
+     *
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping = array();
-        $report_mapping  = array();
+        $field_mapping   = array();
+        
         foreach($this->getTrackersByGroupId($from_project_id) as $t) {
             if ($t->mustBeInstantiatedForNewProjects()) {
-                $report_mapping_for_this_tracker = array();
-                $new = $this->create($to_project_id,
-                        $from_project_id,
-                        $t->getId(),
-                        $t->getName(),
-                        $t->getDescription(),
-                        $t->getItemName(),
-                        $ugroup_mapping);
-                if ($new) {
-                    $tracker_mapping[$t->getId()] = $new->getId();
-                } else {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($t->getName())));
-                }
+                list($tracker_mapping, $field_mapping) = $this->duplicateTracker($tracker_mapping, $field_mapping, $t, $from_project_id, $to_project_id, $ugroup_mapping);
             }
         }
+       
+        if ($tracker_mapping) {
+            $hierarchy_factory = $this->getHierarchyFactory();
+            $hierarchy_factory->duplicate($tracker_mapping);
+        }
         
-        
-        /**
-         * The trackers from a project have been duplicated in another project
-         *
-         * Parameters:
-         * 'reportMapping'  => The mapping between source and target project trackers reports
-         * 'trackerMapping' => The mapping between source and target project trackers
-         * 'ugroupsMapping' => The mapping between source and target project ugroups
-         * 'group_id        => The id of the target project
-         *
-         * No expected results
-         */
-        /*EventManager::instance()->processEvent('trackers_duplicated', array(
-                'reportMapping'  => $report_mapping,
-                'trackerMapping' => $tracker_mapping,
-                'ugroupsMapping' => $ugroup_mapping,
-                'group_id'       => $to_project_id
-        ));*/
-    }
+        $shared_factory = $this->getFormElementFactory();
+        $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
+        EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
+            'tracker_mapping' => $tracker_mapping,
+            'group_id'        => $to_project_id
+        ));
+    }
+    
+    private function duplicateTracker($tracker_mapping, $field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
+        $tracker_and_field_mapping = $this->create($to_project_id,
+                $from_project_id,
+                $tracker->getId(),
+                $tracker->getName(),
+                $tracker->getDescription(),
+                $tracker->getItemName(),
+                $ugroup_mapping);
+        
+        if ($tracker_and_field_mapping) {
+            $tracker_mapping[$tracker->getId()] = $tracker_and_field_mapping['tracker']->getId();
+            $field_mapping = array_merge($field_mapping, $tracker_and_field_mapping['field_mapping']);
+        } else {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($tracker->getName())));
+        }
+        
+        return array($tracker_mapping, $field_mapping);
+    }
+    
+    /**
+     * @return Tracker_HierarchyFactory 
+     */
+    public function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this);
+    }
+    
     /**
      * First, creates a new Tracker Object by importing its structure from an XML file,
      * then, imports it into the Database, before verifying the consistency

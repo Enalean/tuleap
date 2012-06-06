@@ -287,7 +287,7 @@ function export_plugin_logs($log ,$project) {
         
         if (isset ($arr['type'])) {
             $col_list = array('time','type','user','email','title','local_time');
-            $documents_title = array ('time'         => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','documents'),
+            $plugin_title = array ('time'         => $log['title'],
                 'type'       => '',
                 'user'       => '',
                 'email'      => '',
@@ -297,11 +297,11 @@ function export_plugin_logs($log ,$project) {
                 'type'       => $GLOBALS['Language']->getText('project_admin_utils','action'),
                 'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
                 'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-                'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','document'),
+                'title'      => $log['field'],
                 'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
         } else {
             $col_list = array('time','user','email','title','local_time');
-            $documents_title = array ('time'         => $GLOBALS['Language']->getText('project_stats_source_code_access_utils','documents'),
+            $plugin_title = array ('time'         => $log['title'],
                 'user'       => '',
                 'email'      => '',
                 'title'      => '',
@@ -309,11 +309,11 @@ function export_plugin_logs($log ,$project) {
             $lbl_list = array( 'time'       => $GLOBALS['Language']->getText('project_export_access_logs_export','time'),
                 'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export','user'),
                 'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export','email'),
-                'title'      => $GLOBALS['Language']->getText('project_export_access_logs_export','document'),
+                'title'      => $log['field'],
                 'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export','local_time'));
         }
         // Build csv for plugins logs 
-        echo build_csv_header($col_list, $documents_title).$eol;
+        echo build_csv_header($col_list, $plugin_title).$eol;
         echo build_csv_header($col_list, $lbl_list).$eol;
         do {
             prepare_access_logs_record($project->getGroupId(),$arr);
