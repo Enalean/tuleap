@@ -54,7 +54,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
     
     protected function fetchTable() {
-        Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
+        Planning_ArtifactTreeNodeVisitor::build($this->planning, 'planning-draggable-toplan')->visit($this->tree_of_artifacts);
         return $this->renderer->render('backlog', $this, true);
     }
 
