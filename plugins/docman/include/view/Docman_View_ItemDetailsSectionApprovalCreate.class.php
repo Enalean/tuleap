@@ -218,10 +218,10 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '<input size="2" name="occurence" value="'.$occurence.'" /> ';
         $html .= html_build_select_box_from_arrays(array(1, 7), array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_days'), $GLOBALS['Language']->getText('plugin_docman', 'details_approval_weeks')), 'period', null, false);
         $html .= '</span>';
-        $js   .= 'function toggle_occurence() {
-                      Effect.toggle(\'occurence_form\', \'slide\', { duration: 0 });
-                      Effect.toggle(\'reminder\', \'slide\', { duration: 0 });
-                  }';
+        $js   = 'function toggle_occurence() {
+                     Effect.toggle(\'occurence_form\', \'slide\', { duration: 0 });
+                     Effect.toggle(\'reminder\', \'slide\', { duration: 0 });
+                 }';
         if (!$occurence) {
             $js .= 'Element.toggle(\'occurence_form\', \'slide\', { duration: 0 });';
         }
