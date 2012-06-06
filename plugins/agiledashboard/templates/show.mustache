@@ -6,7 +6,7 @@
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}
                 <li>
-                    <a href="#{{identifier}}" data-toggle="tab">{{title}}</a>
+                    <a href="#{{getIdentifier}}" data-toggle="tab">{{getTitle}}</a>
                 </li>
             {{/additionalPanes}}
         {{/hasSelectedArtifact}}
@@ -35,8 +35,8 @@
         </table>
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}
-                <div id="{{identifier}}" class="tab-pane">
-                    {{{content}}}
+                <div id="{{getIdentifier}}" class="tab-pane">
+                    {{{getContent}}}
                 </div>
             {{/additionalPanes}}
         {{/hasSelectedArtifact}}

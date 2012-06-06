@@ -18,16 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
-
 /**
- * Get the additional panes to display next to a milestone in the agiledashboard
- *
- * Parameters:
- * 'milestone' => The current Planning_Milestone
- *
- * Expected results
- * 'panes'     => Input/Output paameter, array of type AgileDashboard_Pane
+ * Base interface to display a content pane in the agiledashboard next to a
+ * milestone
  */
-define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
+interface AgileDashboard_Pane {
+
+    /**
+     * @return string eg: 'cardwall'
+     */
+    public function getIdentifier();
+
+    /**
+     * @return string eg: 'Card Wall'
+     */
+    public function getTitle();
+
+    /**
+     * @return string eg: '<table>...</table>'
+     */
+    public function getContent();
+}
 ?>
