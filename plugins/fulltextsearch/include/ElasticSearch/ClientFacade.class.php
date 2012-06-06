@@ -89,7 +89,13 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
         $this->client->setType('');
         $result = $this->client->request(array('_status'), 'GET', $payload = false, $verbose = true);
         $this->client->setType($this->type);
-        return $result;
+        
+        $status = array(
+            'size'    => isset($result['indices']['tuleap']['index']['size']) ? $result['indices']['tuleap']['index']['size'] : '0',
+            'nb_docs' => isset($result['indices']['tuleap']['docs']['num_docs']) ? $result['indices']['tuleap']['docs']['num_docs'] : 0,
+        );
+
+        return $status;
     }
 }
 ?>

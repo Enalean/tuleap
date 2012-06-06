@@ -30,11 +30,11 @@ class FullTextSearch_Presenter_Index {
     }
     
     public function index_size() {
-        return $this->index_status['indices']['tuleap']['index']['size'];
+        return $this->index_status['size'];
     }
     
     public function nb_docs() {
-        return $this->index_status['indices']['tuleap']['docs']['num_docs'];
+        return $this->index_status['nb_docs'];
     }
     
     public function terms() {
