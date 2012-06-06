@@ -18,25 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_SearchPresenter {
-    private $terms;
+require_once 'IndexPresenter.class.php';
+
+class FullTextSearch_SearchPresenter extends FullTextSearch_IndexPresenter {
     private $query_result;
-    private $index_status;
     private $project_manager;
     
-    public function __construct($terms, $query_result, $index_status, ProjectManager $project_manager) {
-        $this->terms           = $terms;
-        $this->index_status    = $index_status;
+    public function __construct($index_status, $terms, $query_result, ProjectManager $project_manager) {
+        parent::__construct($index_status, $terms);
+        
         $this->query_result    = $query_result;
         $this->project_manager = $project_manager;
-    }
-    
-    public function index_size() {
-        return $this->index_status['indices']['tuleap']['index']['size'];
-    }
-    
-    public function nb_docs() {
-        return $this->index_status['indices']['tuleap']['docs']['num_docs'];
     }
     
     public function has_results() {
@@ -46,11 +38,7 @@ class FullTextSearch_SearchPresenter {
     public function no_results() {
         return !$this->has_results();
     }
-    
-    public function terms() {
-        return $this->terms;
-    }
-    
+        
     public function result_count() {
         if (isset($this->query_result['hits']['total'])) {
             return $this->query_result['hits']['total'];

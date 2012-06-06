@@ -125,7 +125,13 @@ class fulltextsearchPlugin extends Plugin {
         $request         = HTTPRequest::instance();
         $project_manager = ProjectManager::instance();
         $controller      = new FullTextSearch_SearchController($request, $this->getSearchClient(), $project_manager);
-        $controller->search();
+        switch ($request->get('func')) {
+            case 'search':
+                $controller->search();
+                break;
+            default:
+                $controller->index();
+        }
     }
 }
 
