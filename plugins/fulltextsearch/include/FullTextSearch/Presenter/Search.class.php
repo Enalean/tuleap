@@ -26,11 +26,10 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     private $query_result;
     private $project_manager;
     
-    public function __construct($index_status, $terms, $query_result, ProjectManager $project_manager) {
+    public function __construct($index_status, $terms, $query_result) {
         parent::__construct($index_status, $terms);
         
         $this->query_result    = $query_result;
-        $this->project_manager = $project_manager;
     }
     
     public function has_results() {
@@ -42,34 +41,15 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     }
         
     public function result_count() {
-        if (isset($this->query_result['hits']['total'])) {
-            return $this->query_result['hits']['total'];
-        }
-        return 0;
+        return $this->query_result->nb_documents_found;
     }
     
     public function search_results() {
-        $results = array();
-        if (isset($this->query_result['hits']['hits'])) {
-            foreach ($this->query_result['hits']['hits'] as $hit) {
-                $project = $this->project_manager->getProject($hit['fields']['group_id']);
-                $results[] = array(
-                    'item_title'   => $hit['fields']['title'],
-                    'url'          => '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details',
-                    'permissions'  => implode(', ', $hit['fields']['permissions']),
-                    'project_name' => $project->getPublicName(),
-                    'highlight'    => isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : ''
-                );
-            }
-        }
-        return $results;
+        return $this->query_result->results;
     }
     
     public function elapsed_time() {
-        if (isset($this->query_result['time'])) {
-            return $this->query_result['time'];
-        }
-        return '';
+        return $this->query_result->query_time;
     }
 
 }

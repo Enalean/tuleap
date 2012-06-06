@@ -103,8 +103,9 @@ class fulltextsearchPlugin extends Plugin {
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
 
         require_once 'ElasticSearch/ClientFactory.class.php';
-        $factory = new ElasticSearch_ClientFactory();
-        return $factory->build($client_path, $server_host, $server_port);
+        $factory         = new ElasticSearch_ClientFactory();
+        $project_manager = ProjectManager::instance();
+        return $factory->build($client_path, $server_host, $server_port, $project_manager);
     }
 
     public function getPluginInfo() {
@@ -123,8 +124,7 @@ class fulltextsearchPlugin extends Plugin {
 
         include_once 'FullTextSearch/Controller/Search.class.php';
         $request         = HTTPRequest::instance();
-        $project_manager = ProjectManager::instance();
-        $controller      = new FullTextSearch_Controller_Search($request, $this->getSearchClient(), $project_manager);
+        $controller      = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
         switch ($request->get('func')) {
             case 'search':
                 $controller->search();

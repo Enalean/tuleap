@@ -28,18 +28,10 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
      */
     private $client;
     
-    /**
-     * @var ProjectManager 
-     */
-    private $project_manager;
-    
     public function __construct(Codendi_Request            $request,
-                                ElasticSearch_ClientFacade $client,
-                                ProjectManager             $project_manager) {
+                                ElasticSearch_ClientFacade $client) {
         parent::__construct('fulltextsearch', $request);
-        
         $this->client          = $client;
-        $this->project_manager = $project_manager;
     }
     
     public function index() {
@@ -51,19 +43,11 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     public function search() {
         $terms         = $this->request->getValidated('terms', 'string', '');
         $index_status  = $this->client->getStatus();
-        $search_result = $this->getSearchResults($terms);
-        $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result, $this->project_manager);
+        $search_result = $this->client->searchDocuments($terms);
+        $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result);
         $this->renderWithHeaderAndFooter($presenter);
     }
-    
-    private function getSearchResults($terms) {
-        $search_result = array();
-        if ($terms) {
-            $search_result = $this->client->searchDocuments($terms);
-        }
-        return $search_result;
-    }
-    
+
     private function renderWithHeaderAndFooter($presenter) {
         $GLOBALS['HTML']->header(array('title' => 'Full text search', 'selected_top_tab' => 'admin'));
         $this->render($presenter->template, $presenter);

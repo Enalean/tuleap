@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__) .'/../FullTextSearch/ISearchAndIndexDocuments.class.php';
+require_once 'SearchResultCollection.class.php';
 
 /**
  * Base class to interact with ElasticSearch
@@ -35,9 +36,15 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
      */
     private $type;
     
-    public function __construct(ElasticSearchClient $client, $type) {
-        $this->client = $client;
-        $this->type   = $type;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+    
+    public function __construct(ElasticSearchClient $client, $type, ProjectManager $project_manager) {
+        $this->client          = $client;
+        $this->type            = $type;
+        $this->project_manager = $project_manager;
     }
     
     /**
@@ -76,7 +83,7 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
      */
     public function searchDocuments($terms) {
         $query = $this->getSearchDocumentsQuery($terms);
-        return $this->client->search($query);
+        return new ElasticSearch_SearchResultCollection($this->client->search($query), $this->project_manager);
     }
     
     private function getSearchDocumentsQuery($terms) {

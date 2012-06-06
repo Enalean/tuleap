@@ -32,7 +32,7 @@ class ElasticSearch_ClientFactory {
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function build($path_to_elasticsearch_client, $server_host, $server_port) {
+    public function build($path_to_elasticsearch_client, $server_host, $server_port, ProjectManager $project_manager) {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
@@ -50,7 +50,7 @@ class ElasticSearch_ClientFactory {
         $type = 'docman';
         
         $client = new ElasticSearchClient($transport, 'tuleap', $type);
-        return new ElasticSearch_ClientFacade($client, $type);
+        return new ElasticSearch_ClientFacade($client, $type, $project_manager);
     }
 }
 ?>
