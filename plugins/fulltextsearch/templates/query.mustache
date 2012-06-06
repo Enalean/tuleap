@@ -15,7 +15,6 @@ site admin usage for the time being.</p>
 </form>
 
 {{#has_results}}
-
 <p>{{result_count}} document(s) match:
     <ol>
     {{#search_results}}
@@ -31,5 +30,8 @@ site admin usage for the time being.</p>
 </p>
 
 <p>Query took {{elapsed_time}}s</p>
-
 {{/has_results}}
+
+{{#no_results}}
+No results found
+{{/no_results}}

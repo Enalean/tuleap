@@ -43,6 +43,10 @@ class FullTextSearch_SearchPresenter {
         return ($this->result_count() > 0);
     }
     
+    public function no_results() {
+        return !$this->has_results();
+    }
+    
     public function terms() {
         return $this->terms;
     }
