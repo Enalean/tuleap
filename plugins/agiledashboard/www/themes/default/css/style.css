@@ -45,8 +45,14 @@
     padding-right: 0.5em;
     margin-bottom: 1em;
     border:1px solid #B2B39D;
-    background: #ffe;
+    background: #f8f8f8;
     min-width: 200px;
+    color: gray;
+}
+
+.planning-draggable > .card {
+    background: #ffe;
+    font-style: normal;
 }
 
 .backlog-actions, 
