@@ -24,12 +24,25 @@ Start the elasticsearch server:
 
 Create the index:
 
-    $ curl -X PUT http://localhost:9200/tuleap/
+    $ curl -X PUT "localhost:9200/tuleap" -d '{
+      "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
+      }'
 
 Define the attachment mapping:
 
-    $ curl -X PUT "localhost:9200/tuleap/docman/_mapping" -d \
-        '{"docman": {"properties": {"file": {"type": "attachment"}}}}'
+    $ curl -X PUT "localhost:9200/tuleap/docman/_mapping" -d '{
+      "docman" : {
+        "properties" : {
+          "file" : {
+            "type" : "attachment",
+            "fields" : {
+              "title" : { "store" : "yes" },
+              "file" : { "term_vector":"with_positions_offsets", "store":"yes" }
+            }
+          }
+        }
+      }
+     }'
 
 Check it worked:
 
@@ -52,3 +65,10 @@ References
 - http://www.elasticsearch.org/
 - https://github.com/elasticsearch/elasticsearch-mapper-attachments
 - http://www.elasticsearch.org/tutorials/2011/07/18/attachment-type-in-action.html
+
+Clean-up
+--------
+
+Delete the index to start over:
+
+    $ curl -X DELETE "localhost:9200/tuleap"
