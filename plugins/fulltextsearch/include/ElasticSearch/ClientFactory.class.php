@@ -48,7 +48,7 @@ class ElasticSearch_ClientFactory {
      * @return ElasticSearch_ClientFacade
      */
     public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, ProjectManager $project_manager) {
-        $type = 'docman';
+        $type   = 'docman';
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $type);
         require_once 'SearchClientFacade.class.php';
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
@@ -66,10 +66,7 @@ class ElasticSearch_ClientFactory {
 
         require_once $client_path;
 
-        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);
-
-        $type = 'docman';
-        
+        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);        
         return new ElasticSearchClient($transport, 'tuleap', $type);
     }
 }

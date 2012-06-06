@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Presenter/Search.class.php';
 require_once 'common/mvc2/Controller.class.php';
+require_once dirname(__FILE__).'/../Presenter/Search.class.php';
+require_once dirname(__FILE__).'/../ISearchDocuments.class.php';
 
 class FullTextSearch_Controller_Search extends MVC2_Controller {
     
@@ -28,15 +29,15 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
      */
     private $client;
     
-    public function __construct(Codendi_Request            $request,
-                                ElasticSearch_ClientFacade $client) {
+    public function __construct(Codendi_Request                 $request,
+                                FullTextSearch_ISearchDocuments $client) {
         parent::__construct('fulltextsearch', $request);
-        $this->client               = $client;
+        $this->client = $client;
     }
     
     public function index() {
-        $index_status  = $this->client->getStatus();
-        $presenter = new FullTextSearch_Presenter_Index($index_status);
+        $index_status = $this->client->getStatus();
+        $presenter    = new FullTextSearch_Presenter_Index($index_status);
         $this->renderWithHeaderAndFooter($presenter);
     }
     

@@ -44,6 +44,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     
     /**
      * @see ISearchDocuments::searchDocuments
+     * 
+     * @return ElasticSearch_SearchResultCollection
      */
     public function searchDocuments($terms) {
         $query  = $this->getSearchDocumentsQuery($terms);
@@ -76,6 +78,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     
     /**
      * @see ISearchDocuments::getStatus
+     * 
+     * @return array
      */
     public function getStatus() {
         $this->client->setType('');
