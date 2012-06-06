@@ -266,7 +266,7 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
 
         $this->assertFalse(empty($children));
         foreach($children as $tree_node) {
-//                $this->assertIsA($tree_node->getObject(), Planning_Item);
+            $this->assertIsA($tree_node->getObject(), 'Planning_Item');
         }
     }
 }

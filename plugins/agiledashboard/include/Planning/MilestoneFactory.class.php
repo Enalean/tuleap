@@ -20,6 +20,7 @@
 
 require_once 'ArtifactMilestone.class.php';
 require_once 'NoMilestone.class.php';
+require_once 'Item.class.php';
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -120,6 +121,7 @@ class Planning_MilestoneFactory {
                                    'allowedChildrenTypes' => array($backlog_tracker),
                                    'artifact'             => $milestone_artifact));
         $node->setId($id);
+        // TODO: $node->setObject(new Planning_Item($milestone_artifact)) ?
         $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, array());
         
         return $node;
@@ -148,6 +150,7 @@ class Planning_MilestoneFactory {
             $node = new TreeNode(array('id'       => $linked_artifact->getId(),
                                        'artifact' => $linked_artifact));
             $node->setId($linked_artifact->getId());
+            $node->setObject(new Planning_Item($linked_artifact));
             $this->addChildrenPlannedArtifacts($user, $linked_artifact, $node, $parents);
             $parent_node->addChild($node);
         }
