@@ -43,28 +43,22 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     }
     
     public function index() {
-        $index_status  = $this->getIndexStatus();
+        $index_status  = $this->client->getStatus();
         $presenter = new FullTextSearch_Presenter_Index($index_status);
         $this->renderWithHeaderAndFooter($presenter);
     }
     
     public function search() {
         $terms         = $this->request->getValidated('terms', 'string', '');
-        $index_status  = $this->getIndexStatus();
+        $index_status  = $this->client->getStatus();
         $search_result = $this->getSearchResults($terms);
         $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result, $this->project_manager);
         $this->renderWithHeaderAndFooter($presenter);
     }
     
-    private function getIndexStatus() {
-        $this->client->setType('');
-        return $this->client->request(array('_status'), 'GET', false);
-    }
-    
     private function getSearchResults($terms) {
         $search_result = array();
         if ($terms) {
-            $this->client->setType('docman');
             $search_result = $this->client->search($this->getSearchQuery($terms));
         }
         return $search_result;

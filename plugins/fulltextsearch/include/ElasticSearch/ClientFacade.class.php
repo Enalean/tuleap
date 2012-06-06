@@ -30,20 +30,14 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
      */
     private $client;
 
-    public function __construct(ElasticSearchClient $client) {
-        $this->client = $client;
-    }
-
     /**
-     * Change what types to act against
-     * 
-     * for instance 'docman' for '/tuleap/docman'
-     * or '' for '/tuleap'
-     * 
-     * @param type $type 
+     * @var mixed
      */
-    public function setType($type) {
-        $this->client->setType($type);
+    private $type;
+    
+    public function __construct(ElasticSearchClient $client, $type) {
+        $this->client = $client;
+        $this->type   = $type;
     }
     
     /**
@@ -91,8 +85,11 @@ class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocume
     /**
      * Execute a query directly 
      */
-    public function request($path, $method, $payload) {
-        return $this->client->request($path, $method, $payload, $verbose = true);
+    public function getStatus() {
+        $this->client->setType('');
+        $result = $this->client->request(array('_status'), 'GET', $payload = false, $verbose = true);
+        $this->client->setType($this->type);
+        return $result;
     }
 }
 ?>

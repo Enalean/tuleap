@@ -35,10 +35,12 @@ interface FullTextSearch_ISearchAndIndexDocuments {
     /**
      * Flush this index/type combination
      *
-     * @return array
+     * 
      * @param mixed $id If id is supplied, delete that id for this index
      *                  if not wipe the entire index
      * @param array $options Parameters to pass to delete action
+     * 
+     * @return array
      */
     public function delete($id = false);
 
@@ -58,12 +60,19 @@ interface FullTextSearch_ISearchAndIndexDocuments {
     
     /**
      * Search for data in the index
+     * 
+     * @param array $query the query to perform on the server
+     * 
+     * @return array
      */
     public function search($query);
     
+
     /**
-     * Execute a query directly 
+     * Return status of the index
+     * 
+     * @return array 
      */
-    public function request($path, $method, $payload);
+    public function getStatus();
 }
 ?>

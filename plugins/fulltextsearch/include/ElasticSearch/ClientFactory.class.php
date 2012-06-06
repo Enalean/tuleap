@@ -47,8 +47,10 @@ class ElasticSearch_ClientFactory {
 
         $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);
 
-        $client = new ElasticSearchClient($transport, 'tuleap', 'docman');
-        return new ElasticSearch_ClientFacade($client);
+        $type = 'docman';
+        
+        $client = new ElasticSearchClient($transport, 'tuleap', $type);
+        return new ElasticSearch_ClientFacade($client, $type);
     }
 }
 ?>
