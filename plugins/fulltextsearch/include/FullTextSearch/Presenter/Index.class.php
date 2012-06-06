@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_Presenter_Index {    
+class FullTextSearch_Presenter_Index {
     public $template = 'index';
     
     private $index_status;
     private $terms;
     
-    public function __construct($index_status, $terms='') {
+    public function __construct($index_status, $terms = '') {
         $this->index_status = $index_status;
         $this->terms        = $terms;
     }

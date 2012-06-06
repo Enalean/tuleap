@@ -25,7 +25,7 @@ require_once dirname(__FILE__).'/../ISearchDocuments.class.php';
 class FullTextSearch_Controller_Search extends MVC2_Controller {
     
     /**
-     * @var ElasticSearch_ClientFacade 
+     * @var FullTextSearch_ISearchDocuments
      */
     private $client;
     

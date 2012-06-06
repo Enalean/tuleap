@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Define the structure of result a search should return
+ */
 interface FullTextSearch_SearchResultCollection extends Countable {
     /**
      * Duration of search query
@@ -27,7 +30,7 @@ interface FullTextSearch_SearchResultCollection extends Countable {
     public function getQueryTime();
     
     /**
-     * Numbver of results 
+     * Number of results
      */
     public function getResults();
 }

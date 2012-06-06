@@ -22,9 +22,9 @@ require_once 'SearchResult.class.php';
 require_once dirname(__FILE__).'/../FullTextSearch/SearchResultCollection.class.php';
 
 class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResultCollection {
-    public $nb_documents_found = 0;
-    public $query_time         = 0;
-    public $results            = array();
+    private $nb_documents_found = 0;
+    private $query_time         = 0;
+    private $results            = array();
     
     public function __construct(array $result, ProjectManager $project_manager) {
         if (isset($result['hits']['total'])) {

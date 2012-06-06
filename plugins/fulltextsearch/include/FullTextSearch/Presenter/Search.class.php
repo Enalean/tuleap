@@ -25,7 +25,7 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template = 'search';
 
     /**
-     * @var FullTextSearch_SearchResultCollection 
+     * @var FullTextSearch_SearchResultCollection
      */
     private $query_result;
     
