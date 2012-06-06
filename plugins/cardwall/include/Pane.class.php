@@ -39,7 +39,7 @@ class Cardwall_Pane implements AgileDashboard_Pane {
     }
 
     public function getContent() {
-        $tracker = $this->milestone->getArtifact()->getTracker();
+        $tracker = $this->milestone->getPlanning()->getBacklogTracker();
         $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
         if (!$field) {
             return 'Y u no configure the status semantic of ur tracker?';
