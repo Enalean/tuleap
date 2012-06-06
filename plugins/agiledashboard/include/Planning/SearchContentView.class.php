@@ -72,7 +72,6 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     public function setRenderer(TemplateRenderer $renderer) {
         $this->renderer = $renderer;
-        
     }
 }
 ?>

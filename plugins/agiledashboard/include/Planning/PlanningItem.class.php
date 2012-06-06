@@ -20,6 +20,34 @@
 
 require_once 'Planning.class.php';
 
+/**
+ * An item to be displayed in a planning.
+ * 
+ * Given a planning was configured to move stories from the product backlog to
+ * the selected release:
+ * 
+ *     Product Backlog | Release 1.0
+ *     ----------------+-------------
+ *     + Epic 2        | + Epic 1
+ *       + Story 2     |   + Story 1
+ *         + Task 2    |     + Task 1
+ * 
+ * Epics, stories and tasks all need to be displayed in the planning. They are
+ * all "planning items".
+ * 
+ * But there are some subtle differences:
+ *   - Epics are just here to provide some context to stories.
+ *   - Stories are the real plannified items.
+ *   - Tasks are just here to provide some details regarding the stories.
+ * 
+ * The Planning_Item::isPlannifiable() method allows one to know whether an
+ * item is the kind being plannified (e.g. Stories).
+ * 
+ * The Planning_Item::isContext() method allows one to know whether an item is
+ * an ancestor of the kind being plannified (e.g. Epics).
+ * 
+ * Items for which both of these methods return false are details (e.g. Tasks).
+ */
 abstract class Planning_Item {
 
     /**
@@ -36,6 +64,7 @@ abstract class Planning_Item {
     public abstract function getTitle();
     public abstract function getId();
     public abstract function isPlannifiable();
+    public abstract function isContext();
 }
 
 ?>
