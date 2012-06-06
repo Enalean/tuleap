@@ -60,7 +60,7 @@ class Widget_ProjectSvnStats_Layout {
      * @return Boolean
      */
     public function getChartHeigh() {
-        return $this->hasOnlyOneColumn() ? $chartHeigh  = 300+16*$this->nb_committer*(1/$this->legend_ratio) : $chartHeigh  = 300+(16+$this->legend_ratio)*$this->nb_committer;
+        return $this->hasOnlyOneColumn() ? 300+16*$this->nb_committer*(1/$this->legend_ratio) : 300+(16+$this->legend_ratio)*$this->nb_committer;
     }
 
     /**
@@ -70,7 +70,7 @@ class Widget_ProjectSvnStats_Layout {
      * @return Integer
      */
     private function getCustomImageMargin() {
-        return $this->hasMoreThanTwoColumns() ? $customImageMargin = 80+(16-$this->legend_ratio)*$this->nb_committer : $customImageMargin = 125+15*(1/$this->legend_ratio)*$this->nb_committer;
+        return $this->hasMoreThanTwoColumns() ? 80+(16-$this->legend_ratio)*$this->nb_committer : 125+15*(1/$this->legend_ratio)*$this->nb_committer;
     }
 
     /**
@@ -88,7 +88,7 @@ class Widget_ProjectSvnStats_Layout {
      * @return Float
      */
     public function getLegendXPosition() {
-        return $this->hasOnlyOneColumn() ? $legend_x_position = 0.1 : $legend_x_position = 0.05;
+        return $this->hasOnlyOneColumn() ? 0.1 : 0.05;
     }
 
     /**
@@ -97,8 +97,8 @@ class Widget_ProjectSvnStats_Layout {
      * @return Float
      */
     public function getLegendYPosition() {
-        $this->hasOnlyOneColumn() ? $y_position = 0.99 : $y_position = 0.645;
-        return $this->hasMoreThanTwoColumns() ? $legend_y_position = 0.6 : $legend_y_position = $y_position;
+        $this->hasOnlyOneColumn() ? $legend_y_position = 0.99 : $legend_y_position = 0.645;
+        return $this->hasMoreThanTwoColumns() ? 0.6 : $legend_y_position;
     }
 
     /**
@@ -108,7 +108,7 @@ class Widget_ProjectSvnStats_Layout {
      */
     public function getImageBottomMargin() {
         $customImageMargin = $this->getCustomImageMargin();
-        return $this->hasOnlyOneColumn() ? $imgBottomMargin = 100+18*$this->nb_committer : $imgBottomMargin = $customImageMargin;
+        return $this->hasOnlyOneColumn() ? 100+18*$this->nb_committer : $customImageMargin;
     }
 
     /**
@@ -117,7 +117,7 @@ class Widget_ProjectSvnStats_Layout {
      * @return String
      */
     public function getLegendAlign() {
-        return $this->hasOnlyOneColumn() ? $legendAlign = 'bottom' : $legendAlign = 'top';
+        return $this->hasOnlyOneColumn() ? 'bottom' : 'top';
     }
 
     /**
