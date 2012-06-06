@@ -19,8 +19,9 @@
  */
 
 require_once 'SearchResult.class.php';
+require_once dirname(__FILE__).'/../FullTextSearch/SearchResultCollection.class.php';
 
-class ElasticSearch_SearchResultCollection {
+class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResultCollection {
     public $nb_documents_found = 0;
     public $query_time         = 0;
     public $results            = array();
@@ -37,6 +38,18 @@ class ElasticSearch_SearchResultCollection {
                 $this->results[] = new ElasticSearch_SearchResult($hit, $project_manager);
             }
         }
+    }
+    
+    public function count() {
+        return $this->nb_documents_found;
+    }
+    
+    public function getQueryTime() {
+        return $this->query_time;
+    }
+    
+    public function getResults() {
+        return $this->results;
     }
 }
 

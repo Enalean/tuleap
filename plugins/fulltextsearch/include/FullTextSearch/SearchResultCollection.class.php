@@ -18,32 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchResultCollection.class.php';
-
-/**
- * Interface which define the base contract for search library clients
- */
-interface FullTextSearch_ISearchDocuments {
-
+interface FullTextSearch_SearchResultCollection extends Countable {
     /**
-     * Search for data in the index
+     * Duration of search query
      * 
-     * @param String $term terms
-     * 
-     * @return FullTextSearch_SearchResultCollection
+     * @return int
      */
-    public function searchDocuments($terms);
+    public function getQueryTime();
     
-
     /**
-     * Return status of the index
-     * 
-     * The returned array is:
-     * array('size'   => string with human readable size
-     *       'nb_docs => integer, number of documents in index)
-     * 
-     * @return array 
+     * Numbver of results 
      */
-    public function getStatus();
+    public function getResults();
 }
+
 ?>

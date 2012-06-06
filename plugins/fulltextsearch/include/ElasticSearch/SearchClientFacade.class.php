@@ -22,6 +22,9 @@ require_once 'ClientFacade.class.php';
 require_once dirname(__FILE__) .'/../FullTextSearch/ISearchDocuments.class.php';
 require_once 'SearchResultCollection.class.php';
 
+/**
+ * Allow to perform search on ElasticSearch Index 
+ */
 class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_ISearchDocuments {
     /**
      * @var mixed
@@ -40,7 +43,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
     
     /**
-     * @see ISearchAndIndexDocuments::searchDocuments
+     * @see ISearchDocuments::searchDocuments
      */
     public function searchDocuments($terms) {
         $query  = $this->getSearchDocumentsQuery($terms);
@@ -72,7 +75,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
     
     /**
-     * @see ISearchAndIndexDocuments::getStatus
+     * @see ISearchDocuments::getStatus
      */
     public function getStatus() {
         $this->client->setType('');

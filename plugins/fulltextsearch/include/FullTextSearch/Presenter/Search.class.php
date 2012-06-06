@@ -19,13 +19,17 @@
  */
 
 require_once 'Index.class.php';
+require_once dirname(__FILE__).'/../SearchResultCollection.class.php';
 
 class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template = 'search';
 
+    /**
+     * @var FullTextSearch_SearchResultCollection 
+     */
     private $query_result;
     
-    public function __construct($index_status, $terms, $query_result) {
+    public function __construct($index_status, $terms, FullTextSearch_SearchResultCollection $query_result) {
         parent::__construct($index_status, $terms);
         $this->query_result = $query_result;
     }
@@ -39,15 +43,15 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     }
         
     public function result_count() {
-        return $this->query_result->nb_documents_found;
+        return $this->query_result->count();
     }
     
     public function search_results() {
-        return $this->query_result->results;
+        return $this->query_result->getResults();
     }
     
     public function elapsed_time() {
-        return $this->query_result->query_time;
+        return $this->query_result->getQueryTime();
     }
 
 }
