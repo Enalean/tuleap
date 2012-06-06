@@ -207,12 +207,11 @@ class cardwallPlugin extends Plugin {
     }
     
     public function agiledashboard_event_additional_panes_on_milestone($params) {
-        $artifact = $params['milestone']->getArtifact();
-        $tracker  = $artifact->getTracker();
+        $tracker  = $params['milestone']->getArtifact()->getTracker();
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             require_once 'Pane.class.php';
-            $params['panes'][] = new Cardwall_Pane();
+            $params['panes'][] = new Cardwall_Pane($params['milestone']);
         }
     }
 }
