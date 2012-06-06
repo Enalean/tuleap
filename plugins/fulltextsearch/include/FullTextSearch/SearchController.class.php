@@ -44,25 +44,16 @@ class FullTextSearch_SearchController extends MVC2_Controller {
     
     public function index() {
         $index_status  = $this->getIndexStatus();
-        $index_presenter = new FullTextSearch_IndexPresenter($index_status);
-        
-        $title = 'Full text search';
-        $GLOBALS['HTML']->header(array('title' => $title, 'toptab' => 'admin'));
-        $this->render('index', $index_presenter);
-        $GLOBALS['HTML']->footer(array());
+        $presenter = new FullTextSearch_IndexPresenter($index_status);
+        $this->renderWithHeaderAndFooter($presenter);
     }
     
     public function search() {
         $terms         = $this->request->getValidated('terms', 'string', '');
         $index_status  = $this->getIndexStatus();
         $search_result = $this->getSearchResults($terms);
-
-        $query_presenter = new FullTextSearch_SearchPresenter($index_status, $terms, $search_result, $this->project_manager);
-
-        $title = 'Full text search';
-        $GLOBALS['HTML']->header(array('title' => $title, 'toptab' => 'admin'));
-        $this->render('query', $query_presenter);
-        $GLOBALS['HTML']->footer(array());
+        $presenter     = new FullTextSearch_SearchPresenter($index_status, $terms, $search_result, $this->project_manager);
+        $this->renderWithHeaderAndFooter($presenter);
     }
     
     private function getIndexStatus() {
@@ -100,6 +91,12 @@ class FullTextSearch_SearchController extends MVC2_Controller {
                 )
             )
         );
+    }
+    
+    private function renderWithHeaderAndFooter($presenter) {
+        $GLOBALS['HTML']->header(array('title' => 'Full text search', 'toptab' => 'admin'));
+        $this->render($presenter->template, $presenter);
+        $GLOBALS['HTML']->footer(array());
     }
 }
 

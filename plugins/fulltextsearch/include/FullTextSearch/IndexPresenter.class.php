@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_IndexPresenter {
+class FullTextSearch_IndexPresenter {    
+    public $template = 'index';
+    
     private $index_status;
     private $terms;
     
@@ -26,7 +28,7 @@ class FullTextSearch_IndexPresenter {
         $this->index_status = $index_status;
         $this->terms        = $terms;
     }
- 
+    
     public function index_size() {
         return $this->index_status['indices']['tuleap']['index']['size'];
     }

@@ -21,6 +21,8 @@
 require_once 'IndexPresenter.class.php';
 
 class FullTextSearch_SearchPresenter extends FullTextSearch_IndexPresenter {
+    public $template = 'search';
+
     private $query_result;
     private $project_manager;
     
