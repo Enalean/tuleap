@@ -57,6 +57,17 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
     public function getDescendantIds($tracker_id) {
         return $this->hierarchy_factory->getDescendantIds($tracker_id);
     } 
+
+    public function filterNonPlannableNodes($backlog_tracker_id, TreeNode &$node) {
+        $node_children = $node->getChildren();
+        foreach ($node_children as $key => $child) {
+            $child_data = $child->getData();
+            if ($child_data['tracker_id'] != $backlog_tracker_id) {
+                unset($node_children[$key]);
+            }
+        }
+        $node->setChildren($node_children);
+    }
     
     public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;

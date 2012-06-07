@@ -24,6 +24,7 @@ require_once dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCri
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
 class ViewBuilderTest extends TuleapTestCase {
+
     public function setUp() {
         parent::setUp();
         
@@ -38,8 +39,6 @@ class ViewBuilderTest extends TuleapTestCase {
         
         
         $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $this->backlog_tracker_id);
-        
-        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
         
         $this->criteria_builder->setReturnValue('getCriteria', array());
         
@@ -63,14 +62,57 @@ class ViewBuilderTest extends TuleapTestCase {
     }
     
     public function itRetrievesTheArtifactsFromTheBacklogTrackerAndItsChildrenTrackers() {
+        stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
         $this->search->expectOnce('getHierarchicallySortedArtifacts', array($this->user, $this->project, $this->descendant_ids, $this->cross_search_criteria, array()));
         $this->build();
     }
     
     public function itRemovesRootArtifactsThatDoNotMatchTheBacklogTracker() {
+        $story = array('id' => 1, 'tracker_id' => $this->backlog_tracker_id);
+        $task = array('id' => 2, 'tracker_id' => 123);
+        $bug = array('id' => 3, 'tracker_id' => 999);
+
+        $root = new TreeNode();
+        $story_node = new TreeNode();
+        $task_node = new TreeNode();
+        $bug_node = new TreeNode();
+
+        $story_node->setData($story);
+        $task_node->setData($task);
+        $bug_node->setData($bug);
+
+        $story_node->addChild($task_node);
+        $root->addChild($story_node);
+        $root->addChild($bug_node);
+
+        // Source:
+        // .
+        // |-- Story
+        // |   `-- Task
+        // `-- Bug
+
+        $this->builder->filterNonPlannableNodes($this->backlog_tracker_id, $root);
+
+        // Expectation:
+        // .
+        // `-- Story
+        //     `-- Task
+
+
+        $root_children = $root->getChildren();
+        $this->assertEqual(count($root_children), 1);
+        $this->assertEqual($root_children[0], $story_node);
+
+        $story_children = $root_children[0]->getChildren();
+        $this->assertEqual(count($story_children), 1);
+        $this->assertEqual($story_children[0], $task_node);
     }
 
+    //stub($this->search)->getHierarchicallySortedArtifacts()->returns($root);
+    //$this->build();
+
     public function itBuildsPlanningContentView() {
+        stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
         $this->assertIsA($this->build(), 'Planning_SearchContentView');
     }
 }
