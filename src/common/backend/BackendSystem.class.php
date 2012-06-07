@@ -502,7 +502,7 @@ class BackendSystem extends Backend {
             return false;
         }
         if (!is_dir($ssh_dir)) {
-            if (@mkdir($ssh_dir)) {
+            if (mkdir($ssh_dir)) {
                 $this->chmod($ssh_dir, 0755);
                 $this->chown($ssh_dir, $username);
                 $this->chgrp($ssh_dir, $username);
