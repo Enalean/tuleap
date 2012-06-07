@@ -42,14 +42,14 @@ class Tracker_Hierarchy_Sorter {
         return $root;
     }
     
-    private function organizeArtifactsInTrackerHierarchy($parent, $hierarchy, $artifacts_by_id, $artifacts_by_tracker, $tracker_ids) {
+    private function organizeArtifactsInTrackerHierarchy(TreeNode $parent, Tracker_Hierarchy $hierarchy, array $artifacts_by_id, array $artifacts_by_tracker, $tracker_ids) {
         $artifacts_in_tree = array();
         foreach ($tracker_ids as $tracker_id) {
             $this->appendArtifactsOfTracker($parent, $hierarchy, $artifacts_by_id, $artifacts_by_tracker, $tracker_id, $artifacts_in_tree);
         }
     }
 
-    private function appendArtifactsOfTracker($parent, $hierarchy, $artifacts_by_id, $artifacts_by_tracker, $tracker_id, array &$artifacts_in_tree) {
+    private function appendArtifactsOfTracker(TreeNode $parent, Tracker_Hierarchy $hierarchy, array $artifacts_by_id, array $artifacts_by_tracker, $tracker_id, array &$artifacts_in_tree) {
         if (isset($artifacts_by_tracker[$tracker_id])) {
             foreach ($artifacts_by_tracker[$tracker_id] as $artifact) {
                 $this->appendArtifactAndSonsToParent($parent, $hierarchy, $artifacts_by_id, $artifact, $artifacts_in_tree);
