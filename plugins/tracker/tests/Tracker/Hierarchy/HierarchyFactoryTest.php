@@ -19,6 +19,8 @@
  */
 
 require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/HierarchyFactory.class.php';
+require_once dirname(__FILE__) .'/../../../include/Tracker/TrackerFactory.class.php';
+require_once dirname(__FILE__).'/../../builders/aMockTracker.php';
 
 Mock::generate('Tracker_Hierarchy_Dao');
 
@@ -143,6 +145,22 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
             $dao->setReturnValue('searchTrackerHierarchy', array());
         }
         return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'));
+    }
+}
+
+class Tracker_HierarchyFactory_DescendantsTest extends TuleapTestCase {
+    public function itRetrievesDescendantIdsFromAGivenTrackerIdIncludingItself() {
+        $factory = TestHelper::getPartialMock('Tracker_HierarchyFactory', array('getChildren'));
+        
+        stub($factory)->getChildren(1)->returns(array(aMockTracker()->withId(2)->build(),
+                                                      aMockTracker()->withId(3)->build()));
+        stub($factory)->getChildren(2)->returns(array(aMockTracker()->withId(4)->build()));
+        stub($factory)->getChildren(3)->returns(array());
+        stub($factory)->getChildren(4)->returns(array());
+        
+        $descendant_ids = $factory->getDescendantIds(1);
+        sort($descendant_ids);
+        $this->assertEqual(array(1, 2, 3, 4), $descendant_ids);
     }
 }
 ?>
