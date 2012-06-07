@@ -1,6 +1,9 @@
 Version 5.2 (Not Released Yet)
 	== Bug Fix ==
 	* Fix chart legend display (Contrib STMicroelectronics)
+	* Fix ssh keys when no unix account: With Gitolite, it's possible to have
+	a ssh key without having a unix account. However, the interface doesn't
+	allow it.
 
 	== Enhancement ==
 	* SOAP: 5.2
