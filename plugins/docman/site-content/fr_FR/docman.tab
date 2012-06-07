@@ -33,7 +33,7 @@ plugin_docman	approval_notif_mail_subject	[$1] Merci d'approuver '$2'
 plugin_docman	approval_notif_mail_body	Vous êtes convié à approuver le document suivant :\n\nTitre : $1\nProjet : $2\nDemandeur : $3 <$8>\nLien direct : <$4>\n\n$5Type de notification : $6\n\nCliquez sur le lien suivant pour approuver ou réprouver le document :\n<$7>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un après l'autre.\nPersonne *ne sera notifié* tant que vous n'approuvez/réprouvez pas le document.\n
 plugin_docman	approval_notif_mail_notif_all	Tous d'un coup\n
-plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n$1\n\n
+plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n------------\n$1\n------------\n\n\n
 plugin_docman	approval_notif_reject_mail_body	Votre document '$1' a été réprouvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
 plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' a été réprouvé par un approbateur
 plugin_docman	approval_notif_approve_mail_body	Votre document '$1' a été approuvé par tous les approbateurs.\nAccès direct à la table d'approbation :\n<$2>\n\nMerci de noter que le statut du document n'a pas été modifié. Vous pouvez\nmodifier les propriétés du document :\n<$3>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
