@@ -38,19 +38,17 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
     }
     
     public function itWrapsAnArtifactInATreeNode() {
-        $stories_tracker = aMockTracker()->withId(23452345)->build();
-        $tasks_tracker   = mock('Tracker');
-        $bugs_tracker    = mock('Tracker');
+        $tracker           = aMockTracker()->withId(23452345)->build();
+        $children_trackers = array(mock('Tracker'), mock('Tracker'));
         
-        stub($this->hierarchy_factory)->getChildren($stories_tracker->getId())
-                                      ->returns(array($tasks_tracker, $bugs_tracker));
+        stub($this->hierarchy_factory)->getChildren($tracker->getId())->returns($children_trackers);
         
         $artifact = mock('Tracker_Artifact');
         stub($artifact)->getId()->returns(123);
         stub($artifact)->getTitle()->returns('Foo');
         stub($artifact)->getUri()->returns('/bar');
         stub($artifact)->getXRef()->returns('art #123');
-        stub($artifact)->getTracker()->returns($stories_tracker);
+        stub($artifact)->getTracker()->returns($tracker);
         
         $artifact_factory = mock('Tracker_ArtifactFactory');
         stub($artifact_factory)->getArtifactById(123)->returns($artifact);
@@ -68,7 +66,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $this->assertEqual('/bar', $presenter->getUrl());
         $this->assertEqual('art #123', $presenter->getXRef());
         $this->assertEqual('baz', $presenter->getCssClasses());
-        $this->assertEqual(array($tasks_tracker, $bugs_tracker, $stories_tracker), $presenter->allowedChildrenTypes());
+        $this->assertEqual($children_trackers, $presenter->allowedChildrenTypes());
         
         Tracker_HierarchyFactory::clearInstance();
     }
