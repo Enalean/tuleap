@@ -19,6 +19,7 @@
  */
 
 require_once('Tracker_GlobalNotification.class.php');
+require_once('Tracker_DateReminderManager.class.php');
 
 require_once('dao/Tracker_WatcherDao.class.php');
 require_once('dao/Tracker_GlobalNotificationDao.class.php');
@@ -26,10 +27,12 @@ require_once('dao/Tracker_NotificationDao.class.php');
 
 class Tracker_NotificationsManager {
 
-    protected $tracker;    
+    protected $tracker;
+    protected $dateReminderManager;
     
     public function __construct($tracker) {
         $this->tracker = $tracker;
+        $this->dateReminderManager = new Tracker_DateReminderManager($this->tracker);
     }
     
     public function process(TrackerManager $tracker_manager, $request, $current_user) {

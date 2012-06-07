@@ -59,7 +59,7 @@ class Tracker_DateReminderManager {
      *
      * @return Void
      */
-    protected sendReminderNotification() {
+    protected function sendReminderNotification() {
         $tracker = $this->getTracker();
         // 1. Get the recipients list
         $recipients = $this->getRecipients();
@@ -176,7 +176,7 @@ class Tracker_DateReminderManager {
      * @return string
      */
     public function getSubject($recipient) {
-        $s = "[" . $this->tracker->getTrackerName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($this->reminder->getLabel(),date("j F Y",$this->reminder->getDateValue()), $this->artifact->getSummary())));
+        $s = "[" . $this->tracker->getTrackerName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($this->reminder->getLabel(),date("j F Y",$this->reminder->getDateValue()), $this->artifact->getSummary()));
         return $s;
     }
     
