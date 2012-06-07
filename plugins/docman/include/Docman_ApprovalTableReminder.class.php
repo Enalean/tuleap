@@ -150,7 +150,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Mail
      */
-     function prepareMailReminder($table, $reviewer) {
+    function prepareMailReminder($table, $reviewer) {
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($table->itemId);
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
@@ -169,7 +169,32 @@ class Docman_ApprovalTableReminder {
                 break;
         }
         return $mail;
-     }
+    }
+
+    function getReviewUrl($docmanItem) {
+        $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
+        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.->getId().'&review=1';
+        return $reviewUrl;
+    }
+
+    function getItemUrl($docmanItem) {
+        $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
+        $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
+        return $itemUrl;
+    }
+
+    function getNotificationStyle($table) {
+        $notifStyle = '';
+        switch($table->getNotification()) {
+        case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
+            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
+            break;
+        case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
+            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
+            break;
+        }
+        return $notifStyle;
+    }
 
     /**
      * Creates the text mail body
@@ -186,10 +211,6 @@ class Docman_ApprovalTableReminder {
         $um    = UserManager::instance();
         $owner = $um->getUserById($table->owner);
 
-        $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
-        $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
-        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
-
         $comment     = '';
         $userComment = $table->getDescription();
         if($userComment != '') {
@@ -197,22 +218,13 @@ class Docman_ApprovalTableReminder {
             $comment .= "\n\n";
         }
 
-        $notifStyle = '';
-        switch($table->getNotification()) {
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
-            break;
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
-            break;
-        }
         $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($docmanItem->getTitle(), 
                                                               $group->getPublicName(),
                                                               $owner->getRealName(),
-                                                              $itemUrl,
+                                                              $this->getItemUrl($docmanItem),
                                                               $comment,
-                                                              $notifStyle,
-                                                              $reviewUrl,
+                                                              $this->getNotificationStyle($table),
+                                                              $this->getReviewUrl($docmanItem),
                                                               $owner->getEmail()));
 
         $mail = new Mail();
@@ -236,32 +248,19 @@ class Docman_ApprovalTableReminder {
         $um    = UserManager::instance();
         $owner = $um->getUserById($table->owner);
 
-        $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
-        $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
-        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
-
         $comment     = '';
         $userComment = $table->getDescription();
         if($userComment != '') {
             $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
         }
 
-        $notifStyle = '';
-        switch($table->getNotification()) {
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
-            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_seq', array($GLOBALS['sys_name']));
-            break;
-        case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
-            $notifStyle = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_all');
-            break;
-        }
         $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body', array($docmanItem->getTitle(), 
                                                               $group->getPublicName(),
                                                               $owner->getRealName(),
-                                                              $itemUrl,
+                                                              $this->getItemUrl($docmanItem),
                                                               $comment,
-                                                              $notifStyle,
-                                                              $reviewUrl,
+                                                              $this->getNotificationStyle($table),
+                                                              $this->getReviewUrl($docmanItem),
                                                               $owner->getEmail()));
 
         $mail = new Codendi_Mail();
