@@ -43,6 +43,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
         $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
         $tracker_ids = $this->getDescendantIds($backlog_tracker_id);
         $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
+        $this->filterNotPlannableNodes($backlog_tracker_id, $artifacts);
         
         return new Planning_SearchContentView($report, 
                                               $criteria, 
@@ -58,7 +59,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
         return $this->hierarchy_factory->getDescendantIds($tracker_id);
     } 
 
-    public function filterNonPlannableNodes($backlog_tracker_id, TreeNode &$node) {
+    public function filterNotPlannableNodes($backlog_tracker_id, TreeNode &$node) {
         $node_children = $node->getChildren();
         foreach ($node_children as $key => $child) {
             $child_data = $child->getData();

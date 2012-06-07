@@ -67,6 +67,11 @@ class ViewBuilderTest extends TuleapTestCase {
         $this->build();
     }
     
+    public function itBuildsPlanningContentView() {
+        stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
+        $this->assertIsA($this->build(), 'Planning_SearchContentView');
+    }
+
     public function itRemovesRootArtifactsThatDoNotMatchTheBacklogTracker() {
         $story = array('id' => 1, 'tracker_id' => $this->backlog_tracker_id);
         $task = array('id' => 2, 'tracker_id' => 123);
@@ -91,7 +96,7 @@ class ViewBuilderTest extends TuleapTestCase {
         // |   `-- Task
         // `-- Bug
 
-        $this->builder->filterNonPlannableNodes($this->backlog_tracker_id, $root);
+        $this->builder->filterNotPlannableNodes($this->backlog_tracker_id, $root);
 
         // Expectation:
         // .
@@ -108,12 +113,16 @@ class ViewBuilderTest extends TuleapTestCase {
         $this->assertEqual($story_children[0], $task_node);
     }
 
-    //stub($this->search)->getHierarchicallySortedArtifacts()->returns($root);
-    //$this->build();
+    public function itBuildsTheViewWithoutNotPlannableArtifacts() {
+        $root = new TreeNode();
+        stub($this->search)->getHierarchicallySortedArtifacts()->returns($root);
 
-    public function itBuildsPlanningContentView() {
-        stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
-        $this->assertIsA($this->build(), 'Planning_SearchContentView');
+        $builder = TestHelper::getPartialMock('Planning_ViewBuilder', array('filterNotPlannableNodes'));
+        $builder->__construct($this->formElementFactory, $this->search, $this->criteria_builder);
+        $builder->setHierarchyFactory($this->hierarchy_factory);
+
+        $builder->expectOnce('filterNotPlannableNodes', array($this->backlog_tracker_id, $root));
+        $builder->build($this->user, $this->project, $this->cross_search_criteria, array(), $this->backlog_tracker_id, $this->planning, '');
     }
 }
 
