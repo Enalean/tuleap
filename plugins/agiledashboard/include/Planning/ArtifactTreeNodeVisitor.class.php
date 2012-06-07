@@ -42,9 +42,9 @@ class Planning_ArtifactTreeNodeVisitor {
      */
     private $artifact_factory;
     
-    public function __construct(Planning                                     $planning,
-                                Tracker_ArtifactFactory                      $artifact_factory,
-                                                                             $classname) {
+    public function __construct(Planning                $planning,
+                                Tracker_ArtifactFactory $artifact_factory,
+                                                        $classname) {
         $this->planning         = $planning;
         $this->artifact_factory = $artifact_factory;
         $this->classname        = $classname;
@@ -56,7 +56,7 @@ class Planning_ArtifactTreeNodeVisitor {
      * @return Planning_ArtifactTreeNodeVisitor
      */
     public static function build(Planning $planning, $classname) {
-        $artifact_factory  = Tracker_ArtifactFactory::instance();
+        $artifact_factory = Tracker_ArtifactFactory::instance();
         
         return new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, $classname);
     }
