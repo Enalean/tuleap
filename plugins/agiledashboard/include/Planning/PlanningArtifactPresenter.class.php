@@ -63,7 +63,12 @@ class PlanningArtifactPresenter {
     
     public function allowedChildrenTypes() {
         $hierarchy_factory = Tracker_HierarchyFactory::instance();
-        return $hierarchy_factory->getChildren($this->planning_item->getTracker()->getId());
+        $planning_tracker  = $this->planning_item->getTracker();
+        
+        $allowed_children_types   = $hierarchy_factory->getChildren($planning_tracker->getId());
+        $allowed_children_types[] = $planning_tracker;
+        
+        return $allowed_children_types;
     }
 }
 ?>
