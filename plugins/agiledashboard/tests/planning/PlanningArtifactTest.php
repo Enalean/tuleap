@@ -26,6 +26,8 @@ require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
 class PlanningArtifactTest extends PlanningItemTestCase {
     
+    private $backlog_tracker_id;
+    
     public function setUp() {
         parent::setUp();
         
@@ -34,10 +36,10 @@ class PlanningArtifactTest extends PlanningItemTestCase {
         $this->title    = 'do something interresting';
         $this->id       = '234872';
         
-        $this->planning_tracker_id = 123;
+        $this->backlog_tracker_id = 123;
         $this->other_tracker_id    = 456;
         
-        $this->planning = aPlanning()->withPlanningTrackerId($this->planning_tracker_id)
+        $this->planning = aPlanning()->withBacklogTrackerId($this->backlog_tracker_id)
                                      ->build();
         
         $this->artifact = aMockArtifact()->withUri($this->edit_uri)
@@ -51,12 +53,12 @@ class PlanningArtifactTest extends PlanningItemTestCase {
     
     public function itIsPlannifiableIfItsTrackerMatchesThePlanningOne() {
         stub($this->artifact)->getTrackerId()
-                             ->returns($this->planning_tracker_id);
+                             ->returns($this->backlog_tracker_id);
         
         $this->assertTrue($this->item->isPlannifiable());
     }
     
-    public function itIsNotPlannifiableIfItsTrackerDoesNotMatchThePlanningOne() {
+    public function itIsNotPlannifiableIfItsTrackerDoesNotMatchThePlanningBacklogTracker() {
         stub($this->artifact)->getTrackerId()
                              ->returns($this->other_tracker_id);
         

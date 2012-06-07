@@ -48,6 +48,11 @@ class Test_Planning_Builder {
         return $this;
     }
     
+    public function withBacklogTrackerId($backlog_tracker_id) {
+        $this->backlog_tracker_id = $backlog_tracker_id;
+        return $this;
+    }
+    
     public function withPlanningTrackerId($planning_tracker_id) {
         $this->planning_tracker_id = $planning_tracker_id;
         return $this;

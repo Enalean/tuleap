@@ -19,6 +19,7 @@
  */
 
 require_once 'Planning.class.php';
+require_once 'PlanningArtifact.class.php';
 
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
@@ -73,32 +74,36 @@ class Planning_ArtifactTreeNodeVisitor {
     }
 
     public function visit(TreeNode $node) {
-        $row = $node->getData();
+        $row      = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
+        
         if ($artifact) {
-            $this->buildNodeData($node, $row, $artifact);
+            $planning_artifact = new PlanningArtifact($artifact, $this->planning);
+            
+            $node->setObject($planning_artifact);
+            $this->buildNodeData($node, $row, $planning_artifact);
         }
         $this->injectArtifactInChildren($node);
     }
     
-    private function buildNodeData(TreeNode $node, $row, Tracker_Artifact $artifact) {
-        $row['artifact_id']          = $artifact->getId();
-        $row['title']                = $artifact->getTitle();
+    private function buildNodeData(TreeNode $node, $row, PlanningArtifact $planning_artifact) {
+        $row['artifact_id']          = $planning_artifact->getId();
+        $row['title']                = $planning_artifact->getTitle();
         $row['class']                = $this->classname;
-        $row['uri']                  = $artifact->getUri();
-        $row['xref']                 = $artifact->getXRef();
+        $row['uri']                  = $planning_artifact->getEditUri();
+        $row['xref']                 = $planning_artifact->getXRef();
         $row['editLabel']            = $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
-        $row['planningDraggable']    = $this->getPlanningDraggableClass($artifact);
+        $row['planningDraggable']    = $this->getPlanningDraggableClass($planning_artifact);
         
         if (!isset($row['allowedChildrenTypes'])) {
-            $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
+            $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($planning_artifact->getTracker());
         }
         
         $node->setData($row);
     }
     
-    private function getPlanningDraggableClass(Tracker_Artifact $artifact) {
-        if ($artifact->getTrackerId() == $this->planning->getBacklogTrackerId()) {
+    private function getPlanningDraggableClass(PlanningArtifact $planning_artifact) {
+        if ($planning_artifact->isPlannifiable()) {
             return 'planning-draggable';
         }
     }
