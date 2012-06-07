@@ -40,7 +40,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $sql = "SELECT *
                 FROM $this->tableName
                 WHERE tracker_id = ".$trackerId."
-                  AND status = 1;
+                  AND status = 1";
         return $this->retrieve($sql);
     }
 
@@ -80,7 +80,37 @@ class Tracker_DateReminderDao extends DataAccessObject {
                 ".$notificationType.",
                 ".$distance.",
                 ".$status.",
-                ");
+                )";
+        return $this->update($sql);
+    }
+
+    /**
+     * Update a date reminder
+     *
+     * @param Integer $reminderId       Id of the reminder
+     * @param Integer $fieldId          Id of the date field
+     * @param Integer $ugroupId         Id of the user group
+     * @param Integer $notificationType 0 if before, 1 if after the value of the date field
+     * @param Integer $distance         Distance from the value of the date fiels
+     * @param Integer $status           0 if disabled, 1 if enabled
+     *
+     * @return Boolean
+     */
+    function addDateReminder($reminderId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
+        $reminderId       = $this->da->escapeInt($reminderId);
+        $fieldId          = $this->da->escapeInt($fieldId);
+        $ugroupId         = $this->da->escapeInt($ugroupId);
+        $notificationType = $this->da->escapeInt($notificationType);
+        $distance         = $this->da->escapeInt($distance);
+        $status           = $this->da->escapeInt($status);
+        $sql = "Update ".$this->tableName."
+                SET
+                field_id          = ".$fieldId.",
+                ugroup_id         = ".$ugroupId.",
+                notification_type = ".$notificationType.",
+                distance          = ".$distance.",
+                status            = ".$status."
+                WHERE reminder_id = ".$reminderId;
         return $this->update($sql);
     }
 
