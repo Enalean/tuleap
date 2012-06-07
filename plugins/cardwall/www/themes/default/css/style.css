@@ -20,21 +20,11 @@
 .cardwall_board.nifty ul{
   padding: 3em;
 }
-.cardwall_board ul li {
-  overflow:hidden;
-  text-decoration:none;
-  color:#000;
-  background:#ffc;
-  display:inline-block;
-  padding:1em;
-  margin:1em;
+.cardwall_board .card {
   cursor: move;
-  border: 1px solid #ccc;
-  width:8em;
-  vertical-align:top;
 }
 
-.widget .cardwall_board ul li {
+.widget .cardwall_board .card {
     cursor: auto;
 }
 

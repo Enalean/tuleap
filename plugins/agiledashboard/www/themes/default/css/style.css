@@ -31,29 +31,6 @@
     margin-top: 0;
 }
 
-.cards {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.cards .cards {
-  margin-left: 2em;
-}
-.card {
-    padding: 0.25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    margin-bottom: 1em;
-    border:1px solid #B2B39D;
-    background: #ffe;
-    min-width: 200px;
-}
-
-.backlog-actions, 
-.card-actions {
-    float:right;
-}
-
 .backlog-content {
     clear:both;
     padding-top: 0.5em;
@@ -76,26 +53,27 @@
 .planning-artifact-chooser > option {
 }
 
-.backlog-actions ul, 
-.card-actions ul {
+/* {{{ same as card-actions in tracker style.css */
+.backlog-actions {
+    float:right;
+}
+.backlog-actions ul {
     list-style: none;
     padding: 0.25em 0.5em;
 }
-.backlog-actions .caret, 
-.card-actions .caret {
+.backlog-actions .caret {
   margin-top: 6px;
 }
-.backlog-actions:hover .caret, 
-.card-actions:hover .caret {
+.backlog-actions:hover .caret {
   opacity: 1;
   filter: alpha(opacity=100);
 }
-
-.backlog-actions .dropdown.open .dropdown-toggle,
-.card-actions .dropdown.open .dropdown-toggle {
+.backlog-actions .dropdown.open .dropdown-toggle {
     color: #005580;
     background: none;
 }
+/* }}} */
+
 .agiledashboard hr {
     border:0px; 
     border-top:1px solid #ccc;
