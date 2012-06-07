@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+define('AGILEDASHBOARD_BASE_URL', '/plugins/agiledashboard');
 define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
 
 /**

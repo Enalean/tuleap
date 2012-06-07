@@ -111,7 +111,8 @@ class cardwallPlugin extends Plugin {
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0 ||
+        if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
@@ -122,7 +123,8 @@ class cardwallPlugin extends Plugin {
     function jsFile($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
+        if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
         }
     }

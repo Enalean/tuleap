@@ -46,7 +46,7 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         }
         
         $html  = '';
-        $html .= '<table>';
+        $html .= '<div class="cardwall_board">';
 
         // {{{ Copy&paste from Cardwall_Renderer
         $hp = Codendi_HTMLPurifier::instance();
@@ -85,7 +85,7 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         // ...
         $html .= '<colgroup>';
         foreach ($values as $key => $value) {
-            $html .= '<col id="tracker_renderer_board_column-'. (int)$value->getId() .'" />';
+            $html .= '<col id="cardwall_board_column-'. (int)$value->getId() .'" />';
         }
         $html .= '</colgroup>';
         
@@ -139,13 +139,13 @@ class Cardwall_Pane implements AgileDashboard_Pane {
                     $artifact = $data['artifact'];
                     $artifact_status = $artifact->getStatus();
                     if (!$field || $artifact_status === $value->getLabel() || $artifact_status === null && $value->getId() == 100) {
-                        $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$artifact->getId() .'">';
+                        $html .= '<li class="cardwall_board_postit" id="cardwall_board_postit-'. (int)$artifact->getId() .'">';
                         // TODO: use mustache templates?
                         $html .= '<div class="card">';
                         $html .= '<div class="card-actions">';
                         $html .= '<a href="'. TRACKER_BASE_URL .'/?aid='. (int)$artifact->getId() .'">#'. (int)$artifact->getId() .'</a>'; // TODO: Use artifact->getUrl or similar?
                         $html .= '</div>';
-                        $html .= '<div class="tracker_renderer_board_content">';
+                        $html .= '<div class="cardwall_board_content">';
                         $html .= $hp->purify($artifact->getTitle(), CODENDI_PURIFIER_BASIC_NOBR, $artifact->getTracker()->getGroupId());
                         $html .= '</div>';
                         $html .= '</div>';
@@ -160,6 +160,7 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         }
         $html .= '</tbody>';
         $html .= '</table>';
+        $html .= '</div>';
         return $html;
     }
 }
