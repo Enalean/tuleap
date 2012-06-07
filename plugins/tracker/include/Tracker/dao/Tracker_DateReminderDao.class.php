@@ -96,7 +96,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function addDateReminder($reminderId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
+    function updateDateReminder($reminderId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
         $reminderId       = $this->da->escapeInt($reminderId);
         $fieldId          = $this->da->escapeInt($fieldId);
         $ugroupId         = $this->da->escapeInt($ugroupId);
