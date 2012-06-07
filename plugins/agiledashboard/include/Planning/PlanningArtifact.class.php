@@ -21,6 +21,9 @@
 require_once 'PlanningItem.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
+/**
+ * Allows using artifacts as planning items.
+ */
 class PlanningArtifact extends Planning_Item {
     
     /**
