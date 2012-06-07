@@ -17,17 +17,41 @@
  */
 
 class DateReminderManager {
+
     protected $tracker;
+
+    /**
+     * Constructor of the class
+     *
+     * @param Tracker $tracker Tracker associated to the manager
+     *
+     * @return Void
+     */
     public function __construct($tracker) {
         $this->tracker = $tracker;
     }
-    
+
+    /**
+     * Obtain the tracker associated to the manager
+     *
+     * @return Tracker
+     */
     public function getTracker(){
-        return $tracker;
+        return $this->tracker;
     }
-    
+
+    /**
+     * Process nightly job to send reminders
+     *
+     * @param TrackerManager  $engine       Tracker manager
+     * @param Codendi_Request $request      HTTP request
+     * @param User            $current_user Current user
+     *
+     * @return ???
+     */
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
     }
- 
+
 }
+
 ?>
