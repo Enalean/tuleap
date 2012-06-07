@@ -32,6 +32,22 @@ class Cardwall_Pane implements AgileDashboard_Pane {
 
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
+        $this->milestone->getPlannedArtifacts()->accept($this);
+    }
+
+    public function visit(TreeNode $node) {
+        $this->injectColumnFieldId($node);
+        foreach ($node->getChildren() as $child) {
+            $child->accept($this);
+        }
+    }
+
+    private function injectColumnFieldId(TreeNode $node) {
+        $data    = $node->getData();
+        $tracker = $data['artifact']->getTracker();
+        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        $data['column_field_id'] = $field ? $field->getId() : 0;
+        $node->setData($data);
     }
 
     /**
