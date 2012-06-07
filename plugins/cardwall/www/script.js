@@ -1,12 +1,14 @@
 document.observe('dom:loaded', function () {
     $$('.cardwall_board').each(function (board) {
         //{{{ Make sure that we got the last version of the card wall
-        //    Eg: board > drag n drop > go to a page > click back (the post it should be drag 'n dropped)
-        if ($F('tracker_report_cardwall_to_be_refreshed') === "1") {
-            $('tracker_report_cardwall_to_be_refreshed').value = 0;
-            location.reload();
-        } else {
-            $('tracker_report_cardwall_to_be_refreshed').value = 1;
+        if ($('tracker_report_cardwall_to_be_refreshed')) {
+            //    Eg: board > drag n drop > go to a page > click back (the post it should be drag 'n dropped)
+            if ($F('tracker_report_cardwall_to_be_refreshed') === "1") {
+                $('tracker_report_cardwall_to_be_refreshed').value = 0;
+                location.reload();
+            } else {
+                $('tracker_report_cardwall_to_be_refreshed').value = 1;
+            }
         }
         // }}}
 
@@ -63,7 +65,7 @@ document.observe('dom:loaded', function () {
                         func: 'artifact-update'
                     };
                     parameters['artifact[' + $F('tracker_report_cardwall_settings_column') + ']'] = col.id.split('-')[1];
-                    var req = new Ajax.Request(location.href, {
+                    var req = new Ajax.Request(codendi.tracker.base_url, {
                         method: 'POST',
                         parameters: parameters,
                         onComplete: function () {

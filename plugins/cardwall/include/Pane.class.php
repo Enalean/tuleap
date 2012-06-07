@@ -61,11 +61,15 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         $columns   = $this->getColumns($field);
         $swimlines = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
 
+        $html  = '';
+        $html .= '<input type="hidden" id="tracker_report_cardwall_settings_column" value="'. $field->getId() .'" />';
+
         $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
         $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns);
         ob_start();
         $renderer->render('pane-content', $presenter);
-        return ob_get_clean();
+        $html .= ob_get_clean();
+        return $html;
     }
 
     private function getColumns(Tracker_FormElement_Field_Selectbox $field) {
