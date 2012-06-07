@@ -16,7 +16,7 @@
  */
  
 /**
- * Autocompleting project and user inputs within ProjectQuotaHtml::renderNewCustomQuotaForm() form
+ * Autocompleting user input within ProjectQuotaHtml::renderNewCustomQuotaForm() form
  */
 
 var tuleap = codendi || { };

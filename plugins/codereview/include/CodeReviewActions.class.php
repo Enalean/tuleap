@@ -252,7 +252,12 @@ function validateRequest2() {
             }
         }
     }
-    
+
+    /**
+    * Publish a new review request
+    *
+    * @return void
+    */
     function publishReviewRequest() {
         $reviewRessources = $this->validateRequest2();
         if ($reviewRessources['status']) {
