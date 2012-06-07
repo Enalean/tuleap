@@ -36,6 +36,7 @@ class CodeReviewPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
     }
 
     /**
@@ -61,6 +62,20 @@ class CodeReviewPlugin extends Plugin {
             $this->pluginInfo = new CodeReviewPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * Obtain combined scripts
+     *
+     * @return Void
+     */
+    public function combined_scripts($params) {
+        $params['scripts'] = array_merge(
+            $params['scripts'],
+            array(
+                $this->getPluginPath().'/js/autocomplete.js',
+            )
+        );
     }
 }
 
