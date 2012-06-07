@@ -510,7 +510,7 @@ class BackendSystem extends Backend {
                 $this->log("Unable to create user home directory for $username", Backend::LOG_ERROR);
                 return false;
             }
-        }        
+        }
         if ( file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
             posix_seteuid(0);
             $this->log("Unable to write authorized_keys_new file for $username", Backend::LOG_ERROR);
