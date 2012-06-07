@@ -23,7 +23,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
      *
      * @return Void
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct();
         $this->tableName = 'tracker_reminder';
     }
@@ -60,7 +60,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function addDateReminder($trackerId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
+    public function addDateReminder($trackerId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
         $trackerId        = $this->da->escapeInt($trackerId);
         $fieldId          = $this->da->escapeInt($fieldId);
         $ugroupId         = $this->da->escapeInt($ugroupId);
@@ -100,7 +100,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    function updateDateReminder($reminderId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
+    public function updateDateReminder($reminderId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
         $reminderId       = $this->da->escapeInt($reminderId);
         $fieldId          = $this->da->escapeInt($fieldId);
         $ugroupId         = $this->da->escapeInt($ugroupId);
