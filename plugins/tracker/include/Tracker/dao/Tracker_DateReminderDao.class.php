@@ -43,6 +43,46 @@ class Tracker_DateReminderDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Add a date reminder
+     *
+     * @param Integer $trackerId        Id of the tracker
+     * @param Integer $fieldId          Id of the date field
+     * @param Integer $ugroupId         Id of the user group
+     * @param Integer $notificationType 0 if before, 1 if after the value of the date field
+     * @param Integer $distance         Distance from the value of the date fiels
+     * @param Integer $status           0 if disabled, 1 if enabled
+     *
+     * @return Boolean
+     */
+    function addDateReminder($trackerId, $fieldId, $ugroupId, $notificationType = 0, $distance = 0, $status = 1) {
+        $trackerId        = $this->da->escapeInt($trackerId);
+        $fieldId          = $this->da->escapeInt($fieldId);
+        $ugroupId         = $this->da->escapeInt($ugroupId);
+        $notificationType = $this->da->escapeInt($notificationType);
+        $distance         = $this->da->escapeInt($distance);
+        $status           = $this->da->escapeInt($status);
+        $sql = "INSERT INTO ".$this->tableName."
+                (
+                tracker_id,
+                field_id,
+                ugroup_id,
+                notification_type,
+                distance,
+                status
+                )
+                VALUES
+                (
+                ".$trackerId.",
+                ".$fieldId.",
+                ".$ugroupId.",
+                ".$notificationType.",
+                ".$distance.",
+                ".$status.",
+                ");
+        return $this->update($sql);
+    }
+
 }
 
 ?>
