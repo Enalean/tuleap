@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
+require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'PaneContentPresenter.class.php';
+require_once 'Column.class.php';
+require_once 'Swimline.class.php';
 
 class Cardwall_Pane implements AgileDashboard_Pane {
 
@@ -44,124 +48,91 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         if (!$field) {
             return 'Y u no configure the status semantic of ur tracker?';
         }
-        
-        $html  = '';
-        $html .= '<div class="cardwall_board">';
 
-        // {{{ Copy&paste from Cardwall_Renderer
-        $hp = Codendi_HTMLPurifier::instance();
-        $nb_columns        = 1;
-        $column_sql_select = '';
-        $column_sql_from   = '';
-        $values            = array(1);
-        // ...
+        $columns   = $this->getColumns($field);
+        $swimlines = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
+
+        $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
+        $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns);
+        ob_start();
+        $renderer->render('pane-content', $presenter);
+        return ob_get_clean();
+    }
+
+    private function getColumns(Tracker_FormElement_Field_Selectbox $field) {
         $values = $field->getAllValues();
         foreach ($values as $key => $value) {
             if ($value->isHidden()) {
                 unset($values[$key]);
             }
         }
-        $nb_columns = count($values);
-        if ($nb_columns) {
-            $column_sql_select  = ", IFNULL(CVL.bindvalue_id, 100) AS col";
-            $column_sql_from = "LEFT JOIN (
-                           tracker_changeset_value AS CV2
-                           INNER JOIN tracker_changeset_value_list AS CVL ON (CVL.changeset_value_id = CV2.id)
-                           ) ON (A.last_changeset_id = CV2.changeset_id AND CV2.field_id = {$field->getId()}) ";
-           if (!$field->isRequired()) {
-               $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
-               $values = array_merge(array($none), $values);
-               $nb_columns++;
-           }
-        } else {
-            $html .= '<div class="alert-message block-message warning">';
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($field->getLabel()));
-            $html .= '</div>';
+        if ($values) {
+            if (! $field->isRequired()) {
+                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+                $values = array_merge(array($none), $values);
+            }
         }
-        // }}}
 
-        // {{{ Copy&paste from Cardwall_Renderer
-        $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
-        // ...
-        $html .= '<colgroup>';
-        foreach ($values as $key => $value) {
-            $html .= '<col id="cardwall_board_column-'. (int)$value->getId() .'" />';
-        }
-        $html .= '</colgroup>';
-        
-        $html .= '<thead><tr>';
-        
-        /* not copied */$html .= '<th></th>'; /* not copied */
         $decorators = $field->getBind()->getDecorators();
-        foreach ($values as $key => $value) {
-            if (1) {
-                $style = '';
-                if (isset($decorators[$value->getId()])) {
-                    $r = $decorators[$value->getId()]->r;
-                    $g = $decorators[$value->getId()]->g;
-                    $b = $decorators[$value->getId()]->b;
-                    if ($r !== null && $g !== null && $b !== null ) {
-                        //choose a text color to have right contrast (black on dark colors is quite useless)
-                        $color = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
-                        $style = 'style="background-color:rgb('. (int)$r .', '. (int)$g .', '. (int)$b .'); color:'. $color .';"';
-                    }
-                }
-                $html .= '<th '. $style .'>';
-                $html .= $hp->purify($value->getLabel());
-            } else {
-                $html .= '<th>';
-                if (isset($decorators[$value->getId()])) {
-                    $html .= $decorators[$value->getId()]->decorate($hp->purify($value->getLabel()));
-                } else {
-                    $html .= $hp->purify($value->getLabel());
+        $columns    = array();
+        foreach ($values as $value) {
+            $id = (int)$value->getId();
+            $bgcolor = 'white';
+            $fgcolor = 'black';
+            if (isset($decorators[$id])) {
+                $r = $decorators[$id]->r;
+                $g = $decorators[$id]->g;
+                $b = $decorators[$id]->b;
+                if ($r !== null && $g !== null && $b !== null ) {
+                    //choose a text color to have right contrast (black on dark colors is quite useless)
+                    $bgcolor = 'rgb('. (int)$r .', '. (int)$g .', '. (int)$b .');';
+                    $fgcolor = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
                 }
             }
-            $html .= '</th>';
+            $columns[] = new Cardwall_Column($id, $value->getLabel(), $bgcolor, $fgcolor);
         }
-        $html .= '</tr></thead>';
-        // }}}
-        
-        $html .= '<tbody>';
-        foreach ($this->milestone->getPlannedArtifacts()->getChildren() as $child) {
-            $data     = $child->getData();
-            $swimline = $data['artifact'];
-            $html .= '<tr valign="top">';
-            $html .= '<td>';
-            $html .= $swimline->fetchTitle();
-            $html .= '</td>';
-            
-            $cards = $child->getChildren();
-            foreach ($values as $value) {
-                $html .= '<td>';
-                $html .= '<ul>';
-                foreach ($cards as $row) {
-                    $data = $row->getData();
-                    $artifact = $data['artifact'];
-                    $artifact_status = $artifact->getStatus();
-                    if (!$field || $artifact_status === $value->getLabel() || $artifact_status === null && $value->getId() == 100) {
-                        $html .= '<li class="cardwall_board_postit" id="cardwall_board_postit-'. (int)$artifact->getId() .'">';
-                        // TODO: use mustache templates?
-                        $html .= '<div class="card">';
-                        $html .= '<div class="card-actions">';
-                        $html .= '<a href="'. TRACKER_BASE_URL .'/?aid='. (int)$artifact->getId() .'">#'. (int)$artifact->getId() .'</a>'; // TODO: Use artifact->getUrl or similar?
-                        $html .= '</div>';
-                        $html .= '<div class="cardwall_board_content">';
-                        $html .= $hp->purify($artifact->getTitle(), CODENDI_PURIFIER_BASIC_NOBR, $artifact->getTracker()->getGroupId());
-                        $html .= '</div>';
-                        $html .= '</div>';
-                        $html .= '</li>';
-                    }
-                }
-                $html .= '</ul>&nbsp;';
-                $html .= '</td>';
-            }
-            
-            $html .= '</tr>';
+        return $columns;
+    }
+
+    private function getSwimlines(array $columns, array $nodes) {
+        $swimlines = array();
+        foreach ($nodes as $child) {
+            $data  = $child->getData();
+            $title = $data['artifact']->fetchTitle();
+            $cells = $this->getCells($columns, $child->getChildren());
+            $swimlines[] = new Cardwall_Swimline($title, $cells);
         }
-        $html .= '</tbody>';
-        $html .= '</table>';
-        $html .= '</div>';
-        return $html;
+        return $swimlines;
+    }
+
+    private function getCells(array $columns, array $nodes) {
+        $cells = array();
+        foreach ($columns as $column) {
+            $cells[] = $this->getCell($column, $nodes);
+        }
+        return $cells;
+    }
+
+    private function getCell(Cardwall_Column $column, array $nodes) {
+        $artifacts = array();
+        foreach ($nodes as $node) {
+            $this->addNodeToCell($node, $column, $artifacts);
+        }
+        return array('artifacts' => $artifacts);;
+    }
+
+    private function addNodeToCell(TreeNode $node, Cardwall_Column $column, array &$artifacts) {
+        $data            = $node->getData();
+        $artifact        = $data['artifact'];
+        $artifact_status = $artifact->getStatus();
+        if ($this->isArtifactInCell($artifact, $column)) {
+            $artifacts[] = $node;
+        }
+    }
+
+    private function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
+        $artifact_status = $artifact->getStatus();
+        return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
 }
 ?>

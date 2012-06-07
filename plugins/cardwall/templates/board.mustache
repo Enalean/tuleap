@@ -1,0 +1,46 @@
+<div class="cardwall_board">
+    <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
+        <colgroup>
+            {{#hasSwimlineHeader}}
+                <col />
+            {{/hasSwimlineHeader}}
+            {{#columns}}
+                <col id="cardwall_board_column-{{id}}" />
+            {{/columns}}
+        </colgroup>
+
+        <thead>
+            <tr>
+                {{#hasSwimlineHeader}}
+                    <th></th>
+                {{/hasSwimlineHeader}}
+                {{#columns}}
+                    <th style="background-color: {{bgcolor}}; color: {{fgcolor}}">{{label}}</th>
+                {{/columns}}
+            </tr>
+        </thead>
+
+        <tbody>
+            {{#swimlines}}
+                <tr valign="top">
+                    {{#hasSwimlineHeader}}
+                        <td>{{{title}}}</td>
+                    {{/hasSwimlineHeader}}
+                    {{#cells}}
+                        <td>
+                            <ul>
+                                {{#artifacts}}
+                                    {{#getData}}
+                                        <li class="cardwall_board_postit" id="cardwall_board_postit-{{id}}">
+                                            {{> card}}
+                                        </li>
+                                    {{/getData}}
+                                {{/artifacts}}
+                            </ul>
+                        </td>
+                    {{/cells}}
+                </tr>
+            {{/swimlines}}
+        </tbody>
+    </table>
+</div>
