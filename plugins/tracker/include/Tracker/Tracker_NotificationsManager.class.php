@@ -32,7 +32,7 @@ class Tracker_NotificationsManager {
         $this->tracker = $tracker;
     }
     
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {        
+    public function process(TrackerManager $tracker_manager, $request, $current_user) {
         if ($request->get('submit')) {
             if ($request->exist('stop_notification')) {
                 if ($this->tracker->stop_notification != $request->get('stop_notification')) {
@@ -53,12 +53,16 @@ class Tracker_NotificationsManager {
         }
 
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
+        if ($this->tracker->userIsAdmin()) {
+            $this->displayDateReminders($request);
+        }
+        $this->tracker->displayFooter($tracker_manager);
     }
     
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');        
-        echo '<form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
+        echo '<fieldset><form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
         
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotifications_Global($request);
@@ -68,9 +72,7 @@ class Tracker_NotificationsManager {
         echo'
         <HR>
         <P align="center"><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'">
-        </FORM>';
-        
-        $this->tracker->displayFooter($tracker_manager);
+        </FORM></fieldset>';
     }
     
     protected function displayAdminNotifications_Toggle() {
@@ -278,6 +280,73 @@ class Tracker_NotificationsManager {
         
         echo'
         </table>';
+    }
+
+    protected function displayDateReminders(HTTPRequest $request) {
+        $output = '<fieldset>';
+        $titles = array($GLOBALS['Language']->getText('tracker_include_type','df'),
+                        $GLOBALS['Language']->getText('plugin_statistics', 'date'),
+                        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
+                        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
+                        $GLOBALS['Language']->getText('global', 'delete'));
+        $i=0;
+        $reminderId = 999;
+        $output .= html_build_list_table_top($titles);
+        $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+        $output .= '<td>Lorem ipsum dolor sit amet</td>';
+        $output .= '<td>Lorem ipsum dolor sit amet</td>';
+        $output .= '<td>Lorem ipsum dolor sit amet</td>';
+        $output .= '<td>Lorem ipsum dolor sit amet</td>';
+        $output .= '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=delete_reminder&amp;reminder_id='.$reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+        $output .= '</tr>';
+        $output .= '</TABLE>';
+
+        $ouptut .= '<div id="tracker_reminder">'.$this->getNewDateReminderForm().'</div>';
+        $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
+        $output .=  "<script type=\"text/javascript\">
+            document.observe('dom:loaded', function() {
+                $('add_reminder').observe('click', function (evt) {
+                    var reminderDiv = new Element('div');
+                    reminderDiv.insert('".$this->getNewDateReminderForm()."');
+                    Element.insert($('tracker_reminder'), reminderDiv);
+                    Event.stop(evt);
+                    return false;
+                });
+            });
+            </script>";
+            
+            if ( $request->get('action') == 'add_reminder' ) {
+                $output .= $this->getNewDateReminderForm();
+            }
+            
+        $output .= '</fieldset>';
+        echo $output;
+    }
+
+    protected function getNewDateReminderForm() {
+        $before = '';
+        $after  = '';
+        
+        //@todo retrieve field
+        $out .= '<FORM ACTION="'.$baseActionUrl.'" METHOD="POST" name="date_field_notification_settings_form">';
+        //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field->getID().'">';
+        $out .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
+                 <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+
+        $ouput .= '<table border="0" width="900px"><TR height="30">';
+        $ouput .= '<TD> <INPUT TYPE="TEXT" NAME="start" SIZE="3" VALUE="5"> day(s)</TD>';
+        $ouput .= '<TD><SELECT NAME="notif_type">
+                   <OPTION VALUE="0" '.$before.'> before
+                   <OPTION VALUE="1" '.$after.'> after
+                   </SELECT></TD>';
+        $ouput .= '<TD><SELECT NAME="notif_type">
+                   <OPTION VALUE="0" '.$before.'> before
+                   <OPTION VALUE="1" '.$after.'> after
+                   </SELECT></TD>';
+        $ouput .= '<TD>send mail to ......</TD>';
+        $ouput .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
+        $ouput .= '</table>';
+        return $output;
     }
 
     /**
