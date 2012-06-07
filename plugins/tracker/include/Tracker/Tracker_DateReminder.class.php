@@ -22,6 +22,9 @@ class Tracker_DateReminder {
     public $trackerId;
     public $fieldId;
     public $ugroupId;
+    public $notificationType;
+    public $distance;
+    public $status;
 
     /**
      * @var Tracker_FormElement_Field
@@ -30,11 +33,14 @@ class Tracker_DateReminder {
     
 
    
-    public function __construct($reminderId, $trackerId, $fieldId, $ugroupId) {
+    public function __construct($reminderId, $trackerId, $fieldId, $ugroupId, $notificationType, $distance, $status) {
         $this->reminderId      = $reminderId;
         $this->trackerId = $trackerId;
         $this->fieldId   = $fieldId;
         $this->ugroupId   = $ugroupId;
+        $this->notificationType = $notificationType;
+        $this->distance = $distance;
+        $this->status = $status;
     }
 
     /**
@@ -51,14 +57,14 @@ class Tracker_DateReminder {
      * @return string
      */
     public function getTrackerId() {
-        return $this->trackerIid;
+        return $this->trackerId;
     }
     
     /**
      * @return string
      */
     public function getFieldId() {
-        return $this->field_id;
+        return $this->fieldId;
     }
     
     /**
@@ -81,6 +87,25 @@ class Tracker_DateReminder {
     }
 
     /**
+     * get the Notification Type of this reminder
+     *
+     *
+     * @return Integer
+     */
+    public function getNotificationType() {
+        return $this->notificationType;
+    }
+
+    /**
+     * get the Ugroup Id  of this reminder
+     *
+     * @return Integer
+     */
+    public function getUgroupId() {
+        return $this->ugroupId;
+    }
+
+    /**
      * Set the tracker of this reminder
      *
      * @param Tracker $tracker The tracker
@@ -91,5 +116,26 @@ class Tracker_DateReminder {
         $this->trackerId = $trackerId;
     }
     
+    /**
+     * Set the Notification Type of this reminder
+     *
+     * @param Integer $notificationType The Notification Type
+     *
+     * @return void
+     */
+    public function setNotificationType($notificationType) {
+        $this->notificationType = $notificationType;
+    }
+
+    /**
+     * Set the Ugroup of this reminder
+     *
+     * @param Integer $ugroupId The Ugroup Id
+     *
+     * @return void
+     */
+    public function setUgroupId($ugroupId) {
+        $this->ugroupId = $ugroupId;
+    }
 }
 ?>
