@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DateReminderManager {
+class Tracker_DateReminderManager {
 
     protected $tracker;
 
