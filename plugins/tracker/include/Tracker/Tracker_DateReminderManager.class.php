@@ -236,13 +236,18 @@ class Tracker_DateReminderManager {
         return array();
     }
 
+    /**
+     * New date reminder form
+     *
+     * @return String
+     */
     public function getNewDateReminderForm() {
         $before = '';
         $after  = '';
         //@todo retrieve field
         //@todo Call dateReminder insertion method within a dedicated action (say insert_reminder) at Tracker_NotificationsManager::process() (around line 57)
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_global" METHOD="POST" name="date_field_reminder_form">';
-        //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field->getID().'">';
+        //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$this->reminder->dateField->getID().'">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
@@ -255,12 +260,27 @@ class Tracker_DateReminderManager {
                         <OPTION VALUE="0"> MyUgroup1
                         <OPTION VALUE="1"> MyUgroup2
                     </SELECT></TD>';
-        $output .= '<TD>send mail to <SELECT NAME="reminder_ugroup">
-                        <OPTION VALUE="0" '.$before.'> MyUgroup1
-                        <OPTION VALUE="1" '.$after.'> MyUgroup2
-                    </SELECT></TD>';
+        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
         $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
         $output .= '</table></FORM>';
+        return $output;
+    }
+
+    /**
+     * Return a multi-select box of ugroup selectable to fill the new date field reminder.
+     * It contains: all dynamic ugroups plus project members and admins.
+     * @TODO check permissions on tracker, date field before display??
+     *
+     * @return String
+     */
+    function getUgroupsAllowedForTracker() {
+        $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $output  = '<SELECT NAME="reminder_ugroup" multiple>';
+        while($row = db_fetch_array($res)) {
+            $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+        }
+        $output  .= '</SELECT>';
         return $output;
     }
 }
