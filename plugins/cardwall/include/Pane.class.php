@@ -30,6 +30,11 @@ class Cardwall_Pane implements AgileDashboard_Pane {
      */
     private $milestone;
 
+    /**
+     * @var array Accumulated array of Tracker_FormElement_Field_Selectbox
+     */
+    private $accumulated_status_fields = array();
+
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
         $this->milestone->getPlannedArtifacts()->accept($this);
@@ -46,7 +51,12 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         $data    = $node->getData();
         $tracker = $data['artifact']->getTracker();
         $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        $data['column_field_id'] = $field ? $field->getId() : 0;
+        $data['column_field_id'] = 0;
+        if ($field) {
+            $field_id = $field->getId();
+            $data['column_field_id'] = $field_id;
+            $this->accumulated_status_fields[$field_id] = $field;
+        }
         $node->setData($data);
     }
 
@@ -77,8 +87,8 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         $columns   = $this->getColumns($field);
         $swimlines = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
 
-        $html  = '';
-        $html .= '<input type="hidden" id="tracker_report_cardwall_settings_column" value="'. $field->getId() .'" />';
+        $html = '';
+        $html .= $this->getHiddenFields($field, $columns);
 
         $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
         $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns);
@@ -87,21 +97,27 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         $html .= ob_get_clean();
         return $html;
     }
+    
+    /**
+     * @return string html
+     */
+    private function getHiddenFields(Tracker_FormElement_Field_Selectbox $field, array $columns) {
+        $html  = '';
+        $html .= '<input type="hidden" id="tracker_report_cardwall_settings_column" value="'. $field->getId() .'" />';
+        foreach ($this->accumulated_status_fields as $status_field) {
+            foreach ($this->getFieldValues($field) as $value) {
+                foreach ($columns as $column) {
+                    if ($column->label == $value->getLabel()) {
+                        $html .= '<input type="hidden" id="cardwall_column_mapping_'. $column->id .'_'. $status_field->getId() .'" value="'. $value->getId() .'" />';
+                    }
+                }
+            }
+        }
+        return $html;
+    }
 
     private function getColumns(Tracker_FormElement_Field_Selectbox $field) {
-        $values = $field->getAllValues();
-        foreach ($values as $key => $value) {
-            if ($value->isHidden()) {
-                unset($values[$key]);
-            }
-        }
-        if ($values) {
-            if (! $field->isRequired()) {
-                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
-                $values = array_merge(array($none), $values);
-            }
-        }
-
+        $values     = $this->getFieldValues($field);
         $decorators = $field->getBind()->getDecorators();
         $columns    = array();
         foreach ($values as $value) {
@@ -121,6 +137,22 @@ class Cardwall_Pane implements AgileDashboard_Pane {
             $columns[] = new Cardwall_Column($id, $value->getLabel(), $bgcolor, $fgcolor);
         }
         return $columns;
+    }
+
+    private function getFieldValues(Tracker_FormElement_Field_Selectbox $field) {
+        $values = $field->getAllValues();
+        foreach ($values as $key => $value) {
+            if ($value->isHidden()) {
+                unset($values[$key]);
+            }
+        }
+        if ($values) {
+            if (! $field->isRequired()) {
+                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+                $values = array_merge(array($none), $values);
+            }
+        }
+        return $values;
     }
 
     private function getSwimlines(array $columns, array $nodes) {
