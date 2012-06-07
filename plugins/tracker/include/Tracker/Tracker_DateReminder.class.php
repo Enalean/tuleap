@@ -22,12 +22,7 @@ class Tracker_DateReminder {
     public $trackerId;
     public $fieldId;
     public $ugroupId;
-    
-    /**
-     * @var Tracker_Artifact
-     */
-    protected $artifact = null;
-    
+
     /**
      * @var Tracker_FormElement_Field
      */
@@ -41,16 +36,7 @@ class Tracker_DateReminder {
         $this->fieldId   = $fieldId;
         $this->ugroupId   = $ugroupId;
     }
-    
-    /**
-     * Set artifact
-     *
-     * @param Tracker_Artifact $artifact Artifact
-     */
-    public function setArtifact(Tracker_Artifact $artifact) {
-        $this->artifact = $artifact;
-    }
-    
+
     /**
      * Set field
      *
@@ -58,14 +44,14 @@ class Tracker_DateReminder {
      */
     public function setField(Tracker_FormElement_Field $field) {
         $this->field    = $field;
-        $this->field_id = $field->getId();
+        $this->fieldId = $field->getId();
     }
     
     /**
      * @return string
      */
     public function getTrackerId() {
-        return $this->tracker_id;
+        return $this->trackerIid;
     }
     
     /**
@@ -91,7 +77,7 @@ class Tracker_DateReminder {
      * @return Tracker
      */
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        return TrackerFactory::instance()->getTrackerByid($this->trackerId);
     }
 
     /**
@@ -102,7 +88,7 @@ class Tracker_DateReminder {
      * @return void
      */
     public function setTracker($trackerId) {
-        $this->tracker_id = $trackerId;
+        $this->trackerId = $trackerId;
     }
     
 }
