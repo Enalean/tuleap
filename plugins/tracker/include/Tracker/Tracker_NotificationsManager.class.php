@@ -286,7 +286,7 @@ class Tracker_NotificationsManager {
     }
 
     protected function displayDateReminders(HTTPRequest $request) {
-        $output = '<fieldset>';
+        $output .= '<fieldset>';
         $titles = array($GLOBALS['Language']->getText('tracker_include_type','df'),
                         $GLOBALS['Language']->getText('plugin_statistics', 'date'),
                         $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
@@ -304,9 +304,11 @@ class Tracker_NotificationsManager {
         $output .= '</tr>';
         $output .= '</TABLE>';
 
-        $ouptut .= '<div id="tracker_reminder">'.$this->getNewDateReminderForm().'</div>';
+        $output .= '<div id="tracker_reminder">';
+        //$output .= $this->getNewDateReminderForm();
+        $output .= '</div>';
         $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
-        $output .=  "<script type=\"text/javascript\">
+        $output .= "<script type=\"text/javascript\">
             document.observe('dom:loaded', function() {
                 $('add_reminder').observe('click', function (evt) {
                     var reminderDiv = new Element('div');
@@ -321,7 +323,6 @@ class Tracker_NotificationsManager {
             if ( $request->get('action') == 'add_reminder' ) {
                 $output .= $this->getNewDateReminderForm();
             }
-            
         $output .= '</fieldset>';
         echo $output;
     }
@@ -329,26 +330,28 @@ class Tracker_NotificationsManager {
     protected function getNewDateReminderForm() {
         $before = '';
         $after  = '';
-        
         //@todo retrieve field
         $out .= '<FORM ACTION="'.$baseActionUrl.'" METHOD="POST" name="date_field_notification_settings_form">';
         //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field->getID().'">';
         $out .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                  <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
 
-        $ouput .= '<table border="0" width="900px"><TR height="30">';
-        $ouput .= '<TD> <INPUT TYPE="TEXT" NAME="start" SIZE="3" VALUE="5"> day(s)</TD>';
-        $ouput .= '<TD><SELECT NAME="notif_type">
+        $output .= '<table border="0" width="900px"><TR height="30">';
+        $output .= '<TD> <INPUT TYPE="TEXT" NAME="start" SIZE="3" VALUE="5"> day(s)</TD>';
+        $output .= '<TD><SELECT NAME="notif_type">
                    <OPTION VALUE="0" '.$before.'> before
                    <OPTION VALUE="1" '.$after.'> after
                    </SELECT></TD>';
-        $ouput .= '<TD><SELECT NAME="notif_type">
-                   <OPTION VALUE="0" '.$before.'> before
-                   <OPTION VALUE="1" '.$after.'> after
+        $output .= '<TD><SELECT NAME="date_field">
+                   <OPTION VALUE="0"> MyUgroup1
+                   <OPTION VALUE="1"> MyUgroup2
                    </SELECT></TD>';
-        $ouput .= '<TD>send mail to ......</TD>';
-        $ouput .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
-        $ouput .= '</table>';
+        $output .= '<TD>send mail to <SELECT NAME="reminder_ugroup">
+                   <OPTION VALUE="0" '.$before.'> MyUgroup1
+                   <OPTION VALUE="1" '.$after.'> MyUgroup2
+                   </SELECT></TD>';
+        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
+        $output .= '</table>';
         return $output;
     }
 
