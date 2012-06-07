@@ -29,18 +29,22 @@ class Tracker_DateReminderDao extends DataAccessObject {
     }
 
     /**
-     * Get reminders by tracker
+     * Get date reminders
      *
-     * @param Integer trackerId Id of the tracker
+     * @param Integer trackerId Id of the tracker (optional)
      *
      * @return DataAccessResult
      */
-    public function getRemindersByTracker($trackerId) {
-        $trackerId = $this->da->escapeInt($trackerId);
+    public function getDateReminders($trackerId = null) {
+        $condition = "";
+        if ($trackerId) {
+            $trackerId = $this->da->escapeInt($trackerId);
+            $condition = "AND tracker_id = ".$trackerId;
+        }
         $sql = "SELECT *
-                FROM $this->tableName
-                WHERE tracker_id = ".$trackerId."
-                  AND status = 1";
+                FROM ".$this->tableName."
+                WHERE status = 1
+                  ".$condition;
         return $this->retrieve($sql);
     }
 
