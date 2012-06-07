@@ -34,14 +34,23 @@ class Cardwall_Pane implements AgileDashboard_Pane {
         $this->milestone = $milestone;
     }
 
+    /**
+     * @see AgileDashboard_Pane::getIdentifier()
+     */
     public function getIdentifier() {
         return 'cardwall';
     }
 
+    /**
+     * @see AgileDashboard_Pane::getTitle()
+     */
     public function getTitle() {
         return 'Card Wall';
     }
 
+    /**
+     * @see AgileDashboard_Pane::getContent()
+     */
     public function getContent() {
         $tracker = $this->milestone->getPlanning()->getBacklogTracker();
         $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
