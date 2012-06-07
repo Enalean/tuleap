@@ -235,7 +235,34 @@ class Tracker_DateReminderManager {
         //TODO
         return array();
     }
-    
+
+    public function getNewDateReminderForm() {
+        $before = '';
+        $after  = '';
+        //@todo retrieve field
+        //@todo Call dateReminder insertion method within a dedicated action (say insert_reminder) at Tracker_NotificationsManager::process() (around line 57)
+        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_global" METHOD="POST" name="date_field_reminder_form">';
+        //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$field->getID().'">';
+        $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
+                    <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+        $output .= '<table border="0" width="900px"><TR height="30">';
+        $output .= '<TD> <INPUT TYPE="TEXT" NAME="start" SIZE="3" VALUE="5"> day(s)</TD>';
+        $output .= '<TD><SELECT NAME="notif_type">
+                        <OPTION VALUE="0" '.$before.'> before
+                        <OPTION VALUE="1" '.$after.'> after
+                    </SELECT></TD>';
+        $output .= '<TD><SELECT NAME="date_field">
+                        <OPTION VALUE="0"> MyUgroup1
+                        <OPTION VALUE="1"> MyUgroup2
+                    </SELECT></TD>';
+        $output .= '<TD>send mail to <SELECT NAME="reminder_ugroup">
+                        <OPTION VALUE="0" '.$before.'> MyUgroup1
+                        <OPTION VALUE="1" '.$after.'> MyUgroup2
+                    </SELECT></TD>';
+        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
+        $output .= '</table></FORM>';
+        return $output;
+    }
 }
 
 ?>
