@@ -70,8 +70,12 @@ class Planning_ArtifactTreeNodeVisitor {
     }
 
     public function visit(TreeNode $node) {
-        $row      = $node->getData();
-        $artifact = $this->artifact_factory->getArtifactById($row['id']);
+        $this->decorate($node);
+        $this->visitChildren($node);
+    }
+    
+    private function decorate(TreeNode $node) {
+        $artifact = $this->getArtifact($node);
         
         if ($artifact) {
             $planning_artifact = new PlanningArtifact($artifact, $this->planning);
@@ -79,10 +83,14 @@ class Planning_ArtifactTreeNodeVisitor {
             
             $node->setObject($presenter);
         }
-        $this->injectArtifactInChildren($node);
     }
     
-    private function injectArtifactInChildren(TreeNode $node) {
+    private function getArtifact(TreeNode $node) {
+        $row = $node->getData();
+        return $this->artifact_factory->getArtifactById($row['id']);
+    }
+    
+    private function visitChildren(TreeNode $node) {
         foreach ($node->getChildren() as $child) {
             $child->accept($this);
         }
