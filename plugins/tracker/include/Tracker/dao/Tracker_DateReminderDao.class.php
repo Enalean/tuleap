@@ -39,7 +39,8 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $trackerId = $this->da->escapeInt($trackerId);
         $sql = "SELECT *
                 FROM $this->tableName
-                WHERE tracker_id = ".$trackerId;
+                WHERE tracker_id = ".$trackerId."
+                  AND status = 1;
         return $this->retrieve($sql);
     }
 
