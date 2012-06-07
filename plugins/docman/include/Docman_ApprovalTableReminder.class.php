@@ -171,18 +171,39 @@ class Docman_ApprovalTableReminder {
         return $mail;
     }
 
+    /**
+     * Retrieve approval table url for a given docmna item
+     *
+     * @param Docman_Item $table The approval table that its reminder notification will be sent
+     *
+     * @return String
+     */
     function getReviewUrl($docmanItem) {
         $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
-        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.->getId().'&review=1';
+        $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
         return $reviewUrl;
     }
 
+    /**
+     * Retrieve url to access a given docman item
+     *
+     * @param Docman_Item $table The approval table that its reminder notification will be sent
+     *
+     * @return String
+     */
     function getItemUrl($docmanItem) {
         $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
         $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
         return $itemUrl;
     }
 
+    /**
+     * Retrieve notification mail type formmatted as a message within the reminder
+     *
+     * @param ApprovalTable $table The approval The approval table that its reminder notification will be sent
+     *
+     * @return User
+     */
     function getNotificationStyle($table) {
         $notifStyle = '';
         switch($table->getNotification()) {
@@ -197,6 +218,58 @@ class Docman_ApprovalTableReminder {
     }
 
     /**
+     * Retrieve approval table descritpion formatted as a message within the reminder
+     *
+     * @param ApprovalTable $table  The approval table that its reminder notification will be sent
+     * @param String        $format Message format
+     *
+     * @return User
+     */
+    function getTableDescriptionAsMessage($table, $format) {
+        $comment     = '';
+        $userComment = $table->getDescription();
+        if($userComment != '') {
+            switch ($format) {
+                case Codendi_Mail_Interface::FORMAT_HTML :
+                    $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
+                    break;
+                case Codendi_Mail_Interface::FORMAT_TEXT :
+                    $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
+                    $comment .= "\n\n";
+                    break;
+                default :
+                    $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
+                    break;
+            }
+        }
+        return $comment;
+    }
+
+    /**
+     * Retrieve the owner of a given approval table
+     *
+     * @param ApprovalTable $table The approval table we want to get its owner
+     *
+     * @return User
+     */
+    function getApprovalTableOwner($table) {
+        $um    = UserManager::instance();
+        return $um->getUserById($table->owner);
+    }
+
+    /**
+     * Retrieve project for a given docman item
+     *
+     * @param Docman_Item $docmanItem The docman item we want to get its project
+     *
+     * @return Project
+     */
+    function getItemProject($docmanItem) {
+        $pm    = ProjectManager::instance();
+        return $pm->getProject($docmanItem->getGroupId());
+    }
+
+    /**
      * Creates the text mail body
      *
      * @param User                 $reviewer User to remind
@@ -206,23 +279,14 @@ class Docman_ApprovalTableReminder {
      * @return Mail
      */
     function createMailForReviewer($table, $docmanItem, $subject) {
-        $pm    = ProjectManager::instance();
-        $group = $pm->getProject($docmanItem->getGroupId());
-        $um    = UserManager::instance();
-        $owner = $um->getUserById($table->owner);
-
-        $comment     = '';
-        $userComment = $table->getDescription();
-        if($userComment != '') {
-            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));
-            $comment .= "\n\n";
-        }
+        $group = $this->getItemProject($docmanItem);
+        $owner = $this->getApprovalTableOwner($table);
 
         $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_body', array($docmanItem->getTitle(), 
                                                               $group->getPublicName(),
                                                               $owner->getRealName(),
                                                               $this->getItemUrl($docmanItem),
-                                                              $comment,
+                                                              $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_TEXT),
                                                               $this->getNotificationStyle($table),
                                                               $this->getReviewUrl($docmanItem),
                                                               $owner->getEmail()));
@@ -243,22 +307,14 @@ class Docman_ApprovalTableReminder {
      * @return Codendi_Mail
      */
     function createHTMLMailForReviewer($table, $docmanItem, $subject) {
-        $pm    = ProjectManager::instance();
-        $group = $pm->getProject($docmanItem->getGroupId());
-        $um    = UserManager::instance();
-        $owner = $um->getUserById($table->owner);
-
-        $comment     = '';
-        $userComment = $table->getDescription();
-        if($userComment != '') {
-            $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
-        }
+        $group = $this->getItemProject($docmanItem);
+        $owner = $this->getApprovalTableOwner($table);
 
         $body = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_html_mail_body', array($docmanItem->getTitle(), 
                                                               $group->getPublicName(),
                                                               $owner->getRealName(),
                                                               $this->getItemUrl($docmanItem),
-                                                              $comment,
+                                                              $this->getTableDescriptionAsMessage($table, Codendi_Mail_Interface::FORMAT_HTML),
                                                               $this->getNotificationStyle($table),
                                                               $this->getReviewUrl($docmanItem),
                                                               $owner->getEmail()));
