@@ -1,41 +1,43 @@
 <div class="agiledashboard">
     <ul class="nav nav-tabs">
-        <li class="active">
-            <a href="#planner" data-toggle="tab">{{planningName}}</a>
+        <li class="{{#isPlannerPaneActive}}active{{/isPlannerPaneActive}}">
+            <a href="{{current_uri}}">{{planningName}}</a>
         </li>
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}
-                <li>
-                    <a href="#{{getIdentifier}}" data-toggle="tab">{{getTitle}}</a>
+                <li class="{{#isActive}}active{{/isActive}}">
+                    <a href="{{current_uri}}&pane={{getIdentifier}}">{{getTitle}}</a>
                 </li>
             {{/additionalPanes}}
         {{/hasSelectedArtifact}}
     </ul>
     <div class="tab-content">
-        <table cellspacing="5" id="planner" class="tab-pane active">
-            <tbody>
-                <tr valign="top">
-                    <td width="50%">
-                        <div class="planning-backlog">
-                            <h3>{{planningBacklogTitle}}</h3>
-                            {{{backlogSearchView}}}
-                        </div>
-                    </td>
-                    <td>
-                        <h3>{{planningPlanTitle}}</h3>
-                        {{^hasSelectedArtifact}}
-                            {{> select-destination}}
-                        {{/hasSelectedArtifact}}
-                        {{#hasSelectedArtifact}}
-                            {{> show-destination}}
-                        {{/hasSelectedArtifact}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        {{#isPlannerPaneActive}}
+            <table cellspacing="5" id="planner" class="tab-pane active">
+                <tbody>
+                    <tr valign="top">
+                        <td width="50%">
+                            <div class="planning-backlog">
+                                <h3>{{planningBacklogTitle}}</h3>
+                                {{{backlogSearchView}}}
+                            </div>
+                        </td>
+                        <td>
+                            <h3>{{planningPlanTitle}}</h3>
+                            {{^hasSelectedArtifact}}
+                                {{> select-destination}}
+                            {{/hasSelectedArtifact}}
+                            {{#hasSelectedArtifact}}
+                                {{> show-destination}}
+                            {{/hasSelectedArtifact}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        {{/isPlannerPaneActive}}
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}
-                <div id="{{getIdentifier}}" class="tab-pane">
+                <div id="{{getIdentifier}}" class="tab-pane {{#isActive}}active{{/isActive}}">
                     {{{getContent}}}
                 </div>
             {{/additionalPanes}}

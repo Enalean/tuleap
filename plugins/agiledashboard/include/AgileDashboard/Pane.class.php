@@ -38,5 +38,10 @@ interface AgileDashboard_Pane {
      * @return string eg: '<table>...</table>'
      */
     public function getContent();
+
+    /**
+     * @return bool
+     */
+    public function isActive();
 }
 ?>

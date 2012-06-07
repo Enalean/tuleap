@@ -76,6 +76,13 @@ class Cardwall_Pane implements AgileDashboard_Pane {
     }
 
     /**
+     * @see AgileDashboard_Pane::isActive()
+     */
+    public function isActive() {
+        return HTTPRequest::instance()->get('pane') === $this->getIdentifier();
+    }
+
+    /**
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {

@@ -79,6 +79,8 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
+        $this->current_uri                 = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
+        $this->planned_artifacts_tree      = $this->buildPlannedArtifactsTree();
     }
     
     /**
@@ -87,23 +89,44 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function hasSelectedArtifact() {
         return !is_a($this->milestone, 'Planning_NoMilestone');
     }
-    
+
+    public function isPlannerPaneActive() {
+        $this->getAdditionalPanes();
+        return $this->is_planner_pane_active;
+    }
+
     public function additionalPanes() {
-        $panes = array();
+        return $this->getAdditionalPanes();
+    }
+
+    private $additional_panes = array();
+    private function getAdditionalPanes() {
+        if (!empty($this->additional_panes)) {
+            return $this->additional_panes;
+        }
+
+        $this->additional_panes = array();
         EventManager::instance()->processEvent(
             AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
             array(
                 'milestone' => $this->milestone,
-                'panes'     => &$panes
+                'panes'     => &$this->additional_panes
             )
         );
-        return $panes;
+
+        $an_additional_pane_is_active = false;
+        while (!$an_additional_pane_is_active && list(,$pane) = each($this->additional_panes)) {
+            $an_additional_pane_is_active = $pane->isActive();
+        }
+        $this->is_planner_pane_active = ! $an_additional_pane_is_active;
+
+        return $this->additional_panes;
     }
-    
+
     /**
      * @return TreeNode
      */
-    public function plannedArtifactsTree($child_depth = 1) {
+    public function buildPlannedArtifactsTree($child_depth = 1) {
         $root_node = null;
         
         if ($this->canAccessPlannedItem()) {
@@ -116,7 +139,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         }
         return $root_node;
     }
-    
+
+    public function getPlannedArtifactsTree() {
+        return $this->planned_artifacts_tree;
+    }
+
     private function canAccessPlannedItem() {
         return $this->milestone && $this->milestone->userCanView($this->current_user);
     }
