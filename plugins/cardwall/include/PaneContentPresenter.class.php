@@ -33,6 +33,11 @@ class Cardwall_PaneContentPresenter {
     public $columns;
 
     /**
+     * @var array of Cardwall_Mapping
+     */
+    public $mappings;
+
+    /**
      * @var string
      */
     public $planning_redirect_parameter = '';
@@ -40,10 +45,12 @@ class Cardwall_PaneContentPresenter {
     /**
      * @param array $swimlines Array of TreeNode
      * @param array $columns   Array of Cardwall_Column
+     * @param array $mappings  Array of Cardwall_Mapping
      */
-    public function __construct(array $swimlines, array $columns) {
+    public function __construct(array $swimlines, array $columns, array $mappings) {
         $this->swimlines = $swimlines;
         $this->columns   = $columns;
+        $this->mappings  = $mappings;
     }
 
     public function hasSwimlineHeader() {

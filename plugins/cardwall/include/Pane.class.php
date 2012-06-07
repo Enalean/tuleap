@@ -22,6 +22,7 @@ require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'Column.class.php';
 require_once 'Swimline.class.php';
+require_once 'Mapping.class.php';
 
 class Cardwall_Pane implements AgileDashboard_Pane {
 
@@ -86,34 +87,30 @@ class Cardwall_Pane implements AgileDashboard_Pane {
 
         $columns   = $this->getColumns($field);
         $swimlines = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
+        $mappings  = $this->getMapping($field, $columns);
 
-        $html = '';
-        $html .= $this->getHiddenFields($field, $columns);
-
-        $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns);
+        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
+        $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns, $mappings);
         ob_start();
         $renderer->render('pane-content', $presenter);
-        $html .= ob_get_clean();
-        return $html;
+        return ob_get_clean();
     }
     
     /**
-     * @return string html
+     * @return array of Cardwall_Mapping
      */
-    private function getHiddenFields(Tracker_FormElement_Field_Selectbox $field, array $columns) {
-        $html  = '';
-        $html .= '<input type="hidden" id="tracker_report_cardwall_settings_column" value="'. $field->getId() .'" />';
+    private function getMapping(Tracker_FormElement_Field_Selectbox $field, array $columns) {
+        $mappings = array();
         foreach ($this->accumulated_status_fields as $status_field) {
-            foreach ($this->getFieldValues($field) as $value) {
+            foreach ($this->getFieldValues($status_field) as $value) {
                 foreach ($columns as $column) {
                     if ($column->label == $value->getLabel()) {
-                        $html .= '<input type="hidden" id="cardwall_column_mapping_'. $column->id .'_'. $status_field->getId() .'" value="'. $value->getId() .'" />';
+                        $mappings[] = new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId());
                     }
                 }
             }
         }
-        return $html;
+        return $mappings;
     }
 
     private function getColumns(Tracker_FormElement_Field_Selectbox $field) {

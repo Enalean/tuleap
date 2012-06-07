@@ -61,10 +61,20 @@ document.observe('dom:loaded', function () {
 
                     //save the new state
                     var parameters = {
-                        aid: dragged.id.split('-')[1],
-                        func: 'artifact-update'
-                    };
-                    parameters['artifact[' + $F('tracker_report_cardwall_settings_column') + ']'] = col.id.split('-')[1];
+                            aid: dragged.id.split('-')[1],
+                            func: 'artifact-update'
+                        },
+                        field_id,
+                        value_id = col.id.split('-')[1];
+                    if ($('tracker_report_cardwall_settings_column')) {
+                         field_id = $F('tracker_report_cardwall_settings_column');
+                    } else {
+                        console.log(field_id, value_id);
+                        field_id = dragged.readAttribute('data-column-field-id');
+                        value_id = $F('cardwall_column_mapping_' + value_id + '_' + field_id);
+                        console.log(field_id, value_id);
+                    }
+                    parameters['artifact[' + field_id + ']'] = value_id;
                     var req = new Ajax.Request(codendi.tracker.base_url, {
                         method: 'POST',
                         parameters: parameters,
