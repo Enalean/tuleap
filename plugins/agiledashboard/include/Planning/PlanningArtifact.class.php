@@ -58,7 +58,7 @@ class PlanningArtifact extends Planning_Item {
     }
     
     public function isPlannifiable() {
-        return ($this->artifact->getTrackerId() == $this->planning->getBacklogTrackerId());
+        return ($this->getTracker()->getId() == $this->planning->getBacklogTrackerId());
     }
     
     public function isContext() {

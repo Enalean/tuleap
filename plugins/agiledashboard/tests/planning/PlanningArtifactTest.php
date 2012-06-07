@@ -26,7 +26,9 @@ require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
 class PlanningArtifactTest extends PlanningItemTestCase {
     
-    private $backlog_tracker_id;
+    private $epics_tracker;
+    private $stories_tracker;
+    private $epic;
     
     public function setUp() {
         parent::setUp();
@@ -36,32 +38,34 @@ class PlanningArtifactTest extends PlanningItemTestCase {
         $this->title    = 'do something interresting';
         $this->id       = '234872';
         
-        $this->backlog_tracker_id = 123;
-        $this->other_tracker_id    = 456;
+        $epics_tracker_id   = 123;
+        $stories_tracker_id = 456;
         
-        $this->planning = aPlanning()->withBacklogTrackerId($this->backlog_tracker_id)
+        $this->epics_tracker   = aTracker()->withId($epics_tracker_id)->build();
+        $this->stories_tracker = aTracker()->withId($stories_tracker_id)->build();
+        
+        $this->planning = aPlanning()->withBacklogTrackerId($epics_tracker_id)
                                      ->build();
         
-        $this->artifact = aMockArtifact()->withUri($this->edit_uri)
-                                         ->withXRef($this->xref)
-                                         ->withTitle($this->title)
-                                         ->withId($this->id)
-                                         ->build();
+        $this->epic  = aMockArtifact()->withUri($this->edit_uri)
+                                      ->withXRef($this->xref)
+                                      ->withTitle($this->title)
+                                      ->withTracker($this->epics_tracker)
+                                      ->withId($this->id)
+                                      ->build();
+        $this->story = aMockArtifact()->withTracker($this->stories_tracker)
+                                      ->build();
         
-        $this->item = new PlanningArtifact($this->artifact, $this->planning);
+        $this->item = new PlanningArtifact($this->epic, $this->planning);
     }
     
     public function itIsPlannifiableIfItsTrackerMatchesThePlanningOne() {
-        stub($this->artifact)->getTrackerId()
-                             ->returns($this->backlog_tracker_id);
-        
+        stub($this->epic)->getTracker()->returns($this->epics_tracker);
         $this->assertTrue($this->item->isPlannifiable());
     }
     
     public function itIsNotPlannifiableIfItsTrackerDoesNotMatchThePlanningBacklogTracker() {
-        stub($this->artifact)->getTrackerId()
-                             ->returns($this->other_tracker_id);
-        
+        $this->item = new PlanningArtifact($this->story, $this->planning);
         $this->assertFalse($this->item->isPlannifiable());
     }
 }

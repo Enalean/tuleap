@@ -1270,7 +1270,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getHierarchyFactory() {
         if ($this->hierarchy_factory == null) {
-            $this->hierarchy_factory = Tracker_HierarchyFactory::build();
+            $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
         }
         return $this->hierarchy_factory;
     }

@@ -59,16 +59,18 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
+        
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
+        Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
     }
 
     public function tearDown() {
         parent::tearDown();
 
-
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
+        Tracker_HierarchyFactory::clearInstance();
     }
 
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {

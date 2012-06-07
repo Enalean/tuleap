@@ -52,7 +52,7 @@ class PlanningArtifactPresenter {
     }
     
     public function getCssClasses() {
-        return $this->css_classes.' '.$this->getPlanningDraggableClass();
+        return trim($this->css_classes.' '.$this->getPlanningDraggableClass());
     }
     
     private function getPlanningDraggableClass() {
@@ -62,7 +62,8 @@ class PlanningArtifactPresenter {
     }
     
     public function allowedChildrenTypes() {
-        return Tracker_HierarchyFactory::build()->getChildren($this->planning_item->getTracker()->getId());
+        $hierarchy_factory = Tracker_HierarchyFactory::instance();
+        return $hierarchy_factory->getChildren($this->planning_item->getTracker()->getId());
     }
 }
 ?>
