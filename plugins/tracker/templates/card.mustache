@@ -1,12 +1,12 @@
-{{#getData}}
-<li class="{{planningDraggable}} {{class}}" id="art-{{id}}">
+{{#getObject}}
+<li class="{{getCssClasses}}" id="art-{{getId}}">
     <div class="card">
         {{> card-actions}}
-        {{title}}
+        {{getTitle}}
         &nbsp;
     </div>
     {{#hasChildren}}
         {{> cards}}
     {{/hasChildren}}
 </li>
-{{/getData}}
+{{/getObject}}
