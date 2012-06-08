@@ -149,16 +149,6 @@ class Tracker_DateReminder {
         $this->ugroupId = $ugroupId;
     }
 
-
-    /**
-     * React when reminder is treated as a string
-     *
-     * @return String
-     */
-    public function __toString() {
-        return $this->distance.' day(s) '.$this->notificationType.'"'.$this->fieldId .'" send an email to "'.$this->ugroupId.'"';
-    }
-
     /**
      * Retrieve the recipient list for the ugroup_id's
      *
@@ -184,6 +174,20 @@ class Tracker_DateReminder {
         return $fieldFactory->getFieldById($this->getFieldId());
     }
 
+    /**
+     * React when reminder is treated as a string
+     *
+     * @return String
+     */
+    public function __toString() {
+        if ($this->getNotificationType() == 1) {
+            $notificationTypeLabel = "after";
+        } else {
+            $notificationTypeLabel = "before";
+        }
+        $fieldLabel  = ' "'.$this->getField()->name.'" ';
+        $ugroupLabel = ' "'.$this->ugroupId.'" ';
+        return $this->distance.' day(s) '.$notificationTypeLabel.$fieldLabel.' send an email to '.$ugroupLabel;
+    }
 }
-
 ?>
