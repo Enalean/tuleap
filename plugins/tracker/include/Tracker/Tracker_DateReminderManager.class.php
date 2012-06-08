@@ -378,6 +378,31 @@ class Tracker_DateReminderManager {
         }
     }
 
+    /** Display all reminders for a given tracker
+     *
+     * @return Void
+     */
+    public function displayAllReminders() {
+        $titles = array('Reminder',
+                        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
+                        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
+                        $GLOBALS['Language']->getText('global', 'delete'));
+        $i=0;
+        $trackerReminders = $this->getTrackerReminders();
+        print html_build_list_table_top($titles);
+        foreach ($trackerReminders as $reminder) {
+            $reminder = $this->getReminder($reminder['reminder_id']);
+            print '<tr class="'.util_get_alt_row_color($i++).'">';
+            print '<td>';
+            print $reminder;
+            print '</td>';
+            print '<td>'.$reminder->status.'</td>';
+            print '<td>'.$reminder->notificationType.'</td>';
+            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+            print '</tr>';
+        }
+        print '</TABLE>';
+    }
 }
 
 ?>

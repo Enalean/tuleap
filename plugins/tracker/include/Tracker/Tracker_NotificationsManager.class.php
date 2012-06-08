@@ -289,28 +289,8 @@ class Tracker_NotificationsManager {
 
     protected function displayDateReminders(HTTPRequest $request) {
         $output .= '<fieldset>';
-        $titles = array($GLOBALS['Language']->getText('tracker_include_type','df'),
-                        $GLOBALS['Language']->getText('plugin_statistics', 'date'),
-                        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
-                        $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
-                        $GLOBALS['Language']->getText('global', 'delete'));
-        $i=0;
-        $trackerReminders = $this->dateReminderManager->getTrackerReminders();
-        $output .= html_build_list_table_top($titles);
-        foreach ($trackerReminders as $reminder) {
-            $reminder = $this->dateReminderManager->getReminder($reminder['reminder_id']);
-            $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
-            $output .= '<td>'.$reminder->fieldId.'</td>';
-            $output .= '<td>'.$reminder->distance.'</td>';
-            $output .= '<td>'.$reminder->status.'</td>';
-            $output .= '<td>'.$reminder->notificationType.'</td>';
-            $output .= '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
-            $output .= '</tr>';
-        }
-        $output .= '</TABLE>';
-
-        $output .= '<div id="tracker_reminder">';
-        $output .= '</div>';
+        $this->dateReminderManager->displayAllReminders();
+        $output .= '<div id="tracker_reminder"></div>';
         $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
         $output .= "<script type=\"text/javascript\">
             document.observe('dom:loaded', function() {
