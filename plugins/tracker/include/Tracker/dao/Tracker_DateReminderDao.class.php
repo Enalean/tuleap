@@ -132,5 +132,18 @@ class Tracker_DateReminderDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Delete a date reminders given their ids
+     * 
+     * @param Array $remindersIds List of Id of reminders
+     * 
+     * @return Boolean
+     */
+    public function deleteReminders($remindersIds) {
+        $reminders = $this->da->escapeIntImplode($remindersIds);
+        $sql = "DELETE FROM $this->tableName
+                WHERE reminder_id IN ($reminders)";
+        return $this->update($sql);
+    }
 }
 ?>
