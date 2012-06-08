@@ -94,7 +94,17 @@ class CodeReviewViews extends Views {
      */
     function displayFirstFrame() {
         $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        $form  = " <form id=\"form\" target=\"_blank\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
+        echo'</br>';
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
+        echo'</br>';
+        echo'</br>';
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
+        echo'</br>';
+        echo'</br>';
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
+        echo'</br>';
+        $iframe  = "<iframe name=\"rb\" style=\"display:none; visibility:hidden\"/>";
+        $form    = " <form id=\"form\" target=\"rb\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form   .= "  <p>";
         $form   .= "   <input name=\"username\" value=".$this->user->getUserName()." type=\"hidden\" size=\"24\" />";
         $form   .= "  </p>";
@@ -111,15 +121,8 @@ class CodeReviewViews extends Views {
         $script .="</script>";
         print $form;
         print $script;
-        echo'</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
-        echo'</br>';
-        echo'</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
-        echo'</br>';
-        echo'</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
-        echo'</br>';
+        print $iframe;
+        
     }
     /**
      * Displays Review board frame
