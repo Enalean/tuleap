@@ -163,7 +163,12 @@ class Tracker_DateReminder {
      * @return Array
      */
     public function getRecipients() {
-        // @TODO
+        $uGroupManager = new UGroupManager();
+        $uGroup        = $uGroupManager->getById($this->getUgroupId());
+        $recipients    = $uGroup->getMembers();
+        if ($recipients) {
+            return $recipients;
+        }
         return array();
     }
 
