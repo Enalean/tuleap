@@ -53,17 +53,24 @@ class Tracker_DateReminderManager {
      * @return Void
      */
     public function process(TrackerManager $engine) {
-        return $this->sendReminderNotification();
+        $reminders = $this->getTrackerReminders();
+        foreach ($reminders as $reminder) {
+            $artifacts = $this->getArtifactsByreminder($reminder);
+            foreach ($artifacts as $artifact) {
+                $this->sendReminderNotification($reminder, $artifact);
+            }
+        }
     }
 
     /**
      * Send reminder
      *
+     * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param Tracker_Artifact $artifact Artifact for which reminders will be sent
      *
      * @return Void
      */
-    protected function sendReminderNotification(Tracker_Artifact $artifact) {
+    protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact) {
         $tracker    = $this->getTracker();
         // 1. Get the recipients list
         $recipients = $this->getRecipients();
@@ -355,16 +362,18 @@ class Tracker_DateReminderManager {
      *
      * @param Tracker_DateReminder $reminder Reminder on which the notification is based on
      *
-     * @return Void
+     * @return Array
      */
     public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
+        $artifacts = array();
         $date = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
         // @TODO: Include "last update date" & "submitted on" as types of date fields
         $dao = new Tracker_FormElement_Field_Value_DateDao();
         $dar = $dao->getArtifactsByFieldANDValue($reminder->getFieldId(), $date);
         if ($dar && !$dar->isError()) {
+            $artifactFactory = Tracker_ArtifactFactory();
             foreach ($dar as $row) {
-                
+                $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);
             }
         }
     }
