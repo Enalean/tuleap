@@ -140,6 +140,18 @@ class TreeNode /*implements Visitable*/ {
         }
     }
 
+    /**
+     * Allows to define a tree inline (usefull for tests)
+     *
+     * @return TreeNode
+     */
+    function addChildren() {
+        $child_list = func_get_args();
+        foreach ($child_list as $child) {
+            $this->addChild($child);
+        }
+        return $this;
+    }
 
     /**
      * Remove a child.
