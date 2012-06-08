@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
+
 class Planning_BacklogItemFilterVisitor {
 
     /**
@@ -24,20 +27,34 @@ class Planning_BacklogItemFilterVisitor {
      */
     private $backlog_tracker_id;
 
-    public function __construct($backlog_tracker_id) {
+    /**
+     * @var Tracker_Hierarchy
+     */
+    private $hierarchy;
+
+    public function __construct($backlog_tracker_id, Tracker_HierarchyFactory $hierarchy_factory) {
         $this->backlog_tracker_id = $backlog_tracker_id;
+        $this->hierarchy          = $hierarchy_factory->getHierarchy(array($this->backlog_tracker_id));
+    }
+
+    private function isChildInHierarchy() {
+
     }
 
     public function visit(TreeNode $tree_node) {
         $new_children = array();
 
+        $parent_artifact = $tree_node->getData();
+
         foreach ($tree_node->getChildren() as $child_node) {
             $data = $child_node->getData();
 
-            if ($data['tracker_id'] == $this->backlog_tracker_id) {
-                $new_children[] = $child_node;
-            } else {
-                $new_children = array_merge($new_children, $child_node->accept($this)->getChildren());
+            if ($this->hierarchy->isChild($parent_artifact['tracker_id'], $data['tracker_id'])) {
+                if ($data['tracker_id'] == $this->backlog_tracker_id) {
+                    $new_children[] = $child_node;
+                } else {
+                    $new_children = array_merge($new_children, $child_node->accept($this)->getChildren());
+                }
             }
         }
 
