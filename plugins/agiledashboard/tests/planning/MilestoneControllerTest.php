@@ -21,10 +21,11 @@
 
 $current_dir = dirname(__FILE__);
 
+require_once $current_dir.'/../../include/constants.php';
 require_once $current_dir.'/../../../tracker/include/constants.php';
-require_once $current_dir.'/../../include/Planning/MilestoneController.class.php';
-require_once $current_dir.'/../../include/Planning/Planning.class.php';
-require_once $current_dir.'/../../include/Planning/NoMilestone.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/MilestoneController.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/Planning.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/NoMilestone.class.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aTracker.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aField.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
@@ -32,7 +33,7 @@ require_once $current_dir.'/../builders/aPlanning.php';
 require_once $current_dir.'/../builders/aPlanningFactory.php';
 require_once $current_dir.'/../builders/aPlanningController.php';
 require_once $current_dir.'/../../../../tests/simpletest/common/include/builders/aRequest.php';
-require_once $current_dir.'/../../include/Planning/ViewBuilder.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ViewBuilder.class.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
