@@ -23,42 +23,46 @@ require_once 'PaneContentPresenter.class.php';
 require_once 'Column.class.php';
 require_once 'Swimline.class.php';
 require_once 'Mapping.class.php';
+require_once 'MappingCollection.class.php';
+require_once 'InjectColumnIdVisitor.class.php';
 
 class Cardwall_Pane extends AgileDashboard_Pane {
-
-    /**
-     * @var Planning_Milestone
-     */
-    private $milestone;
 
     /**
      * @var array Accumulated array of Tracker_FormElement_Field_Selectbox
      */
     private $accumulated_status_fields = array();
 
+    /**
+     * @var Planning_Milestone
+     */
+    private $milestone;
+
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
+
+        $visitor = new Cardwall_InjectColumnIdVisitor();
+        $this->milestone->getPlannedArtifacts()->accept($visitor);
+        $this->accumulated_status_fields = $visitor->getAccumulatedStatusFields();
+
         $this->milestone->getPlannedArtifacts()->accept($this);
     }
 
     public function visit(TreeNode $node) {
-        $this->injectColumnFieldId($node);
+        $this->injectDropIntoClassnames($node);
+    }
+
+    private function injectDropIntoClassnames(TreeNode $node) {
+        $data     = $node->getData();
+        $mappings = $this->getMapping()->getMappingsByFieldId($data['column_field_id']);
+        $data['drop-into-class'] = '';
+        foreach ($mappings as $mapping) {
+            $data['drop-into-class'] .= ' drop-into-'. $mapping->column_id;
+        }
+        $node->setData($data);
         foreach ($node->getChildren() as $child) {
             $child->accept($this);
         }
-    }
-
-    private function injectColumnFieldId(TreeNode $node) {
-        $data    = $node->getData();
-        $tracker = $data['artifact']->getTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        $data['column_field_id'] = 0;
-        if ($field) {
-            $field_id = $field->getId();
-            $data['column_field_id'] = $field_id;
-            $this->accumulated_status_fields[$field_id] = $field;
-        }
-        $node->setData($data);
     }
 
     /**
@@ -79,15 +83,13 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
-        $tracker = $this->milestone->getPlanning()->getBacklogTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        if (!$field) {
+        if (! $this->getField()) {
             return 'Y u no configure the status semantic of ur tracker?';
         }
 
-        $columns   = $this->getColumns($field);
+        $columns   = $this->getColumns();
+        $mappings  = $this->getMapping();
         $swimlines = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
-        $mappings  = $this->getMapping($field, $columns);
 
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns, $mappings);
@@ -95,17 +97,34 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $renderer->render('pane-content', $presenter);
         return ob_get_clean();
     }
-    
+
     /**
-     * @return array of Cardwall_Mapping
+     * @var Tracker_FormElement_Field_Selectbox
      */
-    private function getMapping(Tracker_FormElement_Field_Selectbox $field, array $columns) {
-        $mappings = array();
+    private $field;
+
+    /**
+     * @return Tracker_FormElement_Field_Selectbox
+     */
+    private function getField() {
+        if (! $this->field) {
+            $tracker     = $this->milestone->getPlanning()->getBacklogTracker();
+            $this->field = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        }
+        return $this->field;
+    }
+
+    /**
+     * @return Cardwall_MappingCollection
+     */
+    private function getMapping() {
+        $columns  = $this->getColumns();
+        $mappings = new Cardwall_MappingCollection();
         foreach ($this->accumulated_status_fields as $status_field) {
             foreach ($this->getFieldValues($status_field) as $value) {
                 foreach ($columns as $column) {
                     if ($column->label == $value->getLabel()) {
-                        $mappings[] = new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId());
+                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
                     }
                 }
             }
@@ -113,10 +132,20 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         return $mappings;
     }
 
-    private function getColumns(Tracker_FormElement_Field_Selectbox $field) {
-        $values     = $this->getFieldValues($field);
-        $decorators = $field->getBind()->getDecorators();
-        $columns    = array();
+    /**
+     *  @var array of Cardwall_Column
+     */
+    private $columns;
+
+    private function getColumns() {
+        if ($this->columns) return $this->columns;
+
+        $field = $this->getField();
+        if (! $field) return array();
+
+        $values        = $this->getFieldValues($field);
+        $decorators    = $field->getBind()->getDecorators();
+        $this->columns = array();
         foreach ($values as $value) {
             $id = (int)$value->getId();
             $bgcolor = 'white';
@@ -131,9 +160,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
                     $fgcolor = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
                 }
             }
-            $columns[] = new Cardwall_Column($id, $value->getLabel(), $bgcolor, $fgcolor);
+            $this->columns[] = new Cardwall_Column($id, $value->getLabel(), $bgcolor, $fgcolor);
         }
-        return $columns;
+        return $this->columns;
     }
 
     private function getFieldValues(Tracker_FormElement_Field_Selectbox $field) {

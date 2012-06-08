@@ -33,7 +33,7 @@ class Cardwall_PaneContentPresenter {
     public $columns;
 
     /**
-     * @var array of Cardwall_Mapping
+     * @var Cardwall_MappingCollection
      */
     public $mappings;
 
@@ -45,9 +45,9 @@ class Cardwall_PaneContentPresenter {
     /**
      * @param array $swimlines Array of TreeNode
      * @param array $columns   Array of Cardwall_Column
-     * @param array $mappings  Array of Cardwall_Mapping
+     * @param array $mappings  Cardwall_MappingCollection
      */
-    public function __construct(array $swimlines, array $columns, array $mappings) {
+    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
         $this->swimlines = $swimlines;
         $this->columns   = $columns;
         $this->mappings  = $mappings;

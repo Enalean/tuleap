@@ -21,33 +21,27 @@ document.observe('dom:loaded', function () {
         // }}}
 
         // {{{ Define the droppables columns
-        var cols = board.select('col'),
-            cols_classnames = [];
-        cols.each(function (col, col_index) {
-            cols_classnames[col_index] = [];
-            col.up('table').down('tbody').select('tr').each(function (tr, swimline_index) {
-                var c = board.identify() + '_dummy_' + col_index + '_' + swimline_index;
-                cols_classnames[col_index][swimline_index] = c;
-                tr.down('td', col.up().childElements().indexOf(col)).select('.cardwall_board_postit').invoke('addClassName', c);
+        var cols = board.select('col');;
+        cols.each(function (col) {
+            var classname = 'drop-into-' + col.id.split('-')[1];
+            col.up('table').down('tbody').select('tr').each(function (tr) {
+                tr.down('td', col.up().childElements().indexOf(col)).select('.cardwall_board_postit').invoke('removeClassName', classname);
             });
         });
         cols.each(function (col, col_index) {
-            col.up('table').down('tbody').select('tr').each(function (tr, swimline_index) {
+            col.up('table').down('tbody').select('tr').each(function (tr) {
                 var td           = tr.down('td', col_index),
                     restorecolor = td.getStyle('background-color'),
-                    effect       = null;
+                    effect       = null,
+                    accept       = 'drop-into-' + col.id.split('-')[1];
                 Droppables.add(td, {
                     hoverclass: 'cardwall_board_column_hover',
-                    accept: cols_classnames.collect(function (swim) {
-                        return swim[swimline_index];
-                    }).reject(function (value, key) {
-                        return key === col_index;
-                    }),
+                    accept: accept,
                     onDrop: function (dragged, dropped, event) {
                         //change the classname of the post it to be accepted by the formers columns
-                        dragged.removeClassName(cols_classnames[dragged.up('tr').childElements().indexOf(dragged.up('td'))][swimline_index]);
-                        dragged.addClassName(cols_classnames[col_index][swimline_index]);
-    
+                        dragged.addClassName('drop-into-' + cols[dragged.up('tr').childElements().indexOf(dragged.up('td'))].id.split('-')[1]);
+                        dragged.removeClassName(accept);
+                        
                         //switch to the new column
                         Element.remove(dragged);
                         td.down('ul').appendChild(dragged);
@@ -72,10 +66,8 @@ document.observe('dom:loaded', function () {
                         if ($('tracker_report_cardwall_settings_column')) {
                              field_id = $F('tracker_report_cardwall_settings_column');
                         } else {
-                            console.log(field_id, value_id);
                             field_id = dragged.readAttribute('data-column-field-id');
                             value_id = $F('cardwall_column_mapping_' + value_id + '_' + field_id);
-                            console.log(field_id, value_id);
                         }
                         parameters['artifact[' + field_id + ']'] = value_id;
                         var req = new Ajax.Request(codendi.tracker.base_url, {
