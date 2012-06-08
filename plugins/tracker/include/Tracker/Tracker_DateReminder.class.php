@@ -156,5 +156,27 @@ class Tracker_DateReminder {
     public function __toString() {
         return $this->distance.' day(s) '.$this->notificationType.'"'.$this->fieldId .'" send an email to "'.$this->ugroupId.'"';
     }
+
+    /**
+     * Retrieve the recipient list for the ugroup_id's
+     *
+     * @return Array
+     */
+    public function getRecipients() {
+        // @TODO
+        return array();
+    }
+
+    /**
+     * Retrieve the date field as a Tracker_FormElement object
+     *
+     * @return Tracker_FormElement
+     */
+    public function getDateField() {
+        $fieldFactory = new Tracker_FormElementFactory();
+        return $fieldFactory->getFieldById($this->getFieldId());
+    }
+
 }
+
 ?>

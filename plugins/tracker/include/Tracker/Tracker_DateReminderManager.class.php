@@ -48,11 +48,9 @@ class Tracker_DateReminderManager {
     /**
      * Process nightly job to send reminders
      *
-     * @param TrackerManager $engine Tracker manager
-     *
      * @return Void
      */
-    public function process(TrackerManager $engine) {
+    public function process() {
         $reminders = $this->getTrackerReminders();
         foreach ($reminders as $reminder) {
             $artifacts = $this->getArtifactsByreminder($reminder);
@@ -73,7 +71,7 @@ class Tracker_DateReminderManager {
     protected function sendReminderNotification(Tracker_DateReminder $reminder, Tracker_Artifact $artifact) {
         $tracker    = $this->getTracker();
         // 1. Get the recipients list
-        $recipients = $this->getRecipients();
+        $recipients = $reminder->getRecipients();
 
         // 2. Compute the body of the message + headers
         $messages = array();
@@ -81,7 +79,7 @@ class Tracker_DateReminderManager {
         foreach ($recipients as $recipient) {
             $user = null;
             $user = $um->getUserByUserName($recipient);
-            if ($user && $artifact->userCanView($user) && $this->reminder->dateField->userCanRead($user)) {
+            if ($user && $artifact->userCanView($user) && $reminder->getDateField()->userCanRead($user)) {
                 $this->buildMessage($reminder, $artifact, $messages, $user);
             }
         }
@@ -101,7 +99,6 @@ class Tracker_DateReminderManager {
      * @param User             $user     Receipient
      *
      * return Array
-     *
      */
     protected function buildMessage(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, &$messages, $user) {
         $mailManager = new MailManager();
@@ -136,13 +133,13 @@ class Tracker_DateReminderManager {
     /**
      * Send a notification
      *
-     * @param array  $recipients the list of recipients
-     * @param array  $headers    the additional headers
-     * @param string $subject    the subject of the message
-     * @param string $htmlBody   the html content of the message
-     * @param string $txtBody    the text content of the message
+     * @param Array  $recipients the list of recipients
+     * @param Array  $headers    the additional headers
+     * @param String $subject    the subject of the message
+     * @param String $htmlBody   the html content of the message
+     * @param String $txtBody    the text content of the message
      *
-     * @return void
+     * @return Void
      */
     protected function sendReminder(Tracker_Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody) {
         $mail = new Codendi_Mail();
@@ -178,9 +175,9 @@ class Tracker_DateReminderManager {
     /**
      * Get the subject for reminder
      *
-     * @param string $recipient The recipient who will receive the reminder
+     * @param String $recipient The recipient who will receive the reminder
      *
-     * @return string
+     * @return String
      */
     public function getSubject($recipient) {
         $s = "[" . $this->tracker->getTrackerName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($this->reminder->getLabel(),date("j F Y",$this->reminder->getDateValue()), $this->artifact->getSummary()));
@@ -227,16 +224,6 @@ class Tracker_DateReminderManager {
     protected function getBodyHtml(Tracker_DateReminder $reminder, $recipient, BaseLanguage $language) {
         //TODO
         return $output;
-    }
-
-    /**
-     * Retrieve the recipient list given an ugroup_id 
-     *
-     * @return Array
-     */
-    public function getRecipients(){
-        //TODO
-        return array();
     }
 
     /**
