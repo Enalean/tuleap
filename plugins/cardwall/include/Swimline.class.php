@@ -31,8 +31,8 @@ class Cardwall_Swimline {
     public $cells = array();
 
     /**
-     * @param int    $id
-     * @param string $label
+     * @param string $title
+     * @param array  $cells
      */
     public function __construct($title, array $cells) {
         $this->title = $title;
