@@ -111,17 +111,17 @@ class DateHelper {
      * Get the date x days before/after today
      *
      * @param Integer $distance Distance in number of days
-     * @param Integer $positive 0 if the date is before today otherwise the date is after today
+     * @param Integer $before   0 if the date is after today otherwise the date is before today
      *
      * @return 
      */
-    public static function getDistantDateFromToday(int $distance, int $positive) {
+    public static function getDistantDateFromToday(int $distance, int $before) {
         $hours        = 24;
         $minutes      = 60;
         $seconds      = 60;
         $dayInSeconds = $hours * $minutes * $seconds;
         $distance     = $dayInSeconds * $distance;
-        if (!$positive) {
+        if ($before) {
             $distance = $distance * -1;
         }
         return strtotime(date("Y-m-d", $_SERVER['REQUEST_TIME'] + $distance));

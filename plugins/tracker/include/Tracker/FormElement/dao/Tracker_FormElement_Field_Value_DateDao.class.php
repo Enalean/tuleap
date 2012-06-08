@@ -64,5 +64,30 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
     }
+
+    /**
+     * Retrieve the list of artifact id corresponding to a date field having a specific value
+     *
+     * @param Integer $fieldId Date field
+     * @param Integer $date    Value of the date field
+     *
+     * @return
+     */
+    public function getArtifactsByFieldANDValue(int $fileldId, int $date) {
+        $fileldId = $this->da->escapeInt($fileldId);
+        $date     = $this->da->escapeInt($date);
+        $sql      = "SELECT artifact_id FROM
+                     (
+                         SELECT MAX(id) AS id, artifact_id FROM
+                         tracker_changeset
+                         GROUP BY artifact_id
+                     ) AS t, tracker_changeset_value v, tracker_changeset_value_date d
+                     WHERE t.id = v.changeset_id
+                       AND v.id = d.changeset_value_id
+                       AND d.value = ".$date."
+                       AND v.field_id = ".$fieldId;
+        return $this->retrieve($sql);
+    }
+
 }
 ?>
