@@ -59,4 +59,33 @@ class TreeNode_FlattenChildrenTest extends TuleapTestCase {
         $this->assertEqual(array($child1,  $subchild1, $child2), $node->flattenChildren());
     }
 }
+
+class TreeNode_AddChildrenTest extends TuleapTestCase {
+    
+    public function itBuildsATreeInline() {        
+        $root       = new TreeNode();
+        $node_1     = new TreeNode();
+        $node_1_1   = new TreeNode();
+        $node_1_1_1 = new TreeNode();
+        $node_1_2   = new TreeNode();
+        $node_2     = new TreeNode();
+
+        $root->addChildren(
+            $node_1->addChildren(
+                $node_1_1->addChildren(
+                    $node_1_1_1
+                ),
+                $node_1_2
+            ), 
+            $node_2
+        );
+        
+        $this->assertEqual($node_1,     $root->getChild(0));
+        $this->assertEqual($node_1_1,   $root->getChild(0)->getChild(0));
+        $this->assertEqual($node_1_1_1, $root->getChild(0)->getChild(0)->getChild(0));
+        $this->assertEqual($node_1_2,   $root->getChild(0)->getChild(1));
+        $this->assertEqual($node_2,     $root->getChild(1));
+    }
+}
+
 ?>
