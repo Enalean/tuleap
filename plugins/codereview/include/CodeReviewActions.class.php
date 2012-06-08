@@ -112,20 +112,20 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'description';
         }
 */
-        $valid       = new Valid_String('codereview_target_people');
+        $valid         = new Valid_String('codereview_target_people');
         $target_people = trim($this->request->get('codereview_target_people'));
         if ($this->request->valid($valid) && $target_people != '') {
             $params['target_people'] = $target_people;
-            $reviewers = explode(",", $target_people);
-            $check=true;
-            $nbr = count($reviewers);
-            for($i=0;$i<$nbr && $check;$i++){
-                $username=$reviewers[$i];
-                $check=$this->isUGroup($username);
-                $user=$reviewers[$i];
+            $reviewers               = explode(",", $target_people);
+            $check                   = true;
+            $nbr                     = count($reviewers);
+            for($i = 0;$i<$nbr && $check;$i++){
+                $username = $reviewers[$i];
+                $check    = $this->isUGroup($username);
+                $user     = $reviewers[$i];
             }
             if (!$check){
-                var_dump("The user ".$user." is not a member of your project");
+                var_dump("The user '".$user."' is not a member of your project");
                 $status    = false;
                 $invalid[] = 'target_people';
             }
@@ -379,8 +379,8 @@ function validateRequest2() {
      * @return Boolean
      */
     function isUGroup($username){
-        $project                 = ProjectManager::instance()->getProject($this->request->get('group_id'));
-        $members=$project->getMembersUserNames();
+        $project = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        $members = $project->getMembersUserNames();
         foreach ($members as $member) {
             if ($member['user_name'] == $username) {
                 return true;
