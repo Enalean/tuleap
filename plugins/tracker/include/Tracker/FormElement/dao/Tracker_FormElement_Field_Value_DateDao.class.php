@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
      *
      * @return
      */
-    public function getArtifactsByFieldANDValue(int $fileldId, int $date) {
+    public function getArtifactsByFieldAndValue(int $fileldId, int $date) {
         $fileldId = $this->da->escapeInt($fileldId);
         $date     = $this->da->escapeInt($date);
         $sql      = "SELECT artifact_id FROM
@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
                          GROUP BY artifact_id
                      ) as t on t.id = v.changeset_id
                      WHERE d.value = ".$date."
-                     AND v.field_id = ".$fieldId;
+                       AND v.field_id = ".$fieldId;
         return $this->retrieve($sql);
     }
 

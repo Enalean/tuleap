@@ -369,7 +369,7 @@ class Tracker_DateReminderManager {
         $date = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
         // @TODO: Include "last update date" & "submitted on" as types of date fields
         $dao = new Tracker_FormElement_Field_Value_DateDao();
-        $dar = $dao->getArtifactsByFieldANDValue($reminder->getFieldId(), $date);
+        $dar = $dao->getArtifactsByFieldAndValue($reminder->getFieldId(), $date);
         if ($dar && !$dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory();
             foreach ($dar as $row) {
