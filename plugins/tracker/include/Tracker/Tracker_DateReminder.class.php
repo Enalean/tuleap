@@ -97,6 +97,15 @@ class Tracker_DateReminder {
     }
 
     /**
+     * get the distance of this reminder
+     *
+     * @return Integer
+     */
+    public function getDistance() {
+        return $this->distance;
+    }
+
+    /**
      * get the Ugroup Id  of this reminder
      *
      * @return Integer

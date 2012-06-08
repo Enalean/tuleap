@@ -106,5 +106,27 @@ class DateHelper {
         }
         return $user_date;
     }
+
+    /**
+     * Get the date x days before/after today
+     *
+     * @param Integer $distance Distance in number of days
+     * @param Integer $positive 0 if the date is before today otherwise the date is after today
+     *
+     * @return 
+     */
+    public static function getDistantDateFromToday(int $distance, int $positive) {
+        $hours        = 24;
+        $minutes      = 60;
+        $seconds      = 60;
+        $dayInSeconds = $hours * $minutes * $seconds;
+        $distance     = $dayInSeconds * $distance;
+        if (!$positive) {
+            $distance = $distance * -1;
+        }
+        return strtotime(date("Y-m-d", $_SERVER['REQUEST_TIME'] + $distance));
+    }
+
 }
+
 ?>

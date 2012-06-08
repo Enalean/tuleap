@@ -19,6 +19,7 @@
 require_once('Tracker_DateReminder.class.php');
 require_once('dao/Tracker_DateReminderDao.class.php');
 require_once('FormElement/Tracker_FormElementFactory.class.php');
+require_once 'common/date/DateHelper.class.php';
 
 class Tracker_DateReminderManager {
 
@@ -337,6 +338,18 @@ class Tracker_DateReminderManager {
         }
         return null;
     }
+
+    /** Get artifacts that will send notification for a reminder
+     *
+     * @param Tracker_DateReminder $reminder Reminder on which the notification is based on
+     *
+     * @return Void
+     */
+    public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
+        $date = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
+        $dar  = $this->getDao->getArtifactsByField($reminder->getFieldId(), $date);
+    }
+
 }
 
 ?>
