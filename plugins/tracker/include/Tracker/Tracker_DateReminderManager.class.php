@@ -16,6 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('Tracker_DateReminder.class.php');
+require_once('dao/Tracker_DateReminder_Dao.class.php');
 class Tracker_DateReminderManager {
 
     protected $tracker;
@@ -44,12 +46,10 @@ class Tracker_DateReminderManager {
      * Process nightly job to send reminders
      *
      * @param TrackerManager  $engine       Tracker manager
-     * @param Codendi_Request $request      HTTP request
-     * @param User            $current_user Current user
      *
-     * @return ???
+     * @return Void
      */
-    public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
+    public function process(TrackerManager $engine) {
         return $this->sendReminderNotification();
     }
 
@@ -188,7 +188,7 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    public function getBodyText($recipient, BaseLanguage $language) {
+    protected function getBodyText($recipient, BaseLanguage $language) {
         $art = $this->getArtifact();
         $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
         $link .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
@@ -215,7 +215,7 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    public function getBodyHtml($recipient_user, BaseLanguage $language) {
+    protected function getBodyHtml($recipient_user, BaseLanguage $language) {
         //TODO
         return $output;
     }
@@ -273,7 +273,7 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    function getUgroupsAllowedForTracker() {
+    protected function getUgroupsAllowedForTracker() {
         $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $output  = '<SELECT NAME="reminder_ugroup" multiple>';
@@ -282,6 +282,46 @@ class Tracker_DateReminderManager {
         }
         $output  .= '</SELECT>';
         return $output;
+    }
+
+    /**
+     * Build a reminder instance
+     *
+     * @param array $row The data describing the reminder
+     *
+     * @return Tracker_DateReminder
+     */
+    public function getInstanceFromRow($row) {
+        return new Tracker_DateReminder($row['reminder_id'],
+                                          $row['tracker_id'],
+                                          $row['field_id'],
+                                          $row['ugroup_id'],
+                                          $row['notification_type'],
+                                          $row['distance'],
+                                          $row['status']);
+    }
+
+    /**
+     * Get the Tracker_DateReminder dao
+     *
+     * @return Tracker_DateReminder_Dao
+     */
+    protected function getDao() {
+        return new Tracker_DateReminder_Dao();
+    }
+
+    /**
+     * Get the reminder
+     *
+     * @param Integer  $reminderId    The reminder id
+     *
+     * @return Tracker_DateReminder
+     */
+    public function getReminder($reminderId) {
+        if ($row = $this->getDao()->searchById($reminderId)->getRow()) {
+            return $this->getInstanceFromRow($row);
+        }
+        return null;
     }
 }
 

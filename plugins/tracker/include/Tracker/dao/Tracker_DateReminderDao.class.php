@@ -117,6 +117,20 @@ class Tracker_DateReminderDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-}
+    /**
+     * Retrieve a date reminder given its id
+     * 
+     * @param Integer $reminderId       Id of the reminder
+     * 
+     * @return DataAccessResult
+     */
+    public function searchById($reminderId) {
+        $reminderId = $this->da->escapeInt($reminderId);
+        $sql = "SELECT * 
+                FROM $this->table_name
+                WHERE reminder_id = $reminderId";
+        return $this->retrieve($sql);
+    }
 
+}
 ?>
