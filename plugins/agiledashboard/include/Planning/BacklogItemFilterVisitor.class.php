@@ -32,19 +32,25 @@ class Planning_BacklogItemFilterVisitor {
      */
     private $hierarchy;
 
-    public function __construct($backlog_tracker_id, Tracker_HierarchyFactory $hierarchy_factory) {
-        $this->backlog_tracker_id = $backlog_tracker_id;
-        $this->hierarchy          = $hierarchy_factory->getHierarchy(array($backlog_tracker_id));
+    /**
+     * @var array of artifact ids
+     */
+    private $already_planned_ids;
+
+    public function __construct($backlog_tracker_id, Tracker_HierarchyFactory $hierarchy_factory, array $already_planned_ids) {
+        $this->backlog_tracker_id  = $backlog_tracker_id;
+        $this->hierarchy           = $hierarchy_factory->getHierarchy(array($backlog_tracker_id));
+        $this->already_planned_ids = $already_planned_ids;
     }
 
     public function visit(TreeNode $tree_node) {
         $new_children = array();
-        
+
         foreach ($tree_node->getChildren() as $child_node) {
             $child_artifact = $child_node->getData();
 
             if ($this->hierarchy->exists($child_artifact['tracker_id'])) {
-                if ($child_artifact['tracker_id'] == $this->backlog_tracker_id) {
+                if ($this->isStuff($child_artifact)) {
                     $new_children[] = $child_node;
                 } else {
                     $new_subchildren = $child_node->accept($this)->getChildren();
@@ -57,6 +63,11 @@ class Planning_BacklogItemFilterVisitor {
         $new_tree_node->setChildren($new_children);
 
         return $new_tree_node;
+    }
+    
+    public function isStuff($child_artifact) {
+        return ($child_artifact['tracker_id'] == $this->backlog_tracker_id
+                    && !in_array($child_artifact['id'], $this->already_planned_ids));
     }
 }
 
