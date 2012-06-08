@@ -34,6 +34,7 @@ require_once('CrossSearch/Search.class.php');
 require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
+require_once('dao/Tracker_DateReminderDao.class.php');
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
@@ -831,5 +832,24 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
 
     }
+
+    /**
+     * Get all trackers having at leas on active date reminder
+     *
+     * @return Array
+     */
+    public function getTrackersHavingDateReminders() {
+        $trackers = array();
+        $dao = new Tracker_DateReminderDao();
+        $dar = $dao->getTrackersHavingDateReminders();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $trackers[] = $this->getTrackerFactory()->getTrackerById($row['tracker_id']);
+            }
+        }
+        return $trackers;
+    }
+
 }
+
 ?>

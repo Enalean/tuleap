@@ -467,11 +467,14 @@ class trackerPlugin extends Plugin {
      * @return void
      */
     function codendi_daily_start($params) {
+        include_once 'Tracker/TrackerManager.class.php';
         include_once 'Tracker/Tracker_DateReminderManager.class.php';
-        //TODO 
-        //foreach tracker in reminder table 
-        $dateReminderManager = new Tracker_DateReminderManager();
-        //$dateReminderManager->process();
+        $trackerManager = new TrackerManager();
+        $trackers       = $trackerManager->getTrackersHavingDateReminders();
+        foreach ($trackers as $tracker) {
+            $dateReminderManager = new Tracker_DateReminderManager($tracker);
+            //$dateReminderManager->process();
+        }
     }
 }
 

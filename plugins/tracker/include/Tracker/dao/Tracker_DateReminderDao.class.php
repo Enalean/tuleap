@@ -51,6 +51,18 @@ class Tracker_DateReminderDao extends DataAccessObject {
     }
 
     /**
+     * Get trackers having at least one active reminder
+     *
+     * @return DataAccessResult
+     */
+    public function getTrackersHavingDateReminders() {
+        $sql = "SELECT DISTINCT(tracker_id)
+                FROM ".$this->tableName."
+                WHERE status = 1";
+        return $this->retrieve($sql);
+    }
+
+    /**
      * Add a date reminder
      *
      * @param Integer $trackerId        Id of the tracker
@@ -145,5 +157,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
                 WHERE reminder_id IN ($reminders)";
         return $this->update($sql);
     }
+
 }
+
 ?>

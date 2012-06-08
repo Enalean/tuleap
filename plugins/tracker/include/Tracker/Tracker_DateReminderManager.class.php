@@ -376,6 +376,7 @@ class Tracker_DateReminderManager {
                 $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);
             }
         }
+        return $artifacts;
     }
 
     /** Display all reminders for a given tracker
