@@ -1,3 +1,6 @@
+Version 2.5.6 - Tuleap 5.2
+    * Fix fatal error while creating a new repo
+
 Version 2.5.5 - Tuleap 5.2
     * Refactoring of "external permissions"
 

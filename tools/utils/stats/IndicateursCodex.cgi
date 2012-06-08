@@ -24,9 +24,9 @@ use HTML::Entities ();
 
 use vars qw($dbh);
 my $sys_dbhost="localhost";#adress of the Codex database
-my $sys_dbname="codex";#name of the Codex database
-my $sys_dbuser="XXXXX";#readonly Codex database login
-my $sys_dbpasswd="XXXXX";#readonly Codex database pass
+my $sys_dbname="codendi";#name of the Codex database
+my $sys_dbuser="codendiadm";#readonly Codex database login
+my $sys_dbpasswd="welcome0";#readonly Codex database pass
 my $version="1.0";					# script version
 my $date_end;                              	# base date and end of the period
 my $date_start;					# date of the period start
@@ -200,6 +200,12 @@ push(@Allmetrics,new SQLmetrics("ActiviteSVN",
 FROM  svn_commits 
 WHERE date<=$time_end AND date>=$time_start
 GROUP BY group_id"));
+
+push(@Allmetrics,new SQLmetrics("Push Git",
+"SELECT project_id, SUM(commits_number) 
+FROM  plugin_git_log INNER JOIN plugin_git USING(repository_id)
+WHERE push_date<=$time_end AND push_date>=$time_start
+GROUP BY project_id"));
 
 #Calcul de l'indicateur 'Fichiers publies' par projet
 #date de "creation du fichier":  frs_file.postdate
@@ -520,11 +526,11 @@ my $tmpStrCSV="";#chaine stockant la valeur d'une metrique avant nettoyages des 
 				$tmpStrCSV = $temp_ProjectMetrics{$metrics->{NAME}};
 				$tmpStrCSV =~ s/\r\n?//g; # on enleve tous les retours à la ligne 
 				$tmpStrCSV = HTML::Entities::decode($tmpStrCSV); # on transcode de html à ISO-8859/1
-				$strCSV=$strCSV.$tmpStrCSV."|";
+				$strCSV=$strCSV.$tmpStrCSV.",";
 			}
 			else
 			{
-				$strCSV=$strCSV."0|";
+				$strCSV=$strCSV."0,";
 			}
 		}
 		
@@ -547,7 +553,7 @@ my $metrics;
 
 foreach $metrics (@Allmetrics)#TODO: integrer un trie custom pour la sortie des metrics
 	{
-		$strCSV=$strCSV.$metrics->{NAME}."|";
+		$strCSV=$strCSV.$metrics->{NAME}.",";
 		
 	}
 return $strCSV;	
