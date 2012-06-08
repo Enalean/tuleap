@@ -17,7 +17,9 @@
  */
 
 require_once('Tracker_DateReminder.class.php');
-require_once('dao/Tracker_DateReminder_Dao.class.php');
+require_once('dao/Tracker_DateReminderDao.class.php');
+require_once('FormElement/Tracker_FormElementFactory.class.php');
+
 class Tracker_DateReminderManager {
 
     protected $tracker;
@@ -244,7 +246,6 @@ class Tracker_DateReminderManager {
     public function getNewDateReminderForm() {
         $before = '';
         $after  = '';
-        //@todo retrieve field
         //@todo Call dateReminder insertion method within a dedicated action (say insert_reminder) at Tracker_NotificationsManager::process() (around line 57)
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_global" METHOD="POST" name="date_field_reminder_form">';
         //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$this->reminder->dateField->getID().'">';
@@ -256,10 +257,7 @@ class Tracker_DateReminderManager {
                         <OPTION VALUE="0" '.$before.'> before
                         <OPTION VALUE="1" '.$after.'> after
                     </SELECT></TD>';
-        $output .= '<TD><SELECT NAME="date_field">
-                        <OPTION VALUE="0"> MyUgroup1
-                        <OPTION VALUE="1"> MyUgroup2
-                    </SELECT></TD>';
+        $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
         $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
         $output .= '</table></FORM>';
@@ -267,7 +265,7 @@ class Tracker_DateReminderManager {
     }
 
     /**
-     * Return a multi-select box of ugroup selectable to fill the new date field reminder.
+     * Build a multi-select box of ugroup selectable to fill the new date field reminder.
      * It contains: all dynamic ugroups plus project members and admins.
      * @TODO check permissions on tracker, date field before display??
      *
@@ -282,6 +280,22 @@ class Tracker_DateReminderManager {
         }
         $output  .= '</SELECT>';
         return $output;
+    }
+
+    /**
+     * Build a select box of all date fields used by a given tracker
+     *
+     * @return String
+     */
+    function getTrackerDateFields() {
+        $tff = Tracker_FormElementFactory::instance();
+        $trackerDateFields = $tff->getUsedDateFields($this->tracker);
+        $ouptut  = '<select name="reminder_field_date">';
+        foreach ($trackerDateFields as $dateField) {
+            $ouptut .= '<option value="'. $dateField->getId() .'" '. $selected.'>'.$dateField->getLabel().'</option>';
+        }
+        $ouptut .= '</select>';
+        return $ouptut;
     }
 
     /**
