@@ -288,7 +288,7 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    function getTrackerDateFields() {
+    protected function getTrackerDateFields() {
         $tff = Tracker_FormElementFactory::instance();
         $trackerDateFields = $tff->getUsedDateFields($this->tracker);
         $ouptut  = '<select name="reminder_field_date">';
@@ -321,7 +321,7 @@ class Tracker_DateReminderManager {
      *
      * @return Tracker_DateReminderDao
      */
-    protected function getDao() {
+    public function getDao() {
         return new Tracker_DateReminderDao();
     }
 
