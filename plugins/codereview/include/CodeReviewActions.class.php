@@ -21,6 +21,7 @@
 require_once('common/mvc/Actions.class.php');
 require_once('common/curl/TuleapCurl.class.php');
 require_once('exceptions/CodeReviewException.class.php');
+require_once('RbUserManager.class.php');
 
 /**
  * codereview
@@ -123,6 +124,17 @@ class CodeReviewActions extends Actions {
                 $username = $reviewers[$i];
                 $check    = $this->isUGroup($username);
                 $user     = $reviewers[$i];
+                if ($check){
+                    $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+                    $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
+                    $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
+                    $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
+                    $rbusermanager    = new RbUserManager();
+                    $exist            = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$user);
+                    if(!$exist){
+                        //To do : retrieve user pwd and add it in RB
+                    }
+                }
             }
             if (!$check){
                 var_dump("The user '".$user."' is not a member of your project");
