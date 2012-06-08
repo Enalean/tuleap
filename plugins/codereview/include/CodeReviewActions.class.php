@@ -116,6 +116,19 @@ class CodeReviewActions extends Actions {
         $target_people = trim($this->request->get('codereview_target_people'));
         if ($this->request->valid($valid) && $target_people != '') {
             $params['target_people'] = $target_people;
+            $reviewers = explode(",", $target_people);
+            $check=true;
+            $nbr = count($reviewers);
+            for($i=0;$i<$nbr && $check;$i++){
+                $username=$reviewers[$i];
+                $check=$this->isUGroup($username);
+                $user=$reviewers[$i];
+            }
+            if (!$check){
+                var_dump("The user ".$user." is not a member of your project");
+                $status    = false;
+                $invalid[] = 'target_people';
+            }
         } else {
             $status    = false;
             $invalid[] = 'target_people';
@@ -356,6 +369,24 @@ function validateRequest2() {
         }
         $error = curl_error($ch);
         curl_close($ch);
+    }
+
+    /**
+     * Check if the reviewer is an uGroup
+     *
+     * @param String  $username
+     *
+     * @return Boolean
+     */
+    function isUGroup($username){
+        $project                 = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        $members=$project->getMembersUserNames();
+        foreach ($members as $member) {
+            if ($member['user_name'] == $username) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>
