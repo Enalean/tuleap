@@ -51,6 +51,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('widgets',                             'widgets',                           false);
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
+        $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
     }
     
     public function getPluginInfo() {
@@ -456,6 +457,21 @@ class trackerPlugin extends Plugin {
             $trackerManager = new TrackerManager();
             $trackerManager->deleteProjectTrackers($groupId);
         }
+    }
+
+   /**
+     * Process the nightly job to send reminder on artifact correponding to given criteria
+     *
+     * @param mixed $params 
+     *
+     * @return void
+     */
+    function codendi_daily_start($params) {
+        include_once 'Tracker/Tracker_DateReminderManager.class.php';
+        //TODO 
+        //foreach tracker in reminder table 
+        $dateReminderManager = new Tracker_DateReminderManager();
+        //$dateReminderManager->process();
     }
 }
 
