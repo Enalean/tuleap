@@ -15,7 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+require_once('FormElement/Tracker_FormElementFactory.class.php');
+require_once('FormElement/Tracker_FormElement_Field.class.php');
 class Tracker_DateReminder {
     
     public $reminderId;

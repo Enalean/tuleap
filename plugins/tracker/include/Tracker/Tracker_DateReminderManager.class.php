@@ -19,6 +19,7 @@
 require_once('Tracker_DateReminder.class.php');
 require_once('dao/Tracker_DateReminderDao.class.php');
 require_once('FormElement/Tracker_FormElementFactory.class.php');
+require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
 
 class Tracker_DateReminderManager {
@@ -79,7 +80,8 @@ class Tracker_DateReminderManager {
         foreach ($recipients as $recipient) {
             $user = null;
             $user = $um->getUserByUserName($recipient);
-            if ($user && $artifact->userCanView($user) && $reminder->getDateField()->userCanRead($user)) {
+
+            if ($user && $artifact->userCanView($user) && $reminder->getField()->userCanRead($user)) {
                 $this->buildMessage($reminder, $artifact, $messages, $user);
             }
         }
@@ -110,11 +112,11 @@ class Tracker_DateReminderManager {
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';
         if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
-            $htmlBody  .= $this->getBodyHtml($reminder, $user, $lang);
+            //$htmlBody  .= $this->getBodyHtml($reminder, $user, $lang);
         }
-        $txtBody = $this->getBodyText($reminder, $user, $lang);
+        $txtBody = $this->getBodyText($reminder, $artifact, $user, $lang);
 
-        $subject   = $this->getSubject($user);
+        $subject   = $this->getSubject($reminder, $artifact, $user);
         $headers   = array(); 
         $hash = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
         if (isset($messages[$hash])) {
@@ -148,7 +150,7 @@ class Tracker_DateReminderManager {
         $groupId = $this->getTracker()->getGroupId();
         $project = $this->getTracker()->getProject();
         $trackerId = $this->getTracker()->getID();
-        $artifactId = $artifact()->getID();
+        $artifactId = $artifact->getID();
 
         $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
         $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
@@ -157,9 +159,9 @@ class Tracker_DateReminderManager {
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
         $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->addAdditionalHeader("X-Codendi-Project",     $this->artifact()->getTracker()->getProject()->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->artifact()->getTracker()->getItemName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getId());
+        $mail->addAdditionalHeader("X-Codendi-Project",     $this->getTracker()->getProject()->getUnixName());
+        $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getTracker()->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $artifact->getId());
         foreach($headers as $header) {
             $mail->addAdditionalHeader($header['name'], $header['value']);
         }
@@ -179,8 +181,8 @@ class Tracker_DateReminderManager {
      *
      * @return String
      */
-    public function getSubject($recipient) {
-        $s = "[" . $this->tracker->getTrackerName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($this->reminder->getLabel(),date("j F Y",$this->reminder->getDateValue()), $this->artifact->getSummary()));
+    public function getSubject($reminder, $artifact, $recipient) {
+        $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($reminder->getField()->getLabel(),date("j F Y",$reminder->getField()->getValue()), $artifact->getTitle()));
         return $s;
     }
 
@@ -195,18 +197,19 @@ class Tracker_DateReminderManager {
      * @return String
      */
     protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
+        $format = Codendi_Mail_Interface::FORMAT_TEXT;
         $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
         $link .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
-        $week = date("W", $this->reminder->getValue());
+        $week = date("W", $reminder->getField()->getValue());
 
         $output = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient, $format, false).' ==============+';
         $output .= PHP_EOL;
     
-        $output = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_header',array('codex', $reminder->getField->getLabel(),date("l j F Y",$reminder->getField->getDateValue()), $week)).
-            "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_project',array($group->getPublicName())).
-            "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_tracker',array($this->tracker->getTrackerName())).
-            "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art',array($artifact->getSummary())).
-            "\n".$this->reminder->getLabel().": ".date("D j F Y", $reminder->getField->getValue()).
+        $output = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_header',array('codex', $reminder->getField()->getLabel(),date("l j F Y",$reminder->getField()->getValue()), $week)).
+            "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_project',array($this->getTracker()->getProject()->getPublicName())).
+            "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_tracker',array($this->getTracker()->getName())).
+            "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art',array($artifact->getTitle())).
+            "\n".$reminder->getField()->getLabel().": ".date("D j F Y", $reminder->getField()->getValue()).
             "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art_link').
             "\n".$link."\n";
         return $output;
@@ -411,6 +414,16 @@ class Tracker_DateReminderManager {
         }
         print '</TABLE>';
     }
+
+    /**
+     * Get an instance of UserManager
+     *
+     * @return UserManager
+     */
+    public function getUserManager() {
+        return UserManager::instance();
+    }
+    
 }
 
 ?>
