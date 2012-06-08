@@ -114,11 +114,13 @@ class Planning_MilestonePresenter extends PlanningPresenter {
             )
         );
 
-        $an_additional_pane_is_active = false;
-        while (!$an_additional_pane_is_active && list(,$pane) = each($this->additional_panes)) {
-            $an_additional_pane_is_active = $pane->isActive();
+        $a_pane_is_active = false;
+        $requested_pane   = HTTPRequest::instance()->get('pane');
+        foreach($this->additional_panes as $pane) {
+            $pane->setActive($requested_pane === $pane->getIdentifier());
+            $a_pane_is_active = $pane->isActive();
         }
-        $this->is_planner_pane_active = ! $an_additional_pane_is_active;
+        $this->is_planner_pane_active = ! $a_pane_is_active;
 
         return $this->additional_panes;
     }

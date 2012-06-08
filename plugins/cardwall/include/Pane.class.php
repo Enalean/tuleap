@@ -24,7 +24,7 @@ require_once 'Column.class.php';
 require_once 'Swimline.class.php';
 require_once 'Mapping.class.php';
 
-class Cardwall_Pane implements AgileDashboard_Pane {
+class Cardwall_Pane extends AgileDashboard_Pane {
 
     /**
      * @var Planning_Milestone
@@ -73,13 +73,6 @@ class Cardwall_Pane implements AgileDashboard_Pane {
      */
     public function getTitle() {
         return 'Card Wall';
-    }
-
-    /**
-     * @see AgileDashboard_Pane::isActive()
-     */
-    public function isActive() {
-        return HTTPRequest::instance()->get('pane') === $this->getIdentifier();
     }
 
     /**

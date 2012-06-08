@@ -22,26 +22,40 @@
  * Base interface to display a content pane in the agiledashboard next to a
  * milestone
  */
-interface AgileDashboard_Pane {
+abstract class AgileDashboard_Pane {
+
+    /**
+     * @var bool
+     */
+    private $is_active;
+    
+    /**
+     * @return bool
+     */
+    public function isActive() {
+        return $this->is_active;
+    }
+    
+    /**
+     * @param bool $state
+     */
+    public function setActive($state) {
+        $this->is_active = (bool)$state;
+    }
 
     /**
      * @return string eg: 'cardwall'
      */
-    public function getIdentifier();
+    public abstract function getIdentifier();
 
     /**
      * @return string eg: 'Card Wall'
      */
-    public function getTitle();
+    public abstract function getTitle();
 
     /**
      * @return string eg: '<table>...</table>'
      */
-    public function getContent();
-
-    /**
-     * @return bool
-     */
-    public function isActive();
+    public abstract function getContent();
 }
 ?>
