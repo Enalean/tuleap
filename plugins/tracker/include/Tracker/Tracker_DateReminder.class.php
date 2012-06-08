@@ -146,5 +146,15 @@ class Tracker_DateReminder {
     public function setUgroupId($ugroupId) {
         $this->ugroupId = $ugroupId;
     }
+
+
+    /**
+     * React when reminder is treated as a string
+     *
+     * @return String
+     */
+    public function __toString() {
+        return $this->distance.' day(s) '.$this->notificationType.'"'.$this->fieldId .'" send an email to "'.$this->ugroupId.'"';
+    }
 }
 ?>
