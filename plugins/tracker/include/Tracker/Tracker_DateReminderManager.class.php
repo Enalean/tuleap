@@ -310,6 +310,18 @@ class Tracker_DateReminderManager {
     }
 
     /**
+     * Delete a list of date reminders
+     *
+     * @param Array $remindersIds List of Id of reminders
+     *
+     * @return Boolean
+     */
+    public function deleteTrackerReminders($remindersIds) {
+        $reminderManagerDao = $this->getDao();
+        return $reminderManagerDao->deleteReminders($remindersIds);
+    }
+
+    /**
      * Build a reminder instance
      *
      * @param array $row The data describing the reminder

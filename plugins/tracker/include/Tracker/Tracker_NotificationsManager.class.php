@@ -53,6 +53,8 @@ class Tracker_NotificationsManager {
             }
         } else if (  $request->get('action') == 'remove_global' ) {
             $this->removeGlobalNotification( $request->get('global_notification_id') );
+        } else if (  $request->get('action') == 'delete_reminder' ) {
+            $this->dateReminderManager->deleteTrackerReminders(array($request->get('reminder_id')));
         }
 
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
@@ -297,7 +299,7 @@ class Tracker_NotificationsManager {
         $output .= html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
             $reminder = $this->dateReminderManager->getReminder($reminder['reminder_id']);
-            $output .= '<tr class="'. util_get_alt_row_color($i++) .'">';
+            $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
             $output .= '<td>'.$reminder->fieldId.'</td>';
             $output .= '<td>'.$reminder->distance.'</td>';
             $output .= '<td>'.$reminder->status.'</td>';
