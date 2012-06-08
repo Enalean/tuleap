@@ -82,7 +82,7 @@ class Tracker_DateReminderManager {
             $user = null;
             $user = $um->getUserByUserName($recipient);
             if ($user && $artifact->userCanView($user) && $this->reminder->dateField->userCanRead($user)) {
-                $this->buildMessage($artifact, $messages, $user);
+                $this->buildMessage($reminder, $artifact, $messages, $user);
             }
         }
 
@@ -95,6 +95,7 @@ class Tracker_DateReminderManager {
     /**
      * Build the reminder messages
      *
+     * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param Tracker_Artifact $artifact Artifact for which reminders will be sent
      * @param Array            $messages Messages
      * @param User             $user     Receipient
@@ -102,7 +103,7 @@ class Tracker_DateReminderManager {
      * return Array
      *
      */
-    protected function buildMessage(Tracker_Artifact $artifact, &$messages, $user) {
+    protected function buildMessage(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, &$messages, $user) {
         $mailManager = new MailManager();
 
         $recipient = $user->getEmail();
@@ -112,9 +113,9 @@ class Tracker_DateReminderManager {
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';
         if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
-            $htmlBody  .= $this->getBodyHtml($user, $lang);
+            $htmlBody  .= $this->getBodyHtml($reminder, $user, $lang);
         }
-        $txtBody = $this->getBodyText($user, $lang);
+        $txtBody = $this->getBodyText($reminder, $user, $lang);
 
         $subject   = $this->getSubject($user);
         $headers   = array(); 
@@ -189,25 +190,26 @@ class Tracker_DateReminderManager {
     /**
      * Get the text body for notification
      *
+     * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param Tracker_Artifact $artifact
      * @param String  $recipient    The recipient who will receive the notification
      * @param BaseLanguage $language The language of the message
      *
      * @return String
      */
-    protected function getBodyText(Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
+    protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
         $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
         $link .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
-        $week = date("W", $this->reminder->getDateValue());
+        $week = date("W", $this->reminder->getValue());
 
         $output = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient, $format, false).' ==============+';
         $output .= PHP_EOL;
     
-        $output = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_header',array('codex', $this->reminder->getLabel(),date("l j F Y",$this->reminder->getDateValue()), $week)).
+        $output = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_header',array('codex', $reminder->getField->getLabel(),date("l j F Y",$reminder->getField->getDateValue()), $week)).
             "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_project',array($group->getPublicName())).
             "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_tracker',array($this->tracker->getTrackerName())).
             "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art',array($artifact->getSummary())).
-            "\n".$this->reminder->getLabel().": ".date("D j F Y", $this->reminder->getDateValue()).
+            "\n".$this->reminder->getLabel().": ".date("D j F Y", $reminder->getField->getValue()).
             "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art_link').
             "\n".$link."\n";
         return $output;
@@ -216,12 +218,13 @@ class Tracker_DateReminderManager {
     /**
      * Get the html body for notification
      *
+     * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param String  $recipient    The recipient who will receive the reminder
      * @param BaseLanguage $language The language of the message
      *
      * @return String
      */
-    protected function getBodyHtml($recipient_user, BaseLanguage $language) {
+    protected function getBodyHtml(Tracker_DateReminder $reminder, $recipient, BaseLanguage $language) {
         //TODO
         return $output;
     }
