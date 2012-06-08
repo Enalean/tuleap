@@ -319,10 +319,10 @@ class Tracker_DateReminderManager {
     /**
      * Get the Tracker_DateReminder dao
      *
-     * @return Tracker_DateReminder_Dao
+     * @return Tracker_DateReminderDao
      */
     protected function getDao() {
-        return new Tracker_DateReminder_Dao();
+        return new Tracker_DateReminderDao();
     }
 
     /**
