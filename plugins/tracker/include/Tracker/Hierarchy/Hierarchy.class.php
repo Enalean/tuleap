@@ -42,6 +42,22 @@ class Tracker_Hierarchy {
     }
     
     /**
+     * Returns true if $tracker_id belongs to the hierarchy
+     * 
+     * @param int $tracker_id
+     * 
+     * @return boolean 
+     */
+    public function exists($tracker_id) {
+        try {
+            $this->getLevel($tracker_id);
+            return true;
+        } catch (Tracker_Hierarchy_NotInHierarchyException $e) {
+            return false;
+        }
+    }
+    
+    /**
      * @throws Tracker_Hierarchy_NotInHierarchyException
      * @throws Tracker_Hierarchy_CyclicHierarchyException
      *

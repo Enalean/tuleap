@@ -25,9 +25,15 @@ class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-
+        
         $this->epic_tracker_id  = 111;
         $this->story_tracker_id = 112;
+        
+        $this->hierarchy         = mock('Tracker_Hierarchy');
+        stub($this->hierarchy)->isChild($this->epic_tracker_id, $this->story_tracker_id)->returns(true);
+        stub($this->hierarchy)->exists($this->epic_tracker_id)->returns(true);
+        stub($this->hierarchy)->exists($this->story_tracker_id)->returns(true);
+        $this->hierarchy_factory = stub('Tracker_HierarchyFactory')->getHierarchy()->returns($this->hierarchy);
 
         $this->root   = new TreeNode();
         $this->epic1  = new TreeNode(array('id' => 1, 'tracker_id' => $this->epic_tracker_id));
@@ -52,7 +58,7 @@ class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
     }
 
     public function itKeepsOnlyEpicsAtRoot() {
-        $visitor  = new Planning_BacklogItemFilterVisitor($this->epic_tracker_id);
+        $visitor  = new Planning_BacklogItemFilterVisitor($this->epic_tracker_id, $this->hierarchy_factory);
         $new_root = $this->root->accept($visitor);
 
         $this->assertEqual(count($new_root->getChildren()), 2);
@@ -61,7 +67,7 @@ class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
     }
 
     public function itKeepsDescendantOfEpics() {
-        $visitor  = new Planning_BacklogItemFilterVisitor($this->epic_tracker_id);
+        $visitor  = new Planning_BacklogItemFilterVisitor($this->epic_tracker_id, $this->hierarchy_factory);
         $new_root = $this->root->accept($visitor);
 
         $epic1 = $new_root->getChild(0);
@@ -71,13 +77,13 @@ class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
     }
 
     public function itMovesTheDeepBacklogItemsToTheRoot() {
-        $visitor = new Planning_BacklogItemFilterVisitor($this->story_tracker_id);
+        $visitor = new Planning_BacklogItemFilterVisitor($this->story_tracker_id, $this->hierarchy_factory);
         $new_root = $this->root->accept($visitor);
 
-//        $this->assertEqual(count($new_root->getChildren()), 3);
+        $this->assertEqual(count($new_root->getChildren()), 3);
         $this->assertEqual($new_root->getChild(0), $this->story1);
         $this->assertEqual($new_root->getChild(1), $this->story2);
-//        $this->assertEqual($new_root->getChild(2), $this->story3);
+        $this->assertEqual($new_root->getChild(2), $this->story3);
     }
 
 }
@@ -103,10 +109,15 @@ class Planning_BacklogItemFilterVisitor_HierarchyTest extends TuleapTestCase {
             )
         );
 
-        $hierarchy         = stub('Tracker_Hierarchy')->isChild($this->epic_tracker_id, $this->story_tracker_id)->returns(true);
-        $hierarchy_factory = stub('Tracker_HierarchyFactory')->getHierarchy(array($this->story_tracker_id))->returns($hierarchy);
+        $hierarchy         = mock('Tracker_Hierarchy');
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        
+        stub($hierarchy_factory)->getHierarchy(array($this->story_tracker_id))->returns($hierarchy);
+        stub($hierarchy)->isChild($this->epic_tracker_id, $this->story_tracker_id)->returns(true);
+        stub($hierarchy)->exists($this->epic_tracker_id)->returns(true);
+        stub($hierarchy)->exists($this->story_tracker_id)->returns(true);
 
-        $visitor = new Planning_BacklogItemFilterVisitor($this->story_tracker_id, $hierarchy_factory);
+        $visitor  = new Planning_BacklogItemFilterVisitor($this->story_tracker_id, $hierarchy_factory);
         $new_root = $this->root->accept($visitor);
 
         $this->assertEqual(count($new_root->getChildren()), 1);
