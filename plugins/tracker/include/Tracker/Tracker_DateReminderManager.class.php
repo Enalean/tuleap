@@ -235,12 +235,11 @@ class Tracker_DateReminderManager {
         $before = '';
         $after  = '';
         //@todo Call dateReminder insertion method within a dedicated action (say insert_reminder) at Tracker_NotificationsManager::process() (around line 57)
-        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_global" METHOD="POST" name="date_field_reminder_form">';
-        //$out .='<INPUT TYPE="HIDDEN" NAME="field_id" VALUE="'.$this->reminder->dateField->getID().'">';
+        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
-        $output .= '<TD> <INPUT TYPE="TEXT" NAME="start" SIZE="3" VALUE="5"> day(s)</TD>';
+        $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
                         <OPTION VALUE="0" '.$before.'> before
                         <OPTION VALUE="1" '.$after.'> after
@@ -294,6 +293,24 @@ class Tracker_DateReminderManager {
     public function getTrackerReminders() {
         $reminderManagerDao = $this->getDao();
         return $reminderManagerDao->getDateReminders((int)$this->tracker->id);
+    }
+
+    /**
+     * Add new reminder
+     * @TODO check request params before insertion
+     * 
+     * @param HTTPRequest $request request object
+     *
+     * @return Boolean
+     */
+    public function addNewReminder(HTTPRequest $request) {
+        $trackerId = $request->get('tracker_id');
+        $fieldId   = $request->get('reminder_field_date');
+        $notificationType = $request->get('notif_type');
+        $ugroupId  = $request->get('reminder_ugroup');
+        $distance = $request->get('distance');
+        $reminderManagerDao = $this->getDao();
+        return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroupId, $notificationType, $distance);
     }
 
     /**
