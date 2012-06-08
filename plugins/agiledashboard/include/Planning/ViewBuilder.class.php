@@ -21,7 +21,7 @@
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once 'SearchContentView.class.php';
-
+require_once 'BacklogItemFilterVisitor.class.php';
 /**
  * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
  */
@@ -41,9 +41,13 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
     
         $report      = $this->getReport($user);
         $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $tracker_ids = $this->getDescendantIds($backlog_tracker_id);
+        //$tracker_ids = $this->getDescendantIds($backlog_tracker_id);
+        $tracker_ids = array(142,143,144,145);
         $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
-        $this->filterNotPlannableNodes($backlog_tracker_id, $artifacts);
+        //$this->filterNotPlannableNodes($backlog_tracker_id, $artifacts);
+        //var_dump($artifacts);
+        $visitor = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $excluded_artifact_ids);
+        $artifacts =  $artifacts->accept($visitor);
         
         return new Planning_SearchContentView($report, 
                                               $criteria, 

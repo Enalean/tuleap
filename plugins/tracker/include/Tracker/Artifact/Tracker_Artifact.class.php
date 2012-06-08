@@ -1222,10 +1222,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $artifact_links       = array_merge($artifact_links, $sub_linked_artifacts);
             }
         }
-
         return $artifact_links;
     }
-
+    
     /**
      * Get artifacts linked to the current artifact if they belongs to the hierarchy
      * 

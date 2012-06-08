@@ -90,10 +90,41 @@ class Tracker_CrossSearch_Search {
         $shared_fields   = $this->shared_field_factory->getSharedFields($query->getSharedFields());
         $semantic_fields = $query->getSemanticCriteria();
         
-        $artifacts = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
+        $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
-        return $this->result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
+        $artifacts = $this->getArtifactsFromArtifactInfo($artifacts_info);
+        
+        $root = new TreeNode();
+        $this->buildArtifactsTree($user, $root, $artifacts);
+        
+        //var_dump($root);
+        
+        return $root;
+        
+        //return $this->result_sorter->sortArtifacts($artifacts_info, $tracker_ids, $hierarchy);
     }
     
+    private function getArtifactsFromArtifactInfo($artifacts_info) {
+        $artifacts = array();
+        foreach ($artifacts_info as $artifact_info) {
+            $artifacts[] = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_info['id']);
+        }
+        return $artifacts;
+    }
+    
+    private function buildArtifactsTree(User $user, TreeNode $root, $artifacts) {
+        foreach ($artifacts as $artifact) {
+            $node = new TreeNode($this->getArtifactInfo($artifact));
+            $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user));
+            $root->addChild($node);
+        }
+    }
+    
+    private function getArtifactInfo($artifact) {
+        return array(
+            'id'         => $artifact->getId(),
+            'tracker_id' => $artifact->getTrackerId(),
+        );
+    }
 }
 ?>
