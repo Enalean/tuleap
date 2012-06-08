@@ -300,6 +300,16 @@ class Tracker_DateReminderManager {
     }
 
     /**
+     * Retrieve all date reminders for a given tracker
+     *
+     * @return DataAccessResult
+     */
+    public function getTrackerReminders() {
+        $reminderManagerDao = $this->getDao();
+        return $reminderManagerDao->getDateReminders((int)$this->tracker->id);
+    }
+
+    /**
      * Build a reminder instance
      *
      * @param array $row The data describing the reminder
@@ -321,7 +331,7 @@ class Tracker_DateReminderManager {
      *
      * @return Tracker_DateReminderDao
      */
-    public function getDao() {
+    protected function getDao() {
         return new Tracker_DateReminderDao();
     }
 

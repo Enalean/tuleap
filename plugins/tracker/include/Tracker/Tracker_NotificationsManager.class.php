@@ -293,8 +293,7 @@ class Tracker_NotificationsManager {
                         $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
                         $GLOBALS['Language']->getText('global', 'delete'));
         $i=0;
-        $reminderManagerDao = $this->dateReminderManager->getDao();
-        $trackerReminders   = $reminderManagerDao->getDateReminders((int)$this->tracker->id);
+        $trackerReminders = $this->dateReminderManager->getTrackerReminders();
         $output .= html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
             $reminder = $this->dateReminderManager->getReminder($reminder['reminder_id']);
