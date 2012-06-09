@@ -92,20 +92,24 @@ class Tracker_CrossSearch_Search {
         
         $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
+        $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
         $artifacts = $this->getArtifactsFromArtifactInfo($artifacts_info);
-        
         $root = new TreeNode();
-        $this->buildArtifactsTree($user, $root, $artifacts);
+        $this->buildArtifactsTree($user, $root, $artifacts, $artifacts_info);
         
-        //var_dump($root);
-        
-        // @todo: FIX DISPLAY OF ARTIFACT LINK IN COLUMN RESULT!
-
         return $root;
         
         //return $this->result_sorter->sortArtifacts($artifacts_info, $tracker_ids, $hierarchy);
     }
     
+    private function indexArtifactInfoByArtifactId($artifacts_info) {
+        $new_info = array();
+        foreach ($artifacts_info as $artifact_info) {
+            $new_info[$artifact_info['id']] = $artifact_info;
+        }
+        return $new_info;
+    }
+
     private function getArtifactsFromArtifactInfo($artifacts_info) {
         $artifacts = array();
         foreach ($artifacts_info as $artifact_info) {
@@ -114,20 +118,36 @@ class Tracker_CrossSearch_Search {
         return $artifacts;
     }
     
-    private function buildArtifactsTree(User $user, TreeNode $root, $artifacts) {
+    private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info) {
         foreach ($artifacts as $artifact) {
-            $node = new TreeNode($this->getArtifactInfo($artifact));
-            $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user));
+            $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));
+            $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user), $artifacts_info);
             $root->addChild($node);
         }
     }
     
-    private function getArtifactInfo(Tracker_Artifact $artifact) {
-        return array(
-            'id'                => $artifact->getId(),
-            'last_changeset_id' => $artifact->getLastChangeset()->getId(),
-            'tracker_id'        => $artifact->getTrackerId(),
-        );
+    /**
+     * Return artifact info from artifact object
+     *
+     * If there is already an artifact info available in DB result, use this one
+     * instead of re-creating it (artifact_info from DB contains extra informations
+     * like the "artifact link column value")
+     *
+     * @param Tracker_Artifact $artifact
+     * @param array $artifacts_info
+     *
+     * @return array
+     */
+    private function getArtifactInfo(Tracker_Artifact $artifact, array $artifacts_info) {
+        if (isset($artifacts_info[$artifact->getId()])) {
+            return $artifacts_info[$artifact->getId()];
+        } else {
+            return array(
+                'id'                => $artifact->getId(),
+                'last_changeset_id' => $artifact->getLastChangeset()->getId(),
+                'tracker_id'        => $artifact->getTrackerId(),
+            );
+        }
     }
 }
 ?>
