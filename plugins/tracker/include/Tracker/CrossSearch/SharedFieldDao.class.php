@@ -24,9 +24,8 @@ class Tracker_CrossSearch_SharedFieldDao extends DataAccessObject {
         $source_or_target_field_ids = $this->da->escapeInt($source_or_target_field_ids);
         
         $sql_original_ids = "
-            SELECT original.id
+            SELECT f.id
             FROM tracker_field AS f
-                INNER JOIN tracker_field AS original ON (f.original_field_id = original.id)
             WHERE f.id = $source_or_target_field_ids
         ";
         
@@ -44,7 +43,7 @@ class Tracker_CrossSearch_SharedFieldDao extends DataAccessObject {
         ";
         
         $sql = $sql_original_ids.' UNION '.$sql_target_ids;
-        
+        //echo '<pre>'.print_r($sql, true).'</pre>';
         return $this->retrieve($sql);
     }
 
@@ -55,9 +54,8 @@ class Tracker_CrossSearch_SharedFieldDao extends DataAccessObject {
         
         $source_or_target_value_ids = implode(',', $source_or_target_value_ids);
         
-        $sql_original_ids = "SELECT original.id
+        $sql_original_ids = "SELECT v.id
                 FROM tracker_field_list_bind_static_value AS v
-                    INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id)
                 WHERE v.id IN ($source_or_target_value_ids)";
         
         $sql_target_ids = "SELECT target.id
