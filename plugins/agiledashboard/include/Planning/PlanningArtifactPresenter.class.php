@@ -47,6 +47,10 @@ class PlanningArtifactPresenter {
         return $this->getUrl();
     }
     
+    public function getArtifactId() {
+        return $this->planning_item->getId();
+    }
+    
     public function getEditLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
