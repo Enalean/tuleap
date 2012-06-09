@@ -99,6 +99,8 @@ class Tracker_CrossSearch_Search {
         
         //var_dump($root);
         
+        // @todo: FIX DISPLAY OF ARTIFACT LINK IN COLUMN RESULT!
+
         return $root;
         
         //return $this->result_sorter->sortArtifacts($artifacts_info, $tracker_ids, $hierarchy);
@@ -120,10 +122,11 @@ class Tracker_CrossSearch_Search {
         }
     }
     
-    private function getArtifactInfo($artifact) {
+    private function getArtifactInfo(Tracker_Artifact $artifact) {
         return array(
-            'id'         => $artifact->getId(),
-            'tracker_id' => $artifact->getTrackerId(),
+            'id'                => $artifact->getId(),
+            'last_changeset_id' => $artifact->getLastChangeset()->getId(),
+            'tracker_id'        => $artifact->getTrackerId(),
         );
     }
 }

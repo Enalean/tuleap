@@ -42,6 +42,15 @@ class Tracker_Hierarchy {
     }
     
     /**
+     * Return the internal hierarchy flattened
+     *
+     * @return Array
+     */
+    public function flatten() {
+        return array_keys($this->parents);
+    }
+
+    /**
      * Returns true if $tracker_id belongs to the hierarchy
      * 
      * @param int $tracker_id

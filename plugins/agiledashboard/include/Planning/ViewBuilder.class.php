@@ -34,20 +34,17 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
     public function build(User $user, 
                           Project $project,
                           Tracker_CrossSearch_Query $cross_search_query, 
-                          array $excluded_artifact_ids, 
+                          array $already_planned_artifact_ids,
                           $backlog_tracker_id,
                           Planning $planning,
                           $planning_redirect_parameter) {
     
         $report      = $this->getReport($user);
         $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
-        //$tracker_ids = $this->getDescendantIds($backlog_tracker_id);
-        $tracker_ids = array(142,143,144,145);
-        $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
-        //$this->filterNotPlannableNodes($backlog_tracker_id, $artifacts);
-        //var_dump($artifacts);
-        $visitor = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $excluded_artifact_ids);
-        $artifacts =  $artifacts->accept($visitor);
+        $tracker_ids = $this->hierarchy_factory->getHierarchy(array($backlog_tracker_id))->flatten();
+        $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $already_planned_artifact_ids);
+        $visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
+        $artifacts   = $artifacts->accept($visitor);
         
         return new Planning_SearchContentView($report, 
                                               $criteria, 
@@ -58,22 +55,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
                                               $planning,
                                               $planning_redirect_parameter);        
     }
-    
-    public function getDescendantIds($tracker_id) {
-        return $this->hierarchy_factory->getDescendantIds($tracker_id);
-    } 
 
-    public function filterNotPlannableNodes($backlog_tracker_id, TreeNode &$node) {
-        $node_children = $node->getChildren();
-        foreach ($node_children as $key => $child) {
-            $child_data = $child->getData();
-            if ($child_data['tracker_id'] != $backlog_tracker_id) {
-                unset($node_children[$key]);
-            }
-        }
-        $node->setChildren($node_children);
-    }
-    
     public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
     }

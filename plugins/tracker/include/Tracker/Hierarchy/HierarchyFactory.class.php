@@ -102,6 +102,13 @@ class Tracker_HierarchyFactory {
         return $descendant_ids;
     }
     
+    /**
+     * Return the whole hierarchy (parents and descendants) that involve the given trackers
+     *
+     * @param array $tracker_ids
+     *
+     * @return \Tracker_Hierarchy
+     */
     public function getHierarchy($tracker_ids = array()) {
         $hierarchy             = new Tracker_Hierarchy();
         $search_tracker_ids    = $tracker_ids;
