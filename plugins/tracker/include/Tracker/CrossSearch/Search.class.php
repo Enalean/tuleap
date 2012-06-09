@@ -92,11 +92,11 @@ class Tracker_CrossSearch_Search {
         
         $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
-        if ($query->isEmpty()) {
+        //if ($query->isEmpty()) {
             return $this->result_sorter->sortArtifacts($artifacts_info, $tracker_ids, $hierarchy);
-        } else {
+        //} else {
             return $this->buildMissingNodes($user, $artifacts_info);
-        }
+        //}
     }
 
     /**

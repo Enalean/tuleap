@@ -58,8 +58,8 @@ class TreeNode /*implements Visitable*/ {
     /**
      * Constructor
      */
-    function TreeNode($data=null) {
-        $this->id = uniqid();
+    function TreeNode($data=null, $id=null) {
+        $this->id = ($id === null) ? uniqid() : $id;
         /*if(func_num_args() !== 0) {
             trigger_error(get_class($this).'::TreeNode => Do not accept arguments', E_USER_ERROR);
         }*/

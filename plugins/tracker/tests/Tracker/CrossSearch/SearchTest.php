@@ -135,48 +135,29 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     }
     
     private function getExpectedForTrackerOutsideHierarchy() {
-        $root = new TreeNode();
-        $root->setId(0);
-        
-        $node_7 = new TreeNode();
-        $node_7->setId(7);
-        $node_7->setData(array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5'));
-        $root->addChild($node_7);
-        
-        $node_5 = new TreeNode();
-        $node_5->setId(5);
-        $node_5->setData(array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => ''));
-        $node_7->addChild($node_5);
-        
-        $node_6 = new TreeNode();
-        $node_6->setId(6);
-        $node_6->setData(array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8'));
-        $root->addChild($node_6);
+        $root    = new TreeNode(null, 0);
+        $node_7  = new TreeNode(array('id' => 7,  'tracker_id' => 112, 'artifactlinks' => '5'), 7);
+        $node_5  = new TreeNode(array('id' => 5,  'tracker_id' => 111, 'artifactlinks' => ''), 5);
+        $node_6  = new TreeNode(array('id' => 6,  'tracker_id' => 112, 'artifactlinks' => '8'), 6);
+        $node_8  = new TreeNode(array('id' => 8,  'tracker_id' => 111, 'artifactlinks' => '11,9,34'), 8);
+        $node_11 = new TreeNode(array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => ''), 11);
+        $node_9  = new TreeNode(array('id' => 9,  'tracker_id' => 93,  'artifactlinks' => ''), 9);
+        $node_10 = new TreeNode(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66'), 10);
+        $node_66 = new TreeNode(array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => ''), 66);
 
-        $node_8 = new TreeNode();
-        $node_8->setId(8);
-        $node_8->setData(array('id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34'));
-        $node_6->addChild($node_8);
-        
-        $node_11 = new TreeNode();
-        $node_11->setId(11);
-        $node_11->setData(array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => ''));
-        $node_8->addChild($node_11);
-        
-        $node_9 = new TreeNode();
-        $node_9->setId(9);
-        $node_9->setData(array('id' => 9, 'tracker_id' => 93, 'artifactlinks' => ''));
-        $node_8->addChild($node_9);
-        
-        $node_10 = new TreeNode();
-        $node_10->setId(10);
-        $node_10->setData(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66'));
-        $root->addChild($node_10);
-        
-        $node_66 = new TreeNode();
-        $node_66->setId(66);
-        $node_66->setData(array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => ''));
-        $root->addChild($node_66);
+        $root->addChildren(
+            $node_7->addChildren(
+                $node_5
+            ),
+            $node_6->addChildren(
+                $node_8->addChildren(
+                    $node_11,
+                    $node_9
+                )
+            ),
+            $node_10,
+            $node_66
+        );
         return $root;
     }
     
