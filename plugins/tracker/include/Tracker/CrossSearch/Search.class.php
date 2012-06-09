@@ -90,20 +90,30 @@ class Tracker_CrossSearch_Search {
         $shared_fields   = $this->shared_field_factory->getSharedFields($query->getSharedFields());
         $semantic_fields = $query->getSemanticCriteria();
         
-        var_dump($query);
-        
         $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
-        $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
-        $artifacts = $this->getArtifactsFromArtifactInfo($artifacts_info);
-        $root = new TreeNode();
-        $this->buildArtifactsTree($user, $root, $artifacts, $artifacts_info);
-        
-        return $root;
-        
-        //return $this->result_sorter->sortArtifacts($artifacts_info, $tracker_ids, $hierarchy);
+        if ($query->isEmpty()) {
+            return $this->result_sorter->sortArtifacts($artifacts_info, $tracker_ids, $hierarchy);
+        } else {
+            return $this->buildMissingNodes($user, $artifacts_info);
+        }
     }
-    
+
+    /**
+     * Given a partial result of search, re-add all descendants of retrieved artifacts (if any).
+     *
+     * @param User             $user
+     * @param DataAccessResult $artifacts_info
+     * @return \TreeNode
+     */
+    private function buildMissingNodes(User $user, $artifacts_info) {
+        $root           = new TreeNode();
+        $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
+        $artifacts      = $this->getArtifactsFromArtifactInfo($artifacts_info);
+        $this->buildArtifactsTree($user, $root, $artifacts, $artifacts_info);
+        return $root;
+    }
+
     private function indexArtifactInfoByArtifactId($artifacts_info) {
         $new_info = array();
         foreach ($artifacts_info as $artifact_info) {
@@ -119,7 +129,7 @@ class Tracker_CrossSearch_Search {
         }
         return $artifacts;
     }
-    
+
     private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info) {
         foreach ($artifacts as $artifact) {
             $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));
@@ -127,7 +137,7 @@ class Tracker_CrossSearch_Search {
             $root->addChild($node);
         }
     }
-    
+
     /**
      * Return artifact info from artifact object
      *
