@@ -90,6 +90,8 @@ class Tracker_CrossSearch_Search {
         $shared_fields   = $this->shared_field_factory->getSharedFields($query->getSharedFields());
         $semantic_fields = $query->getSemanticCriteria();
         
+        var_dump($query);
+        
         $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
         $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
