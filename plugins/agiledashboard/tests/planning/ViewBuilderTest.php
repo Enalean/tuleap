@@ -29,9 +29,11 @@ class ViewBuilderTest extends TuleapTestCase {
         parent::setUp();
         
         $this->backlog_tracker_id = 486;
-        $this->descendant_ids     = array($this->backlog_tracker_id, 123, 456);
+        $this->hierarchy_ids     = array($this->backlog_tracker_id, 123, 456);
         
-        $this->hierarchy_factory  = stub('Tracker_HierarchyFactory')->getDescendantIds()->returns($this->descendant_ids);
+        $this->hierarchy          = stub('Tracker_Hierarchy')->flatten()->returns($this->hierarchy_ids);
+
+        $this->hierarchy_factory  = stub('Tracker_HierarchyFactory')->getHierarchy(array($this->backlog_tracker_id))->returns($this->hierarchy);
         $this->formElementFactory = mock('Tracker_FormElementFactory');
         $this->tracker_factory    = mock('TrackerFactory');
         $this->search             = mock('Tracker_CrossSearch_Search');
@@ -56,73 +58,15 @@ class ViewBuilderTest extends TuleapTestCase {
         return $this->builder->build($this->user, $this->project, $this->cross_search_criteria, array(), $this->backlog_tracker_id, $this->planning, '');
     }
     
-    public function itRetrievesTheBacklogTrackerChildren() {
-        $tracker_ids = $this->builder->getDescendantIds($this->backlog_tracker_id);
-        $this->assertEqual($tracker_ids, $this->descendant_ids);
-    }
-    
     public function itRetrievesTheArtifactsFromTheBacklogTrackerAndItsChildrenTrackers() {
         stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
-        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($this->user, $this->project, $this->descendant_ids, $this->cross_search_criteria, array()));
+        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($this->user, $this->project, $this->hierarchy_ids, $this->cross_search_criteria, array()));
         $this->build();
     }
     
     public function itBuildsPlanningContentView() {
         stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
         $this->assertIsA($this->build(), 'Planning_SearchContentView');
-    }
-
-    public function itRemovesRootArtifactsThatDoNotMatchTheBacklogTracker() {
-        $story = array('id' => 1, 'tracker_id' => $this->backlog_tracker_id);
-        $task = array('id' => 2, 'tracker_id' => 123);
-        $bug = array('id' => 3, 'tracker_id' => 999);
-
-        $root = new TreeNode();
-        $story_node = new TreeNode();
-        $task_node = new TreeNode();
-        $bug_node = new TreeNode();
-
-        $story_node->setData($story);
-        $task_node->setData($task);
-        $bug_node->setData($bug);
-
-        $story_node->addChild($task_node);
-        $root->addChild($story_node);
-        $root->addChild($bug_node);
-
-        // Source:
-        // .
-        // |-- Story
-        // |   `-- Task
-        // `-- Bug
-
-        $this->builder->filterNotPlannableNodes($this->backlog_tracker_id, $root);
-
-        // Expectation:
-        // .
-        // `-- Story
-        //     `-- Task
-
-
-        $root_children = $root->getChildren();
-        $this->assertEqual(count($root_children), 1);
-        $this->assertEqual($root_children[0], $story_node);
-
-        $story_children = $root_children[0]->getChildren();
-        $this->assertEqual(count($story_children), 1);
-        $this->assertEqual($story_children[0], $task_node);
-    }
-
-    public function itBuildsTheViewWithoutNotPlannableArtifacts() {
-        $root = new TreeNode();
-        stub($this->search)->getHierarchicallySortedArtifacts()->returns($root);
-
-        $builder = TestHelper::getPartialMock('Planning_ViewBuilder', array('filterNotPlannableNodes'));
-        $builder->__construct($this->formElementFactory, $this->search, $this->criteria_builder);
-        $builder->setHierarchyFactory($this->hierarchy_factory);
-
-        $builder->expectOnce('filterNotPlannableNodes', array($this->backlog_tracker_id, $root));
-        $builder->build($this->user, $this->project, $this->cross_search_criteria, array(), $this->backlog_tracker_id, $this->planning, '');
     }
 }
 
