@@ -34,7 +34,7 @@ require_once('CrossSearch/Search.class.php');
 require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
-require_once('dao/Tracker_DateReminderDao.class.php');
+require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     

@@ -17,7 +17,7 @@
  */
 
 require_once('Tracker_DateReminder.class.php');
-require_once('dao/Tracker_DateReminderDao.class.php');
+require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
 require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
