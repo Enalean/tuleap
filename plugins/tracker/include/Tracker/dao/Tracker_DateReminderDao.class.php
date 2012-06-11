@@ -121,7 +121,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $sql = "Update ".$this->tableName."
                 SET
                 field_id          = ".$fieldId.",
-                ugroups         = ".$ugroups.",
+                ugroups           = ".$ugroups.",
                 notification_type = ".$notificationType.",
                 distance          = ".$distance.",
                 status            = ".$status."
