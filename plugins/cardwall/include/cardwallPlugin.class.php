@@ -27,10 +27,6 @@ class cardwallPlugin extends Plugin {
 
     const RENDERER_TYPE = 'plugin_cardwall';
 
-    public function __construct($id) {
-        parent::__construct($id);
-    }
-    
     public function getHooksAndCallbacks() {
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile',                           'cssFile',                           false);
