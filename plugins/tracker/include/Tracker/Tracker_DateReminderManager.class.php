@@ -267,7 +267,7 @@ class Tracker_DateReminderManager {
                                                                                   $GLOBALS['UGROUP_PROJECT_ADMIN']));
         $output  = '<SELECT NAME="reminder_ugroup[]" multiple>';
         while($row = db_fetch_array($res)) {
-            $output .= '<OPTION VALUE="'.$row['ugroups'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+            $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
         }
         $output  .= '</SELECT>';
         return $output;
