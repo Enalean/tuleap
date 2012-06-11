@@ -167,7 +167,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return String
      */
-    private function createMailForReviewer(Docman_Item $docmanItem) {
+    private function getReviewUrl(Docman_Item $docmanItem) {
         $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
         $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
         return $reviewUrl;
