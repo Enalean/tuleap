@@ -101,27 +101,26 @@ class Planning_MilestonePresenter extends PlanningPresenter {
 
     private $additional_panes = array();
     private function getAdditionalPanes() {
-        if (!empty($this->additional_panes)) {
-            return $this->additional_panes;
+        if (empty($this->additional_panes)) {
+            $this->additional_panes = array();
+            $a_pane_is_active       = false;
+            if ($this->milestone->getArtifact()) {
+                EventManager::instance()->processEvent(
+                    AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
+                    array(
+                        'milestone' => $this->milestone,
+                        'panes'     => &$this->additional_panes
+                    )
+                );
+
+                $requested_pane   = HTTPRequest::instance()->get('pane');
+                foreach($this->additional_panes as $pane) {
+                    $pane->setActive($requested_pane === $pane->getIdentifier());
+                    $a_pane_is_active = $pane->isActive();
+                }
+            }
+            $this->is_planner_pane_active = ! $a_pane_is_active;
         }
-
-        $this->additional_panes = array();
-        EventManager::instance()->processEvent(
-            AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-            array(
-                'milestone' => $this->milestone,
-                'panes'     => &$this->additional_panes
-            )
-        );
-
-        $a_pane_is_active = false;
-        $requested_pane   = HTTPRequest::instance()->get('pane');
-        foreach($this->additional_panes as $pane) {
-            $pane->setActive($requested_pane === $pane->getIdentifier());
-            $a_pane_is_active = $pane->isActive();
-        }
-        $this->is_planner_pane_active = ! $a_pane_is_active;
-
         return $this->additional_panes;
     }
 
