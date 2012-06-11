@@ -115,7 +115,7 @@ class DateHelper {
      *
      * @return Integer
      */
-    function dateDiffInDays($start, $end) {
+    public static function dateDiffInDays($start, $end) {
         $hours        = 24;
         $minutes      = 60;
         $seconds      = 60;
@@ -131,7 +131,7 @@ class DateHelper {
      *
      * @return Boolean
      */
-    function isPeriodicallyDistant($distance, $period) {
+    public static function isPeriodicallyDistant($distance, $period) {
         return ($distance % $period == 0);
     }
 
