@@ -137,9 +137,11 @@ class CodeReviewActions extends Actions {
                 }
             }
             if (!$check){
-                var_dump("The user '".$user."' is not a member of your project");
-                $status    = false;
-                $invalid[] = 'target_people';
+                $msg = "The user '".$username."' is not a member of your project.";
+                $GLOBALS['Response']->addFeedBack('error', $msg);
+                $this->controller->view = 'displayFrame';
+                $status                 = false;
+                $invalid[]              = 'target_people';
             }
         } else {
             $status    = false;
