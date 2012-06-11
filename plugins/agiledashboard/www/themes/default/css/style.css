@@ -106,3 +106,8 @@
     border:0px; 
     border-top:1px solid #ccc;
 }
+
+.toggle-collapse {
+    display: inline-block;
+    width: .8em;
+}
