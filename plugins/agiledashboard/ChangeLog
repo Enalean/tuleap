@@ -1,3 +1,6 @@
+Version 0.29 - Tuleap 5.2
+     * Fix bug when attempt to create an artifact in an empty milestone.
+
 Version 0.28 - Tuleap 5.2
      * Allow edition of an existing planning
 

@@ -52,9 +52,10 @@ class Planning_NoMilestone implements Planning_Milestone {
         return '';
     }
     
-    /**
-     * @return int
-     */
+    public function getArtifact() {
+        
+    }
+
     public function getArtifactId() {
         return null;
     }
@@ -71,18 +72,6 @@ class Planning_NoMilestone implements Planning_Milestone {
         return true; // User can view milestone content, since it's empty.
     }
 
-    public function addSubMilestones(array $new_sub_milestones) {
-        
-    }
-
-    public function getArtifact() {
-        
-    }
-
-    public function getGroupId() {
-        
-    }
-
     public function getLinkedArtifacts(User $user) {
         
     }
@@ -96,11 +85,15 @@ class Planning_NoMilestone implements Planning_Milestone {
     }
 
     public function getPlanningId() {
-        
+        return $this->planning->getId();
     }
 
     public function getProject() {
         return $this->project;
+    }
+
+    public function getGroupId() {
+        return $this->project->getID();
     }
 
     public function getSubMilestones() {
@@ -108,6 +101,10 @@ class Planning_NoMilestone implements Planning_Milestone {
     }
 
     public function hasSubMilestones() {
+        
+    }
+
+    public function addSubMilestones(array $new_sub_milestones) {
         
     }
 
