@@ -163,7 +163,7 @@ class Docman_ApprovalTableReminder {
     /**
      * Retrieve approval table url for a given docmna item
      *
-     * @param Docman_Item          $docmanItem Item to be approved
+     * @param Docman_Item $docmanItem Item to be approved
      *
      * @return String
      */
@@ -193,7 +193,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return User
      */
-    private function getNotificationStyle($table) {
+    private function getNotificationStyle(ApprovalTable $table) {
         $notifStyle = '';
         switch($table->getNotification()) {
         case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
@@ -214,7 +214,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return User
      */
-    private function getTableDescriptionAsMessage($table, $format) {
+    private function getTableDescriptionAsMessage(ApprovalTable $table, String $format) {
         $comment     = '';
         $userComment = $table->getDescription();
         if($userComment != '') {
@@ -241,7 +241,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return User
      */
-    private function getApprovalTableOwner($table) {
+    private function getApprovalTableOwner(ApprovalTable $table) {
         $um    = UserManager::instance();
         return $um->getUserById($table->owner);
     }
@@ -253,7 +253,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Project
      */
-    private function getItemProject($docmanItem) {
+    private function getItemProject(Docman_Item $docmanItem) {
         $pm    = ProjectManager::instance();
         return $pm->getProject($docmanItem->getGroupId());
     }
@@ -261,13 +261,13 @@ class Docman_ApprovalTableReminder {
     /**
      * Creates the text mail body
      *
-     * @param User                 $reviewer User to remind
-     * @param Docman_ApprovalTable $table    Approval table
-     * @param String               $subject
+     * @param Docman_ApprovalTable $table      Approval table
+     * @param Docman_Item          $docmanItem The docman item to be reviewed
+     * @param String               $subject    Subject of the mail
      *
      * @return Mail
      */
-    private function createMailForReviewer($table, $docmanItem, $subject) {
+    private function createMailForReviewer(Docman_ApprovalTable $table, $docmanItem, $subject) {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
@@ -291,7 +291,7 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table      Approval table
      * @param Docman_Item          $docmanItem Item to be approved
-     * @param String               $subject    Dubject of the mail
+     * @param String               $subject    Subject of the mail
      *
      * @return Codendi_Mail
      */
