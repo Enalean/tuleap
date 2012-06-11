@@ -127,7 +127,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Boolean
      */
-    private function notifyIndividual(Docman_ApprovalTable $table, int $reviewerId) {
+    private function notifyIndividual(Docman_ApprovalTable $table, $reviewerId) {
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
         $mail     = $this->prepareMailReminder($table, $reviewer);
@@ -189,11 +189,11 @@ class Docman_ApprovalTableReminder {
     /**
      * Retrieve notification mail type formmatted as a message within the reminder
      *
-     * @param ApprovalTable $table The approval The approval table that its reminder notification will be sent
+     * @param Docman_ApprovalTable $table The approval The approval table that its reminder notification will be sent
      *
      * @return User
      */
-    private function getNotificationStyle(ApprovalTable $table) {
+    private function getNotificationStyle(Docman_ApprovalTable $table) {
         $notifStyle = '';
         switch($table->getNotification()) {
         case PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL:
@@ -209,12 +209,12 @@ class Docman_ApprovalTableReminder {
     /**
      * Retrieve approval table descritpion formatted as a message within the reminder
      *
-     * @param ApprovalTable $table  The approval table that its reminder notification will be sent
-     * @param String        $format Message format
+     * @param Docman_ApprovalTable $table  The approval table that its reminder notification will be sent
+     * @param String               $format Message format
      *
      * @return User
      */
-    private function getTableDescriptionAsMessage(ApprovalTable $table, String $format) {
+    private function getTableDescriptionAsMessage(Docman_ApprovalTable $table, $format) {
         $comment     = '';
         $userComment = $table->getDescription();
         if($userComment != '') {
@@ -237,11 +237,11 @@ class Docman_ApprovalTableReminder {
     /**
      * Retrieve the owner of a given approval table
      *
-     * @param ApprovalTable $table The approval table we want to get its owner
+     * @param Docman_ApprovalTable $table The approval table we want to get its owner
      *
      * @return User
      */
-    private function getApprovalTableOwner(ApprovalTable $table) {
+    private function getApprovalTableOwner(Docman_ApprovalTable $table) {
         $um    = UserManager::instance();
         return $um->getUserById($table->owner);
     }
