@@ -124,6 +124,7 @@ class DateHelper {
         if ($before) {
             $distance = $distance * -1;
         }
+        // @TODO: prpose a better idea, to avoid +/- x hours if timezone is not GMT
         date_default_timezone_set('GMT');
         return strtotime(date("Y-m-d", $_SERVER['REQUEST_TIME'] + $distance));
     }
