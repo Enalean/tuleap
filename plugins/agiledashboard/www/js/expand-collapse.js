@@ -3,26 +3,29 @@ codendi.agiledashboard = codendi.agiledashboard || { };
 codendi.agiledashboard.planning = codendi.agiledashboard.planning || { };
 
 codendi.agiledashboard.planning.TreeView = Class.create({
-    initialize : function(root) {
-        this.root = $(root);
+    initialize : function(root, nodeSelector) {
+        this.root         = $(root);
+        this.nodeSelector = nodeSelector;
+        this.linkSelector = '.toggle-collapse';
+        
         if (this.root !== null ) {
             /* private method binded as event listener */
             function _eventOnNode(event) {
-                this.toggleCollapse(Event.element(event).up('.planning-item'));
+                this.toggleCollapse(Event.element(event).up(this.nodeSelector));
                 Event.stop(event);
             };
             this.collapseAll();
-            this.root.select('.planning-item .toggle-collapse').invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
+            this.root.select(this.nodeSelector + ' ' + this.linkSelector).invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
         }
     },
     
     collapseAll: function() {
-        this.root.getElementsBySelector('.planning-item').each(this.collapse, this);
+        this.root.getElementsBySelector(this.nodeSelector).each(this.collapse, this);
         return this;
     },
 
     expandAll: function() {
-        this.root.getElementsBySelector('.planning-item').each(this.expand, this);
+        this.root.getElementsBySelector(this.nodeSelector).each(this.expand, this);
         return this;
     },
 
@@ -56,7 +59,7 @@ codendi.agiledashboard.planning.TreeView = Class.create({
     },
     
     toggleLink: function(nodeElement) {
-        nodeElement.down('.toggle-collapse').update(this.getLinkText(nodeElement));
+        nodeElement.down(this.linkSelector).update(this.getLinkText(nodeElement));
     },
     
     getLinkText: function(nodeElement) {
@@ -76,7 +79,7 @@ codendi.agiledashboard.planning.TreeView = Class.create({
     },
 
     children: function(nodeElement) {
-        var firstChildNode  = nodeElement.down('.planning-item');
+        var firstChildNode  = nodeElement.down(this.nodeSelector);
         
         if (firstChildNode) {
             var otherChildNodes = firstChildNode.siblings();
@@ -88,7 +91,7 @@ codendi.agiledashboard.planning.TreeView = Class.create({
     
     getNodeChild: function(nodeElement) {
         if(nodeElement) {
-            var nodeChild = nodeElement.select('.planning-item');
+            var nodeChild = nodeElement.select(this.nodeSelector);
             if (nodeChild[0]) {
                 return nodeChild[0];
             }
@@ -100,10 +103,10 @@ codendi.agiledashboard.planning.TreeView = Class.create({
 
 Event.observe(window, 'load', function() {
     $$('.planning-backlog .backlog-content').each(function (element) {
-        new codendi.agiledashboard.planning.TreeView(element);
+        new codendi.agiledashboard.planning.TreeView(element, '.planning-item');
     });
     
     $$('.release_planner').each(function (element) {
-        new codendi.agiledashboard.planning.TreeView(element);
+        new codendi.agiledashboard.planning.TreeView(element, '.planning-item');
     });
 });
