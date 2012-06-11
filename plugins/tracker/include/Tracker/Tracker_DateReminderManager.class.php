@@ -21,6 +21,7 @@ require_once('dao/Tracker_DateReminderDao.class.php');
 require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 class Tracker_DateReminderManager {
 
@@ -35,6 +36,7 @@ class Tracker_DateReminderManager {
      */
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
+        $this->csrf    = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->tracker->id.'&action=new_reminder');
     }
 
     /**
@@ -251,17 +253,15 @@ class Tracker_DateReminderManager {
      * @return String
      */
     public function getNewDateReminderForm() {
-        $before = '';
-        $after  = '';
-        //@todo Call dateReminder insertion method within a dedicated action (say insert_reminder) at Tracker_NotificationsManager::process() (around line 57)
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
+        $output .= $this->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0" '.$before.'> before
-                        <OPTION VALUE="1" '.$after.'> after
+                        <OPTION VALUE="0"> before
+                        <OPTION VALUE="1"> after
                     </SELECT></TD>';
         $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
@@ -442,6 +442,7 @@ class Tracker_DateReminderManager {
      * @return Boolean
      */
     public function addNewReminder(HTTPRequest $request) {
+        $this->csrf->check();
         $trackerId          = $this->validateTrackerId($request);
         $fieldId            = $this->validateFieldId($request);
         $notificationType   = $this->validateNotificationType($request);
