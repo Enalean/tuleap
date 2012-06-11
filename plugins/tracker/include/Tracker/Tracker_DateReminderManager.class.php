@@ -314,9 +314,9 @@ class Tracker_DateReminderManager {
         $notificationType   = $request->get('notif_type');
         $ugroups            = join(",", $request->get('reminder_ugroup'));
         $distance           = $request->get('distance');
-        $reminderManagerDao = $this->getDao();
         $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
-        $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s)', 'Type: '.$notificationType, 'Ugroup(s): '.$ugroups));
+        $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
+        $reminderManagerDao = $this->getDao();
         return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
     }
 
@@ -328,7 +328,8 @@ class Tracker_DateReminderManager {
      * @return Boolean
      */
     public function deleteTrackerReminders($remindersIds) {
-        // @TODO: keep trace of the change
+        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), $remindersIds);
         $reminderManagerDao = $this->getDao();
         return $reminderManagerDao->deleteReminders($remindersIds);
     }

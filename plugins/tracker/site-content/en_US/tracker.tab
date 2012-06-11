@@ -1349,7 +1349,7 @@ plugin_tracker_date_reminder	body_tracker	Tracker: '$1'
 plugin_tracker_date_reminder	body_art	Artifact: '$1'
 plugin_tracker_date_reminder	body_art_link	You can access the artifact here:
 
-project_admin_utils	tracker_date_reminder_add	Added tracker date reminder
-project_admin_utils	tracker_date_reminder_update	Updated tracker date reminder
-project_admin_utils	tracker_date_reminder_delete	Deleted tracker date reminder
-project_admin_utils	tracker_date_reminder_sent	Sent tracker date reminder
+project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
+project_admin_utils	tracker_date_reminder_update	Updated tracker date reminder $1
+project_admin_utils	tracker_date_reminder_delete	Deleted tracker date reminder $1
+project_admin_utils	tracker_date_reminder_sent	Sent tracker date reminder $1
