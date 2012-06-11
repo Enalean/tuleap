@@ -22,11 +22,14 @@ use SQLmetrics; #package/class SQLmetrics, definition and use of metrics for thi
 use POSIX;
 use HTML::Entities ();
 
+my $INSTALL_DIR="/usr/share/codendi";
+require("$INSTALL_DIR/src/utils/include.pl");  # Include all the predefined functions and variables
+
 use vars qw($dbh);
-my $sys_dbhost="localhost";#adress of the Codex database
-my $sys_dbname="codex";#name of the Codex database
-my $sys_dbuser="XXXXX";#readonly Codex database login
-my $sys_dbpasswd="XXXXX";#readonly Codex database pass
+my $sys_dbhost;
+my $sys_dbname;
+my $sys_dbuser;
+my $sys_dbpasswd;
 my $version="1.0";					# script version
 my $date_end;                              	# base date and end of the period
 my $date_start;					# date of the period start
@@ -202,7 +205,7 @@ WHERE date<=$time_end AND date>=$time_start
 GROUP BY group_id"));
 
 push(@Allmetrics,new SQLmetrics("Push Git",
-"SELECT project_id, count(*) 
+"SELECT project_id, count(*)
 FROM  plugin_git_log INNER JOIN plugin_git USING(repository_id)
 WHERE push_date<=$time_end AND push_date>=$time_start
 GROUP BY project_id"));
