@@ -1,3 +1,9 @@
+Version 5.7.23 - Tuleap 5.2
+    * Update tracker templates by adding permissions on unused fields.
+
+Version 5.7.22 - Tuleap 5.2
+    * Introduc NullTracker object
+
 Version 5.7.21 - Tuleap 5.2
     * When a hierarchy is defined between 2 trackers, the linking between two
       artifacts is always done with respect of hierarchy (ie the artifact that

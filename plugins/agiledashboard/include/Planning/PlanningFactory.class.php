@@ -21,6 +21,7 @@
 require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once('PlanningDao.class.php');
 require_once('Planning.class.php');
+require_once 'PlanningParameters.class.php';
 
 class PlanningFactory {
     
@@ -213,19 +214,25 @@ class PlanningFactory {
     /**
      * Create a new planning
      * 
-     * @param $planning_name the planning name
      * @param int $group_id
-     * @param array $backlog_tracker_id the list of tracker ids defined as backlog
-     * @param int $planning_tracker_id
+     * @param PlanningParameters $planning_parameters
      *
      * @return array of Planning
      */
-    public function createPlanning($planning_name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id) {
-        return $this->dao->createPlanning($planning_name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id);
+    public function createPlanning($group_id, PlanningParameters $planning_parameters) {
+        return $this->dao->createPlanning($group_id, $planning_parameters);
     }
     
-    public function updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id) {
-        return $this->dao->updatePlanning($planning_id, $planning_name, $backlog_title, $plan_title, $backlog_tracker_id, $planning_tracker_id);
+    /**
+     * Update an existing planning
+     * 
+     * @param int $planning_id
+     * @param PlanningParameters $planning_parameters
+     *
+     * @return array of Planning
+     */
+    public function updatePlanning($planning_id, PlanningParameters $planning_parameters) {
+        return $this->dao->updatePlanning($planning_id, $planning_parameters);
     }
     
     /**
@@ -251,14 +258,14 @@ class PlanningFactory {
     /**
      * Retrieve the project trackers that can be used as planning trackers.
      * 
-     * @param int $group_id the project id the trackers to retrieve belong to
+     * @param Planning $planning The planning for which we want to know the available trackers.
      * 
      * @return Array of Tracker
      */
-    public function getAvailablePlanningTrackers($group_id) {
-        $planning_trackers = array();
+    public function getAvailablePlanningTrackers(Planning $planning) {
+        $planning_trackers = array($planning->getPlanningTracker());
         
-        foreach($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
+        foreach($this->dao->searchNonPlanningTrackersByGroupId($planning->getGroupId()) as $row) {
             $planning_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
         }
         

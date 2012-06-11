@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/NullTracker.class.php';
+
 /**
  * This allows to define a planning
  * A planning is composed of a list of tracker ids (eg: Sprints, Tasks...) that represent what is in the backlog
@@ -66,9 +68,9 @@ class Planning {
     private $planning_tracker;
     
     /**
-     * @var array of Tracker
+     * @var Tracker
      */
-    private $backlog_tracker = array();
+    private $backlog_tracker;
     
     function __construct($id, $name, $group_id, $backlog_title, $plan_title, $backlog_tracker_id = null, $planning_tracker_id = null) {
         $this->id                  = $id;
@@ -78,6 +80,8 @@ class Planning {
         $this->backlog_title       = $backlog_title;
         $this->backlog_tracker_id  = $backlog_tracker_id;
         $this->planning_tracker_id = $planning_tracker_id;
+        $this->backlog_tracker     = new NullTracker();
+        $this->planning_tracker    = new NullTracker();
     }
     
     /**

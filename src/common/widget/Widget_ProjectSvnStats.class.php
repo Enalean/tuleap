@@ -22,6 +22,8 @@
 
 require_once('common/dao/SvnCommitsDao.class.php');
 require_once('common/chart/Chart.class.php');
+require_once('common/chart/ErrorChart.class.php');
+require_once('common/widget/Widget_ProjectSvnStats_Layout.class.php');
 
 class Widget_ProjectSvnStats extends Widget {
     function __construct() {
@@ -86,15 +88,28 @@ class Widget_ProjectSvnStats extends Widget {
                 $dates[] = date('M d', $i);
             }
             
-            $nb_commiters = count($stats);
-            
+            $nb_commiters    = count($stats);
+            $widgetFormatter = new Widget_ProjectSvnStats_Layout($nb_commiters);
+
+            $legendRatio       = $widgetFormatter->legend_ratio;
+            $chartWidth        = $widgetFormatter->getChartWidth();
+            $chartHeigh        = $widgetFormatter->getChartHeigh();
+            $legend_x_position = $widgetFormatter->getLegendXPosition();
+            $legend_y_position = $widgetFormatter->getLegendYPosition();
+            $imgBottomMargin   = $widgetFormatter->getImageBottomMargin();
+            $legendAlign       = $widgetFormatter->getLegendAlign();
+            // @TODO: Centralize stuff at Chart class level to properly render a Jpgraph chart with a large number of legend items
+
             //Build the chart
-            $c = new Chart(400, 300+16*$nb_commiters);
+            $c = new Chart($chartWidth, $chartHeigh);
             $c->SetScale('textlin');
-            $c->img->SetMargin(40,20,20,80+16*$nb_commiters);
+            $c->img->SetMargin(40,20,20,$imgBottomMargin);
             $c->xaxis->SetTickLabels($dates);
-            $c->legend->Pos(0.1,0.95,'left','bottom');
-            
+            $c->legend->Pos($legend_x_position, $legend_y_position, 'left', $legendAlign);
+            if ($legendRatio >= 1) {
+                $c->legend->setColumns(2);
+            }
+
             $colors = array_reverse(array_slice($GLOBALS['HTML']->getChartColors(), 0, $nb_commiters));
             $nb_colors = count($colors);
             $bars = array();
@@ -114,42 +129,11 @@ class Widget_ProjectSvnStats extends Widget {
             
             $gbplot = new AccBarPlot($bars);
             $c->Add($gbplot);
-            echo $c->stroke();
         } else {
-            //There is no stats yet
-            //generate a message as an image 
-            //(plz remember that we must return some img data)
-            
-            //ttf from jpgraph
-            $ttf = new TTF();
-            $ttf->SetUserFont(
-                'dejavu-lgc/DejaVuLGCSans.ttf',  
-                'dejavu-lgc/DejaVuLGCSans-Bold.ttf', 
-                'dejavu-lgc/DejaVuLGCSans-Oblique.ttf', 
-                'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
-            );
-            //Calculate the baseline
-            // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
-            //this should be above baseline
-            $test2="H";
-            //some of these additional letters should go below it
-            $test3="Hjgqp";
-            //get the dimension for these two:
-            $box2 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test2);
-            $box3 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test3);
-            $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
-            
             $error = "No commits in the last $duration days";
-            $bbox = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $error);
-            if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
-                $background_color = imagecolorallocate($im, 255, 255, 255);
-                $text_color       = imagecolorallocate($im, 64, 64, 64);
-                imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $error);
-                header("Content-type: image/png");
-                imagepng($im);
-                imagedestroy($im);
-            }
+            $c     = new ErrorChart("No logged commits", $error, 400, 300);
         }
+        echo $c->stroke();
     }
     
     protected function sortByTop($a, $b) {

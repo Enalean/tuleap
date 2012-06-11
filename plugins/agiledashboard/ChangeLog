@@ -1,13 +1,19 @@
-Version 0.26 - Tuleap 5.2 (Not released yet)
+Version 0.29 - Tuleap 5.2
+     * Fix bug when attempt to create an artifact in an empty milestone.
+
+Version 0.28 - Tuleap 5.2
+     * Allow edition of an existing planning
+
+Version 0.26 - Tuleap 5.2
      * Introduce base interface for \Planning\Milestone
 
-Version 0.25 - Tuleap 5.2 (Not released yet)
+Version 0.25 - Tuleap 5.2
      * Fix merge issue at commit #ee35e7d7ba0f
 
-Version 0.24 - Tuleap 5.2 (Not released yet)
+Version 0.24 - Tuleap 5.2
      * Fix bug when artifacts are displayed on both side of the planning
 
-Version 0.23 - Tuleap 5.2 (Not released yet)
+Version 0.23 - Tuleap 5.2
      * Only one tracker can be selected for backlog
      * Inherit columns titles definition from project templates
 

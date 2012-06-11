@@ -42,6 +42,7 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
+Mock::generatePartial('Planning_Controller', 'MockPlanning_Controller', array('render'));
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Tracker_CrossSearch_Search');
@@ -154,20 +155,20 @@ class Planning_ControllerNewTest extends TuleapTestCase {
     }
     
     public function itHasATextFieldForTheName() {
-        $this->assertPattern('/<input type="text" name="planning_name"/', $this->output);
+        $this->assertPattern('/<input type="text" name="planning\[name\]"/', $this->output);
     }
     
     public function itHasASelectBoxListingBacklogTrackers() {
-        $this->assertPattern('/\<select name="backlog_tracker_id"/', $this->output);
+        $this->assertPattern('/\<select name="planning\[backlog_tracker_id\]"/', $this->output);
         foreach ($this->available_backlog_trackers as $tracker) {
-            $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
+            $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
     }
     
     public function itHasASelectBoxListingPlanningTrackers() {
-        $this->assertPattern('/\<select name="planning_tracker_id"/', $this->output);
+        $this->assertPattern('/\<select name="planning\[planning_tracker_id\]"/', $this->output);
         foreach ($this->available_planning_trackers as $tracker) {
-            $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
+            $this->assertPattern('/\<option value="'.$tracker->getId().'".*\>'.$tracker->getName().'/', $this->output);
         }
     }
 }
@@ -196,9 +197,9 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
     public function setUp() {
         parent::setUp();
         
-        $this->request->set('planning_name', '');
-        $this->request->set('backlog_tracker_id', '');
-        $this->request->set('planning_tracker_id', '');
+        $this->request->set('planning[name]', '');
+        $this->request->set('planning[backlog_tracker_id]', '');
+        $this->request->set('planning[planning_tracker_id]', '');
     }
     
     public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
@@ -212,17 +213,95 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     public function setUp() {
         parent::setUp();
         
-        $this->request->set('planning_name', 'Release Planning');
-        $this->request->set('backlog_tracker_id', '2');
-        $this->request->set('planning_tracker_id', '3');
-        $this->request->set('planning_backlog_title', 'Release Backlog');
-        $this->request->set('planning_plan_title', 'Sprint Plan');
+        $this->planning_parameters = array('name'                => 'Release Planning',
+                                           'backlog_tracker_id'  => '2',
+                                           'planning_tracker_id' => '3',
+                                           'backlog_title'       => 'Release Backlog',
+                                           'plan_title'          => 'Sprint Plan');
+        $this->request->set('planning', $this->planning_parameters);
     }
     
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
-        $this->planning_factory->expectOnce('createPlanning', array('Release Planning', $this->group_id, 'Release Backlog', 'Sprint Plan', '2', '3'));
+        $this->planning_factory->expectOnce('createPlanning', array($this->group_id, PlanningParameters::fromArray($this->planning_parameters)));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
         $this->create();
+    }
+}
+
+class Planning_Controller_EditTest extends TuleapTestCase {
+    
+    public function itRendersTheEditTemplate() {
+        $group_id         = 123;
+        $planning_id      = 456;
+        $planning         = aPlanning()->withGroupId($group_id)
+                                       ->withId($planning_id)->build();
+        $request          = aRequest()->with('planning_id', $planning_id)
+                                      ->with('action', 'edit')->build();
+        $planning_factory = mock('PlanningFactory');
+        $controller       = new MockPlanning_Controller();
+        
+        stub($planning_factory)->getPlanningWithTrackers($planning_id)->returns($planning);
+        stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
+        stub($planning_factory)->getAvailablePlanningTrackers($planning)->returns(array());
+        
+        $controller->__construct($request, $planning_factory);
+        
+        $controller->expectOnce('render', array('edit', new IsAExpectation('Planning_FormPresenter')));
+        $controller->edit();
+    }
+}
+
+class Planning_Controller_ValidUpdateTest extends TuleapTestCase {
+    public function itUpdatesThePlanningAndRedirectToTheIndex() {
+        $group_id            = 456;
+        $planning_id         = 123;
+        $planning_parameters = array('name'                => 'Foo',
+                                     'backlog_title'       => 'Bar',
+                                     'plan_title'          => 'Baz',
+                                     'backlog_tracker_id'  => 43875,
+                                     'planning_tracker_id' => 654823);
+        $request             = aRequest()->with('group_id', $group_id)
+                                         ->with('planning_id', $planning_id)
+                                         ->with('planning', $planning_parameters)->build();
+        $planning_factory    = mock('PlanningFactory');
+        $this->controller    = new Planning_Controller($request, $planning_factory);
+        
+        // TODO: Inject validator into controller so that we can mock it and test it in isolation.
+        stub($planning_factory)->getPlanningTrackerIdsByGroupId($group_id)->returns(array());
+        
+        $planning_factory->expectOnce('updatePlanning', array($planning_id, PlanningParameters::fromArray($planning_parameters)));
+        $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$group_id&action=index");
+        $this->controller->update();
+    }
+}
+
+class Planning_Controller_InvalidUpdateTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        
+        $this->group_id         = 123;
+        $this->planning_id      = 456;
+        $planning_parameters    = array();
+        $request                = aRequest()->with('group_id', $this->group_id)
+                                            ->with('planning_id', $this->planning_id)
+                                            ->with('planning', $planning_parameters)->build();
+        $this->planning_factory = mock('PlanningFactory');
+        $this->controller       = new Planning_Controller($request, $this->planning_factory);
+    }
+    
+    public function itDoesNotUpdateThePlanning() {
+        $this->planning_factory->expectNever('updatePlanning');
+        $this->controller->update();
+    }
+    
+    public function itReRendersTheEditForm() {
+        $this->expectRedirectTo("/plugins/agiledashboard/?group_id=$this->group_id&planning_id=$this->planning_id&action=edit");
+        $this->controller->update();
+    }
+    
+    public function itDisplaysTheRelevantErrorMessages() {
+        $this->expectFeedback('error', '*');
+        $this->controller->update();
     }
 }
 

@@ -1,3 +1,8 @@
+1.5.1 - SOAP api 4.2 (Tuleap 5.2)
+   Bug fix
+   =======
+   * Fix warnings in frs getPackages
+
 1.5.0 - SOAP api 4.2 (Tuleap 4.0.25)
     What Changed?
     ============

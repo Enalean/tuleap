@@ -21,7 +21,7 @@
 /**
  * Interface which define the base contract for index/search library clients
  */
-interface FullTextSearch_ISearchAndIndexDocuments {
+interface FullTextSearch_IIndexDocuments {
 
     /**
      * Index a new document or update it if existing
@@ -35,10 +35,12 @@ interface FullTextSearch_ISearchAndIndexDocuments {
     /**
      * Flush this index/type combination
      *
-     * @return array
+     * 
      * @param mixed $id If id is supplied, delete that id for this index
      *                  if not wipe the entire index
      * @param array $options Parameters to pass to delete action
+     * 
+     * @return array
      */
     public function delete($id = false);
 
@@ -56,4 +58,5 @@ interface FullTextSearch_ISearchAndIndexDocuments {
      */
     public function buildSetterData(array $current_data, $name, $value);
 }
+
 ?>

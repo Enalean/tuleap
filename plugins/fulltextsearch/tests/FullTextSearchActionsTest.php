@@ -31,7 +31,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->client              = mock('FullTextSearch_ISearchAndIndexDocuments');
+        $this->client              = mock('FullTextSearch_IIndexDocuments');
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
         $this->actions = new FullTextSearchActions($this->client, $this->permissions_manager);
 

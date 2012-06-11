@@ -46,7 +46,15 @@ class Planning_ListPresenter {
     }
     
     public function createPlanning() {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
+    }
+    
+    public function getEditActionLabel() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit');
+    }
+    
+    public function getEditIconPath() {
+        return $GLOBALS['HTML']->getImagePath('ic/edit.png');
     }
 }
 

@@ -18,51 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../FullTextSearch/ISearchAndIndexDocuments.class.php';
 
 /**
  * Base class to interact with ElasticSearch
  */
-class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocuments {
+abstract class ElasticSearch_ClientFacade {
 
     /**
      * @var ElasticSearchClient
      */
-    private $client;
-
+    protected $client;
+    
     public function __construct(ElasticSearchClient $client) {
         $this->client = $client;
     }
-
-    /**
-     * @see ISearchAndIndexDocuments::index
-     */
-    public function index(array $document, $id = false) {
-        $this->client->index($document, $id);
-    }
-
-    /**
-     * @see ISearchAndIndexDocuments::delete
-     */
-    public function delete($id = false) {
-        $this->client->delete($id);
-    }
-
-    /**
-     * @see ISearchAndIndexDocuments::delete
-     */
-    public function update($item_id, $data) {
-        $this->client->request($item_id.'/_update', 'POST', $data);
-    }
-
-    /**
-     * make a parameter with name $nname and value $value
-     * then append it to current_data as script and var
-     */
-    public function buildSetterData(array $current_data, $name, $value) {
-        $current_data['script']       .= "ctx._source.$name = $name;";
-        $current_data['params'][$name] = $value;
-        return $current_data;
-    }
+    
 }
 ?>
