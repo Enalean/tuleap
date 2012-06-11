@@ -36,13 +36,22 @@ class Tracker_DateReminder {
 
    
     public function __construct($reminderId, $trackerId, $fieldId, $ugroupId, $notificationType, $distance, $status) {
-        $this->reminderId      = $reminderId;
-        $this->trackerId = $trackerId;
-        $this->fieldId   = $fieldId;
-        $this->ugroupId   = $ugroupId;
+        $this->reminderId       = $reminderId;
+        $this->trackerId        = $trackerId;
+        $this->fieldId          = $fieldId;
+        $this->ugroupId         = $ugroupId;
         $this->notificationType = $notificationType;
-        $this->distance = $distance;
-        $this->status = $status;
+        $this->distance         = $distance;
+        $this->status           = $status;
+    }
+
+    /**
+     * Get reminder id
+     *
+     * @return string
+     */
+    public function getId() {
+        return $this->reminderId;
     }
 
     /**
@@ -54,22 +63,28 @@ class Tracker_DateReminder {
         $this->field    = $field;
         $this->fieldId = $field->getId();
     }
-    
+
     /**
+     * Get tracker id of the reminder
+     *
      * @return string
      */
     public function getTrackerId() {
         return $this->trackerId;
     }
-    
+
     /**
+     * Get field id of the reminder
+     *
      * @return string
      */
     public function getFieldId() {
         return $this->fieldId;
     }
-    
+
     /**
+     * Get the date field
+     *
      * @return Tracker_FormElement_Field
      */
     public function getField() {
@@ -89,8 +104,7 @@ class Tracker_DateReminder {
     }
 
     /**
-     * get the Notification Type of this reminder
-     *
+     * Get the Notification Type of this reminder
      *
      * @return Integer
      */
@@ -99,7 +113,7 @@ class Tracker_DateReminder {
     }
 
     /**
-     * get the distance of this reminder
+     * Get the distance of this reminder
      *
      * @return Integer
      */
@@ -108,12 +122,21 @@ class Tracker_DateReminder {
     }
 
     /**
-     * get the Ugroup Id  of this reminder
+     * Get the Ugroup Id  of this reminder
      *
      * @return Integer
      */
     public function getUgroupId() {
         return $this->ugroupId;
+    }
+
+    /**
+     * Get the status  of this reminder
+     *
+     * @return Integer
+     */
+    public function getStatus() {
+        return $this->status;
     }
 
     /**
@@ -190,4 +213,5 @@ class Tracker_DateReminder {
         return $this->distance.' day(s) '.$notificationTypeLabel.$fieldLabel.' send an email to '.$ugroupLabel;
     }
 }
+
 ?>

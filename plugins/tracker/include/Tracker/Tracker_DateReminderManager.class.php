@@ -307,11 +307,18 @@ class Tracker_DateReminderManager {
     /**
      * Retrieve all date reminders for a given tracker
      *
-     * @return DataAccessResult
+     * @return Array
      */
     public function getTrackerReminders() {
+        $reminders          = array();
         $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->getDateReminders((int)$this->tracker->id);
+        $dar = $reminderManagerDao->getDateReminders($this->tracker->getId());
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $reminders[] = $this->getInstanceFromRow($row);
+            }
+        }
+        return $reminders;
     }
 
     /**
@@ -423,14 +430,13 @@ class Tracker_DateReminderManager {
         $trackerReminders = $this->getTrackerReminders();
         print html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
-            $reminder = $this->getReminder($reminder['reminder_id']);
             print '<tr class="'.util_get_alt_row_color($i++).'">';
             print '<td>';
             print $reminder;
             print '</td>';
-            print '<td>'.$reminder->status.'</td>';
-            print '<td>'.$reminder->notificationType.'</td>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+            print '<td>'.$reminder->getStatus().'</td>';
+            print '<td>'.$reminder->getNotificationType().'</td>';
+            print '<td><a href="?func=admin-notifications&amp;tracker='.$this->tracker->getId().'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
             print '</tr>';
         }
         print '</TABLE>';
