@@ -15,17 +15,7 @@ codendi.agiledashboard.planning.TreeView = Class.create({
             this.root.select('.planning-item .toggle-collapse').invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
         }
     },
-
-    getNodeChild: function(nodeElement) {
-        if(nodeElement) {
-            var nodeChild = nodeElement.select('.planning-item');
-            if (nodeChild[0]) {
-                return nodeChild[0];
-            }
-        }
-        return false
-    },
-
+    
     collapseAll: function() {
         this.root.getElementsBySelector('.planning-item').each(this.collapse, this);
         return this;
@@ -36,6 +26,22 @@ codendi.agiledashboard.planning.TreeView = Class.create({
         return this;
     },
 
+    collapse: function(nodeElement) {
+        this.children(nodeElement).each(function(childNodeElement) {
+            childNodeElement.hide();
+        });
+        this.toggleLink(nodeElement);
+        return this;
+    },
+
+    expand: function(nodeElement) {
+        this.children(nodeElement).each(function(childNodeElement) {
+            childNodeElement.show();
+        });
+        this.toggleLink(nodeElement);
+        return this;
+    },
+    
     isExpanded: function(TRElement) {
         var nodeChild = this.getNodeChild(TRElement);
         return nodeChild && (nodeChild.visible());
@@ -47,18 +53,6 @@ codendi.agiledashboard.planning.TreeView = Class.create({
         } else {
             this.expand(TRElement);
         }
-    },
-
-    collapse: function(TRElement) {
-        this.hideChildren(TRElement);
-        this.toggleLink(TRElement);
-        return this;
-    },
-    
-    hideChildren: function(nodeElement) {
-        this.children(nodeElement).each(function(childNodeElement) {
-            childNodeElement.hide();
-        });
     },
     
     toggleLink: function(nodeElement) {
@@ -80,15 +74,7 @@ codendi.agiledashboard.planning.TreeView = Class.create({
     hasNoChildren: function(nodeElement) {
         return !this.getNodeChild(nodeElement)
     },
-    
-    expand: function(TRElement) {
-        this.children(TRElement).each(function(planningItem) {
-            planningItem.show();
-        });
-        this.toggleLink(TRElement);
-        return this;
-    },
-    
+
     children: function(nodeElement) {
         var firstChildNode  = nodeElement.down('.planning-item');
         
@@ -98,7 +84,18 @@ codendi.agiledashboard.planning.TreeView = Class.create({
         } else {
             return [];
         }
+    },
+    
+    getNodeChild: function(nodeElement) {
+        if(nodeElement) {
+            var nodeChild = nodeElement.select('.planning-item');
+            if (nodeChild[0]) {
+                return nodeChild[0];
+            }
+        }
+        return false
     }
+    
 });
 
 Event.observe(window, 'load', function() {
