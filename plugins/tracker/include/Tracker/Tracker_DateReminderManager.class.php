@@ -220,13 +220,28 @@ class Tracker_DateReminderManager {
      * Get the html body for notification
      *
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
-     * @param String  $recipient    The recipient who will receive the reminder
+     * @param Tracker_Artifact $artifact
+     * @param String  $recipient    The recipient who will receive the notification
      * @param BaseLanguage $language The language of the message
      *
      * @return String
      */
-    protected function getBodyHtml(Tracker_DateReminder $reminder, $recipient, BaseLanguage $language) {
-        //TODO
+    protected function getBodyHtml(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
+        $format = Codendi_Mail_Interface::FORMAT_HTML;
+        $proto  = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+        $link   .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
+        $week   = date("W", $reminder->getField()->getValue());
+
+        $output = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient, $format, false).' ==============+';
+        $output .= PHP_EOL;
+    
+        $output = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_header',array('codex', $reminder->getField()->getLabel(),date("l j F Y",$reminder->getField()->getValue()), $week)).
+            "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_project',array($this->getTracker()->getProject()->getPublicName())).
+            "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_tracker',array($this->getTracker()->getName())).
+            "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art',array($artifact->getTitle())).
+            "\n".$reminder->getField()->getLabel().": ".date("D j F Y", $reminder->getField()->getValue()).
+            "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_art_link').
+            "\n".$link."\n";
         return $output;
     }
 

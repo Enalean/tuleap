@@ -474,7 +474,7 @@ class trackerPlugin extends Plugin {
         $trackers       = $trackerManager->getTrackersHavingDateReminders();
         foreach ($trackers as $tracker) {
             $dateReminderManager = new Tracker_DateReminderManager($tracker);
-            //$dateReminderManager->process();
+            $dateReminderManager->process();
         }
     }
 
