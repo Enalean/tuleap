@@ -202,7 +202,7 @@ WHERE date<=$time_end AND date>=$time_start
 GROUP BY group_id"));
 
 push(@Allmetrics,new SQLmetrics("Push Git",
-"SELECT project_id, SUM(commits_number) 
+"SELECT project_id, count(*) 
 FROM  plugin_git_log INNER JOIN plugin_git USING(repository_id)
 WHERE push_date<=$time_end AND push_date>=$time_start
 GROUP BY project_id"));
