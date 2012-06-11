@@ -60,7 +60,7 @@ class Docman_ApprovalTableReminder {
      * @return Void
      */
     private function sendNotificationToPendingApprovers(Docman_ApprovalTable $table) {
-        if($table->isEnabled() && $table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
+        if($table->isEnabled()) {
             switch ($table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
                 $this->notifyAllAtOnce($table);
