@@ -1,7 +1,8 @@
 {{#getObject}}
-<li class="{{getCssClasses}}" id="art-{{getId}}">
+<li class="planning-item {{getCssClasses}}" id="art-{{getId}}">
     <div class="card">
         {{> card-actions}}
+        <a href="#" class="toggle-collapse">+</a>
         {{getTitle}}
         &nbsp;
     </div>
