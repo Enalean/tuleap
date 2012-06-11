@@ -1339,8 +1339,8 @@ plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
 plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
 
 # DateReminder
-plugin_tracker_date_reminder	Sujet	Rappel: '$1' $2 for '$3'
-plugin_tracker_date_reminder	body_header	'$1' a été chargé de vous rappeler aujourd'hui que '$2' dans l'artefact suivant est '$3' (Semaine $4).
+plugin_tracker_date_reminder	subject	Rappel: '$1' $2 for '$3'
+plugin_tracker_date_reminder	body_header	$1 a été chargé de vous rappeler aujourd'hui que '$2' dans l'artefact suivant est $3 (Semaine $4).
 plugin_tracker_date_reminder	body_project	Projet: '$1'
 plugin_tracker_date_reminder	body_tracker	Tracker: '$1'
 plugin_tracker_date_reminder	body_art	Artefact: '$1'
