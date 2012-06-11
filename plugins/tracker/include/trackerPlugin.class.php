@@ -52,6 +52,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
+        $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
     }
     
     public function getPluginInfo() {
@@ -476,6 +477,19 @@ class trackerPlugin extends Plugin {
             //$dateReminderManager->process();
         }
     }
+
+    /**
+     * Fill the list of subEvents related to tracker in the project history interface
+     *
+     */
+    function fillProjectHistorySubEvents($params) {
+        array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',
+                                                         'tracker_date_reminder_update',
+                                                         'tracker_date_reminder_delete',
+                                                         'tracker_date_reminder_sent'
+        );
+    }
+
 }
 
 ?>

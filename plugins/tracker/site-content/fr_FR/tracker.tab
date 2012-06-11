@@ -1345,3 +1345,8 @@ plugin_tracker_date_reminder	body_project	Projet: '$1'
 plugin_tracker_date_reminder	body_tracker	Tracker: '$1'
 plugin_tracker_date_reminder	body_art	Artefact: '$1'
 plugin_tracker_date_reminder	body_art_link	Vous pouvez accéder à l'artefact ici '$1':
+
+project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté
+project_admin_utils	tracker_date_reminder_update	Rappel sur date de tracker mis a jour
+project_admin_utils	tracker_date_reminder_delete	Rappel sur date de tracker summprimé
+project_admin_utils	tracker_date_reminder_sent	Rappel de date sur le tracker envoyé
