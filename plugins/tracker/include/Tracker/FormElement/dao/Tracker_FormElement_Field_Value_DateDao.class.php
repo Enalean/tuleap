@@ -73,8 +73,8 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
      *
      * @return
      */
-    public function getArtifactsByFieldAndValue(int $fileldId, int $date) {
-        $fileldId = $this->da->escapeInt($fileldId);
+    public function getArtifactsByFieldAndValue($fileldId, $date) {
+        $fieldId = $this->da->escapeInt($fileldId);
         $date     = $this->da->escapeInt($date);
         $sql      = "SELECT artifact_id FROM
                      tracker_changeset_value_date d

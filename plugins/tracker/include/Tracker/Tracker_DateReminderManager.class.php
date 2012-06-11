@@ -522,7 +522,7 @@ class Tracker_DateReminderManager {
         $dao = new Tracker_FormElement_Field_Value_DateDao();
         $dar = $dao->getArtifactsByFieldAndValue($reminder->getFieldId(), $date);
         if ($dar && !$dar->isError()) {
-            $artifactFactory = Tracker_ArtifactFactory();
+            $artifactFactory = Tracker_ArtifactFactory::instance();
             foreach ($dar as $row) {
                 $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);
             }

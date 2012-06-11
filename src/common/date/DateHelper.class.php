@@ -115,7 +115,7 @@ class DateHelper {
      *
      * @return 
      */
-    public static function getDistantDateFromToday(int $distance, int $before) {
+    public static function getDistantDateFromToday($distance, $before) {
         $hours        = 24;
         $minutes      = 60;
         $seconds      = 60;
