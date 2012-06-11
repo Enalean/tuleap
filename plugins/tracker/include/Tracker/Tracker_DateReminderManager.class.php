@@ -78,20 +78,16 @@ class Tracker_DateReminderManager {
 
         // 2. Compute the body of the message + headers
         $messages   = array();
-        $um         = $this->getUserManager();
         foreach ($recipients as $recipient) {
-            $user = null;
-            $user = $um->getUserByUserName($recipient);
-
-            if ($user && $artifact->userCanView($user) && $reminder->getField()->userCanRead($user)) {
-                $this->buildMessage($reminder, $artifact, $messages, $user);
+            if ($recipient && $artifact->userCanView($recipient) && $reminder->getField()->userCanRead($recipient)) {
+                $this->buildMessage($reminder, $artifact, $messages, $recipient);
             }
         }
 
         // 3. Send the notification
         foreach ($messages as $m) {
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_sent", $this->tracker->getName().":".$reminder->getField()->getId(), $this->tracker->getGroupId(), array($m['recipients']));
+            $historyDao->groupAddHistory("tracker_date_reminder_sent", $this->tracker->getName().":".$reminder->getField()->getId(), $this->tracker->getGroupId(), $m['recipients']);
             $this->sendReminder($artifact, $m['recipients'], $m['headers'], $m['subject'], $m['htmlBody'], $m['txtBody']);
         }
     }
@@ -203,7 +199,8 @@ class Tracker_DateReminderManager {
     protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
         $format = Codendi_Mail_Interface::FORMAT_TEXT;
         $proto  = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-        $link   .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
+        $link   = ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
+        // @TODO: add value_id param to Tracker_FormElement_Field::getValue()
         $week   = date("W", $reminder->getField()->getValue());
 
         $output = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient, $format, false).' ==============+';
