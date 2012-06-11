@@ -315,7 +315,8 @@ class Tracker_DateReminderManager {
         $ugroups            = join(",", $request->get('reminder_ugroup'));
         $distance           = $request->get('distance');
         $reminderManagerDao = $this->getDao();
-        // @TODO: keep trace of the change
+        $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s)', 'Type: '.$notificationType, 'Ugroup(s): '.$ugroups));
         return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
     }
 
