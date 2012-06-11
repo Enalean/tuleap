@@ -540,7 +540,6 @@ class Tracker_DateReminderManager {
         $trackerReminders = $this->getTrackerReminders();
         print html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
-            $reminder = $this->getReminder($reminder['reminder_id']);
             print '<tr class="'.util_get_alt_row_color($i++).'">';
             print '<td>';
             print $reminder;
