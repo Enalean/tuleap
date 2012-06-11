@@ -114,7 +114,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
     public function updateDateReminder($reminderId, $fieldId, $ugroups, $notificationType = 0, $distance = 0, $status = 1) {
         $reminderId       = $this->da->escapeInt($reminderId);
         $fieldId          = $this->da->escapeInt($fieldId);
-        $ugroups          = $this->da->escapeInt($ugroups);
+        $ugroups          = $this->da->quoteSmart($ugroups);
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
         $status           = $this->da->escapeInt($status);
