@@ -388,23 +388,6 @@ WHERE date >=$time_start
 AND date <=$time_end
 GROUP BY  group_id"));
 
-# Calcul de l'indicateur 'Passerelle' par projet
-
-push(@Allmetrics,new SQLmetrics("Passerelle",
-"select group_id, COUNT(*) FROM plugin_cvstodimensions_log
-WHERE date >=$time_start
-AND date <=$time_end
-GROUP BY  group_id"));
-
-# Calcul de l'indicateur 'PasserelleSVN' par projet
-
-push(@Allmetrics,new SQLmetrics("PasserelleSVN",
-"select group_id, COUNT(*) FROM plugin_svntodimensions_log
-WHERE date >=$time_start
-AND date <=$time_end
-GROUP BY  group_id"));
-
-
 # Verifier si le service 'Integration Continue' est activé par projet
 
 push(@Allmetrics,new SQLmetrics("IntegrationContinueActive",
