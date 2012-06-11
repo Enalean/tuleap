@@ -322,6 +322,92 @@ class Tracker_DateReminderManager {
     }
 
     /**
+     * Validate date field Id param used for tracker reminder.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    private function validateFieldId(HTTPRequest $request) {
+        $validFieldId = new Valid_UInt('reminder_field_date');
+        $validFieldId->required();
+        $fieldId      = null;
+        if ($request->valid($validFieldId)) {
+            $fieldId = $request->get('reminder_field_date');
+        }
+        return $fieldId;
+    }
+
+    /**
+     * Validate distance param used for tracker reminder.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    private function validateDistance(HTTPRequest $request) {
+        $validDistance = new Valid_UInt('distance');
+        $validDistance->required();
+        $distance      = null;
+        if ($request->valid($validDistance)) {
+            $distance = $request->get('distance');
+        }
+        return $distance;
+    }
+
+    /**
+     * Validate tracker id param used for tracker reminder.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    private function validateTrackerId(HTTPRequest $request) {
+        $validTrackerId = new Valid_UInt('tracker_id');
+        $validTrackerId->required();
+        $trackerId      = null;
+        if ($request->valid($validTrackerId)) {
+            $trackerId = $request->get('tracker_id');
+        }
+        return $trackerId;
+    }
+
+    /**
+     * Validate notification type param used for tracker reminder.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    private function validateNotificationType(HTTPRequest $request) {
+        $validNotificationType = new Valid_UInt('notif_type');
+        $validNotificationType->required();
+        $notificationType      = null;
+        if ($request->valid($validNotificationType)) {
+            $notificationType = $request->get('notif_type');
+        }
+        return $notificationType;
+    }
+
+    /**
+     * Validate ugroup list param used for tracker reminder.
+     * //TODO validate an array of ugroups Ids
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    private function validateReminderUgroups(HTTPRequest $request) {
+        $validUgroupId = new Valid_WhiteList('reminder_ugroup');
+        $validUgroupId->required();
+        $ugroupId      = null;
+        if ($request->valid($validUgroupId)) {
+            $ugroupId = $request->get('reminder_ugroup');
+        }
+        return $ugroupId;
+    }
+
+    /**
      * Add new reminder
      * @TODO check request params before insertion
      * 
@@ -330,12 +416,12 @@ class Tracker_DateReminderManager {
      * @return Boolean
      */
     public function addNewReminder(HTTPRequest $request) {
-        // @TODO: validate request elements
-        $trackerId          = $request->get('tracker_id');
-        $fieldId            = $request->get('reminder_field_date');
-        $notificationType   = $request->get('notif_type');
+        $trackerId          = $this->validateTrackerId($request);
+        $fieldId            = $this->validateFieldId($request);
+        $notificationType   = $this->validateNotificationType($request);
+        //$ugroups           = $this->validateReminderUgroups($request);
         $ugroups            = join(",", $request->get('reminder_ugroup'));
-        $distance           = $request->get('distance');
+        $distance           = $this->validateDistance($request);
         $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
         $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
         $reminderManagerDao = $this->getDao();
