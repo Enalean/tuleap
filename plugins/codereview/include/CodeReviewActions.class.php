@@ -67,6 +67,15 @@ class CodeReviewActions extends Actions {
     function validateRequest() {
         $status  = true;
         $invalid = array();
+        
+        $user     = UserManager::instance()->getCurrentUser();
+        $username = $user->getUserName();
+        $project  = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        //var_dump("verifiy if the current user is a project admin or not : ");
+        if(!$project->userIsAdmin()){
+        $msg = "The user '".$username."' has not the right to create a review request.";
+                $GLOBALS['Response']->addFeedBack('error', $msg);
+                $this->controller->view = 'displayFrame';}
 
         $valid  = new Valid_String('codereview_server_url');
         $server = trim($this->request->get('codereview_server_url'));
