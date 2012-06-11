@@ -59,7 +59,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Void
      */
-     private function sendNotificationToPendingApprovers($table) {
+    private function sendNotificationToPendingApprovers(Docman_ApprovalTable $table) {
         if($table->isEnabled() && $table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
             switch ($table->getNotification()) {
             case PLUGIN_DOCMAN_APPROVAL_NOTIF_ALLATONCE:
@@ -81,7 +81,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Boolean
      */
-    private function notifyAllAtOnce($table) {
+    private function notifyAllAtOnce(Docman_ApprovalTable $table) {
         $nbNotif = 0;
         $this->populateReviewersList($table);
         $reviewers   = $table->getReviewerArray();
@@ -112,7 +112,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Boolean
      */
-    private function notifyNextReviewer($table) {
+    private function notifyNextReviewer(Docman_ApprovalTable $table) {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getFirstReviewerByStatus($table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
         if($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -130,12 +130,12 @@ class Docman_ApprovalTableReminder {
     /**
      * Remind a user about the document he is supposed to review
      *
-     * @param Docman_ApprovalTable $table Approval table
-     * @param Integer              $reviewerId     Id of the reviewer
+     * @param Docman_ApprovalTable $table      Approval table
+     * @param Integer              $reviewerId Id of the reviewer
      *
      * @return Boolean
      */
-    private function notifyIndividual($table, $reviewerId) {
+    private function notifyIndividual(Docman_ApprovalTable $table, int $reviewerId) {
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
         $mail     = $this->prepareMailReminder($table, $reviewer);
@@ -150,7 +150,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Mail
      */
-    private function prepareMailReminder($table, $reviewer) {
+    private function prepareMailReminder(Docman_ApprovalTable $table, User $reviewer) {
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($table->itemId);
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
@@ -174,11 +174,11 @@ class Docman_ApprovalTableReminder {
     /**
      * Retrieve approval table url for a given docmna item
      *
-     * @param Docman_Item $table The approval table that its reminder notification will be sent
+     * @param Docman_Item          $docmanItem Item to be approved
      *
      * @return String
      */
-    private function getReviewUrl($docmanItem) {
+    private function createMailForReviewer(Docman_Item $docmanItem) {
         $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
         $reviewUrl = $baseUrl.'&action=details&section=approval&id='.$docmanItem->getId().'&review=1';
         return $reviewUrl;
@@ -300,13 +300,13 @@ class Docman_ApprovalTableReminder {
     /**
      * Creates the html mail body
      *
-     * @param Docman_ApprovalTable $table    Approval table
-     * @param User                 $reviewer User to remind
-     * @param String                 $subject
+     * @param Docman_ApprovalTable $table      Approval table
+     * @param Docman_Item          $docmanItem Item to be approved
+     * @param String               $subject    Dubject of the mail
      *
      * @return Codendi_Mail
      */
-    private function createHTMLMailForReviewer($table, $docmanItem, $subject) {
+    private function createHTMLMailForReviewer(Docman_ApprovalTable $table, Docman_Item $docmanItem, String $subject) {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
@@ -331,7 +331,7 @@ class Docman_ApprovalTableReminder {
      * @param Codendi_Mail_Interface $mail
      * @param Array                  $to
      */
-    private function sendMailReminder(Codendi_Mail_Interface $mail, array $to) {
+    private function sendMailReminder(Codendi_Mail_Interface $mail, Array $to) {
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo(join(',', $to));
         return $mail->send();
@@ -344,7 +344,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Void
      */
-     private function populateReviewersList($table) {
+    private function populateReviewersList(Docman_ApprovalTable $table) {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getReviewerList($table->getId());
         if ($dar && !$dar->isError()) {
