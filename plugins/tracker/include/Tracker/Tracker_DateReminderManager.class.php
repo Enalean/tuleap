@@ -271,6 +271,33 @@ class Tracker_DateReminderManager {
     }
 
     /**
+     * Edit a given date reminder
+     *
+     *  @param Integer $reminderId Id of the edited date reminder
+     *
+     * @return String
+     */
+    public function editDateReminder($reminderId) {
+        $reminder = $this->getReminder($reminderId);
+        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
+        $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
+                    <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+        $output .= '<table border="0" width="900px"><TR height="30">';
+        $output .= $this->csrf->fetchHTMLInput();
+        $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';
+        $output .= '<TD><SELECT NAME="notif_type">
+                        <OPTION VALUE="0" '.$before.'> before
+                        <OPTION VALUE="1" '.$after.'> after
+                    </SELECT></TD>';
+        $output .= '<TD>'.$reminder->getField()->name.'</TD>';
+        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
+        $output .= '<TD>'.$reminder->status.'</TD>';
+        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
+        $output .= '</table></FORM>';
+        return $output;
+    }
+
+    /**
      * Build a multi-select box of ugroup selectable to fill the new date field reminder.
      * It contains: all dynamic ugroups plus project members and admins.
      * @TODO check permissions on tracker, date field before display??
@@ -409,7 +436,6 @@ class Tracker_DateReminderManager {
 
     /**
      * Add new reminder
-     * @TODO check request params before insertion
      * 
      * @param HTTPRequest $request request object
      *
