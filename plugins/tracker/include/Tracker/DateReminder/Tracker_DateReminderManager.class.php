@@ -54,6 +54,7 @@ class Tracker_DateReminderManager {
     public function process() {
         $reminders = $this->getTrackerReminders();
         foreach ($reminders as $reminder) {
+            
             $artifacts = $this->getArtifactsByreminder($reminder);
             foreach ($artifacts as $artifact) {
                 $this->sendReminderNotification($reminder, $artifact);
@@ -230,7 +231,7 @@ class Tracker_DateReminderManager {
         $link   .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
         $week   = date("W", $reminder->getField()->getValue());
 
-       $output ='<h1>'.$hp->purify($art->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;
+        $output ='<h1>'.$hp->purify($art->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;
 
         $output = "\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(),date("l j F Y",$reminder->getField()->getValue()), $week)).
             "\n\n".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','body_project',array($this->getTracker()->getProject()->getPublicName())).
