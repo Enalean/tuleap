@@ -29,6 +29,9 @@ class cardwallPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
+    }
+    
+    public function getHooksAndCallbacks() {
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile',                           'cssFile',                           false);
             $this->_addHook('javascript_file',                   'jsFile',                            false);
@@ -41,6 +44,7 @@ class cardwallPlugin extends Plugin {
                 $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
             }
         }
+        return parent::getHooksAndCallbacks();
     }
 
     /**
