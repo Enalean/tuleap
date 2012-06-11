@@ -85,24 +85,16 @@ class Docman_ApprovalTableReminder {
         $nbNotif = 0;
         $this->populateReviewersList($table);
         $reviewers   = $table->getReviewerArray();
-        if(!empty($reviewers)) {
-            foreach ($reviewers as $reviewer) {
-                if ($reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET || $reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED) {
-                    $sent = $this->notifyIndividual($table, $reviewer->getId());
-                    if($sent) {
-                        $nbNotif++;
-                    }
+        foreach ($reviewers as $reviewer) {
+            if ($reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET || $reviewer->getState() == PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED) {
+                $sent = $this->notifyIndividual($table, $reviewer->getId());
+                if($sent) {
+                    $nbNotif++;
                 }
             }
-        } else {
-            return false;
         }
 
-        if($nbNotif > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($nbNotif > 0);
     }
 
     /**
