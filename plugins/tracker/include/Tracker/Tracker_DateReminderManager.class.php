@@ -530,26 +530,25 @@ class Tracker_DateReminderManager {
         return $artifacts;
     }
 
-    /** Display all reminders for a given tracker
-     *
-     * @return Void
-     */
     public function displayAllReminders() {
         $titles           = array('Reminder',
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
+                                  'Edit',
                                   $GLOBALS['Language']->getText('global', 'delete'));
         $i                = 0;
         $trackerReminders = $this->getTrackerReminders();
         print html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
+            $reminder = $this->getReminder($reminder['reminder_id']);
             print '<tr class="'.util_get_alt_row_color($i++).'">';
             print '<td>';
             print $reminder;
             print '</td>';
             print '<td>'.$reminder->getStatus().'</td>';
             print '<td>'.$reminder->getNotificationType().'</td>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='.$this->tracker->getId().'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+            print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->reminderId.'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
+            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
             print '</tr>';
         }
         print '</TABLE>';
