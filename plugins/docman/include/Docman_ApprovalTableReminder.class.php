@@ -153,9 +153,6 @@ class Docman_ApprovalTableReminder {
             case Codendi_Mail_Interface::FORMAT_HTML :
                 $mail = $this->createHTMLMailForReviewer($table, $docmanItem, $subject);
                 break;
-            case Codendi_Mail_Interface::FORMAT_TEXT :
-                $mail = $this->createMailForReviewer($table, $docmanItem, $subject);
-                break;
             default :
                 $mail = $this->createMailForReviewer($table, $docmanItem, $subject);
                 break;
