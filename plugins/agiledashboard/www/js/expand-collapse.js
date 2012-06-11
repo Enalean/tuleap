@@ -16,13 +16,17 @@ codendi.agiledashboard.planning.TreeView = Class.create({
         }
     },
 
-    getNodeChild: function(TRElement) {
-        if(TRElement) {
-            var nodeChild = TRElement.select('.planning-item');
+    getNodeChild: function(nodeElement) {
+        if(nodeElement) {
+            var nodeChild = nodeElement.select('.planning-item');
             if (nodeChild[0]) {
                 return nodeChild[0];
             }
         }
+    },
+
+    hasChildren: function(nodeElement) {
+        return this.getNodeChild(nodeElement)
     },
     
     collapseAll: function() {
@@ -37,10 +41,7 @@ codendi.agiledashboard.planning.TreeView = Class.create({
 
     isCollapsed: function(TRElement) {
         var nodeChild = this.getNodeChild(TRElement);
-        if (nodeChild) {
-            return nodeChild.visible() == false;
-        }
-        return false;
+        return nodeChild && (nodeChild.visible() == false);
     },
 
     toggleCollapse: function(TRElement) {
@@ -52,17 +53,50 @@ codendi.agiledashboard.planning.TreeView = Class.create({
     },
 
     collapse: function(TRElement) {
-        TRElement.getElementsBySelector('.planning-item').each(function(planningItem) {
-            planningItem.hide();
-        });
+        this.hideChildren(TRElement);
+        this.toggleLink(TRElement);
         return this;
+    },
+    
+    hideChildren: function(nodeElement) {
+        this.children(nodeElement).each(function(childNodeElement) {
+            childNodeElement.hide();
+        });
+    },
+    
+    toggleLink: function(nodeElement) {
+        nodeElement.down('.toggle-collapse').update(this.getLinkText(nodeElement));
+    },
+    
+    getLinkText: function(nodeElement) {
+        if (! this.hasChildren(nodeElement)) {
+            return '';
+        }
+        
+        if(this.isCollapsed(nodeElement)) {
+            return '+';
+        } else {
+            return '-';
+        }
     },
 
     expand: function(TRElement) {
-        TRElement.getElementsBySelector('.planning-item').each(function(planningItem) {
+        this.children(TRElement).each(function(planningItem) {
             planningItem.show();
         });
+        this.toggleLink(TRElement);
         return this;
+    },
+    
+    children: function(nodeElement) {
+        var firstChildNode  = nodeElement.down('.planning-item');
+        
+        if (firstChildNode) {
+            var otherChildNodes = firstChildNode.siblings();
+            return $A([firstChildNode].concat(otherChildNodes));
+        } else {
+            return [];
+        }
     }
 });
 
