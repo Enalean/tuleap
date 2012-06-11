@@ -123,16 +123,18 @@ class CodeReviewActions extends Actions {
             for($i = 0;$i<$nbr && $check;$i++){
                 $username = $reviewers[$i];
                 $check    = $this->isUGroup($username);
-                $user     = $reviewers[$i];
                 if ($check){
                     $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
                     $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
                     $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
                     $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
                     $rbusermanager    = new RbUserManager();
-                    $exist            = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$user);
+                    $exist            = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
                     if(!$exist){
-                        //To do : retrieve user pwd and add it in RB
+                        $user    = UserManager::instance()->getUserByUserName($username);
+                        $userpwd = $user->getUserPw();
+                        $curl    = new TuleapCurl();
+                        $create  = $curl->execute($url."/api/users/", false, $username, $userpwd, null);
                     }
                 }
             }
