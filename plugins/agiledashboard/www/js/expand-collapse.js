@@ -23,12 +23,9 @@ codendi.agiledashboard.planning.TreeView = Class.create({
                 return nodeChild[0];
             }
         }
+        return false
     },
 
-    hasChildren: function(nodeElement) {
-        return this.getNodeChild(nodeElement)
-    },
-    
     collapseAll: function() {
         this.root.getElementsBySelector('.planning-item').each(this.collapse, this);
         return this;
@@ -39,16 +36,16 @@ codendi.agiledashboard.planning.TreeView = Class.create({
         return this;
     },
 
-    isCollapsed: function(TRElement) {
+    isExpanded: function(TRElement) {
         var nodeChild = this.getNodeChild(TRElement);
-        return nodeChild && (nodeChild.visible() == false);
+        return nodeChild && (nodeChild.visible());
     },
 
     toggleCollapse: function(TRElement) {
-        if(this.isCollapsed(TRElement)) {
-            this.expand(TRElement);
-        } else {
+        if(this.isExpanded(TRElement)) {
             this.collapse(TRElement);
+        } else {
+            this.expand(TRElement);
         }
     },
 
@@ -69,17 +66,21 @@ codendi.agiledashboard.planning.TreeView = Class.create({
     },
     
     getLinkText: function(nodeElement) {
-        if (! this.hasChildren(nodeElement)) {
+        if (this.hasNoChildren(nodeElement)) {
             return '';
         }
         
-        if(this.isCollapsed(nodeElement)) {
-            return '+';
-        } else {
+        if(this.isExpanded(nodeElement)) {
             return '-';
+        } else {
+            return '+';
         }
     },
 
+    hasNoChildren: function(nodeElement) {
+        return !this.getNodeChild(nodeElement)
+    },
+    
     expand: function(TRElement) {
         this.children(TRElement).each(function(planningItem) {
             planningItem.show();
