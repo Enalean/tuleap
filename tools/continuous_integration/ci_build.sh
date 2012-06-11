@@ -29,7 +29,7 @@ local_module_directory="codendi-src";
 port="80";
 sys_org_name="Tuleap";
 sys_long_org_name="Tuleap";
-sniff_svn="false"
+checkstyle_sniff="true"
 
 ##
 ## Parse options
@@ -44,7 +44,7 @@ do
 	    usage $0
 	    exit 0;;
 	--without-svn-sniff)
-	    sniff_svn="false"
+	    checkstyle_sniff="false"
 	    shift 1;;
 	--srcdir)
 	    local_module_directory=$2; 
@@ -110,7 +110,7 @@ php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M
 
 # Checkstyle
 files=""
-if [ "$sniff_svn" = "true" ]; then
+if [ "$checkstyle_sniff" = "true" ]; then
   files=$(git diff --name-only stable/master... | grep ".php" | grep -v "plugins/git/gitphp-0.1.0\|plugins/webdav/include/lib\|src/db/mysql/updates\|tools/examples\|cli")
 fi
 
