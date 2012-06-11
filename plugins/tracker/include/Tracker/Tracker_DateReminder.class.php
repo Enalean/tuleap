@@ -209,8 +209,14 @@ class Tracker_DateReminder {
             $notificationTypeLabel = "before";
         }
         $fieldLabel  = ' "'.$this->getField()->name.'" ';
-        $ugroupLabel = ' "'.$this->ugroupId.'" ';
-        return $this->distance.' day(s) '.$notificationTypeLabel.$fieldLabel.' send an email to '.$ugroupLabel;
+        //@TODO retrieve comma separated ugroups
+        $ugroupsLabel   = '';
+        $ugroupManager  = new UGroupManager();
+        $ugroups        = explode(',', $this->ugroupId);
+        foreach ($ugroups as $ugroup) {
+            $ugroupsLabel  .= ' "'.$ugroupManager->getById($ugroup)->getName().' "';
+        }
+        return $this->distance.' day(s) '.$notificationTypeLabel.$fieldLabel.' send an email to '.$ugroupsLabel;
     }
 }
 
