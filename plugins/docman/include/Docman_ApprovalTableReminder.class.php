@@ -180,7 +180,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return String
      */
-    private function getItemUrl($docmanItem) {
+    private function getItemUrl(Docman_Item $docmanItem) {
         $baseUrl   = get_server_url().'/plugins/docman/?group_id='.$docmanItem->getGroupId();
         $itemUrl   = $baseUrl.'&action=show&id='.$docmanItem->getId();
         return $itemUrl;
