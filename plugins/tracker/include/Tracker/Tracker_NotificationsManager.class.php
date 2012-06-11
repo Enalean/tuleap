@@ -62,12 +62,7 @@ class Tracker_NotificationsManager {
         } else if ($request->get('action') == 'delete_reminder' ) {
             $this->dateReminderManager->deleteTrackerReminders(array($request->get('reminder_id')));
         }
-
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
-        if ($this->tracker->userIsAdmin()) {
-            $this->displayDateReminders($request);
-        }
-        $this->tracker->displayFooter($tracker_manager);
     }
     
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
