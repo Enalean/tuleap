@@ -477,8 +477,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $this->getNotificationsManager()->process($layout, $request, $current_user);
                     if ($this->userIsAdmin($current_user)) {
                         $this->getDateReminderRenderer()->displayDateReminders($request);
-                        $this->getDateReminderRenderer()->displayFooter($layout);
                     }
+                    $this->getDateReminderRenderer()->displayFooter($layout);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
