@@ -36,6 +36,7 @@ class Tracker_NotificationsManager {
     }
     
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
+        //@TODO Please respect SRP !!
         if ($request->get('submit')) {
             if ($request->get('action') == 'new_reminder') {
 
@@ -308,9 +309,23 @@ class Tracker_NotificationsManager {
                 });
             });
             </script>";
-            
-            if ( $request->get('action') == 'add_reminder' ) {
+            if ($request->get('action') == 'add_reminder') {
                 $output .= $this->dateReminderManager->getNewDateReminderForm();
+            } elseif ($request->get('action') == 'update_reminder') {
+               $output .= '<div id="update_reminder"></div>';
+               $output .= "<script type=\"text/javascript\">
+            document.observe('dom:loaded', function() {
+                $('update_reminder').observe('click', function (evt) {
+                    var reminderDiv = new Element('div');
+                    reminderDiv.insert('".$this->dateReminderManager->editDateReminder($request->get('reminder_id'))."');
+                    Element.insert($('update_reminder'), reminderDiv);
+                    Event.stop(evt);
+                    return false;
+                });
+            });
+            </script>";
+                $output .= "Update Reminder";
+                $output .= $this->dateReminderManager->editDateReminder($request->get('reminder_id'));
             }
         $output .= '</fieldset>';
         echo $output;
