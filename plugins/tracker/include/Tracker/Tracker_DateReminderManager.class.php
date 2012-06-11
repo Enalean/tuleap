@@ -264,9 +264,9 @@ class Tracker_DateReminderManager {
     protected function getUgroupsAllowedForTracker() {
         $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
-        $output  = '<SELECT NAME="reminder_ugroup" multiple>';
+        $output  = '<SELECT NAME="reminder_ugroup[]" multiple>';
         while($row = db_fetch_array($res)) {
-            $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+            $output .= '<OPTION VALUE="'.$row['ugroups'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
         }
         $output  .= '</SELECT>';
         return $output;
@@ -307,13 +307,14 @@ class Tracker_DateReminderManager {
      * @return Boolean
      */
     public function addNewReminder(HTTPRequest $request) {
-        $trackerId = $request->get('tracker_id');
-        $fieldId   = $request->get('reminder_field_date');
-        $notificationType = $request->get('notif_type');
-        $ugroupId  = $request->get('reminder_ugroup');
-        $distance = $request->get('distance');
+        // @TODO: validate request elements
+        $trackerId          = $request->get('tracker_id');
+        $fieldId            = $request->get('reminder_field_date');
+        $notificationType   = $request->get('notif_type');
+        $ugroups            = join(",", $request->get('reminder_ugroup'));
+        $distance           = $request->get('distance');
         $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroupId, $notificationType, $distance);
+        return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
     }
 
     /**
@@ -339,7 +340,7 @@ class Tracker_DateReminderManager {
         return new Tracker_DateReminder($row['reminder_id'],
                                           $row['tracker_id'],
                                           $row['field_id'],
-                                          $row['ugroup_id'],
+                                          $row['ugroups'],
                                           $row['notification_type'],
                                           $row['distance'],
                                           $row['status']);

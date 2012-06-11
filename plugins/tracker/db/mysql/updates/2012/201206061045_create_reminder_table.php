@@ -48,7 +48,7 @@ EOT;
                     reminder_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
                     tracker_id INT(11) NOT NULL,
                     field_id INT(11) NOT NULL,
-                    ugroup_id INT( 11 ) NOT NULL,
+                    ugroups VARCHAR(255) NOT NULL,
                     notification_type TINYINT(1) DEFAULT 0,
                     distance INT( 11 ) DEFAULT 0,
                     status TINYINT(1) DEFAULT 1,
