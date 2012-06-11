@@ -16,9 +16,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DateReminder/Tracker_DateReminder.class.php');
-require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
-require_once('FormElement/Tracker_FormElementFactory.class.php');
+require_once('Tracker_DateReminder.class.php');
+require_once('dao/Tracker_DateReminderDao.class.php');
+require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
 require_once('common/include/CSRFSynchronizerToken.class.php');

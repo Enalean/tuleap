@@ -19,7 +19,7 @@
  */
 
 require_once('Tracker_GlobalNotification.class.php');
-require_once('Tracker_DateReminderManager.class.php');
+require_once('DateReminder/Tracker_DateReminderManager.class.php');
 
 require_once('dao/Tracker_WatcherDao.class.php');
 require_once('dao/Tracker_GlobalNotificationDao.class.php');
