@@ -19,6 +19,7 @@
  */
 
 class Tracker_Artifact_ChangesetDao extends DataAccessObject {
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_changeset';
@@ -67,5 +68,27 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
                 WHERE id = $changeset_id";
         return $this->update($sql);
     }
+
+    /**
+     * Retrieve the list of artifact id corresponding to a last update date having a specific value
+     *
+     * @param Integer $trackerId Tracker id
+     * @param Integer $date      Last update date
+     *
+     * @return
+     */
+    public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date) {
+        $fieldId  = $this->da->escapeInt($fieldId);
+        $date     = $this->da->escapeInt($date);
+        $sql      = "SELECT MAX(c.id) AS id, c.artifact_id FROM
+                       tracker_changeset c
+                       JOIN tracker_artifact a ON c.artifact_id = a.id
+                       WHERE DATE(FROM_UNIXTIME(c.submitted_on)) = DATE(FROM_UNIXTIME(".$date."))
+                         AND a.tracker_id = ".$trackerId."
+                       GROUP BY c.artifact_id";
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

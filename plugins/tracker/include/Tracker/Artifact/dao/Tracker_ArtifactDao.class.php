@@ -19,6 +19,7 @@
  */
 
 class Tracker_ArtifactDao extends DataAccessObject {
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_artifact';
@@ -294,5 +295,25 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }
+
+    /**
+     * Retrieve the list of artifact id corresponding to a submitted on date having a specific value
+     *
+     * @param Integer $trackerId Tracker id
+     * @param Integer $date      Submitted on date
+     *
+     * @return
+     */
+    public function getArtifactsBySubmittedOnDate($trackerId, $date) {
+        $trackerId  = $this->da->escapeInt($trackerId);
+        $date       = $this->da->escapeInt($date);
+        $sql        = "SELECT id AS artifact_id FROM
+                       tracker_artifact
+                       WHERE DATE(FROM_UNIXTIME(submitted_on)) = DATE(FROM_UNIXTIME(".$date."))
+                         AND tracker_id = ".$trackerId;
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

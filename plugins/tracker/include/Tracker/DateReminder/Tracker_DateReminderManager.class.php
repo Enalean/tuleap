@@ -398,9 +398,11 @@ class Tracker_DateReminderManager {
         $date      = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
         $field     = $reminder->getField();
         if ($field instanceof Tracker_FormElement_Field_LastUpdateDate) {
-            // @TODO: Obtain artifacts of that tracker with changeset having that update date
+            $dao = new Tracker_Artifact_ChangesetDao();
+            $dar = $dao->getArtifactsByFieldAndLastUpdateDate($this->getTracker()->getId(), $date);
         } elseif ($field instanceof Tracker_FormElement_Field_SubmittedOn) {
-            // @TODO: Obtain artifacts of that tracker with changeset having that submitted date
+            $dao = new Tracker_ArtifactDao();
+            $dar = $dao->getArtifactsBySubmittedOnDate($this->getTracker()->getId(), $date);
         } elseif ($field instanceof Tracker_FormElement_Field_Date) {
             $dao = new Tracker_FormElement_Field_Value_DateDao();
             $dar = $dao->getArtifactsByFieldAndValue($reminder->getFieldId(), $date);
