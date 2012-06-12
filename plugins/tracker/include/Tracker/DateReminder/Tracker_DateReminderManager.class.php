@@ -17,6 +17,7 @@
  */
 
 require_once('Tracker_DateReminder.class.php');
+require_once('Tracker_DateReminderRenderer.class.php');
 require_once('dao/Tracker_DateReminderDao.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
@@ -60,6 +61,38 @@ class Tracker_DateReminderManager {
                 $this->sendReminderNotification($reminder, $artifact);
             }
         }
+    }
+
+    /**
+     * Process date reminder requests
+     *
+     * @param TrackerManager $trackerManager
+     * @param HTTPRequest    $request
+     * @param User           $currentUser
+     *
+     * @return Void
+     */
+    public function processReminder(TrackerManager $trackerManager, HTTPRequest $request, $currentUser) {
+        if ($request->get('submit')) {
+            if ($request->get('action') == 'new_reminder') {
+                $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
+            } elseif ($request->get('action') == 'update_reminder') {
+                echo "//@todo Yaw dog, we gonna update this reminder";
+            }
+        } elseif ($request->get('action') == 'delete_reminder' ) {
+            $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminders(array($request->get('reminder_id')));
+        }
+        if ($this->tracker->userIsAdmin($currentUser)) {
+            $this->getDateReminderRenderer()->displayDateReminders($request);
+        }
+        $this->getDateReminderRenderer()->displayFooter($trackerManager);
+    }
+
+    /**
+     * @return Tracker_DateReminderRenderer
+     */
+    public function getDateReminderRenderer() {
+        return new Tracker_DateReminderRenderer($this->tracker);
     }
 
     /**
