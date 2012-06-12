@@ -87,12 +87,13 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return 'Y u no configure the status semantic of ur tracker?';
         }
 
-        $columns   = $this->getColumns();
-        $mappings  = $this->getMapping();
-        $swimlines = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
+        $columns       = $this->getColumns();
+        $mappings      = $this->getMapping();
+        $swimlines     = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
+        $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
 
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new Cardwall_PaneContentPresenter($swimlines, $columns, $mappings);
+        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $mappings);
         ob_start();
         $renderer->render('pane-content', $presenter);
         return ob_get_clean();

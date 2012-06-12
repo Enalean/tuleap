@@ -43,14 +43,20 @@ class Cardwall_PaneContentPresenter {
     public $planning_redirect_parameter = '';
 
     /**
+     * @var string
+     */
+    public $swimline_title = '';
+
+    /**
      * @param array $swimlines Array of TreeNode
      * @param array $columns   Array of Cardwall_Column
      * @param array $mappings  Cardwall_MappingCollection
      */
-    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
-        $this->swimlines = $swimlines;
-        $this->columns   = $columns;
-        $this->mappings  = $mappings;
+    public function __construct($swimline_title, array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
+        $this->swimline_title = $swimline_title;
+        $this->swimlines      = $swimlines;
+        $this->columns        = $columns;
+        $this->mappings       = $mappings;
     }
 
     public function hasSwimlineHeader() {
