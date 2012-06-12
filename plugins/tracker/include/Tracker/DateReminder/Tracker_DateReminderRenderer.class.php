@@ -78,6 +78,14 @@ class Tracker_DateReminderRenderer {
      */
     public function editDateReminder($reminderId) {
         $reminder = $this->dateReminderFactory->getReminder($reminderId);
+        $notificationType = $reminder->getNotificationType();
+        if ($notificationType == 1) {
+            $after = "selected";
+            $before = "";
+        } else {
+            $after = "";
+            $before = "selected";
+        }
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
