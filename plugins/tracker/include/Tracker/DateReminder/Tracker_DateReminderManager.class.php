@@ -21,7 +21,6 @@ require_once('dao/Tracker_DateReminderDao.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 class Tracker_DateReminderManager {
 
@@ -36,7 +35,6 @@ class Tracker_DateReminderManager {
      */
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
-        $this->csrf    = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->tracker->id.'&action=new_reminder');
     }
 
     /**
@@ -262,92 +260,6 @@ class Tracker_DateReminderManager {
     }
 
     /**
-     * Validate date field Id param used for tracker reminder.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    private function validateFieldId(HTTPRequest $request) {
-        $validFieldId = new Valid_UInt('reminder_field_date');
-        $validFieldId->required();
-        $fieldId      = null;
-        if ($request->valid($validFieldId)) {
-            $fieldId = $request->get('reminder_field_date');
-        }
-        return $fieldId;
-    }
-
-    /**
-     * Validate distance param used for tracker reminder.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    private function validateDistance(HTTPRequest $request) {
-        $validDistance = new Valid_UInt('distance');
-        $validDistance->required();
-        $distance      = null;
-        if ($request->valid($validDistance)) {
-            $distance = $request->get('distance');
-        }
-        return $distance;
-    }
-
-    /**
-     * Validate tracker id param used for tracker reminder.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    private function validateTrackerId(HTTPRequest $request) {
-        $validTrackerId = new Valid_UInt('tracker_id');
-        $validTrackerId->required();
-        $trackerId      = null;
-        if ($request->valid($validTrackerId)) {
-            $trackerId = $request->get('tracker_id');
-        }
-        return $trackerId;
-    }
-
-    /**
-     * Validate notification type param used for tracker reminder.
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    private function validateNotificationType(HTTPRequest $request) {
-        $validNotificationType = new Valid_UInt('notif_type');
-        $validNotificationType->required();
-        $notificationType      = null;
-        if ($request->valid($validNotificationType)) {
-            $notificationType = $request->get('notif_type');
-        }
-        return $notificationType;
-    }
-
-    /**
-     * Validate ugroup list param used for tracker reminder.
-     * //TODO validate an array of ugroups Ids
-     *
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Integer
-     */
-    private function validateReminderUgroups(HTTPRequest $request) {
-        $validUgroupId = new Valid_WhiteList('reminder_ugroup');
-        $validUgroupId->required();
-        $ugroupId      = null;
-        if ($request->valid($validUgroupId)) {
-            $ugroupId = $request->get('reminder_ugroup');
-        }
-        return $ugroupId;
-    }
-
-    /**
      * Build a reminder instance
      *
      * @param array $row The data describing the reminder
@@ -371,20 +283,6 @@ class Tracker_DateReminderManager {
      */
     protected function getDao() {
         return new Tracker_DateReminderDao();
-    }
-
-    /**
-     * Get the reminder
-     *
-     * @param Integer  $reminderId    The reminder id
-     *
-     * @return Tracker_DateReminder
-     */
-    public function getReminder($reminderId) {
-        if ($row = $this->getDao()->searchById($reminderId)->getRow()) {
-            return $this->getInstanceFromRow($row);
-        }
-        return null;
     }
 
     /** Get artifacts that will send notification for a reminder
@@ -415,44 +313,6 @@ class Tracker_DateReminderManager {
         }
         return $artifacts;
     }
-
-    /**
-     * Display all reminders of the tracker
-     *
-     * @return Void
-     */
-    public function displayAllReminders() {
-        $titles           = array('Reminder',
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
-                                  'Edit',
-                                  $GLOBALS['Language']->getText('global', 'delete'));
-        $i                = 0;
-        $trackerReminders = $this->getTrackerReminders();
-        print html_build_list_table_top($titles);
-        foreach ($trackerReminders as $reminder) {
-            print '<tr class="'.util_get_alt_row_color($i++).'">';
-            print '<td>';
-            print $reminder;
-            print '</td>';
-            print '<td>'.$reminder->getStatus().'</td>';
-            print '<td>'.$reminder->getNotificationType().'</td>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->reminderId.'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
-            print '</tr>';
-        }
-        print '</TABLE>';
-    }
-
-    /**
-     * Get an instance of UserManager
-     *
-     * @return UserManager
-     */
-    public function getUserManager() {
-        return UserManager::instance();
-    }
-    
 }
 
 ?>
