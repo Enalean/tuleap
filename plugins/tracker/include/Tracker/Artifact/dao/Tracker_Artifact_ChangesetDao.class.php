@@ -78,14 +78,14 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
      * @return
      */
     public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date) {
-        $fieldId  = $this->da->escapeInt($fieldId);
-        $date     = $this->da->escapeInt($date);
-        $sql      = "SELECT MAX(c.id) AS id, c.artifact_id FROM
-                       tracker_changeset c
-                       JOIN tracker_artifact a ON c.artifact_id = a.id
-                       WHERE DATE(FROM_UNIXTIME(c.submitted_on)) = DATE(FROM_UNIXTIME(".$date."))
-                         AND a.tracker_id = ".$trackerId."
-                       GROUP BY c.artifact_id";
+        $trackerId  = $this->da->escapeInt($trackerId);
+        $date       = $this->da->escapeInt($date);
+        $sql        = "SELECT MAX(c.id) AS id, c.artifact_id FROM
+                         tracker_changeset c
+                         JOIN tracker_artifact a ON c.artifact_id = a.id
+                         WHERE DATE(FROM_UNIXTIME(c.submitted_on)) = DATE(FROM_UNIXTIME(".$date."))
+                           AND a.tracker_id = ".$trackerId."
+                         GROUP BY c.artifact_id";
         return $this->retrieve($sql);
     }
 
