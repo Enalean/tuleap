@@ -254,8 +254,8 @@ class Tracker_DateReminderRenderer {
             print '</td>';
             print '<td>'.$reminder->getReminderStatusLabel().'</td>';
             print '<td>'.$reminder->getNotificationTypeLabel().'</td>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->reminderId.'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->reminderId.'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+            print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
+            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
             print '</tr>';
         }
         print '</TABLE>';

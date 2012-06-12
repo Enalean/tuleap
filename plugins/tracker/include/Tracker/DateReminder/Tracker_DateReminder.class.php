@@ -62,7 +62,7 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    protected function getId() {
+    public function getId() {
         return $this->reminderId;
     }
 
