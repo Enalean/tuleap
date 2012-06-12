@@ -114,7 +114,7 @@ class Tracker_DateReminderRenderer {
                         <OPTION VALUE="1" '.$after.'> after
                     </SELECT></TD>';
         $output .= '<TD>'.$reminder->getField()->name.'</TD>';
-        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
+        $output .= '<TD>'.$this->getUgroupsAllowedForTracker($reminderId).'</TD>';
         $output .= '<TD><SELECT NAME="notif_status">
                         <OPTION VALUE="0" '.$disabled.'> disabled
                         <OPTION VALUE="1" '.$enabled.'> enabled
@@ -127,16 +127,25 @@ class Tracker_DateReminderRenderer {
     /**
      * Build a multi-select box of ugroup selectable to fill the new date field reminder.
      * It contains: all dynamic ugroups plus project members and admins.
-     * @TODO check permissions on tracker, date field before display??
+     *
+     * @params Integer $reminderId Id of the date reminder we want to customize its notified ugroups
      *
      * @return String
      */
-    protected function getUgroupsAllowedForTracker() {
+    protected function getUgroupsAllowedForTracker($reminderId = Null) {
         $res     = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                                   $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        if (!empty($reminderId)) {
+            $reminder        = $this->dateReminderFactory->getReminder($reminderId);
+            $selectedUgroups = $reminder->getUgroups(true);
+        }
         $output  = '<SELECT NAME="reminder_ugroup[]" multiple>';
         while($row = db_fetch_array($res)) {
-            $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+            if ($selectedUgroups && in_array($row['ugroup_id'], $selectedUgroups)) {
+                $output .= '<OPTION VALUE="'.$row['ugroup_id'].'" selected>'.util_translate_name_ugroup($row['name']).'</OPTION>';
+            } else {
+                $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+            }
         }
         $output  .= '</SELECT>';
         return $output;
