@@ -231,7 +231,7 @@ class Tracker_DateReminderRenderer {
                                   'Edit',
                                   $GLOBALS['Language']->getText('global', 'delete'));
         $i                = 0;
-        $trackerReminders = $this->getTrackerReminders();
+        $trackerReminders = $this->dateReminderManager->getTrackerReminders();
         print html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
             print '<tr class="'.util_get_alt_row_color($i++).'">';
@@ -254,14 +254,14 @@ class Tracker_DateReminderRenderer {
      */
     public function displayDateReminders(HTTPRequest $request) {
         print '<fieldset>';
-        $this->dateReminderManager->displayAllReminders();
+        $this->displayAllReminders();
         $output .= '<div id="tracker_reminder"></div>';
         $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
         $output .= "<script type=\"text/javascript\">
             document.observe('dom:loaded', function() {
                 $('add_reminder').observe('click', function (evt) {
                     var reminderDiv = new Element('div');
-                    reminderDiv.insert('".$this->dateReminderManager->getNewDateReminderForm()."');
+                    reminderDiv.insert('".$this->getNewDateReminderForm()."');
                     Element.insert($('tracker_reminder'), reminderDiv);
                     Event.stop(evt);
                     return false;
@@ -269,14 +269,14 @@ class Tracker_DateReminderRenderer {
             });
             </script>";
             if ($request->get('action') == 'add_reminder') {
-                $output .= $this->dateReminderManager->getNewDateReminderForm();
+                $output .= $this->getNewDateReminderForm();
             } elseif ($request->get('action') == 'update_reminder') {
                $output .= '<div id="update_reminder"></div>';
                $output .= "<script type=\"text/javascript\">
             document.observe('dom:loaded', function() {
                 $('update_reminder').observe('click', function (evt) {
                     var reminderDiv = new Element('div');
-                    reminderDiv.insert('".$this->dateReminderManager->editDateReminder($request->get('reminder_id'))."');
+                    reminderDiv.insert('".$this->editDateReminder($request->get('reminder_id'))."');
                     Element.insert($('update_reminder'), reminderDiv);
                     Event.stop(evt);
                     return false;
@@ -284,7 +284,7 @@ class Tracker_DateReminderRenderer {
             });
             </script>";
                 $output .= "Update Reminder";
-                $output .= $this->dateReminderManager->editDateReminder($request->get('reminder_id'));
+                $output .= $this->editDateReminder($request->get('reminder_id'));
             }
         $output .= '</fieldset>';
         echo $output;
