@@ -226,10 +226,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
         
+        $drop_into = '';
         if ($field) {
             $html .= '<colgroup>';
             foreach ($values as $key => $value) {
                 $html .= '<col id="cardwall_board_column-'. (int)$value->getId() .'" />';
+                $drop_into .= ' drop-into-'. (int)$value->getId();
             }
             $html .= '</colgroup>';
             
@@ -271,7 +273,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '<ul>';
             foreach ($cards as $row) {
                 if (!$field || $row['col'] == $value->getId()) {
-                    $html .= '<li class="cardwall_board_postit" id="cardwall_board_postit-'. (int)$row['id'] .'">';
+                    $html .= '<li class="cardwall_board_postit '. $drop_into .'" id="cardwall_board_postit-'. (int)$row['id'] .'">';
                     // TODO: use mustache templates?
                     $html .= '<div class="card">';
                     $html .= '<div class="card-actions">';
