@@ -53,6 +53,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         parent::setUp();
 
         $this->request_uri = '/plugins/agiledashboard/';
+        $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $_SERVER['REQUEST_URI'] = $this->request_uri;
+        
+        
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
@@ -65,7 +69,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     public function tearDown() {
         parent::tearDown();
-
+        $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
 
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
