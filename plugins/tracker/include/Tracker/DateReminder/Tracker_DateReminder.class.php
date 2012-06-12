@@ -34,7 +34,19 @@ class Tracker_DateReminder {
     protected $field = null;
     
 
-   
+   /**
+    * Constructor of the class
+    *
+    * @param Integer $reminderId       Id of the reminder
+    * @param Integer $trackerId        Id of the tracker
+    * @param Integer $fieldId          Id of the field
+    * @param String  $ugroupId         List of ugroups to be notified
+    * @param Integer $notificationType Befor or after the date value
+    * @param Integer $distance         Distance from the date value
+    * @param Integer $status           Status of the reminder
+    *
+    * @return Void
+    */
     public function __construct($reminderId, $trackerId, $fieldId, $ugroupId, $notificationType, $distance, $status) {
         $this->reminderId       = $reminderId;
         $this->trackerId        = $trackerId;
@@ -48,7 +60,7 @@ class Tracker_DateReminder {
     /**
      * Get reminder id
      *
-     * @return string
+     * @return String
      */
     public function getId() {
         return $this->reminderId;
@@ -58,16 +70,18 @@ class Tracker_DateReminder {
      * Set field
      *
      * @param Tracker_FormElement_Field $field Field
+     *
+     * @return Void
      */
     public function setField(Tracker_FormElement_Field $field) {
-        $this->field    = $field;
+        $this->field   = $field;
         $this->fieldId = $field->getId();
     }
 
     /**
      * Get tracker id of the reminder
      *
-     * @return string
+     * @return Integer
      */
     public function getTrackerId() {
         return $this->trackerId;
@@ -76,7 +90,7 @@ class Tracker_DateReminder {
     /**
      * Get field id of the reminder
      *
-     * @return string
+     * @return Integer
      */
     public function getFieldId() {
         return $this->fieldId;
@@ -144,7 +158,7 @@ class Tracker_DateReminder {
      *
      * @param Tracker $tracker The tracker
      *
-     * @return void
+     * @return Void
      */
     public function setTracker($trackerId) {
         $this->trackerId = $trackerId;
@@ -155,7 +169,7 @@ class Tracker_DateReminder {
      *
      * @param Integer $notificationType The Notification Type
      *
-     * @return void
+     * @return Void
      */
     public function setNotificationType($notificationType) {
         $this->notificationType = $notificationType;
@@ -164,9 +178,9 @@ class Tracker_DateReminder {
     /**
      * Set the Ugroup of this reminder
      *
-     * @param Integer $ugroupId The Ugroup Id
+     * @param String $ugroupId The user groups to be notified
      *
-     * @return void
+     * @return Void
      */
     public function setUgroupId($ugroupId) {
         $this->ugroupId = $ugroupId;

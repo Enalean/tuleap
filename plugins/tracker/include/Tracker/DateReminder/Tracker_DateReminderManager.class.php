@@ -527,6 +527,11 @@ class Tracker_DateReminderManager {
         return $artifacts;
     }
 
+    /**
+     * Display all reminders of the tracker
+     *
+     * @return Void
+     */
     public function displayAllReminders() {
         $titles           = array('Reminder',
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),

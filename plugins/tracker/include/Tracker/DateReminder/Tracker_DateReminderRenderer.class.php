@@ -219,6 +219,11 @@ class Tracker_DateReminderRenderer {
         return $ugroupId;
     }
 
+    /**
+     * Display all reminders of the tracker
+     *
+     * @return Void
+     */
     public function displayAllReminders() {
         $titles           = array('Reminder',
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
@@ -242,6 +247,11 @@ class Tracker_DateReminderRenderer {
         print '</TABLE>';
     }
 
+    /**
+     * Display date reminders
+     *
+     * @return Void
+     */
     public function displayDateReminders(HTTPRequest $request) {
         print '<fieldset>';
         $this->dateReminderManager->displayAllReminders();
@@ -280,6 +290,13 @@ class Tracker_DateReminderRenderer {
         echo $output;
     }
 
+    /**
+     * Display the footer
+     *
+     * @param TrackerManager $tracker_manager Tracker manager
+     *
+     * @return String
+     */
     public function displayFooter(TrackerManager $tracker_manager) {
         return $this->tracker->displayFooter($tracker_manager);
     }
