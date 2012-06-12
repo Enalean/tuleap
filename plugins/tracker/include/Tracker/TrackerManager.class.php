@@ -838,7 +838,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @return Array
      */
-    public function getTrackersHavingDateReminders() {
+    protected function getTrackersHavingDateReminders() {
         $trackers = array();
         $dao = new Tracker_DateReminderDao();
         $dar = $dao->getTrackersHavingDateReminders();
@@ -850,6 +850,18 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $trackers;
     }
 
+    /**
+     *  Send Date reminder 
+     * 
+     * @return Void
+     */
+    public function sendDateReminder() {
+        $trackers       = $this->getTrackersHavingDateReminders();
+        foreach ($trackers as $tracker) {
+            $dateReminderManager = new Tracker_DateReminderManager($tracker);
+            $dateReminderManager->process();
+        }
+    }
 }
 
 ?>
