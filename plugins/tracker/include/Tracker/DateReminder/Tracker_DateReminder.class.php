@@ -218,17 +218,41 @@ class Tracker_DateReminder {
     }
 
     /**
-     * React when reminder is treated as a string
+     * Retrieve the reminder status as a string
      *
      * @return String
      */
-    public function __toString() {
+    public function getReminderStatusLabel() {
+        if ($this->getStatus() == 1) {
+            $reminderStatusLabel = "enabled";
+        } else {
+            $reminderStatusLabel = "disabled";
+        }
+        return $reminderStatusLabel;
+    }
+
+    /**
+     * Retrieve the reminder notification type as a string
+     *
+     * @return String
+     */
+    public function getNotificationTypeLabel() {
         if ($this->getNotificationType() == 1) {
             $notificationTypeLabel = "after";
         } else {
             $notificationTypeLabel = "before";
         }
+        return $notificationTypeLabel;
+    }
+
+    /**
+     * React when reminder is treated as a string
+     *
+     * @return String
+     */
+    public function __toString() {
         $fieldLabel  = ' "'.$this->getField()->name.'" ';
+        $notificationTypeLabel = $this->getNotificationTypeLabel();
         //@TODO retrieve comma separated ugroups
         $ugroupsLabel   = '';
         $ugroupManager  = new UGroupManager();
