@@ -83,7 +83,7 @@ class Tracker_DateReminder {
      *
      * @return Integer
      */
-    protected function getTrackerId() {
+    public function getTrackerId() {
         return $this->trackerId;
     }
 
@@ -92,7 +92,7 @@ class Tracker_DateReminder {
      *
      * @return Integer
      */
-    protected function getFieldId() {
+    public function getFieldId() {
         return $this->fieldId;
     }
 
@@ -101,7 +101,7 @@ class Tracker_DateReminder {
      *
      * @return Tracker_FormElement_Field
      */
-    protected function getField() {
+    public function getField() {
         if (!$this->field) {
             $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
         }
@@ -113,7 +113,7 @@ class Tracker_DateReminder {
      *
      * @return Tracker
      */
-    protected function getTracker() {
+    public function getTracker() {
         return TrackerFactory::instance()->getTrackerByid($this->trackerId);
     }
 
@@ -122,7 +122,7 @@ class Tracker_DateReminder {
      *
      * @return Integer
      */
-    protected function getNotificationType() {
+    public function getNotificationType() {
         return $this->notificationType;
     }
 
@@ -131,7 +131,7 @@ class Tracker_DateReminder {
      *
      * @return Integer
      */
-    protected function getDistance() {
+    public function getDistance() {
         return $this->distance;
     }
 
@@ -140,7 +140,7 @@ class Tracker_DateReminder {
      *
      * @return Mixed
      */
-    protected function getUgroups($asArray = false) {
+    public function getUgroups($asArray = false) {
         $ugroups = $this->ugroups;
         if ($asArray) {
             $ugroups = split('[,]', $this->ugroups);
@@ -154,7 +154,7 @@ class Tracker_DateReminder {
      *
      * @return Integer
      */
-    protected function getStatus() {
+    public function getStatus() {
         return $this->status;
     }
 
@@ -196,7 +196,7 @@ class Tracker_DateReminder {
      *
      * @return Array
      */
-    protected function getRecipients() {
+    public function getRecipients() {
         //@TODO retrieve members for the ugroups list
         $uGroupManager = new UGroupManager();
         $uGroup        = $uGroupManager->getById($this->getUgroups());
@@ -212,7 +212,7 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    protected function getReminderStatusLabel() {
+    public function getReminderStatusLabel() {
         if ($this->getStatus() == 1) {
             $reminderStatusLabel = "enabled";
         } else {
@@ -226,7 +226,7 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    protected function getNotificationTypeLabel() {
+    public function getNotificationTypeLabel() {
         if ($this->getNotificationType() == 1) {
             $notificationTypeLabel = "after";
         } else {
@@ -240,7 +240,7 @@ class Tracker_DateReminder {
      *
      * @return String
      */
-    protected function __toString() {
+    public function __toString() {
         $fieldLabel  = ' "'.$this->getField()->name.'" ';
         $notificationTypeLabel = $this->getNotificationTypeLabel();
         //@TODO retrieve comma separated ugroups
