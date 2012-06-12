@@ -20,6 +20,22 @@
 
 require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
 
+/**
+ * This class crawl a TreeNode data structure and produce another TreeNode that
+ * contains only Backlog items and their children.
+ *
+ * Given the following tree
+ * .
+ * `-- Epic 1
+ *     `-- Story 1.1
+ *         `-- Task 1.1
+ *
+ * And we want to filter for a Sprint plan (Story -> Sprint)
+ * Then this class produce
+ * .
+ * `-- Story 1.1
+ *     `-- Task 1.1
+ */
 class Planning_BacklogItemFilterVisitor {
 
     /**
