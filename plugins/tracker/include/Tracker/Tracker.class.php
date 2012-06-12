@@ -24,7 +24,7 @@ require_once('Semantic/Tracker_SemanticManager.class.php');
 require_once('Tooltip/Tracker_Tooltip.class.php');
 require_once('Tracker_NotificationsManager.class.php');
 require_once('CannedResponse/Tracker_CannedResponseManager.class.php');
-require_once('DateReminder/Tracker_DateReminderRenderer.class.php');
+require_once('DateReminder/Tracker_DateReminderManager.class.php');
 require_once('Rule/Tracker_RulesManager.class.php');
 require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
@@ -464,8 +464,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-notifications':
                 if ($this->userIsAdmin($current_user)) {
                     $this->getNotificationsManager()->process($layout, $request, $current_user);
-                    $this->getDateReminderRenderer()->displayDateReminders($request);
-                    $this->getDateReminderRenderer()->displayFooter($layout);
+                    $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -475,10 +474,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             // you just need to be registered to have access to this part
                 if ($current_user->isLoggedIn()) {
                     $this->getNotificationsManager()->process($layout, $request, $current_user);
-                    if ($this->userIsAdmin($current_user)) {
-                        $this->getDateReminderRenderer()->displayDateReminders($request);
-                    }
-                    $this->getDateReminderRenderer()->displayFooter($layout);
+                    $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1932,10 +1928,10 @@ EOS;
     }
 
     /**
-     * @return Tracker_DateReminderRenderer
+     * @return Tracker_DateReminderManager
      */
-    public function getDateReminderRenderer() {
-        return new Tracker_DateReminderRenderer($this);
+    public function getDateReminderManager() {
+        return new Tracker_DateReminderManager($this);
     }
 
     /**
