@@ -208,16 +208,6 @@ class Tracker_DateReminder {
     }
 
     /**
-     * Retrieve the date field as a Tracker_FormElement object
-     *
-     * @return Tracker_FormElement
-     */
-    public function getDateField() {
-        $fieldFactory = new Tracker_FormElementFactory();
-        return $fieldFactory->getFieldById($this->getFieldId());
-    }
-
-    /**
      * Retrieve the reminder status as a string
      *
      * @return String
