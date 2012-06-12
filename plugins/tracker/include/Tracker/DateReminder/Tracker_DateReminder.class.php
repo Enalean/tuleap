@@ -202,7 +202,6 @@ class Tracker_DateReminder {
         $uGroup        = $uGroupManager->getById($this->getUgroups());
         $recipients    = $uGroup->getMembers();
         if ($recipients) {
-            var_dump($recipients);
             return $recipients;
         }
         return array();
