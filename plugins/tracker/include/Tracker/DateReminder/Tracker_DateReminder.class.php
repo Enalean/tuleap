@@ -23,7 +23,7 @@ class Tracker_DateReminder {
     public $reminderId;
     public $trackerId;
     public $fieldId;
-    public $ugroupId;
+    public $ugroups;
     public $notificationType;
     public $distance;
     public $status;
@@ -40,18 +40,18 @@ class Tracker_DateReminder {
     * @param Integer $reminderId       Id of the reminder
     * @param Integer $trackerId        Id of the tracker
     * @param Integer $fieldId          Id of the field
-    * @param String  $ugroupId         List of ugroups to be notified
+    * @param String  $ugroups          List of ugroups to be notified
     * @param Integer $notificationType Befor or after the date value
     * @param Integer $distance         Distance from the date value
     * @param Integer $status           Status of the reminder
     *
     * @return Void
     */
-    public function __construct($reminderId, $trackerId, $fieldId, $ugroupId, $notificationType, $distance, $status) {
+    public function __construct($reminderId, $trackerId, $fieldId, $ugroups, $notificationType, $distance, $status) {
         $this->reminderId       = $reminderId;
         $this->trackerId        = $trackerId;
         $this->fieldId          = $fieldId;
-        $this->ugroupId         = $ugroupId;
+        $this->ugroups          = $ugroups;
         $this->notificationType = $notificationType;
         $this->distance         = $distance;
         $this->status           = $status;
@@ -136,16 +136,21 @@ class Tracker_DateReminder {
     }
 
     /**
-     * Get the Ugroup Id  of this reminder
+     * Get the notified ugroups ids of this reminder
      *
-     * @return Integer
+     * @return Mixed
      */
-    public function getUgroupId() {
-        return $this->ugroupId;
+    public function getUgroups($asArray = false) {
+        $ugroups = $this->ugroups;
+        if ($asArray) {
+            $ugroups = split('[,]', $this->ugroups);
+            $ugroups = array_map('trim', $ugroups);
+        }
+        return $ugroups;
     }
 
     /**
-     * Get the status  of this reminder
+     * Get the status of this reminder
      *
      * @return Integer
      */
@@ -178,22 +183,23 @@ class Tracker_DateReminder {
     /**
      * Set the Ugroup of this reminder
      *
-     * @param String $ugroupId The user groups to be notified
+     * @param String $ugroups The user groups to be notified
      *
      * @return Void
      */
-    public function setUgroupId($ugroupId) {
-        $this->ugroupId = $ugroupId;
+    public function setUgroups($ugroups) {
+        $this->ugroups = $ugroups;
     }
 
     /**
-     * Retrieve the recipient list for the ugroup_id's
+     * Retrieve the recipient list for all ugroup_id's
      *
      * @return Array
      */
     public function getRecipients() {
+        //@TODO retrieve members for the ugroups list
         $uGroupManager = new UGroupManager();
-        $uGroup        = $uGroupManager->getById($this->getUgroupId());
+        $uGroup        = $uGroupManager->getById($this->getUgroups());
         $recipients    = $uGroup->getMembers();
         if ($recipients) {
             return $recipients;
@@ -226,7 +232,7 @@ class Tracker_DateReminder {
         //@TODO retrieve comma separated ugroups
         $ugroupsLabel   = '';
         $ugroupManager  = new UGroupManager();
-        $ugroups        = explode(',', $this->ugroupId);
+        $ugroups        = explode(',', $this->ugroups);
         foreach ($ugroups as $ugroup) {
             $ugroupsLabel  .= ' "'.$ugroupManager->getById($ugroup)->getName().' "';
         }
