@@ -95,6 +95,14 @@ class Tracker_DateReminderRenderer {
             $after = "";
             $before = "selected";
         }
+        $reminderStatus = $reminder->getStatus();
+        if ($reminderStatus == 1) {
+            $enabled = "selected";
+            $disabled = "";
+        } else {
+            $enabled = "";
+            $disabled = "selected";
+        }
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
@@ -107,7 +115,10 @@ class Tracker_DateReminderRenderer {
                     </SELECT></TD>';
         $output .= '<TD>'.$reminder->getField()->name.'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
-        $output .= '<TD>'.$reminder->getStatus().'</TD>';
+        $output .= '<TD><SELECT NAME="notif_status">
+                        <OPTION VALUE="0" '.$disabled.'> disabled
+                        <OPTION VALUE="1" '.$enabled.'> enabled
+                    </SELECT></TD>';
         $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
         $output .= '</table></FORM>';
         return $output;
