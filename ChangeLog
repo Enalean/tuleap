@@ -8,6 +8,7 @@ Version 5.2 (Not Released Yet)
 	== Enhancement ==
 	* SOAP: 5.2
 	* Refresh the default page for projects website
+	* Update "IndicateurCodex" perl script to take git into account
 
 	== Plugins ==
 	* Cardwall: 0.5.1
