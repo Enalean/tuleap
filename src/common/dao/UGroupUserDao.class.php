@@ -74,12 +74,8 @@ class UGroupUserDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function getUgroupMembers($ugroupId, $groupId) {
-        if($ugroupId > 100) {
-            $sql = ugroup_db_get_members($ugroupId);
-        } else {
-            $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
-        }
+    public function searchUserByDynamicUGroupId($ugroupId, $groupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
         return $this->retrieve($sql);
     }
 

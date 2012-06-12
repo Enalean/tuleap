@@ -101,14 +101,11 @@ class UGroup {
     public function getMembers() {
         if (! $this->members) {
             $this->members = array();
-            $dar = $this->getUGroupUserDao()->getUgroupMembers($this->id, $this->group_id);
-            if ($dar && !$dar->isError()) {
-                $um = UserManager::instance();
-                foreach($dar as $row) {
-                    $currentUser          = $um->getUserById($row['user_id']);
-                    $this->members[]      = $currentUser;
-                    $this->members_name[] = $currentUser->getUserName();
-                }
+            $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+            foreach($dar as $row) {
+                $currentUser = new User($row);
+                $this->members[] = $currentUser;
+                $this->members_name[] = $currentUser->getUserName();
             }
         }
         return $this->members;
