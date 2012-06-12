@@ -22,6 +22,17 @@
 }
 .cardwall_board .card {
   cursor: move;
+  -moz-box-shadow:1px 1px 3px rgba(33,33,33,.3);
+  -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.3);
+  box-shadow: 1px 1px 3px rgba(33,33,33,.3);
+}
+.cardwall_board .nodrag .card {
+  cursor: auto;
+  background: #f9f9f9;
+  height: 100%;
+  -moz-box-shadow:none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 .widget .cardwall_board .card {

@@ -184,10 +184,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private function getSwimlines(array $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
-            $data  = $child->getData();
-            $title = $data['artifact']->fetchTitle();
             $cells = $this->getCells($columns, $child->getChildren());
-            $swimlines[] = new Cardwall_Swimline($title, $cells);
+            $swimlines[] = new Cardwall_Swimline($child, $cells);
         }
         return $swimlines;
     }

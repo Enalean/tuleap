@@ -21,9 +21,9 @@
 class Cardwall_Swimline {
 
     /**
-     * @var string
+     * @var TreeNode
      */
-    public $title;
+    public $node;
 
     /**
      * @var array
@@ -34,8 +34,8 @@ class Cardwall_Swimline {
      * @param string $title
      * @param array  $cells
      */
-    public function __construct($title, array $cells) {
-        $this->title = $title;
+    public function __construct(TreeNode $node, array $cells) {
+        $this->node  = $node;
         $this->cells = $cells;
     }
 }

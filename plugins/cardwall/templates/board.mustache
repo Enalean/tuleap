@@ -27,7 +27,15 @@
             {{#swimlines}}
                 <tr valign="top">
                     {{#hasSwimlineHeader}}
-                        <td>{{{title}}}</td>
+                        {{#node}}
+                            {{#getData}}
+                                <td>
+                                    <ul class="nodrag">
+                                        <li>{{> card}}</td>
+                                    </ul>
+                                </td>
+                            {{/getData}}
+                        {{/node}}
                     {{/hasSwimlineHeader}}
                     {{#cells}}
                         <td>
