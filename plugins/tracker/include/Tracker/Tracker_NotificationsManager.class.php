@@ -36,30 +36,23 @@ class Tracker_NotificationsManager {
     }
     
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
-        //@TODO Please respect SRP !!
         if ($request->get('submit')) {
-            if ($request->get('action') == 'new_reminder') {
-                $this->dateReminderFactory->addNewReminder($request);
-            } else {
-                if ($request->exist('stop_notification')) {
-                    if ($this->tracker->stop_notification != $request->get('stop_notification')) {
-                        $this->tracker->stop_notification = $request->get('stop_notification') ? 1 : 0;
-                        $dao = new TrackerDao();
-                        if ($dao->save($this->tracker)) {
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification','successfully_updated'));
-                        }
+            if ($request->exist('stop_notification')) {
+                if ($this->tracker->stop_notification != $request->get('stop_notification')) {
+                    $this->tracker->stop_notification = $request->get('stop_notification') ? 1 : 0;
+                    $dao = new TrackerDao();
+                    if ($dao->save($this->tracker)) {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_notification','successfully_updated'));
                     }
                 }
-                if ( $global_notification_data = $request->get('global_notification') ) {                
-                    if ( !empty($global_notification_data) )  {
-                        $this->processGlobalNotificationData($global_notification_data);
-                    }
+            }
+            if ( $global_notification_data = $request->get('global_notification') ) {                
+                if ( !empty($global_notification_data) )  {
+                    $this->processGlobalNotificationData($global_notification_data);
                 }
             }
         } else if ($request->get('action') == 'remove_global' ) {
             $this->removeGlobalNotification( $request->get('global_notification_id') );
-        } else if ($request->get('action') == 'delete_reminder' ) {
-            $this->dateReminderFactory->deleteTrackerReminders(array($request->get('reminder_id')));
         }
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
     }
