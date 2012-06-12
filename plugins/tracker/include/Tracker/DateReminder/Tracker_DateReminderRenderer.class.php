@@ -17,15 +17,13 @@
  */
 
 require_once('Tracker_DateReminder.class.php');
-require_once('Tracker_DateReminderManager.class.php');
+require_once('Tracker_DateReminderFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once 'common/date/DateHelper.class.php';
-require_once('common/include/CSRFSynchronizerToken.class.php');
 
 class Tracker_DateReminderRenderer {
 
     protected $tracker;
-    protected $dateReminderManager;
+    protected $dateReminderFactory;
 
     /**
      * Constructor of the class
@@ -36,8 +34,7 @@ class Tracker_DateReminderRenderer {
      */
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
-        $this->dateReminderManager = new Tracker_DateReminderManager($this->tracker);
-        $this->csrf    = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->tracker->id.'&action=new_reminder');
+        $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
 
     /**
@@ -59,7 +56,7 @@ class Tracker_DateReminderRenderer {
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
-        $output .= $this->csrf->fetchHTMLInput();
+        $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
                         <OPTION VALUE="0"> before
@@ -80,12 +77,12 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     public function editDateReminder($reminderId) {
-        $reminder = $this->getReminder($reminderId);
+        $reminder = $this->dateReminderFactory->getReminder($reminderId);
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
-        $output .= $this->csrf->fetchHTMLInput();
+        $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
                         <OPTION VALUE="0" '.$before.'> before
@@ -231,7 +228,7 @@ class Tracker_DateReminderRenderer {
                                   'Edit',
                                   $GLOBALS['Language']->getText('global', 'delete'));
         $i                = 0;
-        $trackerReminders = $this->dateReminderManager->getTrackerReminders();
+        $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
         print html_build_list_table_top($titles);
         foreach ($trackerReminders as $reminder) {
             print '<tr class="'.util_get_alt_row_color($i++).'">';
