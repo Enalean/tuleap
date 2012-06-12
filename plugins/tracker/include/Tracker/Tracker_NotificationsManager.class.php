@@ -19,7 +19,7 @@
  */
 
 require_once('Tracker_GlobalNotification.class.php');
-require_once('DateReminder/Tracker_DateReminderManager.class.php');
+require_once('DateReminder/Tracker_DateReminderFactory.class.php');
 
 require_once('dao/Tracker_WatcherDao.class.php');
 require_once('dao/Tracker_GlobalNotificationDao.class.php');
@@ -28,19 +28,18 @@ require_once('dao/Tracker_NotificationDao.class.php');
 class Tracker_NotificationsManager {
 
     protected $tracker;
-    protected $dateReminderManager;
+    protected $dateReminderFactory;
     
     public function __construct($tracker) {
         $this->tracker = $tracker;
-        $this->dateReminderManager = new Tracker_DateReminderManager($this->tracker);
+        $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
     
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
         //@TODO Please respect SRP !!
         if ($request->get('submit')) {
             if ($request->get('action') == 'new_reminder') {
-
-                $this->dateReminderManager->addNewReminder($request);
+                $this->dateReminderFactory->addNewReminder($request);
             } else {
                 if ($request->exist('stop_notification')) {
                     if ($this->tracker->stop_notification != $request->get('stop_notification')) {
@@ -60,7 +59,7 @@ class Tracker_NotificationsManager {
         } else if ($request->get('action') == 'remove_global' ) {
             $this->removeGlobalNotification( $request->get('global_notification_id') );
         } else if ($request->get('action') == 'delete_reminder' ) {
-            $this->dateReminderManager->deleteTrackerReminders(array($request->get('reminder_id')));
+            $this->dateReminderFactory->deleteTrackerReminders(array($request->get('reminder_id')));
         }
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
     }
@@ -286,44 +285,6 @@ class Tracker_NotificationsManager {
         
         echo'
         </table>';
-    }
-
-    protected function displayDateReminders(HTTPRequest $request) {
-        print '<fieldset>';
-        $this->dateReminderManager->displayAllReminders();
-        $output .= '<div id="tracker_reminder"></div>';
-        $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
-        $output .= "<script type=\"text/javascript\">
-            document.observe('dom:loaded', function() {
-                $('add_reminder').observe('click', function (evt) {
-                    var reminderDiv = new Element('div');
-                    reminderDiv.insert('".$this->dateReminderManager->getNewDateReminderForm()."');
-                    Element.insert($('tracker_reminder'), reminderDiv);
-                    Event.stop(evt);
-                    return false;
-                });
-            });
-            </script>";
-            if ($request->get('action') == 'add_reminder') {
-                $output .= $this->dateReminderManager->getNewDateReminderForm();
-            } elseif ($request->get('action') == 'update_reminder') {
-               $output .= '<div id="update_reminder"></div>';
-               $output .= "<script type=\"text/javascript\">
-            document.observe('dom:loaded', function() {
-                $('update_reminder').observe('click', function (evt) {
-                    var reminderDiv = new Element('div');
-                    reminderDiv.insert('".$this->dateReminderManager->editDateReminder($request->get('reminder_id'))."');
-                    Element.insert($('update_reminder'), reminderDiv);
-                    Event.stop(evt);
-                    return false;
-                });
-            });
-            </script>";
-                $output .= "Update Reminder";
-                $output .= $this->dateReminderManager->editDateReminder($request->get('reminder_id'));
-            }
-        $output .= '</fieldset>';
-        echo $output;
     }
 
     /**

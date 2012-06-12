@@ -137,7 +137,7 @@ class Tracker_DateReminderRenderer {
      *
      * @return Integer
      */
-    private function validateFieldId(HTTPRequest $request) {
+    public function validateFieldId(HTTPRequest $request) {
         $validFieldId = new Valid_UInt('reminder_field_date');
         $validFieldId->required();
         $fieldId      = null;
@@ -154,7 +154,7 @@ class Tracker_DateReminderRenderer {
      *
      * @return Integer
      */
-    private function validateDistance(HTTPRequest $request) {
+    public function validateDistance(HTTPRequest $request) {
         $validDistance = new Valid_UInt('distance');
         $validDistance->required();
         $distance      = null;
@@ -171,7 +171,7 @@ class Tracker_DateReminderRenderer {
      *
      * @return Integer
      */
-    private function validateTrackerId(HTTPRequest $request) {
+    public function validateTrackerId(HTTPRequest $request) {
         $validTrackerId = new Valid_UInt('tracker_id');
         $validTrackerId->required();
         $trackerId      = null;
@@ -188,7 +188,7 @@ class Tracker_DateReminderRenderer {
      *
      * @return Integer
      */
-    private function validateNotificationType(HTTPRequest $request) {
+    public function validateNotificationType(HTTPRequest $request) {
         $validNotificationType = new Valid_UInt('notif_type');
         $validNotificationType->required();
         $notificationType      = null;
@@ -206,7 +206,7 @@ class Tracker_DateReminderRenderer {
      *
      * @return Integer
      */
-    private function validateReminderUgroups(HTTPRequest $request) {
+    public function validateReminderUgroups(HTTPRequest $request) {
         $validUgroupId = new Valid_WhiteList('reminder_ugroup');
         $validUgroupId->required();
         $ugroupId      = null;

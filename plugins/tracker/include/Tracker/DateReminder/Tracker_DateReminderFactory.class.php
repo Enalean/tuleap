@@ -72,16 +72,17 @@ class Tracker_DateReminderFactory {
      */
     public function addNewReminder(HTTPRequest $request) {
         $this->csrf->check();
-        $trackerId          = $this->validateTrackerId($request);
-        $fieldId            = $this->validateFieldId($request);
-        $notificationType   = $this->validateNotificationType($request);
+        $reminderRenderer   = new Tracker_DateReminderRenderer($this->tracker);
+        $trackerId          = $reminderRenderer->validateTrackerId($request);
+        $fieldId            = $reminderRenderer->validateFieldId($request);
+        $notificationType   = $reminderRenderer->validateNotificationType($request);
         //$ugroups           = $this->validateReminderUgroups($request);
         $ugroups            = join(",", $request->get('reminder_ugroup'));
-        $distance           = $this->validateDistance($request);
+        $distance           = $reminderRenderer->validateDistance($request);
         $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
         $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
-        $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+        $reminderDao = $this->getDao();
+        return $reminderDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
     }
 
     /**

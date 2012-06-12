@@ -245,90 +245,6 @@ class Tracker_DateReminderManager {
     }
 
     /**
-     * New date reminder form
-     *
-     * @return String
-     */
-    public function getNewDateReminderForm() {
-        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
-        $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
-                    <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
-        $output .= '<table border="0" width="900px"><TR height="30">';
-        $output .= $this->csrf->fetchHTMLInput();
-        $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
-        $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0"> before
-                        <OPTION VALUE="1"> after
-                    </SELECT></TD>';
-        $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
-        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
-        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
-        $output .= '</table></FORM>';
-        return $output;
-    }
-
-    /**
-     * Edit a given date reminder
-     *
-     *  @param Integer $reminderId Id of the edited date reminder
-     *
-     * @return String
-     */
-    public function editDateReminder($reminderId) {
-        $reminder = $this->getReminder($reminderId);
-        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
-        $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
-                    <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
-        $output .= '<table border="0" width="900px"><TR height="30">';
-        $output .= $this->csrf->fetchHTMLInput();
-        $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';
-        $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0" '.$before.'> before
-                        <OPTION VALUE="1" '.$after.'> after
-                    </SELECT></TD>';
-        $output .= '<TD>'.$reminder->getField()->name.'</TD>';
-        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
-        $output .= '<TD>'.$reminder->status.'</TD>';
-        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
-        $output .= '</table></FORM>';
-        return $output;
-    }
-
-    /**
-     * Build a multi-select box of ugroup selectable to fill the new date field reminder.
-     * It contains: all dynamic ugroups plus project members and admins.
-     * @TODO check permissions on tracker, date field before display??
-     *
-     * @return String
-     */
-    protected function getUgroupsAllowedForTracker() {
-        $res     = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                                                  $GLOBALS['UGROUP_PROJECT_ADMIN']));
-        $output  = '<SELECT NAME="reminder_ugroup[]" multiple>';
-        while($row = db_fetch_array($res)) {
-            $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
-        }
-        $output  .= '</SELECT>';
-        return $output;
-    }
-
-    /**
-     * Build a select box of all date fields used by a given tracker
-     *
-     * @return String
-     */
-    protected function getTrackerDateFields() {
-        $tff               = Tracker_FormElementFactory::instance();
-        $trackerDateFields = $tff->getUsedDateFields($this->tracker);
-        $ouptut            = '<select name="reminder_field_date">';
-        foreach ($trackerDateFields as $dateField) {
-            $ouptut .= '<option value="'. $dateField->getId() .'" '. $selected.'>'.$dateField->getLabel().'</option>';
-        }
-        $ouptut .= '</select>';
-        return $ouptut;
-    }
-
-    /**
      * Retrieve all date reminders for a given tracker
      *
      * @return Array
@@ -429,41 +345,6 @@ class Tracker_DateReminderManager {
             $ugroupId = $request->get('reminder_ugroup');
         }
         return $ugroupId;
-    }
-
-    /**
-     * Add new reminder
-     * 
-     * @param HTTPRequest $request request object
-     *
-     * @return Boolean
-     */
-    public function addNewReminder(HTTPRequest $request) {
-        $this->csrf->check();
-        $trackerId          = $this->validateTrackerId($request);
-        $fieldId            = $this->validateFieldId($request);
-        $notificationType   = $this->validateNotificationType($request);
-        //$ugroups           = $this->validateReminderUgroups($request);
-        $ugroups            = join(",", $request->get('reminder_ugroup'));
-        $distance           = $this->validateDistance($request);
-        $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
-        $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
-        $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
-    }
-
-    /**
-     * Delete a list of date reminders
-     *
-     * @param Array $remindersIds List of Id of reminders
-     *
-     * @return Boolean
-     */
-    public function deleteTrackerReminders($remindersIds) {
-        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-        $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), $remindersIds);
-        $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->deleteReminders($remindersIds);
     }
 
     /**
