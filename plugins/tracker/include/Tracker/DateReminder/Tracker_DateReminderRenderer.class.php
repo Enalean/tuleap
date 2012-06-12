@@ -293,12 +293,12 @@ class Tracker_DateReminderRenderer {
     /**
      * Display the footer
      *
-     * @param TrackerManager $tracker_manager Tracker manager
+     * @param TrackerManager $trackerManager Tracker manager
      *
      * @return String
      */
-    public function displayFooter(TrackerManager $tracker_manager) {
-        return $this->tracker->displayFooter($tracker_manager);
+    public function displayFooter(TrackerManager $trackerManager) {
+        return $this->tracker->displayFooter($trackerManager);
     }
 }
 
