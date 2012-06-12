@@ -43,7 +43,7 @@ class Tracker_DateReminderManager {
      *
      * @return Tracker
      */
-    public function getTracker(){
+    public function getTracker() {
         return $this->tracker;
     }
 

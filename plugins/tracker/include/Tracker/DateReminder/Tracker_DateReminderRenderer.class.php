@@ -107,7 +107,7 @@ class Tracker_DateReminderRenderer {
                     </SELECT></TD>';
         $output .= '<TD>'.$reminder->getField()->name.'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
-        $output .= '<TD>'.$reminder->status.'</TD>';
+        $output .= '<TD>'.$reminder->getStatus().'</TD>';
         $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
         $output .= '</table></FORM>';
         return $output;
