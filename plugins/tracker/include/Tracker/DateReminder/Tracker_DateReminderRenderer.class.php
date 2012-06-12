@@ -38,12 +38,21 @@ class Tracker_DateReminderRenderer {
     }
 
     /**
-     * Obtain the tracker associated to the manager
+     * Obtain the tracker associated to the Renderer
      *
      * @return Tracker
      */
     public function getTracker(){
         return $this->tracker;
+    }
+
+    /**
+     * Obtain the Tracker_DateReminderFactory associated to the Renderer
+     *
+     * @return Tracker_DateReminderFactory
+     */
+    public function getDateReminderFactory(){
+        return $this->dateReminderFactory;
     }
 
     /**
