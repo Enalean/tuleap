@@ -33,7 +33,6 @@ Mock::generatePartial('Tracker',
                           'displayAdminFormElements',
                           'getTrackerSemanticManager',
                           'getNotificationsManager',
-                          'getDateReminderRenderer',
                           'getCannedResponseManager',
                           'getCannedResponseFactory',
                           'getFormElementFactory',
@@ -66,7 +65,6 @@ Mock::generatePartial('Tracker',
                           'displayAdminFormElements',
                           'getTrackerSemanticManager',
                           'getNotificationsManager',
-                          'getDateReminderRenderer',
                           'getCannedResponseManager',
                           'getCannedResponseFactory',
                           'getFormElementFactory',
@@ -118,9 +116,6 @@ Mock::generate('Tracker_SemanticManager');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker_NotificationsManager.class.php');
 Mock::generate('Tracker_NotificationsManager');
-
-require_once(dirname(__FILE__).'/../include/Tracker/DateReminder/Tracker_DateReminderRenderer.class.php');
-Mock::generate('Tracker_DateReminderRenderer');
 
 require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseManager.class.php');
 Mock::generate('Tracker_CannedResponseManager');
@@ -188,10 +183,6 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnReference('getNotificationsManager', $this->tnm);
         $this->tracker1->setReturnReference('getNotificationsManager', $this->tnm);
         $this->tracker2->setReturnReference('getNotificationsManager', $this->tnm);
-        $this->trr = new MockTracker_DateReminderRenderer();
-        $this->tracker->setReturnReference('getDateReminderRenderer', $this->trr);
-        $this->tracker1->setReturnReference('getDateReminderRenderer', $this->trr);
-        $this->tracker2->setReturnReference('getDateReminderRenderer', $this->trr);
         $this->tcrm = new MockTracker_CannedResponseManager();
         $this->tracker->setReturnReference('getCannedResponseManager', $this->tcrm);
         $this->tracker1->setReturnReference('getCannedResponseManager', $this->tcrm);
@@ -997,7 +988,6 @@ class TrackerTest extends TuleapTestCase {
         // site admin can access tracker notification admin part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->site_admin_user);
-        $this->tracker->expectCallCount('getDateReminderRenderer', 2);
     }
     public function testPermsAdminNotificationTrackerProjectAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1006,7 +996,6 @@ class TrackerTest extends TuleapTestCase {
         // project admin can access tracker notification admin part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->project_admin_user);
-        $this->tracker->expectCallCount('getDateReminderRenderer', 2);
     }
     public function testPermsAdminNotificationTrackerTrackerAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1045,7 +1034,6 @@ class TrackerTest extends TuleapTestCase {
         // project member can't access tracker notification admin part
         $this->tracker->expectNever('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->project_member_user);
-        $this->tracker->expectNever('getDateReminderRenderer');
     }
     public function testPermsAdminNotificationTrackerRegisteredUser() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1054,7 +1042,6 @@ class TrackerTest extends TuleapTestCase {
         // registered user can't access tracker notification admin part
         $this->tracker->expectNever('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->registered_user);
-        $this->tracker->expectNever('getDateReminderRenderer');
     }
     public function testPermsAdminNotificationTrackerAnonymousUser() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1063,7 +1050,6 @@ class TrackerTest extends TuleapTestCase {
         // anonymous user can't access tracker notification admin part
         $this->tracker->expectNever('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->anonymous_user);
-        $this->tracker->expectNever('getDateReminderRenderer');
     }
     
     //
@@ -1076,7 +1062,6 @@ class TrackerTest extends TuleapTestCase {
         // site admin can access tracker notification user part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->site_admin_user);
-        $this->tracker->expectCallCount('getDateReminderRenderer', 2);
     }
     public function testPermsNotificationTrackerProjectAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1085,7 +1070,6 @@ class TrackerTest extends TuleapTestCase {
         // project admin can access tracker notification user part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->project_admin_user);
-        $this->tracker->expectCallCount('getDateReminderRenderer', 2);
     }
     public function testPermsNotificationTrackerTrackerAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1716,6 +1700,9 @@ class Tracker_ArtifactSubmit_RedirectUrlTest extends TuleapTestCase {
         
     }
 
+
 }
+
+
 
 ?>
