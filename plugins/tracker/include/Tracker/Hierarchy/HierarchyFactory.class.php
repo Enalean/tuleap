@@ -72,36 +72,7 @@ class Tracker_HierarchyFactory {
         
         return $children;
     }
-    
-    /**
-     * Retrieves the list of all the descendant tracker ids, and return them including the given parent tracker id.
-     * 
-     * Example:
-     * 
-     *   Given the following tracker hierarchy:
-     * 
-     *   + Activities (id=1)
-     *     + Epics (id=2)
-     *       + Stories (id=3)
-     *         + Tasks (id=4)
-     *         + Bugs (id=5)
-     * 
-     *   Then getDescendantIds(2) will return an array with ids 2, 3, 4, and 5, in any order.
-     * 
-     * @param int $tracker_id
-     * 
-     * @return array
-     */
-    public function getDescendantIds($tracker_id) {
-        $descendant_ids = array($tracker_id);
-        
-        foreach($this->getChildren($tracker_id) as $tracker) {
-            $descendant_ids = array_merge($descendant_ids, $this->getDescendantIds($tracker->getId()));
-        }
-        
-        return $descendant_ids;
-    }
-    
+
     /**
      * Return the whole hierarchy (parents and descendants) that involve the given trackers
      *
