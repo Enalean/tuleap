@@ -1348,5 +1348,5 @@ plugin_tracker_date_reminder	body_art_link	Vous pouvez accéder à l'artefact ic
 
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
 project_admin_utils	tracker_date_reminder_update	Rappel sur date de tracker mis a jour $1
-project_admin_utils	tracker_date_reminder_delete	Rappel sur date de tracker summprimé $1
+project_admin_utils	tracker_date_reminder_delete	Rappel sur date de tracker supprimé $1
 project_admin_utils	tracker_date_reminder_sent	Rappel de date sur le tracker envoyé $1
