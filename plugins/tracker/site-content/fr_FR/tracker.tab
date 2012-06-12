@@ -1341,10 +1341,7 @@ plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'accede
 # DateReminder
 plugin_tracker_date_reminder	subject	Rappel: '$1' $2 for '$3'
 plugin_tracker_date_reminder	body_header	$1 a été chargé de vous rappeler aujourd'hui que '$2' dans l'artefact suivant est $3.
-plugin_tracker_date_reminder	body_project	Projet: '$1'
-plugin_tracker_date_reminder	body_tracker	Tracker: '$1'
-plugin_tracker_date_reminder	body_art	Artefact: '$1'
-plugin_tracker_date_reminder	body_art_link	Vous pouvez accéder à l'artefact ici '$1':
+plugin_tracker_date_reminder	body_art_link	Vous pouvez accéder à l'artefact ici: $1
 
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
 project_admin_utils	tracker_date_reminder_update	Rappel sur date de tracker mis a jour $1
