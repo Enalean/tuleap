@@ -103,7 +103,6 @@ class Tracker_DateReminderDao extends DataAccessObject {
      * Update a date reminder
      *
      * @param Integer $reminderId       Id of the reminder
-     * @param Integer $fieldId          Id of the date field
      * @param String  $ugroups          Id of the user groups
      * @param Integer $notificationType 0 if before, 1 if after the value of the date field
      * @param Integer $distance         Distance from the value of the date fiels
@@ -111,7 +110,7 @@ class Tracker_DateReminderDao extends DataAccessObject {
      *
      * @return Boolean
      */
-    public function updateDateReminder($reminderId, $fieldId, $ugroups, $notificationType = 0, $distance = 0, $status = 1) {
+    public function updateDateReminder($reminderId, $ugroups, $notificationType = 0, $distance = 0, $status = 1) {
         $reminderId       = $this->da->escapeInt($reminderId);
         $fieldId          = $this->da->escapeInt($fieldId);
         $ugroups          = $this->da->quoteSmart($ugroups);
@@ -120,7 +119,6 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $status           = $this->da->escapeInt($status);
         $sql = "Update ".$this->tableName."
                 SET
-                field_id          = ".$fieldId.",
                 ugroups           = ".$ugroups.",
                 notification_type = ".$notificationType.",
                 distance          = ".$distance.",
