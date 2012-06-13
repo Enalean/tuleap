@@ -1346,6 +1346,7 @@ plugin_tracker_date_reminder	subject	Reminder: '$1' $2 for '$3'
 plugin_tracker_date_reminder	body_header	$1 was asked to remind you today that the '$2' in the artifact below is $3.
 plugin_tracker_date_reminder	body_art_link	You can access the artifact here: $1
 
+project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
 project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
 project_admin_utils	tracker_date_reminder_update	Updated tracker date reminder $1
 project_admin_utils	tracker_date_reminder_delete	Deleted tracker date reminder $1

@@ -289,6 +289,7 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function displayDateReminders(HTTPRequest $request) {
+        print '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
         print '<fieldset>';
         $this->displayAllReminders();
         $output .= '<div id="tracker_reminder"></div>';
