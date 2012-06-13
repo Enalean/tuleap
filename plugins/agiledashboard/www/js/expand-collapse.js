@@ -1,8 +1,8 @@
-var codendi = codendi || { };
-codendi.agiledashboard = codendi.agiledashboard || { };
-codendi.agiledashboard.planning = codendi.agiledashboard.planning || { };
+var tuleap = tuleap || { };
+tuleap.agiledashboard = tuleap.agiledashboard || { };
+tuleap.agiledashboard.planning = tuleap.agiledashboard.planning || { };
 
-codendi.agiledashboard.planning.TreeView = Class.create({
+tuleap.agiledashboard.planning.TreeView = Class.create({
     initialize : function(root, nodeSelector) {
         this.root         = $(root);
         this.nodeSelector = nodeSelector;
@@ -103,10 +103,10 @@ codendi.agiledashboard.planning.TreeView = Class.create({
 
 Event.observe(window, 'load', function() {
     $$('.planning-backlog .backlog-content').each(function (element) {
-        new codendi.agiledashboard.planning.TreeView(element, '.planning-item');
+        new tuleap.agiledashboard.planning.TreeView(element, '.planning-item');
     });
     
     $$('.release_planner').each(function (element) {
-        new codendi.agiledashboard.planning.TreeView(element, '.planning-item');
+        new tuleap.agiledashboard.planning.TreeView(element, '.planning-item');
     });
 });
