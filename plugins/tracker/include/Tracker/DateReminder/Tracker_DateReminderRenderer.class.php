@@ -86,41 +86,45 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     public function editDateReminder($reminderId) {
+        $output = '';
         $reminder = $this->dateReminderFactory->getReminder($reminderId);
-        $notificationType = $reminder->getNotificationType();
-        if ($notificationType == 1) {
-            $after = "selected";
-            $before = "";
-        } else {
-            $after = "";
-            $before = "selected";
+        if ($reminder) {
+            $notificationType = $reminder->getNotificationType();
+            if ($notificationType == 1) {
+                $after = "selected";
+                $before = "";
+            } else {
+                $after = "";
+                $before = "selected";
+            }
+            $reminderStatus = $reminder->getStatus();
+            if ($reminderStatus == 1) {
+                $enabled = "selected";
+                $disabled = "";
+            } else {
+                $enabled = "";
+                $disabled = "selected";
+            }
+            $output .= "Update Reminder";
+            $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
+            $output .= '<INPUT TYPE="HIDDEN" NAME="reminder_id" VALUE="'.$reminderId.'">
+                        <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+            $output .= '<table border="0" width="900px"><TR height="30">';
+            $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
+            $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';
+            $output .= '<TD><SELECT NAME="notif_type">
+                            <OPTION VALUE="0" '.$before.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
+                            <OPTION VALUE="1" '.$after.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
+                            </SELECT></TD>';
+            $output .= '<TD>'.$reminder->getField()->name.'</TD>';
+            $output .= '<TD>'.$this->getUgroupsAllowedForTracker($reminderId).'</TD>';
+            $output .= '<TD><SELECT NAME="notif_status">
+                            <OPTION VALUE="0" '.$disabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled').'
+                            <OPTION VALUE="1" '.$enabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled').'
+                            </SELECT></TD>';
+            $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
+            $output .= '</table></FORM>';
         }
-        $reminderStatus = $reminder->getStatus();
-        if ($reminderStatus == 1) {
-            $enabled = "selected";
-            $disabled = "";
-        } else {
-            $enabled = "";
-            $disabled = "selected";
-        }
-        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
-        $output .= '<INPUT TYPE="HIDDEN" NAME="reminder_id" VALUE="'.$reminderId.'">
-                    <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
-        $output .= '<table border="0" width="900px"><TR height="30">';
-        $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
-        $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';
-        $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0" '.$before.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
-                        <OPTION VALUE="1" '.$after.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
-                        </SELECT></TD>';
-        $output .= '<TD>'.$reminder->getField()->name.'</TD>';
-        $output .= '<TD>'.$this->getUgroupsAllowedForTracker($reminderId).'</TD>';
-        $output .= '<TD><SELECT NAME="notif_status">
-                        <OPTION VALUE="0" '.$disabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled').'
-                        <OPTION VALUE="1" '.$enabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled').'
-                        </SELECT></TD>';
-        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
-        $output .= '</table></FORM>';
         return $output;
     }
 
@@ -318,7 +322,6 @@ class Tracker_DateReminderRenderer {
                 });
             });
             </script>";
-                $output .= "Update Reminder";
                 $output .= $this->editDateReminder($request->get('reminder_id'));
             }
         $output .= '</fieldset>';
