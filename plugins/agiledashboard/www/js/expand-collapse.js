@@ -102,11 +102,7 @@ tuleap.agiledashboard.planning.TreeView = Class.create({
 });
 
 Event.observe(window, 'load', function() {
-    $$('.planning-backlog .backlog-content').each(function (element) {
-        new tuleap.agiledashboard.planning.TreeView(element, '.planning-item');
-    });
-    
-    $$('.release_planner').each(function (element) {
+    $$('.planning-backlog .backlog-content', '.release_planner').each(function (element) {
         new tuleap.agiledashboard.planning.TreeView(element, '.planning-item');
     });
 });
