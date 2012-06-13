@@ -254,15 +254,14 @@ class Docman_ApprovalTableReminder {
         $pm    = ProjectManager::instance();
         return $pm->getProject($docmanItem->getGroupId());
     }
-    
+
     /**
      * Creates the text mail body
      *
      * @param Docman_ApprovalTable $table      Approval table
      * @param Docman_Item          $docmanItem The docman item to be reviewed
-     * @param String               $subject    Subject of the mail
      *
-     * @return Mail
+     * @return String
      */
     private function getBodyText(Docman_ApprovalTable $table, Docman_Item $docmanItem) {
         $group = $this->getItemProject($docmanItem);
@@ -285,9 +284,8 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table      Approval table
      * @param Docman_Item          $docmanItem Item to be approved
-     * @param String               $subject    Subject of the mail
      *
-     * @return Codendi_Mail
+     * @return String
      */
     private function getBodyHtml(Docman_ApprovalTable $table, Docman_Item $docmanItem) {
         $group = $this->getItemProject($docmanItem);
