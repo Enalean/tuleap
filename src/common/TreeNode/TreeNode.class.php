@@ -240,6 +240,9 @@ class TreeNode /*implements Visitable*/ {
         return 'TreeNode #'. $this->id ." {\n $children_as_string }\n";
     }
 
+    /**
+     * @return array A flat list of all descendant nodes.
+     */
     public function flattenChildren() {
         $flatten_children = array();
         
@@ -250,6 +253,9 @@ class TreeNode /*implements Visitable*/ {
         return $flatten_children;
     }
     
+    /**
+     * @return array A flat list of this node and all its descendants.
+     */
     private function flatten() {
         return array_merge(array($this), $this->flattenChildren());
     }
