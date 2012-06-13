@@ -40,8 +40,6 @@ require_once 'Planning.class.php';
  * 
  * The Planning_Item::isPlannifiable() method allows one to know whether an
  * item can be planned (e.g. Epic2, Story 2, Task 2 or Epic 1).
- * 
- * Items for which both of these methods return false are details (e.g. Tasks).
  */
 abstract class Planning_Item {
 
@@ -50,14 +48,48 @@ abstract class Planning_Item {
      */
     protected $planning;
     
+    /**
+     * @param Planning $planning The planning this item belongs to.
+     */
     public function __construct(Planning $planning) {
         $this->planning = $planning;
     }
     
+    /**
+     * An URL pointing to the edit page of this item.
+     * 
+     * TODO: move to presenter ?
+     * 
+     * @return string
+     */
     public abstract function getEditUri();
+    
+    /**
+     * A human-friendly unique identifier.
+     * 
+     * @return string
+     */
     public abstract function getXRef();
+    
+    /**
+     * A title for this item.
+     * 
+     * @return string
+     */
     public abstract function getTitle();
+    
+    /**
+     * A machine-friendly unique identifier. 
+     * 
+     * @return int
+     */
     public abstract function getId();
+    
+    /** 
+     * Checks whether or not this item can be assigned to a milestone.
+     * 
+     * @return bool
+     */
     public abstract function isPlannifiable();
 }
 

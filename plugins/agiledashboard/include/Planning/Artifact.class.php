@@ -37,26 +37,44 @@ class Planning_Artifact extends Planning_Item {
         $this->artifact = $artifact;
     }
 
+    /**
+     * @see Planning_Item
+     */
     public function getEditUri() {
         return $this->artifact->getUri();
     }
 
+    /**
+     * @see Planning_Item
+     */
     public function getXRef() {
         return $this->artifact->getXRef();
     }
     
+    /**
+     * @see Planning_Item
+     */
     public function getTitle() {
         return $this->artifact->getTitle();
     }
 
+    /**
+     * @see Planning_Item
+     */
     public function getId() {
         return $this->artifact->getId();
     }
     
+    /**
+     * @see Planning_Item
+     */
     public function getTracker() {
         return $this->artifact->getTracker();
     }
     
+    /**
+     * @see Planning_Item
+     */
     public function isPlannifiable() {
         return ($this->getTracker()->getId() == $this->planning->getBacklogTrackerId());
     }
