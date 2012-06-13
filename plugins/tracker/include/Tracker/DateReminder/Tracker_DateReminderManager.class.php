@@ -77,7 +77,7 @@ class Tracker_DateReminderManager {
             if ($request->get('action') == 'new_reminder') {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
             } elseif ($request->get('action') == 'update_reminder') {
-                $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminders(array($request->get('reminder_id')));
+                $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
             }
         }
         if ($this->tracker->userIsAdmin($currentUser)) {

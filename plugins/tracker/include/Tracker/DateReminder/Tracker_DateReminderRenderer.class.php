@@ -240,6 +240,39 @@ class Tracker_DateReminderRenderer {
     }
 
     /**
+     * Validate date reminder status.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    public function validateStatus(HTTPRequest $request) {
+        $validStatus = new Valid_UInt('notif_status');
+        $validStatus->required();
+        $status      = null;
+        if ($request->valid($validStatus)) {
+            $status = $request->get('notif_status');
+        }
+        return $status;
+    }
+
+    /**
+     * Validate date Reminder Id.
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Integer
+     */
+    public function validateReminderId(HTTPRequest $request) {
+        $validReminderId = new Valid_UInt('reminder_id');
+        $validReminderId->required();
+        $reminderId      = null;
+        if ($request->valid($validReminderId)) {
+            $reminderId = $request->get('reminder_id');
+        }
+        return $reminderId;
+    }
+    /**
      * Validate ugroup list param used for tracker reminder.
      * //TODO validate an array of ugroups Ids
      *
