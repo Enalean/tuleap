@@ -68,8 +68,8 @@ class Tracker_DateReminderRenderer {
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0"> before
-                        <OPTION VALUE="1"> after
+                        <OPTION VALUE="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
+                        <OPTION VALUE="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
                     </SELECT></TD>';
         $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
@@ -110,15 +110,15 @@ class Tracker_DateReminderRenderer {
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0" '.$before.'> before
-                        <OPTION VALUE="1" '.$after.'> after
-                    </SELECT></TD>';
+                        <OPTION VALUE="0" '.$before.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
+                        <OPTION VALUE="1" '.$after.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
+                        </SELECT></TD>';
         $output .= '<TD>'.$reminder->getField()->name.'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker($reminderId).'</TD>';
         $output .= '<TD><SELECT NAME="notif_status">
-                        <OPTION VALUE="0" '.$disabled.'> disabled
-                        <OPTION VALUE="1" '.$enabled.'> enabled
-                    </SELECT></TD>';
+                        <OPTION VALUE="0" '.$disabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled').'
+                        <OPTION VALUE="1" '.$enabled.'> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled').'
+                        </SELECT></TD>';
         $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
         $output .= '</table></FORM>';
         return $output;
@@ -275,7 +275,7 @@ class Tracker_DateReminderRenderer {
                 print '</td>';
                 print '<td>'.$reminder->getReminderStatusLabel().'</td>';
                 print '<td>'.$reminder->getNotificationTypeLabel().'</td>';
-                print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
+                print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;reminder_id='.$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
                 print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
                 print '</tr>';
             }

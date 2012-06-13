@@ -229,9 +229,9 @@ class Tracker_DateReminder {
      */
     public function getReminderStatusLabel() {
         if ($this->getStatus() == 1) {
-            $reminderStatusLabel = "enabled";
+            $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled');
         } else {
-            $reminderStatusLabel = "disabled";
+            $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled');
         }
         return $reminderStatusLabel;
     }
@@ -243,9 +243,9 @@ class Tracker_DateReminder {
      */
     public function getNotificationTypeLabel() {
         if ($this->getNotificationType() == 1) {
-            $notificationTypeLabel = "after";
+            $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after');
         } else {
-            $notificationTypeLabel = "before";
+            $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before');
         }
         return $notificationTypeLabel;
     }

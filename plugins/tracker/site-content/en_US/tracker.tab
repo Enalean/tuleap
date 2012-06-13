@@ -1351,3 +1351,7 @@ project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
 project_admin_utils	tracker_date_reminder_update	Updated tracker date reminder $1
 project_admin_utils	tracker_date_reminder_delete	Deleted tracker date reminder $1
 project_admin_utils	tracker_date_reminder_sent	Sent tracker date reminder $1
+project_admin_utils	tracker_date_reminder_before	Before
+project_admin_utils	tracker_date_reminder_after	After
+project_admin_utils	tracker_date_reminder_enabled	Enabled
+project_admin_utils	tracker_date_reminder_disabled	Disabled
