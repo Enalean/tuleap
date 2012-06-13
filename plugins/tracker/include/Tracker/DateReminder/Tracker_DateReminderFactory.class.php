@@ -20,6 +20,7 @@ require_once('Tracker_DateReminder.class.php');
 require_once('dao/Tracker_DateReminderDao.class.php');
 require_once 'common/date/DateHelper.class.php';
 require_once('common/include/CSRFSynchronizerToken.class.php');
+require_once('Tracker_DateReminderException.class.php');
 
 class Tracker_DateReminderFactory {
 
@@ -81,8 +82,13 @@ class Tracker_DateReminderFactory {
         $distance           = $reminderRenderer->validateDistance($request);
         $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
         $historyDao->groupAddHistory("tracker_date_reminder_add", $this->tracker->getName().":".$fieldId, $this->tracker->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
-        $reminderDao = $this->getDao();
-        return $reminderDao->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+        $reminder    = $this->getDao()->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+        if ($reminder) {
+            return $reminder;
+        } else {
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
+            throw new Tracker_DateReminderException($errorMessage);
+        }
     }
 
     /**
@@ -102,9 +108,14 @@ class Tracker_DateReminderFactory {
         $status             = $request->get('notif_status');
         $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
         $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->tracker->getName().":".$reminderId, $this->tracker->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
-        $reminderManagerDao = $this->getDao();
-        $reminderManagerDao->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
+        $updateReminder = $this->getDao()->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
+        if ($updateReminder) {
+            return $updateReminder;
+        } else {
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_update_failure', array($reminderId));
+            throw new Tracker_DateReminderException($errorMessage);
         }
+    }
 
     /**
      * Build a reminder instance
