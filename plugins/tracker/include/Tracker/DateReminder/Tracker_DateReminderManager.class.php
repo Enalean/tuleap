@@ -214,7 +214,7 @@ class Tracker_DateReminderManager {
      * @return String
      */
     public function getSubject($reminder, $artifact, $recipient) {
-        $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($reminder->getField()->getLabel(), $artifact->getValue($reminder->getField())->getValue(), $artifact->getTitle()));
+        $s = "[" . $this->tracker->getName()."] ".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
         return $s;
     }
 
@@ -229,14 +229,13 @@ class Tracker_DateReminderManager {
      * @return String
      */
     protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
-        $format = Codendi_Mail_Interface::FORMAT_TEXT;
         $proto  = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
         $link   = ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
 
-        $output = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient, $format, false).' ==============+';
+        $output = '+============== '.'['.$this->getTracker()->getItemName() .' #'. $artifact->getId().'] '.$artifact->fetchMailTitle($recipient).' ==============+';
         $output .= PHP_EOL;
 
-        $output .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $artifact->getValue($reminder->getField())->getValue()));
+        $output .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
         $output .= PHP_EOL;
         $output .= $language->getText('plugin_tracker_date_reminder','body_art_link', array($link));
         $output .= PHP_EOL;
@@ -257,10 +256,10 @@ class Tracker_DateReminderManager {
         $format = Codendi_Mail_Interface::FORMAT_HTML;
         $hp = Codendi_HTMLPurifier::instance();
         $proto  = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-        $link   = ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'>';
+        $link   = '<a href='. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'</a>';
 
         $output ='<h1>'.$hp->purify($artifact->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;
-        $output .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $artifact->getValue($reminder->getField())->getValue()));
+        $output .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
         $output .= '<br>';
         $output .= $language->getText('plugin_tracker_date_reminder','body_art_link', array($link));
         $output .= '<br>';
