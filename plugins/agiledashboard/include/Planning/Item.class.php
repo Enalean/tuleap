@@ -19,6 +19,7 @@
  */
 
 require_once 'Planning.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Tracker_Artifact.class.php';
 
 /**
  * An item to be displayed in a planning.
@@ -41,18 +42,25 @@ require_once 'Planning.class.php';
  * The Planning_Item::isPlannifiable() method allows one to know whether an
  * item can be planned (e.g. Epic2, Story 2, Task 2 or Epic 1).
  */
-abstract class Planning_Item {
-
+class Planning_Item {
+    
     /**
      * @var Planning
      */
-    protected $planning;
+    private $planning;
     
     /**
-     * @param Planning $planning The planning this item belongs to.
+     * @var Tracker_Artifact
      */
-    public function __construct(Planning $planning) {
+    private $artifact;
+    
+    /**
+     * @param Tracker_Artifact $artifact The underlying artifact to be planned.
+     * @param Planning         $planning The planning this item belongs to.
+     */
+    public function __construct(Tracker_Artifact $artifact, Planning $planning) {
         $this->planning = $planning;
+        $this->artifact = $artifact;
     }
     
     /**
@@ -62,35 +70,54 @@ abstract class Planning_Item {
      * 
      * @return string
      */
-    public abstract function getEditUri();
+    public function getEditUri() {
+        return $this->artifact->getUri();
+    }
     
     /**
      * A human-friendly unique identifier.
      * 
      * @return string
      */
-    public abstract function getXRef();
+    public function getXRef() {
+        return $this->artifact->getXRef();
+    }
     
     /**
      * A title for this item.
      * 
      * @return string
      */
-    public abstract function getTitle();
+    public function getTitle() {
+        return $this->artifact->getTitle();
+    }
     
     /**
      * A machine-friendly unique identifier. 
      * 
      * @return int
      */
-    public abstract function getId();
+    public function getId() {
+        return $this->artifact->getId();
+    }
+    
+    /**
+     * Get the underlying backlog tracker.
+     * 
+     * @return Tracker
+     */
+    public function getTracker() {
+        return $this->artifact->getTracker();
+    }
     
     /** 
      * Checks whether or not this item can be assigned to a milestone.
      * 
      * @return bool
      */
-    public abstract function isPlannifiable();
+    public function isPlannifiable() {
+        return ($this->getTracker()->getId() == $this->planning->getBacklogTrackerId());
+    }
 }
 
 ?>

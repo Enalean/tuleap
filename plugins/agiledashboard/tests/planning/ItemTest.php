@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ItemTestCase.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/Artifact.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/Item.class.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
-class Planning_ArtifactTest extends Planning_ItemTestCase {
+class Planning_ArtifactTest extends TuleapTestCase {
     
+    private $item;
     private $epics_tracker;
     private $stories_tracker;
     private $epic;
@@ -56,7 +56,23 @@ class Planning_ArtifactTest extends Planning_ItemTestCase {
         $this->story = aMockArtifact()->withTracker($this->stories_tracker)
                                       ->build();
         
-        $this->item = new Planning_Artifact($this->epic, $this->planning);
+        $this->item = new Planning_Item($this->epic, $this->planning);
+    }
+    
+    public function itHasAnUri() {
+        $this->assertEqual($this->edit_uri, $this->item->getEditUri());
+    }
+    
+    public function itHasAnXRef() {
+        $this->assertEqual($this->xref, $this->item->getXRef());
+    }
+    
+    public function itHasATitle() {
+        $this->assertEqual($this->title, $this->item->getTitle());
+    }
+    
+    public function itHasAnId() {
+        $this->assertEqual($this->id, $this->item->getId());
     }
     
     public function itIsPlannifiableIfItsTrackerMatchesThePlanningOne() {
@@ -65,7 +81,7 @@ class Planning_ArtifactTest extends Planning_ItemTestCase {
     }
     
     public function itIsNotPlannifiableIfItsTrackerDoesNotMatchThePlanningBacklogTracker() {
-        $this->item = new Planning_Artifact($this->story, $this->planning);
+        $this->item = new Planning_Item($this->story, $this->planning);
         $this->assertFalse($this->item->isPlannifiable());
     }
 }

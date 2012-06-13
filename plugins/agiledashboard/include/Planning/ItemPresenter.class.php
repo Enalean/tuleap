@@ -20,7 +20,7 @@
 
 require_once 'Item.class.php';
 
-class Planning_ArtifactPresenter {
+class Planning_ItemPresenter {
     
     /**
      * @var Planning_Item
