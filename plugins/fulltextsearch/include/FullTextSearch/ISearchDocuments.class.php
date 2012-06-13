@@ -18,20 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'SearchResultCollection.class.php';
 
 /**
- * Base class to interact with ElasticSearch
+ * Interface which define the base contract for search library clients
  */
-abstract class ElasticSearch_ClientFacade {
+interface FullTextSearch_ISearchDocuments {
 
     /**
-     * @var ElasticSearchClient
+     * Search for data in the index
+     * 
+     * @param String $term terms
+     * 
+     * @return FullTextSearch_SearchResultCollection
      */
-    protected $client;
+    public function searchDocuments($terms);
     
-    public function __construct(ElasticSearchClient $client) {
-        $this->client = $client;
-    }
-    
+
+    /**
+     * Return status of the index
+     * 
+     * The returned array is:
+     * array('size'   => string with human readable size
+     *       'nb_docs => integer, number of documents in index)
+     * 
+     * @return array 
+     */
+    public function getStatus();
 }
 ?>

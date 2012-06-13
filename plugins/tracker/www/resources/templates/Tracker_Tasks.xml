@@ -187,12 +187,6 @@
             </formElement>
           </formElements>
         </formElement>
-        <formElement type="date" ID="F28" rank="10" use_it="0">
-          <name>close_date</name>
-          <label>Close Date</label>
-          <description>Close Date</description>
-          <properties default_value="today"/>
-        </formElement>
         <formElement type="sb" ID="F29" rank="11" use_it="0">
           <name>stage</name>
           <label>Stage</label>
@@ -266,74 +260,11 @@
       <description>Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)</description>
       <bind type="static" is_rank_alpha="0"/>
     </formElement>
-    <formElement type="int" ID="F36" rank="0" use_it="0">
-      <name>initial_effort</name>
-      <label>Initial Effort Estimate</label>
-      <description>Initial estimation of effort</description>
-      <properties size="5"/>
-    </formElement>
-    <formElement type="int" ID="F37" rank="2" use_it="0">
-      <name>current_effort</name>
-      <label>Current Effort Estimate</label>
-      <description>Current estimation of effort</description>
-      <properties size="5"/>
-    </formElement>
-    <formElement type="int" ID="F38" rank="4" use_it="0">
-      <name>remaining_effort</name>
-      <label>Remaining Effort</label>
-      <description>Remaining Effort</description>
-      <properties size="5"/>
-    </formElement>
     <formElement type="date" ID="F39" rank="10" use_it="0">
       <name>close_date</name>
       <label>Close Date</label>
       <description>Close Date</description>
       <properties default_value="today"/>
-    </formElement>
-    <formElement type="sb" ID="F40" rank="11" use_it="0">
-      <name>stage</name>
-      <label>Stage</label>
-      <description>Stage in the life cycle of the artifact</description>
-      <bind type="static" is_rank_alpha="0">
-        <items>
-          <item ID="F40-V0" label="New">
-            <description>The artifact has just been submitted</description>
-          </item>
-          <item ID="F40-V1" label="Analyzed">
-            <description>The cause of the artifact has been identified and documented</description>
-          </item>
-          <item ID="F40-V2" label="Accepted">
-            <description>The artifact will be worked on.</description>
-          </item>
-          <item ID="F40-V3" label="Under Implementation">
-            <description>The artifact is being worked on.</description>
-          </item>
-          <item ID="F40-V4" label="Ready for Review">
-            <description>Updated/Created non-software work product (e.g. documentation) is ready for review and approval.</description>
-          </item>
-          <item ID="F40-V5" label="Ready for Test">
-            <description>Updated/Created software is ready to be included in the next build</description>
-          </item>
-          <item ID="F40-V6" label="In Test">
-            <description>Updated/Created software is in the build and is ready to enter the test phase</description>
-          </item>
-          <item ID="F40-V7" label="Approved">
-            <description>The artifact fix has been succesfully tested. It is approved and awaiting release.</description>
-          </item>
-          <item ID="F40-V8" label="Declined">
-            <description>The artifact was not accepted.</description>
-          </item>
-          <item ID="F40-V9" label="Done">
-            <description>The artifact is closed.</description>
-          </item>
-        </items>
-      </bind>
-    </formElement>
-    <formElement type="float" ID="F41" rank="13" use_it="0">
-      <name>effort</name>
-      <label>Effort</label>
-      <description>Number of hours of work needed to fix the artifact (including testing)</description>
-      <properties maxchars="5" size="5" default_value="0.0000"/>
     </formElement>
   </formElements>
   <semantics>
@@ -488,12 +419,24 @@
     <permission scope="field" REF="F9" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F9" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F9" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F12" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F12" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F12" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F20" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F20" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F20" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
@@ -512,9 +455,21 @@
     <permission scope="field" REF="F27" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F27" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F27" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F29" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F29" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F29" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F30" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F30" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F30" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F32" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F32" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F32" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F35" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F35" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F35" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F34" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F39" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F39" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F39" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
   </permissions>
 </tracker>

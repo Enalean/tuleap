@@ -1,3 +1,11 @@
+Version 5.7.24 - Tuleap 5.2
+	* Allow plugins to add their stuff in tracker admin page
+	* Allow tracker admin to unset the status semantic
+	* Move cards css from agiledashboard to tracker
+
+Version 5.7.23 - Tuleap 5.2
+    * Update tracker templates by adding permissions on unused fields.
+
 Version 5.7.22 - Tuleap 5.2
     * Introduc NullTracker object
 

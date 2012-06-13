@@ -18,20 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-/**
- * Base class to interact with ElasticSearch
- */
-abstract class ElasticSearch_ClientFacade {
-
-    /**
-     * @var ElasticSearchClient
-     */
-    protected $client;
+class FullTextSearch_Presenter_Index {
+    public $template = 'index';
     
-    public function __construct(ElasticSearchClient $client) {
-        $this->client = $client;
+    private $index_status;
+    private $terms;
+    
+    public function __construct($index_status, $terms = '') {
+        $this->index_status = $index_status;
+        $this->terms        = $terms;
     }
     
+    public function index_size() {
+        return $this->index_status['size'];
+    }
+    
+    public function nb_docs() {
+        return $this->index_status['nb_docs'];
+    }
+    
+    public function terms() {
+        return $this->terms;
+    }
 }
+
 ?>

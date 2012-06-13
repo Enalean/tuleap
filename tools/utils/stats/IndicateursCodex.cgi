@@ -22,11 +22,14 @@ use SQLmetrics; #package/class SQLmetrics, definition and use of metrics for thi
 use POSIX;
 use HTML::Entities ();
 
+my $INSTALL_DIR="/usr/share/codendi";
+require("$INSTALL_DIR/src/utils/include.pl");  # Include all the predefined functions and variables
+
 use vars qw($dbh);
-my $sys_dbhost="localhost";#adress of the Codex database
-my $sys_dbname="codex";#name of the Codex database
-my $sys_dbuser="XXXXX";#readonly Codex database login
-my $sys_dbpasswd="XXXXX";#readonly Codex database pass
+my $sys_dbhost;
+my $sys_dbname;
+my $sys_dbuser;
+my $sys_dbpasswd;
 my $version="1.0";					# script version
 my $date_end;                              	# base date and end of the period
 my $date_start;					# date of the period start
@@ -200,6 +203,12 @@ push(@Allmetrics,new SQLmetrics("ActiviteSVN",
 FROM  svn_commits 
 WHERE date<=$time_end AND date>=$time_start
 GROUP BY group_id"));
+
+push(@Allmetrics,new SQLmetrics("Push Git",
+"SELECT project_id, count(*)
+FROM  plugin_git_log INNER JOIN plugin_git USING(repository_id)
+WHERE push_date<=$time_end AND push_date>=$time_start
+GROUP BY project_id"));
 
 #Calcul de l'indicateur 'Fichiers publies' par projet
 #date de "creation du fichier":  frs_file.postdate
@@ -378,23 +387,6 @@ push(@Allmetrics,new SQLmetrics("Reponses sondages",
 WHERE date >=$time_start
 AND date <=$time_end
 GROUP BY  group_id"));
-
-# Calcul de l'indicateur 'Passerelle' par projet
-
-push(@Allmetrics,new SQLmetrics("Passerelle",
-"select group_id, COUNT(*) FROM plugin_cvstodimensions_log
-WHERE date >=$time_start
-AND date <=$time_end
-GROUP BY  group_id"));
-
-# Calcul de l'indicateur 'PasserelleSVN' par projet
-
-push(@Allmetrics,new SQLmetrics("PasserelleSVN",
-"select group_id, COUNT(*) FROM plugin_svntodimensions_log
-WHERE date >=$time_start
-AND date <=$time_end
-GROUP BY  group_id"));
-
 
 # Verifier si le service 'Integration Continue' est activé par projet
 

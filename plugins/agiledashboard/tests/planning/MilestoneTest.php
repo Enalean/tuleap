@@ -25,16 +25,42 @@ require_once dirname(__FILE__).'/../builders/aMilestone.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
-class Planning_MilestoneTest extends TuleapTestCase {
+abstract class Planning_MilestoneTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->project   = stub('Project')->getID()->returns(123);
+        $this->planning  = aPlanning()->withId(9999)->build();
+    }
     
-    private $project;
-    private $planning;
+    public function itHasAPlanning() {
+        $this->assertEqual($this->planning, $this->milestone->getPlanning());
+        $this->assertEqual($this->planning->getId(), $this->milestone->getPlanningId());
+    }
+    
+    public function itHasAProject() {
+        $this->assertEqual($this->project, $this->milestone->getProject());
+        $this->assertEqual($this->project->getID(), $this->milestone->getGroupId());
+    }
+
+}
+
+class Planning_NoMilestoneTest extends Planning_MilestoneTest {
+    public function setUp() {
+        parent::setUp();
+        $this->milestone = new Planning_NoMilestone($this->project, $this->planning);
+    }
+}
+
+class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
+    
+    protected $project;
+    protected $planning;
     private $artifact;
     
     /**
      * @var Planning_Milestone
      */
-    private $milestone;
+    protected $milestone;
     
     public function setUp() {
         parent::setUp();

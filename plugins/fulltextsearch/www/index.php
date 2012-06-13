@@ -18,20 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'pre.php';
+require_once 'common/mustache/MustacheRenderer.class.php';
 
-/**
- * Base class to interact with ElasticSearch
- */
-abstract class ElasticSearch_ClientFacade {
-
-    /**
-     * @var ElasticSearchClient
-     */
-    protected $client;
-    
-    public function __construct(ElasticSearchClient $client) {
-        $this->client = $client;
-    }
-    
+// First, check plugin availability
+$plugin_manager = PluginManager::instance();
+$plugin         = $plugin_manager->getPluginByName('fulltextsearch');
+if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
+    $plugin->process();
+} else {
+    header('Location: '.get_server_url());
 }
+
 ?>

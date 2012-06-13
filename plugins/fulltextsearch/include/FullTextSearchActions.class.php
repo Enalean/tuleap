@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'FullTextSearch/ISearchAndIndexDocuments.class.php';
+require_once 'FullTextSearch/IIndexDocuments.class.php';
 require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
 /**
  * Class responsible to send requests to an indexation server
@@ -26,12 +26,12 @@ require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemMan
 class FullTextSearchActions {
 
     /**
-     * @var FullTextSearch_ISearchAndIndexDocuments
+     * @var FullTextSearch_IIndexDocuments
      */
     protected $client;
     protected $permissions_manager;
 
-    public function __construct(FullTextSearch_ISearchAndIndexDocuments $client, Docman_PermissionsItemManager $permissions_manager) {
+    public function __construct(FullTextSearch_IIndexDocuments $client, Docman_PermissionsItemManager $permissions_manager) {
         $this->client              = $client;
         $this->permissions_manager = $permissions_manager;
     }
