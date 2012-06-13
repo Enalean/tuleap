@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Planning/PlanningItem.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/Item.class.php';
 
-abstract class PlanningItemTestCase extends TuleapTestCase {
+abstract class Planning_ItemTestCase extends TuleapTestCase {
     
     /**
-     * @var PlanningItem
+     * @var Planning_Item
      */
     protected $item;
     

@@ -18,13 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'PlanningItemTestCase.class.php';
+require_once 'ItemTestCase.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/Artifact.class.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
-class Planning_ArtifactTest extends PlanningItemTestCase {
+class Planning_ArtifactTest extends Planning_ItemTestCase {
     
     private $epics_tracker;
     private $stories_tracker;

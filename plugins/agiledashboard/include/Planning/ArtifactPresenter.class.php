@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'PlanningItem.class.php';
+require_once 'Item.class.php';
 
 class Planning_ArtifactPresenter {
     
