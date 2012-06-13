@@ -302,7 +302,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
      * @param Integer $trackerId Tracker id
      * @param Integer $date      Submitted on date
      *
-     * @return
+     * @return DataAccessResult
      */
     public function getArtifactsBySubmittedOnDate($trackerId, $date) {
         $trackerId  = $this->da->escapeInt($trackerId);

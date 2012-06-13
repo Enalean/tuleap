@@ -465,9 +465,9 @@ class trackerPlugin extends Plugin {
      *
      * @param mixed $params 
      *
-     * @return void
+     * @return Void
      */
-    function codendi_daily_start($params) {
+    public function codendi_daily_start($params) {
         include_once 'Tracker/TrackerManager.class.php';
         $trackerManager = new TrackerManager();
         return $trackerManager->sendDateReminder();
@@ -477,7 +477,7 @@ class trackerPlugin extends Plugin {
      * Fill the list of subEvents related to tracker in the project history interface
      *
      */
-    function fillProjectHistorySubEvents($params) {
+    public function fillProjectHistorySubEvents($params) {
         array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',
                                                          'tracker_date_reminder_edit',
                                                          'tracker_date_reminder_sent'

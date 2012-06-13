@@ -75,7 +75,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
      * @param Integer $trackerId Tracker id
      * @param Integer $date      Last update date
      *
-     * @return
+     * @return DataAccessResult
      */
     public function getArtifactsByFieldAndLastUpdateDate($trackerId, $date) {
         $trackerId  = $this->da->escapeInt($trackerId);

@@ -87,6 +87,8 @@ class Tracker_DateReminderManager {
     }
 
     /**
+     * Obtain date reminder renderer
+     *
      * @return Tracker_DateReminderRenderer
      */
     public function getDateReminderRenderer() {
@@ -97,7 +99,7 @@ class Tracker_DateReminderManager {
      * Send reminder
      *
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
-     * @param Tracker_Artifact $artifact Artifact for which reminders will be sent
+     * @param Tracker_Artifact     $artifact Artifact for which reminders will be sent
      *
      * @return Void
      */
@@ -161,7 +163,7 @@ class Tracker_DateReminderManager {
             );
         }
     }
-    
+
     /**
      * Send a notification
      *
@@ -252,7 +254,7 @@ class Tracker_DateReminderManager {
      */
     protected function getBodyHtml(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language) {
         $format = Codendi_Mail_Interface::FORMAT_HTML;
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp     = Codendi_HTMLPurifier::instance();
         $proto  = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
         $link   = '<a href='. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'</a>';
 
@@ -290,12 +292,12 @@ class Tracker_DateReminderManager {
      */
     public function getInstanceFromRow($row) {
         return new Tracker_DateReminder($row['reminder_id'],
-                                          $row['tracker_id'],
-                                          $row['field_id'],
-                                          $row['ugroups'],
-                                          $row['notification_type'],
-                                          $row['distance'],
-                                          $row['status']);
+                                        $row['tracker_id'],
+                                        $row['field_id'],
+                                        $row['ugroups'],
+                                        $row['notification_type'],
+                                        $row['distance'],
+                                        $row['status']);
     }
 
     /**

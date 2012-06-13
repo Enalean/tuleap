@@ -18,8 +18,9 @@
 
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field.class.php');
+
 class Tracker_DateReminder {
-    
+
     protected $reminderId;
     protected $trackerId;
     protected $fieldId;
@@ -114,7 +115,7 @@ class Tracker_DateReminder {
      * @return Tracker
      */
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerByid($this->trackerId);
+        return TrackerFactory::instance()->getTrackerByid($this->getTrackerId());
     }
 
     /**
@@ -137,6 +138,8 @@ class Tracker_DateReminder {
 
     /**
      * Get the notified ugroups ids of this reminder
+     *
+     * @param Boolean $asArray Return an array if true and a string otherwise
      *
      * @return Mixed
      */
@@ -161,7 +164,7 @@ class Tracker_DateReminder {
     /**
      * Set the tracker of this reminder
      *
-     * @param Tracker $tracker The tracker
+     * @param Integer $trackerId Id of the tracker
      *
      * @return Void
      */
@@ -197,17 +200,16 @@ class Tracker_DateReminder {
      * @return Array
      */
     public function getRecipients() {
-        //@TODO retrieve members for the ugroups list
         $recipients    = array();
         $uGroupManager = new UGroupManager();
         $ugroups       = $this->getUgroups(true);
         foreach ($ugroups as $ugroupId) {
             if ($ugroupId < 100) {
-                $um = UserManager::instance();
+                $um      = UserManager::instance();
                 $members = $uGroupManager->getDynamicUGroupsMembers($ugroupId, $this->getTracker()->getGroupId());
                 if ($members && !$members->isError()) {
                     foreach ($members as $member) {
-                        $user = $um->getUserById($member['user_id']);
+                        $user                       = $um->getUserById($member['user_id']);
                         $recipients[$user->getId()] = $user;
                     }
                 }
@@ -269,14 +271,14 @@ class Tracker_DateReminder {
     }
 
     /**
-     * Retreive The date Fiel value
-     * 
+     * Retreive The date Field value
+     *
      * @param Tracker_Artifact $artifact The artifact
-     * 
+     *
      * @return date
-     */ 
+     */
     public function getFieldValue(Tracker_Artifact $artifact) {
-        $field     = $this->getField();
+        $field = $this->getField();
         if ($field instanceof Tracker_FormElement_Field_LastUpdateDate) {
             $value = date("Y-m-d", $artifact->getLastChangeset()->getSubmittedOn());
         } elseif ($field instanceof Tracker_FormElement_Field_SubmittedOn) {
@@ -286,6 +288,7 @@ class Tracker_DateReminder {
         }
         return $value;
     }
+
 }
 
 ?>

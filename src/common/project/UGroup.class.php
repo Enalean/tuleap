@@ -95,16 +95,15 @@ class UGroup {
 
     /**
      * Return array of all ugroup members as User objects
-     *
-     * @return Array
+     * WARNING: this does not work currently with dynamic ugroups
      */
     public function getMembers() {
         if (! $this->members) {
             $this->members = array();
-            $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+            $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
             foreach($dar as $row) {
-                $currentUser = new User($row);
-                $this->members[] = $currentUser;
+                $currentUser          = new User($row);
+                $this->members[]      = $currentUser;
                 $this->members_name[] = $currentUser->getUserName();
             }
         }

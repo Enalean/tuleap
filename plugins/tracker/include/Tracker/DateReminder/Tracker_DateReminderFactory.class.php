@@ -65,7 +65,7 @@ class Tracker_DateReminderFactory {
 
     /**
      * Add new reminder
-     * 
+     *
      * @param HTTPRequest $request Request object
      *
      * @return Boolean
@@ -115,12 +115,12 @@ class Tracker_DateReminderFactory {
      */
     public function getInstanceFromRow($row) {
         return new Tracker_DateReminder($row['reminder_id'],
-                                          $row['tracker_id'],
-                                          $row['field_id'],
-                                          $row['ugroups'],
-                                          $row['notification_type'],
-                                          $row['distance'],
-                                          $row['status']);
+                                        $row['tracker_id'],
+                                        $row['field_id'],
+                                        $row['ugroups'],
+                                        $row['notification_type'],
+                                        $row['distance'],
+                                        $row['status']);
     }
 
     /**
@@ -147,8 +147,10 @@ class Tracker_DateReminderFactory {
     }
 
     /** Get artifacts that will send notification for a reminder
+     * @TODO: check if this is not an old duplicate of the code in Tracker_DateReminderManager
      *
      * @param Tracker_DateReminder $reminder Reminder on which the notification is based on
+     *
      *
      * @return Array
      */

@@ -41,7 +41,7 @@ EOT;
     /**
      * Creation of the table
      *
-     * @return void
+     * @return Void
      */
     public function up() {
         $sql = 'CREATE TABLE tracker_reminder (
@@ -60,7 +60,7 @@ EOT;
     /**
      * Verify the table creation
      *
-     * @return void
+     * @return Void
      */
     public function postUp() {
         if (!$this->db->tableNameExists('tracker_reminder')) {

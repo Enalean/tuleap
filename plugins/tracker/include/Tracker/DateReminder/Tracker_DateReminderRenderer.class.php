@@ -33,7 +33,7 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function __construct(Tracker $tracker) {
-        $this->tracker = $tracker;
+        $this->tracker             = $tracker;
         $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
 
@@ -61,7 +61,7 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     public function getNewDateReminderForm() {
-        $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
+        $output = '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
         $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
@@ -86,23 +86,23 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     public function editDateReminder($reminderId) {
-        $output = '';
+        $output   = '';
         $reminder = $this->dateReminderFactory->getReminder($reminderId);
         if ($reminder) {
             $notificationType = $reminder->getNotificationType();
             if ($notificationType == 1) {
-                $after = "selected";
+                $after  = "selected";
                 $before = "";
             } else {
-                $after = "";
+                $after  = "";
                 $before = "selected";
             }
             $reminderStatus = $reminder->getStatus();
             if ($reminderStatus == 1) {
-                $enabled = "selected";
+                $enabled  = "selected";
                 $disabled = "";
             } else {
-                $enabled = "";
+                $enabled  = "";
                 $disabled = "selected";
             }
             $output .= "Update Reminder";
@@ -137,8 +137,8 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     protected function getUgroupsAllowedForTracker($reminderId = Null) {
-        $res     = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                                                  $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']));
         if (!empty($reminderId)) {
             $reminder        = $this->dateReminderFactory->getReminder($reminderId);
             $selectedUgroups = $reminder->getUgroups(true);
@@ -327,7 +327,7 @@ class Tracker_DateReminderRenderer {
         print '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
         print '<fieldset>';
         $this->displayAllReminders();
-        $output .= '<div id="tracker_reminder"></div>';
+        $output = '<div id="tracker_reminder"></div>';
         $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
         $output .= "<script type=\"text/javascript\">
             document.observe('dom:loaded', function() {
