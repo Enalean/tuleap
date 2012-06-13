@@ -101,9 +101,7 @@ class Tracker_DateReminderFactory {
         $distance           = $request->get('distance');
         $status             = $request->get('notif_status');
         $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
-        var_dump("ff");
         $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->tracker->getName().":".$reminderId, $this->tracker->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
-        var_dump("dd");
         $reminderManagerDao = $this->getDao();
         $reminderManagerDao->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
         }
