@@ -244,11 +244,6 @@ class MileStoneFactory_getOpenMilestonesTest extends TuleapTestCase {
         $factory->__construct($planning_factory, $artifact_factory);
         return $factory;
     }
-    
-    
-    //partout node->getObject() is a Planning_Item
-    //si planning->getBacklogTracker == $artifact->getTracker() alors c'est un PlannifiableItem
-    //sinon Backlog_item
 }
 
 class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
