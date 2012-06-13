@@ -156,7 +156,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
 
         $presenter = $this->getAPresenter($node_parent);
         
-        $result = $presenter->plannedArtifactsTree($node_parent);
+        $result = $presenter->getPlannedArtifactsTree($node_parent);
         $this->assertEqualTreeNodes($node_parent, $result);
     }
     
@@ -180,7 +180,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
     
         $presenter = $this->getAPresenter($node_parent);
     
-        $result = $presenter->plannedArtifactsTree();
+        $result = $presenter->getPlannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
     }
 }
@@ -211,7 +211,7 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
         
         $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
 
-        $this->assertNull($this->presenter->plannedArtifactsTree());
+        $this->assertNull($this->presenter->getPlannedArtifactsTree());
     }
 }
 ?>

@@ -1,5 +1,8 @@
+<?php
 /**
- * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,17 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
-/**
- * Autocompleting project and user inputs within ProjectQuotaHtml::renderNewCustomQuotaForm() form
- */
 
-var tuleap = codendi || { };
-document.observe('dom:loaded', function () {
-    if ($('plugin_statistics')) {
-        var prjAutocomplete  = new ProjectAutoCompleter('project', tuleap.imgroot);
-        var userAutocomplete = new UserAutoCompleter('requester', tuleap.imgroot);
-        prjAutocomplete.registerOnLoad();
-        userAutocomplete.registerOnLoad();
+/**
+ * A swimline in the dashboard
+ */
+class Cardwall_Swimline {
+
+    /**
+     * @var TreeNode
+     */
+    public $node;
+
+    /**
+     * @var array
+     */
+    public $cells = array();
+
+    /**
+     * @param string $title
+     * @param array  $cells
+     */
+    public function __construct(TreeNode $node, array $cells) {
+        $this->node  = $node;
+        $this->cells = $cells;
     }
-});
+}
+?>

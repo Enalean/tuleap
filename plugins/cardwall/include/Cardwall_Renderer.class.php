@@ -212,11 +212,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         //echo $sql;
         $dao = new DataAccessObject();
         
-        $nifty = Toggler::getClassname('tracker_renderer_board-nifty') == 'toggler' ? 'nifty' : false;
-        $html .= '<div class="tracker_renderer_board '. $nifty .'">';
+        $nifty = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
+        $html .= '<div class="cardwall_board '. $nifty .'">';
         
-        $html .= '<label id="tracker_renderer_board-nifty">';
-        $html .= '<input type="checkbox" onclick="$(this).up(\'div.tracker_renderer_board\').toggleClassName(\'nifty\'); new Ajax.Request(\'/toggler.php?id=tracker_renderer_board-nifty\');" ';
+        $html .= '<label id="cardwall_board-nifty">';
+        $html .= '<input type="checkbox" onclick="$(this).up(\'div.cardwall_board\').toggleClassName(\'nifty\'); new Ajax.Request(\'/toggler.php?id=cardwall_board-nifty\');" ';
         if ($nifty) {
             $html .= 'checked="checked"';
         }
@@ -226,10 +226,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
         
+        $drop_into = '';
         if ($field) {
             $html .= '<colgroup>';
             foreach ($values as $key => $value) {
-                $html .= '<col id="tracker_renderer_board_column-'. (int)$value->getId() .'" />';
+                $html .= '<col id="cardwall_board_column-'. (int)$value->getId() .'" />';
+                $drop_into .= ' drop-into-'. (int)$value->getId();
             }
             $html .= '</colgroup>';
             
@@ -271,9 +273,16 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '<ul>';
             foreach ($cards as $row) {
                 if (!$field || $row['col'] == $value->getId()) {
-                    $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$row['id'] .'">';
-                    $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a></p>';
-                    $html .= '<p class="tracker_renderer_board_content"> '. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId()) .'</p>';
+                    $html .= '<li class="cardwall_board_postit '. $drop_into .'" id="cardwall_board_postit-'. (int)$row['id'] .'">';
+                    // TODO: use mustache templates?
+                    $html .= '<div class="card">';
+                    $html .= '<div class="card-actions">';
+                    $html .= '<a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a>'; // TODO: Use artifact->getUrl or similar?
+                    $html .= '</div>';
+                    $html .= '<div class="cardwall_board_content">';
+                    $html .= $hp->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId());
+                    $html .= '</div>';
+                    $html .= '</div>';
                     $html .= '</li>';
                 }
             }

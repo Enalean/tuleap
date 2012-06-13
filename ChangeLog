@@ -11,17 +11,20 @@ Version 5.2 (Not Released Yet)
 	* Update "IndicateurCodex" perl script to take git into account
 
 	== Plugins ==
-	* Cardwall: 0.5.1
-	* Tracker: 5.7.23
-	* Agildashboard: 0.29
+	* Cardwall: 0.5.2
+	* Tracker: 5.7.24
+	* Agildashboard: 0.30
 	* Docman: 2.25.7
 	* Git: 2.5.6
 	* Ldap: 3.14
-	* Statistics: 0.15
+	* Statistics: 0.16
 	* FullTextSearch: 0.4
 
         == CLI ==
         * Version 1.5.1
+
+	== Development ==
+	* Add bootstrap css for tabs and pills
 
 Version 5.1 (Wednesday, May 23rd 2012)
    == Enhancement ==

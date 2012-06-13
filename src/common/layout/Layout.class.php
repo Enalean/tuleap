@@ -2086,7 +2086,17 @@ document.observe('dom:loaded', function() {
      * @return string <img src="/themes/CodeXTab/images/trash.png" alt="Beautiful image" />
      */
     function getImage($src, $args = array()) {
-        $return = '<img src="'. $this->getImagePath($src) .'"';
+        return $this->getAbsoluteImage($this->getImagePath($src), $args);
+    }
+    
+    /**
+     * Same as getImage but with absolute path to the image.
+     * Usefull for plugin related image for example
+     *
+     * @see getImage
+     */
+    function getAbsoluteImage($src, $args = array()) {
+        $return = '<img src="'. $src .'"';
         foreach($args as $k => $v) {
             $return .= ' '.$k.'="'.$v.'"';
         }
