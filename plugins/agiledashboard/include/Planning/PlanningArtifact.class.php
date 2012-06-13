@@ -19,7 +19,7 @@
  */
 
 require_once 'PlanningItem.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Tracker_Artifact.class.php';
 
 /**
  * Allows using artifacts as planning items.
