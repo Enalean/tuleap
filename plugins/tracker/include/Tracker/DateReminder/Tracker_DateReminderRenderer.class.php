@@ -104,7 +104,7 @@ class Tracker_DateReminderRenderer {
             $disabled = "selected";
         }
         $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
-        $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
+        $output .= '<INPUT TYPE="HIDDEN" NAME="reminder_id" VALUE="'.$reminderId.'">
                     <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
@@ -262,8 +262,7 @@ class Tracker_DateReminderRenderer {
         $titles           = array('Reminder',
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
-                                  'Edit',
-                                  $GLOBALS['Language']->getText('global', 'delete'));
+                                  'Edit');
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
         if (!empty($trackerReminders)) {
@@ -275,8 +274,7 @@ class Tracker_DateReminderRenderer {
                 print '</td>';
                 print '<td>'.$reminder->getReminderStatusLabel().'</td>';
                 print '<td>'.$reminder->getNotificationTypeLabel().'</td>';
-                print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;reminder_id='.$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
-                print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+                print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
                 print '</tr>';
             }
             print '</TABLE>';
