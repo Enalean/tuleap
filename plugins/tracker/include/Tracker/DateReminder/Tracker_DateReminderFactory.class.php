@@ -66,7 +66,7 @@ class Tracker_DateReminderFactory {
     /**
      * Add new reminder
      * 
-     * @param HTTPRequest $request request object
+     * @param HTTPRequest $request Request object
      *
      * @return Boolean
      */
@@ -88,7 +88,7 @@ class Tracker_DateReminderFactory {
     /**
      * Edit a given date reminder
      *
-     * @param Integer $reminderId Id of the reminder
+     * @param HTTPRequest $request Reminder edit request
      *
      * @return Boolean
      */
@@ -100,8 +100,8 @@ class Tracker_DateReminderFactory {
         $ugroups            = join(",", $request->get('reminder_ugroup'));
         $distance           = $request->get('distance');
         $status             = $request->get('notif_status');
-        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-        //$historyDao->groupAddHistory("tracker_date_reminder_edit", $this->tracker->getName(), $this->tracker->getGroupId(), $remindersIds);
+        $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->tracker->getName().":".$reminderId, $this->tracker->getGroupId(), array($reminderId, $notificationType, $ugroups, $distance, $status));
         $reminderManagerDao = $this->getDao();
         $reminderManagerDao->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
         }
