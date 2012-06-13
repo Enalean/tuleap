@@ -1,3 +1,6 @@
+Version 0.31 - Tuleap 5.2
+	* Fix fatal erro while duplicating planning
+
 Version 0.30 - Tuleap 5.2
 	* Allow plugins to add panes in the dashboard (on a milestone)
 
