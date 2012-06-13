@@ -22,6 +22,20 @@ require_once 'Item.class.php';
 
 class Planning_ArtifactPresenter {
     
+    /**
+     * @var Planning_Item
+     */
+    private $planning_item;
+    
+    /**
+     * @var string
+     */
+    private $css_classes;
+    
+    /**
+     * @param Planning_Item $planning_item The planning item to be presented.
+     * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
+     */
     public function __construct(Planning_Item $planning_item, $css_classes = '') {
         $this->planning_item = $planning_item;
         $this->css_classes   = $css_classes;
