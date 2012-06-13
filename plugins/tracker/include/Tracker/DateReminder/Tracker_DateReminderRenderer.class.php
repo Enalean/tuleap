@@ -266,19 +266,21 @@ class Tracker_DateReminderRenderer {
                                   $GLOBALS['Language']->getText('global', 'delete'));
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
-        print html_build_list_table_top($titles);
-        foreach ($trackerReminders as $reminder) {
-            print '<tr class="'.util_get_alt_row_color($i++).'">';
-            print '<td>';
-            print $reminder;
-            print '</td>';
-            print '<td>'.$reminder->getReminderStatusLabel().'</td>';
-            print '<td>'.$reminder->getNotificationTypeLabel().'</td>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
-            print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
-            print '</tr>';
+        if (!empty($trackerReminders)) {
+            print html_build_list_table_top($titles);
+            foreach ($trackerReminders as $reminder) {
+                print '<tr class="'.util_get_alt_row_color($i++).'">';
+                print '<td>';
+                print $reminder;
+                print '</td>';
+                print '<td>'.$reminder->getReminderStatusLabel().'</td>';
+                print '<td>'.$reminder->getNotificationTypeLabel().'</td>';
+                print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
+                print '<td><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></td>';
+                print '</tr>';
+            }
+            print '</TABLE>';
         }
-        print '</TABLE>';
     }
 
     /**
