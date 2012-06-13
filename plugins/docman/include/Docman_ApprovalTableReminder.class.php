@@ -128,36 +128,31 @@ class Docman_ApprovalTableReminder {
      * @return Boolean
      */
     private function notifyIndividual(Docman_ApprovalTable $table, $reviewerId) {
+        $hp            = Codendi_HTMLPurifier::instance();
+
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
-        $mail     = $this->prepareMailReminder($table, $reviewer);
-        return $this->sendMailReminder($mail, array($reviewer->getEmail()));
-    }
 
-    /**
-     * Prepare the mail reminder
-     *
-     * @param Docman_ApprovalTable $table    Approval table
-     * @param User                 $reviewer User to remind
-     *
-     * @return Mail
-     */
-    private function prepareMailReminder(Docman_ApprovalTable $table, User $reviewer) {
         $itemFactory = new Docman_ItemFactory();
-        $docmanItem  = $itemFactory->getItemFromDb($table->itemId);
+        $docmanItem  = $itemFactory->getItemFromDb(20);
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
 
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
-        switch ($mailPrefs) {
-            case Codendi_Mail_Interface::FORMAT_HTML :
-                $mail = $this->createHTMLMailForReviewer($table, $docmanItem, $subject);
-                break;
-            default :
-                $mail = $this->createMailForReviewer($table, $docmanItem, $subject);
-                break;
+        
+        $mail          = new Codendi_Mail();
+        if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
+                $htmlBody = $this->getBodyHtml($table, $docmanItem);
+                $mail->setBodyHtml($htmlBody);
         }
-        return $mail;
+        $txtBody = $this->getBodyText($table, $docmanItem);
+        $mail->setBody($txtBody);
+
+        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo($reviewer->getEmail());
+        $mail->setSubject($subject);
+        return $mail->send();
     }
 
     /**
@@ -257,7 +252,7 @@ class Docman_ApprovalTableReminder {
         $pm    = ProjectManager::instance();
         return $pm->getProject($docmanItem->getGroupId());
     }
-
+    
     /**
      * Creates the text mail body
      *
@@ -267,7 +262,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Mail
      */
-    private function createMailForReviewer(Docman_ApprovalTable $table, $docmanItem, $subject) {
+    private function getBodyText(Docman_ApprovalTable $table, Docman_Item $docmanItem) {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
@@ -280,10 +275,7 @@ class Docman_ApprovalTableReminder {
                                                               $this->getReviewUrl($docmanItem),
                                                               $owner->getEmail()));
 
-        $mail = new Mail();
-        $mail->setSubject($subject);
-        $mail->setBody($body);
-        return $mail;
+        return $body;
     }
 
     /**
@@ -295,7 +287,7 @@ class Docman_ApprovalTableReminder {
      *
      * @return Codendi_Mail
      */
-    private function createHTMLMailForReviewer(Docman_ApprovalTable $table, Docman_Item $docmanItem, String $subject) {
+    private function getBodyHtml(Docman_ApprovalTable $table, Docman_Item $docmanItem) {
         $group = $this->getItemProject($docmanItem);
         $owner = $this->getApprovalTableOwner($table);
 
@@ -308,22 +300,7 @@ class Docman_ApprovalTableReminder {
                                                               $this->getReviewUrl($docmanItem),
                                                               $owner->getEmail()));
 
-        $mail = new Codendi_Mail();
-        $mail->setSubject($subject);
-        $mail->setBodyHtml($body);
-        return $mail;
-    }
-
-    /**
-     * Send mail reminder to reviewers
-     *
-     * @param Codendi_Mail_Interface $mail
-     * @param Array                  $to
-     */
-    private function sendMailReminder(Codendi_Mail_Interface $mail, Array $to) {
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setTo(join(',', $to));
-        return $mail->send();
+        return $body;
     }
 
     /**
@@ -344,7 +321,7 @@ class Docman_ApprovalTableReminder {
                 unset($reviewer);
             }
         }
-     }
+    }
 
 }
 
