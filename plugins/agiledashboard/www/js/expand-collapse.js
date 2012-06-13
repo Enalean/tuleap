@@ -9,16 +9,15 @@ tuleap.agiledashboard.planning.TreeView = Class.create({
         this.linkSelector = '.toggle-collapse';
         
         if (this.root !== null ) {
-            /* private method binded as event listener */
-            function _eventOnNode(event) {
-                this.toggleCollapse(Event.element(event).up(this.nodeSelector));
-                Event.stop(event);
-            };
             this.collapseAll();
-            this.root.select(this.nodeSelector + ' ' + this.linkSelector).invoke('observe', 'click', _eventOnNode.bindAsEventListener(this));
+            this.root.select(this.nodeSelector + ' ' + this.linkSelector).invoke('observe', 'click', this._eventOnNode.bindAsEventListener(this));
         }
     },
-    
+    // Handle event observe for expand/collapse
+    _eventOnNode: function (event) {
+        this.toggleCollapse(Event.element(event).up(this.nodeSelector));
+        Event.stop(event);
+    },
     collapseAll: function() {
         this.root.getElementsBySelector(this.nodeSelector).each(this.collapse, this);
         return this;
