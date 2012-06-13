@@ -134,29 +134,30 @@ class Docman_ApprovalTableReminder {
         $reviewer = $um->getUserById($reviewerId);
 
         $itemFactory = new Docman_ItemFactory();
-        $docmanItem  = $itemFactory->getItemFromDb(20);
+        $docmanItem  = $itemFactory->getItemFromDb($table->getItemId());
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
 
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($reviewer);
-        
+
         $mail          = new Codendi_Mail();
+        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo($reviewer->getEmail());
+        $mail->setSubject($subject);
+
         if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
                 $htmlBody = $this->getBodyHtml($table, $docmanItem);
                 $mail->setBodyHtml($htmlBody);
         }
         $txtBody = $this->getBodyText($table, $docmanItem);
-        $mail->setBody($txtBody);
+        $mail->setBodyText($txtBody);
 
-        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setTo($reviewer->getEmail());
-        $mail->setSubject($subject);
         return $mail->send();
     }
 
     /**
-     * Retrieve approval table url for a given docmna item
+     * Retrieve approval table url for a given docman item
      *
      * @param Docman_Item $docmanItem Item to be approved
      *
