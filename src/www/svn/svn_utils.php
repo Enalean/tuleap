@@ -743,6 +743,49 @@ function svn_utils_check_access($username, $gname, $svnpath) {
   }
 }
 
+function svn_utils_check_write_access($username, $gname, $svnpath) {
+  global $SVNACCESS, $SVNGROUPS;
+
+  if ( (user_getname()==$username) && (user_is_super_user())) return true;
+
+  $em =& EventManager::instance();
+  $em->processEvent('svn_check_access_username', array('username'  => &$username,
+                                                       'groupname' => $gname));
+  $username = strtolower($username);
+
+  if ($SVNACCESS == "None") {
+    svn_utils_parse_access_file($gname);
+  }
+
+  $perm = '';
+  $path = '/'.$svnpath;
+  while (true) {
+    if (array_key_exists($username,$SVNACCESS) && array_key_exists($path, $SVNACCESS[$username])) {
+      $perm = $SVNACCESS[$username][$path];
+      //echo "match: SVNACCESS[$username][$path] $perm";
+      break;
+    } else if (array_key_exists('*',$SVNACCESS) && array_key_exists($path,$SVNACCESS['*'])) {
+      $perm = $SVNACCESS['*'][$path];
+      //echo "match: SVNACCESS[*][$path] $perm";
+      break;
+    } else {
+      // see if it maches higher in the path
+      if ($path == '/') break;
+      $idx = strrpos($path,'/');
+        if ($idx == 0) {
+          $path = '/';
+        } else {
+          $path = substr($path,0,$idx);
+        }
+    }
+  }
+  if (strpos($perm,'w') === false) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function svn_utils_is_there_specific_permission($gname) {
     $specifics = svn_utils_read_svn_access_file($gname);
     return !$specifics || $specifics != '';
