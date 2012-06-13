@@ -263,7 +263,7 @@ class Tracker_DateReminder {
         $ugroupManager  = new UGroupManager();
         $ugroups        = explode(',', $this->ugroups);
         foreach ($ugroups as $ugroup) {
-            $ugroupsLabel  .= ' "'.$ugroupManager->getById($ugroup)->getName().' "';
+            $ugroupsLabel  .= ' "'.util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()).' "';
         }
         return $this->distance.' day(s) '.$notificationTypeLabel.$fieldLabel.' send an email to '.$ugroupsLabel;
     }
