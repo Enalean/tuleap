@@ -22,7 +22,7 @@ require_once 'Item.class.php';
 
 class Planning_ArtifactPresenter {
     
-    public function __construct(Planning_Item $planning_item, $css_classes='') {
+    public function __construct(Planning_Item $planning_item, $css_classes = '') {
         $this->planning_item = $planning_item;
         $this->css_classes   = $css_classes;
     }
