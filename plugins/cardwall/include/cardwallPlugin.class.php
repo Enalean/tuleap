@@ -35,12 +35,19 @@ class cardwallPlugin extends Plugin {
             $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
             $this->_addHook(TRACKER_EVENT_ADMIN_ITEMS,           'tracker_event_admin_items',         false);
             $this->_addHook(TRACKER_EVENT_PROCESS,               'tracker_event_process',             false);
+            $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED,   'tracker_event_trackers_duplicated', false);
             
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
             }
         }
         return parent::getHooksAndCallbacks();
+    }
+
+    public function tracker_event_trackers_duplicated($params) {
+        foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
+            $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
+        }
     }
 
     /**

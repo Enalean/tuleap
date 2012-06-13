@@ -20,7 +20,7 @@
 
 
 class Cardwall_OnTopDao extends DataAccessObject {
-    
+
     /**
      * @return boolean
      */
@@ -33,18 +33,28 @@ class Cardwall_OnTopDao extends DataAccessObject {
         $result = $this->retrieve($sql);
         return $result && count($result) == 1;
     }
-    
+
     public function enable($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "REPLACE INTO plugin_cardwall_on_top
                 VALUES ($tracker_id)";
         return $this->update($sql);
     }
-    
+
     public function disable($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "DELETE FROM plugin_cardwall_on_top
                 WHERE tracker_id = $tracker_id";
+        return $this->update($sql);
+    }
+
+    public function duplicate($from_tracker_id, $to_tracker_id) {
+        $from_tracker_id = $this->da->escapeInt($from_tracker_id);
+        $to_tracker_id   = $this->da->escapeInt($to_tracker_id);
+        $sql = "REPLACE INTO plugin_cardwall_on_top
+                SELECT $to_tracker_id
+                FROM plugin_cardwall_on_top
+                WHERE tracker_id = $from_tracker_id";
         return $this->update($sql);
     }
 }
