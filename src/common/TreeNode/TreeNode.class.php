@@ -241,7 +241,7 @@ class TreeNode /*implements Visitable*/ {
     }
 
     /**
-     * @return array A flat list of all descendant nodes.
+     * @return array A flat list of all descendant nodes (usefull for tests).
      */
     public function flattenChildren() {
         $flatten_children = array();
@@ -254,7 +254,7 @@ class TreeNode /*implements Visitable*/ {
     }
     
     /**
-     * @return array A flat list of this node and all its descendants.
+     * @return array A flat list of this node and all its descendants (usefull for tests).
      */
     private function flatten() {
         return array_merge(array($this), $this->flattenChildren());
