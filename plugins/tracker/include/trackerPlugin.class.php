@@ -479,8 +479,7 @@ class trackerPlugin extends Plugin {
      */
     function fillProjectHistorySubEvents($params) {
         array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',
-                                                         'tracker_date_reminder_update',
-                                                         'tracker_date_reminder_delete',
+                                                         'tracker_date_reminder_edit',
                                                          'tracker_date_reminder_sent'
         );
     }
