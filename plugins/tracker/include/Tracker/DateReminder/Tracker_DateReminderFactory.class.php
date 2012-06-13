@@ -86,18 +86,25 @@ class Tracker_DateReminderFactory {
     }
 
     /**
-     * Delete a list of date reminders
+     * Edit a given date reminder
      *
-     * @param Array $remindersIds List of Id of reminders
+     * @param Integer $reminderId Id of the reminder
      *
      * @return Boolean
      */
-    public function deleteTrackerReminders($remindersIds) {
+    public function editTrackerReminder($request) {
+        //$this->csrf->check();
+        $reminderRenderer   = new Tracker_DateReminderRenderer($this->tracker);
+        $reminderId         = $request->get('reminder_id');
+        $notificationType   = $request->get('notif_type');
+        $ugroups            = join(",", $request->get('reminder_ugroup'));
+        $distance           = $request->get('distance');
+        $status             = $request->get('notif_status');
         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-        $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), $remindersIds);
+        //$historyDao->groupAddHistory("tracker_date_reminder_edit", $this->tracker->getName(), $this->tracker->getGroupId(), $remindersIds);
         $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->deleteReminders($remindersIds);
-    }
+        $reminderManagerDao->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
+        }
 
     /**
      * Build a reminder instance
