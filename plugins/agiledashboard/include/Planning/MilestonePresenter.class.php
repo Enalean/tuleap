@@ -53,6 +53,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public $planning_redirect_parameter;
     
     /**
+     * @var array
+     */
+    private $additional_panes = array();
+    
+    /**
      * Instanciates a new presenter.
      * 
      * TODO:
@@ -90,16 +95,21 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         return !is_a($this->milestone, 'Planning_NoMilestone');
     }
 
+    /**
+     * @return bool
+     */
     public function isPlannerPaneActive() {
         $this->getAdditionalPanes();
         return $this->is_planner_pane_active;
     }
 
+    /**
+     * @return array
+     */
     public function additionalPanes() {
         return $this->getAdditionalPanes();
     }
 
-    private $additional_panes = array();
     private function getAdditionalPanes() {
         if (empty($this->additional_panes)) {
             $this->additional_panes = array();
@@ -127,7 +137,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     /**
      * @return TreeNode
      */
-    public function buildPlannedArtifactsTree($child_depth = 1) {
+    private function buildPlannedArtifactsTree($child_depth = 1) {
         $root_node = null;
         
         if ($this->canAccessPlannedItem()) {

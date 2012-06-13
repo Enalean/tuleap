@@ -48,6 +48,13 @@ class Cardwall_PaneContentPresenter {
     public $swimline_title = '';
 
     /**
+     * Say if the swimlines should display their header on top of them
+     *
+     * @var bool
+     */
+    public $has_swimline_header = true;
+
+    /**
      * @param array $swimlines Array of TreeNode
      * @param array $columns   Array of Cardwall_Column
      * @param array $mappings  Cardwall_MappingCollection
@@ -57,10 +64,6 @@ class Cardwall_PaneContentPresenter {
         $this->swimlines      = $swimlines;
         $this->columns        = $columns;
         $this->mappings       = $mappings;
-    }
-
-    public function hasSwimlineHeader() {
-        return true;
     }
 }
 ?>

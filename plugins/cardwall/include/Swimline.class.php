@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * A swimline in the dashboard
+ */
 class Cardwall_Swimline {
 
     /**

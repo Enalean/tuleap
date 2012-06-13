@@ -4,9 +4,9 @@
     {{/mappings}}
     <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
         <colgroup>
-            {{#hasSwimlineHeader}}
+            {{#has_swimline_header}}
                 <col />
-            {{/hasSwimlineHeader}}
+            {{/has_swimline_header}}
             {{#columns}}
                 <col id="cardwall_board_column-{{id}}" />
             {{/columns}}
@@ -14,9 +14,9 @@
 
         <thead>
             <tr>
-                {{#hasSwimlineHeader}}
+                {{#has_swimline_header}}
                     <th>{{swimline_title}}</th>
-                {{/hasSwimlineHeader}}
+                {{/has_swimline_header}}
                 {{#columns}}
                     <th style="background-color: {{bgcolor}}; color: {{fgcolor}}">{{label}}</th>
                 {{/columns}}
@@ -26,7 +26,7 @@
         <tbody>
             {{#swimlines}}
                 <tr valign="top">
-                    {{#hasSwimlineHeader}}
+                    {{#has_swimline_header}}
                         {{#node}}
                             {{#getData}}
                                 <td>
@@ -36,7 +36,7 @@
                                 </td>
                             {{/getData}}
                         {{/node}}
-                    {{/hasSwimlineHeader}}
+                    {{/has_swimline_header}}
                     {{#cells}}
                         <td>
                             <ul>

@@ -19,36 +19,31 @@
  */
 
 /**
- * Foreach artifact in a TreeNode, inject the id of the field used for the status semantic
+ * Foreach artifact in a TreeNode, inject the drop-into-* classnames depending 
+ * on the column_field_id defined.
  */
-class Cardwall_InjectColumnIdVisitor {
+class Cardwall_InjectDropIntoClassnamesVisitor {
 
     /**
-     * @var array Accumulated array of Tracker_FormElement_Field_Selectbox
+     * @var Cardwall_MappingCollection
      */
-    private $accumulated_status_fields = array();
+    private $mappings;
+
+    public function __construct(Cardwall_MappingCollection $mappings) {
+        $this->mappings = $mappings;
+    }
 
     public function visit(TreeNode $node) {
-        $data    = $node->getData();
-        $tracker = $data['artifact']->getTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        $data['column_field_id'] = 0;
-        if ($field) {
-            $field_id                = $field->getId();
-            $data['column_field_id'] = $field_id;
-            $this->accumulated_status_fields[$field_id] = $field;
+        $data     = $node->getData();
+        $mappings = $this->mappings->getMappingsByFieldId($data['column_field_id']);
+        $data['drop-into-class'] = '';
+        foreach ($mappings as $mapping) {
+            $data['drop-into-class'] .= ' drop-into-'. $mapping->column_id;
         }
         $node->setData($data);
         foreach ($node->getChildren() as $child) {
             $child->accept($this);
         }
-    }
-
-    /**
-     * @return array Accumulated array of Tracker_FormElement_Field_Selectbox
-     */
-    public function getAccumulatedStatusFields() {
-        return $this->accumulated_status_fields;
     }
 }
 ?>

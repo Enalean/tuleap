@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * A column in a cardwall
+ */
 class Cardwall_Column {
 
     /**

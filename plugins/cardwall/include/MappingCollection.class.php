@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Collection of Cardwall_Mapping
+ */
 class Cardwall_MappingCollection implements IteratorAggregate {
 
     /**

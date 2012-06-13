@@ -25,7 +25,11 @@ require_once 'Swimline.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
+require_once 'InjectDropIntoClassnamesVisitor.class.php';
 
+/**
+ * A pane to be displayed in AgileDashboard
+ */
 class Cardwall_Pane extends AgileDashboard_Pane {
 
     /**
@@ -41,28 +45,12 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
 
-        $visitor = new Cardwall_InjectColumnIdVisitor();
-        $this->milestone->getPlannedArtifacts()->accept($visitor);
-        $this->accumulated_status_fields = $visitor->getAccumulatedStatusFields();
+        $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
+        $this->milestone->getPlannedArtifacts()->accept($column_id_visitor);
+        $this->accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
 
-        $this->milestone->getPlannedArtifacts()->accept($this);
-    }
-
-    public function visit(TreeNode $node) {
-        $this->injectDropIntoClassnames($node);
-    }
-
-    private function injectDropIntoClassnames(TreeNode $node) {
-        $data     = $node->getData();
-        $mappings = $this->getMapping()->getMappingsByFieldId($data['column_field_id']);
-        $data['drop-into-class'] = '';
-        foreach ($mappings as $mapping) {
-            $data['drop-into-class'] .= ' drop-into-'. $mapping->column_id;
-        }
-        $node->setData($data);
-        foreach ($node->getChildren() as $child) {
-            $child->accept($this);
-        }
+        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->getMapping());
+        $this->milestone->getPlannedArtifacts()->accept($drop_into_visitor);
     }
 
     /**
@@ -84,7 +72,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     public function getContent() {
         if (! $this->getField()) {
-            return 'Y u no configure the status semantic of ur tracker?';
+            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
 
         $columns       = $this->getColumns();
@@ -148,22 +136,23 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $decorators    = $field->getBind()->getDecorators();
         $this->columns = array();
         foreach ($values as $value) {
-            $id = (int)$value->getId();
-            $bgcolor = 'white';
-            $fgcolor = 'black';
-            if (isset($decorators[$id])) {
-                $r = $decorators[$id]->r;
-                $g = $decorators[$id]->g;
-                $b = $decorators[$id]->b;
-                if ($r !== null && $g !== null && $b !== null ) {
-                    //choose a text color to have right contrast (black on dark colors is quite useless)
-                    $bgcolor = 'rgb('. (int)$r .', '. (int)$g .', '. (int)$b .');';
-                    $fgcolor = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
-                }
-            }
-            $this->columns[] = new Cardwall_Column($id, $value->getLabel(), $bgcolor, $fgcolor);
+            list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
+
+            $this->columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
         }
         return $this->columns;
+    }
+
+    private function getColumnColors($value, $decorators) {
+        $id      = (int)$value->getId();
+        $bgcolor = 'white';
+        $fgcolor = 'black';
+        if (isset($decorators[$id])) {
+            $bgcolor = $decorators[$id]->css($bgcolor);
+            //choose a text color to have right contrast (black on dark colors is quite useless)
+            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
+        }
+        return array($bgcolor, $fgcolor);
     }
 
     private function getFieldValues(Tracker_FormElement_Field_Selectbox $field) {
