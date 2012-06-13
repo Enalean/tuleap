@@ -108,6 +108,7 @@ class Tracker_DateReminderFactory {
 
     /**
      * Build a reminder instance
+     * @TODO: check if this is not an old duplicate of the code in Tracker_DateReminderManager
      *
      * @param array $row The data describing the reminder
      *
