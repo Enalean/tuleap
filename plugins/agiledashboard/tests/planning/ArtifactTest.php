@@ -19,12 +19,12 @@
  */
 
 require_once 'PlanningItemTestCase.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningArtifact.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/Artifact.class.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aTracker.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
-class PlanningArtifactTest extends PlanningItemTestCase {
+class Planning_ArtifactTest extends PlanningItemTestCase {
     
     private $epics_tracker;
     private $stories_tracker;
@@ -56,7 +56,7 @@ class PlanningArtifactTest extends PlanningItemTestCase {
         $this->story = aMockArtifact()->withTracker($this->stories_tracker)
                                       ->build();
         
-        $this->item = new PlanningArtifact($this->epic, $this->planning);
+        $this->item = new Planning_Artifact($this->epic, $this->planning);
     }
     
     public function itIsPlannifiableIfItsTrackerMatchesThePlanningOne() {
@@ -65,7 +65,7 @@ class PlanningArtifactTest extends PlanningItemTestCase {
     }
     
     public function itIsNotPlannifiableIfItsTrackerDoesNotMatchThePlanningBacklogTracker() {
-        $this->item = new PlanningArtifact($this->story, $this->planning);
+        $this->item = new Planning_Artifact($this->story, $this->planning);
         $this->assertFalse($this->item->isPlannifiable());
     }
 }

@@ -19,8 +19,8 @@
  */
 
 require_once 'Planning.class.php';
-require_once 'PlanningArtifact.class.php';
-require_once 'PlanningArtifactPresenter.class.php';
+require_once 'Artifact.class.php';
+require_once 'ArtifactPresenter.class.php';
 
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
@@ -70,8 +70,8 @@ class Planning_ArtifactTreeNodeVisitor {
         $artifact = $this->getArtifact($node);
         
         if ($artifact) {
-            $planning_artifact = new PlanningArtifact($artifact, $this->planning);
-            $presenter         = new PlanningArtifactPresenter($planning_artifact, $this->classname);
+            $planning_artifact = new Planning_Artifact($artifact, $this->planning);
+            $presenter         = new Planning_ArtifactPresenter($planning_artifact, $this->classname);
             
             $node->setObject($presenter);
         }

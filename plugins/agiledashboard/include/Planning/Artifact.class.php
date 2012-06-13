@@ -24,7 +24,7 @@ require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Tracker_Artifact.class.php';
 /**
  * Allows using artifacts as planning items.
  */
-class PlanningArtifact extends Planning_Item {
+class Planning_Artifact extends Planning_Item {
     
     /**
      * @var Tracker_Artifact
