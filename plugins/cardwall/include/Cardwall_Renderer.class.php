@@ -118,21 +118,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $this->columns = array();
         $column_sql_select = '';
         $column_sql_from   = '';
-        $values            = array(1);
         if ($field) {
-            $values = $field->getAllValues();
-            foreach ($values as $key => $value) {
-                if ($value->isHidden()) {
-                    unset($values[$key]);
-                }
-            }
-            if (count($values)) {
-               if (!$field->isRequired()) {
-                   $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
-                   $values = array_merge(array($none), $values);
-               }
-            }
-            
+            $values     = $this->getFieldValues($field);
             $decorators = $field->getBind()->getDecorators();
             foreach ($values as $key => $value) {
                 list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
