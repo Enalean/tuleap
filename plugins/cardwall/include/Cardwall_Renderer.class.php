@@ -22,7 +22,7 @@ require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.ph
 require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
 require_once 'Column.class.php';
-require_once 'Swimline.class.php';
+require_once 'SwimlineFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'Mapping.class.php';
@@ -162,9 +162,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->getMapping());
         $root->accept($drop_into_visitor);
         
-        $swimlines = array(
-            new Cardwall_Swimline(new TreeNode(), $this->getCells($this->columns, $root->getChildren()))
-        );
+        $swimline_factory = new Cardwall_SwimlineFactory();
+        $swimlines = $swimline_factory->getSwimlines($this->columns, array($root));
+
         $qrcode        = $this->getQrCode();
         $mappings      = $this->getMapping();
         $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode, $field, $form);
@@ -240,36 +240,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             );
         }
         return false;
-    }
-
-    private function getCells(array $columns, array $nodes) {
-        $cells = array();
-        foreach ($columns as $column) {
-            $cells[] = $this->getCell($column, $nodes);
-        }
-        return $cells;
-    }
-
-    private function getCell(Cardwall_Column $column, array $nodes) {
-        $artifacts = array();
-        foreach ($nodes as $node) {
-            $this->addNodeToCell($node, $column, $artifacts);
-        }
-        return array('artifacts' => $artifacts);;
-    }
-
-    private function addNodeToCell(TreeNode $node, Cardwall_Column $column, array &$artifacts) {
-        $data            = $node->getData();
-        $artifact        = $data['artifact'];
-        $artifact_status = $artifact->getStatus();
-        if ($this->isArtifactInCell($artifact, $column)) {
-            $artifacts[] = $node;
-        }
-    }
-
-    private function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
-        $artifact_status = $artifact->getStatus();
-        return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
     
     /*----- Implements below some abstract methods ----*/

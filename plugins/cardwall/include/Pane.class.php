@@ -21,7 +21,7 @@ require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'Column.class.php';
-require_once 'Swimline.class.php';
+require_once 'SwimlineFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
@@ -87,10 +87,12 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
 
+        $swimline_factory = new Cardwall_SwimlineFactory();
+
         $qrcode        = $this->getQrCode();
         $columns       = $this->getColumns();
         $mappings      = $this->getMapping();
-        $swimlines     = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
+        $swimlines     = $swimline_factory->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
         $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
 
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
@@ -187,45 +189,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             }
         }
         return $values;
-    }
-
-    private function getSwimlines(array $columns, array $nodes) {
-        $swimlines = array();
-        foreach ($nodes as $child) {
-            $cells = $this->getCells($columns, $child->getChildren());
-            $swimlines[] = new Cardwall_Swimline($child, $cells);
-        }
-        return $swimlines;
-    }
-
-    private function getCells(array $columns, array $nodes) {
-        $cells = array();
-        foreach ($columns as $column) {
-            $cells[] = $this->getCell($column, $nodes);
-        }
-        return $cells;
-    }
-
-    private function getCell(Cardwall_Column $column, array $nodes) {
-        $artifacts = array();
-        foreach ($nodes as $node) {
-            $this->addNodeToCell($node, $column, $artifacts);
-        }
-        return array('artifacts' => $artifacts);;
-    }
-
-    private function addNodeToCell(TreeNode $node, Cardwall_Column $column, array &$artifacts) {
-        $data            = $node->getData();
-        $artifact        = $data['artifact'];
-        $artifact_status = $artifact->getStatus();
-        if ($this->isArtifactInCell($artifact, $column)) {
-            $artifacts[] = $node;
-        }
-    }
-
-    private function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
-        $artifact_status = $artifact->getStatus();
-        return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
 }
 ?>
