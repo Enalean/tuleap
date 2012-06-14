@@ -62,8 +62,7 @@ class Tracker_DateReminderRenderer {
      */
     public function getNewDateReminderForm() {
         $output = '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
-        $output .= '<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$this->tracker->group_id.'">
-                    <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+        $output .= '<INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
@@ -146,9 +145,9 @@ class Tracker_DateReminderRenderer {
         $output  = '<SELECT NAME="reminder_ugroup[]" multiple>';
         while($row = db_fetch_array($res)) {
             if ($selectedUgroups && in_array($row['ugroup_id'], $selectedUgroups)) {
-                $output .= '<OPTION VALUE="'.$row['ugroup_id'].'" selected>'.util_translate_name_ugroup($row['name']).'</OPTION>';
+                $output .= '<OPTION VALUE="'.intval($row['ugroup_id']).'" selected>'.util_translate_name_ugroup($row['name']).'</OPTION>';
             } else {
-                $output .= '<OPTION VALUE="'.$row['ugroup_id'].'wxop">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+                $output .= '<OPTION VALUE="'.intval($row['ugroup_id']).'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
             }
         }
         $output  .= '</SELECT>';
@@ -281,25 +280,34 @@ class Tracker_DateReminderRenderer {
     
     /**
      * Validate ugroup list param used for tracker reminder.
-     * //TODO validate an array of ugroups Ids
+     * @TODO write less, write better
      *
      * @param HTTPRequest $request HTTP request
      *
-     * @return Integer
+     * @return Array
      */
     public function validateReminderUgroups(HTTPRequest $request) {
-        $ugroupIds = $request->get('reminder_ugroup');
-        /*$validUgroupId = new Valid_WhiteList('reminder_ugroup');
-        $validUgroupId->required();
-        $ugroupIds     = array()
-        if ($request->valid($validUgroupId)) {
-            $ugroupIds[] = $request->get('reminder_ugroup');
+        $groupId = $this->getTracker()->getGroupId();
+        $ugs       = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $ugroupIds = array();
+        while ($row = db_fetch_array($ugs)) {
+            $ugroupIds[] = intval($row['ugroup_id']);
+        }
+        $validUgroupIds = array();
+        foreach ($ugroupIds as $ugroup) {
+            if (in_array($ugroup, $ugroupIds)) {
+                $validUgroupIds[] = $ugroup;
+            } else {
+                $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_ugroup', array($ugroup));
+                throw new Tracker_DateReminderException($errorMessage);
+            }
+        }
+        if(!empty($validUgroupIds)) {
+            return $validUgroupIds;
         } else {
-            $errorMessage = $request->get('notif_status').' is not a valid status !!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_status', array($request->get('notif_status')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_empty_ugroup_param');
             throw new Tracker_DateReminderException($errorMessage);
-        }*/
-        return $ugroupIds;
+        }
     }
 
     /**

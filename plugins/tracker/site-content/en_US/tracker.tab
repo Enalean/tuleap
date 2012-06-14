@@ -1363,3 +1363,4 @@ project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' is not 
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' is not a valid Reminder Status
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' is not a valid Date Reminder
 project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugroup
+project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup

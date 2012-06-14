@@ -1360,3 +1360,4 @@ project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' n'est p
 project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un status valide
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur champs date valide 
 project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugroup valide
+project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez selectionner au moins un ugroup valide
