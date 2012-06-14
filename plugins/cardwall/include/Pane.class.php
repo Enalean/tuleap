@@ -22,6 +22,7 @@ require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'Column.class.php';
 require_once 'Swimline.class.php';
+require_once 'QrCode.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
@@ -42,8 +43,19 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $milestone;
 
-    public function __construct(Planning_Milestone $milestone) {
-        $this->milestone = $milestone;
+    /**
+     * @var Tracker_FormElement_Field_Selectbox
+     */
+    private $field;
+
+    /**
+     * @var bool
+     */
+    private $enable_qr_code;
+
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code) {
+        $this->milestone      = $milestone;
+        $this->enable_qr_code = $enable_qr_code;
 
         $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
         $this->milestone->getPlannedArtifacts()->accept($column_id_visitor);
@@ -75,22 +87,28 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
 
+        $qrcode        = $this->getQrCode();
         $columns       = $this->getColumns();
         $mappings      = $this->getMapping();
         $swimlines     = $this->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
         $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
 
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $mappings);
+        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $mappings, $qrcode);
         ob_start();
         $renderer->render('pane-content', $presenter);
         return ob_get_clean();
     }
 
     /**
-     * @var Tracker_FormElement_Field_Selectbox
+     * @return Cardwall_QrCode
      */
-    private $field;
+    private function getQrCode() {
+        if ($this->enable_qr_code) {
+            return new Cardwall_QrCode($_SERVER['REQUEST_URI'] .'&pv=2');
+        }
+        return false;
+    }
 
     /**
      * @return Tracker_FormElement_Field_Selectbox

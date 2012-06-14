@@ -55,15 +55,24 @@ class Cardwall_PaneContentPresenter {
     public $has_swimline_header = true;
 
     /**
-     * @param array $swimlines Array of TreeNode
-     * @param array $columns   Array of Cardwall_Column
-     * @param array $mappings  Cardwall_MappingCollection
+     * Say if the a qr code should be displayed next to the cardwall
+     *
+     * @var bool
      */
-    public function __construct($swimline_title, array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
+    public $qrcode = true;
+
+    /**
+     * @param array                      $swimlines Array of TreeNode
+     * @param array                      $columns   Array of Cardwall_Column
+     * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
+     * @param Cardwall_QrCode            $qrcode    QrCode to display. false if no qrcode (thus no typehinting)
+     */
+    public function __construct($swimline_title, array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode) {
         $this->swimline_title = $swimline_title;
         $this->swimlines      = $swimlines;
         $this->columns        = $columns;
         $this->mappings       = $mappings;
+        $this->qrcode         = $qrcode;
     }
 }
 ?>

@@ -220,7 +220,7 @@ class cardwallPlugin extends Plugin {
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             require_once 'Pane.class.php';
-            $params['panes'][] = new Cardwall_Pane($params['milestone']);
+            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'));
         }
     }
 }
