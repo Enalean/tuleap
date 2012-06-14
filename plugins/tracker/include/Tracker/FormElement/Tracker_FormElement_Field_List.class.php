@@ -590,7 +590,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             }
         }
         if ($values) {
-            if (! $field->isRequired()) {
+            if (! $this->isRequired()) {
                 $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
                 $values = array_merge(array($none), $values);
             }
