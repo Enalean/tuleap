@@ -1,3 +1,6 @@
+Version 0.30 - Tuleap 5.2
+	* Allow plugins to add panes in the dashboard (on a milestone)
+
 Version 0.29 - Tuleap 5.2
      * Fix bug when attempt to create an artifact in an empty milestone.
 

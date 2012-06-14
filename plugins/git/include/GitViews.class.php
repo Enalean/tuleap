@@ -438,11 +438,30 @@ class GitViews extends PluginViews {
             //echo '<hr>';
             echo '<div id="gitphp">';
         }
-        include( dirname(__FILE__).'/../gitphp/index.php' );
+
+        include($this->getGitPhpIndexPath());
+
         if ( empty($_REQUEST['noheader']) ) {
             echo '</div>';
         }
     }
+
+    /**
+     * Return path to GitPhp index file
+     *
+     * @return String
+     */
+    private function getGitPhpIndexPath() {
+        $gitphp_path = $this->getController()->getPlugin()->getConfigurationParameter('gitphp_path');
+        if ($gitphp_path) {
+            define('GITPHP_CONFIGDIR', dirname(__FILE__).'/../etc/');
+            ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
+        } else {
+            $gitphp_path = dirname(__FILE__).'/../gitphp';
+        }
+        return $gitphp_path.'/index.php';
+    }
+
     /**
      * CONFIRM_DELETION
      * @todo make a generic function ?
@@ -768,7 +787,7 @@ class GitViews extends PluginViews {
         if ($backendIsGitolite) {
             //$accessType .= '"'.$this->getText('view_repo_access_custom').'">';
             $accessType .= '"custom">';
-            $accessType .= '<img src="'.$this->getController()->plugin->getThemePath().'/images/perms.png" />';
+            $accessType .= '<img src="'.$this->getController()->getPlugin()->getThemePath().'/images/perms.png" />';
         } else {
             switch ($access) {
                 case GitRepository::PRIVATE_ACCESS:

@@ -20,8 +20,10 @@
  */
 
 document.observe('dom:loaded', function () {
-    var prjAutocomplete  = new ProjectAutoCompleter('project', codendi.imgroot);
-    var userAutocomplete = new UserAutoCompleter('requester', codendi.imgroot);
-    prjAutocomplete.registerOnLoad();
-    userAutocomplete.registerOnLoad();
+    if ($('plugin_statistics')) {
+        var prjAutocomplete  = new ProjectAutoCompleter('project', codendi.imgroot);
+        var userAutocomplete = new UserAutoCompleter('requester', codendi.imgroot);
+        prjAutocomplete.registerOnLoad();
+        userAutocomplete.registerOnLoad();
+    }
 });
