@@ -1,0 +1,20 @@
+<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0" />
+<form id="tracker_report_cardwall_settings" action="" method="POST">
+    <input type="hidden" value="105" name="report" />
+    <input type="hidden" value="112" name="renderer" />
+    <input type="hidden" value="renderer" name="func" />
+    <p>Columns:
+        <select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">
+            <option value="174">As a</option>
+            <option value="187">Business value</option>
+            <option value="188">Story points</option>
+            <option value="192" selected="selected">Stage</option>
+        </select>
+        <input type="submit" value="Submit" />
+    </p>
+</form>
+<label id="cardwall_board-nifty">
+    <input type="checkbox" onclick="$(this).up().next('div.cardwall_board').toggleClassName('nifty'); new Ajax.Request('/toggler.php?id=cardwall_board-nifty');">free-hand drawing view
+</label>
+{{> board}}
+{{> qr-code}}

@@ -30,15 +30,17 @@ class Cardwall_InjectColumnIdVisitor {
 
     public function visit(TreeNode $node) {
         $data    = $node->getData();
-        $tracker = $data['artifact']->getTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        $data['column_field_id'] = 0;
-        if ($field) {
-            $field_id                = $field->getId();
-            $data['column_field_id'] = $field_id;
-            $this->accumulated_status_fields[$field_id] = $field;
+        if (isset($data['artifact'])) {
+            $tracker = $data['artifact']->getTracker();
+            $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+            $data['column_field_id'] = 0;
+            if ($field) {
+                $field_id                = $field->getId();
+                $data['column_field_id'] = $field_id;
+                $this->accumulated_status_fields[$field_id] = $field;
+            }
+            $node->setData($data);
         }
-        $node->setData($data);
         foreach ($node->getChildren() as $child) {
             $child->accept($this);
         }

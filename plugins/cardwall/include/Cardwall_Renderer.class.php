@@ -18,7 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php');
+require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ArtifactTreeNodeVisitor.class.php';
+require_once 'RendererPresenter.class.php';
+require_once 'Column.class.php';
+require_once 'Swimline.class.php';
+require_once 'QrCode.class.php';
+require_once 'Mapping.class.php';
+require_once 'MappingCollection.class.php';
+require_once 'InjectColumnIdVisitor.class.php';
+require_once 'InjectDropIntoClassnamesVisitor.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
@@ -139,18 +148,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $html .= $this->fetchCards($matching_ids, $display_choose, $form);
         
-        $proto = Config::get('sys_force_ssl') ? 'https' : 'http';
-        $url   = $proto .'://'. Config::get('sys_default_domain') . TRACKER_BASE_URL .'/?'. http_build_query(
-            array(
-                'report'   => $this->report->id,
-                'renderer' => $this->id,
-                'pv'       => 2,
-            )
-        );
-        
-        if ($this->enable_qr_code) {
-            $html .= $this->getHTMLQRCode($url);
-        }
         return $html;
     }
     
@@ -212,6 +209,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         //echo $sql;
         $dao = new DataAccessObject();
         
+        
+        $this->columns = array();
+        
         $nifty = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         
         $html .= '<label id="cardwall_board-nifty">';
@@ -239,6 +239,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '<thead><tr>';
             $decorators = $field->getBind()->getDecorators();
             foreach ($values as $key => $value) {
+                // {{{ columns
+                list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
+                $this->columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+                // }}}
                 if (1) {
                     $style = '';
                     if (isset($decorators[$value->getId()])) {
@@ -268,12 +272,25 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $html .= '<tbody><tr valign="top">';
         
+        
+        $root = new TreeNode();
+        
         $cards = $dao->retrieve($sql);
         foreach ($values as $value) {
             $html .= '<td>';
             $html .= '<ul>';
             foreach ($cards as $row) {
                 if (!$field || $row['col'] == $value->getId()) {
+                    // {{{
+                    $node = new TreeNode();
+                    $node->setId((int)$row['id']);
+                    $node->setData(array(
+                        'id'       => (int)$row['id'],
+                        //'artifact' => Tracker_ArtifactFactory::instance()->getArtifactById((int)$row['id'])
+                    ));
+                    $root->addChild($node);
+                    //}}}
+                    
                     $html .= '<li class="cardwall_board_postit '. $drop_into .'" id="cardwall_board_postit-'. (int)$row['id'] .'">';
                     // TODO: use mustache templates?
                     $html .= '<div class="card">';
@@ -293,22 +310,127 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $html .= '</tr></tbody></table>';
         $html .= '</div>';
+        
+        //return $html;
+        $html = '';
+        $visitor = Planning_ArtifactTreeNodeVisitor::build('');
+        $root->accept($visitor);
+        
+        $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
+        $root->accept($column_id_visitor);
+        $this->accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
+        
+        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->getMapping());
+        $root->accept($drop_into_visitor);
+        
+        $swimlines = array(
+            new Cardwall_Swimline(new TreeNode(), $this->getCells($this->columns, $root->getChildren()))
+        );
+        $qrcode        = $this->getQrCode();
+        $mappings      = $this->getMapping();
+        $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode);
+        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
+        ob_start();
+        $renderer->render('renderer', $presenter);
+        $html .= ob_get_clean();
         return $html;
     }
 
-    private function getHTMLQRCode($url) {
-        $html = '';
-        $html .= '<div class="plugin_cardwall_qrcode">';
-        $html .= '<div id="plugin_cardwall_qrcode_toggler" class="'. Toggler::getClassname('plugin_cardwall_qrcode_toggler', false, true) .'">QR Code</div>';
-        $html .= '<img src="http://chart.apis.google.com/chart?'. http_build_query(
-            array(
-                'chs'  => '150x150',
-                'cht'  => 'qr',
-                'chld' => 'L|0',
-                'chl'  => $url,
-            )).'" alt="QR code" widht="150" height="150"/>';
-        $html .= '</div>';
-        return $html;
+    private function getColumns() {
+        return $this->columns;
+    }
+
+    private function getColumnColors($value, $decorators) {
+        $id      = (int)$value->getId();
+        $bgcolor = 'white';
+        $fgcolor = 'black';
+        if (isset($decorators[$id])) {
+            $bgcolor = $decorators[$id]->css($bgcolor);
+            //choose a text color to have right contrast (black on dark colors is quite useless)
+            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
+        }
+        return array($bgcolor, $fgcolor);
+    }
+
+    /**
+     * @return Cardwall_MappingCollection
+     */
+    private function getMapping() {
+        $columns  = $this->getColumns();
+        $mappings = new Cardwall_MappingCollection();
+        foreach ($this->accumulated_status_fields as $status_field) {
+            foreach ($this->getFieldValues($status_field) as $value) {
+                foreach ($columns as $column) {
+                    if ($column->label == $value->getLabel()) {
+                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
+                    }
+                }
+            }
+        }
+        return $mappings;
+    }
+
+    private function getFieldValues(Tracker_FormElement_Field_Selectbox $field) {
+        $values = $field->getAllValues();
+        foreach ($values as $key => $value) {
+            if ($value->isHidden()) {
+                unset($values[$key]);
+            }
+        }
+        if ($values) {
+            if (! $field->isRequired()) {
+                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+                $values = array_merge(array($none), $values);
+            }
+        }
+        return $values;
+    }
+
+    /**
+     * @return Cardwall_QrCode
+     */
+    private function getQrCode() {
+        if ($this->enable_qr_code) {
+            return new Cardwall_QrCode(TRACKER_BASE_URL .'/?'. http_build_query(
+                    array(
+                        'report'   => $this->report->id,
+                        'renderer' => $this->id,
+                        'pv'       => 2,
+                    )
+                )
+            );
+        }
+        return false;
+    }
+
+    private function getCells(array $columns, array $nodes) {
+        $cells = array();
+        foreach ($columns as $column) {
+            $cells[] = $this->getCell($column, $nodes);
+        }
+        return $cells;
+    }
+
+    private function getCell(Cardwall_Column $column, array $nodes) {
+        $artifacts = array();
+        foreach ($nodes as $node) {
+            $this->addNodeToCell($node, $column, $artifacts);
+        }
+        return array('artifacts' => $artifacts);;
+    }
+
+    private function addNodeToCell(TreeNode $node, Cardwall_Column $column, array &$artifacts) {
+        $data            = $node->getData();
+        $artifact        = $data['artifact'];
+        $artifact_status = $artifact->getStatus();
+        if ($this->isArtifactInCell($artifact, $column)) {
+            $artifacts[] = $node;
+        }
+    }
+
+    private function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
+        $artifact_status = $artifact->getStatus();
+        return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
     
     /*----- Implements below some abstract methods ----*/
@@ -341,6 +463,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * Fetch content to be displayed in widget
      */
     public function fetchWidget() {
+        $this->enable_qr_code = false;
         $html  = '';
         $html .= $this->fetchCards($this->report->getMatchingIds());
         $html .= $this->fetchWidgetGoToReport();
