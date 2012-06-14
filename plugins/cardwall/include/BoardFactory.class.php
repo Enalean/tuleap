@@ -31,11 +31,10 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard(TreeNode $forest_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
+    public function getBoard(Cardwall_InjectColumnIdVisitor $column_id_visitor, TreeNode $forest_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
         $swimline_factory = new Cardwall_SwimlineFactory();
         $column_factory   = new Cardwall_ColumnFactory($field);
 
-        $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
         $forest_of_artifacts->accept($column_id_visitor);
         $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
 
@@ -44,8 +43,8 @@ class Cardwall_BoardFactory {
         $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
         $forest_of_artifacts->accept($drop_into_visitor);
 
-        $columns       = $column_factory->getColumns();
-        $swimlines     = $swimline_factory->getSwimlines($columns, $forest_of_artifacts->getChildren());
+        $columns   = $column_factory->getColumns();
+        $swimlines = $swimline_factory->getSwimlines($columns, $forest_of_artifacts->getChildren());
 
         return new Cardwall_Board($swimlines, $columns, $mappings);
     }
