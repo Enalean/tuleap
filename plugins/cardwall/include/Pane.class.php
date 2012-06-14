@@ -20,8 +20,8 @@
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'PaneContentPresenter.class.php';
-require_once 'Column.class.php';
 require_once 'SwimlineFactory.class.php';
+require_once 'ColumnFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
@@ -61,6 +61,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $this->milestone->getPlannedArtifacts()->accept($column_id_visitor);
         $this->accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
 
+        $this->column_factory = new Cardwall_ColumnFactory($this->getField());
+
         $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->getMapping());
         $this->milestone->getPlannedArtifacts()->accept($drop_into_visitor);
     }
@@ -90,7 +92,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $swimline_factory = new Cardwall_SwimlineFactory();
 
         $qrcode        = $this->getQrCode();
-        $columns       = $this->getColumns();
+        $columns       = $this->column_factory->getColumns();
         $mappings      = $this->getMapping();
         $swimlines     = $swimline_factory->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
         $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
@@ -127,7 +129,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @return Cardwall_MappingCollection
      */
     private function getMapping() {
-        $columns  = $this->getColumns();
+        $columns  = $this->column_factory->getColumns();
         $mappings = new Cardwall_MappingCollection();
         foreach ($this->accumulated_status_fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
@@ -139,40 +141,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             }
         }
         return $mappings;
-    }
-
-    /**
-     *  @var array of Cardwall_Column
-     */
-    private $columns;
-
-    private function getColumns() {
-        if ($this->columns) return $this->columns;
-
-        $field = $this->getField();
-        if (! $field) return array();
-
-        $values        = $this->getFieldValues($field);
-        $decorators    = $field->getBind()->getDecorators();
-        $this->columns = array();
-        foreach ($values as $value) {
-            list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-
-            $this->columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-        }
-        return $this->columns;
-    }
-
-    private function getColumnColors($value, $decorators) {
-        $id      = (int)$value->getId();
-        $bgcolor = 'white';
-        $fgcolor = 'black';
-        if (isset($decorators[$id])) {
-            $bgcolor = $decorators[$id]->css($bgcolor);
-            //choose a text color to have right contrast (black on dark colors is quite useless)
-            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
-        }
-        return array($bgcolor, $fgcolor);
     }
 }
 ?>

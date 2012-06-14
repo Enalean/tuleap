@@ -44,7 +44,7 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
         $this->swimline_title      = '';
         $this->has_swimline_header = false;
         $this->field               = $field ? $field : false;
-        $this->form                = $form ? $form : false;
+        $this->form                = $form  ? $form  : false;
     }
 
     /**

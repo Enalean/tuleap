@@ -21,7 +21,7 @@
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
 require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
-require_once 'Column.class.php';
+require_once 'ColumnFactory.class.php';
 require_once 'SwimlineFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
@@ -114,19 +114,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         if (!$total_rows) {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
         }
-        
-        $this->columns = array();
-        $column_sql_select = '';
-        $column_sql_from   = '';
-        if ($field) {
-            $values     = $this->getFieldValues($field);
-            $decorators = $field->getBind()->getDecorators();
-            foreach ($values as $key => $value) {
-                list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-                $this->columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-            }
-        }
-        
+
+        $column_factory = new Cardwall_ColumnFactory($this->getField());
+        $this->columns  = $column_factory->getColumns();
+
         $root  = new TreeNode();
         foreach (explode(',', $matching_ids['id']) as $id) {
             $node = new TreeNode();
@@ -164,18 +155,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
 
     private function getColumns() {
         return $this->columns;
-    }
-
-    private function getColumnColors($value, $decorators) {
-        $id      = (int)$value->getId();
-        $bgcolor = 'white';
-        $fgcolor = 'black';
-        if (isset($decorators[$id])) {
-            $bgcolor = $decorators[$id]->css($bgcolor);
-            //choose a text color to have right contrast (black on dark colors is quite useless)
-            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
-        }
-        return array($bgcolor, $fgcolor);
     }
 
     /**
