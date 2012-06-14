@@ -18,7 +18,6 @@
 
 require_once('Tracker_DateReminder.class.php');
 require_once('Tracker_DateReminderRenderer.class.php');
-require_once('dao/Tracker_DateReminderDao.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
 require_once 'common/date/DateHelper.class.php';
@@ -270,49 +269,6 @@ class Tracker_DateReminderManager {
         $output .= $language->getText('plugin_tracker_date_reminder','body_art_link', array($link));
         $output .= '<br>';
         return $output;
-    }
-
-    /**
-     * Retrieve all date reminders for a given tracker
-     *
-     * @return Array
-     */
-    public function getTrackerReminders() {
-        $reminders          = array();
-        $reminderManagerDao = $this->getDao();
-        $dar = $reminderManagerDao->getDateReminders($this->tracker->getId());
-        if ($dar && !$dar->isError()) {
-            foreach ($dar as $row) {
-                $reminders[] = $this->getInstanceFromRow($row);
-            }
-        }
-        return $reminders;
-    }
-
-    /**
-     * Build a reminder instance
-     *
-     * @param array $row The data describing the reminder
-     *
-     * @return Tracker_DateReminder
-     */
-    public function getInstanceFromRow($row) {
-        return new Tracker_DateReminder($row['reminder_id'],
-                                        $row['tracker_id'],
-                                        $row['field_id'],
-                                        $row['ugroups'],
-                                        $row['notification_type'],
-                                        $row['distance'],
-                                        $row['status']);
-    }
-
-    /**
-     * Get the Tracker_DateReminder dao
-     *
-     * @return Tracker_DateReminderDao
-     */
-    protected function getDao() {
-        return new Tracker_DateReminderDao();
     }
 
     /** Get artifacts that will send notification for a reminder
