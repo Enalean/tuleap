@@ -21,15 +21,10 @@
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
 require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
-require_once 'ColumnFactory.class.php';
-require_once 'SwimlineFactory.class.php';
-require_once 'Board.class.php';
+require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
-require_once 'Mapping.class.php';
-require_once 'MappingCollection.class.php';
 require_once 'InjectColumnIdCustomFieldVisitor.class.php';
-require_once 'InjectDropIntoClassnamesVisitor.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
@@ -108,54 +103,51 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     }
     
     private function fetchCards($matching_ids, $form = null) {
-        $html  = '';
-        $field = $this->getField();
-        
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
         }
 
-        $column_factory = new Cardwall_ColumnFactory($this->getField());
-        $this->columns  = $column_factory->getColumns();
+        $presenter = $this->getPresenter($this->getForestsOfArtifacts(explode(',', $matching_ids['id'])), $form);
+        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
+        ob_start();
+        $renderer->render('renderer', $presenter);
 
-        $root  = new TreeNode();
-        foreach (explode(',', $matching_ids['id']) as $id) {
+        return ob_get_clean();
+    }
+    
+    /**
+     * @return TreeNode
+     */
+    private function getForestsOfArtifacts(array $artifact_ids) {
+        $forest = new TreeNode();
+        foreach ($artifact_ids as $id) {
             $node = new TreeNode();
             $node->setId((int)$id);
             $node->setData(array(
                 'id' => (int)$id,
             ));
-            $root->addChild($node);
+            $forest->addChild($node);
         }
-        
-        $html  = '';
-        
+        $root = new TreeNode();
+        $root->addChild($forest);
+
         $visitor = Planning_ArtifactTreeNodeVisitor::build('');
         $root->accept($visitor);
-        
-        $column_id_visitor = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
-        $root->accept($column_id_visitor);
-        $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
 
-        $mappings = $column_factory->getMappings($accumulated_status_fields);
+        return $root;
+    }
 
-        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
-        $root->accept($drop_into_visitor);
+    /**
+     * @return Cardwall_PaneContentPresenter
+     */
+    private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
+        $field         = $this->getField();
+        $visitor       = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
+        $board_factory = new Cardwall_BoardFactory();
+        $board         = $board_factory->getBoard($visitor, $forest_of_artifacts, $field);
 
-        $swimline_factory = new Cardwall_SwimlineFactory();
-        $swimlines = $swimline_factory->getSwimlines($this->columns, array($root));
-
-        $qrcode        = $this->getQrCode();
-
-        $board = new Cardwall_Board($swimlines, $this->columns, $mappings);
-
-        $presenter = new Cardwall_RendererPresenter($board, $qrcode, $field, $form);
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('renderer', $presenter);
-        $html .= ob_get_clean();
-        return $html;
+        return new Cardwall_RendererPresenter($board, $this->getQrCode(), $field, $form);
     }
 
     /**
