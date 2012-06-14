@@ -185,7 +185,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $columns  = $this->getColumns();
         $mappings = new Cardwall_MappingCollection();
         foreach ($this->accumulated_status_fields as $status_field) {
-            foreach ($this->getFieldValues($status_field) as $value) {
+            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
                 foreach ($columns as $column) {
                     if ($column->label == $value->getLabel()) {
                         $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
@@ -194,22 +194,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             }
         }
         return $mappings;
-    }
-
-    private function getFieldValues(Tracker_FormElement_Field_Selectbox $field) {
-        $values = $field->getAllValues();
-        foreach ($values as $key => $value) {
-            if ($value->isHidden()) {
-                unset($values[$key]);
-            }
-        }
-        if ($values) {
-            if (! $field->isRequired()) {
-                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
-                $values = array_merge(array($none), $values);
-            }
-        }
-        return $values;
     }
 
     /**
