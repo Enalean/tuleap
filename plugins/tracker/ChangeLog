@@ -1,3 +1,6 @@
+Version 5.7.26 - Tuleap 5.2
+    * Fix regression introduced in 5.7.25 on templates
+
 Version 5.7.25 - Tuleap 5.2
     * On cross search view, when tree is filtered, display children of searched
       artifacts.
