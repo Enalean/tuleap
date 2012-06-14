@@ -105,12 +105,17 @@ class Tracker_DateReminderFactory {
     public function editTrackerReminder($request) {
         //$this->csrf->check();
         $reminderRenderer   = new Tracker_DateReminderRenderer($this->tracker);
-        $reminderId         = $request->get('reminder_id');
-        $notificationType   = $request->get('notif_type');
-        $ugroups            = join(",", $request->get('reminder_ugroup'));
-        $distance           = $request->get('distance');
-        $status             = $request->get('notif_status');
-        $historyDao         = new ProjectHistoryDao(CodendiDataAccess::instance());
+        try {
+            $reminderId       = $reminderRenderer->validateReminderId($request);
+            $notificationType = $reminderRenderer->validateNotificationType($request);
+            $ugroups          = $reminderRenderer->validateReminderUgroups($request);
+            $distance         = $reminderRenderer->validateDistance($request);
+            $status           = $reminderRenderer->validateStatus($request);
+        } catch (Tracker_DateReminderException $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+        }
+        $ugroups    = join(",", $ugroups);
+        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
         $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->tracker->getName().":".$reminderId, $this->tracker->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
         $updateReminder = $this->getDao()->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
         if ($updateReminder) {
