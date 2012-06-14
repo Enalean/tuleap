@@ -52,6 +52,11 @@ class Tracker_NotificationsManager {
             $this->removeGlobalNotification( $request->get('global_notification_id') );
         }
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
+        $reminderRenderer = new Tracker_DateReminderRenderer($this->tracker);
+        if ($this->tracker->userIsAdmin($current_user)) {
+            $reminderRenderer->displayDateReminders($request);
+        }
+        $reminderRenderer->displayFooter($tracker_manager);
     }
     
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {

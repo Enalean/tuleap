@@ -90,10 +90,6 @@ class Tracker_DateReminderManager {
                 }
             }
         }
-        if ($this->tracker->userIsAdmin($currentUser)) {
-            $this->getDateReminderRenderer()->displayDateReminders($request);
-        }
-        $this->getDateReminderRenderer()->displayFooter($trackerManager);
     }
 
     /**

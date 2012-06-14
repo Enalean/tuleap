@@ -463,8 +463,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-notifications':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->getNotificationsManager()->process($layout, $request, $current_user);
                     $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
+                    $this->getNotificationsManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -473,8 +473,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'notifications':
             // you just need to be registered to have access to this part
                 if ($current_user->isLoggedIn()) {
-                    $this->getNotificationsManager()->process($layout, $request, $current_user);
                     $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
+                    $this->getNotificationsManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
