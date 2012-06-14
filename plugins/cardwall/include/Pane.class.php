@@ -19,13 +19,10 @@
  */
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
-require_once 'Board.class.php';
+require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
-require_once 'SwimlineFactory.class.php';
-require_once 'ColumnFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
-require_once 'InjectDropIntoClassnamesVisitor.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -33,19 +30,9 @@ require_once 'InjectDropIntoClassnamesVisitor.class.php';
 class Cardwall_Pane extends AgileDashboard_Pane {
 
     /**
-     * @var Cardwall_MappingCollection
-     */
-    private $mappings;
-
-    /**
      * @var Planning_Milestone
      */
     private $milestone;
-
-    /**
-     * @var Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
 
     /**
      * @var bool
@@ -55,17 +42,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     public function __construct(Planning_Milestone $milestone, $enable_qr_code) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
-
-        $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
-        $this->milestone->getPlannedArtifacts()->accept($column_id_visitor);
-        $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
-
-        $this->column_factory = new Cardwall_ColumnFactory($this->getField());
-
-        $this->mappings = $this->column_factory->getMappings($accumulated_status_fields);
-
-        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->mappings);
-        $this->milestone->getPlannedArtifacts()->accept($drop_into_visitor);
     }
 
     /**
@@ -86,24 +62,26 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
-        if (! $this->getField()) {
+        $tracker = $this->milestone->getPlanning()->getBacklogTracker();
+        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        if (! $field) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
-
-        $swimline_factory = new Cardwall_SwimlineFactory();
-
-        $qrcode        = $this->getQrCode();
-        $columns       = $this->column_factory->getColumns();
-        $swimlines     = $swimline_factory->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
-        $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
-
-        $board = new Cardwall_Board($swimlines, $columns, $this->mappings);
-
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $board, $qrcode);
         ob_start();
-        $renderer->render('agiledashboard-pane', $presenter);
+        $renderer->render('agiledashboard-pane', $this->getPresenter($field));
+
         return ob_get_clean();
+    }
+
+    /**
+     * @return Cardwall_PaneContentPresenter
+     */
+    private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
+        $board_factory = new Cardwall_BoardFactory();
+        $board         = $board_factory->getBoard($this->milestone->getPlannedArtifacts(), $field);
+        $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
+        return new Cardwall_PaneContentPresenter($backlog_title, $board, $this->getQrCode());
     }
 
     /**
@@ -114,17 +92,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return new Cardwall_QrCode($_SERVER['REQUEST_URI'] .'&pv=2');
         }
         return false;
-    }
-
-    /**
-     * @return Tracker_FormElement_Field_Selectbox
-     */
-    private function getField() {
-        if (! $this->field) {
-            $tracker     = $this->milestone->getPlanning()->getBacklogTracker();
-            $this->field = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        }
-        return $this->field;
     }
 }
 ?>
