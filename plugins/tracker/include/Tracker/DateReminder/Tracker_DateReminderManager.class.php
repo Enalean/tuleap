@@ -76,17 +76,19 @@ class Tracker_DateReminderManager {
             if ($request->get('action') == 'new_reminder') {
                 try {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
+                    $GLOBALS['Response']->addFeedback('info', 'Reminder created');
                 } catch (Tracker_DateReminderException $e) {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                    //$GLOBALS['Response']->redirect('/');
                 }
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
             } elseif ($request->get('action') == 'update_reminder') {
                 try {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
+                    $GLOBALS['Response']->addFeedback('info', 'Reminder updated');
                 } catch (Tracker_DateReminderException $e) {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                    //$GLOBALS['Response']->redirect('/');
                 }
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
             }
         }
     }
