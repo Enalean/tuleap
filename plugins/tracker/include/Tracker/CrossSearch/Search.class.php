@@ -90,10 +90,15 @@ class Tracker_CrossSearch_Search {
         $shared_fields   = $this->shared_field_factory->getSharedFields($query->getSharedFields());
         $semantic_fields = $query->getSemanticCriteria();
         
-        $artifacts = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
+        $artifacts_info = $this->dao->searchMatchingArtifacts($user, $project->getId(), $query, $tracker_ids, $shared_fields, $semantic_fields, $this->artifact_link_field_ids_for_column_display, $excluded_artifact_ids);
         
-        return $this->result_sorter->sortArtifacts($artifacts, $tracker_ids, $hierarchy);
+        if ($query->isEmpty()) {
+            return $this->result_sorter->buildTreeWithCompleteList($artifacts_info, $tracker_ids, $hierarchy);
+        } else {
+            return $this->result_sorter->buildTreeWithMissingChildren($user, $artifacts_info);
+        }
     }
-    
+
+   
 }
 ?>

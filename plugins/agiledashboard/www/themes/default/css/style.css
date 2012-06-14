@@ -31,6 +31,35 @@
     margin-top: 0;
 }
 
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.cards .cards {
+  margin-left: 2em;
+}
+.card {
+    padding: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    margin-bottom: 1em;
+    border:1px solid #B2B39D;
+    background: #f8f8f8;
+    min-width: 200px;
+    color: gray;
+}
+
+.planning-draggable > .card {
+    background: #ffe;
+    font-style: normal;
+}
+
+.backlog-actions, 
+.card-actions {
+    float:right;
+}
+
 .backlog-content {
     clear:both;
     padding-top: 0.5em;
@@ -77,4 +106,9 @@
 .agiledashboard hr {
     border:0px; 
     border-top:1px solid #ccc;
+}
+
+.toggle-collapse {
+    display: inline-block;
+    width: .8em;
 }

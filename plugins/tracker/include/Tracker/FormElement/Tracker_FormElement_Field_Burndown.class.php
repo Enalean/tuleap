@@ -48,7 +48,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function getHierarchyFactory() {
         if ($this->hierarchy_factory == null) {
-            $this->hierarchy_factory = Tracker_HierarchyFactory::build();
+            $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
         }
         return $this->hierarchy_factory;
     }

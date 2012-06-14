@@ -1,5 +1,9 @@
+Version 0.31 - Tuleap 5.2
+     * Fix display of hierarchy on backlog side
+     * Add expand collapse on cards
+
 Version 0.30 - Tuleap 5.2
-	* Allow plugins to add panes in the dashboard (on a milestone)
+     * Allow plugins to add panes in the dashboard (on a milestone)
 
 Version 0.29 - Tuleap 5.2
      * Fix bug when attempt to create an artifact in an empty milestone.

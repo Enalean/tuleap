@@ -20,23 +20,31 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
-
+require_once 'SearchContentView.class.php';
+require_once 'BacklogItemFilterVisitor.class.php';
 /**
  * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
  */
 class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
     
     public function build(User $user, 
                           Project $project,
                           Tracker_CrossSearch_Query $cross_search_query, 
-                          array $excluded_artifact_ids, 
-                          array $tracker_ids,
+                          array $already_planned_artifact_ids,
+                          $backlog_tracker_id,
                           Planning $planning,
                           $planning_redirect_parameter) {
     
-        $report    = $this->getReport($user);
-        $criteria  = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $artifacts = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
+        $report      = $this->getReport($user);
+        $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
+        $tracker_ids = $this->hierarchy_factory->getHierarchy(array($backlog_tracker_id))->flatten();
+        $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $already_planned_artifact_ids);
+        $visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
+        $artifacts   = $artifacts->accept($visitor);
         
         return new Planning_SearchContentView($report, 
                                               $criteria, 
@@ -47,8 +55,10 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
                                               $planning,
                                               $planning_redirect_parameter);        
     }
-    
-    
+
+    public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+        $this->hierarchy_factory = $hierarchy_factory;
+    }
 
 }
 

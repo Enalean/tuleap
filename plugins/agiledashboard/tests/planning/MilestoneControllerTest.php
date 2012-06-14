@@ -64,16 +64,20 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
+        
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
+        Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
     }
 
     public function tearDown() {
         parent::tearDown();
+
         $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
 
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
+        Tracker_HierarchyFactory::clearInstance();
     }
 
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -197,14 +201,14 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
-        $tracker_ids  = array();
+        $backlog_tracker_id  = null; // It's null because of NoMilestone in assertThatWeBuildAcontentViewWith
         $view_builder = new MockPlanning_ViewBuilder();
         $expected_arguments = array(
             '*',
             $project,
             new EqualExpectation($expected_criteria),
             $already_linked_items,
-            $tracker_ids,
+            $backlog_tracker_id,
             $this->planning,
             '*' // TODO an assert on planning_redirect_param
         );

@@ -1,3 +1,7 @@
+Version 5.7.25 - Tuleap 5.2
+    * On cross search view, when tree is filtered, display children of searched
+      artifacts.
+
 Version 5.7.24 - Tuleap 5.2
 	* Allow plugins to add their stuff in tracker admin page
 	* Allow tracker admin to unset the status semantic

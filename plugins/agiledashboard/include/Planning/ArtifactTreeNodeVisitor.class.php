@@ -18,10 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Planning.class.php';
+require_once 'Item.class.php';
+require_once 'ItemPresenter.class.php';
+
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
  */
 class Planning_ArtifactTreeNodeVisitor {
+    
+    /**
+     * @var Planning
+     */
+    private $planning;
     
     /**
      * @var string the css class name
@@ -33,15 +42,12 @@ class Planning_ArtifactTreeNodeVisitor {
      */
     private $artifact_factory;
     
-    /**
-     * @var Tracker_Hierarchy_HierarchicalTrackerFactory
-     */
-    private $hierarchy_factory;
-    
-    public function __construct(Tracker_ArtifactFactory $artifact_factory, Tracker_Hierarchy_HierarchicalTrackerFactory $hierarchy_factory, $classname) {
-        $this->artifact_factory  = $artifact_factory;
-        $this->classname         = $classname;
-        $this->hierarchy_factory = $hierarchy_factory;
+    public function __construct(Planning                $planning,
+                                Tracker_ArtifactFactory $artifact_factory,
+                                                        $classname) {
+        $this->planning         = $planning;
+        $this->artifact_factory = $artifact_factory;
+        $this->classname        = $classname;
     }
     
     /**
@@ -49,38 +55,37 @@ class Planning_ArtifactTreeNodeVisitor {
      *
      * @return Planning_ArtifactTreeNodeVisitor
      */
-    public static function build($classname) {
-        $artifact_factory  = Tracker_ArtifactFactory::instance();
-        $hierarchy_factory = Tracker_Hierarchy_HierarchicalTrackerFactory::instance();
-        return new Planning_ArtifactTreeNodeVisitor($artifact_factory, $hierarchy_factory, $classname);
-    }
-    
-    private function injectArtifactInChildren(TreeNode $node) {
-        foreach ($node->getChildren() as $child) {
-            $child->accept($this);
-        }
+    public static function build(Planning $planning, $classname) {
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        
+        return new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, $classname);
     }
 
     public function visit(TreeNode $node) {
-        $row = $node->getData();
-        $artifact = $this->artifact_factory->getArtifactById($row['id']);
-        if ($artifact) {
-            $this->buildNodeData($node, $row, $artifact);
-        }
-        $this->injectArtifactInChildren($node);
+        $this->decorate($node);
+        $this->visitChildren($node);
     }
     
-    private function buildNodeData(TreeNode $node, $row, Tracker_Artifact $artifact) {
-        $row['artifact_id']          = $artifact->getId();
-        $row['title']                = $artifact->getTitle();
-        $row['class']                = $this->classname;
-        $row['uri']                  = $artifact->getUri();
-        $row['xref']                 = $artifact->getXRef();
-        $row['editLabel']            = $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
-        if (!isset($row['allowedChildrenTypes'])) {
-            $row['allowedChildrenTypes'] = $this->hierarchy_factory->getChildren($artifact->getTracker());
+    private function decorate(TreeNode $node) {
+        $artifact = $this->getArtifact($node);
+        
+        if ($artifact) {
+            $planning_item = new Planning_Item($artifact, $this->planning);
+            $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
+            
+            $node->setObject($presenter);
         }
-        $node->setData($row);
+    }
+    
+    private function getArtifact(TreeNode $node) {
+        $row = $node->getData();
+        return $this->artifact_factory->getArtifactById($row['id']);
+    }
+    
+    private function visitChildren(TreeNode $node) {
+        foreach ($node->getChildren() as $child) {
+            $child->accept($this);
+        }
     }
 }
 

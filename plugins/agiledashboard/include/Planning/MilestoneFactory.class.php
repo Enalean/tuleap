@@ -20,6 +20,7 @@
 
 require_once 'ArtifactMilestone.class.php';
 require_once 'NoMilestone.class.php';
+require_once 'Item.class.php';
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -104,13 +105,12 @@ class Planning_MilestoneFactory {
      * @param User             $user
      * @param Planning         $planning
      * @param Tracker_Artifact $milestone_artifact
-     * @param int              $child_depth
      *
      * @return TreeNode
      */
     public function getPlannedArtifacts(User             $user,
-                                         Planning         $planning,
-                                         Tracker_Artifact $milestone_artifact) {
+                                        Planning         $planning,
+                                        Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
 
         $id              = $milestone_artifact->getId();
@@ -120,7 +120,8 @@ class Planning_MilestoneFactory {
                                    'allowedChildrenTypes' => array($backlog_tracker),
                                    'artifact'             => $milestone_artifact));
         $node->setId($id);
-        $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, array());
+        // TODO: $node->setObject(new Planning_Item($milestone_artifact, $planning)) ?
+        $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, array(), $planning);
         
         return $node;
     }
@@ -138,7 +139,8 @@ class Planning_MilestoneFactory {
     private function addChildrenPlannedArtifacts(User             $user,
                                                  Tracker_Artifact $artifact,
                                                  TreeNode         $parent_node,
-                                                 array            $parents) {
+                                                 array            $parents,
+                                                 Planning         $planning) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         if (! $linked_artifacts) return false;
         if (in_array($artifact->getId(), $parents)) return false;
@@ -148,7 +150,8 @@ class Planning_MilestoneFactory {
             $node = new TreeNode(array('id'       => $linked_artifact->getId(),
                                        'artifact' => $linked_artifact));
             $node->setId($linked_artifact->getId());
-            $this->addChildrenPlannedArtifacts($user, $linked_artifact, $node, $parents);
+            $node->setObject(new Planning_Item($linked_artifact, $planning));
+            $this->addChildrenPlannedArtifacts($user, $linked_artifact, $node, $parents, $planning);
             $parent_node->addChild($node);
         }
     }
