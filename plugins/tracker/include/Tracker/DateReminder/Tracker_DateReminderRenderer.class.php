@@ -68,8 +68,8 @@ class Tracker_DateReminderRenderer {
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0mmm"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
-                        <OPTION VALUE="1mmm"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
+                        <OPTION VALUE="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
+                        <OPTION VALUE="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
                     </SELECT></TD>';
         $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
@@ -184,8 +184,7 @@ class Tracker_DateReminderRenderer {
         if ($request->valid($validFieldId)) {
             return $request->get('reminder_field_date');
         } else {
-            $errorMessage = $request->get('reminder_field_date').' is not a valid Field Id!!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_field', array($request->get('reminder_field_date')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_field', array($request->get('reminder_field_date')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -203,8 +202,7 @@ class Tracker_DateReminderRenderer {
         if ($request->valid($validDistance)) {
             return $request->get('distance');
         } else {
-            $errorMessage = $request->get('distance').' is not a valid distance!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_distance', array($request->get('distance')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_distance', array($request->get('distance')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -222,8 +220,7 @@ class Tracker_DateReminderRenderer {
         if ($request->valid($validTrackerId)) {
             return $request->get('tracker_id');
         } else {
-            $errorMessage = $request->get('tracker_id').' is not a valid tracker Id!!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_Tracker', array($request->get('tracker_id')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_Tracker', array($request->get('tracker_id')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -241,8 +238,7 @@ class Tracker_DateReminderRenderer {
         if ($request->valid($validNotificationType)) {
             return $request->get('notif_type');
         } else {
-            $errorMessage = $request->get('notif_type').' is not a valid notification type !!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_notification_type', array($request->get('notif_type')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_notification_type', array($request->get('notif_type')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -260,8 +256,7 @@ class Tracker_DateReminderRenderer {
         if ($request->valid($validStatus)) {
             return $request->get('notif_status');
         } else {
-            $errorMessage = $request->get('notif_status').' is not a valid status !!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_status', array($request->get('notif_status')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_status', array($request->get('notif_status')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -279,8 +274,7 @@ class Tracker_DateReminderRenderer {
         if ($request->valid($validReminderId)) {
            return $request->get('reminder_id');
         } else {
-            $errorMessage = $request->get('reminder_id').' is not a valid date reminder !!';
-            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', array($request->get('reminder_id')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', array($request->get('reminder_id')));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
