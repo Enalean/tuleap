@@ -82,6 +82,7 @@ class Tracker_DateReminderFactory {
             $ugroups          = $reminderRenderer->validateReminderUgroups($request);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
         }
         $ugroups    = join(",", $ugroups);
         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
@@ -113,6 +114,7 @@ class Tracker_DateReminderFactory {
             $status           = $reminderRenderer->validateStatus($request);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
         }
         $ugroups    = join(",", $ugroups);
         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
