@@ -228,47 +228,114 @@ class CodeReviewActions extends Actions {
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
 }
 
-function validateRequest2() {
-        $status  = true;
-        $invalid = array();
+    /**
+    * Validate request pubish review values
+    *
+    * @return Array
+    */
+    function validateRequest2() {
+            $status  = true;
+            $invalid = array();
 
-        $valid  = new Valid_String('codereview_server_url');
-        $server = trim($this->request->get('codereview_server_url'));
-        if ($this->request->valid($valid) && $server != '') {
-            $params['server'] = $server;
-        } else {
-            $status    = false;
-            $invalid[] = 'server';
-        }
+            $valid  = new Valid_String('codereview_server_url');
+            $server = trim($this->request->get('codereview_server_url'));
+            if ($this->request->valid($valid) && $server != '') {
+                $params['server'] = $server;
+            } else {
+                $status    = false;
+                $invalid[] = 'server';
+            }
 
-        $valid     = new Valid_String('codereview_rb_user');
-        $rbUser = trim($this->request->get('codereview_rb_user'));
-        if ($this->request->valid($valid) && $rbUser != '') {
-            $params['rb_user'] = $rbUser;
-        } else {
-            $status    = false;
-            $invalid[] = 'rb_user';
-        }
+            $valid     = new Valid_String('codereview_rb_user');
+            $rbUser = trim($this->request->get('codereview_rb_user'));
+            if ($this->request->valid($valid) && $rbUser != '') {
+                $params['rb_user'] = $rbUser;
+            } else {
+                $status    = false;
+                $invalid[] = 'rb_user';
+            }
 
-        $valid  = new Valid_String('codereview_rb_password');
-        $rbPass = trim($this->request->get('codereview_rb_password'));
-        if ($this->request->valid($valid) && $rbPass != '') {
-            $params['rb_password'] = $rbPass;
-        } else {
-            $status    = false;
-            $invalid[] = 'rb_password';
-        }
+            $valid  = new Valid_String('codereview_rb_password');
+            $rbPass = trim($this->request->get('codereview_rb_password'));
+            if ($this->request->valid($valid) && $rbPass != '') {
+                $params['rb_password'] = $rbPass;
+            } else {
+                $status    = false;
+                $invalid[] = 'rb_password';
+            }
 
-        $valid   = new Valid_String('review_id');
-        $review_id = trim($this->request->get('review_id'));
-        if ($this->request->valid($valid) && $review_id != '') {
-            $params['review_id'] = $review_id;
-        } else {
-            $status    = false;
-            $invalid[] = 'review_id';
+            $valid   = new Valid_String('review_id');
+            $review_id = trim($this->request->get('review_id'));
+            if ($this->request->valid($valid) && $review_id != '') {
+                $params['review_id'] = $review_id;
+            } else {
+                $status    = false;
+                $invalid[] = 'review_id';
+            }
+            return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
+    }
+
+    /**
+    * Validate request patch values
+    *
+    * @return Array
+    */
+    function validateRequestPatch() {
+            $status  = true;
+            $invalid = array();
+
+            $valid  = new Valid_String('first_revision');
+            $frevision = trim($this->request->get('first_revision'));
+            if ($this->request->valid($valid) && $frevision != '') {
+                $params['frevision'] = $frevision;
+            } else {
+                $status    = false;
+                $invalid[] = 'frevision';
+            }
+
+            $valid     = new Valid_String('second_revision');
+            $srevision = trim($this->request->get('second_revision'));
+            if ($this->request->valid($valid) && $srevision != '') {
+                $params['srevision'] = $srevision;
+            } else {
+                $status    = false;
+                $invalid[] = 'srevision';
+            }
+
+            $valid  = new Valid_String('target_directory');
+            $directory = trim($this->request->get('target_directory'));
+            if ($this->request->valid($valid) && $directory != '') {
+                $params['Directory'] = $directory;
+            } else {
+                $status    = false;
+                $invalid[] = 'Directory';
+            }
+
+            $valid   = new Valid_String('patch_path');
+            $patch_path = trim($this->request->get('patch_path'));
+            if ($this->request->valid($valid) && $patch_path != '') {
+                $params['patch_path'] = $patch_path;
+            } else {
+                $status    = false;
+                $invalid[] = 'patch_path';
+            }
+            return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
+    }
+    /**
+    * Creates a patch file
+    *
+    * @return void
+    */
+    function creatPatchFile() {
+        $reviewRessources = $this->validateRequestPatch();
+        if ($reviewRessources['status']) {
+            $frevision       = $reviewRessources['params']['frevision'];
+            $srevision       = $reviewRessources['params']['srevision'];
+            $directory       = $reviewRessources['params']['Directory'];
+            $patch_path     = $reviewRessources['params']['patch_path'];
         }
-        return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
-}
+    }
+
 
     /**
     * Creates a new review request
