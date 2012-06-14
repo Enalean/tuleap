@@ -87,9 +87,24 @@ class Tracker_HierarchyFactory {
         while (!empty($search_tracker_ids)) {
             $this->getHierarchyFromTrackers($hierarchy, $search_tracker_ids, $processed_tracker_ids);
         }
+        return $this->fixSingleHierarchy($tracker_ids, $hierarchy);
+    }
+
+    /**
+     * If no other trackers were found in hierarchy, returns the tracker alone in hierarchy
+     *
+     * @param array             $tracker_ids
+     * @param Tracker_Hierarchy $hierarchy
+     *
+     * @return \Tracker_Hierarchy
+     */
+    private function fixSingleHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy) {
+        if (count($tracker_ids) == 1 && !$hierarchy->flatten()) {
+            $hierarchy->addRelationship($tracker_ids[0], 0);
+        }
         return $hierarchy;
     }
-    
+
     /*
      * Duplicate a tracker hierarchy
      * 

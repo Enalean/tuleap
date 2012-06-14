@@ -47,7 +47,7 @@ class Tracker_Hierarchy {
      * @return Array
      */
     public function flatten() {
-        return array_keys($this->parents);
+        return array_filter(array_keys($this->parents));
     }
 
     /**
