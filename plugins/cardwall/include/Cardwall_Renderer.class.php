@@ -115,7 +115,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
 
         return ob_get_clean();
     }
-    
+
     /**
      * @return TreeNode
      */
