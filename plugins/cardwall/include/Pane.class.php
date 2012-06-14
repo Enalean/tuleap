@@ -23,8 +23,6 @@ require_once 'PaneContentPresenter.class.php';
 require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'QrCode.class.php';
-require_once 'Mapping.class.php';
-require_once 'MappingCollection.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
 require_once 'InjectDropIntoClassnamesVisitor.class.php';
 
@@ -34,9 +32,9 @@ require_once 'InjectDropIntoClassnamesVisitor.class.php';
 class Cardwall_Pane extends AgileDashboard_Pane {
 
     /**
-     * @var array Accumulated array of Tracker_FormElement_Field_Selectbox
+     * @var Cardwall_MappingCollection
      */
-    private $accumulated_status_fields = array();
+    private $mappings;
 
     /**
      * @var Planning_Milestone
@@ -59,11 +57,13 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
         $this->milestone->getPlannedArtifacts()->accept($column_id_visitor);
-        $this->accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
+        $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
 
         $this->column_factory = new Cardwall_ColumnFactory($this->getField());
 
-        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->getMapping());
+        $this->mappings = $this->column_factory->getMappings($accumulated_status_fields);
+
+        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->mappings);
         $this->milestone->getPlannedArtifacts()->accept($drop_into_visitor);
     }
 
@@ -93,12 +93,11 @@ class Cardwall_Pane extends AgileDashboard_Pane {
 
         $qrcode        = $this->getQrCode();
         $columns       = $this->column_factory->getColumns();
-        $mappings      = $this->getMapping();
         $swimlines     = $swimline_factory->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
         $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
 
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $mappings, $qrcode);
+        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $this->mappings, $qrcode);
         ob_start();
         $renderer->render('agiledashboard-pane', $presenter);
         return ob_get_clean();
@@ -123,24 +122,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             $this->field = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
         }
         return $this->field;
-    }
-
-    /**
-     * @return Cardwall_MappingCollection
-     */
-    private function getMapping() {
-        $columns  = $this->column_factory->getColumns();
-        $mappings = new Cardwall_MappingCollection();
-        foreach ($this->accumulated_status_fields as $status_field) {
-            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                foreach ($columns as $column) {
-                    if ($column->label == $value->getLabel()) {
-                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
-                    }
-                }
-            }
-        }
-        return $mappings;
     }
 }
 ?>

@@ -135,44 +135,23 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $column_id_visitor = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
         $root->accept($column_id_visitor);
-        $this->accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
-        
-        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($this->getMapping());
+        $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
+
+        $mappings = $column_factory->getMappings($accumulated_status_fields);
+
+        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
         $root->accept($drop_into_visitor);
-        
+
         $swimline_factory = new Cardwall_SwimlineFactory();
         $swimlines = $swimline_factory->getSwimlines($this->columns, array($root));
 
         $qrcode        = $this->getQrCode();
-        $mappings      = $this->getMapping();
         $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode, $field, $form);
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         ob_start();
         $renderer->render('renderer', $presenter);
         $html .= ob_get_clean();
         return $html;
-    }
-
-    private function getColumns() {
-        return $this->columns;
-    }
-
-    /**
-     * @return Cardwall_MappingCollection
-     */
-    private function getMapping() {
-        $columns  = $this->getColumns();
-        $mappings = new Cardwall_MappingCollection();
-        foreach ($this->accumulated_status_fields as $status_field) {
-            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                foreach ($columns as $column) {
-                    if ($column->label == $value->getLabel()) {
-                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
-                    }
-                }
-            }
-        }
-        return $mappings;
     }
 
     /**

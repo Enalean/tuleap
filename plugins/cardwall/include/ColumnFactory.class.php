@@ -19,6 +19,8 @@
  */
 
 require_once 'Column.class.php';
+require_once 'Mapping.class.php';
+require_once 'MappingCollection.class.php';
 
 /**
  * Build from a SB field bunch of columns to display in cardwall
@@ -54,6 +56,28 @@ class Cardwall_ColumnFactory {
             $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
         }
         return $this->columns;
+    }
+
+    /**
+     * Get the column/field/value mappings
+     *
+     * @param array $fields array of Tracker_FormElement_Field_Selectbox
+     *
+     * @return Cardwall_MappingCollection
+     */
+    public function getMappings($fields) {
+        $columns  = $this->getColumns();
+        $mappings = new Cardwall_MappingCollection();
+        foreach ($fields as $status_field) {
+            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
+                foreach ($columns as $column) {
+                    if ($column->label == $value->getLabel()) {
+                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
+                    }
+                }
+            }
+        }
+        return $mappings;
     }
 
     private function getColumnColors($value, $decorators) {
