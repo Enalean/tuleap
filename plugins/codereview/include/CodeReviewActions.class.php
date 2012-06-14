@@ -65,17 +65,28 @@ class CodeReviewActions extends Actions {
     * @return Array
     */
     function validateRequest() {
-        $status  = true;
-        $invalid = array();
-        
-        $user     = UserManager::instance()->getCurrentUser();
-        $username = $user->getUserName();
-        $project  = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        $status             = true;
+        $invalid            = array();
+        $plugin             = PluginManager::instance()->getPluginByName('codereview');
+        $repository_manager = new RepositoryManager($plugin, $this->request);
+        $svnpath            = $repository_manager->svnPath;
+        $user               = UserManager::instance()->getCurrentUser();
+        $username           = $user->getUserName();
+        $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        $projectname = $project->getPublicName();
+        //$accessfile = svn_utils_read_svn_access_file($projectname);
+        $boolean = svn_utils_check_write_access($username,$projectname,$svnpath);
+        if(!$boolean){
+            $status    = false;
+            $msg = "The user '".$username."' has not the right to create a review request.";
+            $GLOBALS['Response']->addFeedBack('error', $msg);
+            $this->controller->view = 'displayFrame';
+        }
         //var_dump("verifiy if the current user is a project admin or not : ");
-        if(!$project->userIsAdmin()){
+        /*if(!$project->userIsAdmin()){
         $msg = "The user '".$username."' has not the right to create a review request.";
                 $GLOBALS['Response']->addFeedBack('error', $msg);
-                $this->controller->view = 'displayFrame';}
+                $this->controller->view = 'displayFrame';}*/
 
         $valid  = new Valid_String('codereview_server_url');
         $server = trim($this->request->get('codereview_server_url'));
