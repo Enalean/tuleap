@@ -26,16 +26,45 @@ require_once 'BoardPresenter.class.php';
 class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
 
     /**
-     * @param array                      $swimlines Array of TreeNode
-     * @param array                      $columns   Array of Cardwall_Column
-     * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
-     * @param Cardwall_QrCode            $qrcode    QrCode to display. false if no qrcode (thus no typehinting)
+     * @var Tracker_FormElement_Field_Selectbox
      */
-    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode) {
+    public $field;
+
+    /**
+     * @param array                               $swimlines Array of TreeNode
+     * @param array                               $columns   Array of Cardwall_Column
+     * @param Cardwall_MappingCollection          $mappings  Collection of Cardwall_Mapping
+     * @param Cardwall_QrCode                     $qrcode    QrCode to display. false if no qrcode (thus no typehinting)
+     * @param Tracker_FormElement_Field_Selectbox $field     field used for columns. false if no qrcode (thus no typehinting)
+     */
+    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode, $field) {
         parent::__construct($swimlines, $columns, $mappings, $qrcode);
-        $this->nifty               = '';
+        $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         $this->swimline_title      = '';
         $this->has_swimline_header = false;
+        $this->field               = $field ? $field : false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function has_columns() {
+        return count($this->columns) > 0;
+    }
+
+    /**
+     * @return string
+     */
+    public function warn_please_choose() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
+    }
+
+    /**
+     * @return string
+     */
+    public function warn_no_values() {
+        $hp = Codendi_HTMLPurifier::instance();
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($this->field->getLabel()));
     }
 }
 ?>

@@ -19,7 +19,7 @@
  */
 
 /**
- * Foreach artifact in a TreeNode, inject the id of the field used for the status semantic
+ * Foreach artifact in a TreeNode, inject the id of the field used for the columns
  */
 class Cardwall_InjectColumnIdVisitor {
 
@@ -28,11 +28,17 @@ class Cardwall_InjectColumnIdVisitor {
      */
     private $accumulated_status_fields = array();
 
+    /**
+     * @return array Accumulated array of Tracker_FormElement_Field_Selectbox
+     */
+    public function getAccumulatedStatusFields() {
+        return $this->accumulated_status_fields;
+    }
+
     public function visit(TreeNode $node) {
         $data    = $node->getData();
         if (isset($data['artifact'])) {
-            $tracker = $data['artifact']->getTracker();
-            $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+            $field = $this->getField($data['artifact']);
             $data['column_field_id'] = 0;
             if ($field) {
                 $field_id                = $field->getId();
@@ -47,10 +53,11 @@ class Cardwall_InjectColumnIdVisitor {
     }
 
     /**
-     * @return array Accumulated array of Tracker_FormElement_Field_Selectbox
+     * @return Tracker_FormElement_Field_Selectbox
      */
-    public function getAccumulatedStatusFields() {
-        return $this->accumulated_status_fields;
+    protected function getField(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
     }
 }
 ?>

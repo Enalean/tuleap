@@ -9,12 +9,28 @@
             <option value="187">Business value</option>
             <option value="188">Story points</option>
             <option value="192" selected="selected">Stage</option>
+            <option value="368">Empty selectbox</option>
         </select>
         <input type="submit" value="Submit" />
     </p>
 </form>
-<label id="cardwall_board-nifty">
-    <input type="checkbox" onclick="$(this).up().next('div.cardwall_board').toggleClassName('nifty'); new Ajax.Request('/toggler.php?id=cardwall_board-nifty');">free-hand drawing view
-</label>
-{{> board}}
-{{> qr-code}}
+{{^field}}
+    <div class="alert-message block-message warning">
+        {{warn_please_choose}}
+    </div>
+{{/field}}
+{{#field}}
+    {{^has_columns}}
+        <div class="alert-message block-message warning">
+            {{warn_no_values}}
+        </div>
+    {{/has_columns}}
+    {{#has_columns}}
+        <label id="cardwall_board-nifty">
+            <input type="checkbox" onclick="$(this).up().next('div.cardwall_board').toggleClassName('nifty'); new Ajax.Request('/toggler.php?id=cardwall_board-nifty');" {{#nifty}}checked{{/nifty}}>
+            free-hand drawing view
+        </label>
+        {{> board}}
+        {{> qr-code}}
+    {{/has_columns}}
+{{/field}}

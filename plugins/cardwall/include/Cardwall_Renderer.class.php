@@ -26,7 +26,7 @@ require_once 'Swimline.class.php';
 require_once 'QrCode.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
-require_once 'InjectColumnIdVisitor.class.php';
+require_once 'InjectColumnIdCustomFieldVisitor.class.php';
 require_once 'InjectDropIntoClassnamesVisitor.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
@@ -141,17 +141,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $form .= '</p>';
         $form .= '</form>';
         
-        $display_choose  = '';
-        $display_choose .= '<div class="alert-message block-message warning">';
-        $display_choose .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
-        $display_choose .= '</div>';
-        
-        $html .= $this->fetchCards($matching_ids, $display_choose, $form);
+        $html .= $this->fetchCards($matching_ids, $form);
         
         return $html;
     }
     
-    private function fetchCards($matching_ids, $display_choose = '', $form = '') {
+    private function fetchCards($matching_ids, $form = '') {
         $html  = '';
         $hp    = Codendi_HTMLPurifier::instance();
         $field = $this->getField();
@@ -161,9 +156,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
         }
         
-        $html .= $form;
-        
-        $nb_columns        = 1;
+        $this->columns = array();
         $column_sql_select = '';
         $column_sql_from   = '';
         $values            = array(1);
@@ -174,8 +167,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                     unset($values[$key]);
                 }
             }
-            $nb_columns = count($values);
-            if ($nb_columns) {
+            if (count($values)) {
                 $column_sql_select  = ", IFNULL(CVL.bindvalue_id, 100) AS col";
                 $column_sql_from = "LEFT JOIN (
                                tracker_changeset_value AS CV2
@@ -184,15 +176,14 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                if (!$field->isRequired()) {
                    $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
                    $values = array_merge(array($none), $values);
-                   $nb_columns++;
                }
-            } else {
-                $html .= '<div class="alert-message block-message warning">';
-                $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($field->getLabel()));
-                $html .= '</div>';
             }
-        } else {
-            $html .= $display_choose;
+            
+            $decorators = $field->getBind()->getDecorators();
+            foreach ($values as $key => $value) {
+                list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
+                $this->columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+            }
         }
         
         // Build a small sql query to fetch artifact titles (depends on tracker semantic)
@@ -206,117 +197,26 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                    $column_sql_from
                 WHERE A.id IN (". $matching_ids['id'] .")
         ";
-        //echo $sql;
-        $dao = new DataAccessObject();
         
-        
-        $this->columns = array();
-        
-        $nifty = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
-        
-        $html .= '<label id="cardwall_board-nifty">';
-        $html .= '<input type="checkbox" onclick="$(this).up().next(\'div.cardwall_board\').toggleClassName(\'nifty\'); new Ajax.Request(\'/toggler.php?id=cardwall_board-nifty\');" ';
-        if ($nifty) {
-            $html .= 'checked="checked"';
-        }
-        $html .= ' />';
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'nifty_view');
-        $html .= '</label>';
-        
-        $html .= '<div class="cardwall_board '. $nifty .'">';
-
-        $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
-        
-        $drop_into = '';
-        if ($field) {
-            $html .= '<colgroup>';
-            foreach ($values as $key => $value) {
-                $html .= '<col id="cardwall_board_column-'. (int)$value->getId() .'" />';
-                $drop_into .= ' drop-into-'. (int)$value->getId();
-            }
-            $html .= '</colgroup>';
-            
-            $html .= '<thead><tr>';
-            $decorators = $field->getBind()->getDecorators();
-            foreach ($values as $key => $value) {
-                // {{{ columns
-                list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-                $this->columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-                // }}}
-                if (1) {
-                    $style = '';
-                    if (isset($decorators[$value->getId()])) {
-                        $r = $decorators[$value->getId()]->r;
-                        $g = $decorators[$value->getId()]->g;
-                        $b = $decorators[$value->getId()]->b;
-                        if ($r !== null && $g !== null && $b !== null ) {
-                            //choose a text color to have right contrast (black on dark colors is quite useless)
-                            $color = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
-                            $style = 'style="background-color:rgb('. (int)$r .', '. (int)$g .', '. (int)$b .'); color:'. $color .';"';
-                        }
-                    }
-                    $html .= '<th '. $style .'>';
-                    $html .= $hp->purify($value->getLabel());
-                } else {
-                    $html .= '<th>';
-                    if (isset($decorators[$value->getId()])) {
-                        $html .= $decorators[$value->getId()]->decorate($hp->purify($value->getLabel()));
-                    } else {
-                        $html .= $hp->purify($value->getLabel());
-                    }
-                }
-                $html .= '</th>';
-            }
-            $html .= '</tr></thead>';
-        }
-        
-        $html .= '<tbody><tr valign="top">';
-        
-        
-        $root = new TreeNode();
-        
+        $root  = new TreeNode();
+        $dao   = new DataAccessObject();
         $cards = $dao->retrieve($sql);
-        foreach ($values as $value) {
-            $html .= '<td>';
-            $html .= '<ul>';
-            foreach ($cards as $row) {
-                if (!$field || $row['col'] == $value->getId()) {
-                    // {{{
-                    $node = new TreeNode();
-                    $node->setId((int)$row['id']);
-                    $node->setData(array(
-                        'id'       => (int)$row['id'],
-                        //'artifact' => Tracker_ArtifactFactory::instance()->getArtifactById((int)$row['id'])
-                    ));
-                    $root->addChild($node);
-                    //}}}
-                    
-                    $html .= '<li class="cardwall_board_postit '. $drop_into .'" id="cardwall_board_postit-'. (int)$row['id'] .'">';
-                    // TODO: use mustache templates?
-                    $html .= '<div class="card">';
-                    $html .= '<div class="card-actions">';
-                    $html .= '<a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a>'; // TODO: Use artifact->getUrl or similar?
-                    $html .= '</div>';
-                    $html .= '<div class="cardwall_board_content">';
-                    $html .= $hp->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId());
-                    $html .= '</div>';
-                    $html .= '</div>';
-                    $html .= '</li>';
-                }
-            }
-            $html .= '</ul>&nbsp;';
-            $html .= '</td>';
+        foreach ($cards as $row) {
+            $node = new TreeNode();
+            $node->setId((int)$row['id']);
+            $node->setData(array(
+                'id' => (int)$row['id'],
+            ));
+            $root->addChild($node);
         }
-        
-        $html .= '</tr></tbody></table>';
-        $html .= '</div>';
         
         //return $html;
-        $html = '';
+        $html  = '';
+        
         $visitor = Planning_ArtifactTreeNodeVisitor::build('');
         $root->accept($visitor);
         
-        $column_id_visitor = new Cardwall_InjectColumnIdVisitor();
+        $column_id_visitor = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
         $root->accept($column_id_visitor);
         $this->accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
         
@@ -328,7 +228,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         );
         $qrcode        = $this->getQrCode();
         $mappings      = $this->getMapping();
-        $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode);
+        $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode, $field);
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         ob_start();
         $renderer->render('renderer', $presenter);
