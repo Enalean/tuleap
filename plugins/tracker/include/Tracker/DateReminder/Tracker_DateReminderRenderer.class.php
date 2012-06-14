@@ -107,7 +107,7 @@ class Tracker_DateReminderRenderer {
             $output .= "Update Reminder";
             $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
             $output .= '<INPUT TYPE="HIDDEN" NAME="reminder_id" VALUE="'.$reminderId.'">
-                        <INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+                        <INPUT TYPE="HIDDEN" NAME="reminder_field_date" VALUE="'.$reminder->getField()->getId().'">';
             $output .= '<table border="0" width="900px"><TR height="30">';
             $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
             $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" VALUE="'.$reminder->getDistance().'" SIZE="3"> day(s)</TD>';

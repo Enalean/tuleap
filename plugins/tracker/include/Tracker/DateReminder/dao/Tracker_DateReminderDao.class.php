@@ -142,6 +142,33 @@ class Tracker_DateReminderDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Retrieve duplicated date reminders given their params
+     * 
+     * @param Integer $trackerId        Id of the tracker
+     * @param Integer $fieldId          Id of the date field
+     * @param String  $ugroups          Id of the user groups
+     * @param Integer $notificationType 0 if before, 1 if after the value of the date field
+     * @param Integer $distance         Distance from the value of the date fiels
+     * 
+     * @return DataAccessResult
+     */
+    public function findReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance) {
+        $trackerId        = $this->da->escapeInt($trackerId);
+        $fieldId          = $this->da->escapeInt($fieldId);
+        $ugroups          = $this->da->quoteSmart($ugroups);
+        $notificationType = $this->da->escapeInt($notificationType);
+        $distance         = $this->da->escapeInt($distance);
+        $sql = "SELECT * 
+                FROM $this->tableName
+                WHERE tracker_id        = $trackerId
+                  AND field_id          = $fieldId
+                  AND ugroups           = $ugroups
+                  AND notification_type = $notificationType
+                  AND distance          = $distance
+                  AND status            = 1";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>
