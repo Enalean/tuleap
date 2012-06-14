@@ -254,5 +254,33 @@ class CodeReviewViews extends Views {
         print $form;
     }
 
+    /**
+     * Display patch file creation form
+     *
+     * @return Void
+     */
+    function createPatchFile() {
+    $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+    $form  = " <form id=\"createPatch\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_patch\">";
+    $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
+    $form .= "  <p>";
+    $form .= "   <label for=\"first_revision\">First Revision</label><br>";
+    $form .= "   <input id=\"first_revision\" name=\"first_revision\" type=\"text\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "  <p>";
+    $form .= "   <label for=\"second_revision\">Second Revision</label><br>";
+    $form .= "   <input id=\"second_revision\" name=\"second_revision\" type=\"text\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "  <p>";
+    $form .= "   <label for=\"target_directory\">Target Directory</label><br>";
+    $form .= "   <input id=\"target_directory\" name=\"target_directory\" type=\"text\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "   <label for=\"patch_path\">Patch Path</label><br>";
+    $form .= "   <input id=\"patch_path\" name=\"patch_path\" type=\"text\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "   <input type=\"submit\" value=\"Create the patch file\" />";
+    $form .= " </form>";
+    print $form;
+    }
 }
 ?>
