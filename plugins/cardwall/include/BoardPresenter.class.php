@@ -18,12 +18,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BoardPresenter.class.php';
-
 /**
- * A board to display in agiledashboard
+ * A board to display
  */
-class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
+abstract class Cardwall_BoardPresenter {
+
+    /**
+     * @var array of TreeNode
+     */
+    public $swimlines;
+
+    /**
+     * @var array of Cardwall_Column
+     */
+    public $columns;
+
+    /**
+     * @var Cardwall_MappingCollection
+     */
+    public $mappings;
+
+    /**
+     * @var string
+     */
+    public $planning_redirect_parameter = '';
+
+    /**
+     * @var string
+     */
+    public $swimline_title = '';
+
+    /**
+     * Say if the swimlines should display their header on top of them
+     *
+     * @var bool
+     */
+    public $has_swimline_header = true;
+
+    /**
+     * @var Cardwall_QrCode
+     */
+    public $qrcode;
+
+    /**
+     * @var string
+     */
+    public $nifty = '';
 
     /**
      * @param array                      $swimlines Array of TreeNode
@@ -31,11 +71,11 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
      * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
      * @param Cardwall_QrCode            $qrcode    QrCode to display. false if no qrcode (thus no typehinting)
      */
-    public function __construct($swimline_title, array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode) {
-        parent::__construct($swimlines, $columns, $mappings, $qrcode);
-        $this->nifty               = '';
-        $this->swimline_title      = $swimline_title;
-        $this->has_swimline_header = true;
+    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode) {
+        $this->swimlines      = $swimlines;
+        $this->columns        = $columns;
+        $this->mappings       = $mappings;
+        $this->qrcode         = $qrcode;
     }
 }
 ?>
