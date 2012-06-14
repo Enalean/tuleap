@@ -68,8 +68,8 @@ class Tracker_DateReminderRenderer {
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
         $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
         $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
-                        <OPTION VALUE="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
+                        <OPTION VALUE="0mmm"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
+                        <OPTION VALUE="1mmm"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
                     </SELECT></TD>';
         $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
@@ -148,7 +148,7 @@ class Tracker_DateReminderRenderer {
             if ($selectedUgroups && in_array($row['ugroup_id'], $selectedUgroups)) {
                 $output .= '<OPTION VALUE="'.$row['ugroup_id'].'" selected>'.util_translate_name_ugroup($row['name']).'</OPTION>';
             } else {
-                $output .= '<OPTION VALUE="'.$row['ugroup_id'].'">'.util_translate_name_ugroup($row['name']).'</OPTION>';
+                $output .= '<OPTION VALUE="'.$row['ugroup_id'].'wxop">'.util_translate_name_ugroup($row['name']).'</OPTION>';
             }
         }
         $output  .= '</SELECT>';
@@ -165,7 +165,7 @@ class Tracker_DateReminderRenderer {
         $trackerDateFields = $tff->getUsedDateFields($this->tracker);
         $ouptut            = '<select name="reminder_field_date">';
         foreach ($trackerDateFields as $dateField) {
-            $ouptut .= '<option value="'. $dateField->getId() .'" '. $selected.'>'.$dateField->getLabel().'</option>';
+            $ouptut .= '<option value="'. $dateField->getId() .'">'.$dateField->getLabel().'</option>';
         }
         $ouptut .= '</select>';
         return $ouptut;
@@ -181,11 +181,13 @@ class Tracker_DateReminderRenderer {
     public function validateFieldId(HTTPRequest $request) {
         $validFieldId = new Valid_UInt('reminder_field_date');
         $validFieldId->required();
-        $fieldId      = null;
         if ($request->valid($validFieldId)) {
-            $fieldId = $request->get('reminder_field_date');
+            return $request->get('reminder_field_date');
+        } else {
+            $errorMessage = $request->get('reminder_field_date').' is not a valid Field Id!!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_field', array($request->get('reminder_field_date')));
+            throw new Tracker_DateReminderException($errorMessage);
         }
-        return $fieldId;
     }
 
     /**
@@ -198,11 +200,13 @@ class Tracker_DateReminderRenderer {
     public function validateDistance(HTTPRequest $request) {
         $validDistance = new Valid_UInt('distance');
         $validDistance->required();
-        $distance      = null;
         if ($request->valid($validDistance)) {
-            $distance = $request->get('distance');
+            return $request->get('distance');
+        } else {
+            $errorMessage = $request->get('distance').' is not a valid distance!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_distance', array($request->get('distance')));
+            throw new Tracker_DateReminderException($errorMessage);
         }
-        return $distance;
     }
 
     /**
@@ -215,11 +219,13 @@ class Tracker_DateReminderRenderer {
     public function validateTrackerId(HTTPRequest $request) {
         $validTrackerId = new Valid_UInt('tracker_id');
         $validTrackerId->required();
-        $trackerId      = null;
         if ($request->valid($validTrackerId)) {
-            $trackerId = $request->get('tracker_id');
+            return $request->get('tracker_id');
+        } else {
+            $errorMessage = $request->get('tracker_id').' is not a valid tracker Id!!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_Tracker', array($request->get('tracker_id')));
+            throw new Tracker_DateReminderException($errorMessage);
         }
-        return $trackerId;
     }
 
     /**
@@ -232,11 +238,13 @@ class Tracker_DateReminderRenderer {
     public function validateNotificationType(HTTPRequest $request) {
         $validNotificationType = new Valid_UInt('notif_type');
         $validNotificationType->required();
-        $notificationType      = null;
         if ($request->valid($validNotificationType)) {
-            $notificationType = $request->get('notif_type');
+            return $request->get('notif_type');
+        } else {
+            $errorMessage = $request->get('notif_type').' is not a valid notification type !!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_notification_type', array($request->get('notif_type')));
+            throw new Tracker_DateReminderException($errorMessage);
         }
-        return $notificationType;
     }
 
     /**
@@ -249,11 +257,13 @@ class Tracker_DateReminderRenderer {
     public function validateStatus(HTTPRequest $request) {
         $validStatus = new Valid_UInt('notif_status');
         $validStatus->required();
-        $status      = null;
         if ($request->valid($validStatus)) {
-            $status = $request->get('notif_status');
+            return $request->get('notif_status');
+        } else {
+            $errorMessage = $request->get('notif_status').' is not a valid status !!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_status', array($request->get('notif_status')));
+            throw new Tracker_DateReminderException($errorMessage);
         }
-        return $status;
     }
 
     /**
@@ -266,12 +276,15 @@ class Tracker_DateReminderRenderer {
     public function validateReminderId(HTTPRequest $request) {
         $validReminderId = new Valid_UInt('reminder_id');
         $validReminderId->required();
-        $reminderId      = null;
         if ($request->valid($validReminderId)) {
-            $reminderId = $request->get('reminder_id');
+           return $request->get('reminder_id');
+        } else {
+            $errorMessage = $request->get('reminder_id').' is not a valid date reminder !!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', array($request->get('reminder_id')));
+            throw new Tracker_DateReminderException($errorMessage);
         }
-        return $reminderId;
     }
+    
     /**
      * Validate ugroup list param used for tracker reminder.
      * //TODO validate an array of ugroups Ids
@@ -281,13 +294,18 @@ class Tracker_DateReminderRenderer {
      * @return Integer
      */
     public function validateReminderUgroups(HTTPRequest $request) {
-        $validUgroupId = new Valid_WhiteList('reminder_ugroup');
+        $ugroupIds = $request->get('reminder_ugroup');
+        /*$validUgroupId = new Valid_WhiteList('reminder_ugroup');
         $validUgroupId->required();
-        $ugroupId      = null;
+        $ugroupIds     = array()
         if ($request->valid($validUgroupId)) {
-            $ugroupId = $request->get('reminder_ugroup');
-        }
-        return $ugroupId;
+            $ugroupIds[] = $request->get('reminder_ugroup');
+        } else {
+            $errorMessage = $request->get('notif_status').' is not a valid status !!';
+            //$errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_status', array($request->get('notif_status')));
+            throw new Tracker_DateReminderException($errorMessage);
+        }*/
+        return $ugroupIds;
     }
 
     /**
