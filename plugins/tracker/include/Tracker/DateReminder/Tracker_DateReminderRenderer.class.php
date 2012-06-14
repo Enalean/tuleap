@@ -294,7 +294,7 @@ class Tracker_DateReminderRenderer {
             $ugroupIds[] = intval($row['ugroup_id']);
         }
         $validUgroupIds = array();
-        foreach ($ugroupIds as $ugroup) {
+        foreach ($request->get('reminder_ugroup') as $ugroup) {
             if (in_array($ugroup, $ugroupIds)) {
                 $validUgroupIds[] = $ugroup;
             } else {
