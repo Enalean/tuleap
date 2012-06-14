@@ -36,13 +36,15 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      * @param Cardwall_MappingCollection          $mappings  Collection of Cardwall_Mapping
      * @param Cardwall_QrCode                     $qrcode    QrCode to display. false if no qrcode (thus no typehinting)
      * @param Tracker_FormElement_Field_Selectbox $field     field used for columns. false if no qrcode (thus no typehinting)
+     * @param Cardwall_Form                       $field     form to choose the column. false if no form (in widget) (thus no typehinting)
      */
-    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode, $field) {
+    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode, $field, $form) {
         parent::__construct($swimlines, $columns, $mappings, $qrcode);
         $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         $this->swimline_title      = '';
         $this->has_swimline_header = false;
         $this->field               = $field ? $field : false;
+        $this->form                = $form ? $form : false;
     }
 
     /**

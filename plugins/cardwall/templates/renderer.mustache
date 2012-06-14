@@ -1,19 +1,29 @@
 <input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0" />
+{{#form}}
 <form id="tracker_report_cardwall_settings" action="" method="POST">
-    <input type="hidden" value="105" name="report" />
-    <input type="hidden" value="112" name="renderer" />
+    <input type="hidden" value="{{report_id}}" name="report" />
+    <input type="hidden" value="{{renderer_id}}" name="renderer" />
+    {{#has_printer_version}}
+        <input type="hidden" value="{{printer_version}}" name="pv">
+    {{/has_printer_version}}
     <input type="hidden" value="renderer" name="func" />
     <p>Columns:
+        {{#has_possible_columns}}
         <select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">
-            <option value="174">As a</option>
-            <option value="187">Business value</option>
-            <option value="188">Story points</option>
-            <option value="192" selected="selected">Stage</option>
-            <option value="368">Empty selectbox</option>
+            {{^one_selected}}
+                <option selected="selected" value="">{{please_choose_dashed}}</option>
+            {{/one_selected}}
+            {{#possible_columns}}
+                {{#field}}
+                    <option value="{{getId}}" {{#selected}}selected="selected"{{/selected}}>{{getLabel}}</option>
+                {{/field}}
+            {{/possible_columns}}
         </select>
-        <input type="submit" value="Submit" />
+        {{/has_possible_columns}}
+        <input type="submit" value="{{submit}}" />
     </p>
 </form>
+{{/form}}
 {{^field}}
     <div class="alert-message block-message warning">
         {{warn_please_choose}}

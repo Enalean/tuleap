@@ -24,6 +24,7 @@ require_once 'RendererPresenter.class.php';
 require_once 'Column.class.php';
 require_once 'Swimline.class.php';
 require_once 'QrCode.class.php';
+require_once 'Form.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
 require_once 'InjectColumnIdCustomFieldVisitor.class.php';
@@ -100,55 +101,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @return string
      */
     public function fetch($matching_ids, $request, $report_can_be_modified) {
-        $html = '';
-        
-        $hp = Codendi_HTMLPurifier::instance();
-        
-        
-        $form  = '';
-        $form .= '<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0">';
-        
-        $form .= '<form id="tracker_report_cardwall_settings" action="" method="POST">';
-        $form .= '<input type="hidden" value="'. (int)$this->report->id .'" name="report">';
-        $form .= '<input type="hidden" value="'. (int)$this->id .'" name="renderer">';
-        if ($request->existAndNonEmpty('pv')) {
-            $form .= '<input type="hidden" value="'. (int)$request->get('pv') .'" name="pv">';
-        }
-        $form .= '<input type="hidden" value="renderer" name="func">';
-        $form .= '<p>'. 'Columns:';
-        $options  = '';
-        $selected = '';
-        $one_selected = false;
-        foreach($this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb')) as $formElement) {
-            if ($formElement->userCanRead() && count($formElement->getAllValues())) {
-                $selected = '';
-                if ($formElement->getId() == $this->getFieldId()) {
-                    $selected = 'selected="selected"';
-                    $one_selected = true;
-                }
-                $options .= '<option value="'. $formElement->getId() .'" '. $selected .'>'. $hp->purify($formElement->getLabel()) .'</option>';
-            }
-        }
-        if ($options) {
-            $form .= '<select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">';
-            if (!$one_selected) {
-                $form .= '<option selected="selected" value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-            }
-            $form .= $options;
-            $form .= '</select>';
-        }
-        $form .= ' <input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $form .= '</p>';
-        $form .= '</form>';
-        
-        $html .= $this->fetchCards($matching_ids, $form);
-        
-        return $html;
+        $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
+        $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->getField(), $used_sb);
+        return $this->fetchCards($matching_ids, $form);
     }
     
-    private function fetchCards($matching_ids, $form = '') {
+    private function fetchCards($matching_ids, $form = null) {
         $html  = '';
-        $hp    = Codendi_HTMLPurifier::instance();
         $field = $this->getField();
         
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
@@ -168,11 +127,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 }
             }
             if (count($values)) {
-                $column_sql_select  = ", IFNULL(CVL.bindvalue_id, 100) AS col";
-                $column_sql_from = "LEFT JOIN (
-                               tracker_changeset_value AS CV2
-                               INNER JOIN tracker_changeset_value_list AS CVL ON (CVL.changeset_value_id = CV2.id)
-                               ) ON (A.last_changeset_id = CV2.changeset_id AND CV2.field_id = {$field->getId()}) ";
                if (!$field->isRequired()) {
                    $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
                    $values = array_merge(array($none), $values);
@@ -186,31 +140,16 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             }
         }
         
-        // Build a small sql query to fetch artifact titles (depends on tracker semantic)
-        $sql = "SELECT A.id AS id, CVT.value AS title $column_sql_select
-                FROM tracker_artifact AS A
-                   LEFT JOIN (
-                       tracker_changeset_value AS CV
-                       INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
-                       INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
-                   ) ON (A.last_changeset_id = CV.changeset_id)
-                   $column_sql_from
-                WHERE A.id IN (". $matching_ids['id'] .")
-        ";
-        
         $root  = new TreeNode();
-        $dao   = new DataAccessObject();
-        $cards = $dao->retrieve($sql);
-        foreach ($cards as $row) {
+        foreach (explode(',', $matching_ids['id']) as $id) {
             $node = new TreeNode();
-            $node->setId((int)$row['id']);
+            $node->setId((int)$id);
             $node->setData(array(
-                'id' => (int)$row['id'],
+                'id' => (int)$id,
             ));
             $root->addChild($node);
         }
         
-        //return $html;
         $html  = '';
         
         $visitor = Planning_ArtifactTreeNodeVisitor::build('');
@@ -228,7 +167,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         );
         $qrcode        = $this->getQrCode();
         $mappings      = $this->getMapping();
-        $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode, $field);
+        $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode, $field, $form);
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         ob_start();
         $renderer->render('renderer', $presenter);
