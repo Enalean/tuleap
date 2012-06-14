@@ -41,7 +41,10 @@ class Cardwall_BoardFactory {
         $mappings = $column_factory->getMappings($accumulated_status_fields);
 
         $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
-        $forests_of_artifacts->accept($drop_into_visitor);
+        $i = 0;
+        foreach ($forests_of_artifacts->getChildren() as $forest) {
+            $forest->accept($drop_into_visitor, $i++);
+        }
 
         $columns   = $column_factory->getColumns();
         $swimlines = $swimline_factory->getSwimlines($columns, $forests_of_artifacts->getChildren());

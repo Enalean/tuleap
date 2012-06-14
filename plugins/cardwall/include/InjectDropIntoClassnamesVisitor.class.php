@@ -33,18 +33,18 @@ class Cardwall_InjectDropIntoClassnamesVisitor {
         $this->mappings = $mappings;
     }
 
-    public function visit(TreeNode $node) {
+    public function visit(TreeNode $node, $row_index = 0) {
         $data     = $node->getData();
         if (isset($data['column_field_id'])) {
             $mappings = $this->mappings->getMappingsByFieldId($data['column_field_id']);
             $data['drop-into-class'] = '';
             foreach ($mappings as $mapping) {
-                $data['drop-into-class'] .= ' drop-into-'. $mapping->column_id;
+                $data['drop-into-class'] .= ' drop-into-'. $row_index .'-'. $mapping->column_id;
             }
             $node->setData($data);
         }
         foreach ($node->getChildren() as $child) {
-            $child->accept($this);
+            $child->accept($this, $row_index);
         }
     }
 }
