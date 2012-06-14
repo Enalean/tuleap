@@ -96,7 +96,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $mappings, $qrcode);
         ob_start();
-        $renderer->render('pane-content', $presenter);
+        $renderer->render('agiledashboard-pane', $presenter);
         return ob_get_clean();
     }
 

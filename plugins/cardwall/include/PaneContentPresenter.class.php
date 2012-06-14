@@ -55,11 +55,14 @@ class Cardwall_PaneContentPresenter {
     public $has_swimline_header = true;
 
     /**
-     * Say if the a qr code should be displayed next to the cardwall
-     *
-     * @var bool
+     * @var Cardwall_QrCode
      */
-    public $qrcode = true;
+    public $qrcode;
+
+    /**
+     * @var string
+     */
+    public $nifty = '';
 
     /**
      * @param array                      $swimlines Array of TreeNode

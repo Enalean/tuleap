@@ -213,10 +213,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $dao = new DataAccessObject();
         
         $nifty = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
-        $html .= '<div class="cardwall_board '. $nifty .'">';
         
         $html .= '<label id="cardwall_board-nifty">';
-        $html .= '<input type="checkbox" onclick="$(this).up(\'div.cardwall_board\').toggleClassName(\'nifty\'); new Ajax.Request(\'/toggler.php?id=cardwall_board-nifty\');" ';
+        $html .= '<input type="checkbox" onclick="$(this).up().next(\'div.cardwall_board\').toggleClassName(\'nifty\'); new Ajax.Request(\'/toggler.php?id=cardwall_board-nifty\');" ';
         if ($nifty) {
             $html .= 'checked="checked"';
         }
@@ -224,6 +223,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'nifty_view');
         $html .= '</label>';
         
+        $html .= '<div class="cardwall_board '. $nifty .'">';
+
         $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
         
         $drop_into = '';
