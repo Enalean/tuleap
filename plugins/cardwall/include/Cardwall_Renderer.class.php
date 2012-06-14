@@ -23,6 +23,7 @@ require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ArtifactTreeNodeVisitor.class.p
 require_once 'RendererPresenter.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'SwimlineFactory.class.php';
+require_once 'Board.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'Mapping.class.php';
@@ -146,7 +147,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $swimlines = $swimline_factory->getSwimlines($this->columns, array($root));
 
         $qrcode        = $this->getQrCode();
-        $presenter = new Cardwall_RendererPresenter($swimlines, $this->columns, $mappings, $qrcode, $field, $form);
+
+        $board = new Cardwall_Board($swimlines, $this->columns, $mappings);
+
+        $presenter = new Cardwall_RendererPresenter($board, $qrcode, $field, $form);
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         ob_start();
         $renderer->render('renderer', $presenter);

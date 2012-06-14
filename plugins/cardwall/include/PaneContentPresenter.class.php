@@ -26,13 +26,11 @@ require_once 'BoardPresenter.class.php';
 class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
 
     /**
-     * @param array                      $swimlines Array of TreeNode
-     * @param array                      $columns   Array of Cardwall_Column
-     * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
-     * @param Cardwall_QrCode            $qrcode    QrCode to display. false if no qrcode (thus no typehinting)
+     * @param Cardwall_Board  $board  The board
+     * @param Cardwall_QrCode $qrcode QrCode to display. false if no qrcode (thus no typehinting)
      */
-    public function __construct($swimline_title, array $swimlines, array $columns, Cardwall_MappingCollection $mappings, $qrcode) {
-        parent::__construct($swimlines, $columns, $mappings, $qrcode);
+    public function __construct($swimline_title, Cardwall_Board $board, $qrcode) {
+        parent::__construct($board, $qrcode);
         $this->nifty               = '';
         $this->swimline_title      = $swimline_title;
         $this->has_swimline_header = true;

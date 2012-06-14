@@ -19,6 +19,7 @@
  */
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'Board.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
@@ -96,8 +97,10 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $swimlines     = $swimline_factory->getSwimlines($columns, $this->milestone->getPlannedArtifacts()->getChildren());
         $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
 
+        $board = new Cardwall_Board($swimlines, $columns, $this->mappings);
+
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $swimlines, $columns, $this->mappings, $qrcode);
+        $presenter = new Cardwall_PaneContentPresenter($backlog_title, $board, $qrcode);
         ob_start();
         $renderer->render('agiledashboard-pane', $presenter);
         return ob_get_clean();

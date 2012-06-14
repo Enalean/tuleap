@@ -19,49 +19,34 @@
  */
 
 /**
- * A board to display
+ * A board that contains swimlines (with cards) and columns
  */
-abstract class Cardwall_BoardPresenter {
+class Cardwall_Board {
 
     /**
-     * @var Cardwall_Board
+     * @var array of TreeNode
      */
-    public $board;
+    public $swimlines;
 
     /**
-     * @var string
+     * @var array of Cardwall_Column
      */
-    public $planning_redirect_parameter = '';
+    public $columns;
 
     /**
-     * @var string
+     * @var Cardwall_MappingCollection
      */
-    public $swimline_title = '';
+    public $mappings;
 
     /**
-     * Say if the swimlines should display their header on top of them
-     *
-     * @var bool
+     * @param array                      $swimlines Array of TreeNode
+     * @param array                      $columns   Array of Cardwall_Column
+     * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
      */
-    public $has_swimline_header = true;
-
-    /**
-     * @var Cardwall_QrCode
-     */
-    public $qrcode;
-
-    /**
-     * @var string
-     */
-    public $nifty = '';
-
-    /**
-     * @param Cardwall_Board  $board  The board
-     * @param Cardwall_QrCode $qrcode QrCode to display. false if no qrcode (thus no typehinting)
-     */
-    public function __construct(Cardwall_Board $board, $qrcode) {
-        $this->board  = $board;
-        $this->qrcode = $qrcode;
+    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
+        $this->swimlines = $swimlines;
+        $this->columns   = $columns;
+        $this->mappings  = $mappings;
     }
 }
 ?>
