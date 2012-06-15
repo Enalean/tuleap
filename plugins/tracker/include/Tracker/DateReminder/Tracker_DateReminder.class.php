@@ -260,14 +260,13 @@ class Tracker_DateReminder {
     public function __toString() {
         $fieldLabel  = ' "'.$this->getField()->name.'" ';
         $notificationTypeLabel = $this->getNotificationTypeLabel();
-        //@TODO retrieve comma separated ugroups
         $ugroupsLabel   = '';
         $ugroupManager  = new UGroupManager();
         $ugroups        = explode(',', $this->ugroups);
         foreach ($ugroups as $ugroup) {
             $ugroupsLabel  .= ' "'.util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()).' "';
         }
-        return $this->distance.' day(s) '.$notificationTypeLabel.$fieldLabel.' send an email to '.$ugroupsLabel;
+        return $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_toString', array($this->distance, $notificationTypeLabel, $fieldLabel, $ugroupsLabel));
     }
 
     /**
@@ -290,5 +289,4 @@ class Tracker_DateReminder {
     }
 
 }
-
 ?>

@@ -1368,3 +1368,4 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date 
 project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder
 project_admin_utils	tracker_date_reminder_added	Date Reminder successfully added
 project_admin_utils	tracker_date_reminder_updated	Date Reminder successfully updated
+project_admin_utils	tracker_date_reminder_toString	Send an email to $4 $1 day(s) $2 $3
