@@ -348,13 +348,14 @@ class Tracker_DateReminderRenderer {
         print '<fieldset>';
         $this->displayAllReminders();
         $output = '<div id="tracker_reminder"></div>';
-        $output .= '<p>
-        <label for="New Reminder"> Add reminder
-            <input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'">
-        </label>
+        $output .= '
+        <script type="text/javascript">
+        var reminderHtml = \'<p><label for="New Reminder"> Add reminder<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label>\';
+        document.getElementById("tracker_reminder").innerHTML = reminderHtml; 
+        </script>
         <noscript>
-            <a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a>
-        </noscript></p>';
+        <p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a>
+        </noscript>';
         if ($request->get('action') == 'add_reminder') {
             $output .= $this->getNewDateReminderForm();
         } elseif ($request->get('action') == 'update_reminder') {
