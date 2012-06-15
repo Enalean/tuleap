@@ -202,10 +202,10 @@ class Tracker_DateReminder {
     public function getRecipients() {
         $recipients    = array();
         $uGroupManager = new UGroupManager();
+        $um            = UserManager::instance();
         $ugroups       = $this->getUgroups(true);
         foreach ($ugroups as $ugroupId) {
             if ($ugroupId < 100) {
-                $um      = UserManager::instance();
                 $members = $uGroupManager->getDynamicUGroupsMembers($ugroupId, $this->getTracker()->getGroupId());
                 if ($members && !$members->isError()) {
                     foreach ($members as $member) {
