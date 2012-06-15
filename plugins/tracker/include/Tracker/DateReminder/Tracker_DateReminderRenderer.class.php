@@ -316,10 +316,10 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function displayAllReminders() {
-        $titles           = array('Reminder',
+        $titles           = array($GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_title'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
-                                  'Edit');
+                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title'));
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
         if (!empty($trackerReminders)) {
