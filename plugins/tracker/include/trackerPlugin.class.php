@@ -103,6 +103,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
+                '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )
         );
     }
