@@ -36,6 +36,11 @@ class TreeNode /*implements Visitable*/ {
      * @type mixed
      */
     var $data;
+    
+    /**
+     * @var mixed
+     */
+    var $object;
 
     /**
      * @type array
@@ -53,8 +58,8 @@ class TreeNode /*implements Visitable*/ {
     /**
      * Constructor
      */
-    function TreeNode($data=null) {
-        $this->id = uniqid();
+    function TreeNode($data=null, $id=null) {
+        $this->id = ($id === null) ? uniqid() : $id;
         /*if(func_num_args() !== 0) {
             trigger_error(get_class($this).'::TreeNode => Do not accept arguments', E_USER_ERROR);
         }*/
@@ -135,6 +140,18 @@ class TreeNode /*implements Visitable*/ {
         }
     }
 
+    /**
+     * Allows to define a tree inline (usefull for tests)
+     *
+     * @return TreeNode
+     */
+    function addChildren() {
+        $child_list = func_get_args();
+        foreach ($child_list as $child) {
+            $this->addChild($child);
+        }
+        return $this;
+    }
 
     /**
      * Remove a child.
@@ -221,6 +238,34 @@ class TreeNode /*implements Visitable*/ {
             $children_as_string .= $child->__toString() .",\n";
         }
         return 'TreeNode #'. $this->id ." {\n $children_as_string }\n";
+    }
+
+    /**
+     * @return array A flat list of all descendant nodes (usefull for tests).
+     */
+    public function flattenChildren() {
+        $flatten_children = array();
+        
+        foreach($this->getChildren() as $child) {
+            $flatten_children = array_merge($flatten_children, $child->flatten());
+        }
+        
+        return $flatten_children;
+    }
+    
+    /**
+     * @return array A flat list of this node and all its descendants (usefull for tests).
+     */
+    private function flatten() {
+        return array_merge(array($this), $this->flattenChildren());
+    }
+    
+    public function getObject() {
+        return $this->object;
+    }
+    
+    public function setObject($object) {
+        $this->object = $object;
     }
 }
 

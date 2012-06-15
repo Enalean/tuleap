@@ -1,3 +1,9 @@
+Version 2.6 - Tuleap 5.2
+    * Allow to use another gitphp than bundled one
+      You may want to install gitphp-tuleap rpm package as well for test.
+      If so, you need to edit the plugin configuration and set:
+      $gitphp_path = "/usr/share/gitphp-tuleap";
+
 Version 2.5.6 - Tuleap 5.2
     * Fix fatal error while creating a new repo
 

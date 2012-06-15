@@ -115,4 +115,63 @@ class Query_SharedFieldsTest extends TuleapTestCase {
     }
 }
 
+class Query_EmptyTest extends TuleapTestCase {
+
+    public function itIsEmptyWhenThereAreNoArtifactLinkSelected() {
+        $artifact_ids = array(142 => array(), 143 => array());
+        $query        = new Tracker_CrossSearch_Query(array(), array(), $artifact_ids);
+
+        $this->assertTrue($query->isEmpty());
+    }
+
+    public function itIsNotEmptyWhenThereAreArtifactLinkSelected() {
+        $artifact_ids = array(142 => array('898'), 143 => array());
+        $query        = new Tracker_CrossSearch_Query(array(), array(), $artifact_ids);
+
+        $this->assertFalse($query->isEmpty());
+    }
+
+    public function itIsEmptyWhenThereAreNoSementicStatusSelected() {
+        $sementic_criteria = array('title' => '', 'status' => 'any');
+        $query             = new Tracker_CrossSearch_Query(array(), $sementic_criteria, array());
+
+        $this->assertTrue($query->isEmpty());
+    }
+
+    public function itIsNotEmptyWhenThereIsASementicStatusSelected() {
+        $sementic_criteria = array('title' => '', 'status' => 'open');
+        $query             = new Tracker_CrossSearch_Query(array(), $sementic_criteria, array());
+
+        $this->assertFalse($query->isEmpty());
+    }
+
+    public function itIsEmptyWhenThereAreNoSementicTitleSelected() {
+        $sementic_criteria = array('title' => '', 'status' => '');
+        $query             = new Tracker_CrossSearch_Query(array(), $sementic_criteria, array());
+
+        $this->assertTrue($query->isEmpty());
+    }
+
+    public function itIsNotEmptyWhenThereIsASementicTitleSelected() {
+        $sementic_criteria = array('title' => 'zer', 'status' => '');
+        $query             = new Tracker_CrossSearch_Query(array(), $sementic_criteria, array());
+
+        $this->assertFalse($query->isEmpty());
+    }
+
+    public function itIsEmptyWhenThereAreNoSharedFieldSelected() {
+        $shared_fields_criteria = array(1084 => array('values' => array(0 => '')));
+        $query                  = new Tracker_CrossSearch_Query($shared_fields_criteria, array(), array());
+
+        $this->assertTrue($query->isEmpty());
+    }
+
+    public function itIsNotEmptyWhenThereIsASharedFieldSelected() {
+        $shared_fields_criteria = array(1084 => array('values' => array(0 => '1080')));
+        $query                  = new Tracker_CrossSearch_Query($shared_fields_criteria, array(), array());
+
+        $this->assertFalse($query->isEmpty());
+    }
+}
+
 ?>

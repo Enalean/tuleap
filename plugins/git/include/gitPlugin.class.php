@@ -87,6 +87,17 @@ class GitPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    /**
+     * Returns the configuration defined for given variable name
+     *
+     * @param String $key
+     *
+     * @return Mixed
+     */
+    public function getConfigurationParameter($key) {
+        return $this->getPluginInfo()->getPropertyValueForName($key);
+    }
+
     public function cssFile($params) {
         // Only show the stylesheet if we're actually in the Git pages.
         // This stops styles inadvertently clashing with the main site.

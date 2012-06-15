@@ -1,8 +1,8 @@
-{{#getData}}
-<li class="planning-draggable {{class}}" id="art-{{id}}">
+{{#getObject}}
+<li class="planning-item {{getCssClasses}}" id="art-{{getId}}">
     {{> card}}
     {{#hasChildren}}
         {{> cards}}
     {{/hasChildren}}
 </li>
-{{/getData}}
+{{/getObject}}

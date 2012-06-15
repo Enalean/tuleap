@@ -20,13 +20,29 @@
 
 class Tracker_CrossSearch_SharedFieldDao extends DataAccessObject {
     
+    /**
+     * @todo: this query doesn't work when $source_or_target_field_ids is the original field.
+     * 
+     * Given the SharedField criteria in UI is built with the reference field
+     * Then the reference value is not retreived by the following query.
+     * 
+     * Field 1084 (ref)
+     * Field 1107 (original_id = 1084)
+     * Field 1120 (original_id = 1084)
+     * 
+     * $source_or_target_field_ids = 1084 -> [ 1107, 1120 ]
+     * $source_or_target_field_ids = 1107 -> [ 1084, 1107, 1120 ]
+     * $source_or_target_field_ids = 1120 -> [ 1084, 1107, 1120 ]
+     * 
+     * NB: same apply for values method
+     */
     public function searchSharedFieldIds($source_or_target_field_ids) {
         $source_or_target_field_ids = $this->da->escapeInt($source_or_target_field_ids);
         
         $sql_original_ids = "
             SELECT original.id
             FROM tracker_field AS f
-                INNER JOIN tracker_field AS original ON (f.original_field_id = original.id)
+                    INNER JOIN tracker_field AS original ON (f.original_field_id = original.id)
             WHERE f.id = $source_or_target_field_ids
         ";
         
@@ -44,7 +60,7 @@ class Tracker_CrossSearch_SharedFieldDao extends DataAccessObject {
         ";
         
         $sql = $sql_original_ids.' UNION '.$sql_target_ids;
-        
+        //echo '<pre>'.print_r($sql, true).'</pre>';
         return $this->retrieve($sql);
     }
 

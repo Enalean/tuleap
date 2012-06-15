@@ -25,6 +25,8 @@ class Tracker_HierarchyFactory {
     
     protected $hierarchy_dao;
     
+    private static $_instance;
+    
     /**
      * Used to instanciate some related trackers according to their hierarchy,
      * without the need of a tree structure (e.g. retrieve direct children of a
@@ -40,14 +42,25 @@ class Tracker_HierarchyFactory {
     }
     
     /**
-     * Returns a new instance of Tracker_HierarchyFactory.
+     * Returns an instance of Tracker_HierarchyFactory (creating it when needed).
      * 
      * We should usually prefer dependency injection over static methods, but
      * there are some cases in Tuleap legacy code where injection would require
      * a lot of refactoring (e.g. Tracker/FormElement).
      */
-    public static function build() {
-        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance());
+    public static function instance() {
+        if (! self::$_instance) {
+            self::$_instance = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance());
+        }
+        return self::$_instance;
+    }
+    
+    public static function setInstance(Tracker_HierarchyFactory $instance) {
+        self::$_instance = $instance;
+    }
+    
+    public static function clearInstance() {
+        self::$_instance = null;
     }
     
     public function getChildren($tracker_id) {
@@ -59,7 +72,14 @@ class Tracker_HierarchyFactory {
         
         return $children;
     }
-    
+
+    /**
+     * Return the whole hierarchy (parents and descendants) that involve the given trackers
+     *
+     * @param array $tracker_ids
+     *
+     * @return \Tracker_Hierarchy
+     */
     public function getHierarchy($tracker_ids = array()) {
         $hierarchy             = new Tracker_Hierarchy();
         $search_tracker_ids    = $tracker_ids;
@@ -67,9 +87,24 @@ class Tracker_HierarchyFactory {
         while (!empty($search_tracker_ids)) {
             $this->getHierarchyFromTrackers($hierarchy, $search_tracker_ids, $processed_tracker_ids);
         }
+        return $this->fixSingleHierarchy($tracker_ids, $hierarchy);
+    }
+
+    /**
+     * If no other trackers were found in hierarchy, returns the tracker alone in hierarchy
+     *
+     * @param array             $tracker_ids
+     * @param Tracker_Hierarchy $hierarchy
+     *
+     * @return \Tracker_Hierarchy
+     */
+    private function fixSingleHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy) {
+        if (count($tracker_ids) == 1 && !$hierarchy->flatten()) {
+            $hierarchy->addRelationship($tracker_ids[0], 0);
+        }
         return $hierarchy;
     }
-    
+
     /*
      * Duplicate a tracker hierarchy
      * 

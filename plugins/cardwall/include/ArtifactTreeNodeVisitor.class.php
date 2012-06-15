@@ -18,70 +18,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Planning.class.php';
-require_once 'Item.class.php';
-require_once 'ItemPresenter.class.php';
+require_once 'CardPresenter.class.php';
 
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
  */
-class Planning_ArtifactTreeNodeVisitor {
-    
-    /**
-     * @var Planning
-     */
-    private $planning;
-    
+class Cardwall_ArtifactTreeNodeVisitor {
+
     /**
      * @var string the css class name
      */
     private $classname;
-    
+
     /**
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    
-    public function __construct(Planning                $planning,
-                                Tracker_ArtifactFactory $artifact_factory,
-                                                        $classname) {
-        $this->planning         = $planning;
+
+    public function __construct(Tracker_ArtifactFactory $artifact_factory) {
         $this->artifact_factory = $artifact_factory;
-        $this->classname        = $classname;
     }
-    
+
     /**
-     * @param string $classname The css classname to inject in TreeNode
-     *
      * @return Planning_ArtifactTreeNodeVisitor
      */
-    public static function build(Planning $planning, $classname) {
+    public static function build() {
         $artifact_factory = Tracker_ArtifactFactory::instance();
-        
-        return new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, $classname);
+
+        return new Cardwall_ArtifactTreeNodeVisitor($artifact_factory);
     }
 
     public function visit(TreeNode $node) {
         $this->decorate($node);
         $this->visitChildren($node);
     }
-    
+
     private function decorate(TreeNode $node) {
         $artifact = $this->getArtifact($node);
-        
+
         if ($artifact) {
-            $planning_item = new Planning_Item($artifact, $this->planning);
-            $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
-            
+            $presenter = new Cardwall_CardPresenter($artifact);
+
             $node->setObject($presenter);
         }
     }
-    
+
     private function getArtifact(TreeNode $node) {
         $row = $node->getData();
         return $this->artifact_factory->getArtifactById($row['id']);
     }
-    
+
     private function visitChildren(TreeNode $node) {
         foreach ($node->getChildren() as $child) {
             $child->accept($this);

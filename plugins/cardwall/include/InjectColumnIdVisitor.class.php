@@ -36,9 +36,10 @@ class Cardwall_InjectColumnIdVisitor {
     }
 
     public function visit(TreeNode $node) {
-        $data    = $node->getData();
-        if (isset($data['artifact'])) {
-            $field = $this->getField($data['artifact']);
+        $data      = $node->getData();
+        $presenter = $node->getObject();
+        if ($presenter) {
+            $field = $this->getField($presenter->getArtifact());
             $data['column_field_id'] = 0;
             if ($field) {
                 $field_id                = $field->getId();

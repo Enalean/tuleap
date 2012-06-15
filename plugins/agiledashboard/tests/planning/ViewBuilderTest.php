@@ -19,38 +19,54 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../include/Planning/ViewBuilder.class.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
+require_once dirname(__FILE__).'/../builders/aPlanning.php';
 
 class ViewBuilderTest extends TuleapTestCase {
+
     public function setUp() {
         parent::setUp();
         
+        $this->backlog_tracker_id = 486;
+        $this->hierarchy_ids     = array($this->backlog_tracker_id, 123, 456);
+        
+        $this->hierarchy          = stub('Tracker_Hierarchy')->flatten()->returns($this->hierarchy_ids);
+
+        $this->hierarchy_factory  = stub('Tracker_HierarchyFactory')->getHierarchy(array($this->backlog_tracker_id))->returns($this->hierarchy);
         $this->formElementFactory = mock('Tracker_FormElementFactory');
         $this->tracker_factory    = mock('TrackerFactory');
         $this->search             = mock('Tracker_CrossSearch_Search');
         $this->criteria_builder   = mock('Tracker_CrossSearch_CriteriaBuilder');
-    }
-
-    public function itBuildPlanningContentView() {
-        $tracker_ids = array();
-        $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $tracker_ids);
         
-        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
+        
+        $this->tracker_factory->setReturnValue('getTrackersByGroupIdUserCanView', $this->backlog_tracker_id);
         
         $this->criteria_builder->setReturnValue('getCriteria', array());
         
-        $user    = aUser()->build();
-        $project = new MockProject();
+        $this->user    = aUser()->build();
+        $this->project = mock('Project');
         
-        $cross_search_criteria = aCrossSearchCriteria()->build();
+        $this->cross_search_criteria = aCrossSearchCriteria()->build();
         
-        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($user, $project, $tracker_ids, $cross_search_criteria, array()));
-        
-        $builder  = new Planning_ViewBuilder($this->formElementFactory, $this->search, $this->criteria_builder);
-        $planning = aPlanning()->build();
-        $view     = $builder->build($user, $project, $cross_search_criteria, array(), $tracker_ids, $planning, '');
-        
-        $this->assertIsA($view, 'Planning_SearchContentView');
+        $this->builder  = new Planning_ViewBuilder($this->formElementFactory, $this->search, $this->criteria_builder);
+        $this->builder->setHierarchyFactory($this->hierarchy_factory);
+        $this->planning = aPlanning()->build();
+    }
+    
+    private function build() {
+        return $this->builder->build($this->user, $this->project, $this->cross_search_criteria, array(), $this->backlog_tracker_id, $this->planning, '');
+    }
+    
+    public function itRetrievesTheArtifactsFromTheBacklogTrackerAndItsChildrenTrackers() {
+        stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
+        $this->search->expectOnce('getHierarchicallySortedArtifacts', array($this->user, $this->project, $this->hierarchy_ids, $this->cross_search_criteria, array()));
+        $this->build();
+    }
+    
+    public function itBuildsPlanningContentView() {
+        stub($this->search)->getHierarchicallySortedArtifacts()->returns(new TreeNode());
+        $this->assertIsA($this->build(), 'Planning_SearchContentView');
     }
 }
 

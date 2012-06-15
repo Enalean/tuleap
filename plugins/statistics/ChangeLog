@@ -1,3 +1,6 @@
+Version 0.17 - Tuleap 5.2
+    * Prevent conflict between namespaces
+
 Version 0.16 - Tuleap 5.2
     * Do not load Autocompleter if we aren't in plugin
 

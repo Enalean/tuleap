@@ -19,7 +19,7 @@
  */
 
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
-require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ArtifactTreeNodeVisitor.class.php';
+require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
@@ -132,7 +132,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $root = new TreeNode();
         $root->addChild($forest);
 
-        $visitor = Planning_ArtifactTreeNodeVisitor::build('');
+        $visitor = Cardwall_ArtifactTreeNodeVisitor::build();
         $root->accept($visitor);
 
         return $root;

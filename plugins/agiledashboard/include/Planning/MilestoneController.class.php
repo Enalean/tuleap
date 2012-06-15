@@ -116,13 +116,13 @@ class Planning_MilestoneController extends MVC2_Controller {
         $tracker_linked_items  = $this->getTrackerLinkedItems($available_milestones);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
-        $tracker_ids           = $backlog_tracker_id ? array($backlog_tracker_id) : array();
+        $view_builder->setHierarchyFactory(Tracker_HierarchyFactory::instance());
         
         $view = $view_builder->build($this->getCurrentUser(), 
                                                  $project, 
                                                  $cross_search_query, 
                                                  $excluded_artifact_ids, 
-                                                 $tracker_ids,
+                                                 $backlog_tracker_id,
                                                  $planning,
                                                  $this->getPlanningRedirectParameter($planning));
         
