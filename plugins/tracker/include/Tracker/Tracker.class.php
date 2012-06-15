@@ -480,6 +480,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+            case 'display_reminder_form':
+                print $this->getDateReminderManager()->getDateReminderRenderer()->getNewDateReminderForm();
+            break;
             case 'admin-canned':
             // TODO : project members can access this part ?
                 if ($this->userIsAdmin($current_user)) {
