@@ -96,6 +96,15 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function deleteParentChildAssociationsForTracker($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = "DELETE h.*
+                FROM tracker_hierarchy AS h
+                WHERE h.parent_id = $tracker_id
+                OR    h.child_id  = $tracker_id";
+        return $this->update($sql);
+    }
+    
     public function duplicate($parent_id, $child_id, $tracker_mapping){
         if (isset($tracker_mapping[$parent_id]) && isset($tracker_mapping[$child_id])) {
             $parent_id = $this->da->escapeInt($tracker_mapping[$parent_id]);
