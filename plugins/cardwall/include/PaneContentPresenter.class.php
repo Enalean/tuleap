@@ -26,11 +26,13 @@ require_once 'BoardPresenter.class.php';
 class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
 
     /**
-     * @param Cardwall_Board  $board  The board
-     * @param Cardwall_QrCode $qrcode QrCode to display. false if no qrcode (thus no typehinting)
+     * @param Cardwall_Board  $board              The board
+     * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
+     * @param string          $redirect_parameter the redirect paramter to add to various url
+     * @param string          $swimline_title     The title to display on top of swimline headers
      */
-    public function __construct($swimline_title, Cardwall_Board $board, $qrcode) {
-        parent::__construct($board, $qrcode);
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title) {
+        parent::__construct($board, $qrcode, $redirect_parameter);
         $this->nifty               = '';
         $this->swimline_title      = $swimline_title;
         $this->has_swimline_header = true;

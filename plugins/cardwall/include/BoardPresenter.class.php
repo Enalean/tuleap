@@ -31,7 +31,7 @@ abstract class Cardwall_BoardPresenter {
     /**
      * @var string
      */
-    public $planning_redirect_parameter = '';
+    public $planning_redirect_parameter;
 
     /**
      * @var string
@@ -56,12 +56,14 @@ abstract class Cardwall_BoardPresenter {
     public $nifty = '';
 
     /**
-     * @param Cardwall_Board  $board  The board
-     * @param Cardwall_QrCode $qrcode QrCode to display. false if no qrcode (thus no typehinting)
+     * @param Cardwall_Board  $board              The board
+     * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
+     * @param string          $redirect_parameter the redirect paramter to add to various url
      */
-    public function __construct(Cardwall_Board $board, $qrcode) {
-        $this->board  = $board;
-        $this->qrcode = $qrcode;
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter) {
+        $this->board           = $board;
+        $this->qrcode          = $qrcode;
+        $this->planning_redirect_parameter = $redirect_parameter;
     }
 }
 ?>

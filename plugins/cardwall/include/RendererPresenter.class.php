@@ -31,13 +31,14 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
     public $field;
 
     /**
-     * @param Cardwall_Board                      $board  The board
-     * @param Cardwall_QrCode                     $qrcode QrCode to display. false if no qrcode (thus no typehinting)
-     * @param Tracker_FormElement_Field_Selectbox $field  field used for columns. false if no qrcode (thus no typehinting)
-     * @param Cardwall_Form                       $field  form to choose the column. false if no form (in widget) (thus no typehinting)
+     * @param Cardwall_Board                      $board              The board
+     * @param Cardwall_QrCode                     $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
+     * @param string                              $redirect_parameter the redirect paramter to add to various url
+     * @param Tracker_FormElement_Field_Selectbox $field              field used for columns. false if no qrcode (thus no typehinting)
+     * @param Cardwall_Form                       $field              form to choose the column. false if no form (in widget) (thus no typehinting)
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $field, $form) {
-        parent::__construct($board, $qrcode);
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $field, $form) {
+        parent::__construct($board, $qrcode, $redirect_parameter);
         $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         $this->swimline_title      = '';
         $this->has_swimline_header = false;

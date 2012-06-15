@@ -142,12 +142,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @return Cardwall_PaneContentPresenter
      */
     private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
-        $field         = $this->getField();
-        $visitor       = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
-        $board_factory = new Cardwall_BoardFactory();
-        $board         = $board_factory->getBoard($visitor, $forest_of_artifacts, $field);
+        $field              = $this->getField();
+        $visitor            = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
+        $board_factory      = new Cardwall_BoardFactory();
+        $board              = $board_factory->getBoard($visitor, $forest_of_artifacts, $field);
+        $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
 
-        return new Cardwall_RendererPresenter($board, $this->getQrCode(), $field, $form);
+        return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
     }
 
     /**

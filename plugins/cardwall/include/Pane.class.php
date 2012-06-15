@@ -78,10 +78,12 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @return Cardwall_PaneContentPresenter
      */
     private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
-        $board_factory = new Cardwall_BoardFactory();
-        $board         = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $this->milestone->getPlannedArtifacts(), $field);
-        $backlog_title = $this->milestone->getPlanning()->getBacklogTracker()->getName();
-        return new Cardwall_PaneContentPresenter($backlog_title, $board, $this->getQrCode());
+        $board_factory      = new Cardwall_BoardFactory();
+        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $this->milestone->getPlannedArtifacts(), $field);
+        $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
+        $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title);
     }
 
     /**
