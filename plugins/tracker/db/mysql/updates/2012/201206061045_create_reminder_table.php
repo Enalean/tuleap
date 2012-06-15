@@ -52,7 +52,8 @@ EOT;
                     notification_type TINYINT(1) DEFAULT 0,
                     distance INT( 11 ) DEFAULT 0,
                     status TINYINT(1) DEFAULT 1,
-                    PRIMARY KEY (reminder_id)
+                    PRIMARY KEY (reminder_id),
+                    UNIQUE KEY (tracker_id, field_id, ugroups, notification_type, distance, status)
                 )';
         $this->db->createTable('tracker_reminder', $sql);
     }
