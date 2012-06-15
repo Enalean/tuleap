@@ -1,4 +1,7 @@
 Version 5.7.27 - Tuleap 5.2
+    * Introduce CardPresenter interface
+
+Version 5.7.27 - Tuleap 5.2
     * Fix behviour of hierarchy interface with "corrupted data" (tracker deleted)
     * On tracker deletion, delete hierarchy information
     * Fix display of backlog elements in planning when there are no hierarchy defined.

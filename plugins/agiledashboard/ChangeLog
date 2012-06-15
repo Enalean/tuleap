@@ -1,3 +1,6 @@
+Version 0.33 - Tuleap 5.2
+	* Fix fatal error while duplicating planning
+
 Version 0.32 - Tuleap 5.2
      * Fix regression introduced in 0.31 on templates
 

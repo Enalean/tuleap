@@ -107,12 +107,18 @@ class PlanningFactoryTest extends TuleapTestCase {
         
         stub($dao)->searchByPlanningTrackerIds(array_keys($tracker_mapping))->returns($rows);
         
-        $dao->expectOnce('createPlanning', array($sprint_planning_name,
-                                                 $group_id,
-                                                 'Backlog',
-                                                 'Plan',
-                                                 $story_tracker_copy_id,
-                                                 $sprint_tracker_copy_id));
+        $expected_paramters = PlanningParameters::fromArray(array(
+            'id'                  => 1,
+            'name'                => $sprint_planning_name,
+            'group_id'            => 101,
+            'backlog_title'       => 'Backlog',
+            'plan_title'          => 'Plan',
+            'planning_tracker_id' => $sprint_tracker_copy_id,
+            'backlog_tracker_id'  => $story_tracker_copy_id
+        ));
+
+        $dao->expectOnce('createPlanning', array($group_id,
+                                                 $expected_paramters));
         
         $factory->duplicatePlannings($group_id, $tracker_mapping);
     }

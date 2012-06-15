@@ -1,57 +1,59 @@
-<div class="cardwall_board">
-    {{#mappings}}
-        <input type="hidden" id="cardwall_column_mapping_{{column_id}}_{{field_id}}" value="{{value_id}}" />
-    {{/mappings}}
-    <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
-        <colgroup>
-            {{#has_swimline_header}}
-                <col />
-            {{/has_swimline_header}}
-            {{#columns}}
-                <col id="cardwall_board_column-{{id}}" />
-            {{/columns}}
-        </colgroup>
-
-        <thead>
-            <tr>
+{{#board}}
+    <div class="cardwall_board {{nifty}}">
+        {{#mappings}}
+            <input type="hidden" id="cardwall_column_mapping_{{column_id}}_{{field_id}}" value="{{value_id}}" />
+        {{/mappings}}
+        <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
+            <colgroup>
                 {{#has_swimline_header}}
-                    <th>{{swimline_title}}</th>
+                    <col />
                 {{/has_swimline_header}}
                 {{#columns}}
-                    <th style="background-color: {{bgcolor}}; color: {{fgcolor}}">{{label}}</th>
+                    <col id="cardwall_board_column-{{id}}" />
                 {{/columns}}
-            </tr>
-        </thead>
+            </colgroup>
 
-        <tbody>
-            {{#swimlines}}
-                <tr valign="top">
+            <thead>
+                <tr>
                     {{#has_swimline_header}}
-                        {{#node}}
-                            {{#getData}}
-                                <td>
-                                    <ul class="nodrag">
-                                        <li>{{> card}}</td>
-                                    </ul>
-                                </td>
-                            {{/getData}}
-                        {{/node}}
+                        <th>{{swimline_title}}</th>
                     {{/has_swimline_header}}
-                    {{#cells}}
-                        <td>
-                            <ul>
-                                {{#artifacts}}
-                                    {{#getData}}
-                                        <li class="cardwall_board_postit {{drop-into-class}}" id="cardwall_board_postit-{{id}}" data-column-field-id="{{column_field_id}}">
-                                            {{> card}}
-                                        </li>
-                                    {{/getData}}
-                                {{/artifacts}}
-                            </ul>
-                        </td>
-                    {{/cells}}
+                    {{#columns}}
+                        <th style="background-color: {{bgcolor}}; color: {{fgcolor}}">{{label}}</th>
+                    {{/columns}}
                 </tr>
-            {{/swimlines}}
-        </tbody>
-    </table>
-</div>
+            </thead>
+
+            <tbody>
+                {{#swimlines}}
+                    <tr valign="top">
+                        {{#has_swimline_header}}
+                            {{#node}}
+                                {{#getData}}
+                                    <td>
+                                        <ul class="nodrag">
+                                            <li>{{> card}}</td>
+                                        </ul>
+                                    </td>
+                                {{/getData}}
+                            {{/node}}
+                        {{/has_swimline_header}}
+                        {{#cells}}
+                            <td>
+                                <ul>
+                                    {{#artifacts}}
+                                        {{#getData}}
+                                            <li class="cardwall_board_postit {{drop-into-class}}" id="cardwall_board_postit-{{id}}" data-column-field-id="{{column_field_id}}">
+                                                {{> card}}
+                                            </li>
+                                        {{/getData}}
+                                    {{/artifacts}}
+                                </ul>
+                            </td>
+                        {{/cells}}
+                    </tr>
+                {{/swimlines}}
+            </tbody>
+        </table>
+    </div>
+{{/board}}

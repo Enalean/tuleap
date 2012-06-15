@@ -23,23 +23,23 @@ document.observe('dom:loaded', function () {
         // {{{ Define the droppables columns
         var cols = board.select('col');;
         cols.each(function (col) {
-            var classname = 'drop-into-' + col.id.split('-')[1];
-            col.up('table').down('tbody').select('tr').each(function (tr) {
+            col.up('table').down('tbody').select('tr').each(function (tr, row_index) {
+                var classname = 'drop-into-' + row_index + '-' + col.id.split('-')[1];
                 tr.down('td', col.up().childElements().indexOf(col)).select('.cardwall_board_postit').invoke('removeClassName', classname);
             });
         });
         cols.each(function (col, col_index) {
-            col.up('table').down('tbody').select('tr').each(function (tr) {
+            col.up('table').down('tbody').select('tr').each(function (tr, row_index) {
                 var td           = tr.down('td', col_index),
                     restorecolor = td.getStyle('background-color'),
                     effect       = null,
-                    accept       = 'drop-into-' + col.id.split('-')[1];
+                    accept       = 'drop-into-' + row_index + '-' + col.id.split('-')[1];
                 Droppables.add(td, {
                     hoverclass: 'cardwall_board_column_hover',
                     accept: accept,
                     onDrop: function (dragged, dropped, event) {
                         //change the classname of the post it to be accepted by the formers columns
-                        dragged.addClassName('drop-into-' + cols[dragged.up('tr').childElements().indexOf(dragged.up('td'))].id.split('-')[1]);
+                        dragged.addClassName('drop-into-' + row_index + '-' + cols[dragged.up('tr').childElements().indexOf(dragged.up('td'))].id.split('-')[1]);
                         dragged.removeClassName(accept);
                         
                         //switch to the new column
