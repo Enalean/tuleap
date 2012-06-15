@@ -61,19 +61,19 @@ class Tracker_DateReminderRenderer {
      * @return String
      */
     public function getNewDateReminderForm() {
-        $output = '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" METHOD="POST" name="date_field_reminder_form">';
-        $output .= '<INPUT TYPE="HIDDEN" NAME="tracker_id" VALUE="'.$this->tracker->id.'">';
+        $output = '<form action="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=new_reminder" method="POST" id="date_field_reminder_form">';
+        $output .= '<input type="HIDDEN" name="tracker_id" value="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
-        $output .= '<TD> <INPUT TYPE="TEXT" NAME="distance" SIZE="3"> day(s)</TD>';
-        $output .= '<TD><SELECT NAME="notif_type">
-                        <OPTION VALUE="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
-                        <OPTION VALUE="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
-                    </SELECT></TD>';
+        $output .= '<TD> <input type="text" name="distance" size="3"> day(s)</TD>';
+        $output .= '<TD><select name="notif_type">
+                        <option value="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
+                        <option value="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
+                    </select></TD>';
         $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
         $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
-        $output .= '<TD><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
-        $output .= '</table></FORM>';
+        $output .= '<TD><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
+        $output .= '</table></form>';
         return $output;
     }
 
@@ -348,23 +348,18 @@ class Tracker_DateReminderRenderer {
         print '<fieldset>';
         $this->displayAllReminders();
         $output = '<div id="tracker_reminder"></div>';
-        $output .= '<p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a></p>';
-        $output .= "<script type=\"text/javascript\">
-            document.observe('dom:loaded', function() {
-                $('add_reminder').observe('click', function (evt) {
-                    var reminderDiv = new Element('div');
-                    reminderDiv.insert('".$this->getNewDateReminderForm()."');
-                    Element.insert($('tracker_reminder'), reminderDiv);
-                    Event.stop(evt);
-                    return false;
-                });
-            });
-            </script>";
-            if ($request->get('action') == 'add_reminder') {
-                $output .= $this->getNewDateReminderForm();
-            } elseif ($request->get('action') == 'update_reminder') {
-               $output .= '<div id="update_reminder"></div>';
-               $output .= "<script type=\"text/javascript\">
+        $output .= '<p>
+        <label for="New Reminder"> Add reminder
+            <input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'">
+        </label>
+        <noscript>
+            <a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a>
+        </noscript></p>';
+        if ($request->get('action') == 'add_reminder') {
+            $output .= $this->getNewDateReminderForm();
+        } elseif ($request->get('action') == 'update_reminder') {
+           $output .= '<div id="update_reminder"></div>';
+               /*$output .= "<script type=\"text/javascript\">
             document.observe('dom:loaded', function() {
                 $('update_reminder').observe('click', function (evt) {
                     var reminderDiv = new Element('div');
@@ -374,7 +369,7 @@ class Tracker_DateReminderRenderer {
                     return false;
                 });
             });
-            </script>";
+            </script>";*/
                 $output .= $this->editDateReminder($request->get('reminder_id'));
             }
         $output .= '</fieldset>';
