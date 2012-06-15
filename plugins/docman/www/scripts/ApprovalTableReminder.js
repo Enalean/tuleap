@@ -21,7 +21,7 @@
 
 var tuleap = codendi || { };
 document.observe('dom:loaded', function () {
-    var userAutocomplete = new UserAutoCompleter('user_list', tuleap.imgroot);
+    var userAutocomplete = new UserAutoCompleter('user_list', tuleap.imgroot, true);
     userAutocomplete.registerOnLoad();
     if (!$('approval_table_reminder_checkbox').checked) {
         Element.toggle('approval_table_occurence_form', 'slide', { duration: 0 });
