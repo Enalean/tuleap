@@ -22,19 +22,9 @@ var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
 document.observe('dom:loaded', function() {
-    this.url = codendi.tracker.base_url +'/www/dateReminder.php';
     $('add_reminder').observe('click', function (evt) {
-        var reminderDiv = new Element('div');
-        reminderDiv.insert(this.url);
-        Element.insert($('tracker_reminder'), reminderDiv);
-        Event.stop(evt);
-        return false;
-    });
-    $('update_reminder').observe('click', function (evt) {
-        var reminderDiv = new Element('div');
-        reminderDiv.insert(this.url);
-        Element.insert($('update_reminder'), reminderDiv);
-        Event.stop(evt);
-        return false;
+    var url = codendi.tracker.base_url +'?func=display_reminder_form&tracker='+$('add_reminder').value;
+    var target = 'tracker_reminder';
+    var myAjax = new Ajax.Updater(target, url, {method: 'get'});
     });
 });
