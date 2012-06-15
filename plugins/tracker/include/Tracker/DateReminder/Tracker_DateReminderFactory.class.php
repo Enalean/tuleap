@@ -43,7 +43,7 @@ class Tracker_DateReminderFactory {
      *
      * @return Tracker
      */
-    public function getTracker(){
+    public function getTracker() {
         return $this->tracker;
     }
 
@@ -53,7 +53,7 @@ class Tracker_DateReminderFactory {
      * @return Array
      */
     public function getTrackerReminders() {
-        $reminders          = array();
+        $reminders = array();
         $reminderManagerDao = $this->getDao();
         $dar = $reminderManagerDao->getDateReminders($this->getTracker()->getId());
         if ($dar && !$dar->isError()) {
@@ -73,7 +73,7 @@ class Tracker_DateReminderFactory {
      */
     public function addNewReminder(HTTPRequest $request) {
         $this->csrf->check();
-        $reminderRenderer   = new Tracker_DateReminderRenderer($this->getTracker());
+        $reminderRenderer = new Tracker_DateReminderRenderer($this->getTracker());
         try {
             $trackerId        = $reminderRenderer->validateTrackerId($request);
             $fieldId          = $reminderRenderer->validateFieldId($request);
@@ -87,10 +87,10 @@ class Tracker_DateReminderFactory {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
         }
-        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-        $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
-        $reminder    = $this->getDao()->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
+        $reminder = $this->getDao()->addDateReminder($trackerId, $fieldId, $ugroups, $notificationType, $distance);
         if ($reminder) {
+            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+            $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
             return $reminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
@@ -106,6 +106,7 @@ class Tracker_DateReminderFactory {
      * @param String  $ugroups          Id of the user groups
      * @param Integer $notificationType 0 if before, 1 if after the value of the date field
      * @param Integer $distance         Distance from the value of the date fiels
+     *
      * @return Void
      */
     protected function checkDuplicatedReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance) {
@@ -158,10 +159,10 @@ class Tracker_DateReminderFactory {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
         }
-        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-        $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
         $updateReminder = $this->getDao()->updateDateReminder($reminderId, $ugroups, $notificationType, $distance, $status);
         if ($updateReminder) {
+            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+            $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
             return $updateReminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_update_failure', array($reminderId));
@@ -171,7 +172,6 @@ class Tracker_DateReminderFactory {
 
     /**
      * Build a reminder instance
-     * @TODO: check if this is not an old duplicate of the code in Tracker_DateReminderManager
      *
      * @param array $row The data describing the reminder
      *
@@ -199,7 +199,7 @@ class Tracker_DateReminderFactory {
     /**
      * Get the reminder
      *
-     * @param Integer  $reminderId    The reminder id
+     * @param Integer $reminderId The reminder id
      *
      * @return Tracker_DateReminder
      */
@@ -208,29 +208,6 @@ class Tracker_DateReminderFactory {
             return $this->getInstanceFromRow($row);
         }
         return null;
-    }
-
-    /** Get artifacts that will send notification for a reminder
-     * @TODO: check if this is not an old duplicate of the code in Tracker_DateReminderManager
-     *
-     * @param Tracker_DateReminder $reminder Reminder on which the notification is based on
-     *
-     *
-     * @return Array
-     */
-    public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
-        $artifacts = array();
-        $date      = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
-        // @TODO: Include "last update date" & "submitted on" as types of date fields
-        $dao = new Tracker_FormElement_Field_Value_DateDao();
-        $dar = $dao->getArtifactsByFieldAndValue($reminder->getFieldId(), $date);
-        if ($dar && !$dar->isError()) {
-            $artifactFactory = Tracker_ArtifactFactory();
-            foreach ($dar as $row) {
-                $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);
-            }
-        }
-        return $artifacts;
     }
 
     /**
