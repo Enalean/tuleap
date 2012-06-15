@@ -834,7 +834,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     /**
-     * Get all trackers having at leas on active date reminder
+     * Get all trackers having at least on active date reminder
      *
      * @return Array
      */
