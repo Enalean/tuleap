@@ -1361,3 +1361,5 @@ project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un statu
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur champs date valide 
 project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugroup valide
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez selectionner au moins un ugroup valide
+project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champs 'SubmittedOn'
+project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker

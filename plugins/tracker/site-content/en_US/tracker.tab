@@ -1364,3 +1364,5 @@ project_admin_utils	tracker_date_reminder_invalid_status	'$1' is not a valid Rem
 project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' is not a valid Date Reminder
 project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugroup
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup
+project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field
+project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder

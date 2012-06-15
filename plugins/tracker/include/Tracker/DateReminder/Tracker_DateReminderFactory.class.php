@@ -82,7 +82,7 @@ class Tracker_DateReminderFactory {
             $ugroups          = $reminderRenderer->validateReminderUgroups($request);
             $ugroups          = join(",", $ugroups);
             $this->checkDuplicatedReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance);
-            $this->isReminderBeforeOpenDate($fieldId, $notificationType, $distance);
+            $this->isReminderBeforeOpenDate($fieldId, $notificationType);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
@@ -111,7 +111,7 @@ class Tracker_DateReminderFactory {
     protected function checkDuplicatedReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance) {
         $dupilcatedReminders = $this->getDao()->findReminders($trackerId, $fieldId, $ugroups, $notificationType, $distance);
         if ($dupilcatedReminders && !$dupilcatedReminders->isError() && $dupilcatedReminders->rowCount() > 0) {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_duplicated');
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -121,16 +121,15 @@ class Tracker_DateReminderFactory {
      *
      * @param Integer $fieldId          Id of the date field
      * @param Integer $notificationType 0 if before, 1 if after the value of the date field
-     * @param Integer $distance         Distance from the value of the date fiels
      *
      * @return Void
      */
-    protected function isReminderBeforeOpenDate($fieldId, $notificationType, $distance) {
+    protected function isReminderBeforeOpenDate($fieldId, $notificationType) {
         $tff              = Tracker_FormElementFactory::instance();
         $trackerDateField = $tff->getFieldById($fieldId);
         $fieldType        = $tff->getType($trackerDateField);
         if ($fieldType == 'subon' && $notificationType == 0) {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_add_failure', array($trackerId, $fieldType));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before_submittedOn');
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -154,7 +153,7 @@ class Tracker_DateReminderFactory {
             $ugroups          = join(",", $ugroups);
             $fieldId          = $reminderRenderer->validateFieldId($request);
             $this->checkDuplicatedReminders($this->getTracker()->getId(), $fieldId, $ugroups, $notificationType, $distance);
-            $this->isReminderBeforeOpenDate($fieldId, $notificationType, $distance);
+            $this->isReminderBeforeOpenDate($fieldId, $notificationType);
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
