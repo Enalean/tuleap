@@ -207,25 +207,17 @@ extends Docman_View_ItemDetailsSectionApproval {
         } else {
             $checked = '';
         }
-        $html .= '<span id="reminder" ></span><input onclick="toggle_occurence()" type="checkbox" name="reminder" '.$checked.' /></span>';
+        $html .= '<span id="approval_table_reminder" ></span><input id="approval_table_reminder_checkbox" type="checkbox" name="reminder" '.$checked.' /></span>';
         $html .= ' ';
         $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_send_to_approvers');
         $html .= ' </td>';
         $html .= ' </tr>';
         $html .= ' <tr>';
         $html .= '<td>';
-        $html .= '<span id="occurence_form" > '.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_every');
+        $html .= '<span id="approval_table_occurence_form" > '.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_every');
         $html .= '<input size="2" name="occurence" value="'.$occurence.'" /> ';
         $html .= html_build_select_box_from_arrays(array(1, 7), array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_days'), $GLOBALS['Language']->getText('plugin_docman', 'details_approval_weeks')), 'period', null, false);
         $html .= '</span>';
-        $js   = 'function toggle_occurence() {
-                     Effect.toggle(\'occurence_form\', \'slide\', { duration: 0 });
-                     Effect.toggle(\'reminder\', \'slide\', { duration: 0 });
-                 }';
-        if (!$occurence) {
-            $js .= 'Element.toggle(\'occurence_form\', \'slide\', { duration: 0 });';
-        }
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         $html .= '</td>';
         $html .= '</tr>';
 
