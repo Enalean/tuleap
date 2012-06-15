@@ -104,7 +104,7 @@ class Tracker_DateReminderRenderer {
                 $enabled  = "";
                 $disabled = "selected";
             }
-            $output .= "Update Reminder";
+            $output .= "<h3>".$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title')."</h3>";
             $output .= '<FORM ACTION="'.TRACKER_BASE_URL.'/?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=update_reminder" METHOD="POST" name="update_date_field_reminder">';
             $output .= '<INPUT TYPE="HIDDEN" NAME="reminder_id" VALUE="'.$reminderId.'">
                         <INPUT TYPE="HIDDEN" NAME="reminder_field_date" VALUE="'.$reminder->getField()->getId().'">';
@@ -317,8 +317,8 @@ class Tracker_DateReminderRenderer {
      */
     public function displayAllReminders() {
         $titles           = array($GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_title'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_status'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','notification_settings'),
+                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_status'),
+                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_settings'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title'));
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
