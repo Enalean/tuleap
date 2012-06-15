@@ -16,7 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_DateReminder.class.php');
 require_once('Tracker_DateReminderRenderer.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('common/mail/MailManager.class.php');
@@ -76,7 +75,7 @@ class Tracker_DateReminderManager {
             if ($request->get('action') == 'new_reminder') {
                 try {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
-                    $GLOBALS['Response']->addFeedback('info', 'Reminder created');
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_added'));
                 } catch (Tracker_DateReminderException $e) {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 }
@@ -84,7 +83,7 @@ class Tracker_DateReminderManager {
             } elseif ($request->get('action') == 'update_reminder') {
                 try {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
-                    $GLOBALS['Response']->addFeedback('info', 'Reminder updated');
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_updated'));
                 } catch (Tracker_DateReminderException $e) {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 }
