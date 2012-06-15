@@ -7,13 +7,11 @@
                 <a href="{{getEditUrl}}&{{planning_redirect_parameter}}">{{getEditLabel}}</a>
             </li>
             <li class="divider"></li>
-            {{#allowedChildrenTypes}}
-                {{#userCanView}}
-                    <li>
-                        <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{getArtifactId}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
-                    </li>
-                {{/userCanView}}
-            {{/allowedChildrenTypes}}
+            {{#userCanView}}
+                <li>
+                    <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact-link&id={{getArtifactId}}&immediate=1&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
+                </li>
+            {{/userCanView}}
         </ul>
     </div>
 </div>
