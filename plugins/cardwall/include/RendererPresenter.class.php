@@ -62,7 +62,8 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
         $this->form                = $form  ? $form  : false;
         $this->has_columns         = count($this->board->columns) > 0;
         $this->warn_please_choose  = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
-        $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($this->field->getLabel()));
+        $field_label               = $field ? $hp->purify($this->field->getLabel()) : '###';
+        $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $field_label);
     }
 }
 ?>
