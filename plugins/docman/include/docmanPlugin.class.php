@@ -88,7 +88,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permission_request_information', 'permissionRequestInformation', false);
 
         $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
-        $this->_addHook('project_is_deleted', 'project_is_deleted', false);
+        $this->_addHook('project_is_deleted',              'project_is_deleted',          false);
+        $this->_addHook(Event::COMBINED_SCRIPTS,           'combinedScripts',             false);
     }
 
     function permission_get_name($params) {
@@ -808,6 +809,18 @@ class DocmanPlugin extends Plugin {
         }
         return $this->controller[$controller];
     }
+
+    /**
+     * Append scripts to the combined JS file
+     *
+     * @param Array $params parameters of the hook
+     *
+     * @return Void
+     */
+    public function combinedScripts($params) {
+        $params['scripts'] = array_merge($params['scripts'], array($this->getPluginPath().'/scripts/ApprovalTableReminder.js'));
+    }
+
 }
 
 ?>
