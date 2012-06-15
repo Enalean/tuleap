@@ -20,11 +20,17 @@
 .cardwall_board.nifty ul{
   padding: 3em;
 }
+
+.cardwall_board .toggle-collapse {
+    display: none;
+}
+
 .cardwall_board .card {
   cursor: move;
   -moz-box-shadow:1px 1px 3px rgba(33,33,33,.3);
   -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.3);
   box-shadow: 1px 1px 3px rgba(33,33,33,.3);
+  background: #ffe;
 }
 .cardwall_board .nodrag .card {
   cursor: auto;

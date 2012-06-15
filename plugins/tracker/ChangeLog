@@ -1,3 +1,8 @@
+Version 5.7.27 - Tuleap 5.2
+    * Fix behviour of hierarchy interface with "corrupted data" (tracker deleted)
+    * On tracker deletion, delete hierarchy information
+    * Fix display of backlog elements in planning when there are no hierarchy defined.
+
 Version 5.7.26 - Tuleap 5.2
     * Fix regression introduced in 5.7.25 on templates
 
