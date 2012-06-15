@@ -31,6 +31,21 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
     public $field;
 
     /**
+     * @var bool
+     */
+    public $has_columns;
+
+    /**
+     * @var string
+     */
+    public $warn_please_choose;
+
+    /**
+     * @var string
+     */
+    public $warn_no_values;
+
+    /**
      * @param Cardwall_Board                      $board              The board
      * @param Cardwall_QrCode                     $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
      * @param string                              $redirect_parameter the redirect paramter to add to various url
@@ -39,33 +54,15 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter {
      */
     public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $field, $form) {
         parent::__construct($board, $qrcode, $redirect_parameter);
+        $hp                        = Codendi_HTMLPurifier::instance();
         $this->nifty               = Toggler::getClassname('cardwall_board-nifty') == 'toggler' ? 'nifty' : false;
         $this->swimline_title      = '';
         $this->has_swimline_header = false;
         $this->field               = $field ? $field : false;
         $this->form                = $form  ? $form  : false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function has_columns() {
-        return count($this->board->columns) > 0;
-    }
-
-    /**
-     * @return string
-     */
-    public function warn_please_choose() {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
-    }
-
-    /**
-     * @return string
-     */
-    public function warn_no_values() {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($this->field->getLabel()));
+        $this->has_columns         = count($this->board->columns) > 0;
+        $this->warn_please_choose  = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
+        $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($this->field->getLabel()));
     }
 }
 ?>
