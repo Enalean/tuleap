@@ -350,11 +350,11 @@ class Tracker_DateReminderRenderer {
         $output = '<div id="tracker_reminder"></div>';
         $output .= '
         <script type="text/javascript">
-        var reminderHtml = \'<p><label for="New Reminder"> Add reminder<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label>\';
+        var reminderHtml = \'<p><label for="New Reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label>\';
         document.getElementById("tracker_reminder").innerHTML = reminderHtml; 
-        </script>
-        <noscript>
-        <p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder"> Add reminder </a>
+        </script>';
+        $output .= ' <noscript>
+        <p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'</a>
         </noscript>';
         if ($request->get('action') == 'add_reminder') {
             $output .= $this->getNewDateReminderForm();
