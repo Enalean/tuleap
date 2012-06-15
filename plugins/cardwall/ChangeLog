@@ -1,9 +1,11 @@
-Version 0.5.3 - Tuleap 5.2
-<<<<<<< HEAD
+Version 0.5.4 - Tuleap 5.2
 	* Duplicate settings of cardwalls in trackers
-=======
+	* Merge cardwall-in-renderer and cardwall-in-dashbaord codes
+	* Redirect to cardwall after artifact edition
+	* Cards stay on their swimline
+
+Version 0.5.3 - Tuleap 5.2
     * Fix CSS rendering issue
->>>>>>> stable/master
 
 Version 0.5.2 - Tuleap 5.2
     * Display cardwall on top of a tracker (in agiledashboard for now)
