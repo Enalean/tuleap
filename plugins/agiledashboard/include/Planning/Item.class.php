@@ -118,6 +118,13 @@ class Planning_Item {
     public function isPlannifiable() {
         return ($this->getTracker()->getId() == $this->planning->getBacklogTrackerId());
     }
+
+    /**
+     * @return array of int
+     */
+    public function getAllowedChildrenTypes() {
+        return $this->artifact->getAllowedChildrenTypes();
+    }
 }
 
 ?>
