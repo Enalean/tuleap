@@ -167,8 +167,9 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneBaseT
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $root_aid);
         
         $root_node = $milestone->getPlannedArtifacts();
-        $root_note_data = $root_node->getData();
-        $this->assertEqual($root_artifact, $root_note_data['artifact']);
+        $root_note_data = $root_node->getObject();
+        $this->assertEqual($root_aid, $root_node->getId());
+        $this->assertEqual($root_artifact, $root_note_data->getArtifact());
     }
     
     public function itAddsTheArtifactsToTheChildNodes() {
@@ -181,8 +182,9 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneBaseT
         
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $root_aid);
         
-        $child_node_data = $milestone->getPlannedArtifacts()->getChild(0)->getData();
-        $this->assertEqual($depth1_artifact, $child_node_data['artifact']);
+        $child_node      = $milestone->getPlannedArtifacts()->getChild(0);
+        $child_node_data = $child_node->getObject();
+        $this->assertEqual($depth1_artifact, $child_node_data->getArtifact());
     }
 
 }

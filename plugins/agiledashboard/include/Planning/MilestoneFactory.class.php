@@ -113,14 +113,12 @@ class Planning_MilestoneFactory {
                                         Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
 
-        $id              = $milestone_artifact->getId();
-        $backlog_tracker = $planning->getBacklogTracker();
 
-        $node = new TreeNode(array('id'                   => $id,
-                                   'artifact'             => $milestone_artifact));
-        $node->setId($id);
-        // TODO: $node->setObject(new Planning_Item($milestone_artifact, $planning)) ?
-        $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, array(), $planning);
+        $parents = array();
+        $node = new TreeNode();
+        $node->setId($milestone_artifact->getId());
+        $node->setObject(new Planning_Item($milestone_artifact, $planning));
+        $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, $parents, $planning);
         
         return $node;
     }
@@ -146,8 +144,7 @@ class Planning_MilestoneFactory {
         
         $parents[] = $artifact->getId();
         foreach ($linked_artifacts as $linked_artifact) {
-            $node = new TreeNode(array('id'       => $linked_artifact->getId(),
-                                       'artifact' => $linked_artifact));
+            $node = new TreeNode();
             $node->setId($linked_artifact->getId());
             $node->setObject(new Planning_Item($linked_artifact, $planning));
             $this->addChildrenPlannedArtifacts($user, $linked_artifact, $node, $parents, $planning);
