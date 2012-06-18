@@ -1347,6 +1347,7 @@ plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Modifier le rappel
 plugin_tracker_date_reminder	tracker_date_reminder_add_title	Ajouter un rappel
 plugin_tracker_date_reminder	tracker_date_reminder_notification_status	Status de la notification du rappel
 plugin_tracker_date_reminder	tracker_date_reminder_notification_settings	Options de notification du rappel
+plugin_tracker_date_reminder	tracker_date_reminder_toString	Envoyer un email à $4 $1 jour(s) $2 $3
 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
@@ -1370,4 +1371,3 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajoute
 project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_added	Rappel sur date de tracker ajouté avec succés
 project_admin_utils	tracker_date_reminder_updated	Rappel sur date de tracker modififé avec succés
-project_admin_utils	tracker_date_reminder_toString	Envoyer un email à $4 $1 jour(s) $2 $3

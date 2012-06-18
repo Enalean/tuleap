@@ -258,7 +258,7 @@ class Tracker_DateReminder {
      * @return String
      */
     public function __toString() {
-        $fieldLabel  = ' "'.$this->getField()->name.'" ';
+        $fieldLabel  = ' "'.$this->getField()->getLabel().'" ';
         $notificationTypeLabel = $this->getNotificationTypeLabel();
         $ugroupsLabel   = '';
         $ugroupManager  = new UGroupManager();
@@ -266,7 +266,7 @@ class Tracker_DateReminder {
         foreach ($ugroups as $ugroup) {
             $ugroupsLabel  .= ' "'.util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()).' "';
         }
-        return $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_toString', array($this->distance, $notificationTypeLabel, $fieldLabel, $ugroupsLabel));
+        return $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_toString', array($this->distance, $notificationTypeLabel, $fieldLabel, $ugroupsLabel));
     }
 
     /**

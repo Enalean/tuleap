@@ -1350,6 +1350,7 @@ plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Edit reminder
 plugin_tracker_date_reminder	tracker_date_reminder_add_title	Add reminder
 plugin_tracker_date_reminder	tracker_date_reminder_notification_status	Reminder Notification Status
 plugin_tracker_date_reminder	tracker_date_reminder_notification_settings	Reminder Notification Settings
+plugin_tracker_date_reminder	tracker_date_reminder_toString	Send an email to $4 $1 day(s) $2 $3
 
 project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
 project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
@@ -1373,4 +1374,3 @@ project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date 
 project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder
 project_admin_utils	tracker_date_reminder_added	Date Reminder successfully added
 project_admin_utils	tracker_date_reminder_updated	Date Reminder successfully updated
-project_admin_utils	tracker_date_reminder_toString	Send an email to $4 $1 day(s) $2 $3
