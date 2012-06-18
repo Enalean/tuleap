@@ -18,24 +18,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BoardPresenter.class.php';
-
 /**
- * A board to display in agiledashboard
+ * A board to display
  */
-class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
+abstract class Cardwall_BoardPresenter {
+
+    /**
+     * @var Cardwall_Board
+     */
+    public $board;
+
+    /**
+     * @var string
+     */
+    public $planning_redirect_parameter;
+
+    /**
+     * @var string
+     */
+    public $swimline_title = '';
+
+    /**
+     * Say if the swimlines should display their header on top of them
+     *
+     * @var bool
+     */
+    public $has_swimline_header = true;
+
+    /**
+     * @var Cardwall_QrCode
+     */
+    public $qrcode;
+
+    /**
+     * @var string
+     */
+    public $nifty = '';
 
     /**
      * @param Cardwall_Board  $board              The board
      * @param Cardwall_QrCode $qrcode             QrCode to display. false if no qrcode (thus no typehinting)
      * @param string          $redirect_parameter the redirect paramter to add to various url
-     * @param string          $swimline_title     The title to display on top of swimline headers
      */
-    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter, $swimline_title) {
-        parent::__construct($board, $qrcode, $redirect_parameter);
-        $this->nifty               = '';
-        $this->swimline_title      = $swimline_title;
-        $this->has_swimline_header = true;
+    public function __construct(Cardwall_Board $board, $qrcode, $redirect_parameter) {
+        $this->board           = $board;
+        $this->qrcode          = $qrcode;
+        $this->planning_redirect_parameter = $redirect_parameter;
     }
 }
 ?>

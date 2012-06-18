@@ -17,76 +17,88 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'Item.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CardPresenter.class.php';
 
-class Planning_ItemPresenter implements Tracker_CardPresenter {
-    
+class Cardwall_CardPresenter implements Tracker_CardPresenter{
+
     /**
-     * @var Planning_Item
+     * @var Tracker_Artifact
      */
-    private $planning_item;
-    
-    /**
-     * @var string
-     */
-    private $css_classes;
-    
-    /**
-     * @param Planning_Item $planning_item The planning item to be presented.
-     * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
-     */
-    public function __construct(Planning_Item $planning_item, $css_classes = '') {
-        $this->planning_item = $planning_item;
-        $this->css_classes   = $css_classes;
+    private $artifact;
+
+    public function __construct(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getId() {
-        return $this->planning_item->getId();
+        return $this->artifact->getId();
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getTitle() {
-        return $this->planning_item->getTitle();
+        return $this->artifact->getTitle();
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getUrl() {
-        return $this->planning_item->getEditUri();
+        return $this->artifact->getUri();
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getXRef() {
-        return $this->planning_item->getXRef();
+        return $this->artifact->getXRef();
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getEditUrl() {
         return $this->getUrl();
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getArtifactId() {
-        return $this->planning_item->getId();
+        return $this->artifact->getId();
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getArtifact() {
-        return $this->planning_item->getArtifact();
+        return $this->artifact;
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getEditLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function getCssClasses() {
-        return trim($this->css_classes.' '.$this->getPlanningDraggableClass());
+        return '';
     }
-    
-    private function getPlanningDraggableClass() {
-        if ($this->planning_item->isPlannifiable()) {
-            return 'planning-draggable';
-        }
-    }
-    
+
+    /**
+     * @see Tracker_CardPresenter
+     */
     public function allowedChildrenTypes() {
         $hierarchy_factory = Tracker_HierarchyFactory::instance();
-        return $hierarchy_factory->getChildren($this->planning_item->getTracker()->getId());
+        return $hierarchy_factory->getChildren($this->artifact->getTracker()->getId());
     }
 }
 ?>

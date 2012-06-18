@@ -19,7 +19,7 @@
  */
 
 /**
- * Foreach artifact in a TreeNode, inject the id of the field used for the status semantic
+ * Foreach artifact in a TreeNode, inject the id of the field used for the columns
  */
 class Cardwall_InjectColumnIdVisitor {
 
@@ -28,27 +28,37 @@ class Cardwall_InjectColumnIdVisitor {
      */
     private $accumulated_status_fields = array();
 
+    /**
+     * @return array Accumulated array of Tracker_FormElement_Field_Selectbox
+     */
+    public function getAccumulatedStatusFields() {
+        return $this->accumulated_status_fields;
+    }
+
     public function visit(TreeNode $node) {
-        $data    = $node->getData();
-        $tracker = $data['artifact']->getTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        $data['column_field_id'] = 0;
-        if ($field) {
-            $field_id                = $field->getId();
-            $data['column_field_id'] = $field_id;
-            $this->accumulated_status_fields[$field_id] = $field;
+        $data      = $node->getData();
+        $presenter = $node->getObject();
+        if ($presenter) {
+            $field = $this->getField($presenter->getArtifact());
+            $data['column_field_id'] = 0;
+            if ($field) {
+                $field_id                = $field->getId();
+                $data['column_field_id'] = $field_id;
+                $this->accumulated_status_fields[$field_id] = $field;
+            }
+            $node->setData($data);
         }
-        $node->setData($data);
         foreach ($node->getChildren() as $child) {
             $child->accept($this);
         }
     }
 
     /**
-     * @return array Accumulated array of Tracker_FormElement_Field_Selectbox
+     * @return Tracker_FormElement_Field_Selectbox
      */
-    public function getAccumulatedStatusFields() {
-        return $this->accumulated_status_fields;
+    protected function getField(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
     }
 }
 ?>

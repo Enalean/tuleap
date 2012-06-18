@@ -11,9 +11,9 @@ Version 5.2 (Not Released Yet)
 	* Update "IndicateurCodex" perl script to take git into account
 
 	== Plugins ==
-	* Cardwall: 0.5.2
-	* Tracker: 5.7.26
-	* Agildashboard: 0.32
+	* Cardwall: 0.5.4
+	* Tracker: 5.7.28
+	* Agildashboard: 0.33
 	* Docman: 2.25.7
 	* Git: 2.6
 	* Ldap: 3.15

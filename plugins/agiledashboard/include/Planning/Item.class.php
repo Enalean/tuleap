@@ -110,6 +110,13 @@ class Planning_Item {
         return $this->artifact->getTracker();
     }
     
+    /**
+     * @return Tracker_Artifact
+     */
+    public function getArtifact() {
+        return $this->artifact;
+    }
+    
     /** 
      * Checks whether or not this item can be assigned to a milestone.
      * 
