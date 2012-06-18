@@ -320,9 +320,9 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function displayAllReminders() {
-        $titles           = array('Send an email to',
-                                  'When             ',
-                                  'Field   ',
+        $titles           = array($GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_status'),
+                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_when'),
+                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_field'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_status'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title'));
         $i                = 0;
