@@ -278,14 +278,7 @@ class Tracker_DateReminder {
      */
     public function getFieldValue(Tracker_Artifact $artifact) {
         $field = $this->getField();
-        if ($field instanceof Tracker_FormElement_Field_LastUpdateDate) {
-            $value = date("Y-m-d", $artifact->getLastChangeset()->getSubmittedOn());
-        } elseif ($field instanceof Tracker_FormElement_Field_SubmittedOn) {
-            $value = date("Y-m-d", $artifact->getSubmittedOn());
-        } elseif ($field instanceof Tracker_FormElement_Field_Date) {
-            $value = $artifact->getValue($field)->getValue();
-        }
-        return $value;
+        return $field->getLastValue($artifact);
     }
 
 }

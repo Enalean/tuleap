@@ -318,5 +318,16 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     public function afterCreate() {
 
     }
+
+    /**
+     * Retreive The last date Field value
+     *
+     * @param Tracker_Artifact $artifact The artifact
+     *
+     * @return date
+     */
+    public function getLastValue(Tracker_Artifact $artifact) {
+        return date("Y-m-d", $artifact->getSubmittedOn());
+    }
 }
 ?>
