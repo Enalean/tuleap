@@ -193,8 +193,14 @@ extends Docman_View_ItemDetailsSectionApproval {
                 $html .= '</tr>';
             }
         }
+        $html .= $this->_displayNotificationOccurence();
+        $html .= '</table>';
+        $html .= '</div>';
+        return $html;
+    }
 
-        $html .= '<tr>';
+    function _displayNotificationOccurence() {
+        $html = '<tr>';
         $html .= '<td>';
         $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_occurence_title').'</h4>';
         $html .= '</td>';
@@ -220,9 +226,6 @@ extends Docman_View_ItemDetailsSectionApproval {
         $html .= '</span>';
         $html .= '</td>';
         $html .= '</tr>';
-
-        $html .= '</table>';
-        $html .= '</div>';
         return $html;
     }
 
