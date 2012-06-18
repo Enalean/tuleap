@@ -19,13 +19,16 @@
  */
 
 require_once 'common/templating/TemplateRenderer.class.php';
-require_once 'Mustache.php';
 require_once 'MustacheLoader.php';
+require_once 'Tuleap_Mustache.class.php';
 
+/**
+ * Adapts the Mustache template engine to the expected Tuleap interface. 
+ */
 class MustacheRenderer extends TemplateRenderer {
 
     /**
-     * @var Mustache
+     * @var Tuleap_Mustache
      */
     private $mustache;
     
@@ -48,12 +51,12 @@ class MustacheRenderer extends TemplateRenderer {
     public function __construct($plugin_templates_dir) {
         parent::__construct($plugin_templates_dir);
         
-        $this->mustache        = new Mustache(null, null, null, $this->options);
+        $this->mustache        = new Tuleap_Mustache(null, null, null, $this->options);
         $this->mustache_loader = new MustacheLoader($this->plugin_templates_dir);
     }
     
     public function render($template_name, $presenter, $return = false) {
-       $result = $this->mustache->render($this->mustache_loader[$template_name], $presenter, $this->mustache_loader);
+       $result = $this->mustache->renderByName($template_name, $presenter, $this->mustache_loader);
        if ($return) {
            return $result;
        } else {
