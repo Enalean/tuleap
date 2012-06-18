@@ -18,6 +18,7 @@
 
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field.class.php');
+require_once('common/project/UGroupManager.class.php');
 
 class Tracker_DateReminder {
 
@@ -261,7 +262,7 @@ class Tracker_DateReminder {
         $fieldLabel  = ' "'.$this->getField()->getLabel().'" ';
         $notificationTypeLabel = $this->getNotificationTypeLabel();
         $ugroupsLabel   = '';
-        $ugroupManager  = new UGroupManager();
+        $ugroupManager  = $this->getUGroupManager();
         $ugroups        = explode(',', $this->ugroups);
         foreach ($ugroups as $ugroup) {
             $ugroupsLabel  .= ' "'.util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()).' "';
@@ -279,6 +280,15 @@ class Tracker_DateReminder {
     public function getFieldValue(Tracker_Artifact $artifact) {
         $field = $this->getField();
         return $field->getLastValue($artifact);
+    }
+
+    /**
+     * Wrapper for UGroupManager
+     *
+     * @return UGroupManager
+     */
+    protected function getUGroupManager() {
+        return new UGroupManager();
     }
 
 }
