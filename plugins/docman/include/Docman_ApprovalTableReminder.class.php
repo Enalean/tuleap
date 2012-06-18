@@ -216,8 +216,9 @@ class Docman_ApprovalTableReminder {
         if($userComment != '') {
             switch ($format) {
                 case Codendi_Mail_Interface::FORMAT_HTML :
-                    $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment', array($userComment));
-                    $comment .= "<br>";
+                    $comment  = '<b>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_notif_owner_comment').'</b><br>';
+                    $comment .= '<hr align="center" width="50%" color="midnightblue" size="3"><br>'.$userComment.'<br><hr align="center" width="50%" color="midnightblue" size="3"><br><br>';
+                    $comment .= '<br>';
                     break;
                 case Codendi_Mail_Interface::FORMAT_TEXT :
                     $comment = $GLOBALS['Language']->getText('plugin_docman', 'approval_notif_mail_notif_owner_comment', array($userComment));

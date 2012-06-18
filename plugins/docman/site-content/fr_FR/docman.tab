@@ -48,7 +48,7 @@ plugin_docman	approval_notif_declined_mail_subject	[$1] un approbateur ne donner
 plugin_docman	approval_notif_declined_mail_body	Votre document '$1' ne sera pas approuvé par $3 <$4>.\n\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notification_failure	Pas d'email envoyé aux approbateurs.
 plugin_docman	approval_notification_success	Email envoyé aux approbateurs.
-plugin_docman	approval_reminder_mail_notif_owner_comment	<b>Message du demandeur :</b><br><hr align="center" width="50%" color="midnightblue" size="3"><br>$1<br><hr align="center" width="50%" color="midnightblue" size="3"><br><br>
+plugin_docman	approval_reminder_mail_notif_owner_comment	Message du demandeur :
 plugin_docman	approval_reminder_mail_subject	[$1] [Rappel] Merci d'approuver '$2'
 plugin_docman	approval_reminder_html_mail_body	Vous êtes convié à approuver le document suivant :<br><br><b>Titre :</b> $1<br><b>Projet :</b> $2<br><b>Demandeur :</b><a href="$8">$3</a><br> <a href="$4">Lien direct </a><br><br>$5<br><br>Type de notification : $6<br><br><a href="$7"><b>Cliquez sur le lien suivant pour approuver ou réprouver le document<b></a><br><br>--<br><i>Ceci est un message généré automatiquement. Merci de ne pas répondre à cet email.</i><br>
 plugin_docman	approval_review_success	Votre approbation a été enregistrée.
