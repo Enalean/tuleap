@@ -320,9 +320,10 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function displayAllReminders() {
-        $titles           = array($GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_title'),
+        $titles           = array('Send an email to',
+                                  'When             ',
+                                  'Field   ',
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_status'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_settings'),
                                   $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_edit_title'));
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
@@ -331,10 +332,11 @@ class Tracker_DateReminderRenderer {
             foreach ($trackerReminders as $reminder) {
                 print '<tr class="'.util_get_alt_row_color($i++).'">';
                 print '<td>';
-                print $reminder;
+                print $reminder->getUgroupsLabel();
                 print '</td>';
+                print '<td>'.$reminder->getDistance().'day(s) '.$reminder->getNotificationTypeLabel().'</td>';
+                print '<td>'.$reminder->getField()->getLabel().'</td>';
                 print '<td>'.$reminder->getReminderStatusLabel().'</td>';
-                print '<td>'.$reminder->getNotificationTypeLabel().'</td>';
                 print '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
                 print '</tr>';
             }

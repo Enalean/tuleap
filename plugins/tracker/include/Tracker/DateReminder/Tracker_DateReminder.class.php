@@ -254,20 +254,18 @@ class Tracker_DateReminder {
     }
 
     /**
-     * React when reminder is treated as a string
+     * Retrieve the reminder notified ugroups a string
      *
      * @return String
      */
-    public function __toString() {
-        $fieldLabel  = ' "'.$this->getField()->getLabel().'" ';
-        $notificationTypeLabel = $this->getNotificationTypeLabel();
+    public function getUgroupsLabel() {
         $ugroupsLabel   = '';
         $ugroupManager  = $this->getUGroupManager();
         $ugroups        = explode(',', $this->ugroups);
         foreach ($ugroups as $ugroup) {
             $ugroupsLabel  .= ' "'.util_translate_name_ugroup($ugroupManager->getById($ugroup)->getName()).' "';
         }
-        return $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_toString', array($this->distance, $notificationTypeLabel, $fieldLabel, $ugroupsLabel));
+    return $ugroupsLabel;
     }
 
     /**
