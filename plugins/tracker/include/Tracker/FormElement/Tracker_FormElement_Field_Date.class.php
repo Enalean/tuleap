@@ -777,7 +777,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      */
     public function getArtifactsByCriterias($date, $trackerId = null) {
         $artifacts = array();
-        $dar = $this->getDao()->getArtifactsByFieldAndValue($this->id, $date);
+        $dao = new Tracker_FormElement_Field_Value_DateDao();
+        $dar = $dao->getArtifactsByFieldAndValue($this->id, $date);
         if ($dar && !$dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();
             foreach ($dar as $row) {

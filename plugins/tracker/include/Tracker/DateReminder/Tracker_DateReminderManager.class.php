@@ -282,7 +282,7 @@ class Tracker_DateReminderManager {
     public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
         $date      = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
         $field     = $reminder->getField();
-        return $field->getArtifactsByCriterias($date, $this->getTrackerId());
+        return $field->getArtifactsByCriterias($date, $this->getTracker()->getId());
     }
 }
 
