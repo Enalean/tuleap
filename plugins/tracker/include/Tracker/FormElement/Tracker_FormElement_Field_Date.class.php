@@ -768,5 +768,24 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         return $artifact->getValue($this)->getValue();
     }
 
+    /** Get artifacts that responds to some criteria
+     *
+     * @param date    $date      The date criteria
+     * @param Integer $trackerId The Tracker Id
+     *
+     * @return Array
+     */
+    public function getArtifactsByCriterias($date, $trackerId = null) {
+        $artifacts = array();
+        $dar = $this->getDao()->getArtifactsByFieldAndValue($this->id, $date);
+        if ($dar && !$dar->isError()) {
+            $artifactFactory = Tracker_ArtifactFactory::instance();
+            foreach ($dar as $row) {
+                $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);
+            }
+        }
+        return $artifacts;
+    }
+
 }
 ?>
