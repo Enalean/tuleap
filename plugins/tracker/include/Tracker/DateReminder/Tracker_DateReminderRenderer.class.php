@@ -328,7 +328,7 @@ class Tracker_DateReminderRenderer {
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders();
         if (!empty($trackerReminders)) {
-            $output = html_build_list_table_top($titles);
+            $output = html_build_list_table_top($titles,false,false,false);
             foreach ($trackerReminders as $reminder) {
                 $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
                 $output .= '<td>'.$reminder->getUgroupsLabel().'</td>';
