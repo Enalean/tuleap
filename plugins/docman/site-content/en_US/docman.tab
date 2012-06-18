@@ -50,7 +50,14 @@ plugin_docman	approval_notification_failure	No email sent to reviewers.
 plugin_docman	approval_notification_success	Email sent to reviewer.
 plugin_docman	approval_reminder_mail_notif_owner_comment	Message:
 plugin_docman	approval_reminder_mail_subject	[$1] [Reminder] Please review '$2'
-plugin_docman	approval_reminder_html_mail_body	You are requested to review the following document:<br><br><b>Project:</b> $2<br><b>Title:</b> $1<br><a href="$4"><b>Direct link to the document</b></a><br><b>Requester:</b> <a href="$8"> $3 </a> <br><br>$5<br><br>Notification type: $6<br><br><a href="$7"><b>Click on the following link to approve or reject the document<b></a><br><br>--<br><i>This is an automatic message. Please do not reply to this email.</i><br>
+plugin_docman	approval_reminder_html_mail_body_header	You are requested to review the following document:
+plugin_docman	approval_reminder_html_mail_body_title	Title:
+plugin_docman	approval_reminder_html_mail_body_group_name	Project:
+plugin_docman	approval_reminder_html_mail_body_owner_name	Requester:
+plugin_docman	approval_reminder_html_mail_body_direct_link	Direct link to the document
+plugin_docman	approval_reminder_html_mail_body_notif_type	Notification type:
+plugin_docman	approval_reminder_html_mail_body_review_url	Click on the following link to approve or reject the document
+plugin_docman	approval_reminder_html_mail_body_footer	This is an automatic message. Please do not reply to this email
 plugin_docman	approval_review_success	Your review was successfully recorded.
 plugin_docman	approval_review_failure	An error occurred on review recording.
 plugin_docman	approval_useradd_success	User successfully added to the approval table.
