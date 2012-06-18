@@ -1244,7 +1244,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
-     * @return array of int
+     * @return array of Tracker
      */
     public function getAllowedChildrenTypes() {
         return $this->getHierarchyFactory()->getChildren($this->getTrackerId());

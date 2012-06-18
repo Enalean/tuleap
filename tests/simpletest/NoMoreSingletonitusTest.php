@@ -24,14 +24,14 @@
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
     public function testThereAreNoNewClassFilesContainingSingletonLookups() {
-        $expected_singleton_lookups = 2395;
+        $expected_singleton_lookups = 2394;
         $output                     = $this->getSystemOutput("grep -rc  '::instance()' * | awk -F: 'BEGIN { n=0} {n=n+$2} END { print n}'");
         $actual_singleton_lookups   = $output[0];
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
         $this->assertTrue($actual_singleton_lookups <= $expected_singleton_lookups, 
                 "$new_singletons singleton lookup(s) was(were) introduced, please check to see if you can avoid this by injecting it(them)
                  before increasing the allowed number of singleton lookups");
-        $this->assertEqual($actual_singleton_lookups >= $expected_singleton_lookups, 
+        $this->assertTrue($actual_singleton_lookups >= $expected_singleton_lookups, 
                 "Great job! You removed one or more singleton lookups, you're a Dependency Injection champion!
                  please decrease the expected_singleton_lookups variable in this test
                  It should be : $actual_singleton_lookups");
