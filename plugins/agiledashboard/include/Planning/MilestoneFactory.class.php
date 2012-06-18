@@ -117,7 +117,6 @@ class Planning_MilestoneFactory {
         $backlog_tracker = $planning->getBacklogTracker();
 
         $node = new TreeNode(array('id'                   => $id,
-                                   'allowedChildrenTypes' => array($backlog_tracker),
                                    'artifact'             => $milestone_artifact));
         $node->setId($id);
         // TODO: $node->setObject(new Planning_Item($milestone_artifact, $planning)) ?

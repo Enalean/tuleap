@@ -120,7 +120,7 @@ class Planning_Item {
     }
 
     /**
-     * @return array of int
+     * @see Tracker_Artifact::getAllowedChildrenTypes()
      */
     public function getAllowedChildrenTypes() {
         return $this->artifact->getAllowedChildrenTypes();
