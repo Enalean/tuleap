@@ -33,6 +33,7 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function __construct(Tracker $tracker) {
+         error_reporting(E_ALL);
         $this->tracker             = $tracker;
         $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
@@ -294,17 +295,20 @@ class Tracker_DateReminderRenderer {
         while ($row = db_fetch_array($ugs)) {
             $ugroupIds[] = intval($row['ugroup_id']);
         }
-        $validUgroupIds = array();
-        foreach ($request->get('reminder_ugroup') as $ugroup) {
-            if (in_array($ugroup, $ugroupIds)) {
-                $validUgroupIds[] = $ugroup;
-            } else {
-                $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_ugroup', array($ugroup));
-                throw new Tracker_DateReminderException($errorMessage);
+        $validUgroupIds  = array();
+        $selectedUgroups = $request->get('reminder_ugroup');
+        if (!empty($selectedUgroups)) {
+            foreach ($selectedUgroups as $ugroup) {
+                if (in_array($ugroup, $ugroupIds)) {
+                    $validUgroupIds[] = $ugroup;
+                } else {
+                    $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_ugroup', array($ugroup));
+                    throw new Tracker_DateReminderException($errorMessage);
+                }
             }
-        }
-        if(!empty($validUgroupIds)) {
-            return $validUgroupIds;
+            if (!empty($validUgroupIds)) {
+                return $validUgroupIds;
+            }
         } else {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_empty_ugroup_param');
             throw new Tracker_DateReminderException($errorMessage);
