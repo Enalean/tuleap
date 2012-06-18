@@ -80,7 +80,7 @@ class Tracker_DateReminderRenderer {
     /**
      * Edit a given date reminder
      *
-     *  @param Integer $reminderId Id of the edited date reminder
+     * @param Integer $reminderId Id of the edited date reminder
      *
      * @return String
      */
@@ -138,6 +138,7 @@ class Tracker_DateReminderRenderer {
     protected function getUgroupsAllowedForTracker($reminderId = Null) {
         $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                                                               $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $selectedUgroups = '';
         if (!empty($reminderId)) {
             $reminder        = $this->dateReminderFactory->getReminder($reminderId);
             $selectedUgroups = $reminder->getUgroups(true);
@@ -341,6 +342,8 @@ class Tracker_DateReminderRenderer {
     /**
      * Display date reminders
      *
+     * @param HTTPRequest $request HTTP request
+     *
      * @return Void
      */
     public function displayDateReminders(HTTPRequest $request) {
@@ -360,18 +363,7 @@ class Tracker_DateReminderRenderer {
             $output .= $this->getNewDateReminderForm();
         } elseif ($request->get('action') == 'update_reminder') {
            $output .= '<div id="update_reminder"></div>';
-               /*$output .= "<script type=\"text/javascript\">
-            document.observe('dom:loaded', function() {
-                $('update_reminder').observe('click', function (evt) {
-                    var reminderDiv = new Element('div');
-                    reminderDiv.insert('".$this->editDateReminder($request->get('reminder_id'))."');
-                    Element.insert($('update_reminder'), reminderDiv);
-                    Event.stop(evt);
-                    return false;
-                });
-            });
-            </script>";*/
-                $output .= $this->editDateReminder($request->get('reminder_id'));
+           $output .= $this->editDateReminder($request->get('reminder_id'));
             }
         $output .= '</fieldset>';
         echo $output;

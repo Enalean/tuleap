@@ -79,7 +79,6 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $ugroups          = $this->da->quoteSmart($ugroups);
         $notificationType = $this->da->escapeInt($notificationType);
         $distance         = $this->da->escapeInt($distance);
-        $status           = $this->da->escapeInt($status);
         $sql = "INSERT INTO ".$this->tableName."
                 (
                 tracker_id,
