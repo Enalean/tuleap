@@ -33,7 +33,6 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function __construct(Tracker $tracker) {
-         error_reporting(E_ALL);
         $this->tracker             = $tracker;
         $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
@@ -354,13 +353,8 @@ class Tracker_DateReminderRenderer {
         print '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
         print '<fieldset>';
         $this->displayAllReminders();
-        $output = '<div id="tracker_reminder"></div>';
-        $output .= '
-        <script type="text/javascript">
-        var reminderHtml = \'<p><label for="New Reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label>\';
-        document.getElementById("tracker_reminder").innerHTML = reminderHtml; 
-        </script>';
-        $output .= ' <noscript>
+        $output  = '<div id="tracker_reminder" style="display:none;"><p><label for="New Reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label></div>';
+        $output .= '<noscript>
         <p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'</a>
         </noscript>';
         if ($request->get('action') == 'add_reminder') {

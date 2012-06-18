@@ -16,12 +16,14 @@
  */
  
 /**
- * @TODO Write something meaningful here
+ * This script display a hidden div that contains new reminder submission button then listen to any
+ * reminder creation request and delegate process ot the right function within tracker class. 
  */
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
 document.observe('dom:loaded', function() {
+    $('tracker_reminder').show();
     $('add_reminder').observe('click', function (evt) {
     var url = codendi.tracker.base_url +'?func=display_reminder_form&tracker='+$('add_reminder').value;
     var target = 'tracker_reminder';
