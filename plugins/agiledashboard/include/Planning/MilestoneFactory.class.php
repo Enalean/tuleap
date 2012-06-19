@@ -146,11 +146,12 @@ class Planning_MilestoneFactory {
         }
     }
 
-    private function makeNodeWithChildren($user, $planning, $milestone_artifact, $parents) {
-        $node = new TreeNode();
-        $node->setId($milestone_artifact->getId());
-        $node->setObject(new Planning_Item($milestone_artifact, $planning));
-        $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, $parents, $planning);
+    private function makeNodeWithChildren($user, $planning, $artifact, $parents) {
+        $node = new TreeNode(array('id' => $artifact->getId(),
+                                   'artifact' => $artifact));
+        $node->setId($artifact->getId());
+        $node->setObject($artifact, $planning);
+        $this->addChildrenPlannedArtifacts($user, $artifact, $node, $parents, $planning);
         return $node;
     }
     
