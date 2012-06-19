@@ -365,7 +365,7 @@ class GitActions extends PluginActions {
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        if ( empty($repoAccess) || empty($repoDescription) ) {
+        if ( empty($repoAccess) && empty($repoDescription) ) {
             $c->addError( $this->getText('actions_params_error') );
             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
             return false;

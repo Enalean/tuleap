@@ -46,19 +46,11 @@ class GitViews_RepoManagement {
      */
     public function display() {
         echo '<div id="git_repomanagement">';
-        ?>
-        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?= $this->repository->getProjectId() ?>">
-        <input type="hidden" id="action" name="action" value="edit" />
-        <input type="hidden" id="repo_id" name="repo_id" value="<?= $this->repository->getId() ?>" />
-        <?php
         $this->deleteForm();
         $this->descriptionForm();
-        echo '</form>';
-        // form to update notification mail prefix
+        $this->accessControlForm();
         $this->mailPrefixForm();
-        // form to add email addresses (mailing list) or a user to notify
         $this->addMailForm();
-        // show the list of mails to notify
         $this->listOfMails();
 
         echo '</div>';
@@ -73,6 +65,7 @@ class GitViews_RepoManagement {
     private function descriptionForm() {
         $hp = Codendi_HTMLPurifier::instance();
         echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+        echo '<input type="hidden" id="action" name="action" value="edit" />';
         echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
 
         echo '<p id="plugin_git_description">';
@@ -82,12 +75,19 @@ class GitViews_RepoManagement {
         echo '</textarea>';
         echo '</p>';
 
+        echo '<p><input type="submit" name="save" value="'. $this->getText('admin_save_submit') .'" /></p>';
+        echo '</form>';
+    }
+
+    private function accessControlForm() {
+        echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+        echo '<input type="hidden" id="action" name="action" value="edit" />';
+        echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
         if ($this->repository->getBackend() instanceof Git_Backend_Gitolite) {
             $this->accessControlGitolite();
         } else {
             $this->accessControl();
         }
-
         echo '<p><input type="submit" name="save" value="'. $this->getText('admin_save_submit') .'" /></p>';
         echo '</form>';
     }
@@ -174,7 +174,7 @@ class GitViews_RepoManagement {
     }
 
     /**
-     * CREATE NOTIFICATION FORM
+     * form to update notification mail prefix
      */
     private function mailPrefixForm() {
         $hp = Codendi_HTMLPurifier::instance();
@@ -199,7 +199,7 @@ class GitViews_RepoManagement {
     }
 
     /**
-     * MAIL FORM
+     * form to add email addresses (mailing list) or a user to notify
      */
     private function addMailForm() {
         ?>
@@ -226,7 +226,7 @@ class GitViews_RepoManagement {
     }
 
     /**
-     * LIST OF MAILS TO NOTIFY
+     * show the list of mails to notify
      */
     private function listOfMails() {
         $r = new GitRepository();
