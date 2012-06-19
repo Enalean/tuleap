@@ -93,7 +93,7 @@ class Tracker_DateReminderFactory {
             $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName().":".$fieldId, $this->getTracker()->getGroupId(), array($distance.' Day(s), Type: '.$notificationType.' Ugroup(s): '.$ugroups));
             return $reminder;
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
+            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_failure', array($trackerId, $fieldId));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -167,7 +167,7 @@ class Tracker_DateReminderFactory {
             $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName().":".$reminderId, $this->getTracker()->getGroupId(), array("Id: ".$reminderId.", Type: ".$notificationType.", Ugroup(s): ".$ugroups.", Day(s): ".$distance.", Status: ".$status));
             return $updateReminder;
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_update_failure', array($reminderId));
+            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_failure', array($reminderId));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -235,7 +235,7 @@ class Tracker_DateReminderFactory {
             $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), array("Id: ".$reminderId));
             return $deleteReminder;
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_delete_failure', $reminderId);
+            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_delete_failure', array($reminderId));
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
