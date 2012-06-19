@@ -46,12 +46,12 @@ class GitViews_RepoManagement {
      */
     public function display() {
         echo '<div id="git_repomanagement">';
-        $this->deleteForm();
         $this->descriptionForm();
         $this->accessControlForm();
         $this->mailPrefixForm();
         $this->addMailForm();
         $this->listOfMails();
+        $this->deleteForm();
 
         echo '</div>';
     }
