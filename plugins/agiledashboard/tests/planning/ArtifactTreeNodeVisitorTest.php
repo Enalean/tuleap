@@ -40,12 +40,14 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         stub($artifact)->getTracker()->returns($tracker);
         stub($artifact)->getAllowedChildrenTypes()->returns($children_trackers);
         
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        stub($artifact_factory)->getArtifactById(123)->returns($artifact);
         
         $planning = mock('Planning');
         
         $node    = new TreeNode(array('id' => 123));
+        $node->setObject($artifact);
+        
+        
+        $artifact_factory = mock('Tracker_ArtifactFactory');
         $visitor = new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, 'baz');
         
         $visitor->visit($node);
@@ -57,8 +59,6 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $this->assertEqual('art #123', $presenter->getXRef());
         $this->assertEqual('baz', $presenter->getCssClasses());
         $this->assertEqual($children_trackers, $presenter->allowedChildrenTypes());
-        
-        Tracker_HierarchyFactory::clearInstance();
     }
 }
 
@@ -67,7 +67,6 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
     public function setUp() {
         parent::setUp();
         
-        $artifact_id         = 123;
         $planning_tracker_id = 456;
         $other_tracker_id    = 789;
         
@@ -77,11 +76,10 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         $planning       = stub('Planning')->getBacklogTrackerId()->returns($planning_tracker_id);
         $this->artifact = mock('Tracker_Artifact');
         
+        
+        $this->node    = new TreeNode();
+        $this->node->setObject($this->artifact);
         $artifact_factory  = mock('Tracker_ArtifactFactory');
-        
-        stub($artifact_factory)->getArtifactById($artifact_id)->returns($this->artifact);
-        
-        $this->node    = new TreeNode(array('id' => $artifact_id));
         $this->visitor = new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, 'whatever');
     }
     

@@ -37,16 +37,10 @@ class Planning_ArtifactTreeNodeVisitor {
      */
     private $classname;
     
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    
     public function __construct(Planning                $planning,
                                 Tracker_ArtifactFactory $artifact_factory,
                                                         $classname) {
         $this->planning         = $planning;
-        $this->artifact_factory = $artifact_factory;
         $this->classname        = $classname;
     }
     
@@ -67,7 +61,7 @@ class Planning_ArtifactTreeNodeVisitor {
     }
     
     private function decorate(TreeNode $node) {
-        $artifact = $this->getArtifact($node);
+        $artifact = $node->getObject();
         
         if ($artifact) {
             $planning_item = new Planning_Item($artifact, $this->planning);
@@ -75,11 +69,6 @@ class Planning_ArtifactTreeNodeVisitor {
             
             $node->setObject($presenter);
         }
-    }
-    
-    private function getArtifact(TreeNode $node) {
-        $row = $node->getData();
-        return $this->artifact_factory->getArtifactById($row['id']);
     }
     
     private function visitChildren(TreeNode $node) {
