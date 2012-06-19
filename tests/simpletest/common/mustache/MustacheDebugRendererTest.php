@@ -56,7 +56,7 @@ class MustacheDebugRenderer_InvalidTemplateTest extends MustacheDebugRenderer_Te
             $this->renderer->render('invalid-template', $this->whatever());
             $this->failMissingException();
         } catch(Exception $exception) {
-            $this->assertPattern('/invalid-template/', $exception->getMessage());
+            $this->assertPattern('/invalid-template.mustache/', $exception->getMessage());
         }
     }
 }
