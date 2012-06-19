@@ -19,14 +19,7 @@
  */
 
 require_once 'vendor/Mustache.php';
-
-/**
- * Like MustacheException, but for MustacheDebug.
- * 
- * This class does not inherit from MustacheException so that we don't catch
- * them in MustacheDebug.
- */
-class MustacheDebugException extends Exception {}
+require_once 'MustacheDebugException.class.php';
 
 /**
  * An improved version of the Mustache template engine.
