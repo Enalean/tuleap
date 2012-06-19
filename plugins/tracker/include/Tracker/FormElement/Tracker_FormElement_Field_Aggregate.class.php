@@ -67,8 +67,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      * @return string html
      */
     public function fetchAdminFormElement() {
-        $html = $this->fetchWarnings();
-        $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
+        $html = '9001';
         return $html;
     }
 
@@ -76,14 +75,14 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'aggregate_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'aggregate_description');
     }
 
     /**

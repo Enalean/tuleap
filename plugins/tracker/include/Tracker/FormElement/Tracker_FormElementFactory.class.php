@@ -41,6 +41,7 @@ require_once('Tracker_FormElement_Field_SubmittedOn.class.php');
 require_once('Tracker_FormElement_Field_ArtifactLink.class.php');
 require_once('Tracker_FormElement_Field_PermissionsOnArtifact.class.php');
 require_once('Tracker_FormElement_Field_Burndown.class.php');
+require_once('Tracker_FormElement_Field_Aggregate.class.php');
 require_once('Tracker_FormElement_Field_CrossReferences.class.php');
 require_once('Tracker_FormElement_Container_Fieldset.class.php');
 require_once('Tracker_FormElement_Container_Column.class.php');
@@ -78,12 +79,13 @@ class Tracker_FormElementFactory {
     );
     
     protected $special_classnames     = array(
-        'aid'      => 'Tracker_FormElement_Field_ArtifactId',
-        'lud'      => 'Tracker_FormElement_Field_LastUpdateDate',
-        'subby'    => 'Tracker_FormElement_Field_SubmittedBy',
-        'subon'    => 'Tracker_FormElement_Field_SubmittedOn',
-        'cross'    => 'Tracker_FormElement_Field_CrossReferences',
-        'burndown' => 'Tracker_FormElement_Field_Burndown',
+        'aid'       => 'Tracker_FormElement_Field_ArtifactId',
+        'lud'       => 'Tracker_FormElement_Field_LastUpdateDate',
+        'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
+        'subon'     => 'Tracker_FormElement_Field_SubmittedOn',
+        'cross'     => 'Tracker_FormElement_Field_CrossReferences',
+        'burndown'  => 'Tracker_FormElement_Field_Burndown',
+        'aggregate' => 'Tracker_FormElement_Field_Aggregate'
     );
     protected $group_classnames       = array(
         'fieldset' => 'Tracker_FormElement_Container_Fieldset',
