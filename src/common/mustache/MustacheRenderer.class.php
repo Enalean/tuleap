@@ -19,8 +19,9 @@
  */
 
 require_once 'common/templating/TemplateRenderer.class.php';
+require_once 'common/include/Config.class.php';
 require_once 'MustacheLoader.php';
-require_once 'Tuleap_Mustache.class.php';
+require_once 'MustacheDebug.class.php';
 
 /**
  * Adapts the Mustache template engine to the expected Tuleap interface. 
@@ -28,14 +29,14 @@ require_once 'Tuleap_Mustache.class.php';
 class MustacheRenderer extends TemplateRenderer {
 
     /**
-     * @var Tuleap_Mustache
+     * @var Mustache
      */
-    private $mustache;
+    private $template_engine;
     
     /**
      * @var MustacheLoader
      */
-    private $mustache_loader;
+    private $template_loader;
     
     /**
      * @var array
@@ -51,12 +52,22 @@ class MustacheRenderer extends TemplateRenderer {
     public function __construct($plugin_templates_dir) {
         parent::__construct($plugin_templates_dir);
         
-        $this->mustache        = new Tuleap_Mustache(null, null, null, $this->options);
-        $this->mustache_loader = new MustacheLoader($this->plugin_templates_dir);
+        $this->template_engine = $this->getTemplateEngine();
+        $this->template_loader = new MustacheLoader($this->plugin_templates_dir);
+    }
+    
+    private function getTemplateEngineClass() {
+        return Config::get('DEBUG_MODE') ? 'MustacheDebug' : 'Mustache';
+    }
+    
+    public function getTemplateEngine() {
+        $engine_class = $this->getTemplateEngineClass();
+        return new $engine_class(null, null, null, $this->options);
     }
     
     public function render($template_name, $presenter, $return = false) {
-       $result = $this->mustache->renderByName($template_name, $presenter, $this->mustache_loader);
+//       $result = $this->template_engine->renderByName($template_name, $presenter, $this->template_loader);
+        $result = $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
        if ($return) {
            return $result;
        } else {

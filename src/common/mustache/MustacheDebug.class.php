@@ -19,7 +19,14 @@
  */
 
 require_once 'Mustache.php';
-require_once 'Tuleap_MustacheException.class.php';
+
+/**
+ * Like MustacheException, but for MustacheDebug.
+ * 
+ * This class does not inherit from MustacheException so that we don't catch
+ * them in MustacheDebug.
+ */
+class MustacheDebugException extends Exception {}
 
 /**
  * An improved version of the Mustache template engine.
@@ -27,7 +34,7 @@ require_once 'Tuleap_MustacheException.class.php';
  * It knows the current stack of templates/partials, and provides better error
  * messages.
  */
-class Tuleap_Mustache extends Mustache {
+class MustacheDebug extends Mustache {
     
     /**
      * @var array Names of the recursively rendered templates up to the current one.
@@ -56,11 +63,11 @@ class Tuleap_Mustache extends Mustache {
     }
     
     /**
-     * Builds a new Tuleap_MustacheException from a MustacheException, with a
+     * Builds a new MustacheDebugException from a MustacheException, with a
      * better error message (including template names).
      *
      * @param MustacheException $source_exception
-     * @return \Tuleap_MustacheException 
+     * @return \MustacheDebugException 
      */
     private function buildExceptionWithTemplateNamesInMessage(MustacheException $source_exception) {
         $message  = $source_exception->getMessage();
@@ -68,7 +75,7 @@ class Tuleap_Mustache extends Mustache {
         $message .= implode('.mustache<br/>in ', array_reverse($this->template_names_stack));
         $message .= '.mustache<br/>';
         
-        return new Tuleap_MustacheException($message, $source_exception->getCode());
+        return new MustacheDebugException($message, $source_exception->getCode());
     }
     
     /**
@@ -82,7 +89,7 @@ class Tuleap_Mustache extends Mustache {
      * @param mixed          $view          The template evaluation context
      * @param MustacheLoader $loader        A template loader (that will provide the template content given its name)
      * 
-     * @throws Tuleap_MustacheException
+     * @throws MustacheDebugException
      */
     public function renderByName($template_name, $view, $loader) {
         $output = '';

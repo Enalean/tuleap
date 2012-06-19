@@ -28,6 +28,24 @@ class MustacheRendererTest extends TemplateRendererTestBase {
     function setUp() {
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
         parent::setUp();
+        Config::store();
+    }
+    
+    public function itUsesDefaultMustacheEngineWhenDebugModeIsDisabled() {
+        Config::set('DEBUG_MODE', false);
+        $engine = $this->renderer->getTemplateEngine();
+        $this->assertIsA($engine, 'Mustache');
+        $this->assertNotA($engine, 'MustacheDebug');
+    }
+    
+    public function itUsesMustacheDebugEngineWhenDebugModeIsEnabled() {
+        Config::set('DEBUG_MODE', true);
+        $engine = $this->renderer->getTemplateEngine();
+        $this->assertIsA($engine, 'MustacheDebug');
+    }
+    
+    function tearDown() {
+        Config::restore();
     }
 }
 
