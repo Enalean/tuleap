@@ -75,7 +75,7 @@ class Git_LastPushesGraph {
         $repoList           = $dao->getProjectRepositoryList($groupId);
         $um                 = UserManager::instance();
         $user               = $um->getCurrentUser();
-        $repoFactory        = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+        $repoFactory        = new GitRepositoryFactory($dao, ProjectManager::instance());
         foreach ($repoList as $repo) {
             $repository = $repoFactory->getRepositoryById($repo['repository_id']);
             if ($repository->userCanRead($user)) {
