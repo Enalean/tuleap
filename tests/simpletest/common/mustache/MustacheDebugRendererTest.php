@@ -42,8 +42,8 @@ class MustacheDebugRenderer_ValidTemplateTest extends MustacheDebugRenderer_Test
     public function itBehavesLikeMustacheRenderer() {
         $mustache_renderer = new MustacheRenderer($this->templates_dir);
         $presenter         = $this->whatever();
-        $mustache_output   = $mustache_renderer->render('valid-template', $presenter, true);
-        $debug_output      = $this->renderer->render('valid-template', $presenter, true);
+        $mustache_output   = $mustache_renderer->renderToString('valid-template', $presenter);
+        $debug_output      = $this->renderer->renderToString('valid-template', $presenter);
         
         $this->assertEqual($debug_output, $mustache_output);
     }
@@ -53,7 +53,7 @@ class MustacheDebugRenderer_InvalidTemplateTest extends MustacheDebugRenderer_Te
     
     public function itIncludesTheNameOfTheInvalidTemplateInTheErrorMessage() {
         try {
-            $this->renderer->render('invalid-template', $this->whatever());
+            $this->renderer->renderToString('invalid-template', $this->whatever());
             $this->failMissingException();
         } catch(Exception $exception) {
             $this->assertPattern('/ invalid-template.mustache/', $exception->getMessage());
@@ -65,7 +65,7 @@ class MustacheDebug_InvalidPartialRenderingTest extends MustacheDebugRenderer_Te
     public function setUp() {
         parent::setUp();
         try {
-            $this->renderer->render('valid-template-with-invalid-partial', $this->whatever());
+            $this->renderer->renderToString('valid-template-with-invalid-partial', $this->whatever());
             $this->failMissingException();
         } catch(Exception $exception) {
             $this->error_message = $exception->getMessage();

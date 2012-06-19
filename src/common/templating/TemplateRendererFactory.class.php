@@ -20,18 +20,42 @@
 
 require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'common/mustache/MustacheDebugRenderer.class.php';
+require_once 'common/include/Config.class.php';
 
+/**
+ * Handles TemplateRenderer's instanciation. 
+ */
 class TemplateRendererFactory {
     
+    /**
+     * Creates a new factory instance.
+     * 
+     * Mostly used at places where renderers where instanciated manually, and
+     * where injecting a factory needed a lot of refactoring.
+     * 
+     * @return \TemplateRendererFactory 
+     */
     public static function build() {
         return new TemplateRendererFactory();
     }
     
+    /**
+     * Returns a new TemplateRenderer according to Config.
+     * 
+     * For now, it will mostly switch between MustacheRenderer and
+     * MustacheDebugRenderer (when DEBUG_MODE is enabled).
+     * 
+     * @param string $plugin_templates_dir
+     * @return TemplateRenderer
+     */
     public function getRenderer($plugin_templates_dir) {
         $renderer_class = $this->getRendererClassName();
         return new $renderer_class($plugin_templates_dir);
     }
     
+    /**
+     * @return string
+     */
     private function getRendererClassName() {
         return Config::get('DEBUG_MODE') ? 'MustacheDebugRenderer' : 'MustacheRenderer';
     }

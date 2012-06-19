@@ -51,14 +51,23 @@ class MustacheRenderer extends TemplateRenderer {
     public function __construct($plugin_templates_dir) {
         parent::__construct($plugin_templates_dir);
         
-        $this->template_engine = $this->getTemplateEngine();
+        $this->template_engine = $this->buildTemplateEngine();
         $this->template_loader = new MustacheLoader($this->plugin_templates_dir);
     }
     
-    public function getTemplateEngine() {
+    /**
+     * Builds a new Mustache instance.
+     * 
+     * @return \Mustache 
+     */
+    protected function buildTemplateEngine() {
         return new Mustache(null, null, null, $this->options);
     }
     
+    /**
+     * @see TemplateEngine
+     * @return string
+     */
     public function renderToString($template_name, $presenter) {
        return $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
     }

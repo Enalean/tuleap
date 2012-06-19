@@ -21,12 +21,23 @@
 require_once 'MustacheRenderer.class.php';
 require_once 'MustacheDebug.class.php';
 
+/**
+ * Same as MustacheRenderer, with better error messages. 
+ */
 class MustacheDebugRenderer extends MustacheRenderer {
     
-    public function getTemplateEngine() {
+    /**
+     * @see MustacheRenderer
+     * @return \MustacheDebug 
+     */
+    protected function buildTemplateEngine() {
         return new MustacheDebug(null, null, null, $this->options);
     }
     
+    /**
+     * @see TemplateRenderer
+     * @return string 
+     */
     public function renderToString($template_name, $presenter) {
         return $this->template_engine->renderByName($template_name, $presenter, $this->template_loader);
     }

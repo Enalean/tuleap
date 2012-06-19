@@ -19,7 +19,6 @@
  */
 
 require_once 'common/templating/TemplateRendererFactory.class.php';
-require_once 'common/include/Config.class.php';
 
 class TemplateRendererFactoryTest extends TuleapTestCase {
     public function setUp() {
