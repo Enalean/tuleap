@@ -72,15 +72,15 @@ class MustacheDebug_InvalidPartialRenderingTest extends MustacheDebugRenderer_Te
         }
     }
     
-    public function itIncludesTheNameOfTheInvalidPartialAtTheTopOfTheErrorMessage() {
+    public function itIncludesTheNameOfTheInvalidPartialInTheErrorMessage() {
         $this->assertPattern('/ invalid-template.mustache/', $this->error_message);
     }
     
-    public function itIncludesTheNameOfTheRootPartialAtTheBottomOfTheErrorMessage() {
+    public function itIncludesTheNameOfTheRootPartialInTheErrorMessage() {
         $this->assertPattern('/ valid-template-with-invalid-partial.mustache/', $this->error_message);
     }
     
-    public function itDoesNotIncludeTheNameOfValidChildTemplates() {
+    public function itDoesNotIncludeTheNameOfValidChildTemplatesInTheErrorMessage() {
         $this->assertNoPattern('/ valid-template.mustache/', $this->error_message);
     }
 }
