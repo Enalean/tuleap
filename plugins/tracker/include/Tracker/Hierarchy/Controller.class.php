@@ -20,7 +20,7 @@
 
 require_once 'Presenter.class.php';
 require_once 'Dao.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'HierarchicalTracker.class.php';
 require_once 'HierarchicalTrackerFactory.class.php';
@@ -52,7 +52,7 @@ class Tracker_Hierarchy_Controller {
         $this->tracker  = $tracker;
         $this->factory  = $factory;
         $this->dao      = $dao;
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../../templates');
     }
     
     public function edit() {
