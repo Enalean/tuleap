@@ -18,7 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/mustache/MustacheDebugRenderer.class.php';
+
 class TemplateRendererFactory {
+    
+    public static function build() {
+        return new TemplateRendererFactory();
+    }
     
     public function getRenderer($plugin_templates_dir) {
         $renderer_class = $this->getRendererClassName();
