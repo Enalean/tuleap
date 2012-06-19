@@ -153,8 +153,10 @@ class Tracker_DateReminderFactory {
             $status           = $reminderRenderer->validateStatus($request);
             $ugroups          = join(",", $ugroups);
             $fieldId          = $reminderRenderer->validateFieldId($request);
-            $this->checkDuplicatedReminders($this->getTracker()->getId(), $fieldId, $ugroups, $notificationType, $distance);
-            $this->isReminderBeforeOpenDate($fieldId, $notificationType);
+            if ($status == 1) {
+                $this->checkDuplicatedReminders($this->getTracker()->getId(), $fieldId, $ugroups, $notificationType, $distance);
+                $this->isReminderBeforeOpenDate($fieldId, $notificationType);
+            }
         } catch (Tracker_DateReminderException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
