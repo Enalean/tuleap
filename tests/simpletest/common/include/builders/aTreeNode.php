@@ -30,6 +30,7 @@ class Test_TreeNode_Builder {
 
     private $children;
     private $data;
+    private $object;
     
     public function __construct() {
         $this->children = array();
@@ -63,12 +64,21 @@ class Test_TreeNode_Builder {
     }
     
     /**
+     * @return \Test_TreeNode_Builder 
+     */
+    public function withObject($object) {
+        $this->object = $object;
+        return $this;
+    }
+    
+    /**
      * @return \TreeNode 
      */
     public function build() {
         $node = new TreeNode();
         $node->setChildren($this->children);
         $node->setData($this->data);
+        $node->setObject($this->object);
         return $node;
     }
 
