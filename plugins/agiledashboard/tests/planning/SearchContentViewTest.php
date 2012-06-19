@@ -40,7 +40,7 @@ class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentVi
         $view = new Planning_SearchContentView($report, $criteria, $tree_of_artifacts, $artifact_factory, $form_element_factory, $user, $planning, $planning_redirect_param);
         $view->setRenderer($renderer);
         
-        stub($renderer)->render('backlog-actions', $view, '*')->returns($backlog_actions_markup);
+        stub($renderer)->renderToString('backlog-actions', $view)->returns($backlog_actions_markup);
         
         $output = $view->fetch();
         

@@ -86,7 +86,7 @@ class Tracker_Hierarchy_Controller {
     }
     
     private function render($template_name, $presenter) {
-        echo $this->renderer->render($template_name, $presenter);
+        $this->renderer->renderToPage($template_name, $presenter);
     }
 }
 ?>

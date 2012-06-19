@@ -111,10 +111,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
 
         $presenter = $this->getPresenter($this->getForestsOfArtifacts(explode(',', $matching_ids['id'])), $form);
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('renderer', $presenter);
-
-        return ob_get_clean();
+        
+        return $renderer->renderToString('renderer', $presenter);
     }
 
     /**

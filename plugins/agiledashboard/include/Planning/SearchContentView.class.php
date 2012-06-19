@@ -50,12 +50,12 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
     
     public function fetchResultActions() {
-        return $this->renderer->render('backlog-actions', $this, true);
+        return $this->renderer->renderToString('backlog-actions', $this);
     }
     
     protected function fetchTable() {
         Planning_ArtifactTreeNodeVisitor::build($this->planning, 'planning-draggable-toplan')->visit($this->tree_of_artifacts);
-        return $this->renderer->render('backlog', $this, true);
+        return $this->renderer->renderToString('backlog', $this);
     }
 
     public function getChildren() {

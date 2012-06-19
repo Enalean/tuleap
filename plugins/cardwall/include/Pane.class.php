@@ -68,10 +68,8 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('agiledashboard-pane', $this->getPresenter($field));
-
-        return ob_get_clean();
+        
+        return $renderer->renderToString('agiledashboard-pane', $this->getPresenter($field));
     }
 
     /**

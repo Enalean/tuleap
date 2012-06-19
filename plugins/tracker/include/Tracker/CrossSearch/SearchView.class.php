@@ -102,7 +102,7 @@ class Tracker_CrossSearch_SearchView {
     private function fetchTrackerHomeNav() {
         $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../../templates');
-        return $renderer->render('tracker-home-nav', $presenter);
+        return $renderer->renderToString('tracker-home-nav', $presenter);
     }
 
     private function fetchTrackerList(User $user) {

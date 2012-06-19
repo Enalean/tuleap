@@ -437,7 +437,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $presenter = new Tracker_HomeNavPresenter($project);
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
         
-        echo $renderer->render('tracker-home-nav', $presenter);
+        $renderer->renderToPage('tracker-home-nav', $presenter);
     }
     
     /**
