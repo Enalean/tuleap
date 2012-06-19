@@ -24,6 +24,17 @@
 class Tracker_Hierarchy_Sorter {
     
     /**
+     *
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    
+    
+    public function __construct(Tracker_ArtifactFactory $factory = null) {
+        $this->artifact_factory = isset($factory) ? $factory : Tracker_ArtifactFactory::instance();
+    }
+    
+    /**
      * Create a tree from the given list according to the hierarchy definition
      * 
      * @param DataAccessResult $artifacts
@@ -66,6 +77,7 @@ class Tracker_Hierarchy_Sorter {
             
             $node->setId($id);
             $node->setData($artifact);
+            $node->setObject($this->artifact_factory->getArtifactById($id));
             $parent->addChild($node);
             
             $artifacts_in_tree[$id] = true;
@@ -130,7 +142,7 @@ class Tracker_Hierarchy_Sorter {
     private function getArtifactsFromArtifactInfo($artifacts_info) {
         $artifacts = array();
         foreach ($artifacts_info as $artifact_info) {
-            $artifacts[] = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_info['id']);
+            $artifacts[] = $this->artifact_factory->getArtifactById($artifact_info['id']);
         }
         return $artifacts;
     }
@@ -138,6 +150,7 @@ class Tracker_Hierarchy_Sorter {
     private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info) {
         foreach ($artifacts as $artifact) {
             $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));
+            $node->setObject($artifact);
             $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user), $artifacts_info);
             $root->addChild($node);
         }
