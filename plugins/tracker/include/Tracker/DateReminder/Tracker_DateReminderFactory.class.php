@@ -229,16 +229,22 @@ class Tracker_DateReminderFactory {
      * @return Boolean
      */
     public function deleteTrackerReminder($reminderId) {
-        $deleteReminder = $this->getDao()->deleteReminder($reminderId);
-        if ($deleteReminder) {
-            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), array("Id: ".$reminderId));
-            return $deleteReminder;
+        if(isset($reminderId) && is_int($reminderId)) {
+            $deleteReminder = $this->getDao()->deleteReminder($reminderId);
+            if ($deleteReminder) {
+                $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+                $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), array("Id: ".$reminderId));
+                return $deleteReminder;
+            } else {
+                $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_delete_failure', array($reminderId));
+                throw new Tracker_DateReminderException($errorMessage);
+            }
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_delete_failure', array($reminderId));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', array($reminderId));
             throw new Tracker_DateReminderException($errorMessage);
-        }
     }
+}
+
 }
 
 ?>
