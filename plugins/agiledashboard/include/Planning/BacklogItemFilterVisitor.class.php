@@ -63,9 +63,9 @@ class Planning_BacklogItemFilterVisitor {
         $new_children = array();
 
         foreach ($tree_node->getChildren() as $child_node) {
-            $child_artifact = $child_node->getData();
+            $child_artifact = $child_node->getObject();
 
-            if ($this->hierarchy->exists($child_artifact['tracker_id'])) {
+            if ($this->hierarchy->exists($child_artifact->getTrackerId())) {
                 if ($this->isBacklogPlannableArtifact($child_artifact)) {
                     $new_children[] = $child_node;
                 } else {
@@ -82,8 +82,8 @@ class Planning_BacklogItemFilterVisitor {
     }
 
     private function isBacklogPlannableArtifact($child_artifact) {
-        return ($child_artifact['tracker_id'] == $this->backlog_tracker_id
-                && !isset($this->already_planned_ids[$child_artifact['id']]));
+        return ($child_artifact->getTrackerId() == $this->backlog_tracker_id
+                && !isset($this->already_planned_ids[$child_artifact->getId()]));
     }
 }
 
