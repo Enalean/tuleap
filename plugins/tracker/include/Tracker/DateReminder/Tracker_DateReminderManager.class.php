@@ -89,6 +89,8 @@ class Tracker_DateReminderManager {
                 }
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
             }
+        } elseif ($request->get('action') == 'delete_reminder' ) {
+-            $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminders(array($request->get('reminder_id')));
         }
     }
 
