@@ -272,15 +272,16 @@ class Tracker_DateReminderManager {
         return $output;
     }
 
-    /** Get artifacts that will send notification for a reminder
+    /**
+     * Get artifacts that will send notification for a reminder
      *
      * @param Tracker_DateReminder $reminder Reminder on which the notification is based on
      *
      * @return Array
      */
     public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
-        $date      = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
-        $field     = $reminder->getField();
+        $date  = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
+        $field = $reminder->getField();
         return $field->getArtifactsByCriterias($date, $this->getTracker()->getId());
     }
 }

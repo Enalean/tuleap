@@ -330,7 +330,8 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         return date("Y-m-d", $artifact->getSubmittedOn());
     }
 
-    /** Get artifacts that responds to some criteria
+    /**
+     * Get artifacts that responds to some criteria
      *
      * @param date    $date      The date criteria
      * @param Integer $trackerId The Tracker Id
@@ -352,4 +353,5 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     }
 
 }
+
 ?>
