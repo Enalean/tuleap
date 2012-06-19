@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'MustacheRenderer.class.php';
+require_once 'MustacheDebug.class.php';
+
 class MustacheDebugRenderer extends MustacheRenderer {
     
     public function getTemplateEngine() {

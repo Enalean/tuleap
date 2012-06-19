@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Mustache.php';
+require_once 'vendor/Mustache.php';
 
 /**
  * Like MustacheException, but for MustacheDebug.

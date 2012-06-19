@@ -19,9 +19,8 @@
  */
 
 require_once 'common/templating/TemplateRenderer.class.php';
-require_once 'common/include/Config.class.php';
-require_once 'MustacheLoader.php';
-require_once 'MustacheDebug.class.php';
+require_once 'vendor/Mustache.php';
+require_once 'vendor/MustacheLoader.php';
 
 /**
  * Adapts the Mustache template engine to the expected Tuleap interface. 
