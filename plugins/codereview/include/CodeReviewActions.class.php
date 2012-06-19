@@ -319,6 +319,30 @@ class CodeReviewActions extends Actions {
                 $status    = false;
                 $invalid[] = 'patch_path';
             }
+            /**********check the order**********/
+            $f = exec ('sh /usr/share/codendi/plugins/codereview/bin/firstrev.sh '.$directory.' '.$patch_path);
+            $l = exec ('sh /usr/share/codendi/plugins/codereview/bin/lastrev.sh '.$directory.' '.$patch_path);
+            if ($frevision > $srevision){
+                var_dump($GLOBALS['codndi_dir']);
+                $status    = false;
+                $invalid[] = 'srevision';
+                $msg       = "le dexième numéro de revision est inferieur au premier";
+                $GLOBALS['Response']->addFeedBack('error', $msg);
+                $this->controller->view = 'createPatchFile';
+            }
+            if (!(($frevision >= $f) && ($frevision <= $l))){
+                $status = false;
+                $msg    = "Le premier numéro de révision ".$frevision." n'existe pas.";
+                $GLOBALS['Response']->addFeedBack('error', $msg);
+                $this->controller->view = 'createPatchFile';
+            }
+
+        if (!(($srevision >= $f) && ($srevision <= $l))){
+            $status = false;
+            $msg    = "Le dexième numéro de révision ".$srevision." n'existe pas.";
+            $GLOBALS['Response']->addFeedBack('error', $msg);
+            $this->controller->view = 'createPatchFile';
+        }
             return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
     }
     /**
