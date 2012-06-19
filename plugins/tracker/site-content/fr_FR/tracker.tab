@@ -1349,6 +1349,7 @@ plugin_tracker_date_reminder	tracker_date_reminder_notification_when	Quand
 plugin_tracker_date_reminder	tracker_date_reminder_send_to	Envoyer un email à
 plugin_tracker_date_reminder	tracker_date_reminder_field	Champs
 plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 jour(s) $2
+plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Modifier le rappel
 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1

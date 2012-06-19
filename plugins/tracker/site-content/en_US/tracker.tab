@@ -1352,6 +1352,7 @@ plugin_tracker_date_reminder	tracker_date_reminder_notification_when	When
 plugin_tracker_date_reminder	tracker_date_reminder_send_to	Send an email to
 plugin_tracker_date_reminder	tracker_date_reminder_field	Field
 plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 day(s) $2
+plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Update reminder
 
 project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
 project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1

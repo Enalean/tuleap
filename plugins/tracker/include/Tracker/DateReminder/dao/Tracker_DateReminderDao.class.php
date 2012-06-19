@@ -168,6 +168,20 @@ class Tracker_DateReminderDao extends DataAccessObject {
                   AND status            = 1";
         return $this->retrieve($sql);
     }
+
+    /**
+     * Delete a date reminder given its id
+     * 
+     * @param Array $reminderId Id of the reminder
+     * 
+     * @return Boolean
+     */
+    public function deleteReminder($reminderId) {
+        $reminder = $this->da->escapeInt($reminderId);
+        $sql = "DELETE FROM $this->tableName
+                WHERE reminder_id = $reminder";
+        return $this->update($sql);
+    }
 }
 
 ?>

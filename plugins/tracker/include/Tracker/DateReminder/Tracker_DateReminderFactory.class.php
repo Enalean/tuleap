@@ -221,6 +221,19 @@ class Tracker_DateReminderFactory {
         return UserManager::instance();
     }
 
+    /**
+     * Delete a given date reminder
+     *
+     * @param Integer $reminderId Id of reminder
+     *
+     * @return Boolean
+     */
+    public function deleteTrackerReminder($reminderId) {
+        //$historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+        //$historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), $reminderId);
+        $reminderManagerDao = $this->getDao();
+        return $reminderManagerDao->deleteReminder($reminderId);
+    }
 }
 
 ?>

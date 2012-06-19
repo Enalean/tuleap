@@ -336,7 +336,7 @@ class Tracker_DateReminderRenderer {
                 $output .= '<td>'.$reminder->getField()->getLabel().'</td>';
                 $output .= '<td>'.$reminder->getReminderStatusLabel().'</td>';
                 $output .= '<td><span style="float:left;"><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a></span>';
-                $output .= '<span style="float:right;><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></span></td>';
+                $output .= '<span style="float:right;"><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'" id="delete_reminder">'. $GLOBALS['Response']->getimage('ic/trash.png') .'</a></span></td>';
                 $output .= '</tr>';
             }
             $output .= '</TABLE>';
