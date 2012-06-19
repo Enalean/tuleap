@@ -33,7 +33,19 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
+        $user = UserManager::instance()->getCurrentUser();
+        $linked_artifacts = $artifact->getLinkedArtifactsOfHierarchy($user);
+        $sum = 0;
+        foreach ($linked_artifacts as $linked_artifact) {
+            $field = $this->getFormElementFactory()->getFormElementByName($linked_artifact->getTracker()->getId(), 'remaining_effort');
+            if ($field) {
+                $value = $linked_artifact->getValue($field);
+                if ($value) {
+                    $sum += $value->getValue();
+                }
+            }
+        }
+        $html = $sum;
         return $html;
     }
 
