@@ -99,7 +99,7 @@ abstract class MVC2_Controller {
     }
     
     protected function render($template_name, $presenter) {
-        $this->renderer->render($template_name, $presenter);
+        $this->renderer->renderToPage($template_name, $presenter);
     }
     
     protected function addFeedback($type, $message) {
