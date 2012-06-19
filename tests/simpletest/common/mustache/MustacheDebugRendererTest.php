@@ -20,25 +20,7 @@
 
 require_once 'common/mustache/MustacheDebugRenderer.class.php';
 
-class MustacheDebugRenderer_ValidTemplateTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        $this->templates_dir     = dirname(__FILE__).'/templates';
-        $this->mustache_renderer = new MustacheRenderer($this->templates_dir);
-        $this->debug_renderer    = new MustacheDebugRenderer($this->templates_dir);
-    }
-    
-    public function itBehavesLikeMustacheRenderer() {
-        $presenter       = new stdClass();
-        $mustache_output = $this->mustache_renderer->render('valid-template', $presenter, true);
-        $debug_output    = $this->debug_renderer->render('valid-template', $presenter, true);
-        
-        $this->assertEqual($debug_output, $mustache_output);
-    }
-}
-
-class MustacheDebugRenderer_InvalidTemplateTest extends TuleapTestCase {
+class MustacheDebugRenderer_TestCase extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
@@ -53,6 +35,21 @@ class MustacheDebugRenderer_InvalidTemplateTest extends TuleapTestCase {
     protected function whatever() {
         return new stdClass();
     }
+}
+
+class MustacheDebugRenderer_ValidTemplateTest extends MustacheDebugRenderer_TestCase {
+    
+    public function itBehavesLikeMustacheRenderer() {
+        $mustache_renderer = new MustacheRenderer($this->templates_dir);
+        $presenter         = $this->whatever();
+        $mustache_output   = $mustache_renderer->render('valid-template', $presenter, true);
+        $debug_output      = $this->renderer->render('valid-template', $presenter, true);
+        
+        $this->assertEqual($debug_output, $mustache_output);
+    }
+}
+
+class MustacheDebugRenderer_InvalidTemplateTest extends MustacheDebugRenderer_TestCase {
     
     public function itIncludesTheNameOfTheInvalidTemplateInTheErrorMessage() {
         try {

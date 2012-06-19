@@ -60,7 +60,7 @@ class MustacheRenderer extends TemplateRenderer {
         return new Mustache(null, null, null, $this->options);
     }
     
-    public function renderToString($template_name, $presenter, $return = false) {
+    public function renderToString($template_name, $presenter) {
        return $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
     }
 }
