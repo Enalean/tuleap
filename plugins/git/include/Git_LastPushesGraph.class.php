@@ -72,7 +72,16 @@ class Git_LastPushesGraph {
     public function __construct($groupId, $weeksNumber) {
         $dao                = new GitDao();
         // TODO: Optionally include presonal forks in repo list
-        $this->repoList     = $dao->getProjectRepositoryList($groupId);
+        $repoList           = $dao->getProjectRepositoryList($groupId);
+        $um                 = UserManager::instance();
+        $user               = $um->getCurrentUser();
+        $repoFactory        = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+        foreach ($repoList as $repo) {
+            $repository = $repoFactory->getRepositoryById($repo['repository_id']);
+            if ($repository->userCanRead($user)) {
+                $this->repoList[] = $repo;
+            }
+        }
         $this->displayChart = false;
         $this->weeksNumber  = min($weeksNumber, self::MAX_WEEKSNUMBER);
         // Init some class properties according to 'weeks number' parameter         
