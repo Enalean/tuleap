@@ -358,6 +358,11 @@ class CodeReviewActions extends Actions {
             $directory       = $reviewRessources['params']['Directory'];
             $patch_path     = $reviewRessources['params']['patch_path'];
         }
+        //if ($frevision == "FIRST" && $srevision == "HEAD")
+        //$output = exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff.sh '.$directory.' '.$patch_path);
+        //var_dump($output);
+        //else 
+        exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff1.sh '.$frevision.' '.$srevision.' '.$directory.' '.$patch_path);
     }
 
 
