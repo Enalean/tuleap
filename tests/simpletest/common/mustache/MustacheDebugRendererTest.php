@@ -56,26 +56,32 @@ class MustacheDebugRenderer_InvalidTemplateTest extends MustacheDebugRenderer_Te
             $this->renderer->render('invalid-template', $this->whatever());
             $this->failMissingException();
         } catch(Exception $exception) {
-            $this->assertPattern('/invalid-template.mustache/', $exception->getMessage());
+            $this->assertPattern('/ invalid-template.mustache/', $exception->getMessage());
         }
     }
 }
 
-class MustacheDebug_InvalidPartialRenderingTest extends TuleapTestCase {
+class MustacheDebug_InvalidPartialRenderingTest extends MustacheDebugRenderer_TestCase {
+    public function setUp() {
+        parent::setUp();
+        try {
+            $this->renderer->render('valid-template-with-invalid-partial', $this->whatever());
+            $this->failMissingException();
+        } catch(Exception $exception) {
+            $this->error_message = $exception->getMessage();
+        }
+    }
+    
     public function itIncludesTheNameOfTheInvalidPartialAtTheTopOfTheErrorMessage() {
-        //
+        $this->assertPattern('/ invalid-template.mustache/', $this->error_message);
     }
     
     public function itIncludesTheNameOfTheRootPartialAtTheBottomOfTheErrorMessage() {
-        //
-    }
-    
-    public function itIncludesTheNameOfTheParentPartialsInTheErrorMessage() {
-        //
+        $this->assertPattern('/ valid-template-with-invalid-partial.mustache/', $this->error_message);
     }
     
     public function itDoesNotIncludeTheNameOfValidChildTemplates() {
-        //
+        $this->assertNoPattern('/ valid-template.mustache/', $this->error_message);
     }
 }
 ?>
