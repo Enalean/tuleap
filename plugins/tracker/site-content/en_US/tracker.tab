@@ -1345,7 +1345,7 @@ plugin_tracker	burndown_permission_denied	You are not allowed to access this fie
 plugin_tracker_date_reminder	subject	Reminder: '$1' $2 for '$3'
 plugin_tracker_date_reminder	body_header	$1 was asked to remind you today that the '$2' in the artifact below is $3.
 plugin_tracker_date_reminder	body_art_link	You can access the artifact here: $1
-plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Edit reminder
+plugin_tracker_date_reminder	tracker_date_reminder_actions	Actions
 plugin_tracker_date_reminder	tracker_date_reminder_add_title	Add reminder
 plugin_tracker_date_reminder	tracker_date_reminder_notification_status	Status
 plugin_tracker_date_reminder	tracker_date_reminder_notification_when	When
