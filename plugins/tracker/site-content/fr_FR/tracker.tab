@@ -1350,6 +1350,9 @@ plugin_tracker_date_reminder	tracker_date_reminder_send_to	Envoyer un email à
 plugin_tracker_date_reminder	tracker_date_reminder_field	Champs
 plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 jour(s) $2
 plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Modifier le rappel
+plugin_tracker_date_reminder	tracker_date_reminder_deleted	Rappel sur date de tracker supprimé avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_added	Rappel sur date de tracker ajouté avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_updated	Rappel sur date de tracker modififé avec succés
 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
@@ -1371,5 +1374,3 @@ project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugrou
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez selectionner au moins un ugroup valide
 project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champs 'SubmittedOn'
 project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker
-project_admin_utils	tracker_date_reminder_added	Rappel sur date de tracker ajouté avec succés
-project_admin_utils	tracker_date_reminder_updated	Rappel sur date de tracker modififé avec succés

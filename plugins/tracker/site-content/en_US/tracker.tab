@@ -1353,6 +1353,9 @@ plugin_tracker_date_reminder	tracker_date_reminder_send_to	Send an email to
 plugin_tracker_date_reminder	tracker_date_reminder_field	Field
 plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 day(s) $2
 plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Update reminder
+plugin_tracker_date_reminder	tracker_date_reminder_deleted	Date Reminder successfully deleted
+plugin_tracker_date_reminder	tracker_date_reminder_added	Date Reminder successfully added
+plugin_tracker_date_reminder	tracker_date_reminder_updated	Date Reminder successfully updated
 
 project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
 project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
@@ -1374,5 +1377,3 @@ project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugr
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup
 project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field
 project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder
-project_admin_utils	tracker_date_reminder_added	Date Reminder successfully added
-project_admin_utils	tracker_date_reminder_updated	Date Reminder successfully updated
