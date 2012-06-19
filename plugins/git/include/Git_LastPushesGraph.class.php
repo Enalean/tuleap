@@ -72,14 +72,14 @@ class Git_LastPushesGraph {
     public function __construct($groupId, $weeksNumber) {
         $dao                = new GitDao();
         // TODO: Optionally include presonal forks in repo list
-        $repoList           = $dao->getProjectRepositoryList($groupId);
+        $allRepositories    = $dao->getProjectRepositoryList($groupId);
         $um                 = UserManager::instance();
         $user               = $um->getCurrentUser();
         $repoFactory        = new GitRepositoryFactory($dao, ProjectManager::instance());
-        foreach ($repoList as $repo) {
+        foreach ($allRepositories as $repo) {
             $repository = $repoFactory->getRepositoryById($repo['repository_id']);
             if ($repository->userCanRead($user)) {
-                $this->repoList[] = $repo;
+                $this->repoList[] = $repository;
             }
         }
         $this->displayChart = false;
@@ -151,21 +151,21 @@ class Git_LastPushesGraph {
     /**
      * Collect, into an array, logged git pushes matching a given git repository for the given duration.
      *
-     * @param Array $repository Git repository we want to fetch its pushes
+     * @param GitRepository $repository Git repository we want to fetch its pushes
      *
      * @return Array
      */
-    private function getRepositoryPushesByWeek($repository) {
+    private function getRepositoryPushesByWeek(GitRepository $repository) {
         $pushes    = array();
         $gitLogDao = new Git_LogDao();
         foreach ($this->weekNum as $key => $w) {
-            $res = $gitLogDao->getRepositoryPushesByWeek($repository['repository_id'], $w, $this->year[$key]);
+            $res = $gitLogDao->getRepositoryPushesByWeek($repository->getId(), $w, $this->year[$key]);
             if ($res && !$res->isError() && $res->valid()) {
                 $row          = $res->getRow();
                 $pushes[$key] = intval($row['pushes']);
                 if ($pushes[$key] > 0) {
                     $this->displayChart = true;
-                    $this->legend       = $repository['repository_name'];
+                    $this->legend       = $repository->getFullName();
                 }
             }
             $pushes = array_pad($pushes, $this->weeksNumber, 0);
