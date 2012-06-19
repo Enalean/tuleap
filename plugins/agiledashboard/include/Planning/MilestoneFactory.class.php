@@ -147,8 +147,7 @@ class Planning_MilestoneFactory {
     }
 
     private function makeNodeWithChildren($user, $planning, $artifact, $parents) {
-        $node = new TreeNode(array('id' => $artifact->getId(),
-                                   'artifact' => $artifact));
+        $node = new TreeNode();
         $node->setId($artifact->getId());
         $node->setObject($artifact, $planning);
         $this->addChildrenPlannedArtifacts($user, $artifact, $node, $parents, $planning);
