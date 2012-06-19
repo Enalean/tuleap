@@ -336,7 +336,8 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return date("Y-m-d", $artifact->getLastChangeset()->getSubmittedOn());
     }
 
-    /** Get artifacts that responds to some criteria
+    /**
+     * Get artifacts that responds to some criteria
      *
      * @param date    $date      The date criteria
      * @param Integer $trackerId The Tracker Id
@@ -357,4 +358,5 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     }
 
 }
+
 ?>

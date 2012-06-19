@@ -54,7 +54,6 @@ class Tracker_DateReminderManager {
         $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
         $reminders      = $remiderFactory->getTrackerReminders();
         foreach ($reminders as $reminder) {
-            
             $artifacts = $this->getArtifactsByreminder($reminder);
             foreach ($artifacts as $artifact) {
                 $this->sendReminderNotification($reminder, $artifact);
@@ -156,7 +155,7 @@ class Tracker_DateReminderManager {
         $txtBody   = $this->getBodyText($reminder, $artifact, $user, $lang);
 
         $subject   = $this->getSubject($reminder, $artifact, $user);
-        $headers   = array(); 
+        $headers   = array();
         $hash      = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
         if (isset($messages[$hash])) {
             $messages[$hash]['recipients'][] = $recipient;

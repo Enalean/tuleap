@@ -464,7 +464,7 @@ class trackerPlugin extends Plugin {
    /**
      * Process the nightly job to send reminder on artifact correponding to given criteria
      *
-     * @param mixed $params 
+     * @param Array $params Hook params
      *
      * @return Void
      */
@@ -477,6 +477,9 @@ class trackerPlugin extends Plugin {
     /**
      * Fill the list of subEvents related to tracker in the project history interface
      *
+     * @param Array $params Hook params
+     *
+     * @return Void
      */
     public function fillProjectHistorySubEvents($params) {
         array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',

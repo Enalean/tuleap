@@ -34,7 +34,6 @@ class Tracker_DateReminder {
      * @var Tracker_FormElement_Field
      */
     protected $field = null;
-    
 
    /**
     * Constructor of the class
@@ -172,7 +171,7 @@ class Tracker_DateReminder {
     protected function setTracker($trackerId) {
         $this->trackerId = $trackerId;
     }
-    
+
     /**
      * Set the Notification Type of this reminder
      *
@@ -290,4 +289,5 @@ class Tracker_DateReminder {
     }
 
 }
+
 ?>

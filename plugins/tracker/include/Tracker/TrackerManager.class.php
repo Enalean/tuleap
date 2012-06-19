@@ -851,8 +851,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     /**
-     *  Send Date reminder 
-     * 
+     * Send Date reminder
+     *
      * @return Void
      */
     public function sendDateReminder() {

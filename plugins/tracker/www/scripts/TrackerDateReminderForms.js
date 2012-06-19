@@ -14,10 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 /**
  * This script display a hidden div that contains new reminder submission button then listen to any
- * reminder creation request and delegate process ot the right function within tracker class. 
+ * reminder creation request and delegate process ot the right function within tracker class.
  */
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };

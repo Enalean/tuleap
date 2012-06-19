@@ -278,7 +278,7 @@ class Tracker_DateReminderRenderer {
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
-    
+
     /**
      * Validate ugroup list param used for tracker reminder.
      * @TODO write less, write better

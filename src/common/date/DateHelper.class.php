@@ -113,7 +113,7 @@ class DateHelper {
      * @param Integer $distance Distance in number of days
      * @param Integer $before   0 if the date is after today otherwise the date is before today
      *
-     * @return 
+     * @return Integer
      */
     public static function getDistantDateFromToday($distance, $before) {
         $hours        = 24;
