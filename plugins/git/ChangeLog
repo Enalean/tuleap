@@ -1,3 +1,6 @@
+Version 2.6.1 - Tuleap 5.2
+    * Instrument gitphp to use a temporary directory where we can write into.
+
 Version 2.6 - Tuleap 5.2
     * Allow to use another gitphp than bundled one
       You may want to install gitphp-tuleap rpm package as well for test.
