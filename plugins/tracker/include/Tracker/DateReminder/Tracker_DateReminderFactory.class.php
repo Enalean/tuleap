@@ -229,10 +229,15 @@ class Tracker_DateReminderFactory {
      * @return Boolean
      */
     public function deleteTrackerReminder($reminderId) {
-        //$historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-        //$historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), $reminderId);
-        $reminderManagerDao = $this->getDao();
-        return $reminderManagerDao->deleteReminder($reminderId);
+        $deleteReminder = $this->getDao()->deleteReminder($reminderId);
+        if ($deleteReminder) {
+            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+            $historyDao->groupAddHistory("tracker_date_reminder_delete", $this->tracker->getName(), $this->tracker->getGroupId(), array("Id: ".$reminderId));
+            return $deleteReminder;
+        } else {
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_delete_failure', $reminderId);
+            throw new Tracker_DateReminderException($errorMessage);
+        }
     }
 }
 
