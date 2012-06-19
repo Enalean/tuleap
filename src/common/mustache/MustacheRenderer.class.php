@@ -31,17 +31,17 @@ class MustacheRenderer extends TemplateRenderer {
     /**
      * @var Mustache
      */
-    private $template_engine;
+    protected $template_engine;
     
     /**
      * @var MustacheLoader
      */
-    private $template_loader;
+    protected $template_loader;
     
     /**
      * @var array
      */
-    private $options = array('throws_exceptions' => array(
+    protected $options = array('throws_exceptions' => array(
         MustacheException::UNKNOWN_VARIABLE         => true,
         MustacheException::UNCLOSED_SECTION         => true,
         MustacheException::UNEXPECTED_CLOSE_SECTION => true,
@@ -56,23 +56,12 @@ class MustacheRenderer extends TemplateRenderer {
         $this->template_loader = new MustacheLoader($this->plugin_templates_dir);
     }
     
-    private function getTemplateEngineClass() {
-        return Config::get('DEBUG_MODE') ? 'MustacheDebug' : 'Mustache';
-    }
-    
     public function getTemplateEngine() {
-        $engine_class = $this->getTemplateEngineClass();
-        return new $engine_class(null, null, null, $this->options);
+        return new Mustache(null, null, null, $this->options);
     }
     
-    public function render($template_name, $presenter, $return = false) {
-//       $result = $this->template_engine->renderByName($template_name, $presenter, $this->template_loader);
-        $result = $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
-       if ($return) {
-           return $result;
-       } else {
-           echo $result;
-       }
+    public function renderToString($template_name, $presenter, $return = false) {
+       return $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
     }
 }
 

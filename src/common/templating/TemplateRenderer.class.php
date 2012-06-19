@@ -63,7 +63,22 @@ abstract class TemplateRenderer {
      *                              template engine (e.g. its method could be
      *                              called from the template). It can even be
      *                              an associative array.
+     * 
+     * @param bool   $return        If true, returns the output instead of
+     *                              rendering it to the page.
      */
-    public abstract function render($template_name, $presenter);
+    public function render($template_name, $presenter, $return = false) {
+        if ($return) {
+            return $this->renderToString($template_name, $presenter);
+        } else {
+            $this->renderToPage($template_name, $presenter);
+        }
+    }
+    
+    public function renderToPage($template_name, $presenter) {
+        echo $this->renderToString($template_name, $presenter);
+    }
+    
+    public abstract function renderToString($template_name, $presenter);
 }
 ?>

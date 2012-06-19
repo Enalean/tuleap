@@ -18,17 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../templating/TemplateRendererTestBase.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
-
-/**
- * Replace this class or add a class for every template engine 
- */
-class MustacheRendererTest extends TemplateRendererTestBase {
-    function setUp() {
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
-        parent::setUp();
+class MustacheDebugRenderer extends MustacheRenderer {
+    
+    public function getTemplateEngine() {
+        return new MustacheDebug(null, null, null, $this->options);
+    }
+    
+    public function renderToString($template_name, $presenter) {
+        return $this->template_engine->renderByName($template_name, $presenter, $this->template_loader);
     }
 }
-
 ?>
