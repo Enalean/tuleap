@@ -28,6 +28,7 @@ require_once('www/project/admin/permissions.php');
 require_once('GitViewsRepositoriesTraversalStrategy_Selectbox.class.php');
 require_once('GitViewsRepositoriesTraversalStrategy_Tree.class.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
+require_once('GitViews_RepoManagement.class.php');
 
 /**
  * GitViews
@@ -232,107 +233,13 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $repoId       = $repository->getId();
         $repoName     = $repository->getName();
-        $initialized  = $repository->isInitialized();
-        $description  = $repository->getDescription();
-        $this->repoId = $repository->getId();
-        $mailPrefix   = $repository->getMailPrefix();
+
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo "<h2><b>".$this->_getRepositoryPageUrl($this->repoId, $repoName)."</b></h2>";
-        ?>
-        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
-        <input type="hidden" id="action" name="action" value="edit" />
-        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
-        <?php
-        if ($this->getController()->isAPermittedAction('del') && !$repository->hasChild()) {
-            echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
-        }
-        if ( $this->getController()->isAPermittedAction('save') ) {
-            echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->groupId .'">';
-            echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $repository->getId() .'" />';
-            
-            echo '<p id="plugin_git_description">';
-            echo $this->getText('view_repo_description') .': ';
-            echo '<textarea class="text" id="repo_desc" name="repo_desc">';
-            echo $this->HTMLPurifier->purify($repository->getDescription(), CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
-            echo '</textarea>';
-            echo '</p>';
-            
-            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-                $this->_accessControlGitolite($repository);
-            } else {
-                $this->_accessControl($repository);
-            }
-            
-            echo '<p><input type="submit" name="save" value="'. $this->getText('admin_save_submit') .'" /></p>';
-            echo '</form>';
-        }
-        // form to update notification mail prefix
-        $this->_mailPrefixForm($mailPrefix);
-        // form to add email addresses (mailing list) or a user to notify
-        $this->_addMailForm();
-        // show the list of mails to notify
-        $this->_listOfMails();
-    }
-    
-    /**
-     * Display access control management for gitshell backend
-     *
-     * @param GitRepository $repository The repository
-     * 
-     * @return void
-     */
-    protected function _accessControl($repository) {
-        $public  = '';
-        $private = '';
-        $checked = 'checked="checked"';
-        if ( $repository->getAccess() == GitRepository::PRIVATE_ACCESS ) {
-            $private = $checked;
-            echo '<input type="hidden" id="action" name="action" value="edit" />';
-        } else if ( $repository->getAccess() == GitRepository::PUBLIC_ACCESS ) {
-            $public  = $checked;
-            echo '<input type="hidden" id="action" name="action" value="confirm_private" />';
-        }
-        echo '<p id="plugin_git_access">';
-        echo $this->getText('view_repo_access');
-        echo ': <span><input type="radio" name="repo_access" value="private" '. $private .'/> ';
-        echo $this->getText('view_repo_access_private');
-        echo '<input type="radio" name="repo_access" value="public" '. $public .'/> Public';
-        echo '</span>';
-        echo '</p>';
-        
-    }
-    
-    /**
-     * Display access control management for gitolite backend
-     *
-     * @param GitRepository $repository The repository
-     * 
-     * @return void
-     */
-    protected function _accessControlGitolite($repository) {
-        echo '<table>';
-        echo '<thead><tr>';
-        echo '<td>'. $this->getText('perm_R') .'</td>';
-        echo '<td>'. $this->getText('perm_W') .'</td>';
-        echo '<td>'. $this->getText('perm_W+') .'</td>';
-        echo '</tr></thead>';
-        echo '<tbody><tr>';
-        // R
-        echo '<td>';
-        echo permission_fetch_selection_field('PLUGIN_GIT_READ', $repository->getId(), $this->groupId, 'repo_access[read]');
-        echo '</td>';
-        // W
-        echo '<td>';
-        echo permission_fetch_selection_field('PLUGIN_GIT_WRITE', $repository->getId(), $this->groupId, 'repo_access[write]');
-        echo '</td>';
-        // W+
-        echo '<td>';
-        echo permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $repository->getId(), $this->groupId, 'repo_access[wplus]');
-        echo '</td>';
-        
-        echo '</tr></tbody>';
-        echo '</table>';
+        echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .'</h2>';
+
+        $repo_management_view = new GitViews_RepoManagement($this, $repository);
+        $repo_management_view->display();
     }
     
     /**
@@ -512,96 +419,6 @@ class GitViews extends PluginViews {
         <?php
         $this->help('create', array('display'=>'none')) ;
         $this->help('init', array('display'=>'none')) ;
-    }
-
-    /**
-     * CREATE NOTIFICATION FORM
-     */
-    protected function _mailPrefixForm($mailPrefix) {
-        ?>
-<h3><?php echo $this->getText('mail_prefix_title'); ?></h3>
-<form id="mail_prefix_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="mail_prefix" />
-    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
-    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
-    <table>
-        <tr>
-            <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
-        ?></label></td>
-            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?= $this->HTMLPurifier->purify($mailPrefix, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId); ?>" /></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
-        </tr>
-    </table>
-</form>
-        <?php
-    }
-
-    /**
-     * MAIL FORM
-     */
-    protected function _addMailForm() {
-        ?>
-<h3><?php echo $this->getText('add_mail_title'); ?></h3>
-<form id="add_mail_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="add_mail" />
-    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
-    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
-    <table>
-        <tr>
-            <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');?>
-                <a href="#" onclick="$('help_addMail').toggle();"> [?]</a></label></td>
-            <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail"></textarea></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
-        </tr>
-    </table>
-</form>
-        <?php
-        $this->help('addMail', array('display'=>'none') );
-        $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
-    }
-
-    /**
-     * LIST OF MAILS TO NOTIFY
-     */
-    protected function _listOfMails() {
-        $r = new GitRepository();
-        $r->setId($this->repoId);
-        $r->load();
-        $mails = $r->getNotifiedMails();
-        ?>
-<h3><?php echo $this->getText('notified_mails_title'); ?></h3>
-    <?php if (!empty($mails)) {?>
-<form id="add_user_form" action="/plugins/git/" method="POST">
-    <input type="hidden" id="action" name="action" value="remove_mail" />
-    <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->groupId ?>" />
-    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repoId ?>" />
-    <table>
-        <?php
-        $i = 0;
-        foreach ($mails as $mail) {
-            echo '<tr class="'.html_get_alt_row_color(++$i).'">';
-            echo '<td>'.$mail.'</td>';
-            echo '<td>';
-            echo '<input type="checkbox" name="mail[]" value="'.$this->HTMLPurifier->purify($mail).'" />';
-            echo '</a>';
-            echo '</td>';
-            echo '</tr>';
-        }
-        ?>
-    </table>
-    <input type="submit" value="<?php echo $GLOBALS['Language']->getText('global', 'btn_delete') ?>" />
-</form>
-        <?php
-        } else {
-?>
-<h4><?php echo $this->getText('add_mail_existing'); ?> </h4>
-<?php
-}
     }
 
     /**
