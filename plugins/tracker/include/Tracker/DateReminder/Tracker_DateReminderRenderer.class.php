@@ -332,7 +332,7 @@ class Tracker_DateReminderRenderer {
             foreach ($trackerReminders as $reminder) {
                 $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
                 $output .= '<td>'.$reminder->getUgroupsLabel().'</td>';
-                $output .= '<td>'.$reminder->getDistance().'day(s) '.$reminder->getNotificationTypeLabel().'</td>';
+                $output .= '<td>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'</td>';
                 $output .= '<td>'.$reminder->getField()->getLabel().'</td>';
                 $output .= '<td>'.$reminder->getReminderStatusLabel().'</td>';
                 $output .= '<td><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a>';
