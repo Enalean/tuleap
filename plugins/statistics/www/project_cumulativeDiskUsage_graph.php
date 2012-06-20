@@ -57,15 +57,14 @@ $graph = new Statistics_DiskUsageGraph($duMgr);
 
 if ($func == 'usage') {
     //Retreive the config param & convert it to bytes
-    $quota    = $duMgr->getProperty('allowed_quota');
-    $pqm      = new ProjectQuotaManager();
-    $res      = $pqm->getProjectCustomQuota($groupId);
-    if ($res && !$res->isError() && $res->rowCount() == 1) {
-        $row   = $res->getRow();
-        $quota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
+    $quota       = $duMgr->getProperty('allowed_quota');
+    $pqm         = new ProjectQuotaManager();
+    $customQuota = $pqm->getProjectCustomQuota($groupId);
+    if ($customQuota) {
+        $quota = $customQuota;
     }
     $allowed = $quota * (1024*1024*1024);
-    $used = $request->get('size');
+    $used    = $request->get('size');
 
     //In case of over usage
     if ($used > $allowed) {
@@ -76,4 +75,5 @@ if ($func == 'usage') {
 } else {
     $graph->displayProjectTotalSizeGraph($groupId, 'Week', $startDate, $endDate);
 }
+
 ?>
