@@ -32,7 +32,7 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         //project id
         $projectId    = 0;
         if ( !empty($parameters[0]) ) {
-            $projectId = $parameters[0];
+            $projectId = (int) $parameters[0];
         } else {
             $this->error('Missing argument project id');
             return false;
@@ -40,20 +40,18 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         //repo id
         $repositoryId = 0;
         if ( !empty($parameters[1]) ) {
-            $repositoryId = $parameters[1];
+            $repositoryId = (int) $parameters[1];
         } else {
             $this->error('Missing argument repository id');
             return false;
         }
         
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);        
+        $repository = $this->getRepositoryFactory()->getDeletedRepository($repositoryId);
+        return $this->deleteRepo($repository, $projectId, $parameters);
+    }
+
+    private function deleteRepo(GitRepository $repository, $projectId, $parameters) {
         try {
-            $r = $repository->load();
-            if ( $r === false ) {
-                $this->error('Unable to load repository informations from database');
-                return false;
-            }
             if ( $repository->getProjectId() != $projectId ) {
                 $this->error('Bad project id');
                 return false;
@@ -70,12 +68,14 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         }
         $this->done();
         return true;
-
     }
 
     public function verbalizeParameters($with_link) {
-
-        return  $this->parameters;
+        return $this->parameters;
+    }
+    
+    protected function getRepositoryFactory() {
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 }
 
