@@ -35,6 +35,21 @@ class Transition_PostAction_Field_IntDao extends DataAccessObject {
                 ($transition_id)";
         return $this->updateAndGetLastId($sql);
     }
-
+    
+        /**
+     * Search all postactions belonging to a transition
+     *
+     * @param int $transition_id The id of the transition 
+     *
+     * @return DataAccessResult
+     */
+    public function searchByTransitionId($transition_id) {
+        $transition_id = $this->da->escapeInt($transition_id);
+        $sql = "SELECT * 
+                FROM tracker_workflow_transition_postactions_field_int
+                WHERE transition_id = $transition_id
+                ORDER BY id";
+        return $this->retrieve($sql);
+    }
 }
 ?>

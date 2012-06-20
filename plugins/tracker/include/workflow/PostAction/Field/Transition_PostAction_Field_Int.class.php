@@ -93,6 +93,15 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
     }
     
     /**
+     * Return the field associated to this post action
+     *
+     * @return Tracker_FormElement_Field
+     */
+    public function getField() {
+        return $this->field;
+    }
+    
+    /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
