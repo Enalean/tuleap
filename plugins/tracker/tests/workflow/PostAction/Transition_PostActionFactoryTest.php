@@ -32,7 +32,19 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
-class Transition_PostActionFactoryTest extends UnitTestCase {
+class Transition_PostActionFactoryTest extends TuleapTestCase {
+    
+    public function itCanAddAPostActionToAnIntField() {
+        $postaction = 'field_int';
+        $transition = stub('Transition')->getTransitionId()->returns(123);
+        $dao        = mock('Transition_PostAction_Field_IntDao');
+        $factory    = new Transition_PostActionFactoryTestVersion();
+        
+        stub($factory)->getDao($postaction)->returns($dao);
+        
+        $dao->expectOnce('create', array($transition->getTransitionId()));
+        $factory->addPostAction($transition, $postaction);
+    }
     
     public function testDuplicate() {
         

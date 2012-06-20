@@ -21,6 +21,7 @@
 require_once('Field/Transition_PostAction_Field_Date.class.php');
 require_once('Field/Transition_PostAction_Field_Int.class.php');
 require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
+require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 
 /**
  * class Transition_PostActionFactory
@@ -69,7 +70,7 @@ class Transition_PostActionFactory {
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
         if (isset($this->post_actions_classes[$requested_postaction])) {
-            $this->getDao()->create($transition->getTransitionId());
+            $this->getDao($requested_postaction)->create($transition->getTransitionId());
         }
     }
     
@@ -104,8 +105,12 @@ class Transition_PostActionFactory {
      *
      * @return Transition_PostAction_Field_DateDao
      */
-    protected function getDao() {
-        return new Transition_PostAction_Field_DateDao();
+    protected function getDao($postaction=null) {
+        if ($postaction == 'field_int') {
+            return new Transition_PostAction_Field_IntDao();
+        } else {
+            return new Transition_PostAction_Field_DateDao();
+        }
     }
     
     /**

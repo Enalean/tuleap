@@ -98,7 +98,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @return string html
      */
     public function fetch() {
-        $html = '';
+        $html = '<pre>Here be int field post action form</pre>';
         return $html;
     }
     
