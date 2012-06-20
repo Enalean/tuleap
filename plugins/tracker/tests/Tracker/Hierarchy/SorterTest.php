@@ -25,22 +25,30 @@ require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Query.cla
 
 class Tracker_Hierarchy_SorterTest extends TuleapTestCase {
     
-//    public function itAddsTheArtifactToTheTreeNode() {
-//        $artifact = aMockArtifact()->withId(345)->build();
-//        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns($artifact);
-//        $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
-//        $this->assertIdentical($artifact, $sorter->buildTreeWithCompleteList($artifacts, $tracker_ids, $hierarchy)->getObject());
-//    }
-    function testGetMatchingArtifactsShouldReturnArtifactFromTrackersOutsidesHierarchy() {
+    public function itAddsTheArtifactToTheTreeNode() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        
-        
         $trackerIds = array(111, 112, 113, 666);
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(mock('Tracker_Artifact'));
+        $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
+        $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
+
+        $artifacts = $sorter->buildTreeWithCompleteList($artifacts_dar, $trackerIds, $tracker_hierarchy);
+        $all_artifact_nodes = $artifacts->flattenChildren();
         
-        $criteria  = aCrossSearchCriteria()->build();
+        $this->assertArrayNotEmpty($all_artifact_nodes);
+        foreach ($all_artifact_nodes as $artifact_node) {
+            $this->assertIsA($artifact_node->getObject(), 'Tracker_Artifact');
+        }
+    }
+    
+    function itReturnsArtifactFromTrackersOutsidesHierarchy() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
+        $trackerIds = array(111, 112, 113, 666);
         $sorter = new Tracker_Hierarchy_Sorter(mock('Tracker_ArtifactFactory'));
         $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
+
         $artifacts = $sorter->buildTreeWithCompleteList($artifacts_dar, $trackerIds, $tracker_hierarchy);
+        
         $expected  = $this->getExpectedForTrackerOutsideHierarchy();
         $this->assertEqual($artifacts->__toString(), $expected->__toString());
     }
@@ -92,7 +100,7 @@ class Tracker_Hierarchy_SorterTest extends TuleapTestCase {
         $hierarchy->addRelationship(201, 202);
         return $hierarchy;
     }
-   
+
 
 }
 ?>
