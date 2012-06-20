@@ -711,6 +711,11 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->delete($this, $ignoreHasChildren);
     }
 
+    public function markAsDeleted() {
+        $this->setDeletionDate(date('Y-m-d H:i:s'));
+        $this->save();
+    }
+
     /**
      * Rename project
      */
