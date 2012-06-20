@@ -1363,6 +1363,7 @@ plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Cannot delete 
 project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
 project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
 project_admin_utils	tracker_date_reminder_edit	Updated tracker date reminder $1
+project_admin_utils	tracker_date_reminder_delete	deleted tracker date reminder $1
 project_admin_utils	tracker_date_reminder_sent	Sent tracker date reminder $1
 project_admin_utils	tracker_date_reminder_before	Before
 project_admin_utils	tracker_date_reminder_after	After

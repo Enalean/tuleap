@@ -1360,6 +1360,7 @@ plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Impossible de 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
 project_admin_utils	tracker_date_reminder_edit	Rappel sur date de tracker mis a jour $1
+project_admin_utils	tracker_date_reminder_delete	Rappel sur date de tracker supprimé $1
 project_admin_utils	tracker_date_reminder_sent	Rappel de date sur le tracker envoyé $1
 project_admin_utils	tracker_date_reminder_before	Avant
 project_admin_utils	tracker_date_reminder_after	Après
