@@ -18,9 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Transition_PostAction_Field_IntDao {
+class Transition_PostAction_Field_IntDao extends DataAccessObject {
     
-    public function create() {
+    /**
+     * Create a new postaction entry
+     *
+     * @param int $transition_id The transition the post action belongs to
+     *
+     * @return bool true if success false otherwise
+     */
+    public function create($transition_id) {
+        $transition_id = $this->da->escapeInt($transition_id);
+        $sql = "INSERT INTO tracker_workflow_transition_postactions_field_int
+                (transition_id) 
+                VALUES 
+                ($transition_id)";
+        return $this->updateAndGetLastId($sql);
     }
+
 }
 ?>
