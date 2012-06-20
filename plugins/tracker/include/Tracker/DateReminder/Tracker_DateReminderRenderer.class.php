@@ -332,7 +332,7 @@ class Tracker_DateReminderRenderer {
                 if ($reminder->getStatus() == 1) {
                     $output .= '<tr class="'.util_get_alt_row_color($i++).'">';
                 } else {
-                    $output .= '<tr style="background: #808080;font-style: italic;;color:#ffffff;">';
+                    $output .= '<tr class="tracker_date_reminder">';
                 }
                 $output .= '<td>'.$reminder->getUgroupsLabel().'</td>';
                 $output .= '<td>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'</td>';

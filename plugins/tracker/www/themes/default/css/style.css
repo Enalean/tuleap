@@ -1117,3 +1117,8 @@ td.first-column {
     margin-right:1px;
     margin-left:1px;
 }
+.tracker_date_reminder {
+    font-style: italic;
+    color: #ffffff;
+    background-color: #808080;
+}
