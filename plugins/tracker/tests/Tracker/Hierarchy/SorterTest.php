@@ -40,6 +40,22 @@ class Tracker_Hierarchy_SorterTest extends TuleapTestCase {
             $this->assertIsA($artifact_node->getObject(), 'Tracker_Artifact');
         }
     }
+    public function it2AddsTheArtifactToTheTreeNode() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
+        $trackerIds = array(111, 112, 113, 666);
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(mock('Tracker_Artifact'));
+        $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
+        $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
+
+        $user = mock('User');
+        $artifacts = $sorter->buildTreeWithMissingChildren($user, $artifacts_dar);
+        $all_artifact_nodes = $artifacts->flattenChildren();
+        
+        $this->assertArrayNotEmpty($all_artifact_nodes);
+        foreach ($all_artifact_nodes as $artifact_node) {
+            $this->assertIsA($artifact_node->getObject(), 'Tracker_Artifact');
+        }
+    }
     
     function itReturnsArtifactFromTrackersOutsidesHierarchy() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
