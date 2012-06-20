@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
@@ -34,9 +34,10 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $user = UserManager::instance()->getCurrentUser();
-        $linked_artifacts = $artifact->getLinkedArtifactsOfHierarchy($user);
+        $linked_artifacts = $artifact->getLinkedArtifacts($user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
+            //var_dump($linked_artifact);
             $field = $this->getFormElementFactory()->getFormElementByName($linked_artifact->getTracker()->getId(), 'remaining_effort');
             if ($field) {
                 $value = $linked_artifact->getValue($field);
@@ -163,6 +164,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed) {
+        
     }
 
     public function getSoapAvailableValues() {
