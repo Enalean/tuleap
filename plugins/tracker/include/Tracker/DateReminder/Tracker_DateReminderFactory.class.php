@@ -48,14 +48,20 @@ class Tracker_DateReminderFactory {
     }
 
     /**
-     * Retrieve all date reminders for a given tracker
+     * Retrieve date reminders for a given tracker
+     *
+     * @param boolean $allReminders Retrieve enabled and disabled reminders (optional)
      *
      * @return Array
      */
-    public function getTrackerReminders() {
+    public function getTrackerReminders($allReminders = false) {
         $reminders = array();
-        $reminderManagerDao = $this->getDao();
-        $dar = $reminderManagerDao->getDateReminders($this->getTracker()->getId());
+        $reminderDao = $this->getDao();
+        if ($allReminders) {
+            $dar = $reminderDao->getDateReminders($this->getTracker()->getId(), false);
+        } else {
+            $dar = $reminderDao->getDateReminders($this->getTracker()->getId());
+        }
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $reminders[] = $this->getInstanceFromRow($row);

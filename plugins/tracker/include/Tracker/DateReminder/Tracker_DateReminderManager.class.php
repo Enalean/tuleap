@@ -52,7 +52,7 @@ class Tracker_DateReminderManager {
      */
     public function process() {
         $remiderFactory = $this->getDateReminderRenderer()->getDateReminderFactory();
-        $reminders      = $remiderFactory->getTrackerReminders();
+        $reminders      = $remiderFactory->getTrackerReminders(false);
         foreach ($reminders as $reminder) {
             $artifacts = $this->getArtifactsByreminder($reminder);
             foreach ($artifacts as $artifact) {
