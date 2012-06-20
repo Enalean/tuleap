@@ -1296,6 +1296,7 @@ workflow_admin	permissions_transition	Can make the transition
 workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
+workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	under_the_following_condition	Under the following condition:
 workflow_admin	following_action_performed	The following action will be automatically performed:
 workflow_admin	add_new_action	Add a new action: 

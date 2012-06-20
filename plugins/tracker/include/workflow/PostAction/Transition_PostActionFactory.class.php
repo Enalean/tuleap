@@ -19,6 +19,7 @@
  */
 
 require_once('Field/Transition_PostAction_Field_Date.class.php');
+require_once('Field/Transition_PostAction_Field_Int.class.php');
 require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
 
 /**
@@ -31,7 +32,8 @@ class Transition_PostActionFactory {
      * @var Array of available post actions classes
      */
     protected $post_actions_classes = array(
-        'field_date' => 'Transition_PostAction_Field_Date',
+        'field_date'    => 'Transition_PostAction_Field_Date',
+        'field_int' => 'Transition_PostAction_Field_Int',
     );
     
     /**
