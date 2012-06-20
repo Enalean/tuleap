@@ -229,7 +229,7 @@ class Tracker_DateReminderFactory {
      * @return Boolean
      */
     public function deleteTrackerReminder($reminderId) {
-        if(isset($reminderId) && is_int($reminderId)) {
+        if(is_numeric($reminderId)) {
             $deleteReminder = $this->getDao()->deleteReminder($reminderId);
             if ($deleteReminder) {
                 $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
@@ -242,8 +242,8 @@ class Tracker_DateReminderFactory {
         } else {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_invalid_reminder', array($reminderId));
             throw new Tracker_DateReminderException($errorMessage);
+        }
     }
-}
 
 }
 
