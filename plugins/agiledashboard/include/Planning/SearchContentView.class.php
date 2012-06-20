@@ -34,6 +34,8 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     public $planning;
     public $planning_redirect_parameter = '';
 
+    private $tree_of_presenters;
+    
     public function __construct(Tracker_Report             $report,
                                 array                      $criteria,
                                 TreeNode                   $tree_of_artifacts, 
@@ -47,6 +49,9 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
         $this->renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
+
+        $visitor = Planning_ArtifactTreeNodeVisitor::build($this->planning, 'planning-draggable-toplan');
+        $this->tree_of_presenters = $visitor->visit($this->tree_of_artifacts);
     }
     
     public function fetchResultActions() {
@@ -54,12 +59,11 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
     
     protected function fetchTable() {
-        Planning_ArtifactTreeNodeVisitor::build($this->planning, 'planning-draggable-toplan')->visit($this->tree_of_artifacts);
         return $this->renderer->render('backlog', $this, true);
     }
 
     public function getChildren() {
-        return $this->tree_of_artifacts->getChildren();
+        return $this->tree_of_presenters->getChildren();
     }
     
     public function allowedChildrenTypes() {

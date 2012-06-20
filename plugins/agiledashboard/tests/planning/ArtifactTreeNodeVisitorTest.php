@@ -48,9 +48,9 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         
         $visitor = new Planning_ArtifactTreeNodeVisitor($planning, 'baz');
         
-        $visitor->visit($node);
+        $visited_node = $visitor->visit($node);
         
-        $presenter = $node->getObject();
+        $presenter = $visited_node->getObject();
         $this->assertEqual(123, $presenter->getId());
         $this->assertEqual('Foo', $presenter->getTitle());
         $this->assertEqual('/bar', $presenter->getUrl());
@@ -83,17 +83,17 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
     public function itKnowsDraggablePlanningItems() {
         stub($this->artifact)->getTracker()->returns($this->planning_tracker);
         
-        $this->visitor->visit($this->node);
+        $node = $this->visitor->visit($this->node);
         
-        $this->assertEqual('whatever planning-draggable', $this->node->getObject()->getCssClasses());
+        $this->assertEqual('whatever planning-draggable', $node->getObject()->getCssClasses());
     }
     
     public function itKnowsNonDraggablePlanningItems() {
         stub($this->artifact)->getTracker()->returns($this->other_tracker);
         
-        $this->visitor->visit($this->node);
+        $node = $this->visitor->visit($this->node);
         
-        $this->assertEqual('whatever', $this->node->getObject()->getCssClasses());
+        $this->assertEqual('whatever', $node->getObject()->getCssClasses());
     }
 }
 

@@ -54,6 +54,7 @@ class Planning_ArtifactTreeNodeVisitor {
     public function visit(TreeNode $node) {
         $this->decorate($node);
         $this->visitChildren($node);
+        return $node;
     }
     
     private function decorate(TreeNode $node) {
