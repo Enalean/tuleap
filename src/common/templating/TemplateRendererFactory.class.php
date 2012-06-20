@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mustache/MustacheRenderer.class.php';
-require_once 'common/mustache/MustacheDebugRenderer.class.php';
+require_once 'mustache/MustacheRenderer.class.php';
+require_once 'mustache/MustacheDebugRenderer.class.php';
 require_once 'common/include/Config.class.php';
 
 /**

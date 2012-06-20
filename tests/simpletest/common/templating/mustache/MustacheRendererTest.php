@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../templating/TemplateRendererTestBase.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once dirname(__FILE__).'/../TemplateRendererTestBase.php';
+require_once 'common/templating/mustache/MustacheRenderer.class.php';
 
 /**
  * Replace this class or add a class for every template engine 

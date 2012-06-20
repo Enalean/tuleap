@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mustache/MustacheDebugRenderer.class.php';
+require_once 'common/templating/mustache/MustacheDebugRenderer.class.php';
 
 class MustacheDebugRenderer_TestCase extends TuleapTestCase {
     
