@@ -124,6 +124,10 @@ class GitRepositoryFactory {
         $path = GitRepository::getPathFromProjectAndName($project, $name);
         return $this->dao->isRepositoryExisting($project->getID(), $path);
     }
+
+    public function getDeletedRepository($id) {
+        throw new Exception('Missing implementation');
+    }
 }
 
 ?>
