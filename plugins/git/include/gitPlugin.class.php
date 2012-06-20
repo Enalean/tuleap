@@ -21,7 +21,6 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once('Git_Ci.class.php');
 
 /**
  * GitPlugin
@@ -442,6 +441,7 @@ class GitPlugin extends Plugin {
                 $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                 $vRepoId->required();
                 if($params['request']->valid($vRepoId)) {
+                    require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
                     if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
@@ -497,6 +497,7 @@ class GitPlugin extends Plugin {
      */
     public function delete_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
+            require_once('Git_Ci.class.php');
             $ci = new Git_Ci();
             if (!$ci->deleteTrigger($params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));

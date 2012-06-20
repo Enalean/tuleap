@@ -121,7 +121,7 @@ interface Git_Backend_Interface {
      *
      * @return Boolean
      */
-    public function delete($repository, $ignoreHasChildren = false);
+    public function delete(GitRepository $repository);
 
 }
 ?>

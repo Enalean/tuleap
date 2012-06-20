@@ -50,6 +50,18 @@ class GitRepositoryFactory {
     }
 
     /**
+     * Get a deleted repository by its id
+     *
+     * @param int $id         The id of the repository to load
+     *
+     * @return GitRepository the repository or null if not found
+     */
+    public function getDeletedRepository($id) {
+        $dar = $this->dao->searchDeletedRepositoryById($id);
+        return $this->getRepositoryFromDar($dar);
+    }
+
+    /**
      * Get a project repository by its id
      *
      * @param int $id         The id of the repository to load
@@ -123,10 +135,6 @@ class GitRepositoryFactory {
     public function isRepositoryExistingByName(Project $project, $name) {
         $path = GitRepository::getPathFromProjectAndName($project, $name);
         return $this->dao->isRepositoryExisting($project->getID(), $path);
-    }
-
-    public function getDeletedRepository($id) {
-        throw new Exception('Missing implementation');
     }
 }
 

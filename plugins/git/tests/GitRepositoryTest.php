@@ -349,4 +349,8 @@ class GitRepositoryTest extends UnitTestCase {
     }
 }
 
+class GitRepository_MarkDeletedTest extends TuleapTestCase {
+    
+}
+
 ?>

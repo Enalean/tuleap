@@ -304,31 +304,17 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         }
     }
     
-    public function delete($repository, $ignoreHasChildren = false) {
-        $path = $repository->getPath();
-        if ( empty($path) ) {
-            throw new GitBackendException('Bad repository path: '.$path);
-        }
-        $path = $this->getGitRootPath().$path;
+    public function markAsDeleted(GitRepository $repository) {
+        $this->deletePermissions($repository);
+        $this->getDao()->delete($repository);
         
-        if ($ignoreHasChildren === false && $this->getDao()->hasChild($repository) === true) {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
-        }
-        
-        if ($repository->canBeDeleted()) {
-            if ($this->deletePermissions($repository) && $this->getDao()->delete($repository)) {
-                $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-                $this->updateRepoConf($repository);                
-                $this->getDriver()->delete($path);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
-        }
-        
-        return false;
+        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+        $this->updateRepoConf($repository);
+    }
+    
+    public function delete(GitRepository $repository) {
+        $path = $this->getGitRootPath().$repository->getPath();
+        $this->getDriver()->delete($path);
     }
 
     /**

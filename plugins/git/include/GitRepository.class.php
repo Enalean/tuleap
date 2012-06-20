@@ -684,36 +684,40 @@ class GitRepository implements DVCSRepository {
      *
      * @return Boolean
      */
-    public function delete($ignoreHasChildren = false) {
-        $project = $this->getProject();
-        //if empty project name -> get out of here
-        if ( !empty($project) ) {
-            if (  $project->getUnixName() == '' ) {
-                return false;
-            }
-        } else {
-            return false;
-        }
-        //if empty name -> get out of here
-        $name  = $this->getName();
-        if ( empty($name) ) {
-            return false;
-        }        
-        $date  = $this->getDeletionDate();
-        if ( empty($date) || $date == '0000-00-00 00:00:00') {
-            $this->setDeletionDate( date('Y-m-d H:i:s') );
-        }
-
-        //remove notification from DB
-        $postRecMailManager = $this->getPostReceiveMailManager();
-        $postRecMailManager->removeMailByRepository($this);
-
-        $this->getBackend()->delete($this, $ignoreHasChildren);
+    public function delete() {
+        $this->getBackend()->delete($this);
     }
 
-    public function markAsDeleted() {
-        $this->setDeletionDate(date('Y-m-d H:i:s'));
-        $this->save();
+    /**
+     *
+     * @todo: delete properly postreceive stuff
+     * @todo: test it with gitshell
+     * @todo: test with ignoreHasChildren variations
+     * @todo: makes deletion of repo in gitolite asynchronous
+     * 
+     * @param type $ignoreHasChildren
+     * @throws GitBackendException 
+     */
+    public function markAsDeleted($ignoreHasChildren = false) {
+        if ($ignoreHasChildren === false && $this->getDao()->hasChild($this) === true) {
+            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
+        }
+        
+        if (!$this->getPath()) {
+            throw new GitBackendException('Bad repository path: '.$this->getPath());
+        }
+        
+        if ($this->canBeDeleted()) {
+            $this->setDeletionDate( date('Y-m-d H:i:s') );
+            
+            //remove notification from DB
+            //$postRecMailManager = $this->getPostReceiveMailManager();
+            //$postRecMailManager->removeMailByRepository($this);
+            
+            $this->getBackend()->markAsDeleted($this);
+        } else {
+            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
+        }
     }
 
     /**
