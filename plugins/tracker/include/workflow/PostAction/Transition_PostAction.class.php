@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/include/Codendi_Request.class.php';
+
 /**
  * class Transition_PostAction
  * Post action occuring when transition is run
