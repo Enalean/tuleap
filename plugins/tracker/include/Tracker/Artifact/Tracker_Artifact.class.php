@@ -555,8 +555,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $html .= '</p>';
         }
         $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+        $html .= '<textarea id ="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
         $html .= '</div>';
+        $js   = "new codendi.RTE('tracker_followup_comment_new', {toggle: true, default_in_html: false});";
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
         if ($current_user->isAnonymous()) {
             $html .= $this->fetchAnonymousEmailForm();
