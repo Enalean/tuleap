@@ -102,6 +102,10 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
         return $this->field;
     }
     
+    public function getValue() {
+        return $this->value;
+    }
+    
     /**
      * Get the html code needed to display the post action in workflow admin
      *
@@ -110,7 +114,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
     public function fetch() {
         $html = '';
         //define the selectbox for value_type
-        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $this->id .']">';
+        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $this->id .']" value="'.$this->getValue().'"/>';
         
         //define the selectbox for date fields
         $tracker = $this->transition->getWorkflow()->getTracker();
