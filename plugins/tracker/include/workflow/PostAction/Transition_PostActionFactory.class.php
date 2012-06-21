@@ -123,20 +123,28 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function loadPostActions(Transition $transition) {
-        $post_actions         = array();
-        $form_element_factory = $this->getFormElementFactory();
+        $post_actions = array();
         
         foreach ($this->post_actions_classes as $shortname => $klass) {
-            $dao = $this->getDao($shortname);
-            
-            foreach($dao->searchByTransitionId($transition->getTransitionId()) as $row) {
-                $field          = $form_element_factory->getFormElementById((int)$row['field_id']);
-                $value_key      = $this->getValueKeyForPostAction($shortname);
-                $post_actions[] = new $klass($transition, (int)$row['id'], $field, (int)$row[$value_key]);
+            foreach($this->loadPostActionRows($transition, $shortname) as $row) {
+                $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
             }
         }
         
         $transition->setPostActions($post_actions);
+    }
+    
+    private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
+        $id        = (int)$row['id'];
+        $field     = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
+        $value     = (int)$row[$this->getValueKeyForPostAction($shortname)];
+        
+        return new $klass($transition, $id, $field, $value);
+    }
+    
+    private function loadPostActionRows($transition, $shortname) {
+        $dao = $this->getDao($shortname);
+        return $dao->searchByTransitionId($transition->getTransitionId());
     }
     
     private function getValueKeyForPostAction($shortname) {
