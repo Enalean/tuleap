@@ -74,9 +74,8 @@ class GitViews_RepoManagement {
     public function display() {
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
-        foreach ($this->panes as $key => $pane) {
-            echo '<li class="'. ($this->current_pane == $key ? 'active' : '') .'">';
-            echo '<a href="/plugins/git/?action=repo_management&group_id=102&repo_id=50&pane='. $key .'">'. $pane->getTitle() .'</a></li>';
+        foreach ($this->panes as $pane) {
+            $this->displayTab($pane);
         }
         echo '</ul>';
         echo '<div id="git_repomanagement" class="tab-content">';
@@ -84,6 +83,19 @@ class GitViews_RepoManagement {
         echo $this->panes[$this->current_pane]->getContent();
         echo '</div>';
         echo '</div>';
+    }
+
+    private function displayTab($pane) {
+        echo '<li class="'. ($this->current_pane == $pane->getIdentifier() ? 'active' : '') .'">';
+        $url = GIT_BASE_URL .'/?'. http_build_query(
+            array(
+                'action' => 'repo_management',
+                'group_id' => $this->repository->getProjectId(),
+                'repo_id'  => $this->repository->getId(),
+                'pane'     => $pane->getIdentifier(),
+            )
+        );
+        echo '<a href="'. $url .'">'. $pane->getTitle() .'</a></li>';
     }
 }
 ?>
