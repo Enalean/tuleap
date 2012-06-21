@@ -690,7 +690,6 @@ class GitRepository implements DVCSRepository {
 
     /**
      *
-     * @todo: delete properly postreceive stuff
      * @todo: test it with gitshell
      * @todo: test with ignoreHasChildren variations
      * @todo: makes deletion of repo in gitolite asynchronous
@@ -700,23 +699,23 @@ class GitRepository implements DVCSRepository {
      */
     public function markAsDeleted($ignoreHasChildren = false) {
         if ($ignoreHasChildren === false && $this->getDao()->hasChild($this) === true) {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
+            throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error'));
         }
-        
+
         if (!$this->getPath()) {
-            throw new GitBackendException('Bad repository path: '.$this->getPath());
+            throw new GitBackendException('Bad repository path: ' . $this->getPath());
         }
-        
+
         if ($this->canBeDeleted()) {
-            $this->setDeletionDate( date('Y-m-d H:i:s') );
-            
-            //remove notification from DB
-            //$postRecMailManager = $this->getPostReceiveMailManager();
-            //$postRecMailManager->removeMailByRepository($this);
-            
+            $this->setDeletionDate(date('Y-m-d H:i:s'));
+
+            // Remove notification from DB
+            $postRecMailManager = $this->getPostReceiveMailManager();
+            $postRecMailManager->markRepositoryAsDeleted($this);
+
             $this->getBackend()->markAsDeleted($this);
         } else {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
+            throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error'));
         }
     }
 
