@@ -72,22 +72,23 @@ class Tracker_Hierarchy_Sorter {
         }
     }
     
-    private function appendArtifactAndSonsToParent(TreeNode $parent, Tracker_Hierarchy $hierarchy, array $artifacts, array $artifact, array &$artifacts_in_tree) {
-        $id = $artifact['id'];
+    private function appendArtifactAndSonsToParent(TreeNode $parent, Tracker_Hierarchy $hierarchy, array $artifacts, array $artifact_info, array &$artifacts_in_tree) {
+        $id = $artifact_info['id'];
         
         if (!isset($artifacts_in_tree[$id])) {
             $node = new TreeNode();
             
             $node->setId($id);
-            $node->setData($artifact);
-            $node->setObject($this->artifact_factory->getArtifactById($id));
+            $node->setData($artifact_info);
+            $artifact = $this->artifact_factory->getArtifactById($id);
+            $node->setObject($artifact);
             $parent->addChild($node);
             
             $artifacts_in_tree[$id] = true;
-            $artifactlinks          = explode(',', $artifact['artifactlinks']);
+            $artifactlinks          = explode(',', $artifact_info['artifactlinks']);
             
             foreach ($artifactlinks as $link_id) {
-                if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact, $hierarchy)) {
+                if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact_info, $hierarchy)) {
                     $this->appendArtifactAndSonsToParent($node, $hierarchy, $artifacts, $artifacts[$link_id], $artifacts_in_tree);
                 }
             }
