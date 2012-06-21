@@ -224,7 +224,7 @@ class GitViews extends PluginViews {
         echo '<h1>'. $this->_getRepositoryPageUrl($repoId, $repoName) .'</h1>';
         echo '<h2>'. $this->getText('admin_repo_management') .'</h2>';
 
-        $repo_management_view = new GitViews_RepoManagement($this, $repository, $this->controller->getRequest());
+        $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest());
         $repo_management_view->display();
     }
     
