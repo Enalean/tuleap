@@ -52,6 +52,6 @@ class Transition_PostAction_Field_IntDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function updatePostAction($id, $field_id, $value_type) {}
+    public function updatePostAction($id, $field_id, $value) {}
 }
 ?>

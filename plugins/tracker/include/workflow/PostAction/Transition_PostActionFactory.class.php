@@ -128,7 +128,8 @@ class Transition_PostActionFactory {
         }
         foreach ($this->getDao('field_int')->searchByTransitionId($transition->getTransitionId()) as $row) {
             $field = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
-            $post_actions[] = new Transition_PostAction_Field_Int($transition, (int)$row['id'], $field, (int)$row['value']);
+            $dao = new Transition_PostAction_Field_IntDao();
+            $post_actions[] = new Transition_PostAction_Field_Int($transition, (int)$row['id'], $field, (int)$row['value'], $dao);
         }
         $transition->setPostActions($post_actions);
     }

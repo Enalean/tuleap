@@ -20,6 +20,7 @@
 require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
 require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
 
+
 /**
  * Set the date of a field
  */
@@ -41,6 +42,11 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
     protected $bypass_permissions = false;
     
     /**
+     * @var Transition_PostAction_Field_IntDao
+     */
+    private $dao;
+    
+    /**
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
@@ -48,10 +54,11 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      * @param Integer                      $value      The value to set
      */
-    public function __construct(Transition $transition, $id, $field, $value) {
+    public function __construct(Transition $transition, $id, $field, $value, $dao) {
         parent::__construct($transition, $id);
         $this->field      = $field;
-        $this->value       = $value;
+        $this->value      = $value;
+        $this->dao        = $dao;
     }
     
     /**
@@ -142,6 +149,9 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      */
     public function process(Codendi_Request $request) {
 //        throw new Exception('<pre>'.print_r($request->params, true).'</pre>');
+        $field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
+        $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
+        $this->dao->updatePostAction($this->id, $field_id, $value);
     }
     
     /**

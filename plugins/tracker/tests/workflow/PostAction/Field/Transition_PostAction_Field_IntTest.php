@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/Transition_PostAction_Field_Int.class.php';
 require_once dirname(__FILE__).'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once  dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_IntDao.class.php';
 
 Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao'));
 
@@ -37,7 +38,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         $new_field_id   = 4572;
         $new_value      = 10;
         
-        $post_action->__construct($transition, $post_action_id, $old_field, $old_value);
+        $post_action->__construct($transition, $post_action_id, $old_field, $old_value, $dao);
         
         $request = aRequest()->withParams(array('workflow_postaction_field_int'       => $new_field_id,
                                                 'workflow_postaction_field_int_value' => $new_value))->build();
