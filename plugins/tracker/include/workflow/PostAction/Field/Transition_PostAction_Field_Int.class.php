@@ -42,11 +42,6 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
     protected $bypass_permissions = false;
     
     /**
-     * @var Transition_PostAction_Field_IntDao
-     */
-    private $dao;
-    
-    /**
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
@@ -54,11 +49,10 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @param Tracker_FormElement_Field    $field      The field the post action should modify
      * @param Integer                      $value      The value to set
      */
-    public function __construct(Transition $transition, $id, $field, $value, $dao) {
+    public function __construct(Transition $transition, $id, $field, $value) {
         parent::__construct($transition, $id);
         $this->field      = $field;
         $this->value      = $value;
-        $this->dao        = $dao;
     }
     
     /**
@@ -148,10 +142,9 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @see Transition_PostAction
      */
     public function process(Codendi_Request $request) {
-//        throw new Exception('<pre>'.print_r($request->params, true).'</pre>');
         $field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
         $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
-        $this->dao->updatePostAction($this->id, $field_id, $value);
+        $this->getDao()->updatePostAction($this->id, $field_id, $value);
     }
     
     /**
@@ -161,6 +154,10 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      */
     protected function getFormElementFactory() {
         return Tracker_FormElementFactory::instance();
+    }
+    
+    protected function getDao() {
+        return new Transition_PostAction_Field_IntDao();
     }
 }
 ?>
