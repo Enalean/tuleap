@@ -270,34 +270,6 @@ class GitRepositoryTest extends UnitTestCase {
         return $user;
     }
     
-    public function testCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed() {
-        $repo = $this->getRepositoryForDeletionTesting();
-        $repo->setPath('perms/coincoin.git.git');
-
-        $this->assertTrue($repo->canBeDeleted());
-    }
-
-    public function testCanBeDeletedWithWrongRepositoryPathShouldFail() {
-        $repo = $this->getRepositoryForDeletionTesting();
-        $repo->setPath('perms/coincoin');
-
-        $this->assertFalse($repo->canBeDeleted());
-    }
-    
-    protected function getRepositoryForDeletionTesting() {
-        $backend = new MockGitBackend();
-        $backend->setReturnValue('getGitRootPath', dirname(__FILE__).'/_fixtures');
-
-        $project = new MockProject();
-        $project->setReturnValue('getUnixName', 'perms');
-
-        $repo = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        return $repo;
-    }
-    
     public function testGetFullName_appendsNameSpaceToName() {
         $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', null);
         $this->assertEqual('tulip', $repo->getFullName());
@@ -349,7 +321,39 @@ class GitRepositoryTest extends UnitTestCase {
     }
 }
 
-class GitRepository_MarkDeletedTest extends TuleapTestCase {
+class GitRepository_CanDeletedTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $this->backend = stub('GitBackend')->getGitRootPath()->returns(dirname(__FILE__).'/_fixtures');
+        $project       = stub('Project')->getUnixName()->returns('perms');
+
+        $this->repo = new GitRepository();
+        $this->repo->setBackend($this->backend);
+        $this->repo->setProject($project);
+    }
+    
+    public function itCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed() {
+        stub($this->backend)->canBeDeleted()->returns(true);
+        $this->repo->setPath('perms/coincoin.git.git');
+
+        $this->assertTrue($this->repo->canBeDeleted());
+    }
+
+    public function itCanBeDeletedWithWrongRepositoryPathShouldFail() {
+        stub($this->backend)->canBeDeleted()->returns(true);
+        $this->repo->setPath('perms/coincoin');
+
+        $this->assertFalse($this->repo->canBeDeleted());
+    }
+    
+    public function itCannotBeDeletedIfBackendForbidIt() {
+        stub($this->backend)->canBeDeleted()->returns(false);
+        
+        $this->repo->setPath('perms/coincoin.git.git');
+        $this->assertFalse($this->repo->canBeDeleted());
+    }
     
 }
 

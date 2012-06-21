@@ -138,40 +138,6 @@ class GitBackendTest extends UnitTestCase {
         $backend->setUpRepository($repo);
     }
 
-    public function testDeleteProjectRepositoriesNothingToDelete() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array());
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesDeleteFail() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array(2 => array(), 1 => array(), 3 => array()));
-        $backend->setReturnValue('getDao', $dao);
-        $sem = new MockSystemEventManager();
-        $backend->setReturnValue('getSystemEventManager', $sem);
-        $backend->expectOnce('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesSuccess() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array(2 => array(), 1 => array(), 3 => array()));
-        $backend->setReturnValue('getDao', $dao);
-        $sem = new MockSystemEventManager();
-        $backend->setReturnValue('getSystemEventManager', $sem);
-        $backend->expectOnce('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
     public function testArchiveCreatesATarGz() {
         $this->GivenThereIsARepositorySetUp();
         
@@ -209,6 +175,59 @@ class GitBackendTest extends UnitTestCase {
         system('rm -rf '. $this->_glAdmDirRef);
         system('rm -rf '. $this->backupDir);
         chdir($this->cwd);
+    }
+}
+
+class GitBackend_DeleteAllRepositoriesTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->project_id           = 1;
+        $this->repository_factory   = mock('GitRepositoryFactory');
+        $this->system_event_manager = mock('SystemEventManager');
+        
+        $this->backend            = TestHelper::getPartialMock('GitBackend', array('getRepositoryFactory', 'getSystemEventManager'));
+        stub($this->backend)->getRepositoryFactory()->returns($this->repository_factory);
+        stub($this->backend)->getSystemEventManager()->returns($this->system_event_manager);
+    }
+    
+    public function itDeletesNothingWhenThereAreNoRepositories() {
+        stub($this->repository_factory)->getAllGitshellRepositories()->returns(array());
+        $this->repository_factory->expectOnce('getAllGitshellRepositories', array($this->project_id));
+
+        $this->backend->deleteProjectRepositories($this->project_id);
+    }
+
+    public function itDeletesEachRepository() {
+        $repository_1_id = 1;
+        $repository_1    = mock('GitRepository');
+        $repository_1->expectOnce('forceMarkAsDeleted');
+        stub($repository_1)->getId()->returns($repository_1_id);
+        stub($repository_1)->getProjectId()->returns($this->project_id);
+        
+        $repository_2_id = 2;
+        $repository_2    = mock('GitRepository');
+        $repository_2->expectOnce('forceMarkAsDeleted');
+        stub($repository_2)->getId()->returns($repository_2_id);
+        stub($repository_2)->getProjectId()->returns($this->project_id);
+        
+        $this->system_event_manager->expectCallCount('createEvent', 2);
+        
+        $this->system_event_manager->expectAt(0, 'createEvent', array(
+            'GIT_REPO_DELETE',
+            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_1_id,
+            '*'
+        ));
+        
+        $this->system_event_manager->expectAt(1, 'createEvent', array(
+            'GIT_REPO_DELETE',
+            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_2_id,
+            '*'
+        ));
+        
+        stub($this->repository_factory)->getAllGitshellRepositories()->returns(array($repository_1, $repository_2));
+        
+        $this->backend->deleteProjectRepositories($this->project_id);
     }
 }
 

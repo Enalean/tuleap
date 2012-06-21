@@ -49,6 +49,17 @@ class GitRepositoryFactory {
         return $this->getRepositoryFromDar($dar);
     }
 
+    public function getAllGitshellRepositories($project_id) {
+        $repositories = array();
+        $repository_list = $this->dao->getProjectRepositoryList($project_id, true);
+        foreach ($repository_list as $row) {
+            $repository = new GitRepository();
+            $this->dao->hydrateRepositoryObject($repository, $row);
+            $repositories[] = $repository;
+        }
+        return $repositories;
+    }
+    
     /**
      * Get a deleted repository by its id
      *

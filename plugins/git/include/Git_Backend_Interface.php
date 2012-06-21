@@ -123,5 +123,6 @@ interface Git_Backend_Interface {
      */
     public function delete(GitRepository $repository);
 
+    public function canBeDeleted(GitRepository $repository);
 }
 ?>

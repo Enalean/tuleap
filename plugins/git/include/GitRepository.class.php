@@ -690,35 +690,30 @@ class GitRepository implements DVCSRepository {
 
     /**
      *
+     * @todo: it should be possible to delete repo with children only for gitolite
      * @todo: test it with gitshell
      * @todo: test with ignoreHasChildren variations
      * @todo: makes deletion of repo in gitolite asynchronous
      * 
-     * @param type $ignoreHasChildren
      * @throws GitBackendException 
      */
-    public function markAsDeleted($ignoreHasChildren = false) {
-        if ($ignoreHasChildren === false && $this->getDao()->hasChild($this) === true) {
-            throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error'));
-        }
-
-        if (!$this->getPath()) {
-            throw new GitBackendException('Bad repository path: ' . $this->getPath());
-        }
-
+    public function markAsDeleted() {
         if ($this->canBeDeleted()) {
-            $this->setDeletionDate(date('Y-m-d H:i:s'));
-
-            // Remove notification from DB
-            $postRecMailManager = $this->getPostReceiveMailManager();
-            $postRecMailManager->markRepositoryAsDeleted($this);
-
-            $this->getBackend()->markAsDeleted($this);
+            $this->forceMarkAsDeleted();
         } else {
             throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error'));
         }
     }
 
+    public function forceMarkAsDeleted() {
+        $this->setDeletionDate(date('Y-m-d H:i:s'));
+
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        $postRecMailManager->markRepositoryAsDeleted($this);
+
+        $this->getBackend()->markAsDeleted($this);        
+    }
+    
     /**
      * Rename project
      */
@@ -867,9 +862,12 @@ class GitRepository implements DVCSRepository {
      * @return Boolean
      */
     public function canBeDeleted() {
-        $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
-        $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
-        return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
+        if ($this->getPath() && $this->getBackend()->canBeDeleted($this)) {
+            $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
+            $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
+            return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
+        }
+        return false;
     }
     
     /**

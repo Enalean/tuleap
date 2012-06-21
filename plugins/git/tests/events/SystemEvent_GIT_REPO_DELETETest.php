@@ -45,7 +45,6 @@ class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
     }
 
     public function itDeletesTheRepository() {
-        
         $event = TestHelper::getPartialMock('SystemEvent_GIT_REPO_DELETE', array('getRepositoryFactory'));
         $event->setParameters($this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id);
         stub($event)->getRepositoryFactory()->returns($this->git_repository_factory);

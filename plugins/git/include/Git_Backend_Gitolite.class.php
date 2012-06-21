@@ -303,7 +303,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             return false;
         }
     }
-    
+
+    public function canBeDeleted(GitRepository $repository) {
+        return true;
+    }
+
     public function markAsDeleted(GitRepository $repository) {
         $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
@@ -315,6 +319,31 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     public function delete(GitRepository $repository) {
         $path = $this->getGitRootPath().$repository->getPath();
         $this->getDriver()->delete($path);
+    }
+    
+    /**
+     * Delete all gitolite repositories of a project
+     *
+     * @param Integer $projectId Id of the project
+     *
+     * @return Boolean
+     */
+    public function deleteProjectRepositories($projectId) {
+        $deleteStatus = true;
+        $res          = $this->getDao()->getAllGitoliteRespositories($projectId);
+        if (empty($res) || $res->isError()) {
+            return false;
+        } else {
+            while ($row = $res->getRow()) {
+                $repository = $this->loadRepositoryFromId($row[GitDao::REPOSITORY_ID]);
+                try {
+                    $deleteStatus = $repository->delete(true) && $deleteStatus;
+                } catch (GitBackendException $e) {
+                    $deleteStatus = false;
+                }
+            }
+        }
+        return $deleteStatus;
     }
 
     /**
@@ -364,31 +393,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             $this->permissionsManager = PermissionsManager::instance();
         }
         return $this->permissionsManager;
-    }
-    
-    /**
-     * Delete all gitolite repositories of a project
-     *
-     * @param Integer $projectId Id of the project
-     *
-     * @return Boolean
-     */
-    public function deleteProjectRepositories($projectId) {
-        $deleteStatus = true;
-        $res          = $this->getDao()->getAllGitoliteRespositories($projectId);
-        if (empty($res) || $res->isError()) {
-            return false;
-        } else {
-            while ($row = $res->getRow()) {
-                $repository = $this->loadRepositoryFromId($row[GitDao::REPOSITORY_ID]);
-                try {
-                    $deleteStatus = $repository->delete(true) && $deleteStatus;
-                } catch (GitBackendException $e) {
-                    $deleteStatus = false;
-                }
-            }
-        }
-        return $deleteStatus;
     }
 
     /**

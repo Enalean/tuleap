@@ -47,23 +47,19 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
         }
         
         $repository = $this->getRepositoryFactory()->getDeletedRepository($repositoryId);
+        if ($repository->getProjectId() != $projectId) {
+            $this->error('Bad project id');
+            return false;
+        }
+
         return $this->deleteRepo($repository, $projectId, $parameters);
     }
 
-    private function deleteRepo(GitRepository $repository, $projectId, $parameters) {
+    private function deleteRepo(GitRepository $repository) {
         try {
-            if ( $repository->getProjectId() != $projectId ) {
-                $this->error('Bad project id');
-                return false;
-            }
-            $ignoreHasChildren = false;
-            if (!empty($parameters[2])) {
-                $ignoreHasChildren = $parameters[2];
-            }
-            $repository->delete($ignoreHasChildren);
-
+            $repository->delete();
         } catch (Exception $e) {
-            $this->error( $e->getMessage() );
+            $this->error($e->getMessage());
             return false;
         }
         $this->done();
@@ -73,10 +69,11 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
     public function verbalizeParameters($with_link) {
         return $this->parameters;
     }
-    
+
     protected function getRepositoryFactory() {
         return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
+
 }
 
 ?>

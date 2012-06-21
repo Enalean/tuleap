@@ -126,10 +126,14 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         return true;
     }
 
+    public function canBeDeleted(GitRepository $repository) {
+        return ($this->getDao()->hasChild($this) !== true);
+    }
+
     public function markAsDeleted(GitRepository $repository) {
         $this->getDao()->delete($repository);
     }
-    
+
     public function delete(GitRepository $repository) {
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();        
         $this->archive($repository);
@@ -139,22 +143,26 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     /**
      * Delete all repositories of a project
      *
-     * @param Integer $projectId Id of the project
+     * @param Integer $project_id Id of the project
      *
      * @return Boolean
      */
-    public function deleteProjectRepositories($projectId) {
-        $deleteStatus   = true;
-        $repositoryList = $this->getDao()->getProjectRepositoryList($projectId, true);
-        if (!empty($repositoryList)) {
-            $sem = $this->getSystemEventManager();
-            foreach ($repositoryList as $repositoryId => $repoData) {
-                $sem->createEvent('GIT_REPO_DELETE',
-                                   $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId.SystemEvent::PARAMETER_SEPARATOR.true,
-                                   SystemEvent::PRIORITY_MEDIUM);
-            }
+    public function deleteProjectRepositories($project_id) {
+        $system_event_manager = $this->getSystemEventManager();
+        $repo_factory         = $this->getRepositoryFactory();
+        $repositories         = $repo_factory->getAllGitshellRepositories($project_id);
+        foreach ($repositories as $repository) {
+            $repository->forceMarkAsDeleted();
+            $system_event_manager->createEvent(
+                'GIT_REPO_DELETE',
+                 $project_id.SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
+                 SystemEvent::PRIORITY_MEDIUM
+            );
         }
-        return $deleteStatus;
+    }
+
+    protected function getRepositoryFactory() {
+        return new GitRepositoryFactory($this->getDao(), $this->getProjectManager());
     }
 
     function getSystemEventManager() {
