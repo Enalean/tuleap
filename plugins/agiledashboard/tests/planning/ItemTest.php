@@ -40,7 +40,7 @@ class Planning_ArtifactTest extends TuleapTestCase {
         
         $epics_tracker_id   = 123;
         $stories_tracker_id = 456;
-        $this->allowed_children_types = array($stories_tracker_id);
+        $this->allowed_children_types = array(aTracker()->withId($stories_tracker_id)->build());
         
         $this->epics_tracker   = aTracker()->withId($epics_tracker_id)->build();
         $this->stories_tracker = aTracker()->withId($stories_tracker_id)->build();
@@ -52,7 +52,7 @@ class Planning_ArtifactTest extends TuleapTestCase {
                                       ->withXRef($this->xref)
                                       ->withTitle($this->title)
                                       ->withTracker($this->epics_tracker)
-                                      ->withAllowedChildrenTypes(array(456))
+                                      ->withAllowedChildrenTypes($this->allowed_children_types)
                                       ->withId($this->id)
                                       ->build();
         $this->story = aMockArtifact()->withTracker($this->stories_tracker)
