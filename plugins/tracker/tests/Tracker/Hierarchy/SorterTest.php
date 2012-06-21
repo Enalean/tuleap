@@ -44,7 +44,8 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithCompleteListTest extends TuleapTestC
     function itReturnsArtifactFromTrackersOutsidesHierarchy() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $trackerIds = array(111, 112, 113, 666);
-        $sorter = new Tracker_Hierarchy_Sorter(mock('Tracker_ArtifactFactory'));
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(mock('Tracker_Artifact'));
+        $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
         $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
 
         $artifacts = $sorter->buildTreeWithCompleteList($artifacts_dar, $trackerIds, $tracker_hierarchy);
@@ -68,14 +69,14 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithCompleteListTest extends TuleapTestC
     
     private function getExpectedForTrackerOutsideHierarchy() {
         $root    = new TreeNode(null, 0);
-        $node_7  = new TreeNode(array('id' => 7,  'tracker_id' => 112, 'artifactlinks' => '5'), 7);
-        $node_5  = new TreeNode(array('id' => 5,  'tracker_id' => 111, 'artifactlinks' => ''), 5);
-        $node_6  = new TreeNode(array('id' => 6,  'tracker_id' => 112, 'artifactlinks' => '8'), 6);
-        $node_8  = new TreeNode(array('id' => 8,  'tracker_id' => 111, 'artifactlinks' => '11,9,34'), 8);
-        $node_11 = new TreeNode(array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => ''), 11);
-        $node_9  = new TreeNode(array('id' => 9,  'tracker_id' => 93,  'artifactlinks' => ''), 9);
-        $node_10 = new TreeNode(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66'), 10);
-        $node_66 = new TreeNode(array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => ''), 66);
+        $node_7  = new TreeNode(null, 7);
+        $node_5  = new TreeNode(null, 5);
+        $node_6  = new TreeNode(null, 6);
+        $node_8  = new TreeNode(null, 8);
+        $node_11 = new TreeNode(null, 11);
+        $node_9  = new TreeNode(null, 9);
+        $node_10 = new TreeNode(null, 10);
+        $node_66 = new TreeNode(null, 66);
 
         $root->addChildren(
             $node_7->addChildren(

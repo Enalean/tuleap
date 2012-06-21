@@ -19,6 +19,7 @@
  */
 
 require_once 'Hierarchy.class.php';
+require_once dirname(__FILE__).'/../CrossSearch/ArtifactNode.class.php';
 
 /**
  * Sorts artifacts in a TreeNode structure 
@@ -76,11 +77,10 @@ class Tracker_Hierarchy_Sorter {
         $id = $artifact_info['id'];
         
         if (!isset($artifacts_in_tree[$id])) {
-            $node = new TreeNode();
-            
-            $node->setId($id);
-            $node->setData($artifact_info);
             $artifact = $this->artifact_factory->getArtifactById($id);
+//            $node = new ArtifactNode($artifact, $artifact_info);
+            $node = new TreeNode($artifact_info, $id);
+            
             $node->setObject($artifact);
             $parent->addChild($node);
             
