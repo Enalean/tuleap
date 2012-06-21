@@ -690,9 +690,8 @@ class GitRepository implements DVCSRepository {
 
     /**
      *
-     * @todo: it should be possible to delete repo with children only for gitolite
      * @todo: test it with gitshell
-     * @todo: test with ignoreHasChildren variations
+     * @todo: test delete project
      * @todo: makes deletion of repo in gitolite asynchronous
      * 
      * @throws GitBackendException 
