@@ -106,7 +106,20 @@ class GitActions extends PluginActions {
         );
     }
 
+    private function createGitshellReference($projectId, $repositoryName) {
+        $this->systemEventManager->createEvent(
+            'GIT_REPO_CREATE',
+            $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.UserManager::instance()->getCurrentUser()->getId(),
+            SystemEvent::PRIORITY_MEDIUM
+        );
+        $this->getController()->redirect('/plugins/git/?action=index&group_id='.$projectId);
+        exit;
+    }
+    
     public function createReference($projectId, $repositoryName) {
+        // Uncomment the following line only for debug prupose if you ever need to
+        // create a gitshell repo (good luck, luke, may the force be with you).
+        //$this->createGitshellReference($projectId, $repositoryName);
         $c         = $this->getController();
         $projectId = intval( $projectId );
         
