@@ -97,13 +97,14 @@ document.observe('dom:loaded', function () {
                 var comment_panel = edit.up().next();
                 if (comment_panel.visible()) {
                     
-                    var textarea = new Element('textarea');
+                    var textarea = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
                     textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body')
                                                   .innerHTML
                                                   .stripTags();
                     
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(textarea);
                     comment_panel.insert({before: edit_panel});
+                    new codendi.RTE(textarea, {toggle: true, default_in_html: false});
                     while (textarea.offsetWidth < comment_panel.offsetWidth) {
                         textarea.cols++;
                     }
