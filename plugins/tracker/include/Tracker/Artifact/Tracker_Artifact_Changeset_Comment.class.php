@@ -33,6 +33,7 @@ class Tracker_Artifact_Changeset_Comment {
     public $submitted_by;
     public $submitted_on;
     public $body;
+    public $bodyFormat;
     public $parent_id;
     
     /**
@@ -45,6 +46,7 @@ class Tracker_Artifact_Changeset_Comment {
      * @param int                        $submitted_by       The Id of the user that made the comment
      * @param int                        $submitted_on       The date the comment has been done
      * @param string                     $body               The comment (aka follow-up comment)
+     * @param int                        $bodyFormat         The comment type (text or html follow-up comment)
      * @param int                        $parent_id          The id of the parent (if comment has been modified)
      */
     public function __construct($id, 
@@ -54,6 +56,7 @@ class Tracker_Artifact_Changeset_Comment {
                                 $submitted_by, 
                                 $submitted_on, 
                                 $body, 
+                                $bodyFormat, 
                                 $parent_id) {
         $this->id                 = $id;
         $this->changeset          = $changeset;
@@ -62,6 +65,7 @@ class Tracker_Artifact_Changeset_Comment {
         $this->submitted_by       = $submitted_by;
         $this->submitted_on       = $submitted_on;
         $this->body               = $body;
+        $this->bodyFormat         = $bodyFormat;
         $this->parent_id          = $parent_id;
     }
     
