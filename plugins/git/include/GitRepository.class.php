@@ -678,20 +678,15 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Delete a repository (reference and fork)
-     *
-     * @param Boolean $ignoreHasChildren If true delete will ignore if the repo has childrens
-     *
-     * @return Boolean
+     * Physically delete a repository already marked for deletion
      */
     public function delete() {
         $this->getBackend()->delete($this);
     }
 
     /**
-     *
-     * @todo: test it with gitshell
-     * @todo: test delete project
+     * Perform logical deletion repository in DB
+     * 
      * @todo: makes deletion of repo in gitolite asynchronous
      * 
      * @throws GitBackendException 
@@ -704,15 +699,18 @@ class GitRepository implements DVCSRepository {
         }
     }
 
+    /**
+     * Force logical deletion of repository
+     */
     public function forceMarkAsDeleted() {
         $this->setDeletionDate(date('Y-m-d H:i:s'));
 
         $postRecMailManager = $this->getPostReceiveMailManager();
         $postRecMailManager->markRepositoryAsDeleted($this);
 
-        $this->getBackend()->markAsDeleted($this);        
+        $this->getBackend()->markAsDeleted($this);
     }
-    
+
     /**
      * Rename project
      */
@@ -737,6 +735,7 @@ class GitRepository implements DVCSRepository {
     public function isAlreadyNotified ($mail) {
         return (in_array($mail, $this->getNotifiedMails())) ;
     }
+
     /**
      * Add the @mail to the config git section and to DB
      * 
