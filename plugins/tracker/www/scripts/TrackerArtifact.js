@@ -102,7 +102,8 @@ document.observe('dom:loaded', function () {
                                                   .innerHTML
                                                   .stripTags();
                     
-                    var edit_panel = new Element('div', { style: 'text-align: right;'}).update(textarea);
+                    var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
+                    var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
                     new codendi.RTE(textarea, {toggle: true, default_in_html: false});
                     while (textarea.offsetWidth < comment_panel.offsetWidth) {
