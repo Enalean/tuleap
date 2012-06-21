@@ -1771,9 +1771,11 @@ EOS;
         
         // Follow-up comment
         $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea wrap="soft" rows="12" cols="80" name="artifact_masschange_followup_comment" id="artifact_masschange_followup_comment">'.$GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change').'</textarea>';
+        $html .= '<textarea id ="tracker_followup_comment_mass_change" wrap="soft" rows="12" cols="80" name="artifact_masschange_followup_comment" id="artifact_masschange_followup_comment">'.$GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change').'</textarea>';
         $html .= '<br />';
-        
+        $js   = "new codendi.RTE('tracker_followup_comment_mass_change', {toggle: true, default_in_html: false});";
+        $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
+
         // Send notification checkbox
         $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_import','send_notifications');
         $html .= '<input type="checkbox" name="notify" value="ok" />';
