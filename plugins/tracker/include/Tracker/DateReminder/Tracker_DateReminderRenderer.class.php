@@ -65,13 +65,13 @@ class Tracker_DateReminderRenderer {
         $output .= '<input type="HIDDEN" name="tracker_id" value="'.$this->tracker->id.'">';
         $output .= '<table border="0" width="900px"><TR height="30">';
         $output .= $this->dateReminderFactory->csrf->fetchHTMLInput();
-        $output .= '<TD> <input type="text" name="distance" size="3"> day(s)</TD>';
+        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
+        $output .= '<TD> <input type="text" name="distance" size="3"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_distance_label').'</TD>';
         $output .= '<TD><select name="notif_type">
                         <option value="0"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before').'
                         <option value="1"> '.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after').'
                     </select></TD>';
         $output .= '<TD>'.$this->getTrackerDateFields().'</TD>';
-        $output .= '<TD>'.$this->getUgroupsAllowedForTracker().'</TD>';
         $output .= '<TD><input type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'"></TD>';
         $output .= '</table></form>';
         return $output;
