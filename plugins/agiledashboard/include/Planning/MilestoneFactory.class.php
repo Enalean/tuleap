@@ -72,7 +72,7 @@ class Planning_MilestoneFactory {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
             return new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
@@ -109,14 +109,13 @@ class Planning_MilestoneFactory {
      * @return TreeNode
      */
     public function getPlannedArtifacts(User             $user,
-                                        Planning         $planning,
                                         Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
 
 
         $parents = array();
 
-        $node = $this->makeNodeWithChildren($user, $planning, $milestone_artifact, $parents);
+        $node = $this->makeNodeWithChildren($user, $milestone_artifact, $parents);
         return $node;
     }
 
@@ -133,24 +132,23 @@ class Planning_MilestoneFactory {
     private function addChildrenPlannedArtifacts(User             $user,
                                                  Tracker_Artifact $artifact,
                                                  TreeNode         $parent_node,
-                                                 array            $parents,
-                                                 Planning         $planning) {
+                                                 array            $parents) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         if (! $linked_artifacts) return false;
         if (in_array($artifact->getId(), $parents)) return false;
         
         $parents[] = $artifact->getId();
         foreach ($linked_artifacts as $linked_artifact) {
-            $node = $this->makeNodeWithChildren($user, $planning, $linked_artifact, $parents);
+            $node = $this->makeNodeWithChildren($user, $linked_artifact, $parents);
             $parent_node->addChild($node);
         }
     }
 
-    private function makeNodeWithChildren($user, $planning, $artifact, $parents) {
+    private function makeNodeWithChildren($user, $artifact, $parents) {
         $node = new TreeNode();
         $node->setId($artifact->getId());
-        $node->setObject($artifact, $planning);
-        $this->addChildrenPlannedArtifacts($user, $artifact, $node, $parents, $planning);
+        $node->setObject($artifact);
+        $this->addChildrenPlannedArtifacts($user, $artifact, $node, $parents);
         return $node;
     }
     
@@ -251,7 +249,7 @@ class Planning_MilestoneFactory {
         $milestones = array();
         $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
         }
         return $milestones;

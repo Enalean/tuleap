@@ -258,7 +258,7 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $root_artifact    = $this->anArtifactWithIdAndUniqueLinkedArtifacts(100, array($depth1_artifact));
 
         $factory = new Planning_MileStoneFactory(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'));
-        $planning_items_tree = $factory->getPlannedArtifacts(mock('User'), mock('Planning'), $root_artifact);
+        $planning_items_tree = $factory->getPlannedArtifacts(mock('User'), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
 
