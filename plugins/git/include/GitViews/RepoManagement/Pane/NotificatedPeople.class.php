@@ -41,7 +41,7 @@ class GitViews_RepoManagement_Pane_NotificatedPeople extends GitViews_RepoManage
      */
     public function getContent() {
         $html  = '';
-        $this->listOfMails();
+        $html .= $this->listOfMails();
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'add_mail_title') .'</h3>';
         $html .= '<form id="add_mail_form" action="/plugins/git/" method="POST">';
         $html .= '<input type="hidden" id="action" name="action" value="add_mail" />';
