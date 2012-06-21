@@ -314,6 +314,7 @@ class Tracker_Artifact_Changeset {
                                                     $row['submitted_by'],
                                                     $row['submitted_on'],
                                                     $row['body'],
+                                                    $row['body_format'],
                                                     $row['parent_id']);
         }
         return $comment;
