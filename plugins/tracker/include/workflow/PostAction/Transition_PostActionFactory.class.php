@@ -99,6 +99,7 @@ class Transition_PostActionFactory {
      */
     public function deletePostAction(Transition $transition) {
         $this->getDao()->deletePostActionsByTransitionId($transition->transition_id);
+        // FIXME: Is this code used somewhere ?
     }
     
     /**
