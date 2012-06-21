@@ -85,6 +85,7 @@ class Transition_PostActionFactory {
     public function removePostAction(Transition $transition, $requested_postaction) {
         if (isset($this->post_actions_classes[$requested_postaction])) {
             $this->getDao()->delete($postaction_id);
+            // FIXME: Where does $postaction_id come from ?
         }
     }
     
