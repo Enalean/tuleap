@@ -41,8 +41,9 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         $post_action->__construct($transition, $post_action_id, $old_field, $old_value, $dao);
         stub($post_action)->getDao()->returns($dao);
         
-        $request = aRequest()->withParams(array('workflow_postaction_field_int'       => $new_field_id,
-                                                'workflow_postaction_field_int_value' => $new_value))->build();
+        $request = aRequest()->with('workflow_postaction_field_int',       array($post_action_id => $new_field_id))
+                             ->with('workflow_postaction_field_int_value', array($post_action_id => $new_value))
+                             ->build();
         
         $dao->expectOnce('updatePostAction', array($post_action_id, $new_field_id, $new_value));
         
