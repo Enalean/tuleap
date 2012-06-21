@@ -127,7 +127,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
 
     public function canBeDeleted(GitRepository $repository) {
-        return ($this->getDao()->hasChild($this) !== true);
+        return ($this->getDao()->hasChild($repository) !== true);
     }
 
     public function markAsDeleted(GitRepository $repository) {
