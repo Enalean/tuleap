@@ -21,6 +21,7 @@
 require_once 'ArtifactMilestone.class.php';
 require_once 'NoMilestone.class.php';
 require_once 'Item.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ArtifactNode.class.php';
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -145,9 +146,7 @@ class Planning_MilestoneFactory {
     }
 
     private function makeNodeWithChildren($user, $artifact, $parents) {
-        $node = new TreeNode();
-        $node->setId($artifact->getId());
-        $node->setObject($artifact);
+        $node = new ArtifactNode($artifact);
         $this->addChildrenPlannedArtifacts($user, $artifact, $node, $parents);
         return $node;
     }

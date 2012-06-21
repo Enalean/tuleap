@@ -78,10 +78,7 @@ class Tracker_Hierarchy_Sorter {
         
         if (!isset($artifacts_in_tree[$id])) {
             $artifact = $this->artifact_factory->getArtifactById($id);
-//            $node = new ArtifactNode($artifact, $artifact_info);
-            $node = new TreeNode($artifact_info, $id);
-            
-            $node->setObject($artifact);
+            $node = new ArtifactNode($artifact, $artifact_info);
             $parent->addChild($node);
             
             $artifacts_in_tree[$id] = true;

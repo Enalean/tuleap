@@ -44,13 +44,13 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithCompleteListTest extends TuleapTestC
     function itReturnsArtifactFromTrackersOutsidesHierarchy() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $trackerIds = array(111, 112, 113, 666);
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactById()->returns(mock('Tracker_Artifact'));
+        $artifact_factory = new MockedArtifactFactory();
         $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
         $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
 
         $artifacts = $sorter->buildTreeWithCompleteList($artifacts_dar, $trackerIds, $tracker_hierarchy);
         
-        $expected  = $this->getExpectedForTrackerOutsideHierarchy();
+        $expected  = $this->getExpectedForTrackerOutsideHierarchy($artifact_factory);
         $this->assertEqual($artifacts->__toString(), $expected->__toString());
     }
     
@@ -67,16 +67,16 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithCompleteListTest extends TuleapTestC
         );
     }
     
-    private function getExpectedForTrackerOutsideHierarchy() {
-        $root    = new TreeNode(null, 0);
-        $node_7  = new TreeNode(null, 7);
-        $node_5  = new TreeNode(null, 5);
-        $node_6  = new TreeNode(null, 6);
-        $node_8  = new TreeNode(null, 8);
-        $node_11 = new TreeNode(null, 11);
-        $node_9  = new TreeNode(null, 9);
-        $node_10 = new TreeNode(null, 10);
-        $node_66 = new TreeNode(null, 66);
+    private function getExpectedForTrackerOutsideHierarchy($artifact_factory) {
+        $root    = new ArtifactNode($artifact_factory->getArtifactById(0));
+        $node_7  = new ArtifactNode($artifact_factory->getArtifactById(7));
+        $node_5  = new ArtifactNode($artifact_factory->getArtifactById(5));
+        $node_6  = new ArtifactNode($artifact_factory->getArtifactById(6));
+        $node_8  = new ArtifactNode($artifact_factory->getArtifactById(8));
+        $node_11 = new ArtifactNode($artifact_factory->getArtifactById(11));
+        $node_9  = new ArtifactNode($artifact_factory->getArtifactById(9));
+        $node_10 = new ArtifactNode($artifact_factory->getArtifactById(10));
+        $node_66 = new ArtifactNode($artifact_factory->getArtifactById(66));
 
         $root->addChildren(
             $node_7->addChildren(
@@ -100,6 +100,18 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithCompleteListTest extends TuleapTestC
         $hierarchy->addRelationship(111, 113);
         $hierarchy->addRelationship(201, 202);
         return $hierarchy;
+    }
+
+}
+class MockedArtifactFactory extends Tracker_ArtifactFactory {
+
+
+    public function __construct() {
+        // super constructor is protected so we need this public constructor
+    }
+    
+    public function getArtifactById($id) {
+        return stub('Tracker_Artifact')->getId()->returns($id);
     }
 }
 
