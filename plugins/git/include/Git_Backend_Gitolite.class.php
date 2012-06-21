@@ -324,26 +324,30 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
      * Delete all gitolite repositories of a project
      *
-     * @param Integer $projectId Id of the project
+     * @param Integer $project_id Id of the project
      *
      * @return Boolean
      */
-    public function deleteProjectRepositories($projectId) {
-        $deleteStatus = true;
-        $res          = $this->getDao()->getAllGitoliteRespositories($projectId);
-        if (empty($res) || $res->isError()) {
-            return false;
-        } else {
-            while ($row = $res->getRow()) {
-                $repository = $this->loadRepositoryFromId($row[GitDao::REPOSITORY_ID]);
-                try {
-                    $deleteStatus = $repository->delete(true) && $deleteStatus;
-                } catch (GitBackendException $e) {
-                    $deleteStatus = false;
-                }
-            }
+    public function deleteProjectRepositories($project_id) {
+        $system_event_manager = $this->getSystemEventManager();
+        $repository_factory   = $this->getRepositoryFactory();
+        $repositories         = $repository_factory->getAllGitoliteRepositories($project_id);
+        foreach ($repositories as $repository) {
+            $repository->forceMarkAsDeleted();
+            $system_event_manager->createEvent(
+                'GIT_REPO_DELETE',
+                 $project_id.SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
+                 SystemEvent::PRIORITY_MEDIUM
+            );
         }
-        return $deleteStatus;
+    }
+
+    protected function getRepositoryFactory() {
+        return new GitRepositoryFactory($this->getDao(), $this->getProjectManager());
+    }
+
+    protected function getSystemEventManager() {
+        return SystemEventManager::instance();
     }
 
     /**

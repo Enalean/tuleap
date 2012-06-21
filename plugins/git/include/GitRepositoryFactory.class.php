@@ -59,7 +59,18 @@ class GitRepositoryFactory {
         }
         return $repositories;
     }
-    
+
+    public function getAllGitoliteRepositories($project_id) {
+        $repositories = array();
+        $repository_list = $this->dao->getAllGitoliteRespositories($project_id);
+        foreach ($repository_list as $row) {
+            $repository = new GitRepository();
+            $this->dao->hydrateRepositoryObject($repository, $row);
+            $repositories[] = $repository;
+        }
+        return $repositories;
+    }
+
     /**
      * Get a deleted repository by its id
      *

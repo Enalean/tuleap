@@ -102,72 +102,6 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
     }
 
-    public function testDeleteProjectRepositoriesDaoError() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', true);
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('loadRepositoryFromId');
-        $this->assertFalse($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesNothingToDelete() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', false);
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('loadRepositoryFromId');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesDeleteFail() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $dar->setReturnValueAt(0, 'getRow', array('repository_id' => 1));
-        $dar->setReturnValueAt(1, 'getRow', array('repository_id' => 2));
-        $dar->setReturnValueAt(2, 'getRow', array('repository_id' => 3));
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $repository = new MockGitRepository();
-        $repository->setReturnValueAt(0, 'delete', true);
-        $repository->setReturnValueAt(1, 'delete', false);
-        $repository->setReturnValueAt(2, 'delete', true);
-        $backend->setReturnValue('loadRepositoryFromId', $repository);
-        $backend->expectCallCount('loadRepositoryFromId', 3);
-        $repository->expectCallCount('delete', 3);
-        $this->assertFalse($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesSuccess() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValueAt(0, 'getRow', array('repository_id' => 1));
-        $dar->setReturnValueAt(1, 'getRow', array('repository_id' => 2));
-        $dar->setReturnValueAt(2, 'getRow', array('repository_id' => 3));
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $repository = new MockGitRepository();
-        $repository->setReturnValue('delete', true);
-        $backend->setReturnValue('loadRepositoryFromId', $repository);
-        $backend->expectCallCount('loadRepositoryFromId', 3);
-        $repository->expectCallCount('delete', 3);
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-    
     public function testFork_clonesRepositoryAndPushesConf() {
         $name  = 'tuleap';
         $old_namespace = '';
@@ -368,6 +302,59 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $permissionsManager->expectOnce('duplicateWithoutStatic', array($old_repo_id, $new_repo_id, Git::allPermissionTypes()));
         
         $backend->clonePermissions($old, $new);
+    }
+}
+
+class Git_Backend_Gitolite_DeleteAllRepositoriesTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->project_id           = 1;
+        $this->repository_factory   = mock('GitRepositoryFactory');
+        $this->system_event_manager = mock('SystemEventManager');
+        
+        $this->backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('getRepositoryFactory', 'getSystemEventManager'));
+        stub($this->backend)->getRepositoryFactory()->returns($this->repository_factory);
+        stub($this->backend)->getSystemEventManager()->returns($this->system_event_manager);
+    }
+    
+    public function itDeletesNothingWhenThereAreNoRepositories() {
+        stub($this->repository_factory)->getAllGitoliteRepositories()->returns(array());
+        $this->repository_factory->expectOnce('getAllGitoliteRepositories', array($this->project_id));
+
+        $this->backend->deleteProjectRepositories($this->project_id);
+    }
+
+     public function itDeletesEachRepository() {
+        $repository_1_id = 1;
+        $repository_1    = mock('GitRepository');
+        $repository_1->expectOnce('forceMarkAsDeleted');
+        stub($repository_1)->getId()->returns($repository_1_id);
+        stub($repository_1)->getProjectId()->returns($this->project_id);
+        
+        $repository_2_id = 2;
+        $repository_2    = mock('GitRepository');
+        $repository_2->expectOnce('forceMarkAsDeleted');
+        stub($repository_2)->getId()->returns($repository_2_id);
+        stub($repository_2)->getProjectId()->returns($this->project_id);
+        
+        $this->system_event_manager->expectCallCount('createEvent', 2);
+        
+        $this->system_event_manager->expectAt(0, 'createEvent', array(
+            'GIT_REPO_DELETE',
+            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_1_id,
+            '*'
+        ));
+        
+        $this->system_event_manager->expectAt(1, 'createEvent', array(
+            'GIT_REPO_DELETE',
+            $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$repository_2_id,
+            '*'
+        ));
+        
+        stub($this->repository_factory)->getAllGitoliteRepositories($this->project_id)->returns(array($repository_1, $repository_2));
+        
+        $this->backend->deleteProjectRepositories($this->project_id);
     }
 }
 
