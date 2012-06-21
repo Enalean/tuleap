@@ -26,47 +26,38 @@ Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_
 
 class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        
+        $this->post_action_id = 9348;
+        $this->transition     = mock('Transition');
+        $this->post_action    = new Transition_PostAction_Field_IntTestVersion();
+        $this->dao            = mock('Transition_PostAction_Field_IntDao');
+        $this->field          = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1131);
+        $this->value          = 0;
+        
+        $this->post_action->__construct($this->transition, $this->post_action_id, $this->field, $this->value);
+        stub($this->post_action)->getDao()->returns($this->dao);
+    }
+    
     public function itHandlesUpdateRequests() {
-        $post_action_id = 9348;
-        $transition     = mock('Transition');
-        $post_action    = new Transition_PostAction_Field_IntTestVersion();
-        $dao            = mock('Transition_PostAction_Field_IntDao');
+        $new_field_id = 4572;
+        $new_value    = 10;
+        $request      = aRequest()->with('workflow_postaction_field_int',       array($this->post_action_id => $new_field_id))
+                                  ->with('workflow_postaction_field_int_value', array($this->post_action_id => $new_value))
+                                  ->with('remove_postaction',                   array())
+                                  ->build();
         
-        $old_field      = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1131);
-        $old_value      = 0;
-        
-        $new_field_id   = 4572;
-        $new_value      = 10;
-        
-        $post_action->__construct($transition, $post_action_id, $old_field, $old_value);
-        stub($post_action)->getDao()->returns($dao);
-        
-        $request = aRequest()->with('workflow_postaction_field_int',       array($post_action_id => $new_field_id))
-                             ->with('workflow_postaction_field_int_value', array($post_action_id => $new_value))
-                             ->with('remove_postaction',                   array())
-                             ->build();
-        
-        $dao->expectOnce('updatePostAction', array($post_action_id, $new_field_id, $new_value));
-        
-        $post_action->process($request);
+        $this->dao->expectOnce('updatePostAction', array($this->post_action_id, $new_field_id, $new_value));
+        $this->post_action->process($request);
     }
     
     public function itHandlesDeleteRequests() {
-        $post_action_id = 9348;
-        $transition     = mock('Transition');
-        $post_action    = new Transition_PostAction_Field_IntTestVersion();
-        $dao            = mock('Transition_PostAction_Field_IntDao');
-        $field          = mock('Tracker_FormElement_Field_Integer');
-        $value          = 0;
-        
-        $post_action->__construct($transition, $post_action_id, $field, $value);
-        stub($post_action)->getDao()->returns($dao);
-        
-        $request = aRequest()->with('remove_postaction', array($post_action_id => 1))
+        $request = aRequest()->with('remove_postaction', array($this->post_action_id => 1))
                              ->build();
         
-        $dao->expectOnce('deletePostAction', array($post_action_id));
-        $post_action->process($request);
+        $this->dao->expectOnce('deletePostAction', array($this->post_action_id));
+        $this->post_action->process($request);
     }
 }
 ?>
