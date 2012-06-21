@@ -38,15 +38,34 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         $new_field_id   = 4572;
         $new_value      = 10;
         
-        $post_action->__construct($transition, $post_action_id, $old_field, $old_value, $dao);
+        $post_action->__construct($transition, $post_action_id, $old_field, $old_value);
         stub($post_action)->getDao()->returns($dao);
         
         $request = aRequest()->with('workflow_postaction_field_int',       array($post_action_id => $new_field_id))
                              ->with('workflow_postaction_field_int_value', array($post_action_id => $new_value))
+                             ->with('remove_postaction',                   array())
                              ->build();
         
         $dao->expectOnce('updatePostAction', array($post_action_id, $new_field_id, $new_value));
         
+        $post_action->process($request);
+    }
+    
+    public function itHandlesDeleteRequests() {
+        $post_action_id = 9348;
+        $transition     = mock('Transition');
+        $post_action    = new Transition_PostAction_Field_IntTestVersion();
+        $dao            = mock('Transition_PostAction_Field_IntDao');
+        $field          = mock('Tracker_FormElement_Field_Integer');
+        $value          = 0;
+        
+        $post_action->__construct($transition, $post_action_id, $field, $value);
+        stub($post_action)->getDao()->returns($dao);
+        
+        $request = aRequest()->with('remove_postaction', array($post_action_id => 1))
+                             ->build();
+        
+        $dao->expectOnce('deletePostAction', array($post_action_id));
         $post_action->process($request);
     }
 }

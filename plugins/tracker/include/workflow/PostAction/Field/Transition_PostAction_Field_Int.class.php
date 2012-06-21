@@ -146,9 +146,13 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @see Transition_PostAction
      */
     public function process(Codendi_Request $request) {
-        $field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
-        $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
-        $this->getDao()->updatePostAction($this->id, $field_id, $value);
+        if ($request->getInArray('remove_postaction', $this->id)) {
+            $this->getDao()->deletePostAction($this->id);
+        } else {
+            $field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
+            $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
+            $this->getDao()->updatePostAction($this->id, $field_id, $value);
+        }
     }
     
     /**

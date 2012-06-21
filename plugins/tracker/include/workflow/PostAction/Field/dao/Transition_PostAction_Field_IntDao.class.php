@@ -69,5 +69,15 @@ class Transition_PostAction_Field_IntDao extends DataAccessObject {
 SQL;
         return $this->update($sql);
     }
+    
+    public function deletePostAction($id) {
+        $id = $this->da->escapeInt($id);
+        $sql = <<<SQL
+            DELETE
+            FROM $this->table_name
+            WHERE id = $id
+SQL;
+        return $this->update($sql);
+    }
 }
 ?>
