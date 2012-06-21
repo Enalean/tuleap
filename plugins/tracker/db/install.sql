@@ -411,6 +411,15 @@ CREATE TABLE tracker_artifact(
   INDEX idx_tracker_id (tracker_id),
   INDEX idx_my (submitted_by, tracker_id, last_changeset_id)
 );
+
+DROP TABLE IF EXISTS tracker_artifact_priority;
+CREATE TABLE tracker_artifact_priority(
+    curr_id int(11) NULL,
+    succ_id int(11) NULL,
+    rank    int(11) NOT NULL,
+    PRIMARY KEY idx(curr_id, succ_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS  tracker_tooltip;
 CREATE TABLE tracker_tooltip(
     tracker_id INT(11) NOT NULL ,
