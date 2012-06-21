@@ -17,7 +17,7 @@
 
 var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
     initialize: function ($super, element, options) {
-        this.options = Object.extend({htmlFormat : false}, options || { });
+        this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
         $super(element, options);
         // This div contains comment format selection buttons
         var div = Builder.node('div', {'class' : 'rte_format'});
@@ -27,20 +27,20 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
 
         // Add a radio button that tells that the content format is text
         // The value is defined in Artifact class.
-        var text_button = Builder.node('input', {'name'     : 'comment_format',
+        var text_button = Builder.node('input', {'name'     : 'comment_format'+this.options.id,
                                                  'type'     : 'radio',
                                                  'value'    : '0',
                                                  'checked'  : 'checked',
-                                                 'id'       : 'comment_format_text'});
+                                                 'id'       : 'comment_format_text'+this.options.id});
         div.appendChild(text_button);
         div.appendChild(document.createTextNode('Text'));
 
         // Add a radio button that tells that the content format is HTML
         // The value is defined in Artifact class.
-        var html_button = Builder.node('input', {'name' : 'comment_format',
+        var html_button = Builder.node('input', {'name' : 'comment_format'+this.options.id,
                                                  'type' : 'radio',
                                                  'value': '1',
-                                                 'id'   : 'comment_format_html'});
+                                                 'id'   : 'comment_format_html'+this.options.id});
         div.appendChild(html_button);
         div.appendChild(document.createTextNode('HTML'));
 
@@ -53,7 +53,7 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
         if (options.htmlFormat == true) {
             this.switchButtonToHtml();
         } else {
-            $('comment_format_text').checked = true;
+            $('comment_format_text'+this.options.id).checked = true;
         }
     },
 
@@ -67,7 +67,7 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
      * Check the radio button that tells that the content is HTML
      */
     switchButtonToHtml: function () {
-        $('comment_format_text').disabled = true;
-        $('comment_format_html').checked  = true;
+        $('comment_format_text'+this.options.id).disabled = true;
+        $('comment_format_html'+this.options.id).checked  = true;
     }
 });

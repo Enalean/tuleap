@@ -105,7 +105,7 @@ document.observe('dom:loaded', function () {
                     var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
-                    new RTE_Tracker_FollowUp(textarea, {toggle: true, default_in_html: false});
+                    new RTE_Tracker_FollowUp(textarea, {toggle: true, default_in_html: false, id: id});
                     while (textarea.offsetWidth < comment_panel.offsetWidth) {
                         textarea.cols++;
                     }
