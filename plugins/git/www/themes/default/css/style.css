@@ -157,3 +157,8 @@ td.plugin_git_first_col {
 .widget-preview-plugin_git_project_pushes-fr_FR {
     background-image:url('../images/widget-preview-project_pushes.png');
 }
+
+#git_repomanagement label {
+    display: block;
+    margin-bottom: 5px;
+}

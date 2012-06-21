@@ -113,15 +113,6 @@ class GitViews extends PluginViews {
                         </div>
                         <?php
                         break;
-                    case 'addMail':
-                        ?>
-                        <div id="help_addMail" class="help" style="display:<?php echo $display?>">                            
-                        <?php
-                        echo '<ul>'.$this->getText('add_mail_msg').'</ul>';
-                        ?>
-                        </div>
-                        <?php
-                        break;
                 default:
                     break;
             }            

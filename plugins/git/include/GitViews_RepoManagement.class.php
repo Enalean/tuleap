@@ -98,9 +98,9 @@ class GitViews_RepoManagement {
         echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         echo '<input type="hidden" id="action" name="action" value="edit" />';
         echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
-        
-        echo '<p id="plugin_git_description">';
-        echo $this->getText('view_repo_description') .': ';
+
+        echo '<p>';
+        echo '<label for="repo_desc">'. $this->getText('view_repo_description') .':</label>';
         echo '<textarea class="text" id="repo_desc" name="repo_desc">';
         echo $hp->purify($this->repository->getDescription(), CODENDI_PURIFIER_CONVERT_HTML, $this->repository->getProjectId());
         echo '</textarea>';
@@ -184,31 +184,6 @@ class GitViews_RepoManagement {
     }
 
     /**
-     * CONFIRM_DELETION
-     * @todo make a generic function ?
-     * @param <type> $params
-     * @return <type>
-     */
-    private function confirm_deletion( $params ) {
-        if (  empty($params['repo_id']) ) {
-            return false;
-        }
-        $repoId = $params['repo_id'];
-        if ( !$this->getController()->isAPermittedAction('del') ) {
-            return false;
-        }
-        ?>
-    <div class="confirm">
-        <form id="confirm_deletion" method="POST" action="/plugins/git/?group_id=<?php echo $this->repository->getProjectId(); ?>" >
-        <input type="hidden" id="action" name="action" value="del" />
-        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId; ?>" />
-        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->repository->getProjectId();?>&repo_id=<?php echo $repoId?>'"/> </span>
-        </form>
-    </div>
-        <?php
-    }
-
-    /**
      * form to update notification mail prefix
      */
     private function mailPrefixForm() {
@@ -220,16 +195,11 @@ class GitViews_RepoManagement {
     <input type="hidden" id="action" name="action" value="mail_prefix" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->repository->getProjectId() ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repository->getId() ?>" />
-    <table>
-        <tr>
-            <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
-        ?></label></td>
-            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?= $hp->purify($this->repository->getMailPrefix(), CODENDI_PURIFIER_CONVERT_HTML, $this->repository->getProjectId()); ?>" /></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
-        </tr>
-    </table>
+    <label for="mail_prefix"><?= $this->getText('mail_prefix'); ?></label>
+    <input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?= $hp->purify($this->repository->getMailPrefix(), CODENDI_PURIFIER_CONVERT_HTML, $this->repository->getProjectId()); ?>" /></td>
+    <p>
+        <input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?= $this->getText('mail_prefix_submit')?>">
+    </p>
 </form>
         <?php
         echo '</div>';
@@ -240,25 +210,19 @@ class GitViews_RepoManagement {
      */
     private function addMailForm() {
         echo '<div id="git_repomanagement_mail" class="tab-pane active">';
+        $this->listOfMails();
         ?>
 <h3><?php echo $this->getText('add_mail_title'); ?></h3>
 <form id="add_mail_form" action="/plugins/git/" method="POST">
     <input type="hidden" id="action" name="action" value="add_mail" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->repository->getProjectId() ?>" />
     <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $this->repository->getId() ?>" />
-    <table>
-        <tr>
-            <td class="plugin_git_first_col" ><label for="add_mail_label"><?php echo $this->getText('add_mail');?>
-                <a href="#" onclick="$('help_addMail').toggle();"> [?]</a></label></td>
-            <td><textarea id="add_mail" name="add_mail" class="plugin_git_add_mail"></textarea></td>
-        </tr>
-        <tr>
-            <td colspan="2"><input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>"></td>
-        </tr>
-    </table>
+    <label for="add_mail"><?php echo $this->getText('add_mail');?></label>
+    <textarea id="add_mail" name="add_mail" class="plugin_git_add_mail"></textarea>
+    <p class="help-block"><?= $this->getText('add_mail_msg') ?></p>
+    <input type="submit" id="add_mail_submit" name="add_mail_submit" value="<?php echo $this->getText('add_mail_submit')?>" />
 </form>
         <?php
-        $this->listOfMails();
         echo '</div>';
         $this->parent_view->help('addMail', array('display'=>'none') );
         $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
@@ -269,13 +233,12 @@ class GitViews_RepoManagement {
      * show the list of mails to notify
      */
     private function listOfMails() {
-        $r = new GitRepository();
-        $r->setId($this->repository->getId());
-        $r->load();
-        $mails = $r->getNotifiedMails();
+        $hp = Codendi_HTMLPurifier::instance();
+        $mails = $this->repository->getNotifiedMails();
+        if ($mails) {
         ?>
 <h3><?php echo $this->getText('notified_mails_title'); ?></h3>
-    <?php if (!empty($mails)) {?>
+    <?php ?>
 <form id="add_user_form" action="/plugins/git/" method="POST">
     <input type="hidden" id="action" name="action" value="remove_mail" />
     <input type="hidden" id="group_id" name="group_id" value="<?php echo $this->repository->getProjectId() ?>" />
@@ -287,7 +250,7 @@ class GitViews_RepoManagement {
             echo '<tr class="'.html_get_alt_row_color(++$i).'">';
             echo '<td>'.$mail.'</td>';
             echo '<td>';
-            echo '<input type="checkbox" name="mail[]" value="'.$this->HTMLPurifier->purify($mail).'" />';
+            echo '<input type="checkbox" name="mail[]" value="'.$hp->purify($mail).'" />';
             echo '</a>';
             echo '</td>';
             echo '</tr>';
@@ -297,11 +260,7 @@ class GitViews_RepoManagement {
     <input type="submit" value="<?php echo $GLOBALS['Language']->getText('global', 'btn_delete') ?>" />
 </form>
         <?php
-        } else {
-?>
-<h4><?php echo $this->getText('add_mail_existing'); ?> </h4>
-<?php
-}
+        }
     }
 
     private function getText($key, $params=array() ) {
