@@ -39,7 +39,7 @@ EOT;
                     curr_id int(11) NULL,
                     succ_id int(11) NULL,
                     rank    int(11) NOT NULL,
-                    PRIMARY KEY idx(curr_id, succ_id)
+                    UNIQUE idx(curr_id, succ_id)
                 ) ENGINE=InnoDB";
         $this->db->createTable('tracker_artifact_priority', $sql);
     }
