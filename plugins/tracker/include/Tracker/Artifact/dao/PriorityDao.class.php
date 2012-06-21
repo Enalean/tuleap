@@ -28,13 +28,13 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         $sql = "UPDATE tracker_artifact_priority AS new_parent,
                     tracker_artifact_priority AS item_to_move
                     INNER JOIN tracker_artifact_priority AS previous_parent
-                            ON (previous_parent.succ_id = item_to_move.curr_artifact_id)
+                            ON (previous_parent.succ_id = item_to_move.curr_id)
 
                 SET previous_parent.succ_id = item_to_move.succ_id,
                     item_to_move.succ_id    = new_parent.succ_id,
                     new_parent.succ_id      = item_to_move.curr_id
 
-                WHERE new_parent.succ_id   = $new_succ_artifact_idessor_id
+                WHERE new_parent.succ_id   = $successor_id
                   AND item_to_move.curr_id = $artifact_id";
         return $this->update($sql);
     }
