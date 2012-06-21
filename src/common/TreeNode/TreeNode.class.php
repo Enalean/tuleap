@@ -103,11 +103,11 @@ class TreeNode /*implements Visitable*/ {
      * @return mixed (reference)
      */
     function _setParentNode(&$node) {
-        if(is_object($node) && is_a($node, get_class($this))) {
+        if(is_object($node) && is_a($node, 'TreeNode') ) {
             $this->parentNode =& $node;
         }
         else {
-            trigger_error(get_class($this).'::setParentNode => require: "'.get_class($this).'" given: "'.gettype($c).'"', E_USER_ERROR);
+            trigger_error(get_class($this).'::setParentNode => require: TreeNode given: "'.  get_class($node).'"', E_USER_ERROR);
         }
     }
 
@@ -128,7 +128,7 @@ class TreeNode /*implements Visitable*/ {
      * @param TreeNode &$c A TreeNode (reference call)
      */
     function addChild($c) {
-        if(is_object($c) && is_a($c, get_class($this))) {
+        if(is_object($c) && is_a($c, 'TreeNode')) {
             if($this->children === null) {
                 $this->children = array();
             }
@@ -136,7 +136,7 @@ class TreeNode /*implements Visitable*/ {
             $this->children[] = $c;
         }
         else {
-            trigger_error(get_class($this).'::addChild => require: "'.get_class($this).'" given: "'.gettype($c).'"', E_USER_ERROR);
+            trigger_error(get_class($this).'::addChild => require: TreeNode given: "'.get_class($c).'"', E_USER_ERROR);
         }
     }
 
