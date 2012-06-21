@@ -256,7 +256,7 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationAddMail($projectId, $repositoryId, $mails) {
+    public function notificationAddMail($projectId, $repositoryId, $mails, $pane) {
         $c = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
@@ -279,11 +279,12 @@ class GitActions extends PluginActions {
         //Display this message, just if all the entred mails have been added
         if ($res) {
             $c->addInfo($this->getText('mail_added'));
+            $this->redirectToRepoManagement($projectId, $repositoryId, $pane);
         }
         return true;
     }
 
-    public function notificationRemoveMail($projectId, $repositoryId, $mails) {
+    public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane) {
         $c = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
@@ -299,7 +300,20 @@ class GitActions extends PluginActions {
                 $ret = false;
             }
         }
+        $this->redirectToRepoManagement($projectId, $repositoryId, $pane);
         return $ret;
+    }
+    
+    private function redirectToRepoManagement($projectId, $repositoryId, $pane) {
+        $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
+            array(
+                'action'   => 'repo_management',
+                'group_id' => $projectId,
+                'repo_id'  => $repositoryId,
+                'pane'     => $pane,
+            )
+        );
+        $this->getController()->redirect($redirect_url);
     }
 
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
@@ -358,7 +372,7 @@ class GitActions extends PluginActions {
      * @param <type> $repoDescription
      * @return <type>
      */
-    public function save( $projectId, $repoId, $repoAccess, $repoDescription ) {
+    public function save( $projectId, $repoId, $repoAccess, $repoDescription, $pane) {
         $c = $this->getController();
         if ( empty($repoId) ) {
             $c->addError( $this->getText('actions_params_error') );
@@ -369,7 +383,8 @@ class GitActions extends PluginActions {
             $c->addError( $this->getText('actions_params_error') );
             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
             return false;
-        }        
+        }
+        
         $repository = new GitRepository();
         $repository->setId($repoId);
         try {
@@ -406,12 +421,12 @@ class GitActions extends PluginActions {
         try {
             $repository->save();
         } catch (GitDaoException $e) {
-            $c->addError( $e->getMessage() );             
-             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+            $c->addError( $e->getMessage() );
+            $this->redirectToRepoManagement($projectId, $repoId, $pane);
             return false;
         }
         $c->addInfo( $this->getText('actions_save_repo_process') );
-        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+        $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
     }
 

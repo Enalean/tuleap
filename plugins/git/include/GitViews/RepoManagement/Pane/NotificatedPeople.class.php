@@ -69,6 +69,7 @@ class GitViews_RepoManagement_Pane_NotificatedPeople extends GitViews_RepoManage
             $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title') .'</h3>';
             $html .= '<form id="add_user_form" action="/plugins/git/" method="POST">';
             $html .= '<input type="hidden" id="action" name="action" value="remove_mail" />';
+            $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
             $html .= '<input type="hidden" id="group_id" name="group_id" value="'. $this->repository->getProjectId() .'" />';
             $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
             $html .= '<table>';

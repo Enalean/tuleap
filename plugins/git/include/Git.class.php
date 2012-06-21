@@ -302,7 +302,8 @@ class Git extends PluginController {
                     if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
+                    $pane = $this->request->get('pane');
+                    $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc, $pane) );
                     $this->addView('view');
                 } else {
                     $this->addError( $this->getText('controller_access_denied') );
@@ -349,7 +350,7 @@ class Git extends PluginController {
                         }
                     }
                 }
-                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails));
+                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails, $this->request->get('pane')));
                 $this->addView('repoManagement');
                 break;
             #remove mail
@@ -361,7 +362,7 @@ class Git extends PluginController {
                     $mails = $this->request->get('mail');
                 }
                 if (count($mails) > 0) {
-                    $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails));
+                    $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails, $this->request->get('pane')));
                     $this->addView('repoManagement');
                 } else {
                     $this->addAction('repoManagement', array($this->groupId, $repoId));
