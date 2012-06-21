@@ -102,7 +102,10 @@ if ($project && !$project->isError()) {
     $usedProportion = $duMgr->returnTotalProjectSize($groupId);
     $allowedQuota   = $duMgr->getProperty('allowed_quota');
     $pqm            = new ProjectQuotaManager();
-    $allowedQuota   = $pqm->getProjectCustomQuota($groupId);
+    $customQuota   = $pqm->getProjectCustomQuota($groupId);
+    if ($customQuota) {
+        $allowedQuota = $customQuota;
+    }
     if ($allowedQuota) {
         echo '<div id="help_init" class="stat_help">'.$GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($duHtml->sizeReadable($usedProportion),$allowedQuota.'GiB')).'</div>';
         echo '<p><img src="/plugins/statistics/project_cumulativeDiskUsage_graph.php?func=usage&size='.$usedProportion.'&group_id='.$groupId.'" title="Disk usage percentage" /></p>';
