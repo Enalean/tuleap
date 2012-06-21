@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'tests/simpletest/common/include/builders/aTreeNode.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../../include/Planning/ItemPresenterNode.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/ItemPresenter.class.php';
 
@@ -37,6 +37,12 @@ class Planning_ItemPresenterNodeTest extends TuleapTestCase {
         $this->assertIdentical($tree_node->getData(), $presenter_node->getData());
         $this->assertIdentical($tree_node->getChildren(), $presenter_node->getChildren());
         $this->assertIdentical($tree_node->getObject(), $presenter_node->getObject());
+    }
+    
+    public function itHoldsTheGivenPresenter() {
+        $presenter      = mock('Planning_ItemPresenter');
+        $presenter_node = Planning_ItemPresenterNode::build(mock('TreeNode'), $presenter);
+        $this->assertIdentical($presenter, $presenter_node->getPlanningItemPresenter());
     }
 }
 ?>

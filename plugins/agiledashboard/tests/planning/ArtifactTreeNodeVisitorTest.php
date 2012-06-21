@@ -50,13 +50,29 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         
         $visited_node = $visitor->visit($node);
         
-        $presenter = $visited_node->getObject();
+        $presenter = $visited_node->getPlanningItemPresenter();
         $this->assertEqual(123, $presenter->getId());
         $this->assertEqual('Foo', $presenter->getTitle());
         $this->assertEqual('/bar', $presenter->getUrl());
         $this->assertEqual('art #123', $presenter->getXRef());
         $this->assertEqual('baz', $presenter->getCssClasses());
         $this->assertEqual($children_trackers, $presenter->allowedChildrenTypes());
+    }
+    
+    public function itCopiesAllTreeNodesIntoPlanningItemPresenterNode() {
+        $root_node = aNode()->withChildren(
+                                aNode()->withObject(anArtifact()->build()),
+                                aNode()->withObject(anArtifact()->build()))
+                            ->build();
+        $visitor = new Planning_ArtifactTreeNodeVisitor(mock('Planning'), 'whatever-class');
+        
+        $visited_node = $visitor->visit($root_node);
+        
+        $all_nodes = $visited_node->flattenChildren();
+        $this->assertEqual(count($all_nodes), count($root_node->flattenChildren()));
+        foreach ($all_nodes as $node) {
+            $this->assertIsA($node, 'Planning_ItemPresenterNode');
+        }
     }
 }
 
@@ -85,7 +101,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         
         $node = $this->visitor->visit($this->node);
         
-        $this->assertEqual('whatever planning-draggable', $node->getObject()->getCssClasses());
+        $this->assertEqual('whatever planning-draggable', $node->getPlanningItemPresenter()->getCssClasses());
     }
     
     public function itKnowsNonDraggablePlanningItems() {
@@ -93,7 +109,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         
         $node = $this->visitor->visit($this->node);
         
-        $this->assertEqual('whatever', $node->getObject()->getCssClasses());
+        $this->assertEqual('whatever', $node->getPlanningItemPresenter()->getCssClasses());
     }
 }
 

@@ -21,6 +21,7 @@
 require_once 'Planning.class.php';
 require_once 'Item.class.php';
 require_once 'ItemPresenter.class.php';
+require_once 'ItemPresenterNode.class.php';
 
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
@@ -51,27 +52,42 @@ class Planning_ArtifactTreeNodeVisitor {
         return new Planning_ArtifactTreeNodeVisitor($planning, $classname);
     }
 
+    /**
+     * Makes a new TreeNode hierarchy identical to the given one, but changes the types
+     * @param TreeNode $node
+     * @return \Planning_ItemPresenterNode or \TreeNode
+     */
     public function visit(TreeNode $node) {
-        $this->decorate($node);
-        $this->visitChildren($node);
-        return $node;
+        $new_node = $this->decorate($node);
+        $new_node->setChildren($this->visitChildren($node));
+        return $new_node;
     }
     
+    /**
+     * TODO something is wrong since we return different types here
+     * 
+     * Makes a PlanningItemPresenterNode out of $node if $node contains an artifact
+     * @param TreeNode $node
+     * @return \Planning_ItemPresenterNode or \TreeNode
+     */
     private function decorate(TreeNode $node) {
         $artifact = $node->getObject();
         
         if ($artifact) {
             $planning_item = new Planning_Item($artifact, $this->planning);
             $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
-            
-            $node->setObject($presenter);
+            $presenter_node = Planning_ItemPresenterNode::build($node, $presenter);
+            return $presenter_node;
         }
+        return $node;
     }
     
     private function visitChildren(TreeNode $node) {
+        $children = array();
         foreach ($node->getChildren() as $child) {
-            $child->accept($this);
+            $children[] = $child->accept($this);
         }
+        return $children;
     }
 }
 

@@ -20,14 +20,27 @@
  */
 class Planning_ItemPresenterNode extends TreeNode {
 
+    /**
+     * @var Planning_ItemPresenter
+     */
+    private $presenter;
+    
     public function __construct(TreeNode $node, Planning_ItemPresenter $presenter) {
         parent::__construct($node->getData(), $node->getId());
         $this->setChildren($node->getChildren());
         $this->setObject($node->getObject());
+        $this->presenter = $presenter;
     }
-    
+
     public static function build(TreeNode $node, Planning_ItemPresenter $presenter) {
         return new Planning_ItemPresenterNode($node, $presenter);
+    }
+
+    /**
+     * @return Planning_ItemPresenter
+     */
+    public function getPlanningItemPresenter() {
+        return $this->presenter;
     }
 }
 
