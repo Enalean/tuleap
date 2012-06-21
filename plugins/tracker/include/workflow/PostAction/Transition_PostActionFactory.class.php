@@ -134,20 +134,45 @@ class Transition_PostActionFactory {
         $transition->setPostActions($post_actions);
     }
     
+    /**
+     * Reconstitute a PostAction from database
+     * 
+     * @param Transition $transition The transition to which this PostAction is associated
+     * @param mixed      $row        The raw data (array-like)
+     * @param string     $shortname  The PostAction short name
+     * @param string     $klass      The PostAction class name
+     * 
+     * @return Transition_PostAction
+     */
     private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
         $id        = (int)$row['id'];
         $field     = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
-        $value     = (int)$row[$this->getValueKeyForPostAction($shortname)];
+        $value     = (int)$row[$this->getPostActionValueColumn($shortname)];
         
         return new $klass($transition, $id, $field, $value);
     }
     
+    /**
+     * Retrieves matching PostAction database records.
+     * 
+     * @param Transition $transition The Transition to which the PostActions must be associated
+     * @param string     $shortname  The PostAction type (short name, not class name)
+     * 
+     * @return DataAccessResult
+     */
     private function loadPostActionRows($transition, $shortname) {
         $dao = $this->getDao($shortname);
         return $dao->searchByTransitionId($transition->getTransitionId());
     }
     
-    private function getValueKeyForPostAction($shortname) {
+    /**
+     * The name of the database column holding the PostAction "value".
+     * 
+     * @param string $shortname The PostAction type shortname.
+     * 
+     * @return string
+     */
+    private function getPostActionValueColumn($shortname) {
         return $shortname == 'field_int' ? 'value' : 'value_type';
     }
     
