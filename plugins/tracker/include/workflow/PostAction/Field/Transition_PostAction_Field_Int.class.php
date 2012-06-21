@@ -107,7 +107,33 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @return string html
      */
     public function fetch() {
-        $html = '<pre>Here be int field post action form</pre>';
+        $html = '';
+        //define the selectbox for value_type
+        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $this->id .']">';
+        
+        //define the selectbox for date fields
+        $tracker = $this->transition->getWorkflow()->getTracker();
+        $tff = $this->getFormElementFactory();
+        $fields_int = $tff->getUsedFormElementsByType($tracker, array('int'));
+        
+        $select_field  = '<select name="workflow_postaction_field_int['.$this->id.']">';
+        $options_field = '';
+        $one_selected  = false;
+        foreach ($fields_int as $field_int) {
+            $selected = '';
+            if ($this->field && ($this->field->getId() == $field_int->getId())) {
+                $selected     = 'selected="selected"';
+                $one_selected = true;
+            }            
+            $options_field .= '<option value="'. $field_int->getId() .'" '. $selected.'>'.$field_int->getLabel().'</option>';
+        }
+        if (!$one_selected) {
+            $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+        }
+        $select_field .= $options_field;
+        $select_field .= '</select>';
+
+        $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_int_field_to', array($select_field, $input_value));
         return $html;
     }
     
@@ -116,6 +142,15 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @see Transition_PostAction
      */
     public function process(Codendi_Request $request) {
+    }
+    
+        /**
+     * Wrapper for Tracker_FormElementFactory
+     *
+     * @return Tracker_FormElementFactory
+     */
+    protected function getFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
     }
 }
 ?>

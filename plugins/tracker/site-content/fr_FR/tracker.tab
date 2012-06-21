@@ -1292,6 +1292,7 @@ workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
 workflow_admin	permissions_transition	Peut effectuer la transition
 workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2
+workflow_admin	change_value_int_field_to	Le champ entier $1 prend pour valeur $2
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
 workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
 workflow_admin	under_the_following_condition	Sous les conditions suivantes :
