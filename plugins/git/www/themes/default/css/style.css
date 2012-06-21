@@ -70,10 +70,6 @@ textarea.text {
     margin: 0.5em 0 0.5em 0;
 }
 
-#plugin_git_confirm_deletion {
-    float: right;
-}
-
 #plugin_git_fork_form {
     white-space:no-wrap;
     margin-top:0em;

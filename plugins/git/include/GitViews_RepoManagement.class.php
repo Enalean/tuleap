@@ -36,38 +36,69 @@ class GitViews_RepoManagement {
      */
     private $parent_view;
 
-    public function __construct(GitViews $parent_view, GitRepository $repository) {
-        $this->parent_view = $parent_view;
-        $this->repository  = $repository;
+    /**
+     * @var Codendi_Request
+     */
+    private $request;
+
+    public function __construct(GitViews $parent_view, GitRepository $repository, Codendi_Request $request) {
+        $this->parent_view  = $parent_view;
+        $this->repository   = $repository;
+        $this->request      = $request;
+        $this->current_pane = 'settings';
+
+        $panes = array('settings', 'perms', 'mailprefix', 'mail', 'delete');
+        if (in_array($request->get('pane'), $panes)) {
+            $this->current_pane = $request->get('pane');
+        }
     }
 
     /**
      * Output repo management sub screen to the browser
      */
     public function display() {
-        echo '<div id="git_repomanagement">';
-        $this->descriptionForm();
-        $this->accessControlForm();
-        $this->mailPrefixForm();
-        $this->addMailForm();
-        $this->listOfMails();
-        $this->deleteForm();
-
+        echo '<div class="tabbable tabs-left">';
+        echo '<ul class="nav nav-tabs">';
+        echo '<li class="'. ($this->current_pane == 'settings' ? 'active' : '') .'"><a href="/plugins/git/?action=repo_management&group_id=102&repo_id=50&pane=settings">'. 'General Settings' .'</a></li>';
+        echo '<li class="'. ($this->current_pane == 'perms' ? 'active' : '') .'"><a href="/plugins/git/?action=repo_management&group_id=102&repo_id=50&pane=perms">'. 'Access Control' .'</a></li>';
+        echo '<li class="'. ($this->current_pane == 'mailprefix' ? 'active' : '') .'"><a href="/plugins/git/?action=repo_management&group_id=102&repo_id=50&pane=mailprefix">'. 'Notification prefix' .'</a></li>';
+        echo '<li class="'. ($this->current_pane == 'mail' ? 'active' : '') .'"><a href="/plugins/git/?action=repo_management&group_id=102&repo_id=50&pane=mail">'. 'Notificated people' .'</a></li>';
+        echo '<li class="'. ($this->current_pane == 'delete' ? 'active' : '') .'"><a href="/plugins/git/?action=repo_management&group_id=102&repo_id=50&pane=delete">'. 'Delete' .'</a></li>';
+        echo '</ul>';
+        echo '<div id="git_repomanagement" class="tab-content">';
+        $this->current_pane == 'settings' ? $this->descriptionForm()    : '';
+        $this->current_pane == 'perms' ? $this->accessControlForm()     : '';
+        $this->current_pane == 'mailprefix' ? $this->mailPrefixForm()   : '';
+        $this->current_pane == 'mail' ? $this->addMailForm()            : '';
+        $this->current_pane == 'delete' ? $this->deleteForm()           : '';
+        echo '</div>';
         echo '</div>';
     }
 
     private function deleteForm() {
-        if (!$this->repository->hasChild()) {
-            echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
+        echo '<div id="git_repomanagement_delete" class="tab-pane active">';
+        echo '<h3>'. 'Delete' .'</h3>';
+        echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+        echo '<input type="hidden" id="action" name="action" value="edit" />';
+        echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+        $disabled = '';
+        if ($this->repository->hasChild()) {
+            echo '<p>'. 'You cannot delete' .'</p>';
+            $disabled = 'readonly="readonly" disabled="disabled"';
         }
+        echo '<input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" '. $disabled .'/>';
+        echo '</form>';
+        echo '</div>';
     }
 
     private function descriptionForm() {
         $hp = Codendi_HTMLPurifier::instance();
+        echo '<div id="git_repomanagement_settings" class="tab-pane active">';
+        echo '<h3>'. 'General Settings' .'</h3>';
         echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         echo '<input type="hidden" id="action" name="action" value="edit" />';
         echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
-
+        
         echo '<p id="plugin_git_description">';
         echo $this->getText('view_repo_description') .': ';
         echo '<textarea class="text" id="repo_desc" name="repo_desc">';
@@ -77,9 +108,12 @@ class GitViews_RepoManagement {
 
         echo '<p><input type="submit" name="save" value="'. $this->getText('admin_save_submit') .'" /></p>';
         echo '</form>';
+        echo '</div>';
     }
 
     private function accessControlForm() {
+        echo '<div id="git_repomanagement_perms" class="tab-pane active">';
+        echo '<h3>'. 'Access Control' .'</h3>';
         echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         echo '<input type="hidden" id="action" name="action" value="edit" />';
         echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
@@ -90,6 +124,7 @@ class GitViews_RepoManagement {
         }
         echo '<p><input type="submit" name="save" value="'. $this->getText('admin_save_submit') .'" /></p>';
         echo '</form>';
+        echo '</div>';
     }
 
     /**
@@ -178,6 +213,7 @@ class GitViews_RepoManagement {
      */
     private function mailPrefixForm() {
         $hp = Codendi_HTMLPurifier::instance();
+        echo '<div id="git_repomanagement_mailprefix" class="tab-pane active">';
         ?>
 <h3><?php echo $this->getText('mail_prefix_title'); ?></h3>
 <form id="mail_prefix_form" action="/plugins/git/" method="POST">
@@ -196,12 +232,14 @@ class GitViews_RepoManagement {
     </table>
 </form>
         <?php
+        echo '</div>';
     }
 
     /**
      * form to add email addresses (mailing list) or a user to notify
      */
     private function addMailForm() {
+        echo '<div id="git_repomanagement_mail" class="tab-pane active">';
         ?>
 <h3><?php echo $this->getText('add_mail_title'); ?></h3>
 <form id="add_mail_form" action="/plugins/git/" method="POST">
@@ -220,6 +258,8 @@ class GitViews_RepoManagement {
     </table>
 </form>
         <?php
+        $this->listOfMails();
+        echo '</div>';
         $this->parent_view->help('addMail', array('display'=>'none') );
         $js = "new UserAutoCompleter('add_mail', '".util_get_dir_image_theme()."', true);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
