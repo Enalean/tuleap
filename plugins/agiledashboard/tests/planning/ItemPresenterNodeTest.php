@@ -45,33 +45,4 @@ class Planning_ItemPresenterNodeTest extends TuleapTestCase {
         $this->assertIdentical($presenter, $presenter_node->getPlanningItemPresenter());
     }
 }
-
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ArtifactNode.class.php';
-class Tracker_ArtifactNodeTest extends TuleapTestCase {
-    public function setUp() {
-        parent::setUp();
-        $this->artifact = anArtifact()->withId(9787)->build();
-        $this->data     = array('somekey' => 'somevalue');
-        $this->node     = new ArtifactNode($this->artifact, $this->data);
-        
-    }
-    
-    public function itHoldsTheArtifact() {
-        $this->assertIdentical($this->artifact, $this->node->getArtifact());
-        $this->assertIdentical($this->artifact, $this->node->getObject());
-    }
-    
-    public function itCanHoldData() {
-        $this->assertIdentical($this->data, $this->node->getData());
-    }
-    
-    public function itUsesTheIdOfTheArtifact() {
-        $this->assertEqual($this->artifact->getId(), $this->node->getId());
-    }
-    
-    public function itCallsTheSuperConstructor() {
-        $this->assertTrue(is_array($this->node->getChildren()), "getChildren should have been initialized to array()");
-    }
-}
-
 ?>

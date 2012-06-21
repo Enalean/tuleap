@@ -18,6 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/**
+ * TreeNode containing a Planning_ItemPresenter
+ */
 class Planning_ItemPresenterNode extends TreeNode {
 
     /**

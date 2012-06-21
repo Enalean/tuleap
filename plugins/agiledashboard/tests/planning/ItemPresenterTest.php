@@ -20,10 +20,11 @@
  */
 
 class Planning_ItemPresenterTest extends TuleapTestCase {
+    
     public function itDelegatesToPlanningItem() {
         $trackers      = array(mock('Tracker'), mock('Tracker'));
         $planning_item = stub('Planning_Item')->getAllowedChildrenTypes()->returns($trackers);
-        $presenter = new Planning_ItemPresenter($planning_item);
+        $presenter     = new Planning_ItemPresenter($planning_item);
         $this->assertEqual($trackers, $presenter->allowedChildrenTypes());
     }
 }

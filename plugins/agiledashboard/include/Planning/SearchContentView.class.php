@@ -30,11 +30,15 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
      */
     private $renderer;
     
+    /**
+     * @var Planning_ItemPresenterNode
+     */
+    private $tree_of_presenters;
+    
     // Presenter properties
     public $planning;
     public $planning_redirect_parameter = '';
 
-    private $tree_of_presenters;
     
     public function __construct(Tracker_Report             $report,
                                 array                      $criteria,
