@@ -20,6 +20,11 @@
 
 class Transition_PostAction_Field_IntDao extends DataAccessObject {
     
+    function __construct() {
+        parent::__construct();
+        $this->table_name = 'tracker_workflow_transition_postactions_field_int';
+    }
+    
     /**
      * Create a new postaction entry
      *
@@ -52,6 +57,17 @@ class Transition_PostAction_Field_IntDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function updatePostAction($id, $field_id, $value) {}
+    public function updatePostAction($id, $field_id, $value) {
+        $id       = $this->da->escapeInt($id);
+        $field_id = $this->da->escapeInt($field_id);
+        $value    = $this->da->escapeInt($value);
+        
+        $sql = <<<SQL
+            UPDATE $this->table_name
+            SET field_id = $field_id, value = $value
+            WHERE id = $id
+SQL;
+        return $this->update($sql);
+    }
 }
 ?>
