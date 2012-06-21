@@ -19,16 +19,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('mvc/PluginViews.class.php');
-require_once('gitPlugin.class.php');
-require_once('GitDao.class.php');
-require_once('Git_LogDao.class.php');
-require_once('GitBackend.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('GitViewsRepositoriesTraversalStrategy_Selectbox.class.php');
-require_once('GitViewsRepositoriesTraversalStrategy_Tree.class.php');
-require_once('common/include/CSRFSynchronizerToken.class.php');
-require_once('GitViews_RepoManagement.class.php');
+require_once GIT_BASE_DIR .'/mvc/PluginViews.class.php';
+require_once GIT_BASE_DIR .'/gitPlugin.class.php';
+require_once GIT_BASE_DIR .'/GitDao.class.php';
+require_once GIT_BASE_DIR .'/Git_LogDao.class.php';
+require_once GIT_BASE_DIR .'/GitBackend.class.php';
+require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
+require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
+require_once 'www/project/admin/permissions.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
+require_once 'RepoManagement/RepoManagement.class.php';
 
 /**
  * GitViews
@@ -178,13 +178,8 @@ class GitViews extends PluginViews {
             $repoActions .= '</ul>';
 
             echo '<div id="plugin_git_reference">';
-            echo '<h2>'.$accessType.$repository->getFullName().'</h2>';
+            echo '<h1>'.$accessType.$repository->getFullName().'</h1>';
             echo $repoActions;
-?>
-<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
-    <input type="hidden" id="action" name="action" value="edit" />
-    <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
-<?php
             echo '<p id="plugin_git_reference_author">'. 
                 $this->getText('view_repo_creator') 
                 .' '. 
@@ -208,7 +203,6 @@ class GitViews extends PluginViews {
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
             ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $repository->getAccessURL(); ?>" />
     </p>
-</form>
         <?php
         echo '</div>';
         if ( $initialized ) {
@@ -227,7 +221,8 @@ class GitViews extends PluginViews {
 
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .'</h2>';
+        echo '<h1>'. $this->_getRepositoryPageUrl($repoId, $repoName) .'</h1>';
+        echo '<h2>'. $this->getText('admin_repo_management') .'</h2>';
 
         $repo_management_view = new GitViews_RepoManagement($this, $repository, $this->controller->getRequest());
         $repo_management_view->display();
@@ -244,7 +239,7 @@ class GitViews extends PluginViews {
         $initialized  = $repository->isInitialized();
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo "<h2><b>".$this->_getRepositoryPageUrl($repoId, $repoName)."</b></h2>";
+        echo "<h1>".$this->_getRepositoryPageUrl($repoId, $repoName)."</h1>";
         ?>
         <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
         <input type="hidden" id="action" name="action" value="edit" />

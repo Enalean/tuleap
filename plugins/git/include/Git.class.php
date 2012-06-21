@@ -20,7 +20,7 @@
   */
 
 require_once('mvc/PluginController.class.php');
-require_once('GitViews.class.php');
+require_once('GitViews/GitViews.class.php');
 require_once('GitActions.class.php');
 require_once('GitRepository.class.php');
 require_once('GitLog.class.php');

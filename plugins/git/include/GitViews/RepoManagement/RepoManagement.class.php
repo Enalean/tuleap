@@ -19,7 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('GitRepository.class.php');
+require_once GIT_BASE_DIR .'/GitRepository.class.php';
 
 /**
  * Dedicated screen for repo management
