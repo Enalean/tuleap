@@ -343,7 +343,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     }
 
     protected function getRepositoryFactory() {
-        return new GitRepositoryFactory($this->getDao(), $this->getProjectManager());
+        return new GitRepositoryFactory($this->getDao(), ProjectManager::instance());
     }
 
     protected function getSystemEventManager() {
