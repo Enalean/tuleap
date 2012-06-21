@@ -71,3 +71,14 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
         $('comment_format_html'+this.options.id).checked  = true;
     }
 });
+
+document.observe('dom:loaded', function () {
+    var newFollowup = $('tracker_followup_comment_new');
+    if (newFollowup) {
+        new RTE_Tracker_FollowUp(newFollowup, {toggle: true, default_in_html: false, id : 'new'});
+    }
+    var massChangeFollowup = $('tracker_followup_comment_mass_change');
+    if (massChangeFollowup) {
+        new RTE_Tracker_FollowUp(massChangeFollowup, {toggle: true, default_in_html: false, id: 'mass_change'});
+    }
+});
