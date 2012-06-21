@@ -454,12 +454,16 @@ class GitViews extends PluginViews {
     private function getGitPhpIndexPath() {
         $gitphp_path = $this->getController()->getPlugin()->getConfigurationParameter('gitphp_path');
         if ($gitphp_path) {
-            define('GITPHP_CONFIGDIR', dirname(__FILE__).'/../etc/');
-            ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
+            $this->initGitPhpEnvironement();
         } else {
             $gitphp_path = dirname(__FILE__).'/../gitphp';
         }
         return $gitphp_path.'/index.php';
+    }
+
+    private function initGitPhpEnvironement() {
+        define('GITPHP_CONFIGDIR', dirname(__FILE__).'/../etc/');
+        ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
     }
 
     /**

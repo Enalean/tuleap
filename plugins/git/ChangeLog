@@ -1,3 +1,9 @@
+Version 2.6.2 - Tuleap 5.2
+    * Fix display of git push project widget for non project admin (contrib STMicroelectronics).
+
+Version 2.6.1 - Tuleap 5.2
+    * Instrument gitphp to use a temporary directory where we can write into.
+
 Version 2.6 - Tuleap 5.2
     * Allow to use another gitphp than bundled one
       You may want to install gitphp-tuleap rpm package as well for test.
