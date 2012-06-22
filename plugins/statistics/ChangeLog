@@ -1,3 +1,6 @@
+Version 0.18 - Tuleap 5.2
+    * Fix rendering of quota as well as setting of quota when no configuration set (contrib STMicroelectronics).
+
 Version 0.17 - Tuleap 5.2
     * Prevent conflict between namespaces
 

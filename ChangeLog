@@ -15,9 +15,9 @@ Version 5.2 (Not Released Yet)
 	* Tracker: 5.7.29
 	* Agildashboard: 0.33
 	* Docman: 2.25.7
-	* Git: 2.6.1
+	* Git: 2.6.2
 	* Ldap: 3.15
-	* Statistics: 0.17
+	* Statistics: 0.18
 	* FullTextSearch: 0.4
 
         == CLI ==
