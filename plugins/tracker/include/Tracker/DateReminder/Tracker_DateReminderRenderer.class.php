@@ -344,8 +344,8 @@ class Tracker_DateReminderRenderer {
                 $output .= '<td>'.$reminder->getUgroupsLabel().'</td>';
                 $output .= '<td>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'</td>';
                 $output .= '<td>'.$reminder->getField()->getLabel().'</td>';
-                $output .= '<td><span style="float:left;"><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder">'. $GLOBALS['Response']->getimage('ic/edit.png') .'</a></span>';
-                $output .= '<span style="float:right;"><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'" id="delete_reminder">'. $GLOBALS['Response']->getimage('ic/bin.png') .'</a></span></td>';
+                $output .= '<td><span style="float:left;"><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;reminder_id='. (int)$reminder->getId().'&amp;action=update_reminder" id="update_reminder"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_update_action').' '. $GLOBALS['Response']->getimage('ic/edit.png') .'</a></span>';
+                $output .= '&nbsp;&nbsp;&nbsp;<span style="float:right;"><a href="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'&amp;action=delete_reminder&amp;reminder_id='.$reminder->getId().'" id="delete_reminder"> '.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_delete_action').' '. $GLOBALS['Response']->getimage('ic/bin.png') .'</a></span></td>';
                 $output .= '</tr>';
             }
             $output .= '</table>';
