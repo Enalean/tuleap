@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
@@ -119,7 +119,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * @return TreeNode
      */
-    private function getForestsOfArtifacts(array $artifact_ids) {
+    public function getForestsOfArtifacts(array $artifact_ids) {
         $forest = new TreeNode();
         foreach ($artifact_ids as $id) {
             $node = new TreeNode();
