@@ -83,8 +83,16 @@ class RepositoryManager {
      * @return Boolean
      */
     public function addRepository() {
-        // TODO: check if user have read permission on svn repo
-        if (!$this->isRepositoryAlreadyThere()) {
+        //check if user have read permission on svn repo
+        $plugin             = PluginManager::instance()->getPluginByName('codereview');
+        $repository_manager = new RepositoryManager($plugin, $this->request);
+        $svnpath            = $repository_manager->svnPath;
+        $user               = UserManager::instance()->getCurrentUser();
+        $username           = $user->getUserName();
+        $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        $projectname        = $project->getPublicName();
+        $boolean            = svn_utils_check_access($username,$projectname,$svnpath);
+        if ((!$this->isRepositoryAlreadyThere()) && ($boolean) ){
             $data = array("name"     => $this->repoName,
                           "path"     => $this->svnPath,
                           "tool"     => "subversion",
