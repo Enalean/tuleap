@@ -24,7 +24,7 @@ require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormEleme
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Int extends Transition_PostAction {
+class Transition_PostAction_Field_Float extends Transition_PostAction {
     
     /**
      * @var Integer the value
@@ -61,7 +61,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @return string
      */
     public function getShortName() {
-        return 'field_int';
+        return 'field_float';
     }
     
     /**
@@ -70,7 +70,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @return string
      */
     public static function getLabel() {
-        return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_int_field');
+        return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_float_field');
     }
 
     /**
@@ -126,14 +126,15 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      */
     public function fetch() {
         $html = '';
-        $input_value = '<input type="text" name="workflow_postaction_field_int_value['. $this->id .']" value="'.$this->getValue().'"/>';
+        //define the selectbox for value_type
+        $input_value = '<input type="text" name="workflow_postaction_field_float_value['. $this->id .']" value="'.$this->getValue().'"/>';
         
         //define the selectbox for date fields
         $tracker = $this->transition->getWorkflow()->getTracker();
         $tff = $this->getFormElementFactory();
-        $fields_int = $tff->getUsedFormElementsByType($tracker, array('int'));
+        $fields_int = $tff->getUsedFormElementsByType($tracker, array('float'));
         
-        $select_field  = '<select name="workflow_postaction_field_int['.$this->id.']">';
+        $select_field  = '<select name="workflow_postaction_field_float['.$this->id.']">';
         $options_field = '';
         $one_selected  = false;
         foreach ($fields_int as $field_int) {
@@ -150,7 +151,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
         $select_field .= $options_field;
         $select_field .= '</select>';
 
-        $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_int_field_to', array($select_field, $input_value));
+        $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_float_field_to', array($select_field, $input_value));
         return $html;
     }
         
@@ -163,12 +164,12 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
         } else {
             
             $field_id = $this->getFieldId();
-            $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
+            $value    = $request->getInArray('workflow_postaction_field_float_value', $this->id);
 
-            if ($request->validInArray('workflow_postaction_field_int', new Valid_UInt($this->id))) {
-                $new_field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
+            if ($request->validInArray('workflow_postaction_field_float', new Valid_UInt($this->id))) {
+                $new_field_id = $request->getInArray('workflow_postaction_field_float', $this->id);
                 $field_id = $this->getFieldIdOfPostActionToUpdate($field_id, $new_field_id);
-                //Check if value is an int
+                //Check if value is an float
                 $field = $this->getFormElementFactory()->getUsedFormElementById($field_id);
                 if ($field) {
                     $field->validateValue($value);
@@ -190,7 +191,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      * @return void
      */
     public function before(array &$fields_data, User $current_user) {
-        // Do something only if the value and the int field are properly defined 
+        // Do something only if the value and the float field are properly defined 
         if ($this->isDefined()) {
             $field = $this->getField();
             if ($field->userCanRead($current_user)) {
@@ -212,7 +213,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
      */
     public function exportToXml(&$root, $xmlMapping) {
         if ($this->getFieldId()) {
-             $child = $root->addChild('postaction_field_int');
+             $child = $root->addChild('postaction_field_float');
              $child->addAttribute('value', $this->getValue());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }
@@ -231,3 +232,4 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
     }
 }
 ?>
+

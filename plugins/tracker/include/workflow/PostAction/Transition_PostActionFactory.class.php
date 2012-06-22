@@ -20,8 +20,10 @@
 
 require_once('Field/Transition_PostAction_Field_Date.class.php');
 require_once('Field/Transition_PostAction_Field_Int.class.php');
+require_once('Field/Transition_PostAction_Field_Float.class.php');
 require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
+require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
 
 /**
  * class Transition_PostActionFactory
@@ -35,6 +37,7 @@ class Transition_PostActionFactory {
     protected $post_actions_classes = array(
         'field_date'    => 'Transition_PostAction_Field_Date',
         'field_int' => 'Transition_PostAction_Field_Int',
+        'field_float' => 'Transition_PostAction_Field_Float',
     );
     
     /**
@@ -110,7 +113,9 @@ class Transition_PostActionFactory {
     protected function getDao($postaction=null) {
         if ($postaction == 'field_int') {
             return new Transition_PostAction_Field_IntDao();
-        } else {
+        } else if ($postaction == 'field_float') {
+            return new Transition_PostAction_Field_FloatDao();
+        }else {
             return new Transition_PostAction_Field_DateDao();
         }
     }
@@ -173,7 +178,10 @@ class Transition_PostActionFactory {
      * @return string
      */
     private function getPostActionValueColumn($shortname) {
-        return $shortname == 'field_int' ? 'value' : 'value_type';
+        if ($shortname == 'field_date') {
+            return 'value_type';
+        }
+        return 'value';
     }
     
     /**

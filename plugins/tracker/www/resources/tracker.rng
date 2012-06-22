@@ -426,6 +426,18 @@
             </element>
           </element>
         </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_field_float">
+            <attribute name="value">
+              <data type="float"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
       </element>
     </zeroOrMore>
     <zeroOrMore>
