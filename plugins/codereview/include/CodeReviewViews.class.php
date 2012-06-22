@@ -237,7 +237,33 @@ class CodeReviewViews extends Views {
     }
 
     /**
-     * Display published review request
+     * Display publish review request form
+     *
+     * @return Void
+     */
+     function reviewPublishing() {
+    $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+    $form  = " <form id=\"reviewPublish\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_publish\">";
+    $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
+    $form .= "  <p>";
+    $form .= "   <label for=\"codereview_rb_user\">RB_User</label><br>";
+    $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" type=\"text\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "  <p>";
+    $form .= "   <label for=\"codereview_rb_password\">RB_PWD</label><br>";
+    $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" type=\"password\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "  <p>";
+    $form .= "   <label for=\"review_id\">Review_ID</label><br>";
+    $form .= "   <input id=\"review_id\" name=\"review_id\" type=\"text\" size=\"24\" />";
+    $form .= "  </p>";
+    $form .= "   <input type=\"submit\" value=\"Publish the review\" />";
+    $form .= " </form>";
+    print $form;
+    }
+
+    /**
+     * Display  Rb login 
      *
      * @return Void
      */
