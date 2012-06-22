@@ -66,7 +66,9 @@ class CodeReviewPlugin extends Plugin {
 
     /**
      * Obtain combined scripts
-     *
+     
+     * @param Array $params
+     
      * @return Void
      */
     public function combined_scripts($params) {
