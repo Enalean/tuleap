@@ -1,4 +1,4 @@
-<?php
+ <?php
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -37,12 +37,16 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
         $linked_artifacts = $artifact->getLinkedArtifacts($user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
-            //var_dump($linked_artifact);
             $field = $this->getFormElementFactory()->getFormElementByName($linked_artifact->getTracker()->getId(), 'remaining_effort');
             if ($field) {
-                $value = $linked_artifact->getValue($field);
-                if ($value) {
-                    $sum += $value->getValue();
+                //var_dump($field);
+                if ($field instanceof Tracker_FormElement_Field_Aggregate) {
+                    $sum += $field->fetchArtifactValueReadOnly($linked_artifact);
+                } else {
+                    $value = $linked_artifact->getValue($field);
+                    if ($value) {
+                        $sum += $value->getValue();
+                    }
                 }
             }
         }
@@ -164,7 +168,6 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     }
 
     public function getChangesetValue($changeset, $value_id, $has_changed) {
-        
     }
 
     public function getSoapAvailableValues() {
