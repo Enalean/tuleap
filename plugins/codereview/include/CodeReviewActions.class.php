@@ -224,7 +224,7 @@ class CodeReviewActions extends Actions {
     *
     * @return Array
     */
-    function validateRequest2() {
+    function validatePublishRequest() {
             $status  = true;
             $invalid = array();
 
@@ -395,7 +395,7 @@ class CodeReviewActions extends Actions {
     * @return void
     */
     function publishReviewRequest() {
-        $reviewRessources = $this->validateRequest2();
+        $reviewRessources = $this->validatePublishRequest();
         if ($reviewRessources['status']) {
             $server          = $reviewRessources['params']['server'];
             $rb_user         = $reviewRessources['params']['rb_user'];
