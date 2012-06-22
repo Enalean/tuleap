@@ -47,6 +47,18 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_int (
   INDEX idx_wf_transition_id( transition_id )
 );
 
+--  
+--  Table structure for workflow_transition_postactions_field_float
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  field_id int(11) UNSIGNED default NULL,
+  value FLOAT(10,4) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+);
+
 DROP TABLE IF EXISTS tracker_widget_renderer;
 CREATE TABLE tracker_widget_renderer (
    id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
