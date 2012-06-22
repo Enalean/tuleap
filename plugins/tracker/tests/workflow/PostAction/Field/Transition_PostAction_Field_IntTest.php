@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/T
 require_once dirname(__FILE__).'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once  dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_IntDao.class.php';
 
-Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao'));
+Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined'));
 
 class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     
@@ -38,6 +38,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         
         $this->post_action->__construct($this->transition, $this->post_action_id, $this->field, $this->value);
         stub($this->post_action)->getDao()->returns($this->dao);
+        stub($this->post_action)->isDefined()->returns($this->field);
     }
     
     public function itHandlesUpdateRequests() {
@@ -58,6 +59,57 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         
         $this->dao->expectOnce('deletePostAction', array($this->post_action_id));
         $this->post_action->process($request);
+    }
+    
+    public function testBeforeShouldSetTheIntegerField() {
+        $user = new MockUser();
+        
+        $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
+        $readableField   = stub($this->field)->userCanRead($user)->returns(true);
+        $updatableField  = stub($this->field)->userCanUpdate($user)->returns(true);
+        
+        $expected    = 0;
+        $fields_data = array(
+            'field_id' => 'value',
+        );
+        
+        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($this->field->getLabel(), $expected)));
+        
+        $this->post_action->before($fields_data, $user);
+        $this->assertEqual($expected, $fields_data[$this->field->getId()]);
+    }
+    
+    public function testBeforeShouldBypassAndSetTheIntegerField() {
+        $user = new MockUser();
+        
+        $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
+        $readableField   = stub($this->field)->userCanRead($user)->returns(true);
+        $updatableField  = stub($this->field)->userCanUpdate($user)->returns(false);
+        
+        $expected    = 0;
+        $fields_data = array(
+            'field_id' => 'value',
+        );
+        
+        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($this->field->getLabel(), $expected)));      
+        $this->post_action->before($fields_data, $user);
+        $this->assertEqual($expected, $fields_data[$this->field->getId()]);
+    }
+    
+    public function testBeforeShouldNOTDisplayFeedback() {
+        $user = new MockUser();
+        
+        $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
+        $readableField   = stub($this->field)->userCanRead($user)->returns(false);
+        
+        $expected    = 0;
+        $fields_data = array(
+            'field_id' => 'value',
+        );
+        
+        $this->post_action->expectNever('addFeedback');      
+        $this->post_action->before($fields_data, $user);
+        $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
 }
 ?>

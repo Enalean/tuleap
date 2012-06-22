@@ -156,6 +156,26 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
     }
     
     /**
+     * Execute actions before transition happens
+     * 
+     * @param Array &$fields_data Request field data (array[field_id] => data)
+     * @param User  $current_user The user who are performing the update
+     * 
+     * @return void
+     */
+    public function before(array &$fields_data, User $current_user) {
+        // Do something only if the value and the int field are properly defined 
+        if ($this->isDefined()) {
+            $field = $this->getField();
+            if ($field->userCanRead($current_user)) {
+                $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $this->value));
+            }
+           
+            $fields_data[$this->field->getId()] = $this->value;
+            $this->bypass_permissions = true;
+        }
+    }
+    /**
      * Wrapper for Tracker_FormElementFactory
      *
      * @return Tracker_FormElementFactory
