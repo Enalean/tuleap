@@ -151,6 +151,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
         } else {
             $field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
             $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
+            //TODO: check value is an integer
             $this->getDao()->updatePostAction($this->id, $field_id, $value);
         }
     }
@@ -174,6 +175,22 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
             $fields_data[$this->field->getId()] = $this->value;
             $this->bypass_permissions = true;
         }
+    }
+    
+    /**
+     * Export postactions date to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(&$root, $xmlMapping) {
+        if ($this->getFieldId()) {
+             $child = $root->addChild('postaction_field_int');
+             $child->addAttribute('value', $this->getValue());
+             $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+         }
     }
     /**
      * Wrapper for Tracker_FormElementFactory
