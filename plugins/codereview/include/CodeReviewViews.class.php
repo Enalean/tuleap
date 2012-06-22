@@ -172,7 +172,6 @@ class CodeReviewViews extends Views {
     function displayFrameReviewRequest() {
         $action     = new CodeReviewActions($this->controller,null);
         $idrequest  = $action->getIdreviewrequest;
-        var_dump($idrequest);
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$idrequest."/";
         echo '<div id="codereview_iframe_div">';
