@@ -160,6 +160,12 @@ grammar {
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
+            }*,
+            element postaction_field_int {
+                attribute value { xsd:int },
+                element field_id {
+                    attribute REF { xsd:IDREF }
+                }
             }*
         }*,
         element permissions {
