@@ -67,7 +67,7 @@ class RepositoryManager {
         $exist  = false;
         $curl   = new TuleapCurl();
         $result = $curl->execute($this->rbPath."/api/repositories/", $this->rbUser, $this->rbPassword, false);
-        // TODO: handle errors
+        //handle errors
         if ($result['return']) {
             foreach ($result['return']['repositories'] as $repository) {
                 if ($repository['path'] == $this->svnPath) {
@@ -75,6 +75,11 @@ class RepositoryManager {
                     break;
                 }
             }
+        }
+        else{
+            $msg = "This Repo does not exist.";
+            $GLOBALS['Response']->addFeedBack('error', $msg);
+            $this->controller->view = 'displayFirstFrame';
         }
         return $exist;
     }
