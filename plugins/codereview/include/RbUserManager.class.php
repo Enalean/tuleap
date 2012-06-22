@@ -39,7 +39,7 @@ class RbUserManager {
      */
     public function searchUser($url, $includeHeader = false, $authUser = null, $authPassword = null, $postfields = null, $username) {
         $curl   = new TuleapCurl();
-        $result = $curl->execute($url, $includeHeader, $authUser, $authPassword, $postfields);
+        $result = $curl->execute($url, $authUser, $authPassword, $postfields, $includeHeader);
         $users  = $result['return']['users'];
         foreach ($users as $user) {
             if ($user['username'] == $username) {

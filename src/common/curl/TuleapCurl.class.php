@@ -34,7 +34,7 @@ class TuleapCurl {
      *
      * @return Array
      */
-    public function execute($url, $includeHeader = false,$authUser = null, $authPassword = null, $postfields = null) {
+    public function execute($url, $authUser = null, $authPassword = null, $postfields = null,$includeHeader = false) {
         $ch = curl_init();
         $findme   = 'https';
         $pos = strpos($url, $findme);

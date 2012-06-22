@@ -81,7 +81,7 @@ class CodeReview extends Controler {
         $exist         = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null, $username);
         if (!$exist) {
          $curl   = new TuleapCurl();
-         $create = $curl->execute($url."/api/users/", false, $username, $userpwd, null);
+         $create = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
         }
         if ($this->getUser()->isLoggedIn()) {
             if($username == "admin") {

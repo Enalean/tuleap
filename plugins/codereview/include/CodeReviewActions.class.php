@@ -151,7 +151,7 @@ class CodeReviewActions extends Actions {
                         $user    = UserManager::instance()->getUserByUserName($username);
                         $userpwd = $user->getUserPw();
                         $curl    = new TuleapCurl();
-                        $create  = $curl->execute($url."/api/users/", false, $username, $userpwd, null);
+                        $create  = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
                     }
                 }
             }
@@ -431,7 +431,7 @@ class CodeReviewActions extends Actions {
         $data = array('repository' => $repository,
                       'submit_as'  => $reviewSubmitter);
         $curl    = new TuleapCurl();
-        $request = $curl->execute($server."/api/review-requests/", false, $rb_user, $rb_password, $data);
+        $request = $curl->execute($server."/api/review-requests/", $rb_user, $rb_password, $data, false);
         if ($request['return']) {
             if ($request['return']['stat'] == "ok") {
                 return $request['return']['review_request']['id'];
@@ -467,13 +467,13 @@ class CodeReviewActions extends Actions {
                       'description'    => $description,
                       'summary'        => $summary);
         $curl    = new TuleapCurl();
-        $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
+        $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", $rb_user, $rb_password, $data, false);
     }
 
     function publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password) {
         $data = array('public' => 'true');
         $curl    = new TuleapCurl();
-        $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", false, $rb_user, $rb_password, $data);
+        $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", $rb_user, $rb_password, $data, false);
     }
 
     function CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path) {

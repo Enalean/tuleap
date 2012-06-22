@@ -64,7 +64,7 @@ class RepositoryManager {
     public function isRepositoryAlreadyThere() {
         $exist  = false;
         $curl   = new TuleapCurl();
-        $result = $curl->execute($this->rbPath."/api/repositories/", false, $this->rbUser, $this->rbPassword);
+        $result = $curl->execute($this->rbPath."/api/repositories/", $this->rbUser, $this->rbPassword, false);
         // TODO: handle errors
         if ($result['return']) {
             foreach ($result['return']['repositories'] as $repository) {
@@ -91,7 +91,7 @@ class RepositoryManager {
                           "username" => $this->tuleapUser,
                           "password" => $this->tuleapPassword);
             $curl   = new TuleapCurl();
-            $result = $curl->execute($this->rbPath."/api/repositories/", true, $this->rbUser, $this->rbPassword, $data);
+            $result = $curl->execute($this->rbPath."/api/repositories/", $this->rbUser, $this->rbPassword, $data, true);
             // TODO: handle errors
         }
     }
