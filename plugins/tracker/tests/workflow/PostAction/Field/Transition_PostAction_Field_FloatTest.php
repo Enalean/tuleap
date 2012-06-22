@@ -120,4 +120,3 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
     }
 }
 ?>
-
