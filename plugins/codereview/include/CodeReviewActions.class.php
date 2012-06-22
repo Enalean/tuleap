@@ -71,19 +71,13 @@ class CodeReviewActions extends Actions {
         $username           = $user->getUserName();
         $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
         $projectname        = $project->getPublicName();
-        //$accessfile = svn_utils_read_svn_access_file($projectname);
-        $boolean = svn_utils_check_write_access($username,$projectname,$svnpath);
+        $boolean            = svn_utils_check_write_access($username,$projectname,$svnpath);
         if (!$boolean) {
             $status    = false;
             $msg = "The user '".$username."' has not the right to create a review request.";
             $GLOBALS['Response']->addFeedBack('error', $msg);
             $this->controller->view = 'displayFrame';
         }
-        //var_dump("verifiy if the current user is a project admin or not : ");
-        /*if(!$project->userIsAdmin()){
-        $msg = "The user '".$username."' has not the right to create a review request.";
-                $GLOBALS['Response']->addFeedBack('error', $msg);
-                $this->controller->view = 'displayFrame';}*/
 
         $valid  = new Valid_String('codereview_server_url');
         $server = trim($this->request->get('codereview_server_url'));
