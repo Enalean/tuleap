@@ -38,6 +38,7 @@ class TuleapCurl {
         $ch = curl_init();
         $findme   = 'https';
         $pos = strpos($url, $findme);
+        // When the certificate is self signed we must set the following options to get around it
         if ( $pos ){
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
