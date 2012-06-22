@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
@@ -67,11 +67,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         if (! $field) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('agiledashboard-pane', $this->getPresenter($field));
-
-        return ob_get_clean();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+        
+        return $renderer->renderToString('agiledashboard-pane', $this->getPresenter($field));
     }
 
     /**

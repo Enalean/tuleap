@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
 
@@ -46,16 +46,16 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
-        $this->renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) .'/../../templates');
     }
     
     public function fetchResultActions() {
-        return $this->renderer->render('backlog-actions', $this, true);
+        return $this->renderer->renderToString('backlog-actions', $this);
     }
     
     protected function fetchTable() {
         Planning_ArtifactTreeNodeVisitor::build($this->planning, 'planning-draggable-toplan')->visit($this->tree_of_artifacts);
-        return $this->renderer->render('backlog', $this, true);
+        return $this->renderer->renderToString('backlog', $this);
     }
 
     public function getChildren() {

@@ -1,3 +1,14 @@
+Version 5.3 (not released yet)
+	== Plugins ==
+	* Cardwall: 0.5.5
+	* Tracker: 5.7.30
+	* Agildashboard: 0.34
+	* FullTextSearch: 0.5
+	* Test: 5
+
+	== Development ==
+	Update mustache renderer
+
 Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==
 	* Fix chart legend display (Contrib STMicroelectronics)

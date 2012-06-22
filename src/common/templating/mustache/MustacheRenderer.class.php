@@ -19,25 +19,28 @@
  */
 
 require_once 'common/templating/TemplateRenderer.class.php';
-require_once 'Mustache.php';
-require_once 'MustacheLoader.php';
+require_once 'vendor/Mustache.php';
+require_once 'vendor/MustacheLoader.php';
 
+/**
+ * Adapts the Mustache template engine to the expected Tuleap interface. 
+ */
 class MustacheRenderer extends TemplateRenderer {
 
     /**
      * @var Mustache
      */
-    private $mustache;
+    protected $template_engine;
     
     /**
      * @var MustacheLoader
      */
-    private $mustache_loader;
+    protected $template_loader;
     
     /**
      * @var array
      */
-    private $options = array('throws_exceptions' => array(
+    protected $options = array('throws_exceptions' => array(
         MustacheException::UNKNOWN_VARIABLE         => true,
         MustacheException::UNCLOSED_SECTION         => true,
         MustacheException::UNEXPECTED_CLOSE_SECTION => true,
@@ -48,17 +51,25 @@ class MustacheRenderer extends TemplateRenderer {
     public function __construct($plugin_templates_dir) {
         parent::__construct($plugin_templates_dir);
         
-        $this->mustache        = new Mustache(null, null, null, $this->options);
-        $this->mustache_loader = new MustacheLoader($this->plugin_templates_dir);
+        $this->template_engine = $this->buildTemplateEngine();
+        $this->template_loader = new MustacheLoader($this->plugin_templates_dir);
     }
     
-    public function render($template_name, $presenter, $return = false) {
-       $result = $this->mustache->render($this->mustache_loader[$template_name], $presenter, $this->mustache_loader);
-       if ($return) {
-           return $result;
-       } else {
-           echo $result;
-       }
+    /**
+     * Builds a new Mustache instance.
+     * 
+     * @return \Mustache 
+     */
+    protected function buildTemplateEngine() {
+        return new Mustache(null, null, null, $this->options);
+    }
+    
+    /**
+     * @see TemplateEngine
+     * @return string
+     */
+    public function renderToString($template_name, $presenter) {
+       return $this->template_engine->render($this->template_loader[$template_name], $presenter, $this->template_loader);
     }
 }
 

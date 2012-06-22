@@ -1,3 +1,6 @@
+Version 5.7.30 - Tuleap 5.3
+    * Update mustache renderer
+
 Version 5.7.29 - Tuleap 5.2
     * Do not put extra comma which leads to a javascript error in IE
 
