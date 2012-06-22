@@ -231,4 +231,3 @@ class Transition_PostAction_Field_Float extends Transition_PostAction {
     }
 }
 ?>
-
