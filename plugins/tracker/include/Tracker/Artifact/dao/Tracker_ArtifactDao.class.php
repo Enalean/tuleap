@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'PriorityDao.class.php';
+
 class Tracker_ArtifactDao extends DataAccessObject {
     public function __construct() {
         parent::__construct();
@@ -272,6 +274,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
                     VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
             if ($this->update($sql)) {
+                $priority_dao = new Tracker_Artifact_PriorityDao();
+                $priority_dao->artifactHasTheLeastPriority($id);
                 return $id;
             }
         }
