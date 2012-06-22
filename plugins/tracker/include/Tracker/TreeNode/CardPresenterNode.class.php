@@ -20,24 +20,24 @@
  */
 
 /**
- * TreeNode containing a Planning_ItemPresenter
+ * TreeNode containing a Tracker_CardPresenter
  */
-class Planning_ItemPresenterNode extends TreeNode {
+class Tracker_TreeNode_CardPresenterNode extends TreeNode {
 
     /**
      * @var Planning_ItemPresenter
      */
     private $presenter;
     
-    public function __construct(TreeNode $node, Planning_ItemPresenter $presenter) {
+    public function __construct(TreeNode $node, Tracker_CardPresenter $presenter) {
         parent::__construct($node->getData(), $node->getId());
         $this->setChildren($node->getChildren());
         $this->setObject($node->getObject());
         $this->presenter = $presenter;
     }
 
-    public static function build(TreeNode $node, Planning_ItemPresenter $presenter) {
-        return new Planning_ItemPresenterNode($node, $presenter);
+    public static function build(TreeNode $node, Tracker_CardPresenter $presenter) {
+        return new Tracker_TreeNode_CardPresenterNode($node, $presenter);
     }
 
     /**

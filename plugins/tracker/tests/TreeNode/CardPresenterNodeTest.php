@@ -20,10 +20,10 @@
  */
 
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
-require_once dirname(__FILE__).'/../../include/Planning/ItemPresenterNode.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ItemPresenter.class.php';
+require_once dirname(__FILE__).'/../../include/Tracker/TreeNode/CardPresenterNode.class.php';
+require_once dirname(__FILE__).'/../../include/Tracker/CardPresenter.class.php';
 
-class Planning_ItemPresenterNodeTest extends TuleapTestCase {
+class Tracker_TreeNode_CardPresenterNodeTest extends TuleapTestCase {
     
     public function itCopiesAllPropertiesOfTheGivenNode() {
         $tree_node      = aNode()->withId(3)
@@ -32,7 +32,7 @@ class Planning_ItemPresenterNodeTest extends TuleapTestCase {
                                  ->withObject(mock('Tracker_Artifact'))
                                  ->build();
         
-        $presenter_node = Planning_ItemPresenterNode::build($tree_node, mock('Planning_ItemPresenter'));
+        $presenter_node = Tracker_TreeNode_CardPresenterNode::build($tree_node, mock('Tracker_CardPresenter'));
         $this->assertEqual($tree_node->getId(), $presenter_node->getId());
         $this->assertIdentical($tree_node->getData(), $presenter_node->getData());
         $this->assertIdentical($tree_node->getChildren(), $presenter_node->getChildren());
@@ -40,8 +40,8 @@ class Planning_ItemPresenterNodeTest extends TuleapTestCase {
     }
     
     public function itHoldsTheGivenPresenter() {
-        $presenter      = mock('Planning_ItemPresenter');
-        $presenter_node = Planning_ItemPresenterNode::build(mock('TreeNode'), $presenter);
+        $presenter      = mock('Tracker_CardPresenter');
+        $presenter_node = Tracker_TreeNode_CardPresenterNode::build(mock('TreeNode'), $presenter);
         $this->assertIdentical($presenter, $presenter_node->getPlanningItemPresenter());
     }
 }

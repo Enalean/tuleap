@@ -31,7 +31,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     private $renderer;
     
     /**
-     * @var Planning_ItemPresenterNode
+     * @var Tracker_TreeNode_CardPresenterNode
      */
     private $tree_of_presenters;
     

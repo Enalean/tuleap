@@ -21,7 +21,7 @@
 require_once 'Planning.class.php';
 require_once 'Item.class.php';
 require_once 'ItemPresenter.class.php';
-require_once 'ItemPresenterNode.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TreeNode/CardPresenterNode.class.php';
 
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
@@ -55,7 +55,7 @@ class Planning_ArtifactTreeNodeVisitor {
     /**
      * Makes a new TreeNode hierarchy identical to the given one, but changes the types
      * @param TreeNode $node
-     * @return \Planning_ItemPresenterNode or \TreeNode
+     * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
      */
     public function visit(TreeNode $node) {
         $new_node = $this->decorate($node);
@@ -66,9 +66,9 @@ class Planning_ArtifactTreeNodeVisitor {
     /**
      * TODO something is wrong since we return different types here
      * 
-     * Makes a PlanningItemPresenterNode out of $node if $node contains an artifact
+     * Makes a CardPresenterNode out of $node if $node contains an artifact
      * @param TreeNode $node
-     * @return \Planning_ItemPresenterNode or \TreeNode
+     * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
      */
     private function decorate(TreeNode $node) {
         $artifact = $node->getObject();
@@ -76,7 +76,7 @@ class Planning_ArtifactTreeNodeVisitor {
         if ($artifact) {
             $planning_item = new Planning_Item($artifact, $this->planning);
             $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
-            $presenter_node = Planning_ItemPresenterNode::build($node, $presenter);
+            $presenter_node = Tracker_TreeNode_CardPresenterNode::build($node, $presenter);
             return $presenter_node;
         }
         return $node;

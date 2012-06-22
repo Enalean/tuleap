@@ -57,7 +57,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $this->assertEqual($children_trackers, $presenter->allowedChildrenTypes());
     }
     
-    public function itCopiesAllTreeNodesIntoPlanningItemPresenterNode() {
+    public function itCopiesAllTreeNodesIntoCardPresenterNodes() {
         $root_node    = aNode()->withChildren(
                                    aNode()->withObject(anArtifact()->build()),
                                    aNode()->withObject(anArtifact()->build()))
@@ -69,7 +69,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
 
         $this->assertEqual(count($all_nodes), count($root_node->flattenChildren()));
         foreach ($all_nodes as $node) {
-            $this->assertIsA($node, 'Planning_ItemPresenterNode');
+            $this->assertIsA($node, 'Tracker_TreeNode_CardPresenterNode');
         }
     }
 }
