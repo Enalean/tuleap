@@ -91,6 +91,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFirstFrame() {
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
         echo'</br>';
         echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
