@@ -32,6 +32,7 @@ class RepositoryManager {
     public $rbPath;
     public $rbUser;
     public $rbPassword;
+    public $projectname;
 
     /**
      * Class constructor
@@ -45,6 +46,7 @@ class RepositoryManager {
         $this->plugin         = $plugin;
         $pluginInfo           = $this->plugin->getPluginInfo();
         $project              = ProjectManager::instance()->getProject($request->get('group_id'));
+        $this->projectname    = $project->getPublicName();
         $this->repoName       = $project->getUnixName();
         // TODO: Decide whether to go on or not if project doesn't use svn
         $this->svnPath        = svn_utils_get_svn_path($project);
@@ -84,15 +86,10 @@ class RepositoryManager {
      */
     public function addRepository() {
         //check if user have read permission on svn repo
-        $plugin             = PluginManager::instance()->getPluginByName('codereview');
-        $repository_manager = new RepositoryManager($plugin, $this->request);
-        $svnpath            = $repository_manager->svnPath;
         $user               = UserManager::instance()->getCurrentUser();
         $username           = $user->getUserName();
-        $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
-        $projectname        = $project->getPublicName();
-        $boolean            = svn_utils_check_access($username,$projectname,$svnpath);
-        if ((!$this->isRepositoryAlreadyThere()) && ($boolean) ){
+        $boolean            = svn_utils_check_access($username,$this->projectname,$this->svnpath);
+        if ((!$this->isRepositoryAlreadyThere()) && ($boolean)) {
             $data = array("name"     => $this->repoName,
                           "path"     => $this->svnPath,
                           "tool"     => "subversion",
