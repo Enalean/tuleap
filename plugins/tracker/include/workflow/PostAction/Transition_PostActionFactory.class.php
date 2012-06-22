@@ -153,6 +153,9 @@ class Transition_PostActionFactory {
         $id        = (int)$row['id'];
         $field     = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
         $value     = (int)$row[$this->getPostActionValueColumn($shortname)];
+        if ($shortname == 'field_float') {
+            $value     = (float)$row[$this->getPostActionValueColumn($shortname)];
+        }
         
         return new $klass($transition, $id, $field, $value);
     }
@@ -261,7 +264,7 @@ class Transition_PostActionFactory {
             foreach ($field_mapping as $mapping) {
                 if ($mapping['from'] == $from_field_id) {
                     $to_field_id = $mapping['to'];
-                    $this->getDao()->duplicate($from_transition_id, $to_transition_id, $from_field_id, $to_field_id);
+                    $this->getDao($postaction->getShortname())->duplicate($from_transition_id, $to_transition_id, $from_field_id, $to_field_id);
                 }
             }
         }

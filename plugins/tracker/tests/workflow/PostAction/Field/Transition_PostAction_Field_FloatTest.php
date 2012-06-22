@@ -34,7 +34,7 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->post_action    = new Transition_PostAction_Field_FloatTestVersion();
         $this->dao            = mock('Transition_PostAction_Field_FloatDao');
         $this->field          = stub('Tracker_FormElement_Field_Float')->getId()->returns(1131);
-        $this->value          = 0;
+        $this->value          = 1.5;
         $this->factory        = mock('Tracker_FormElementFactory');
         $this->post_action->__construct($this->transition, $this->post_action_id, $this->field, $this->value);
         stub($this->post_action)->getDao()->returns($this->dao);
@@ -68,14 +68,14 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->post_action->process($request);
     }
     
-    public function testBeforeShouldSetTheIntegerField() {
+    public function testBeforeShouldSetTheFloatField() {
         $user = new MockUser();
         
         stub($this->field)->getLabel()->returns('Remaining Effort');
         stub($this->field)->userCanRead($user)->returns(true);
         stub($this->field)->userCanUpdate($user)->returns(true);
         
-        $expected    = 0;
+        $expected    = 1.5;
         $fields_data = array(
             'field_id' => 'value',
         );
@@ -86,14 +86,14 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
     
-    public function testBeforeShouldBypassAndSetTheIntegerField() {
+    public function testBeforeShouldBypassAndSetTheFloatField() {
         $user = new MockUser();
         
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
         $readableField   = stub($this->field)->userCanRead($user)->returns(true);
         $updatableField  = stub($this->field)->userCanUpdate($user)->returns(false);
         
-        $expected    = 0;
+        $expected    = 1.5;
         $fields_data = array(
             'field_id' => 'value',
         );
@@ -109,7 +109,7 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
         $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
         $readableField   = stub($this->field)->userCanRead($user)->returns(false);
         
-        $expected    = 0;
+        $expected    = 1.5;
         $fields_data = array(
             'field_id' => 'value',
         );

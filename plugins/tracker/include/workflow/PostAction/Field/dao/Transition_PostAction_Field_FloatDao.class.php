@@ -99,7 +99,7 @@ class Transition_PostAction_Field_FloatDao extends DataAccessObject {
     public function updatePostAction($id, $field_id, $value) {
         $id       = $this->da->escapeInt($id);
         $field_id = $this->da->escapeInt($field_id);
-        $value    = $this->da->escapeInt($value);
+        $value    = floatval($value);
         
         $sql = <<<SQL
             UPDATE $this->table_name
