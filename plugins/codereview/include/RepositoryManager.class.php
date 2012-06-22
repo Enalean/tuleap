@@ -102,7 +102,12 @@ class RepositoryManager {
                           "password" => $this->tuleapPassword);
             $curl   = new TuleapCurl();
             $result = $curl->execute($this->rbPath."/api/repositories/", $this->rbUser, $this->rbPassword, $data, true);
-            // TODO: handle errors
+            //Handle error
+            if ($result['stat']=="fail"){
+                $msg = "The repo was not created.";
+                $GLOBALS['Response']->addFeedBack('error', $msg);
+                $this->controller->view = 'displayFirstFrame';
+            }
         }
     }
 
