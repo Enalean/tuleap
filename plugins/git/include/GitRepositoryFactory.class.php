@@ -51,7 +51,7 @@ class GitRepositoryFactory {
 
     public function getAllRepositories(Project $project) {
         $repositories = array();
-        $repository_list = $this->dao->getProjectRepositoryList($project->getID());
+        $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false, false);
         foreach ($repository_list as $row) {
             $repository = new GitRepository();
             $this->dao->hydrateRepositoryObject($repository, $row);
