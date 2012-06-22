@@ -161,16 +161,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'target_people';
         }
 
-/*         $valid     = new Valid_String('codereview_testing_done');
-        $testingDone = trim($this->request->get('codereview_testing_done'));
-        if ($this->request->valid($valid) && $testingDone != '') {
-            $params['testing_done'] = $testingDone;
-        } else {
-            $status    = false;
-            $invalid[] = 'testing_done';
-        }
-
-       $valid     = new Valid_String('codereview_submit_as');
+        /*$valid     = new Valid_String('codereview_submit_as');
         $submitAs = trim($this->request->get('codereview_submit_as'));
         if ($this->request->valid($valid) && $submitAs != '') {
             $params['submit_as'] = $submitAs;
@@ -349,10 +340,6 @@ class CodeReviewActions extends Actions {
             $directory       = $reviewRessources['params']['Directory'];
             $patch_path     = $reviewRessources['params']['patch_path'];
         }
-        //if ($frevision == "FIRST" && $srevision == "HEAD")
-        //$output = exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff.sh '.$directory.' '.$patch_path);
-        //var_dump($output);
-        //else
         exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff1.sh '.$frevision.' '.$srevision.' '.$directory.' '.$patch_path);
     }
 
@@ -390,7 +377,7 @@ class CodeReviewActions extends Actions {
     }
 
     /**
-    * Publish a new review request
+    * Publish a  review request submitted by an other person
     *
     * @return void
     */
@@ -464,12 +451,34 @@ class CodeReviewActions extends Actions {
         $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", $rb_user, $rb_password, $data, false);
     }
 
+    /**
+     * Publish a draft review request
+     *
+     * @param String   $server
+     * @param Integer  $review request id
+     * @param String   $rb_user
+     * @param String   $rb_password
+     *
+     * @return Void
+     */
     function publishReviewRequestDraft($server, $reviewRequestId, $rb_user, $rb_password) {
         $data = array('public' => 'true');
         $curl    = new TuleapCurl();
         $request = $curl->execute($server."/api/review-requests/".$reviewRequestId."/draft/", $rb_user, $rb_password, $data, false);
     }
 
+    /**
+     * Create a new diff
+     *
+     * @param String  $server
+     * @param Integer $review request id
+     * @param String  $rb_user
+     * @param String  $rb_password
+     * @param String  $baseDir
+     * @param String  $path
+     *
+     * @return Void
+     */
     function CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path) {
         $ch = curl_init();
         $findme   = 'https';
