@@ -35,7 +35,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         $this->insert($predecessor_id, $artifact_id);
     }
 
-    public function artifactHasTheLeastPriority($artifact_id) {
+    public function artifactHasTheLowestPriority($artifact_id) {
         //TODO: Transaction?
         $predecessor_id = $this->serchPredecessor(null);
         $this->insert($predecessor_id, $artifact_id);

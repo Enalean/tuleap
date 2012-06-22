@@ -39,13 +39,13 @@ include_path=/home/nicolas/tuleap/src:.
     dump_priorities("Table is empty");
     $dao->update("INSERT INTO tracker_artifact_priority VALUES (NULL, 1, 0), (1, NULL, 1)");
     dump_priorities("Table contains one element");
-    $dao->artifactHasTheLeastPriority(42);
+    $dao->artifactHasTheLowestPriority(42);
     dump_priorities("An element is inserted at the end");
     $dao->artifactHasAHigherPriorityThan(42,1);
     dump_priorities("42 is > than 1");
-    $dao->artifactHasTheLeastPriority(66);
-    $dao->artifactHasTheLeastPriority(123);
-    $dao->artifactHasTheLeastPriority(101);
+    $dao->artifactHasTheLowestPriority(66);
+    $dao->artifactHasTheLowestPriority(123);
+    $dao->artifactHasTheLowestPriority(101);
     dump_priorities("Three more elements are added at the end");
     $dao->artifactHasAHigherPriorityThan(1,101);
     dump_priorities("1 is > than 101");

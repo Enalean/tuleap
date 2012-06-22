@@ -275,7 +275,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                     VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
             if ($this->update($sql)) {
                 $priority_dao = new Tracker_Artifact_PriorityDao();
-                $priority_dao->artifactHasTheLeastPriority($id);
+                $priority_dao->artifactHasTheLowestPriority($id);
                 return $id;
             }
         }
