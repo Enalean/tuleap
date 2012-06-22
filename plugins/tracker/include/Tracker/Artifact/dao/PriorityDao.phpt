@@ -1,8 +1,8 @@
 --TEST--
 Test artifact priorities in db
 --INI--
-include_path=/srv/nicolas/tuleap/src:/srv/nicolas/tuleap/src/www/include:.
-;include_path=/usr/share/codendi/src:/usr/share/codendi/src/www/include:.
+include_path=/home/nicolas/tuleap/src:.
+;include_path=/usr/share/codendi/src:.
 --FILE--
 <?php
     $sys_dbhost   = 'localhost';
@@ -47,7 +47,7 @@ include_path=/srv/nicolas/tuleap/src:/srv/nicolas/tuleap/src/www/include:.
     $dao->artifactHasTheLeastPriority(123);
     $dao->artifactHasTheLeastPriority(101);
     dump_priorities("Three more elements are added at the end");
-    $dao->artifactHasAHigherPriorityThan(123,1);
+    $dao->artifactHasAHigherPriorityThan(1,101);
     dump_priorities("1 is > than 101");
 --EXPECT--
 Table is empty
