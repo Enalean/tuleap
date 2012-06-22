@@ -57,6 +57,45 @@ class Transition_PostAction_Field_IntDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    /**
+     * Search all postactions belonging to a transition and a field
+     *
+     * Useful to know if a field is already used in a post action of a transition
+     *
+     * @param int $transition_id The id of the transition 
+     * @param int $field_id      The id of the field 
+     *
+     * @return DataAccessResult
+     */
+    public function searchByTransitionIdAndFieldId($transition_id, $field_id) {
+        $field_id      = $this->da->escapeInt($field_id);
+        $transition_id = $this->da->escapeInt($transition_id);
+        $sql = "SELECT * 
+                FROM tracker_workflow_transition_postactions_field_int
+                WHERE field_id      = $field_id 
+                  AND transition_id = $transition_id
+                ORDER BY id";
+        return $this->retrieve($sql);
+    }
+    
+    /**
+     * Search all postactions belonging to a field
+     *
+     * Useful to know if a field is already used in a post action
+     *
+     * @param int $field_id The id of the field 
+     *
+     * @return DataAccessResult
+     */
+    public function searchByFieldId($field_id) {
+        $field_id      = $this->da->escapeInt($field_id);
+        $sql = "SELECT * 
+                FROM tracker_workflow_transition_postactions_field_int
+                WHERE field_id = $field_id 
+                ORDER BY id";
+        return $this->retrieve($sql);
+    }
+    
     public function updatePostAction($id, $field_id, $value) {
         $id       = $this->da->escapeInt($id);
         $field_id = $this->da->escapeInt($field_id);
@@ -77,6 +116,63 @@ SQL;
             FROM $this->table_name
             WHERE id = $id
 SQL;
+        return $this->update($sql);
+    }
+    
+    /**
+     * Delete a postaction entry by transition id
+     *
+     * @param int $id The id of the transition
+     *
+     * @return bool true if success false otherwise
+     */
+    public function deletePostActionsByTransitionId($transition_id) {
+        $transition_id = $this->da->escapeInt($transition_id);
+        $sql = "DELETE 
+                FROM tracker_workflow_transition_postactions_field_int 
+                WHERE transition_id = $transition_id";
+        return $this->update($sql);
+    }
+    
+   /**
+    * Delete a postaction entries by workflow_id
+    *
+    * @param int $id The id of the workflow
+    *
+    * @return bool true if success false otherwise
+    */
+    public function deletePostActionsByWorkflowId($workflow_id) {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+        $sql = "DELETE P
+                FROM tracker_workflow_transition_postactions_field_int AS P
+                   INNER JOIN tracker_workflow_transition AS T ON P.transition_id = T.transition_id
+                WHERE T.workflow_id = $workflow_id";
+        return $this->update($sql);
+    }
+    
+   /**
+    * Duplicate a postaction 
+    *
+    * @param int $from_transition_id The id of the template transition
+    * @param int $to_transition_id The id of the transition
+    * @param int $from_field_id The id of the field (from template)
+    * @param int $to_field_id The id of the field
+    *
+    * @return bool true if success false otherwise
+    */
+    public function duplicate($from_transition_id, $to_transition_id, $from_field_id, $to_field_id) {
+        
+        $from_transition_id = $this->da->escapeInt($from_transition_id);
+        $to_transition_id = $this->da->escapeInt( $to_transition_id);
+        $from_field_id = $this->da->escapeInt($from_field_id);
+        $to_field_id = $this->da->escapeInt($to_field_id);
+        
+        $sql = "INSERT INTO tracker_workflow_transition_postactions_field_int (transition_id, field_id, value)
+                SELECT $to_transition_id, $to_field_id, value
+                FROM tracker_workflow_transition_postactions_field_int
+                WHERE field_id = $from_field_id AND 
+                      transition_id = $from_transition_id";
+                      
         return $this->update($sql);
     }
 }
