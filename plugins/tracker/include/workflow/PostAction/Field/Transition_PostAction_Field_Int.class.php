@@ -102,6 +102,19 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
         return $this->field;
     }
     
+    /**
+     * Return ID of the field updated by the post-action
+     *
+     * @return Integer
+     */
+    public function getFieldId() {
+        if ($this->field) {
+            return $this->field->getId();
+        } else {
+            return 0;
+        }
+    }
+    
     public function getValue() {
         return $this->value;
     }
