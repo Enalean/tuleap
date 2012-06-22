@@ -3,17 +3,11 @@
 // ReviewBoard url
 $reviewboard_site = "http://localhost";
 
-// ???
+// Domain name
 $domain_name = "localhost/plugins/codereview/reviewboard/";
 
-// ???
+// Site root
 $site_root = "/plugins/codereview/reviewboard/";
-
-// ???
-$media_url = "/";
-
-// ???
-$cache_info = "memcached://localhost:11211/";
 
 // Login of ReviewBoard administrator
 $admin_user = "admin";
@@ -21,7 +15,7 @@ $admin_user = "admin";
 // Password of ReviewBoard administrator
 $admin_pwd = "siteadmin";
 
-// ???
+// Admin mail
 $admin_mail = "admin@root";
 
 ?>
