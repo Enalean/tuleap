@@ -89,7 +89,7 @@ class Tracker_DateReminderManager {
                 }
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
             }
-        } elseif ($request->get('delete_reminder') && $request->get('action') == 'confirm_delete_reminder' ) {
+        } elseif ($request->get('confirm_delete') && $request->get('action') == 'confirm_delete_reminder' ) {
             try {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($request->get('reminder_id'));
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_deleted'));

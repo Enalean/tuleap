@@ -354,19 +354,31 @@ class Tracker_DateReminderRenderer {
         }
     }
 
+    /**
+     * Ask for confirmation before deleting a given date reminder
+     *
+     * @param Integer $reminderId Id of the date reminder to be deleted
+     *
+     * @return String
+     */
     function displayConfirmDelete($reminderId) {
-        $html = '';
-        $html .= '<p><form action="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'" id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_txt', array($reminderId));
-        $html .= '<div class="date_reminder_confirm_delete_buttons">';
-        $html .= '<input type="hidden" name="action" value="confirm_delete_reminder" />';
-        $html .= '<input type="hidden" name="tracker" value="'.(int)$this->tracker->id.'" />';
-        $html .= '<input type="hidden" name="reminder_id" value="'.$reminderId.'" />';
-        $html .= '<input type="submit" name="cancel_delete_reminder" value="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_cancel').'" />';
-        $html .= '<input type="submit" name="delete_reminder" value="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_confirm').'" />';
-        $html .= '</div>';
-        $html .= '</form></p>';
-        return $html;
+        $reminder        = $this->dateReminderFactory->getReminder($reminderId);
+        $reminderString  = '<b>'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_send_to');
+        $reminderString .= '&nbsp;'.$reminder->getUgroupsLabel().'&nbsp;';
+        $reminderString .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())).'&nbsp;"';
+        $reminderString .= $reminder->getField()->getLabel().'"</b>';
+
+        $output = '<p><form action="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'" id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
+        $output .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_txt', array($reminderString));
+        $output .= '<div class="date_reminder_confirm_delete_buttons">';
+        $output .= '<input type="hidden" name="action" value="confirm_delete_reminder" />';
+        $output .= '<input type="hidden" name="tracker" value="'.(int)$this->tracker->id.'" />';
+        $output .= '<input type="hidden" name="reminder_id" value="'.$reminderId.'" />';
+        $output .= '<input type="submit" name="cancel_delete_reminder" value="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_cancel').'" />';
+        $output .= '<input type="submit" name="confirm_delete" value="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_confirm').'" />';
+        $output .= '</div>';
+        $output .= '</form></p>';
+        return $output;
     }
 
     /**
