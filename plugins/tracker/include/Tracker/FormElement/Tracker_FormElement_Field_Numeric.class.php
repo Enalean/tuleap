@@ -303,7 +303,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
-        $this->validateValue($value);
+        return $this->validateValue($value);
     }
     
     /**
