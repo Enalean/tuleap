@@ -29,19 +29,16 @@ require_once('CodeReviewActions.class.php');
 class CodeReviewViews extends Views {
 
     /**
-     *
      * @var PluginController
      */
     protected $controller;
 
     /**
-     *
      * @var HTTPRequest
      */
     protected $request;
 
     /**
-     *
      * @var User
      */
     protected $user;
