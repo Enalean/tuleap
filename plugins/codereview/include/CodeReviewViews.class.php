@@ -54,7 +54,7 @@ class CodeReviewViews extends Views {
     public function __construct($controller) {
         $this->controller = $controller;
         $this->request    = $controller->getRequest();
-        $this->user       =$controller->getUser();
+        $this->user       = $controller->getUser();
     }
 
     /**
@@ -92,16 +92,16 @@ class CodeReviewViews extends Views {
      */
     function displayFirstFrame() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        echo'</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
-        echo'</br>';
-        echo'</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
-        echo'</br>';
-        echo'</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
-        echo'</br>';
+        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
+        echo '</br>';
+        echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
+        echo '</br>';
+        echo '</br>';
+        echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
+        echo '</br>';
+        echo '</br>';
+        echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
+        echo '</br>';
         $iframe  = "<iframe name=\"rb\" style=\"display:none; visibility:hidden\"/>";
         $form    = " <form id=\"form\" target=\"rb\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form   .= "  <p>";
@@ -143,7 +143,7 @@ class CodeReviewViews extends Views {
      */
     function displayFrameAdmin() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/admin/";
+        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/admin/";
         echo '<div id="codereview_iframe_div">';
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
@@ -156,7 +156,7 @@ class CodeReviewViews extends Views {
      */
      function displayFramePublish() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$this->request->get('review_id');
+        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$this->request->get('review_id');
         echo '<div id="codereview_iframe_div">';
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
@@ -168,11 +168,11 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFrameReviewRequest() {
-        $action= new CodeReviewActions($this->controller,null);
-        $idrequest  =$action->getIdreviewrequest;
+        $action     = new CodeReviewActions($this->controller,null);
+        $idrequest  = $action->getIdreviewrequest;
         var_dump($idrequest);
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$idrequest."/";
+        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$idrequest."/";
         echo '<div id="codereview_iframe_div">';
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
@@ -184,9 +184,9 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function reviewSubmission() {
-        $project_manager = ProjectManager::instance();
+        $project_manager    = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
-        $project = $project_manager->getProject($this->request->get('group_id'));
+        $project            = $project_manager->getProject($this->request->get('group_id'));
         $form  = " <form id=\"reviewAdd\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_review\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$repository_manager->rbPath."\" type=\"hidden\"/>";
         //$form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->svnPath."\" type=\"hidden\"/>";
@@ -243,7 +243,7 @@ class CodeReviewViews extends Views {
      */
     function loginSubmission() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        =$pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
+        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
         var_dump($url);
         $form  = " <form id=\"loginsubmission\" target=\"codereview_iframe\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form .= "  <p>";
