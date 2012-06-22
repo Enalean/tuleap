@@ -55,6 +55,64 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         }
     }
 
+    public function artifactHasALesserPriorityThan($artifact_id, $predecessor_id) {
+        //TODO: Transaction?
+        $this->remove($artifact_id);
+        $this->insert($predecessor_id, $artifact_id);
+    }
+
+    /**
+     * Remove an item from the linked list
+     */
+    private function remove($id) {
+        $id = $this->da->escapeInt($id);
+
+        // Change the successor pointer of the actual parent
+        $sql = "UPDATE tracker_artifact_priority AS previous_parent
+                        INNER JOIN tracker_artifact_priority AS item_to_remove
+                                ON (previous_parent.succ_id = item_to_remove.curr_id AND item_to_remove.curr_id = $id)
+                SET previous_parent.succ_id = item_to_remove.succ_id";
+        $this->update($sql);
+
+        // Reorder things
+        $sql = "UPDATE tracker_artifact_priority AS next_sibling
+                        INNER JOIN tracker_artifact_priority AS item_to_remove
+                                ON (next_sibling.rank > item_to_remove.rank AND item_to_remove.curr_id = $id)
+                SET next_sibling.rank = next_sibling.rank - 1";
+        $this->update($sql);
+
+        // Remove the item
+        $sql = "DELETE FROM tracker_artifact_priority WHERE curr_id = $id";
+        $this->update($sql);
+    }
+
+    private function insert($predecessor_id, $id) {
+        $id             = $this->da->escapeInt($id);
+        $predecessor_id = $this->da->escapeInt($predecessor_id);
+
+        // insert the new element
+        $sql = "INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank)
+                SELECT $id, new_parent.succ_id, new_parent.rank
+                FROM tracker_artifact_priority AS new_parent
+                WHERE new_parent.curr_id = $predecessor_id";
+        $this->update($sql);
+
+        // Reorder things
+        $sql = "UPDATE tracker_artifact_priority AS next_sibling
+                        INNER JOIN tracker_artifact_priority AS new_item
+                                ON (next_sibling.rank >= new_item.rank
+                                    AND next_sibling.curr_id <> $predecessor_id
+                                    AND new_item.curr_id = $id)
+                SET next_sibling.rank = next_sibling.rank + 1";
+        $this->update($sql);
+
+        // Fix successor pointer of the predecessor
+        $sql = "UPDATE tracker_artifact_priority AS new_parent
+                SET new_parent.succ_id = $id
+                WHERE new_parent.curr_id = $predecessor_id";
+        $this->update($sql);
+    }
+
     public function artifactHasTheLeastPriority($artifact_id) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         //TODO: Transaction?

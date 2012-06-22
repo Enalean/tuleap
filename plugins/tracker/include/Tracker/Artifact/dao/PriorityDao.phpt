@@ -49,6 +49,8 @@ include_path=/home/nicolas/tuleap/src:.
     dump_priorities("Three more elements are added at the end");
     $dao->artifactHasAHigherPriorityThan(1,101);
     dump_priorities("1 is > than 101");
+    $dao->artifactHasALesserPriorityThan(42, 1);
+    dump_priorities("42 is < than 1");
 --EXPECT--
 Table is empty
 .
@@ -82,3 +84,12 @@ Three more elements are added at the end
 123,1,3,
 101,,5,
 .
+42 is < than 1
+,66,0,
+1,42,3,
+66,123,1,
+123,1,2,
+101,,5,
+42,101,4,
+.
+
