@@ -25,6 +25,14 @@
  */
 class CodeReviewException extends Exception {
 
+    /**
+     * Constructor of the class
+     *
+     * @param String  $msg
+     * @param Integer $code
+     *
+     * @return Void
+     */
     public function __construct($msg, $code = 0) {
       parent::__construct(__CLASS__.' : '.$msg, $code);
     }
