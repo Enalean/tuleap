@@ -47,4 +47,3 @@ class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket
     }
 }
 ?>
-
