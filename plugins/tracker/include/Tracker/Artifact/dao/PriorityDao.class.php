@@ -42,17 +42,19 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     public function artifactHasTheLeastPriority($artifact_id) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         //TODO: Transaction?
-        $sql = "SELECT curr_id FROM tracker_artifact_priority WHERE succ_id IS NULL";
+        $sql = "SELECT curr_id, rank FROM tracker_artifact_priority WHERE succ_id IS NULL";
         $row = $this->retrieve($sql)->getRow();
 
         if ($row) {
+            $rank        = $row['rank'] + 1;
+            $ancestor_id = $row['curr_id'];
             $sql = "INSERT INTO tracker_artifact_priority(curr_id, succ_id, rank)
-                    VALUES ($artifact_id, NULL, 0)";
+                    VALUES ($artifact_id, NULL, $rank)";
             if ($this->update($sql)) {
 
                 $sql = "UPDATE tracker_artifact_priority
                         SET succ_id = $artifact_id
-                        WHERE curr_id = {$row['curr_id']}";
+                        WHERE curr_id = $ancestor_id";
                 return $this->update($sql);
             }
         }

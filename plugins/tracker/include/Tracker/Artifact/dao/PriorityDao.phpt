@@ -37,7 +37,7 @@ include_path=/home/nicolas/tuleap/src:.
     ) ENGINE=InnoDB");
 
     dump_priorities("Table is empty");
-    $dao->update("INSERT INTO tracker_artifact_priority VALUES (NULL, 1, 0), (1, NULL, 0)");
+    $dao->update("INSERT INTO tracker_artifact_priority VALUES (NULL, 1, 0), (1, NULL, 1)");
     dump_priorities("Table contains one element");
     $dao->artifactHasTheLeastPriority(42);
     dump_priorities("An element is inserted at the end");
@@ -54,31 +54,31 @@ Table is empty
 .
 Table contains one element
 ,1,0,
-1,,0,
+1,,1,
 .
 An element is inserted at the end
 ,1,0,
-1,42,0,
-42,,0,
+1,42,1,
+42,,2,
 .
 42 is > than 1
 ,42,0,
-1,,0,
-42,1,0,
+1,,2,
+42,1,1,
 .
 Three more elements are added at the end
 ,42,0,
-1,66,0,
-42,1,0,
-66,123,0,
-123,101,0,
-101,,0,
+1,66,2,
+42,1,1,
+66,123,3,
+123,101,4,
+101,,5,
 .
 1 is > than 101
 ,42,0,
-1,101,0,
-42,66,0,
-66,123,0,
-123,1,0,
-101,,0,
+1,101,4,
+42,66,1,
+66,123,2,
+123,1,3,
+101,,5,
 .
