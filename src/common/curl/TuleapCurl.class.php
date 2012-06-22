@@ -56,8 +56,6 @@ class TuleapCurl {
         curl_close($ch);
         return array('return' => $return, 'status' => $status, 'error' => $error);
     }
-    
-
 
 }
 
