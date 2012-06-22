@@ -323,20 +323,20 @@ class CodeReviewActions extends Actions {
                 var_dump($GLOBALS['codndi_dir']);
                 $status    = false;
                 $invalid[] = 'srevision';
-                $msg       = "le dexième numéro de revision est inferieur au premier";
+                $msg       = "le dexiÃ¨me numÃ©ro de revision est inferieur au premier";
                 $GLOBALS['Response']->addFeedBack('error', $msg);
                 $this->controller->view = 'createPatchFile';
             }
             if (!(($frevision >= $f) && ($frevision <= $l))){
                 $status = false;
-                $msg    = "Le premier numéro de révision ".$frevision." n'existe pas.";
+                $msg    = "Le premier numÃ©ro de rÃ©vision ".$frevision." n'existe pas.";
                 $GLOBALS['Response']->addFeedBack('error', $msg);
                 $this->controller->view = 'createPatchFile';
             }
 
         if (!(($srevision >= $f) && ($srevision <= $l))){
             $status = false;
-            $msg    = "Le dexième numéro de révision ".$srevision." n'existe pas.";
+            $msg    = "Le dexiÃ¨me numÃ©ro de rÃ©vision ".$srevision." n'existe pas.";
             $GLOBALS['Response']->addFeedBack('error', $msg);
             $this->controller->view = 'createPatchFile';
         }
