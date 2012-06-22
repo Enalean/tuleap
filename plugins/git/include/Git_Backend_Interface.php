@@ -116,7 +116,7 @@ interface Git_Backend_Interface {
 
     /**
      * Check if repository can be deleted
-     * 
+     *
      * @return Boolean
      */
     public function canBeDeleted(GitRepository $repository);

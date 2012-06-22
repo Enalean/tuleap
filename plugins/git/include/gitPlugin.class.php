@@ -398,12 +398,12 @@ class GitPlugin extends Plugin {
         require_once 'GitRepositoryManager.class.php';
         return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
     }
-    
+
     private function getRepositoryFactory() {
         require_once 'GitRepositoryFactory.class.php';
         return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
-    
+
     /**
      * Display git backend statistics in CSV format
      *

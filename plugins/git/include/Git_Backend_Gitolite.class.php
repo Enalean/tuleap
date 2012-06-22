@@ -311,7 +311,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     public function markAsDeleted(GitRepository $repository) {
         $this->deletePermissions($repository);
         $this->getDao()->delete($repository);
-        
+
         $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
         $this->updateRepoConf($repository);
     }

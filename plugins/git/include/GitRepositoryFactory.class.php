@@ -49,6 +49,13 @@ class GitRepositoryFactory {
         return $this->getRepositoryFromDar($dar);
     }
 
+    /**
+     * Return all git repositories of a project (gitshell, gitolite, personal forks)
+     *
+     * @param Project $project
+     *
+     * @return Array of GitRepository
+     */
     public function getAllRepositories(Project $project) {
         $repositories = array();
         $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false, false);

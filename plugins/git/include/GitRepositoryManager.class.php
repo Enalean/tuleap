@@ -22,23 +22,37 @@ require_once 'GitRepositoryFactory.class.php';
 require_once 'common/system_event/SystemEventManager.class.php';
 require_once 'common/project/ProjectManager.class.php';
 
+/**
+ * This class is responsible of management of several repositories.
+ *
+ * It works in close cooperation with GitRepositoryFactory (to instanciate repo)
+ */
 class GitRepositoryManager {
-    
+
     /**
      * @var GitRepositoryFactory
      */
     private $repository_factory;
-    
+
     /**
-     * @var SystemEventManager 
+     * @var SystemEventManager
      */
     private $system_event_manager;
-    
+
+    /**
+     * @param GitRepositoryFactory $repository_factory
+     * @param SystemEventManager   $system_event_manager
+     */
     public function __construct(GitRepositoryFactory $repository_factory, SystemEventManager $system_event_manager) {
         $this->repository_factory   = $repository_factory;
         $this->system_event_manager = $system_event_manager;
     }
-    
+
+    /**
+     * Delete all project repositories (on project deletion).
+     *
+     * @param Project $project
+     */
     public function deleteProjectRepositories(Project $project) {
         $repositories = $this->repository_factory->getAllRepositories($project);
         foreach ($repositories as $repository) {
