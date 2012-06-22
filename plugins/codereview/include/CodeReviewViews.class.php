@@ -87,6 +87,7 @@ class CodeReviewViews extends Views {
     function _getTitle() {
         return $GLOBALS['Language']->getText('plugin_codereview', 'title');
     }
+
     /**
      * Displays First Frame
      *
@@ -122,8 +123,8 @@ class CodeReviewViews extends Views {
         print $form;
         print $script;
         print $iframe;
-        
     }
+
     /**
      * Displays Review board frame
      *
@@ -136,8 +137,9 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
+
     /**
-     * Displays The Admin Interface of Review board 
+     * Displays The Admin Interface of Review board
      *
      * @return Void
      */
@@ -148,8 +150,9 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
+
     /**
-     * Display published review request 
+     * Display published review request
      *
      * @return Void
      */
@@ -160,8 +163,9 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
+
     /**
-     * Display all review request 
+     * Display all review request
      *
      * @return Void
      */
@@ -175,6 +179,7 @@ class CodeReviewViews extends Views {
         $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
         echo '</div>';
     }
+
     /**
      * Display review request creation form
      *
@@ -234,7 +239,7 @@ class CodeReviewViews extends Views {
     }
 
     /**
-     * Display published review request 
+     * Display published review request
      *
      * @return Void
      */
@@ -260,27 +265,29 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function createPatchFile() {
-    $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-    $form  = " <form id=\"createPatch\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_patch\">";
-    $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
-    $form .= "  <p>";
-    $form .= "   <label for=\"first_revision\">First Revision</label><br>";
-    $form .= "   <input id=\"first_revision\" name=\"first_revision\" type=\"text\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "  <p>";
-    $form .= "   <label for=\"second_revision\">Second Revision</label><br>";
-    $form .= "   <input id=\"second_revision\" name=\"second_revision\" type=\"text\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "  <p>";
-    $form .= "   <label for=\"target_directory\">Target Directory</label><br>";
-    $form .= "   <input id=\"target_directory\" name=\"target_directory\" type=\"text\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "   <label for=\"patch_path\">Patch Path</label><br>";
-    $form .= "   <input id=\"patch_path\" name=\"patch_path\" type=\"text\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "   <input type=\"submit\" value=\"Create the patch file\" />";
-    $form .= " </form>";
-    print $form;
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $form  = " <form id=\"createPatch\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_patch\">";
+        $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"first_revision\">First Revision</label><br>";
+        $form .= "   <input id=\"first_revision\" name=\"first_revision\" type=\"text\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"second_revision\">Second Revision</label><br>";
+        $form .= "   <input id=\"second_revision\" name=\"second_revision\" type=\"text\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"target_directory\">Target Directory</label><br>";
+        $form .= "   <input id=\"target_directory\" name=\"target_directory\" type=\"text\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "   <label for=\"patch_path\">Patch Path</label><br>";
+        $form .= "   <input id=\"patch_path\" name=\"patch_path\" type=\"text\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "   <input type=\"submit\" value=\"Create the patch file\" />";
+        $form .= " </form>";
+        print $form;
     }
+
 }
+
 ?>

@@ -30,5 +30,4 @@ class CodeReviewException extends Exception {
     }
 }
 
-
 ?>

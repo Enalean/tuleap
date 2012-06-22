@@ -361,7 +361,7 @@ class CodeReviewActions extends Actions {
         //if ($frevision == "FIRST" && $srevision == "HEAD")
         //$output = exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff.sh '.$directory.' '.$patch_path);
         //var_dump($output);
-        //else 
+        //else
         exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff1.sh '.$frevision.' '.$srevision.' '.$directory.' '.$patch_path);
     }
 
@@ -483,8 +483,8 @@ class CodeReviewActions extends Actions {
         $ch = curl_init();
         //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        curl_setopt($ch, CURLOPT_POST, 1 ); 
-        curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);  
+        curl_setopt($ch, CURLOPT_POST, 1 );
+        curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $server."/api/review-requests/".$reviewRequestId."/diffs/");
         $post_array = array(
@@ -523,4 +523,5 @@ class CodeReviewActions extends Actions {
         return false;
     }
 }
+
 ?>

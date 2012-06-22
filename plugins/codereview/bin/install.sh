@@ -48,7 +48,7 @@ $CHOWN -R $APP_USER:$APP_USER $APP_DIR/data
 ##############################################
 # Updating conf
 #
-# Add wsgi module to httpd.conf 
+# Add wsgi module to httpd.conf
 sed -i '/^LoadModule version_module modules\/mod_version.so/i\
 #LoadModule wsgi_module modules\/mod_wsgi.so'  /etc/httpd/conf/httpd.conf
 # httpd.conf append with wsgi conf

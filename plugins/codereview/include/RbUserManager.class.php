@@ -61,7 +61,7 @@ class RbUserManager {
     public function retrieveRbSessionId($url, $authUser = null, $authPassword = null){
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HEADER, true);
-        curl_setopt($ch, CURLOPT_USERPWD, $authUser.":".$authPassword); 
+        curl_setopt($ch, CURLOPT_USERPWD, $authUser.":".$authPassword);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $result = curl_exec($ch);
@@ -69,6 +69,7 @@ class RbUserManager {
         $rbsessionid = $matches[1];
         return $rbsessionid;
     }
+
 }
 
 ?>

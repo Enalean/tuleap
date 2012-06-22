@@ -34,7 +34,7 @@ class CodeReviewPluginInfo extends PluginFileInfo {
      * @return Void
      */
     function __construct($plugin) {
-        parent::__construct($plugin, 'codereview');  
+        parent::__construct($plugin, 'codereview');
         $this->setPluginDescriptor(new CodeReviewPluginDescriptor());
     }
 
