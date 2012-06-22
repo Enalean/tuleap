@@ -271,7 +271,6 @@ class CodeReviewViews extends Views {
     function loginSubmission() {
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        var_dump($url);
         $form  = " <form id=\"loginsubmission\" target=\"codereview_iframe\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form .= "  <p>";
         $form .= "   <input name=\"username\" value=".$this->user->getUserName()." type=\"hidden\" size=\"24\" />";
