@@ -600,6 +600,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
+                        //@TODO retrieve follow up type ??
                         $changeset->updateComment($request->get('content'), $current_user);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
@@ -633,10 +634,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'artifact-update':
 
                 //TODO : check permissions on this action?
-                $fields_data = $request->get('artifact');
+                $fields_data   = $request->get('artifact');
+                $commentFormat = $request->get('comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
-                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'))) {
+                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $commentFormat, $current_user, $request->get('email'))) {
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
@@ -835,13 +837,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param array   $fields_data       Artifact fields values
      * @param string  $comment           The comment (follow-up) associated with the artifact update
+     * @param string  $commentFormat     The comment (follow-up) type (text/html)
      * @param User    $submitter         The user who is doing the update
      * @param string  $email             The email of the person who updates the artifact if modification is done in anonymous mode
      * @param boolean $send_notification true if a notification must be sent, false otherwise
      *
      * @return boolean True if update is done without error, false otherwise
      */
-    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true) {
+    public function createNewChangeset($fields_data, $comment, $commentFormat = 0, $submitter, $email, $send_notification = true) {
         $is_valid = true;
         $is_submission = false;
 
@@ -858,7 +861,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment
-                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0);
+                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $commentFormat);
 
                         //extract references from the comment
                         $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
