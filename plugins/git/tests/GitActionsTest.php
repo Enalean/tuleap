@@ -696,7 +696,7 @@ class GitActionsTest extends TuleapTestCase {
     }
 }
 
-abstract class GitActions_Delete_Tests extends TuleapTestCase {
+class GitActions_Delete_Tests extends TuleapTestCase {
     protected $git_actions;
     protected $project_id;
     protected $repository_id;
@@ -723,12 +723,16 @@ abstract class GitActions_Delete_Tests extends TuleapTestCase {
     }
 
     public function itMarksRepositoryAsDeleted() {
+        stub($this->repository)->canBeDeleted()->returns(true);
+
         $this->repository->expectOnce('markAsDeleted');
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 
     public function itTriggersASystemEventForPhysicalRemove() {
+        stub($this->repository)->canBeDeleted()->returns(true);
+
         $this->system_event_manager->expectOnce(
             'createEvent',
             array(
@@ -740,30 +744,12 @@ abstract class GitActions_Delete_Tests extends TuleapTestCase {
 
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
-}
 
-class GitActions_DeleteGitolite_Tests extends GitActions_Delete_Tests {
-
-    public function setUp() {
-        parent::setUp();
-        stub($this->repository)->getBackend()->returns(mock('Git_Backend_Gitolite'));
-    }
-}
-
-class GitActions_DeleteGitShell_Tests extends GitActions_Delete_Tests {
-
-    public function setUp() {
-        parent::setUp();
-        // For an unknown reason there is no way to get a complete mock of GitBackend that
-        // actually extends GitBackend (mock('GitBackend') extends from SimpleMock).
-        // Use "partialmock trick"
-        stub($this->repository)->getBackend()->returns(TestHelper::getPartialMock('GitBackend', array()));
-    }
-
-    public function itDoesntDeleteWhenRepositoryHasChildren() {
-        stub($this->repository)->hasChild()->returns(true);
+    public function itDoesntDeleteWhenRepositoryCannotBeDeleted() {
+        stub($this->repository)->canBeDeleted()->returns(false);
 
         $this->repository->expectNever('markAsDeleted');
+        $this->system_event_manager->expectNever('createEvent');
         $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 }

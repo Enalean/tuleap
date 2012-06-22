@@ -82,15 +82,15 @@ class GitActions extends PluginActions {
         
         $repository = $this->factory->getRepositoryById($repositoryId);
         if ($repository) {
-            if ($repository->getBackend() instanceof GitBackend && $repository->hasChild()) {
+            if ($repository->canBeDeleted()) {
+                $this->markAsDeleted($repository);
+                $c->addInfo( $this->getText('actions_delete_process') );
+                $c->addInfo( $this->getText('actions_delete_backup').' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir') );
+            } else {
                 $c->addError( $this->getText('backend_delete_haschild_error') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
                 return false;
             }
-
-            $this->markAsDeleted($repository);
-            $c->addInfo( $this->getText('actions_delete_process') );
-            $c->addInfo( $this->getText('actions_delete_backup').' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir') );
         } else {
             $c->addError($this->getText('actions_repo_not_found'));
         }
