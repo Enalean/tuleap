@@ -29,19 +29,16 @@ require_once('RbUserManager.class.php');
 class CodeReviewActions extends Actions {
 
     /**
-     *
      * @var PluginController
      */
     protected $controller;
 
     /**
-     *
      * @var HTTPRequest
      */
     protected $request;
 
     /**
-     *
      * @var Id Review Request
      */
     private $idreviewrequest;
