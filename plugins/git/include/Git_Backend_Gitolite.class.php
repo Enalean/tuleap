@@ -315,39 +315,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
         $this->updateRepoConf($repository);
     }
-    
+
     public function delete(GitRepository $repository) {
         $path = $this->getGitRootPath().$repository->getPath();
         $this->getDriver()->delete($path);
-    }
-    
-    /**
-     * Delete all gitolite repositories of a project
-     *
-     * @param Integer $project_id Id of the project
-     *
-     * @return Boolean
-     */
-    public function deleteProjectRepositories($project_id) {
-        $system_event_manager = $this->getSystemEventManager();
-        $repository_factory   = $this->getRepositoryFactory();
-        $repositories         = $repository_factory->getAllGitoliteRepositories($project_id);
-        foreach ($repositories as $repository) {
-            $repository->forceMarkAsDeleted();
-            $system_event_manager->createEvent(
-                'GIT_REPO_DELETE',
-                 $project_id.SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-                 SystemEvent::PRIORITY_MEDIUM
-            );
-        }
-    }
-
-    protected function getRepositoryFactory() {
-        return new GitRepositoryFactory($this->getDao(), ProjectManager::instance());
-    }
-
-    protected function getSystemEventManager() {
-        return SystemEventManager::instance();
     }
 
     /**

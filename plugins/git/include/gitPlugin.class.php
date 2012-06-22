@@ -385,18 +385,25 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function project_is_deleted($params) {
-        require_once('GitActions.class.php');
         if (!empty($params['group_id'])) {
-            $projectId = intval($params['group_id']);
-            // Delete all gitolite repositories of the project
-            $gitoliteBackend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-            $gitoliteBackend->deleteProjectRepositories($projectId);
-            // Delete all git repositories of the project
-            $gitBackend = Backend::instance('Git','GitBackend');
-            $gitBackend->deleteProjectRepositories($projectId);
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            if ($project) {
+                $repository_manager = $this->getRepositoryManager();
+                $repository_manager->deleteProjectRepositories($project);
+            }
         }
     }
 
+    private function getRepositoryManager() {
+        require_once 'GitRepositoryManager.class.php';
+        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
+    }
+    
+    private function getRepositoryFactory() {
+        require_once 'GitRepositoryFactory.class.php';
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+    }
+    
     /**
      * Display git backend statistics in CSV format
      *

@@ -140,35 +140,6 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $this->getDriver()->delete($path);
     }
 
-    /**
-     * Delete all repositories of a project
-     *
-     * @param Integer $project_id Id of the project
-     *
-     * @return Boolean
-     */
-    public function deleteProjectRepositories($project_id) {
-        $system_event_manager = $this->getSystemEventManager();
-        $repo_factory         = $this->getRepositoryFactory();
-        $repositories         = $repo_factory->getAllGitshellRepositories($project_id);
-        foreach ($repositories as $repository) {
-            $repository->forceMarkAsDeleted();
-            $system_event_manager->createEvent(
-                'GIT_REPO_DELETE',
-                 $project_id.SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
-                 SystemEvent::PRIORITY_MEDIUM
-            );
-        }
-    }
-
-    protected function getRepositoryFactory() {
-        return new GitRepositoryFactory($this->getDao(), $this->getProjectManager());
-    }
-
-    function getSystemEventManager() {
-        return SystemEventManager::instance();
-    }
-
     public function save($repository) {
         $path          = Git_Backend_Interface::GIT_ROOT_PATH .'/'.$repository->getPath();
         $fsDescription = $this->getDriver()->getDescription($path);

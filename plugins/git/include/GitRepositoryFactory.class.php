@@ -49,20 +49,9 @@ class GitRepositoryFactory {
         return $this->getRepositoryFromDar($dar);
     }
 
-    public function getAllGitshellRepositories($project_id) {
+    public function getAllRepositories(Project $project) {
         $repositories = array();
-        $repository_list = $this->dao->getProjectRepositoryList($project_id, true);
-        foreach ($repository_list as $row) {
-            $repository = new GitRepository();
-            $this->dao->hydrateRepositoryObject($repository, $row);
-            $repositories[] = $repository;
-        }
-        return $repositories;
-    }
-
-    public function getAllGitoliteRepositories($project_id) {
-        $repositories = array();
-        $repository_list = $this->dao->getAllGitoliteRespositories($project_id);
+        $repository_list = $this->dao->getProjectRepositoryList($project->getID());
         foreach ($repository_list as $row) {
             $repository = new GitRepository();
             $this->dao->hydrateRepositoryObject($repository, $row);
