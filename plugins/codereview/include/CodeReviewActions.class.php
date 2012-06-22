@@ -106,24 +106,6 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'Description';
         }
 
-/*        $valid     = new Valid_String('codereview_revision_range');
-        $revisions = trim($this->request->get('codereview_revision_range'));
-        if ($this->request->valid($valid) && $revisions != '') {
-            $params['revisions'] = $revisions;
-        } else {
-            $status    = false;
-            $invalid[] = 'revisions';
-        }
-
-        $valid       = new Valid_String('codereview_description');
-        $description = trim($this->request->get('codereview_description'));
-        if ($this->request->valid($valid) && $description != '') {
-            $params['description'] = $description;
-        } else {
-            $status    = false;
-            $invalid[] = 'description';
-        }
-*/
         $valid         = new Valid_String('codereview_target_people');
         $target_people = trim($this->request->get('codereview_target_people'));
         if ($this->request->valid($valid) && $target_people != '') {
