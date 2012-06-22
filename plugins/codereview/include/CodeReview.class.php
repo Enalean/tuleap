@@ -68,14 +68,14 @@ class CodeReview extends Controler {
      * @return void
      */
     function request() {
-        $request = $this->getRequest();
-        $user=$this->getUser();
-        $username=$user->getUserName();
-        $userpwd=$user->getUserPw();
-        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
-        $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
-        $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
+        $request       = $this->getRequest();
+        $user          = $this->getUser();
+        $username      = $user->getUserName();
+        $userpwd       = $user->getUserPw();
+        $pluginInfo    = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url           = $pluginInfo->getPropertyValueForName('reviewboard_site');
+        $rbuser        = $pluginInfo->getPropertyValueForName('admin_user');
+        $rbpass        = $pluginInfo->getPropertyValueForName('admin_pwd');
         /******check if the Tuleap User is registred in reviewboard******/
         $rbusermanager = new RbUserManager();
         $exist         = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null, $username);
