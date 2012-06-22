@@ -58,7 +58,7 @@ class RbUserManager {
      *
      * @return String
      */
-    public function retrieveRbSessionId($url, $authUser = null, $authPassword = null){
+    public function retrieveRbSessionId($url, $authUser = null, $authPassword = null) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_USERPWD, $authUser.":".$authPassword);

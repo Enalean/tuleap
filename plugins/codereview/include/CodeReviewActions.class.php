@@ -70,10 +70,10 @@ class CodeReviewActions extends Actions {
         $user               = UserManager::instance()->getCurrentUser();
         $username           = $user->getUserName();
         $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
-        $projectname = $project->getPublicName();
+        $projectname        = $project->getPublicName();
         //$accessfile = svn_utils_read_svn_access_file($projectname);
         $boolean = svn_utils_check_write_access($username,$projectname,$svnpath);
-        if(!$boolean){
+        if (!$boolean) {
             $status    = false;
             $msg = "The user '".$username."' has not the right to create a review request.";
             $GLOBALS['Response']->addFeedBack('error', $msg);
@@ -509,7 +509,7 @@ class CodeReviewActions extends Actions {
      *
      * @return Boolean
      */
-    function isUGroup($username){
+    function isUGroup($username) {
         $project = ProjectManager::instance()->getProject($this->request->get('group_id'));
         $members = $project->getMembersUserNames();
         foreach ($members as $member) {
