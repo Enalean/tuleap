@@ -478,8 +478,12 @@ class CodeReviewActions extends Actions {
 
     function CreateNewDiff($server, $reviewRequestId, $rb_user, $rb_password, $baseDir, $path) {
         $ch = curl_init();
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        $findme   = 'https';
+        $pos = strpos($url, $findme);
+        if ( $pos ){
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        }
         curl_setopt($ch, CURLOPT_POST, 1 );
         curl_setopt($ch, CURLOPT_USERPWD, $rb_user.":".$rb_password);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
