@@ -33,7 +33,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_TreeNode_CardPresenterNode
      */
-    private $tree_of_presenters;
+    private $tree_of_card_presenters;
     
     // Presenter properties
     public $planning;
@@ -55,7 +55,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         $this->renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
 
         $visitor = Planning_ArtifactTreeNodeVisitor::build($this->planning, 'planning-draggable-toplan');
-        $this->tree_of_presenters = $visitor->visit($this->tree_of_artifacts);
+        $this->tree_of_card_presenters = $visitor->visit($this->tree_of_artifacts);
     }
     
     public function fetchResultActions() {
@@ -67,7 +67,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
 
     public function getChildren() {
-        return $this->tree_of_presenters->getChildren();
+        return $this->tree_of_card_presenters->getChildren();
     }
     
     public function allowedChildrenTypes() {

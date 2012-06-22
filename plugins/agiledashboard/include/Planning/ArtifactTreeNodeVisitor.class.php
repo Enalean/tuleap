@@ -65,6 +65,8 @@ class Planning_ArtifactTreeNodeVisitor {
     
     /**
      * TODO something is wrong since we return different types here
+     * When on the left side of the planning, the top node is just 
+     * a node holding the other nodes, and we cant use an array of nodes because there are card-actions available for it...
      * 
      * Makes a CardPresenterNode out of $node if $node contains an artifact
      * @param TreeNode $node

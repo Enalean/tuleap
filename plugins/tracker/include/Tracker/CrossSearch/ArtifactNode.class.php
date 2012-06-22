@@ -23,20 +23,14 @@
  * A TreeNode that holds an Tracker_Artifact
  */
 class ArtifactNode extends TreeNode {
-
-    /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
     
     public function __construct(Tracker_Artifact $artifact, array $data = null) {
         parent::__construct($data, $artifact->getId());
-        $this->artifact = $artifact;
         $this->setObject($artifact);
     }
     
     public function getArtifact() {
-        return $this->artifact;
+        return $this->getObject();
     }
 
 }

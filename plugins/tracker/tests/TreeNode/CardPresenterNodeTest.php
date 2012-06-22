@@ -42,7 +42,7 @@ class Tracker_TreeNode_CardPresenterNodeTest extends TuleapTestCase {
     public function itHoldsTheGivenPresenter() {
         $presenter      = mock('Tracker_CardPresenter');
         $presenter_node = Tracker_TreeNode_CardPresenterNode::build(mock('TreeNode'), $presenter);
-        $this->assertIdentical($presenter, $presenter_node->getPlanningItemPresenter());
+        $this->assertIdentical($presenter, $presenter_node->getCardPresenter());
     }
 }
 ?>

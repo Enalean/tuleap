@@ -25,7 +25,7 @@
 class Tracker_TreeNode_CardPresenterNode extends TreeNode {
 
     /**
-     * @var Planning_ItemPresenter
+     * @var Tracker_CardPresenter
      */
     private $presenter;
     
@@ -41,9 +41,9 @@ class Tracker_TreeNode_CardPresenterNode extends TreeNode {
     }
 
     /**
-     * @return Planning_ItemPresenter
+     * @return Tracker_CardPresenter
      */
-    public function getPlanningItemPresenter() {
+    public function getCardPresenter() {
         return $this->presenter;
     }
 }
