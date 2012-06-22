@@ -139,7 +139,7 @@ class CodeReviewActions extends Actions {
             $nbr                     = count($reviewers);
             for($i = 0;$i<$nbr && $check;$i++){
                 $username = $reviewers[$i];
-                $check    = $this->isUGroup($username);
+                $check    = $this->isProjectMember($username);
                 if ($check){
                     $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
                     $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
@@ -503,13 +503,13 @@ class CodeReviewActions extends Actions {
     }
 
     /**
-     * Check if the reviewer is an uGroup
+     * Check if the reviewer is a project member
      *
      * @param String  $username
      *
      * @return Boolean
      */
-    function isUGroup($username) {
+    function isProjectMember($username) {
         $project = ProjectManager::instance()->getProject($this->request->get('group_id'));
         $members = $project->getMembersUserNames();
         foreach ($members as $member) {
