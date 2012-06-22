@@ -16,7 +16,7 @@ include_path=/home/nicolas/tuleap/src:.
     function dump_priorities($msg) {
         echo $msg .PHP_EOL;
         global $dao;
-        $dar = $dao->retrieve("SELECT * FROM tracker_artifact_priority");
+        $dar = $dao->retrieve("SELECT * FROM tracker_artifact_priority ORDER BY rank");
         foreach ($dar as $row) {
             foreach ($row as $cell) {
                 echo $cell .',';
@@ -65,31 +65,31 @@ An element is inserted at the end
 .
 42 is > than 1
 ,42,0,
-1,,2,
 42,1,1,
+1,,2,
 .
 Three more elements are added at the end
 ,42,0,
-1,66,2,
 42,1,1,
+1,66,2,
 66,123,3,
 123,101,4,
 101,,5,
 .
 1 is > than 101
 ,42,0,
-1,101,4,
 42,66,1,
 66,123,2,
 123,1,3,
+1,101,4,
 101,,5,
 .
 42 is < than 1
 ,66,0,
-1,42,3,
 66,123,1,
 123,1,2,
-101,,5,
+1,42,3,
 42,101,4,
+101,,5,
 .
 
