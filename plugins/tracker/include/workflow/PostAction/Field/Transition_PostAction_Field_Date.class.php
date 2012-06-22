@@ -202,17 +202,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             // Target field
             if ($request->validInArray('workflow_postaction_field_date', new Valid_UInt($this->id))) {
                 $new_field_id = $request->getInArray('workflow_postaction_field_date', $this->id);
-                if ($new_field_id != $field_id) {
-                    $new_field = $this->getFormElementFactory()->getUsedFormElementById($new_field_id);
-                    if ($new_field) {
-                        $already_used = $this->getDao()->searchByTransitionIdAndFieldId($this->transition->getTransitionId(), $new_field->getId());
-                        if (count($already_used)) {
-                            $this->addFeedback('error', 'workflow_admin', 'postaction_on_field_already_exist', array($new_field->getLabel()));
-                        } else {
-                            $field_id = $new_field->getId();
-                        }
-                    }
-                }
+                $field_id = $this->getFieldIdOfPostActionToUpdate($field_id, $new_field_id);
             }
             
             // Value Type

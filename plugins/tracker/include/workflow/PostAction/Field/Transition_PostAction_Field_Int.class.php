@@ -162,10 +162,23 @@ class Transition_PostAction_Field_Int extends Transition_PostAction {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-            $field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
+            
+            $field_id = $this->getFieldId();
             $value    = $request->getInArray('workflow_postaction_field_int_value', $this->id);
-            //TODO: check value is an integer
-            $this->getDao()->updatePostAction($this->id, $field_id, $value);
+
+            if ($request->validInArray('workflow_postaction_field_int', new Valid_UInt($this->id))) {
+                $new_field_id = $request->getInArray('workflow_postaction_field_int', $this->id);
+                $field_id = $this->getFieldIdOfPostActionToUpdate($field_id, $new_field_id);
+                //Check if value is an int
+                $field = $this->getFormElementFactory()->getUsedFormElementById($field_id);
+                if ($field) {
+                    $field->validateValue($value);
+                }
+            }
+            // Update if something changed
+            if ($field_id != $this->getFieldId() || $value != $this->value) {
+                $this->getDao()->updatePostAction($this->id, $field_id, $value);
+            }
         }
     }
     

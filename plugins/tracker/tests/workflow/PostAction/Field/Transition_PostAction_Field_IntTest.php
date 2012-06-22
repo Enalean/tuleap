@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/T
 require_once dirname(__FILE__).'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once  dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_IntDao.class.php';
 
-Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined'));
+Mock::generatePartial('Transition_PostAction_Field_Int', 'Transition_PostAction_Field_IntTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
 
 class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     
@@ -35,7 +35,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         $this->dao            = mock('Transition_PostAction_Field_IntDao');
         $this->field          = stub('Tracker_FormElement_Field_Integer')->getId()->returns(1131);
         $this->value          = 0;
-        
+        $this->factory        = mock('Tracker_FormElementFactory');
         $this->post_action->__construct($this->transition, $this->post_action_id, $this->field, $this->value);
         stub($this->post_action)->getDao()->returns($this->dao);
         stub($this->post_action)->isDefined()->returns($this->field);
@@ -49,6 +49,13 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
                                   ->with('remove_postaction',                   array())
                                   ->build();
         
+        $field = stub('Tracker_FormElement_Field_Integer')->getId()->returns(4572);
+        stub($this->post_action)->getFieldIdOfPostActionToUpdate()->returns($new_field_id);
+        
+        $this->factory->setReturnReference('getUsedFormElementById', $field, array($new_field_id));
+        $this->post_action->setReturnReference('getFormElementFactory', $this->factory);
+                
+        stub('Tracker_FormElement_Field_Integer')->validateValue()->returns(true);
         $this->dao->expectOnce('updatePostAction', array($this->post_action_id, $new_field_id, $new_value));
         $this->post_action->process($request);
     }
@@ -64,9 +71,9 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
     public function testBeforeShouldSetTheIntegerField() {
         $user = new MockUser();
         
-        $label           = stub($this->field)->getLabel()->returns('Remaining Effort');
-        $readableField   = stub($this->field)->userCanRead($user)->returns(true);
-        $updatableField  = stub($this->field)->userCanUpdate($user)->returns(true);
+        stub($this->field)->getLabel()->returns('Remaining Effort');
+        stub($this->field)->userCanRead($user)->returns(true);
+        stub($this->field)->userCanUpdate($user)->returns(true);
         
         $expected    = 0;
         $fields_data = array(
