@@ -102,6 +102,8 @@ class CodeReviewViews extends Views {
         echo '</br>';
         echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
         echo '</br>';
+        echo '</br>';
+        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=create_patch'>Create your patch file</a>";
         $iframe  = "<iframe name=\"rb\" style=\"display:none; visibility:hidden\"/>";
         $form    = " <form id=\"form\" target=\"rb\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form   .= "  <p>";
