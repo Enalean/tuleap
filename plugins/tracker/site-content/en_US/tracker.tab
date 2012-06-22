@@ -1362,6 +1362,9 @@ plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Cannot delete 
 plugin_tracker_date_reminder	tracker_date_reminder_status	Status
 plugin_tracker_date_reminder	tracker_date_reminder_update_action	Update
 plugin_tracker_date_reminder	tracker_date_reminder_delete_action	Delete
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_txt	<h3>Confirm deletion of date reminder</h3><p>You are going to delete this date reminder:</p><p>$1</p><p>Are you sure that you want to continue?</p>
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_cancel	No, I do not want to delete it
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_confirm	Yes, I am sure!
 
 project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
 project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1

@@ -1359,6 +1359,9 @@ plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Impossible de 
 plugin_tracker_date_reminder	tracker_date_reminder_status	Status
 plugin_tracker_date_reminder	tracker_date_reminder_update_action	Modifier
 plugin_tracker_date_reminder	tracker_date_reminder_delete_action	supprimer
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_txt	<h3>Confirmez la suppression du rappel sur date de tracker</h3><p>Vous êtes sur le point de supprimer un rappel sur date de tracker suivant:</p><p>$1</p><p>Êtes vous sûr de vouloir continuer ?</p>
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_cancel	Non, je ne veux pas le supprimer
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_confirm	Oui, je suis sûr !
 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
 project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1

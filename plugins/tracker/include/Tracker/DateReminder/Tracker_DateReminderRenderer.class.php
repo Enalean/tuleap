@@ -33,6 +33,7 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function __construct(Tracker $tracker) {
+        error_reporting(E_ALL);
         $this->tracker             = $tracker;
         $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
@@ -349,8 +350,23 @@ class Tracker_DateReminderRenderer {
                 $output .= '</tr>';
             }
             $output .= '</table>';
-            print $output;
+            return $output;
         }
+    }
+
+    function displayConfirmDelete($reminderId) {
+        $html = '';
+        $html .= '<p><form action="?func=admin-notifications&amp;tracker='.(int)$this->tracker->id.'" id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_txt', array($reminderId));
+        $html .= '<div class="date_reminder_confirm_delete_buttons">';
+        $html .= '<input type="hidden" name="action" value="confirm_delete_reminder" />';
+        $html .= '<input type="hidden" name="tracker" value="'.(int)$this->tracker->id.'" />';
+        $html .= '<input type="hidden" name="reminder_id" value="'.$reminderId.'" />';
+        $html .= '<input type="submit" name="cancel_delete_reminder" value="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_cancel').'" />';
+        $html .= '<input type="submit" name="delete_reminder" value="'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_confirm').'" />';
+        $html .= '</div>';
+        $html .= '</form></p>';
+        return $html;
     }
 
     /**
@@ -361,10 +377,13 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function displayDateReminders(HTTPRequest $request) {
-        print '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
-        print '<fieldset>';
-        $this->displayAllReminders();
-        $output  = '<div id="tracker_reminder" style="display:none;"><p><label for="New Reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label></div>';
+        $output = '<h2>'.$GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_title').'</h2>';
+        $output .= '<fieldset>';
+        if ($request->get('action') == 'delete_reminder') {
+           $output .= $this->displayConfirmDelete($request->get('reminder_id'));
+        }
+        $output .=$this->displayAllReminders();
+        $output .= '<div id="tracker_reminder" style="display:none;"><p><label for="New Reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'<input type="image" src="'.util_get_image_theme('ic/add.png').'" id="add_reminder" value="'.(int)$this->tracker->id.'"></label></div>';
         $output .= '<noscript>
         <p><a href="?func=admin-notifications&amp;tracker='. (int)$this->tracker->id .'&amp;action=add_reminder" id="add_reminder">'.$GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_add_title').'</a>
         </noscript>';
@@ -373,7 +392,7 @@ class Tracker_DateReminderRenderer {
         } elseif ($request->get('action') == 'update_reminder') {
            $output .= '<div id="update_reminder"></div>';
            $output .= $this->editDateReminder($request->get('reminder_id'));
-            }
+        }
         $output .= '</fieldset>';
         echo $output;
     }
