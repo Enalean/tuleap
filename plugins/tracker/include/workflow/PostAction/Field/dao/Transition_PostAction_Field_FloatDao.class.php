@@ -111,6 +111,10 @@ class Transition_PostAction_Field_FloatDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function countByFieldId($field_id) {
+        return count($this->searchByFieldId($field_id));
+    }
+    
     public function updatePostAction($id, $field_id, $value) {
         $id       = $this->da->escapeInt($id);
         $field_id = $this->da->escapeInt($field_id);

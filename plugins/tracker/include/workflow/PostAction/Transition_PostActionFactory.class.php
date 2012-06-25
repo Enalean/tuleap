@@ -273,7 +273,12 @@ class Transition_PostActionFactory {
      * @return bool
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
-        return count($this->getDao()->searchByFieldId($field->getId())) > 0;
+        foreach ($this->post_actions_classes as $shortname => $klass) {
+            if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

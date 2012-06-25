@@ -311,4 +311,63 @@ class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
     }
 }
 
+class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $this->factory = new Transition_PostActionFactoryTestVersion();
+        
+        $this->date_dao  = mock('Transition_PostAction_Field_DateDao');
+        $this->int_dao   = mock('Transition_PostAction_Field_IntDao');
+        $this->float_dao = mock('Transition_PostAction_Field_FloatDao');
+        
+        stub($this->factory)->getDao('field_date')->returns($this->date_dao);
+        stub($this->factory)->getDao('field_int')->returns($this->int_dao);
+        stub($this->factory)->getDao('field_float')->returns($this->float_dao);        
+        
+        $this->field_id = 45617;
+        $this->field    = aMockField()->withId($this->field_id)->build();
+    }
+    
+    public function itIsTrueWhenFieldIsUsedInADatePostAction() {
+        stub($this->date_dao)->countByFieldId($this->field_id)->returns(1);
+        stub($this->int_dao)->countByFieldId($this->field_id)->returns(0);
+        stub($this->float_dao)->countByFieldId($this->field_id)->returns(0);
+        
+        $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
+    }
+    
+    public function itIsTrueWhenFieldIsUsedInAnIntPostAction() {
+        stub($this->date_dao)->countByFieldId($this->field_id)->returns(0);
+        stub($this->int_dao)->countByFieldId($this->field_id)->returns(2);
+        stub($this->float_dao)->countByFieldId($this->field_id)->returns(0);
+        
+        $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
+    }
+    
+    public function itIsTrueWhenFieldIsUsedInAFloatPostAction() {
+        stub($this->date_dao)->countByFieldId($this->field_id)->returns(0);
+        stub($this->int_dao)->countByFieldId($this->field_id)->returns(0);
+        stub($this->float_dao)->countByFieldId($this->field_id)->returns(3);
+        
+        $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
+    }
+    
+    public function itIsTrueWhenFieldIsUsedInMultiplePostActions() {
+        stub($this->date_dao)->countByFieldId($this->field_id)->returns(1);
+        stub($this->int_dao)->countByFieldId($this->field_id)->returns(2);
+        stub($this->float_dao)->countByFieldId($this->field_id)->returns(3);
+        
+        $this->assertTrue($this->factory->isFieldUsedInPostActions($this->field));
+    }
+    public function itIsFalseWhenFieldIsNotUsedInAnyPostAction() {
+        stub($this->date_dao)->countByFieldId($this->field_id)->returns(0);
+        stub($this->int_dao)->countByFieldId($this->field_id)->returns(0);
+        stub($this->float_dao)->countByFieldId($this->field_id)->returns(0);
+        
+        $this->assertFalse($this->factory->isFieldUsedInPostActions($this->field));
+    }
+}
+
 ?>

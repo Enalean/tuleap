@@ -129,6 +129,10 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function countByFieldId($field_id) {
+        return count($this->searchByFieldId($field_id));
+    }
+    
     /**
      * Delete a postaction entry
      *
