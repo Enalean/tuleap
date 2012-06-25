@@ -20,19 +20,7 @@
 
 class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
 
-    public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
-    }
-
-    /**
-     * Fetch the html code to display the field value in artifact in read only mode
-     *
-     * @param Tracker_Artifact                $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     *
-     * @return string
-     */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    private function sumRecursively(Tracker_Artifact $artifact) {
         $user = UserManager::instance()->getCurrentUser();
         $linked_artifacts = $artifact->getLinkedArtifacts($user);
         $sum = 0;
@@ -49,8 +37,24 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
                 }
             }
         }
-        return $sum;
     }
+
+    public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
+        return $this->sumRecursively($artifact);
+    }
+
+    /**
+     * Fetch the html code to display the field value in artifact in read only mode
+     *
+     * @param Tracker_Artifact                $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     *
+     * @return string
+     */
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->sumRecursively($artifact);
+    }
+
 
     /**
      * Fetch data to display the field value in mail
@@ -62,7 +66,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format = 'text') {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
+        return $this->sumRecursively($artifact);
     }
 
     /**
@@ -73,15 +77,15 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
+        return $this->sumRecursively($artifact);
     }
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
-        return $this->fetchArtifactValueReadOnly($artifact);
+        return $this->sumRecursively($artifact);
     }
 
-    
+
     /**
      * Display the html field in the admin ui
      * @return string html
