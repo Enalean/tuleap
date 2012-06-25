@@ -18,45 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/TreeNodeFunction.class.php';
 require_once 'CardPresenter.class.php';
 
-/**
- * This visitor injects various artifact related data in a TreeNode to be used in mustache
- */
-class Cardwall_ArtifactTreeNodeVisitor {
+class Cardwall_CreateCardPresenterFunction implements TreeNodeFunction {
 
-
-    /**
-     * @return Planning_ArtifactTreeNodeVisitor
-     */
-    public static function build() {
-
-        return new Cardwall_ArtifactTreeNodeVisitor();
-    }
-
-    public function visit(TreeNode $node) {
-        $this->decorate($node);
-        $this->visitChildren($node);
-    }
-
-    private function decorate(TreeNode $node) {
-        $artifact = $this->getArtifact($node);
-
+    public function apply(TreeNode $node) {
+        $artifact = $node->getObject();
         if ($artifact) {
             $presenter = new Cardwall_CardPresenter($artifact);
-
-            $node->setObject($presenter);
+            $new_node  = new TreeNode();
+            $new_node->setObject($presenter);
+            return $new_node;
         }
-    }
-
-    private function getArtifact(TreeNode $node) {
-        return $node->getObject();
-    }
-
-    private function visitChildren(TreeNode $node) {
-        foreach ($node->getChildren() as $child) {
-            $child->accept($this);
-        }
+        return clone $node;
     }
 }
 

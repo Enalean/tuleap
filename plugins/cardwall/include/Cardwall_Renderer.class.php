@@ -17,16 +17,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
-require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
 require_once 'CardwallCardProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'InjectColumnIdCustomFieldVisitor.class.php';
+require_once 'CreateCardPresenterFunction.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
@@ -124,7 +126,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @return TreeNode
      */
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        $visitor  = Cardwall_ArtifactTreeNodeVisitor::build();
+        $visitor  = new TreeNodeMapper(new Cardwall_CreateCardPresenterFunction());
         $provider = new CardwallCardProvider($artifact_factory, $visitor);
         return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory, $visitor);
     }

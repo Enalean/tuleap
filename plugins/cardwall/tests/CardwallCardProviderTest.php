@@ -81,16 +81,9 @@ class CardwallCardProviderTest extends TuleapTestCase {
 
         $artifact_factory = mock('Tracker_ArtifactFactory');
         stub($artifact_factory)->getArtifactById(4)->returns($artifact);
-        $visitor = mock('Cardwall_ArtifactTreeNodeVisitor');
-//        $visitor = stub('ArtifactTreeNodeVisitor')->visit($root)->returns(clone $root);
-        $result = $provider->flatForestOfArtifacts(array(4), $artifact_factory, $visitor);
-        $root = aNode()->withChild(
-                    aNode()->withChild(
-                        anArtifactNode()->withArtifact($artifact)))
-                ->build();
-
-        $visitor->expectOnce('visit', array($root));
-        $this->assertIdentical($root->getChild(0)->getChild(0), $result->getChild(0)->getChild(0));
+        $visitor = mock('TreeNodeMapper');
+        $visitor->expectOnce('visit');
+        $provider->flatForestOfArtifacts(array(4), $artifact_factory, $visitor);
     }
     
     public function itTheVisitorCreatesACardwallPresenterForEveryArtifactNode() {
