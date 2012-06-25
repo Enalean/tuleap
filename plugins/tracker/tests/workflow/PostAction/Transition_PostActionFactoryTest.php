@@ -301,13 +301,48 @@ class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
         $this->float_dao->expectOnce('save', array(123, 456, 0));
         $this->factory->saveObject($post_action);
     }
+}
+
+class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $this->factory = new Transition_PostActionFactoryTestVersion();
+        
+        $this->date_dao  = mock('Transition_PostAction_Field_DateDao');
+        $this->int_dao   = mock('Transition_PostAction_Field_IntDao');
+        $this->float_dao = mock('Transition_PostAction_Field_FloatDao');
+        
+        stub($this->factory)->getDao('field_date')->returns($this->date_dao);
+        stub($this->factory)->getDao('field_int')->returns($this->int_dao);
+        stub($this->factory)->getDao('field_float')->returns($this->float_dao);  
+        
+        $this->workflow_id = 1;
+    }
     
     public function itDeletesAllFieldsPostActions() {
-        $workflow_id = 1;
-        $this->date_dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
-        $this->int_dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
-        $this->float_dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
-        $this->factory->deleteWorkflow($workflow_id);
+        $this->date_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
+        $this->int_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
+        $this->float_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
+        
+        $this->factory->deleteWorkflow($this->workflow_id);
+    }
+    
+    public function itReturnsTrueWhenAllDeletionsSucceed() {
+        stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
+        stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(true);
+        stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
+        
+        $this->assertTrue($this->factory->deleteWorkflow($this->workflow_id));
+    }
+    
+    public function itReturnsFalseWhenAnyDeletionFails() {
+        stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
+        stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(false);
+        stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
+        
+        $this->assertFalse($this->factory->deleteWorkflow($this->workflow_id));
     }
 }
 

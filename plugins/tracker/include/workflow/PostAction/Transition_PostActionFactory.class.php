@@ -288,9 +288,13 @@ class Transition_PostActionFactory {
      * 
      */
     public function deleteWorkflow($workflow_id) {
+        $result = true;
+        
         foreach ($this->post_actions_classes as $shortname => $klass) {
-            $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id);
+            $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
         }
+        
+        return $result;
     }
     
    /**
