@@ -20,15 +20,18 @@
 
 require_once 'common/TreeNode/TreeNodeFunction.class.php';
 require_once 'CardPresenter.class.php';
+require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
 
+/**
+ * Creates a CardPresenter given a TreeNode with Artifact
+ */
 class Cardwall_CreateCardPresenterFunction implements TreeNodeFunction {
 
     public function apply(TreeNode $node) {
         $artifact = $node->getObject();
         if ($artifact) {
             $presenter = new Cardwall_CardPresenter($artifact);
-            $new_node  = new TreeNode();
-            $new_node->setObject($presenter);
+            $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
             return $new_node;
         }
         return clone $node;

@@ -37,9 +37,8 @@ class Cardwall_InjectColumnIdVisitor {
 
     public function visit(TreeNode $node) {
         $data      = $node->getData();
-        $presenter = $node->getObject();
-        if ($presenter) {
-            $field = $this->getField($presenter->getArtifact());
+        if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
+            $field = $this->getField($node->getCardPresenter()->getArtifact());
             $data['column_field_id'] = 0;
             if ($field) {
                 $field_id                = $field->getId();
