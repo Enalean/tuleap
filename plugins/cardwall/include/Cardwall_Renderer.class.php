@@ -19,6 +19,7 @@
  */
 require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
 require_once 'BoardFactory.class.php';
@@ -125,13 +126,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $forest = new TreeNode();
         $artifact_factory = Tracker_ArtifactFactory::instance();
         foreach ($artifact_ids as $id) {
-            $node = new TreeNode();
-            $node->setId((int)$id);
-            $node->setData(array(
-                'id' => (int)$id,
-                'artifact' => $artifact_factory->getArtifactById($id),
-            ));
-            
+            $node = new ArtifactNode($artifact_factory->getArtifactById($id));
             $forest->addChild($node);
         }
         $root = new TreeNode();

@@ -25,27 +25,13 @@ require_once 'CardPresenter.class.php';
  */
 class Cardwall_ArtifactTreeNodeVisitor {
 
-    /**
-     * @var string the css class name
-     */
-    private $classname;
-
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-
-    public function __construct(Tracker_ArtifactFactory $artifact_factory) {
-        $this->artifact_factory = $artifact_factory;
-    }
 
     /**
      * @return Planning_ArtifactTreeNodeVisitor
      */
     public static function build() {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
 
-        return new Cardwall_ArtifactTreeNodeVisitor($artifact_factory);
+        return new Cardwall_ArtifactTreeNodeVisitor();
     }
 
     public function visit(TreeNode $node) {
@@ -64,12 +50,7 @@ class Cardwall_ArtifactTreeNodeVisitor {
     }
 
     private function getArtifact(TreeNode $node) {
-        $row = $node->getData();
-        if (isset($row['artifact'])) {
-            return $row['artifact'];
-        }
-        $artifact_id = $node->getId();
-        return $this->artifact_factory->getArtifactById($artifact_id);
+        return $node->getObject();
     }
 
     private function visitChildren(TreeNode $node) {
