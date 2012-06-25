@@ -28,6 +28,48 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TreeNode/CardP
  */
 class Planning_ArtifactTreeNodeVisitor {
     
+    
+    /**
+     * @param string $classname The css classname to inject in TreeNode
+     *
+     * @return Planning_ArtifactTreeNodeVisitor
+     */
+    public static function build(Planning $planning, $classname) {
+        return new TreeNodeMapper(new Planning_ItemCard($planning, $classname));
+    }
+
+}
+
+class TreeNodeMapper {
+
+    private $function;
+    
+    public function __construct($function) {
+        $this->function = $function;
+    }
+    
+    public function visit(TreeNode $node) {
+        $new_node = $this->decorate($node);
+        $new_node->setChildren($this->visitChildren($node));
+        return $new_node;
+    }
+
+    private function decorate(TreeNode $node) {
+        return $this->function->decorate($node);
+    }
+    
+    
+    private function visitChildren(TreeNode $node) {
+        $children = array();
+        foreach ($node->getChildren() as $child) {
+            $children[] = $child->accept($this);
+        }
+        return $children;
+    }
+}
+
+class Planning_ItemCard {
+
     /**
      * @var Planning
      */
@@ -44,26 +86,6 @@ class Planning_ArtifactTreeNodeVisitor {
     }
     
     /**
-     * @param string $classname The css classname to inject in TreeNode
-     *
-     * @return Planning_ArtifactTreeNodeVisitor
-     */
-    public static function build(Planning $planning, $classname) {
-        return new Planning_ArtifactTreeNodeVisitor($planning, $classname);
-    }
-
-    /**
-     * Makes a new TreeNode hierarchy identical to the given one, but changes the types
-     * @param TreeNode $node
-     * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
-     */
-    public function visit(TreeNode $node) {
-        $new_node = $this->decorate($node);
-        $new_node->setChildren($this->visitChildren($node));
-        return $new_node;
-    }
-    
-    /**
      * TODO something is wrong since we return different types here
      * When on the left side of the planning, the top node is just 
      * a node holding the other nodes, and we cant use an array of nodes because there are card-actions available for it...
@@ -72,7 +94,7 @@ class Planning_ArtifactTreeNodeVisitor {
      * @param TreeNode $node
      * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
      */
-    private function decorate(TreeNode $node) {
+    public function decorate(TreeNode $node) {
         $artifact = $node->getObject();
         
         if ($artifact) {
@@ -83,14 +105,7 @@ class Planning_ArtifactTreeNodeVisitor {
         }
         return $node;
     }
-    
-    private function visitChildren(TreeNode $node) {
-        $children = array();
-        foreach ($node->getChildren() as $child) {
-            $children[] = $child->accept($this);
-        }
-        return $children;
-    }
+
 }
 
 ?>
