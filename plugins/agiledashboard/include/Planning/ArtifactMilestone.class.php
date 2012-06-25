@@ -73,6 +73,14 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     private $sub_milestones = array();
     
     /**
+     * The effort needed to complete the milestone. It's a numerical quantification
+     * of the workload.
+     * 
+     * @var Integer
+     */
+    private $remaining_effort = null;
+    
+    /**
      * @param Project $project
      * @param Planning $planning
      * @param Tracker_Artifact $artifact
@@ -206,6 +214,14 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             $artifacts   = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
             $this->addChildrenNodes($node, $artifacts, $user);
         }
+    }
+
+    public function getRemainingEffort() {
+        return $this->remaining_effort;
+    }
+
+    public function setRemainingEffort($effort) {
+        $this->remaining_effort = $effort;
     }
 }
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Describe what a Milestone business object should present.
+ */
 interface Planning_Milestone {
 
     /**
@@ -96,7 +98,8 @@ interface Planning_Milestone {
      * @return Array of Tracker_Artifact
      */
     public function getLinkedArtifacts(User $user);
-    
+
+    public function getRemainingEffort();
 }
 
 ?>

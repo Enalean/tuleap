@@ -276,7 +276,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         //var_dump($milestone_artifact);
         $field = Tracker_FormElementFactory::instance()->getFormElementByName($milestone_artifact->getTracker()->getId(), 'remaining_effort');
         //var_dump($field);
-         $value = $milestone_artifact->getValue($field);
+        $value = $milestone_artifact->getValue($field);
         return $field->fetchArtifactValue($milestone_artifact);
     }
 }
