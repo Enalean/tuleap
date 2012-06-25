@@ -24,24 +24,6 @@ require_once 'ItemPresenter.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TreeNode/CardPresenterNode.class.php';
 
 /**
- * This visitor injects various artifact related data in a TreeNode to be used in mustache
- */
-class Planning_ArtifactTreeNodeVisitor {
-    
-    
-    /**
-     * @param string $classname The css classname to inject in TreeNode
-     *
-     * @return Planning_ArtifactTreeNodeVisitor
-     */
-    public static function build(Planning $planning, $classname) {
-        return new TreeNodeMapper(new Planning_ItemCardPresenterProvider($planning, $classname));
-    }
-
-}
-
-
-/**
  * Like array_map this produces a new node tree by calling $callback on every node in the current tree
  */
 class TreeNodeMapper {
@@ -55,11 +37,11 @@ class TreeNodeMapper {
     
     public function visit(TreeNode $node) {
         $new_node = $this->function->apply($node);
-        $new_node->setChildren($this->visitChildren($node));
+        $new_node->setChildren($this->applyToChildren($node));
         return $new_node;
     }
 
-    private function visitChildren(TreeNode $node) {
+    private function applyToChildren(TreeNode $node) {
         $children = array();
         foreach ($node->getChildren() as $child) {
             $children[] = $child->accept($this);

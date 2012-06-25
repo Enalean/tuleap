@@ -45,7 +45,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $node     = new TreeNode(array('id' => 123));
         $node->setObject($artifact);
         
-        $visitor      = Planning_ArtifactTreeNodeVisitor::build($planning, 'baz');
+        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterProvider($planning, 'baz'));
         $visited_node = $visitor->visit($node);
         $presenter    = $visited_node->getCardPresenter();
         
@@ -62,7 +62,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
                                    aNode()->withObject(anArtifact()->build()),
                                    aNode()->withObject(anArtifact()->build()))
                                ->build();
-        $visitor      = Planning_ArtifactTreeNodeVisitor::build(mock('Planning'), 'whatever-class');
+        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterProvider(mock('Planning'), 'whatever-class'));
         
         $visited_node = $visitor->visit($root_node);
         $all_nodes    = $visited_node->flattenChildren();
@@ -89,7 +89,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         $this->artifact = mock('Tracker_Artifact');
         $this->node     = new TreeNode();
         $this->node->setObject($this->artifact);
-        $this->visitor  = Planning_ArtifactTreeNodeVisitor::build($planning, 'whatever');
+        $this->visitor  = new TreeNodeMapper(new Planning_ItemCardPresenterProvider($planning, 'whatever'));
     }
     
     public function itKnowsDraggablePlanningItems() {
