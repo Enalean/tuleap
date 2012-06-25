@@ -21,8 +21,9 @@
 
 
 require_once dirname(__FILE__).'/../include/Cardwall_Renderer.class.php';
+require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
 
-class CardwallRenderer_getForestsOfArtifactsTest extends TuleapTestCase {
+class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
     
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
         $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
@@ -43,7 +44,14 @@ class CardwallRenderer_getForestsOfArtifactsTest extends TuleapTestCase {
         $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
         $artifact_factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($artifact_factory);
-        stub($artifact_factory)->getArtifactById()->returns(mock('Tracker_Artifact'));
+        
+        $artifact4 = aMockArtifact()->withId(4)->build();
+        $artifact5 = aMockArtifact()->withId(5)->build();
+        $artifact6 = aMockArtifact()->withId(6)->build();
+        
+        stub($artifact_factory)->getArtifactById(4)->returns($artifact4);
+        stub($artifact_factory)->getArtifactById(5)->returns($artifact5);
+        stub($artifact_factory)->getArtifactById(6)->returns($artifact6);
         
         $root_node = $renderer->getForestsOfArtifacts(array(4, 5, 6), $artifact_factory);
         
@@ -54,8 +62,10 @@ class CardwallRenderer_getForestsOfArtifactsTest extends TuleapTestCase {
         foreach ($tasks as $task) {
             $id = $task->getId();
             $this->assertBetweenClosedInterval($id, 4, 6);
-//            $data = $task->getData();
-//            $this->assertIsA($data['artifact'], 'Tracker_Artifact');
+            $presenter = $task->getObject();
+            $aid = $presenter->getArtifact()->getId();
+            $this->assertBetweenClosedInterval($aid, 4, 6);
+            $this->assertIsA($presenter->getArtifact(), 'Tracker_Artifact');
         }
         
     }
