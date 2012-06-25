@@ -35,6 +35,8 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 require_once(dirname(__FILE__).'/../../builders/aMockField.php');
 require_once(dirname(__FILE__).'/../../builders/aTransition.php');
 require_once(dirname(__FILE__).'/../../builders/aDateFieldPostAction.php');
+require_once(dirname(__FILE__).'/../../builders/anIntFieldPostAction.php');
+require_once(dirname(__FILE__).'/../../builders/aFloatFieldPostAction.php');
 
 class Transition_PostActionFactoryTest extends TuleapTestCase {
     
@@ -259,18 +261,45 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
 
 class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        
+        $this->factory = new Transition_PostActionFactoryTestVersion();
+        
+        $this->date_dao  = mock('Transition_PostAction_Field_DateDao');
+        $this->int_dao   = mock('Transition_PostAction_Field_IntDao');
+        $this->float_dao = mock('Transition_PostAction_Field_FloatDao');
+        
+        stub($this->factory)->getDao('field_date')->returns($this->date_dao);
+        stub($this->factory)->getDao('field_int')->returns($this->int_dao);
+        stub($this->factory)->getDao('field_float')->returns($this->float_dao);        
+    }
+    
     public function itSavesDateFieldPostActions() {
-        $factory     = new Transition_PostActionFactoryTestVersion();
-        $dao         = mock('Transition_PostAction_Field_DateDao');
         $post_action = aDateFieldPostAction()->withTransitionId(123)
                                              ->withFieldId(456)
                                              ->withValueType(1)
-                                             ->build(); //mock('Transition_PostAction_Field_Date')
-        
-        stub($factory)->getDao('field_date')->returns($dao);
-        
-        $dao->expectOnce('save');
-        $factory->saveObject($post_action);
+                                             ->build();
+        $this->date_dao->expectOnce('save', array(123, 456, 1));
+        $this->factory->saveObject($post_action);
+    }
+    
+    public function itSavesIntFieldPostActions() {
+        $post_action = anIntFieldPostAction()->withTransitionId(123)
+                                             ->withFieldId(456)
+                                             ->withValue(0)
+                                             ->build();
+        $this->int_dao->expectOnce('save', array(123, 456, 0));
+        $this->factory->saveObject($post_action);
+    }
+    
+    public function itSavesFloatFieldPostActions() {
+        $post_action = aFloatFieldPostAction()->withTransitionId(123)
+                                               ->withFieldId(456)
+                                               ->withValue(0)
+                                               ->build();
+        $this->float_dao->expectOnce('save', array(123, 456, 0));
+        $this->factory->saveObject($post_action);
     }
 }
 

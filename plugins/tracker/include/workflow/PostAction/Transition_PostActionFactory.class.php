@@ -242,9 +242,18 @@ class Transition_PostActionFactory {
     * @return void
     */
     public function saveObject($post_action) {
-        $this->getDao('field_date')->save($post_action->getTransition()->getTransitionId(),
-                                          $post_action->getFieldId(),
-                                          $post_action->getValueType());
+        $dao   = $this->getDao($post_action->getShortName());
+        
+        $dao->save($post_action->getTransition()->getTransitionId(),
+                   $post_action->getFieldId(),
+                   $this->getValue($post_action));
+    }
+    
+    private function getValue(Transition_PostAction $post_action) {
+        if ($post_action->getShortName() == 'field_date') {
+            return $post_action->getValueType();
+        }        
+        return $post_action->getValue();
     }
     
     /**

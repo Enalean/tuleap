@@ -41,7 +41,22 @@ class Transition_PostAction_Field_FloatDao extends DataAccessObject {
         return $this->updateAndGetLastId($sql);
     }
     
-        /**
+    /**
+     * Create a full-featured postaction.
+     * 
+     * @param int $transition_id
+     * @param int $field_id
+     * @param float $value
+     * 
+     * @return bool
+     */
+    public function save($transition_id, $field_id, $value) {
+        if (($post_action_id = $this->create($transition_id)) > 0) {
+            $this->updatePostAction($post_action_id, $field_id, $value);
+        }
+    }
+    
+    /**
      * Search all postactions belonging to a transition
      *
      * @param int $transition_id The id of the transition 
