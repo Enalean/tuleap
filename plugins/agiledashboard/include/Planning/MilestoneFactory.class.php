@@ -85,24 +85,16 @@ class Planning_MilestoneFactory {
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
-            return $this->updateMilestoneWithSuff($milestone);
+            return $this->updateMilestoneWithStuff($milestone);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
     }
 
-    private function updateMilestoneWithSuff(Planning_ArtifactMilestone $milestone) {
-        return $this->updateWithRemainingEffort($this->updateWithCapacity($milestone));
-    }
-
-    private function updateWithCapacity(Planning_ArtifactMilestone $milestone) {
-        $milestone->setCapacity($this->getFieldValue($milestone, 'capacity'));
-        return $milestone;
-    }
-
-    private function updateWithRemainingEffort(Planning_ArtifactMilestone $milestone) {
-        $milestone->setRemainingEffort($this->getFieldValue($milestone, 'remaining_effort'));
-        return $milestone;
+    private function updateMilestoneWithStuff(Planning_ArtifactMilestone $milestone) {
+        return $milestone
+            ->setCapacity($this->getFieldValue($milestone, 'capacity'))
+            ->setRemainingEffort($this->getFieldValue($milestone, 'remaining_effort'));
     }
 
     private function getFieldValue(Planning_ArtifactMilestone $milestone, $field_name) {

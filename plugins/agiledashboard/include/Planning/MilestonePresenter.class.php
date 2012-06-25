@@ -270,9 +270,17 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function editLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
-    
+
     public function getRemainingEffort() {
-        return $this->milestone->getRemainingEffort();
+        $remaining_effort = '';
+        if ($this->milestone->getRemainingEffort()) {
+            $remaining_effort = 'Remaining effort: ';
+            $remaining_effort .= $this->milestone->getRemainingEffort();
+        }
+        if ($this->milestone->getCapacity()) {
+            $remaining_effort .= ' / '.$this->milestone->getCapacity();
+        }
+        return $remaining_effort;
     }
 }
 ?>

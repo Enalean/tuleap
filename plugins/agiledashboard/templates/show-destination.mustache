@@ -10,7 +10,9 @@
             {{{errorCantDrop}}}
         {{/canDrop}}
         {{#canDrop}}
-            {{> planning-details}}
+            <div>
+            {{getRemainingEffort}}
+            <div>
             <div>
                 {{^hasChildren}}
                     No items yet

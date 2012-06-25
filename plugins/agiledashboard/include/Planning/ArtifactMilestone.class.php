@@ -230,6 +230,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     public function setRemainingEffort($remaining_effort) {
         $this->remaining_effort = $remaining_effort;
+        return $this;
     }
 
     public function getCapacity() {
@@ -238,6 +239,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     public function setCapacity($capacity) {
         $this->capacity = $capacity;
+        return $this;
     }
 }
 
