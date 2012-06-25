@@ -49,8 +49,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
                 }
             }
         }
-        $html = $sum;
-        return $html;
+        return $sum;
     }
 
     /**
@@ -78,6 +77,8 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     }
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+        return $this->fetchArtifactValueReadOnly($artifact);
     }
 
     
