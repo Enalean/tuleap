@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
         $linked_artifacts = $artifact->getLinkedArtifacts($user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
-            $field = $this->getFormElementFactory()->getFormElementByName($linked_artifact->getTracker()->getId(), 'remaining_effort');
+            $field = $this->getTargetField($linked_artifact);
             if ($field) {
                 if ($field instanceof Tracker_FormElement_Field_Aggregate) {
                     $sum += $field->fetchArtifactValueReadOnly($linked_artifact);
@@ -48,6 +48,10 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
             }
         }
         return $sum;
+    }
+
+    private function getTargetField(Tracker_Artifact $artifact) {
+        return $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), $this->getProperty('target_field_name'));
     }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
