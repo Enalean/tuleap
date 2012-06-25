@@ -192,62 +192,52 @@ class Transition_PostActionFactoryTest extends TuleapTestCase {
 
 class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
     
-    public function itReconstitutesDateFieldPostActionsFromXML() {
-        $date_field = aMockField()->withId(62334)->build();
+    public function setUp() {
+        parent::setUp();
         
+        $this->factory    = new Transition_PostActionFactory();
+        $this->field      = aMockField()->withId(62334)->build();
+        $this->mapping    = array('F1' => $this->field->getId());
+        $this->transition = aTransition()->fromFieldValueId(2068)
+                                         ->toFieldValueId(2069)
+                                         ->build();
+    }
+    
+    public function itReconstitutesDateFieldPostActionsFromXML() {
         $xml = new SimpleXMLElement('
             <postaction_field_date valuetype="1">
                 <field_id REF="F1"/>
             </postaction_field_date>
         ');
-        $xml_mapping = array('F1' => $date_field->getId());
         
-        $transition = aTransition()->fromFieldValueId(2068)
-                                   ->toFieldValueId(2069)
-                                   ->build();
+        $post_action = $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
         
-        $factory = new Transition_PostActionFactory();
-        $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Date');
         $this->assertEqual($post_action->getValueType(), 1);
     }
     
     public function itReconstitutesIntFieldPostActionsFromXML() {
-        $int_field = aMockField()->withId(62334)->build();
-        
         $xml = new SimpleXMLElement('
             <postaction_field_int value="440">
                 <field_id REF="F1"/>
             </postaction_field_int>
         ');
-        $xml_mapping = array('F1' => $int_field->getId());
         
-        $transition = aTransition()->fromFieldValueId(2068)
-                                   ->toFieldValueId(2069)
-                                   ->build();
+        $post_action = $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
         
-        $factory = new Transition_PostActionFactory();
-        $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Int');
         $this->assertEqual($post_action->getValue(), 440);
     }
     
     public function itReconstitutesFloatFieldPostActionsFromXML() {
-        $float_field = aMockField()->withId(62334)->build();
-        
         $xml = new SimpleXMLElement('
             <postaction_field_float value="64.42">
                 <field_id REF="F1"/>
             </postaction_field_float>
         ');
-        $xml_mapping = array('F1' => $float_field->getId());
         
-        $transition = aTransition()->fromFieldValueId(2068)
-                                   ->toFieldValueId(2069)
-                                   ->build();
+        $post_action = $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
         
-        $factory = new Transition_PostActionFactory();
-        $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Float');
         $this->assertEqual($post_action->getValue(), 64.42);
     }
@@ -258,15 +248,10 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
                 <field_id REF="F1"/>
             </postaction_field_invalid>
         ');
-        $xml_mapping = array();
         
-        $transition = aTransition()->fromFieldValueId(2068)
-                                   ->toFieldValueId(2069)
-                                   ->build();
-        
-        $factory = new Transition_PostActionFactory();
         $this->expectException('Transition_InvalidPostActionException');
-        $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
+        
+        $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
     }
 }
 
