@@ -33,6 +33,7 @@ Mock::generate('Tracker_FormElement_Field_Date');
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
 require_once(dirname(__FILE__).'/../../builders/aMockField.php');
+require_once(dirname(__FILE__).'/../../builders/aTransition.php');
 
 class Transition_PostActionFactoryTest extends TuleapTestCase {
     
@@ -201,12 +202,9 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         ');
         $xml_mapping = array('F1' => $date_field->getId());
         
-        $source_field_value = new MockTracker_FormElement_Field_List_Value();
-        $source_field_value->setReturnValue('getId', 2068);
-        $destination_field_value = new MockTracker_FormElement_Field_List_Value();
-        $destination_field_value->setReturnValue('getId', 2069);
-        
-        $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
+        $transition = aTransition()->fromFieldValueId(2068)
+                                   ->toFieldValueId(2069)
+                                   ->build();
         
         $factory = new Transition_PostActionFactory();
         $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
@@ -224,12 +222,9 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         ');
         $xml_mapping = array('F1' => $int_field->getId());
         
-        $source_field_value = new MockTracker_FormElement_Field_List_Value();
-        $source_field_value->setReturnValue('getId', 2068);
-        $destination_field_value = new MockTracker_FormElement_Field_List_Value();
-        $destination_field_value->setReturnValue('getId', 2069);
-        
-        $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
+        $transition = aTransition()->fromFieldValueId(2068)
+                                   ->toFieldValueId(2069)
+                                   ->build();
         
         $factory = new Transition_PostActionFactory();
         $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
@@ -247,12 +242,9 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         ');
         $xml_mapping = array('F1' => $float_field->getId());
         
-        $source_field_value = new MockTracker_FormElement_Field_List_Value();
-        $source_field_value->setReturnValue('getId', 2068);
-        $destination_field_value = new MockTracker_FormElement_Field_List_Value();
-        $destination_field_value->setReturnValue('getId', 2069);
-        
-        $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
+        $transition = aTransition()->fromFieldValueId(2068)
+                                   ->toFieldValueId(2069)
+                                   ->build();
         
         $factory = new Transition_PostActionFactory();
         $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
@@ -268,12 +260,9 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         ');
         $xml_mapping = array();
         
-        $source_field_value = new MockTracker_FormElement_Field_List_Value();
-        $source_field_value->setReturnValue('getId', 2068);
-        $destination_field_value = new MockTracker_FormElement_Field_List_Value();
-        $destination_field_value->setReturnValue('getId', 2069);
-        
-        $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
+        $transition = aTransition()->fromFieldValueId(2068)
+                                   ->toFieldValueId(2069)
+                                   ->build();
         
         $factory = new Transition_PostActionFactory();
         $this->expectException('Transition_InvalidPostActionException');
