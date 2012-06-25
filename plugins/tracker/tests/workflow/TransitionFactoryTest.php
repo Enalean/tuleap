@@ -94,4 +94,71 @@ class TransitionFactoryTest extends UnitTestCase {
     }
 }
 
+class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
+    
+    public function itReconstitutesDatePostActions() {
+        
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <postactions>
+                    <postaction_field_date valuetype="1">
+                        <field_id REF="F1"/>
+                    </postaction_field_date>
+                </postactions>
+            </transition>
+        ');
+        
+        $date_field = aMockField()->build();
+        $from_value = mock('Tracker_FormElement_Field_List_Value');
+        $to_value   = mock('Tracker_FormElement_Field_List_Value');
+        $xmlMapping = array('F1'     => $date_field,
+                            'F32-V1' => $from_value,
+                            'F32-V0' => $to_value);
+        
+        $factory      = new TransitionFactory();
+        $transition   = $factory->getInstanceFromXML($xml, $xmlMapping);
+        $post_actions = $transition->getPostActions();
+        
+        $this->assertEqual(1, count($post_actions));
+        
+        $date_post_action = $post_actions[0];
+        
+        $this->assertIsA($date_post_action, 'Transition_PostAction_Field_Date');
+    }
+    
+    public function itReconstitutesIntPostActions() {
+        
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <postactions>
+                    <postaction_field_int value="1">
+                        <field_id REF="F1"/>
+                    </postaction_field_int>
+                </postactions>
+            </transition>
+        ');
+        
+        $int_field = aMockField()->build();
+        $from_value = mock('Tracker_FormElement_Field_List_Value');
+        $to_value   = mock('Tracker_FormElement_Field_List_Value');
+        $xmlMapping = array('F1'     => $int_field,
+                            'F32-V1' => $from_value,
+                            'F32-V0' => $to_value);
+        
+        $factory      = new TransitionFactory();
+        $transition   = $factory->getInstanceFromXML($xml, $xmlMapping);
+        $post_actions = $transition->getPostActions();
+        
+        $this->assertEqual(1, count($post_actions));
+        
+        $int_post_action = $post_actions[0];
+        
+        $this->assertIsA($int_post_action, 'Transition_PostAction_Field_Int');
+    }
+}
+
 ?>

@@ -27,7 +27,7 @@ require_once('PostAction/Transition_PostActionFactory.class.php');
 
 class TransitionFactory {
     
-    protected function __construct() {
+    public function __construct() {
     }
     
     /**
@@ -164,8 +164,10 @@ class TransitionFactory {
         $postactions = array();
         if ($xml->postactions) {
             $tpaf = new Transition_PostActionFactory();
-            foreach ($xml->postactions->postaction_field_date as $p) {            
-                $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+            foreach(array('postaction_field_date', 'postaction_field_int') as $post_action_type) {
+                foreach ($xml->postactions->$post_action_type as $p) {            
+                    $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+                }
             }
         }
         $transition->setPostActions($postactions);
