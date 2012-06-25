@@ -19,11 +19,12 @@
  */
 require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
 require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
+require_once 'Transition_PostAction_Field.class.php';
 
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Date extends Transition_PostAction {
+class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
     
     /**
      * @const Clear the date.
@@ -41,16 +42,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     protected $value_type;
     
     /**
-     * @var Tracker_FormElement_Field The field the post action should modify
-     */
-    protected $field;
-    
-    /**
-     * @var $bypass_permissions true if permissions on field can be bypassed at submission or update
-     */
-    protected $bypass_permissions = false;
-    
-    /**
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
@@ -59,8 +50,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @param Integer                      $value_type The type of the value to set
      */
     public function __construct(Transition $transition, $id, $field, $value_type) {
-        parent::__construct($transition, $id);
-        $this->field      = $field;
+        parent::__construct($transition, $id, $field);
         $this->value_type = $value_type;
     }
     
@@ -89,39 +79,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     public static function getLabel() {
         return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_date_field');
-    }
-    
-    /**
-     * Return ID of the field updated by the post-action
-     *
-     * @return Integer
-     */
-    public function getFieldId() {
-        if ($this->field) {
-            return $this->field->getId();
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Return the field associated to this post action
-     *
-     * @return Tracker_FormElement_Field
-     */
-    public function getField() {
-        return $this->field;
-    }
-
-    /**
-     * Get the value of bypass_permissions
-     *
-     * @param Tracker_FormElement_Field $field
-     *
-     * @return boolean
-     */
-    public function bypassPermissions($field) {
-        return $this->getFieldId() == $field->getId() && $this->bypass_permissions;
     }
     
     /**
@@ -269,15 +226,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
-    }
-    
-    /**
-     * Wrapper for Tracker_FormElementFactory
-     *
-     * @return Tracker_FormElementFactory
-     */
-    protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
     }
 }
 ?>

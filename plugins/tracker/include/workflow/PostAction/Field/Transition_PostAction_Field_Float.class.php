@@ -19,27 +19,17 @@
  */
 require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
 require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
-
+require_once 'Transition_PostAction_Field.class.php';
 
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Float extends Transition_PostAction {
+class Transition_PostAction_Field_Float extends Transition_PostAction_Field {
     
     /**
      * @var Integer the value
      */
     protected $value;
-    
-    /**
-     * @var Tracker_FormElement_Field The field the post action should modify
-     */
-    protected $field;
-    
-    /**
-     * @var $bypass_permissions true if permissions on field can be bypassed at submission or update
-     */
-    protected $bypass_permissions = false;
     
     /**
      * Constructor
@@ -50,9 +40,8 @@ class Transition_PostAction_Field_Float extends Transition_PostAction {
      * @param Integer                      $value      The value to set
      */
     public function __construct(Transition $transition, $id, $field, $value) {
-        parent::__construct($transition, $id);
-        $this->field      = $field;
-        $this->value      = $value;
+        parent::__construct($transition, $id, $field);
+        $this->value = $value;
     }
     
     /**
@@ -72,17 +61,6 @@ class Transition_PostAction_Field_Float extends Transition_PostAction {
     public static function getLabel() {
         return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_float_field');
     }
-
-    /**
-     * Get the value of bypass_permissions
-     *
-     * @param Tracker_FormElement_Field $field
-     *
-     * @return boolean
-     */
-    public function bypassPermissions($field) {
-        return $this->getFieldId() == $field->getId() && $this->bypass_permissions;
-    }
     
     /**
      * Say if the action is well defined
@@ -91,28 +69,6 @@ class Transition_PostAction_Field_Float extends Transition_PostAction {
      */
     public function isDefined() {
         return $this->getField() && ($this->value != null);
-    }
-    
-    /**
-     * Return the field associated to this post action
-     *
-     * @return Tracker_FormElement_Field
-     */
-    public function getField() {
-        return $this->field;
-    }
-    
-    /**
-     * Return ID of the field updated by the post-action
-     *
-     * @return Integer
-     */
-    public function getFieldId() {
-        if ($this->field) {
-            return $this->field->getId();
-        } else {
-            return 0;
-        }
     }
     
     public function getValue() {
@@ -216,14 +172,6 @@ class Transition_PostAction_Field_Float extends Transition_PostAction {
              $child->addAttribute('value', $this->getValue());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }
-    }
-    /**
-     * Wrapper for Tracker_FormElementFactory
-     *
-     * @return Tracker_FormElementFactory
-     */
-    protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
     }
     
     protected function getDao() {
