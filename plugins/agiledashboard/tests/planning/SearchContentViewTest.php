@@ -21,7 +21,7 @@
 require_once dirname(__FILE__).'/../../../tracker/tests/Tracker/CrossSearch/SearchContentViewTest.php';
 require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/SearchContentView.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aMockTemplateRenderer.php';
 
 class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentViewTest {
     public function itCanGenerateALinkToAddNewBacklogRootItems() {
@@ -35,12 +35,12 @@ class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentVi
         $planning_redirect_param = '';
         
         $backlog_actions_markup = 'Some backlog actions';
-        $renderer = mock('MustacheRenderer');
+        $renderer = aMockTemplateRenderer()->build();
         
         $view = new Planning_SearchContentView($report, $criteria, $tree_of_artifacts, $artifact_factory, $form_element_factory, $user, $planning, $planning_redirect_param);
         $view->setRenderer($renderer);
         
-        stub($renderer)->render('backlog-actions', $view, '*')->returns($backlog_actions_markup);
+        stub($renderer)->renderToString('backlog-actions', $view)->returns($backlog_actions_markup);
         
         $output = $view->fetch();
         

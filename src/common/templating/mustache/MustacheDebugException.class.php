@@ -18,17 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../templating/TemplateRendererTestBase.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
-
 /**
- * Replace this class or add a class for every template engine 
+ * Like MustacheException, but for MustacheDebug.
+ * 
+ * This class does not inherit from MustacheException so that we don't catch
+ * it in MustacheDebug.
  */
-class MustacheRendererTest extends TemplateRendererTestBase {
-    function setUp() {
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
-        parent::setUp();
-    }
+class MustacheDebugException extends Exception {
 }
 
 ?>

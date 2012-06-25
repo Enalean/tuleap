@@ -18,15 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once 'MustacheRenderer.class.php';
+require_once 'MustacheDebug.class.php';
 
-// First, check plugin availability
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('fulltextsearch');
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.get_server_url());
+/**
+ * Same as MustacheRenderer, with better error messages. 
+ */
+class MustacheDebugRenderer extends MustacheRenderer {
+    
+    /**
+     * @see MustacheRenderer
+     * @return \MustacheDebug 
+     */
+    protected function buildTemplateEngine() {
+        return new MustacheDebug(null, null, null, $this->options);
+    }
+    
+    /**
+     * @see TemplateRenderer
+     * @return string 
+     */
+    public function renderToString($template_name, $presenter) {
+        return $this->template_engine->renderByName($template_name, $presenter, $this->template_loader);
+    }
 }
-
 ?>
