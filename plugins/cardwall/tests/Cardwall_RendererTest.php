@@ -63,9 +63,9 @@ class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
             $id = $task->getId();
             $this->assertBetweenClosedInterval($id, 4, 6);
             $presenter = $task->getObject();
-            $aid = $presenter->getArtifact()->getId();
-            $this->assertBetweenClosedInterval($aid, 4, 6);
-            $this->assertIsA($presenter->getArtifact(), 'Tracker_Artifact');
+            $artifact = $presenter->getArtifact();
+            $this->assertBetweenClosedInterval($artifact->getId(), 4, 6);
+            $this->assertIsA($artifact, 'Tracker_Artifact');
         }
         
     }

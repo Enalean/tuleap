@@ -131,6 +131,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 'id' => (int)$id,
                 'artifact' => $artifact_factory->getArtifactById($id),
             ));
+            
             $forest->addChild($node);
         }
         $root = new TreeNode();
