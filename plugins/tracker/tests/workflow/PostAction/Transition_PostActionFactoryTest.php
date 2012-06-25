@@ -301,6 +301,14 @@ class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
         $this->float_dao->expectOnce('save', array(123, 456, 0));
         $this->factory->saveObject($post_action);
     }
+    
+    public function itDeletesAllFieldsPostActions() {
+        $workflow_id = 1;
+        $this->date_dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
+        $this->int_dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
+        $this->float_dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
+        $this->factory->deleteWorkflow($workflow_id);
+    }
 }
 
 ?>

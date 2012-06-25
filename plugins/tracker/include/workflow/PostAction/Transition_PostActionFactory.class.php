@@ -87,12 +87,12 @@ class Transition_PostActionFactory {
      *
      * @return void
      */
-    public function removePostAction(Transition $transition, $requested_postaction) {
+    /*public function removePostAction(Transition $transition, $requested_postaction) {
         if (isset($this->post_actions_classes[$requested_postaction])) {
             $this->getDao()->delete($postaction_id);
             // FIXME: Where does $postaction_id come from ?
         }
-    }
+    }*/
     
     /**
      * Delete post actions for the transition
@@ -102,10 +102,10 @@ class Transition_PostActionFactory {
      *
      * @return void
      */
-    public function deletePostAction(Transition $transition) {
+    /*public function deletePostAction(Transition $transition) {
         $this->getDao()->deletePostActionsByTransitionId($transition->transition_id);
         // FIXME: Is this code used somewhere ?
-    }
+    }*/
     
     /**
      * Wrapper for Transition_PostAction_Field_DateDao
@@ -283,7 +283,9 @@ class Transition_PostActionFactory {
      * 
      */
     public function deleteWorkflow($workflow_id) {
-        return $this->getDao()->deletePostActionsByWorkflowId($workflow_id);
+        foreach ($this->post_actions_classes as $shortname => $klass) {
+            $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id);
+        }
     }
     
    /**
