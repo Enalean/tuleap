@@ -35,30 +35,30 @@ class Planning_ArtifactTreeNodeVisitor {
      * @return Planning_ArtifactTreeNodeVisitor
      */
     public static function build(Planning $planning, $classname) {
-        return new TreeNodeMapper(new Planning_ItemCard($planning, $classname));
+        return new TreeNodeMapper(new Planning_ItemCardPresenterProvider($planning, $classname));
     }
 
 }
 
+
+/**
+ * Like array_map this produces a new node tree by calling $callback on every node in the current tree
+ */
 class TreeNodeMapper {
 
+    /** @var TreeNodeFunction */
     private $function;
     
-    public function __construct($function) {
+    public function __construct(TreeNodeFunction $function) {
         $this->function = $function;
     }
     
     public function visit(TreeNode $node) {
-        $new_node = $this->decorate($node);
+        $new_node = $this->function->apply($node);
         $new_node->setChildren($this->visitChildren($node));
         return $new_node;
     }
 
-    private function decorate(TreeNode $node) {
-        return $this->function->decorate($node);
-    }
-    
-    
     private function visitChildren(TreeNode $node) {
         $children = array();
         foreach ($node->getChildren() as $child) {
@@ -68,7 +68,21 @@ class TreeNodeMapper {
     }
 }
 
-class Planning_ItemCard {
+/**
+ * To be used with \TreeNodeMapper
+ */
+interface TreeNodeFunction {
+    
+    /**
+     * Returns a new TreeNode based on the given one. This function should return a perfectly new node
+     * 
+     * @param TreeNode $node
+     * @return TreeNode
+     */
+    function apply(TreeNode $node);
+}
+
+class Planning_ItemCardPresenterProvider implements TreeNodeFunction {
 
     /**
      * @var Planning
@@ -94,7 +108,7 @@ class Planning_ItemCard {
      * @param TreeNode $node
      * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
      */
-    public function decorate(TreeNode $node) {
+    public function apply(TreeNode $node) {
         $artifact = $node->getObject();
         
         if ($artifact) {
