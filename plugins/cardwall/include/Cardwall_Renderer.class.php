@@ -22,6 +22,7 @@ require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.ph
 require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'RendererPresenter.class.php';
+require_once 'CardwallCardProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
@@ -123,31 +124,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @return TreeNode
      */
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        $cards  = $this->getCards($artifact_ids, $artifact_factory);
-        $root    = $this->wrapInAThreeLevelArtifactTree($cards);
-        $visitor = Cardwall_ArtifactTreeNodeVisitor::build();
-        $root->accept($visitor);
-
-        return $root;
+        $visitor  = Cardwall_ArtifactTreeNodeVisitor::build();
+        $provider = new CardwallCardProvider($artifact_factory, $visitor);
+        return $provider->provide($artifact_ids, $artifact_factory, $visitor);
     }
     
-    public function wrapInAThreeLevelArtifactTree($cards) {
-        $forest = new TreeNode();
-        $forest->setChildren($cards);
-        $root = new TreeNode();
-        $root->addChild($forest);
-        return $root;
-    }
-    
-    public function getCards(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        $cards = array();
-        foreach ($artifact_ids as $id) {
-            $cards[] = new ArtifactNode($artifact_factory->getArtifactById($id));
-        }
-        return $cards;
-    }
-
-
     /**
      * @return Cardwall_PaneContentPresenter
      */

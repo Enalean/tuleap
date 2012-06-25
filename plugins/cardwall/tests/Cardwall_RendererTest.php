@@ -26,12 +26,9 @@ require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php'
 class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
     
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
-        $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
-        $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        stub($artifact_factory)->getArtifactById()->returns(mock('Tracker_Artifact'));
+        $renderer = new CardwallCardProvider();
         
-        $root_node = $renderer->getForestsOfArtifacts(array(), $artifact_factory);
+        $root_node = $renderer->wrapInAThreeLevelArtifactTree(array());
         
         $this->assertTrue($root_node->hasChildren());
         $this->assertFalse($root_node->getChild(0)->hasChildren());
@@ -39,8 +36,7 @@ class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
     }
     
     public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone() {
-        $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
-        $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
+        $renderer = new CardwallCardProvider();
         
         $artifact4 = aMockArtifact()->withId(4)->build();
         
@@ -59,8 +55,7 @@ class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
     }
     
     public function itCreatesAnArtifactNodeForEveryArtifactId() {
-        $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
-        $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
+        $renderer = new CardwallCardProvider();
         $artifact_factory = mock('Tracker_ArtifactFactory');
         
         $artifact4 = aMockArtifact()->withId(4)->build();
