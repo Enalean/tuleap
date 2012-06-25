@@ -110,7 +110,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         }
 
         $artifact_ids     = explode(',', $matching_ids['id']);
-        $artifacts = $this->getForestsOfArtifacts($artifact_ids);
+        $artifacts = $this->getForestsOfArtifacts($artifact_ids, Tracker_ArtifactFactory::instance());
         $presenter = $this->getPresenter($artifacts, $form);
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
         ob_start();
@@ -122,9 +122,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * @return TreeNode
      */
-    public function getForestsOfArtifacts(array $artifact_ids) {
+    public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
         $forest = new TreeNode();
-        $artifact_factory = Tracker_ArtifactFactory::instance();
         foreach ($artifact_ids as $id) {
             $node = new ArtifactNode($artifact_factory->getArtifactById($id));
             $forest->addChild($node);

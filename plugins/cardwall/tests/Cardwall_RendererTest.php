@@ -29,7 +29,6 @@ class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
         $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
         $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
         $artifact_factory = mock('Tracker_ArtifactFactory');
-        Tracker_ArtifactFactory::setInstance($artifact_factory);
         stub($artifact_factory)->getArtifactById()->returns(mock('Tracker_Artifact'));
         
         $root_node = $renderer->getForestsOfArtifacts(array(), $artifact_factory);
@@ -43,7 +42,6 @@ class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
         $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
         $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
         $artifact_factory = mock('Tracker_ArtifactFactory');
-        Tracker_ArtifactFactory::setInstance($artifact_factory);
         
         $artifact4 = aMockArtifact()->withId(4)->build();
         $artifact5 = aMockArtifact()->withId(5)->build();
