@@ -36,13 +36,9 @@ class TuleapCurl {
      */
     public function execute($url, $authUser = null, $authPassword = null, $postfields = null,$includeHeader = false) {
         $ch = curl_init();
-        $findme   = 'https';
-        $pos = strpos($url, $findme);
-        // When the certificate is self signed we must set the following options to get around it
-        if ( $pos ){
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-        }
+        // When the certificate is self signed we must set the following option to get around it
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         if (!empty($authUser) && !empty($authPassword)) {
