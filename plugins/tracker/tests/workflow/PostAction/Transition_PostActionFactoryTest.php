@@ -199,7 +199,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
                 <field_id REF="F1"/>
             </postaction_field_date>
         ');
-        $xmlMapping = array('F1' => $date_field->getId());
+        $xml_mapping = array('F1' => $date_field->getId());
         
         $source_field_value = new MockTracker_FormElement_Field_List_Value();
         $source_field_value->setReturnValue('getId', 2068);
@@ -209,7 +209,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
         
         $factory = new Transition_PostActionFactory();
-        $post_action = $factory->getInstanceFromXML($xml, &$xmlMapping, $transition);
+        $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Date');
         $this->assertEqual($post_action->getValueType(), 1);
     }
@@ -222,7 +222,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
                 <field_id REF="F1"/>
             </postaction_field_int>
         ');
-        $xmlMapping = array('F1' => $int_field->getId());
+        $xml_mapping = array('F1' => $int_field->getId());
         
         $source_field_value = new MockTracker_FormElement_Field_List_Value();
         $source_field_value->setReturnValue('getId', 2068);
@@ -232,7 +232,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
         
         $factory = new Transition_PostActionFactory();
-        $post_action = $factory->getInstanceFromXML($xml, &$xmlMapping, $transition);
+        $post_action = $factory->getInstanceFromXML($xml, &$xml_mapping, $transition);
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Int');
         $this->assertEqual($post_action->getValue(), 440);
     }
