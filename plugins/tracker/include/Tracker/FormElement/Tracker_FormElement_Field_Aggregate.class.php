@@ -18,7 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('dao/Tracker_FormElement_Field_AggregateDao.class.php');
+
 class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
+
+    public $default_properties = array(
+        'target_field_name'      => array(
+            'value' => '',
+            'type'  => 'string',
+            'size'  => 40,
+        ),
+    );
 
     private function sumRecursively(Tracker_Artifact $artifact) {
         $user = UserManager::instance()->getCurrentUser();
@@ -37,6 +47,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
                 }
             }
         }
+        return $sum;
     }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
@@ -121,6 +132,10 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
+    }
+
+    protected function getDao() {
+        return new Tracker_FormElement_Field_AggregateDao();
     }
 
     public function getCriteriaFrom($criteria) {
