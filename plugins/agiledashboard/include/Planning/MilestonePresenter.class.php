@@ -272,12 +272,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     }
     
     public function getRemainingEffort() {
-        $milestone_artifact = $this->milestone->getArtifact();
-        //var_dump($milestone_artifact);
-        $field = Tracker_FormElementFactory::instance()->getFormElementByName($milestone_artifact->getTracker()->getId(), 'remaining_effort');
-        //var_dump($field);
-        $value = $milestone_artifact->getValue($field);
-        return $field->fetchArtifactValue($milestone_artifact);
+        return $this->milestone->getRemainingEffort();
     }
 }
 ?>
