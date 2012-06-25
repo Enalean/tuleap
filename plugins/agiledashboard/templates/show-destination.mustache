@@ -1,8 +1,8 @@
 {{#getPlannedArtifactsTree}}
     <div id="art-{{getId}}" class="release_planner card {{planningDroppableClass}}">
-        {{#getData}}
+        {{#getCardPresenter}}
             {{> card-actions}}
-        {{/getData}}
+        {{/getCardPresenter}}
         {{> select-destination}}
         <hr />
         <p class="help">{{plannedArtifactsHelp}}</p>

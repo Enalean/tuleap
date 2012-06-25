@@ -295,9 +295,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function GivenAMilestone($artifact) {
         $milestone = mock('Planning_Milestone');
-        $root_node = new TreeNode(array('id'    => $artifact->getId(),
-                                        'title' => $artifact->getTitle()));
-        $root_node->setId($artifact->getId());
+        $root_node = new ArtifactNode($artifact);
 
         stub($milestone)->getArtifact()->returns($artifact);
         stub($milestone)->getPlannedArtifacts()->returns($root_node);

@@ -130,7 +130,12 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertNotEmpty($string) {
         return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
     }
-    
+
+    protected function assertArrayNotEmpty($all_artifact_nodes) {
+        $this->assertFalse(count($all_artifact_nodes) == 0, "expected array not to be empty, but it contains 0 elements");
+    }
+   
+
     protected function assertNotBlank($string) {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
@@ -166,5 +171,7 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertStringBeginsWith($string, $start_sequence) {
         return $this->assertPattern("%^$start_sequence%", $string);
     }
+    
+
 }
 ?>

@@ -1,3 +1,6 @@
+Version 5.7.31 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
 Version 5.7.30 - Tuleap 5.3
     * Update mustache renderer
 

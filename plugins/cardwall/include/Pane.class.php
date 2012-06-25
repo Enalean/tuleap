@@ -23,6 +23,7 @@ require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
+require_once 'ArtifactTreeNodeVisitor.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -77,7 +78,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
         $board_factory      = new Cardwall_BoardFactory();
-        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $this->milestone->getPlannedArtifacts(), $field);
+        $pa                 = $this->milestone->getPlannedArtifacts();
+        Cardwall_ArtifactTreeNodeVisitor::build()->visit($pa);
+        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $pa, $field);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 

@@ -167,8 +167,9 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneBaseT
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $root_aid);
         
         $root_node = $milestone->getPlannedArtifacts();
-        $root_note_data = $root_node->getData();
-        $this->assertEqual($root_artifact, $root_note_data['artifact']);
+        $root_note_data = $root_node->getObject();
+        $this->assertEqual($root_aid, $root_node->getId());
+        $this->assertIdentical($root_artifact, $root_note_data);
     }
     
     public function itAddsTheArtifactsToTheChildNodes() {
@@ -181,8 +182,10 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneBaseT
         
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $root_aid);
         
-        $child_node_data = $milestone->getPlannedArtifacts()->getChild(0)->getData();
-        $this->assertEqual($depth1_artifact, $child_node_data['artifact']);
+        $child_node      = $milestone->getPlannedArtifacts()->getChild(0);
+        $child_node_data = $child_node->getObject();
+        $this->assertEqual(9999, $child_node->getId());
+        $this->assertIdentical($depth1_artifact, $child_node_data);
     }
 
 }
@@ -255,13 +258,13 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $root_artifact    = $this->anArtifactWithIdAndUniqueLinkedArtifacts(100, array($depth1_artifact));
 
         $factory = new Planning_MileStoneFactory(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'));
-        $planning_items_tree = $factory->getPlannedArtifacts(mock('User'), mock('Planning'), $root_artifact);
+        $planning_items_tree = $factory->getPlannedArtifacts(mock('User'), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
 
         $this->assertFalse(empty($children));
         foreach($children as $tree_node) {
-            $this->assertIsA($tree_node->getObject(), 'Planning_Item');
+            $this->assertIsA($tree_node->getObject(), 'Tracker_Artifact');
         }
     }
 }
