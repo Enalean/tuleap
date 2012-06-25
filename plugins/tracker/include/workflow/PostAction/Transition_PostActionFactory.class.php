@@ -25,6 +25,8 @@ require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
 
+class Transition_InvalidPostActionException extends Exception {}
+
 /**
  * class Transition_PostActionFactory
  * 
@@ -197,20 +199,38 @@ class Transition_PostActionFactory {
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
-        $post_action           = null;
-        $postaction_attributes = $xml->attributes();
+        $xml_tag_name          = $xml->getName();
+        $post_action_class     = $this->getPostActionClassFromXmlTagName($xml_tag_name);
         $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
+        $postaction_attributes = $xml->attributes();
+        $value                 = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
         
         if ($field_id) {
-            switch($xml->getName()) {
-                case 'postaction_field_date':
-                    $postaction = new Transition_PostAction_Field_Date($transition, 0, $field_id, (int) $postaction_attributes['valuetype']);
-                    break;
-                case 'postaction_field_int':
-                    $postaction = new Transition_PostAction_Field_Int($transition, 0, $field_id, (int) $postaction_attributes['value']);
-                    break;
-            }
-            return $postaction;
+            return new $post_action_class($transition, 0, $field_id, $value);
+        }
+    }
+    
+    private function getPostActionClassFromXmlTagName($xml_tag_name) {
+        switch($xml_tag_name) {
+            case 'postaction_field_date':
+                return 'Transition_PostAction_Field_Date';
+            case 'postaction_field_int':
+                return 'Transition_PostAction_Field_Int';
+            case 'postaction_field_float':
+                return 'Transition_PostAction_Field_Float';
+            default:
+                throw new Transition_InvalidPostActionException($xml_tag_name);
+        }
+    }
+    
+    private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
+        switch($xml_tag_name) {
+            case 'postaction_field_date':
+                return (int) $postaction_attributes['valuetype'];
+            case 'postaction_field_int':
+                return (int) $postaction_attributes['value'];
+            case 'postaction_field_float':
+                return (float) $postaction_attributes['value'];
         }
     }
     
