@@ -60,6 +60,11 @@ class Tracker_FormElementFactory {
     protected $formElements_by_name   = array();
     protected $used_formElements      = array();
     protected $used                   = array();
+
+    /**
+     * @var array of Tracker_FormElement
+     */
+    private $cache_used_form_elements_by_type = array();
     
     // Please use unique key for each element
     protected $classnames             = array(
@@ -535,10 +540,14 @@ class Tracker_FormElementFactory {
      * @return array All text formElements used by the tracker
      */
     public function getUsedFormElementsByType($tracker, $type) {
-        $used                      = true;
-        $tracker_id                = $tracker->getId();
-        $used_form_elements_result = $this->getDao()->searchUsedByTrackerIdAndType($tracker_id, $type, $used);
-        return $this->getCachedInstancesFromDAR($used_form_elements_result);
+        $key        = md5(serialize($type));
+        $tracker_id = $tracker->getId();
+        if (!isset($this->cache_used_form_elements_by_type[$tracker_id][$key])) {
+            $used                      = true;
+            $used_form_elements_result = $this->getDao()->searchUsedByTrackerIdAndType($tracker_id, $type, $used);
+            $this->cache_used_form_elements_by_type[$tracker_id][$key] = $this->getCachedInstancesFromDAR($used_form_elements_result);
+        }
+        return $this->cache_used_form_elements_by_type[$tracker_id][$key];
     }
     
     public function getUnusedFormElementForTracker(Tracker $tracker) {
