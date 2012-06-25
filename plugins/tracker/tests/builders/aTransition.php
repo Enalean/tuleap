@@ -51,6 +51,11 @@ class Test_Transition_Builder {
      */
     private $to_field_value;
     
+    public function withId($id) {
+        $this->transition_id = $id;
+        return $this;
+    }
+    
     public function fromFieldValueId($id) {
         $this->from_field_value = mock('Tracker_FormElement_Field_List_Value');
         stub($this->from_field_value)->getId()->returns($id);

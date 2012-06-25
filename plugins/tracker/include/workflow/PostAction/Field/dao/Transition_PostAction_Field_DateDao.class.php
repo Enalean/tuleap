@@ -60,6 +60,21 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
     }
     
     /**
+     * Create a full-featured postaction.
+     * 
+     * @param int $transition_id
+     * @param int $field_id
+     * @param int $value_type
+     * 
+     * @return bool
+     */
+    public function save($transition_id, $field_id, $value_type) {
+        if (($post_action_id = $this->create($transition_id)) > 0) {
+            $this->updatePostAction($post_action_id, $field_id, $value_type);
+        }
+    }
+    
+    /**
      * Search all postactions belonging to a transition
      *
      * @param int $transition_id The id of the transition 

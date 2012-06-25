@@ -34,6 +34,7 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 
 require_once(dirname(__FILE__).'/../../builders/aMockField.php');
 require_once(dirname(__FILE__).'/../../builders/aTransition.php');
+require_once(dirname(__FILE__).'/../../builders/aDateFieldPostAction.php');
 
 class Transition_PostActionFactoryTest extends TuleapTestCase {
     
@@ -190,6 +191,7 @@ class Transition_PostActionFactoryTest extends TuleapTestCase {
     }
 }
 
+
 class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
     
     public function setUp() {
@@ -252,6 +254,23 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         $this->expectException('Transition_InvalidPostActionException');
         
         $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
+    }
+}
+
+class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
+    
+    public function itSavesDateFieldPostActions() {
+        $factory     = new Transition_PostActionFactoryTestVersion();
+        $dao         = mock('Transition_PostAction_Field_DateDao');
+        $post_action = aDateFieldPostAction()->withTransitionId(123)
+                                             ->withFieldId(456)
+                                             ->withValueType(1)
+                                             ->build(); //mock('Transition_PostAction_Field_Date')
+        
+        stub($factory)->getDao('field_date')->returns($dao);
+        
+        $dao->expectOnce('save');
+        $factory->saveObject($post_action);
     }
 }
 

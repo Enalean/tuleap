@@ -237,14 +237,14 @@ class Transition_PostActionFactory {
    /**
     * Save a postaction object
     * 
-    * @param Transition_PostAction $postaction  the object to save
+    * @param Transition_PostAction $post_action  the object to save
     *
     * @return void
     */
-    public function saveObject($postaction) {
-        if (($postaction_id = $this->getDao()->create($postaction->getTransition()->getTransitionId())) > 0) {
-            $this->getDao()->updatePostAction($postaction_id, $postaction->getFieldId(), $postaction->getValueType());
-        }
+    public function saveObject($post_action) {
+        $this->getDao('field_date')->save($post_action->getTransition()->getTransitionId(),
+                                          $post_action->getFieldId(),
+                                          $post_action->getValueType());
     }
     
     /**
