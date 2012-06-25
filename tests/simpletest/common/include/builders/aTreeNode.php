@@ -26,9 +26,40 @@ function aNode() {
     return new Test_TreeNode_Builder();
 }
 
+/**
+ * @return \Test_ArtifactNode_Builder 
+ */
+function anArtifactNode() {
+    return new Test_ArtifactNode_Builder();
+}
+
+class Test_ArtifactNode_Builder extends Test_TreeNode_Builder {
+
+    function __construct() {
+        parent::__construct();
+    }
+    
+    /**
+     * @return \Test_TreeNode_Builder 
+     */
+    public function withArtifact($artifact) {
+        $this->artifact = $artifact;
+        return $this;
+    }
+
+    /**
+     * @return \ArtifactNode 
+     */
+    public function build() {
+        $node = new ArtifactNode($this->artifact);
+        $node->setChildren($this->children);
+        return $node;
+    }
+
+}
 class Test_TreeNode_Builder {
 
-    private $children;
+    protected $children;
     private $data;
     private $object;
     private $id;

@@ -22,7 +22,7 @@ class CardwallCardProvider {
 
     public function provide($artifact_ids, $artifact_factory, $visitor) {
         $cards  = $this->getCards($artifact_ids, $artifact_factory);
-        $root    = $this->wrapInAThreeLevelArtifactTree($cards);
+        $root   = $this->wrapInAThreeLevelArtifactTree($cards);
         $root->accept($visitor);
 
         return $root;
