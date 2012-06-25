@@ -39,7 +39,6 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
         foreach ($linked_artifacts as $linked_artifact) {
             $field = $this->getFormElementFactory()->getFormElementByName($linked_artifact->getTracker()->getId(), 'remaining_effort');
             if ($field) {
-                //var_dump($field);
                 if ($field instanceof Tracker_FormElement_Field_Aggregate) {
                     $sum += $field->fetchArtifactValueReadOnly($linked_artifact);
                 } else {
@@ -64,8 +63,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format = 'text') {
-        $output = '';
-        return $output;
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     /**
@@ -79,6 +77,10 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    }
+
+    
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -126,9 +128,6 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     }
 
     public function getQueryFrom() {
-    }
-
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
