@@ -166,5 +166,15 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertStringBeginsWith($string, $start_sequence) {
         return $this->assertPattern("%^$start_sequence%", $string);
     }
+    
+    /**
+     * Asserts that an array has the expected number of items.
+     * 
+     * @param array $array
+     * @param int $expected_count
+     */
+    protected function assertCount($array, $expected_count) {
+        return $this->assertEqual(count($array), $expected_count);
+    }
 }
 ?>

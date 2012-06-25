@@ -96,6 +96,19 @@ class TransitionFactoryTest extends UnitTestCase {
 
 class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        $this->field = aMockField()->build();
+        $this->from_value  = mock('Tracker_FormElement_Field_List_Value');
+        $this->to_value    = mock('Tracker_FormElement_Field_List_Value');
+        $this->xml_mapping = array('F1'     => $this->field,
+                                   'F32-V1' => $this->from_value,
+                                   'F32-V0' => $this->to_value);
+        
+        $this->factory     = new TransitionFactory();
+        
+    }
+    
     public function itReconstitutesDatePostActions() {
         
         $xml = new SimpleXMLElement('
@@ -110,22 +123,11 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
             </transition>
         ');
         
-        $date_field = aMockField()->build();
-        $from_value = mock('Tracker_FormElement_Field_List_Value');
-        $to_value   = mock('Tracker_FormElement_Field_List_Value');
-        $xmlMapping = array('F1'     => $date_field,
-                            'F32-V1' => $from_value,
-                            'F32-V0' => $to_value);
-        
-        $factory      = new TransitionFactory();
-        $transition   = $factory->getInstanceFromXML($xml, $xmlMapping);
+        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
         $post_actions = $transition->getPostActions();
         
-        $this->assertEqual(1, count($post_actions));
-        
-        $date_post_action = $post_actions[0];
-        
-        $this->assertIsA($date_post_action, 'Transition_PostAction_Field_Date');
+        $this->assertCount($post_actions, 1);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
     }
     
     public function itReconstitutesIntPostActions() {
@@ -142,22 +144,11 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
             </transition>
         ');
         
-        $int_field = aMockField()->build();
-        $from_value = mock('Tracker_FormElement_Field_List_Value');
-        $to_value   = mock('Tracker_FormElement_Field_List_Value');
-        $xmlMapping = array('F1'     => $int_field,
-                            'F32-V1' => $from_value,
-                            'F32-V0' => $to_value);
-        
-        $factory      = new TransitionFactory();
-        $transition   = $factory->getInstanceFromXML($xml, $xmlMapping);
+        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
         $post_actions = $transition->getPostActions();
         
-        $this->assertEqual(1, count($post_actions));
-        
-        $int_post_action = $post_actions[0];
-        
-        $this->assertIsA($int_post_action, 'Transition_PostAction_Field_Int');
+        $this->assertCount($post_actions, 1);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
     }
     
     public function itReconstitutesFloatPostActions() {
@@ -174,22 +165,11 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
             </transition>
         ');
         
-        $float_field = aMockField()->build();
-        $from_value  = mock('Tracker_FormElement_Field_List_Value');
-        $to_value    = mock('Tracker_FormElement_Field_List_Value');
-        $xml_mapping = array('F1'     => $float_field,
-                             'F32-V1' => $from_value,
-                             'F32-V0' => $to_value);
-        
-        $factory      = new TransitionFactory();
-        $transition   = $factory->getInstanceFromXML($xml, $xml_mapping);
+        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
         $post_actions = $transition->getPostActions();
         
-        $this->assertEqual(1, count($post_actions));
-        
-        $float_post_action = $post_actions[0];
-        
-        $this->assertIsA($float_post_action, 'Transition_PostAction_Field_Float');
+        $this->assertCount($post_actions, 1);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
     }
 }
 
