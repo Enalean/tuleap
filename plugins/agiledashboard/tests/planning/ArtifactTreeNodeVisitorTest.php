@@ -25,6 +25,7 @@ require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/anArtifact.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
 

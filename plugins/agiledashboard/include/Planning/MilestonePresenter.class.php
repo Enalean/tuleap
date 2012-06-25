@@ -21,6 +21,7 @@
 require_once 'ArtifactTreeNodeVisitor.class.php';
 require_once 'PlanningPresenter.class.php';
 require_once 'MilestoneLinkPresenter.class.php';
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 /**
  * Provides the presentation logic for a planning milestone.

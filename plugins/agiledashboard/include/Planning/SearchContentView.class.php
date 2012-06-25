@@ -22,6 +22,7 @@
 require_once 'common/mustache/MustacheRenderer.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
