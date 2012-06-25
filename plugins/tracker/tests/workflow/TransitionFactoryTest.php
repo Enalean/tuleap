@@ -159,6 +159,38 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
         
         $this->assertIsA($int_post_action, 'Transition_PostAction_Field_Int');
     }
+    
+    public function itReconstitutesFloatPostActions() {
+        
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <postactions>
+                    <postaction_field_float value="1.2">
+                        <field_id REF="F1"/>
+                    </postaction_field_float>
+                </postactions>
+            </transition>
+        ');
+        
+        $float_field = aMockField()->build();
+        $from_value  = mock('Tracker_FormElement_Field_List_Value');
+        $to_value    = mock('Tracker_FormElement_Field_List_Value');
+        $xml_mapping = array('F1'     => $float_field,
+                             'F32-V1' => $from_value,
+                             'F32-V0' => $to_value);
+        
+        $factory      = new TransitionFactory();
+        $transition   = $factory->getInstanceFromXML($xml, $xml_mapping);
+        $post_actions = $transition->getPostActions();
+        
+        $this->assertEqual(1, count($post_actions));
+        
+        $float_post_action = $post_actions[0];
+        
+        $this->assertIsA($float_post_action, 'Transition_PostAction_Field_Float');
+    }
 }
 
 ?>
