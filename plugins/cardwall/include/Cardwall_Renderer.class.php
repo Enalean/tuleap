@@ -126,7 +126,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
         $visitor  = Cardwall_ArtifactTreeNodeVisitor::build();
         $provider = new CardwallCardProvider($artifact_factory, $visitor);
-        return $provider->provide($artifact_ids, $artifact_factory, $visitor);
+        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory, $visitor);
     }
     
     /**

@@ -18,9 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Provides a TreeNode/ArtifactNode tree given some artifact ids. Organisation of nodes :
+ * root -> forest -> artifactNodes
+ */
 class CardwallCardProvider {
 
-    public function provide($artifact_ids, $artifact_factory, $visitor) {
+    public function flatForestOfArtifacts($artifact_ids, $artifact_factory, $visitor) {
         $cards  = $this->getCards($artifact_ids, $artifact_factory);
         $root   = $this->wrapInAThreeLevelArtifactTree($cards);
         $root->accept($visitor);

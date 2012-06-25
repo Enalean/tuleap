@@ -88,7 +88,7 @@ class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
         stub($artifact_factory)->getArtifactById(4)->returns($artifact);
         $visitor = mock('Cardwall_ArtifactTreeNodeVisitor');
 //        $visitor = stub('ArtifactTreeNodeVisitor')->visit($root)->returns(clone $root);
-        $result = $provider->provide(array(4), $artifact_factory, $visitor);
+        $result = $provider->flatForestOfArtifacts(array(4), $artifact_factory, $visitor);
         $root = aNode()->withChild(
                     aNode()->withChild(
                         anArtifactNode()->withArtifact($artifact)))
