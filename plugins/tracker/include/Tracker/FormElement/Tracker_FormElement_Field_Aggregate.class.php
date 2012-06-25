@@ -31,27 +31,30 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     );
 
     private function sumRecursively(Tracker_Artifact $artifact) {
-        $user = UserManager::instance()->getCurrentUser();
-        $linked_artifacts = $artifact->getLinkedArtifacts($user);
+        $current_user     = UserManager::instance()->getCurrentUser();
+        $linked_artifacts = $artifact->getLinkedArtifacts($current_user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
             $field = $this->getTargetField($linked_artifact);
-            if ($field) {
-                if ($field instanceof Tracker_FormElement_Field_Aggregate) {
-                    $sum += $field->fetchArtifactValueReadOnly($linked_artifact);
-                } else {
-                    $value = $linked_artifact->getValue($field);
-                    if ($value) {
-                        $sum += $value->getValue();
-                    }
-                }
-            }
+            $sum += $this->getTargetFieldValue($linked_artifact, $field);
         }
         return $sum;
     }
 
     private function getTargetField(Tracker_Artifact $artifact) {
         return $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), $this->getProperty('target_field_name'));
+    }
+
+    private function getTargetFieldValue(Tracker_Artifact $artifact, Tracker_FormElement $field=null) {
+        if ($field instanceof Tracker_FormElement_Field_Aggregate) {
+            return $field->fetchArtifactValueReadOnly($artifact);
+        } elseif($field instanceof Tracker_FormElement_Field_Numeric) {
+            $value = $artifact->getValue($field);
+            if ($value) {
+                return $value->getValue();
+            }
+        }
+        return 0;
     }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
