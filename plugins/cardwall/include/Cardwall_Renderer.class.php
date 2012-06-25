@@ -123,19 +123,30 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @return TreeNode
      */
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        $forest = new TreeNode();
-        foreach ($artifact_ids as $id) {
-            $node = new ArtifactNode($artifact_factory->getArtifactById($id));
-            $forest->addChild($node);
-        }
-        $root = new TreeNode();
-        $root->addChild($forest);
-
+        $cards  = $this->getCards($artifact_ids, $artifact_factory);
+        $root    = $this->wrapInAThreeLevelArtifactTree($cards);
         $visitor = Cardwall_ArtifactTreeNodeVisitor::build();
         $root->accept($visitor);
 
         return $root;
     }
+    
+    public function wrapInAThreeLevelArtifactTree($cards) {
+        $forest = new TreeNode();
+        $forest->setChildren($cards);
+        $root = new TreeNode();
+        $root->addChild($forest);
+        return $root;
+    }
+    
+    public function getCards(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
+        $cards = array();
+        foreach ($artifact_ids as $id) {
+            $cards[] = new ArtifactNode($artifact_factory->getArtifactById($id));
+        }
+        return $cards;
+    }
+
 
     /**
      * @return Cardwall_PaneContentPresenter
@@ -266,5 +277,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $root->addAttribute('field_id', $mapping);
         }
     }
+
 }
 ?>
