@@ -24,7 +24,7 @@
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
     public function testThereAreNoNewClassFilesContainingSingletonLookups() {
-        $expected_singleton_lookups = 2395;
+        $expected_singleton_lookups = 2396;
         $output                     = $this->getSystemOutput("grep -rc  '::instance()' * | awk -F: 'BEGIN { n=0} {n=n+$2} END { print n}'");
         $actual_singleton_lookups   = $output[0];
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
