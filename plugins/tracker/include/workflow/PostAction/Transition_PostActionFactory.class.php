@@ -197,11 +197,19 @@ class Transition_PostActionFactory {
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
-        
+        $post_action           = null;
         $postaction_attributes = $xml->attributes();
+        $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
         
-        if ($xmlMapping[(string)$xml->field_id['REF']]) {
-            $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field_id['REF']], (int) $postaction_attributes['valuetype']);
+        if ($field_id) {
+            switch($xml->getName()) {
+                case 'postaction_field_date':
+                    $postaction = new Transition_PostAction_Field_Date($transition, 0, $field_id, (int) $postaction_attributes['valuetype']);
+                    break;
+                case 'postaction_field_int':
+                    $postaction = new Transition_PostAction_Field_Int($transition, 0, $field_id, (int) $postaction_attributes['value']);
+                    break;
+            }
             return $postaction;
         }
     }

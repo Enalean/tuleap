@@ -32,6 +32,8 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
+require_once(dirname(__FILE__).'/../../builders/aMockField.php');
+
 class Transition_PostActionFactoryTest extends TuleapTestCase {
     
     public function itCanAddAPostActionToAnIntField() {
@@ -184,6 +186,52 @@ class Transition_PostActionFactoryTest extends TuleapTestCase {
         $dao->expectCallCount('duplicate', 2, 'Method getDao should be called 2 times.');
         
         $tpaf->duplicate(1, 2, $postactions, $field_mapping);
+    }
+    
+    public function itReconstitutesDateFieldPostActionsFromXML() {
+        $date_field = aMockField()->withId(62334)->build();
+        
+        $xml = new SimpleXMLElement('
+            <postaction_field_date valuetype="1">
+                <field_id REF="F1"/>
+            </postaction_field_date>
+        ');
+        $xmlMapping = array('F1' => $date_field->getId());
+        
+        $source_field_value = new MockTracker_FormElement_Field_List_Value();
+        $source_field_value->setReturnValue('getId', 2068);
+        $destination_field_value = new MockTracker_FormElement_Field_List_Value();
+        $destination_field_value->setReturnValue('getId', 2069);
+        
+        $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
+        
+        $factory = new Transition_PostActionFactory();
+        $post_action = $factory->getInstanceFromXML($xml, &$xmlMapping, $transition);
+        $this->assertIsA($post_action, 'Transition_PostAction_Field_Date');
+        $this->assertEqual($post_action->getValueType(), 1);
+    }
+    
+    public function itReconstitutesIntFieldPostActionsFromXML() {
+        $int_field = aMockField()->withId(62334)->build();
+        
+        $xml = new SimpleXMLElement('
+            <postaction_field_int value="440">
+                <field_id REF="F1"/>
+            </postaction_field_int>
+        ');
+        $xmlMapping = array('F1' => $int_field->getId());
+        
+        $source_field_value = new MockTracker_FormElement_Field_List_Value();
+        $source_field_value->setReturnValue('getId', 2068);
+        $destination_field_value = new MockTracker_FormElement_Field_List_Value();
+        $destination_field_value->setReturnValue('getId', 2069);
+        
+        $transition = new Transition(1, 1, $source_field_value, $destination_field_value);
+        
+        $factory = new Transition_PostActionFactory();
+        $post_action = $factory->getInstanceFromXML($xml, &$xmlMapping, $transition);
+        $this->assertIsA($post_action, 'Transition_PostAction_Field_Int');
+        $this->assertEqual($post_action->getValue(), 440);
     }
 }
 
