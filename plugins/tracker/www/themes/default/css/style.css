@@ -781,7 +781,7 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
-.workflow_actions_field_date {
+.workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #ccc;
     background: #F6F6F6 url(../images/ic/ui-text-field-change.png) 1em 1em no-repeat;

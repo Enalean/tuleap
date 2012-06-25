@@ -202,7 +202,7 @@ class Transition {
                 $html .= '<tr><td>';
 
                 // the action itself
-                $html .= '<div class="'. $hp->purify($classname) .'">';
+                $html .= '<div class="workflow_action '. $hp->purify($classname) .'">';
                 if (!$pa->isDefined()) {
                     $html .= '<div class="alert-message block-message warning">'. $GLOBALS['Language']->getText('workflow_admin', 'post_action_not_defined') .'</div>';
                 }
