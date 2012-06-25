@@ -138,18 +138,20 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * @return TreeNode
      */
     private function buildPlannedArtifactsTree($child_depth = 1) {
-        $root_node = null;
+        $presenter_root_node = null;
         
         if ($this->canAccessPlannedItem()) {
             $root_node = $this->milestone->getPlannedArtifacts();
             
             //TODO use null object pattern while still possible?
             if ($root_node) {
-                Planning_ArtifactTreeNodeVisitor::build($this->milestone->getPlanning(),
-                                                        'planning-draggable-alreadyplanned')->visit($root_node);
+                $visitor = Planning_ArtifactTreeNodeVisitor::build(
+                            $this->milestone->getPlanning(), 
+                            'planning-draggable-alreadyplanned');
+                $presenter_root_node = $visitor->visit($root_node);
             }
         }
-        return $root_node;
+        return $presenter_root_node;
     }
 
     public function getPlannedArtifactsTree() {

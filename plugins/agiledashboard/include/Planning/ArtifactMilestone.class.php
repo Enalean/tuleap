@@ -201,8 +201,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     private function addChildrenNodes(TreeNode $root_node, &$artifacts, $user) {
         foreach ($root_node->getChildren() as $node) {
-            $data        = $node->getData();
-            $artifact    = $data['artifact'];
+            $artifact    = $node->getObject();
             $artifacts[] = $artifact;
             $artifacts   = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
             $this->addChildrenNodes($node, $artifacts, $user);

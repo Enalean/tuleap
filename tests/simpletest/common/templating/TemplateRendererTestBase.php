@@ -52,9 +52,7 @@ abstract class TemplateRendererTestBase extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', $this->expected_l10_string);
         
         $this->presenter = new TestPresenter();
-        ob_start();
-        $this->renderer->render('test', $this->presenter);
-        $this->output = ob_get_clean();
+        $this->output    = $this->renderer->renderToString('test', $this->presenter);
     }
     
     function assertOutputContains($content) {

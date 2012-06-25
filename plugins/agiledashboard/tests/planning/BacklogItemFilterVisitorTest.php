@@ -21,7 +21,7 @@
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../include/Planning/BacklogItemFilterVisitor.class.php';
 
-class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
+class Planning_BacklogItemFilterVisitorTest extends Planning_BacklogItemFilterVisitorBaseTest {
 
     public function setUp() {
         parent::setUp();
@@ -38,13 +38,13 @@ class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
         $this->hierarchy_factory = stub('Tracker_HierarchyFactory')->getHierarchy()->returns($this->hierarchy);
 
         $this->root   = new TreeNode();
-        $this->epic1  = new TreeNode(array('id' => 1, 'tracker_id' => $this->epic_tracker_id));
-        $this->story1 = new TreeNode(array('id' => 2, 'tracker_id' => $this->story_tracker_id));
-        $this->task   = new TreeNode(array('id' => 3, 'tracker_id' => 113));
-        $this->bug    = new TreeNode(array('id' => 4, 'tracker_id' => 114));
-        $this->epic2  = new TreeNode(array('id' => 5, 'tracker_id' => $this->epic_tracker_id));
-        $this->story2 = new TreeNode(array('id' => 6, 'tracker_id' => $this->story_tracker_id));
-        $this->story3 = new TreeNode(array('id' => 7, 'tracker_id' => $this->story_tracker_id));
+        $this->epic1  = $this->newTreeNode(1, $this->epic_tracker_id);
+        $this->story1 = $this->newTreeNode(2, $this->story_tracker_id);
+        $this->task   = $this->newTreeNode(3, 113);
+        $this->bug    = $this->newTreeNode(4, 114);
+        $this->epic2  = $this->newTreeNode(5, $this->epic_tracker_id);
+        $this->story2 = $this->newTreeNode(6, $this->story_tracker_id);
+        $this->story3 = $this->newTreeNode(7, $this->story_tracker_id);
 
         $this->root->addChildren(
             $this->epic1->addChildren(
@@ -90,7 +90,7 @@ class Planning_BacklogItemFilterVisitorTest extends TuleapTestCase {
 
 }
 
-class Planning_BacklogItemFilterVisitor_HierarchyTest extends TuleapTestCase {
+class Planning_BacklogItemFilterVisitor_HierarchyTest extends Planning_BacklogItemFilterVisitorBaseTest {
 
     public function itDoesNotKeepItemsWhichDoesNotMatchTheTrackerHierarchy() {
         $this->already_planned_ids = array();
@@ -100,10 +100,10 @@ class Planning_BacklogItemFilterVisitor_HierarchyTest extends TuleapTestCase {
         $this->sprint_tracker_id = 113;
 
         $this->root    = new TreeNode();
-        $this->epic1   = new TreeNode(array('id' => 1, 'tracker_id' => $this->epic_tracker_id));
-        $this->story1  = new TreeNode(array('id' => 2, 'tracker_id' => $this->story_tracker_id));
-        $this->sprint1 = new TreeNode(array('id' => 3, 'tracker_id' => $this->sprint_tracker_id));
-        $this->story2  = new TreeNode(array('id' => 4, 'tracker_id' => $this->story_tracker_id));
+        $this->epic1   = $this->newTreeNode(1, $this->epic_tracker_id);
+        $this->story1  = $this->newTreeNode(2, $this->story_tracker_id);
+        $this->sprint1 = $this->newTreeNode(3, $this->sprint_tracker_id);
+        $this->story2  = $this->newTreeNode(4, $this->story_tracker_id);
 
         $this->root->addChildren(
             $this->epic1->addChildren(
@@ -130,7 +130,7 @@ class Planning_BacklogItemFilterVisitor_HierarchyTest extends TuleapTestCase {
     }
 }
 
-class Planning_BacklogItemFilterVisitor_AlreadyPlannedItemsTest extends TuleapTestCase {
+class Planning_BacklogItemFilterVisitor_AlreadyPlannedItemsTest extends Planning_BacklogItemFilterVisitorBaseTest {
 
     public function itDoesNotKeepItemsThatAreAlreadyPlannedSomewhereElse() {
         $this->epic_tracker_id   = 111;
@@ -142,9 +142,9 @@ class Planning_BacklogItemFilterVisitor_AlreadyPlannedItemsTest extends TuleapTe
         $this->already_planned_id = array($this->story2_id);
 
         $this->root    = new TreeNode();
-        $this->epic1   = new TreeNode(array('id' => 1, 'tracker_id' => $this->epic_tracker_id));
-        $this->story1  = new TreeNode(array('id' => 2, 'tracker_id' => $this->story_tracker_id));
-        $this->story2  = new TreeNode(array('id' => $this->story2_id, 'tracker_id' => $this->story_tracker_id));
+        $this->epic1   = $this->newTreeNode(1, $this->epic_tracker_id);
+        $this->story1  = $this->newTreeNode(2, $this->story_tracker_id);
+        $this->story2  = $this->newTreeNode($this->story2_id, $this->story_tracker_id);
 
         $this->root->addChildren(
             $this->epic1->addChildren(
@@ -165,6 +165,21 @@ class Planning_BacklogItemFilterVisitor_AlreadyPlannedItemsTest extends TuleapTe
         $this->assertEqual(count($new_root->getChildren()), 1);
         $this->assertEqual($new_root->getChild(0), $this->story1);
     }
+}
+
+class Planning_BacklogItemFilterVisitorBaseTest extends TuleapTestCase {
+    
+    protected function newTreeNode($id, $tracker_id) {
+        $node = new TreeNode();
+        $node->setData(array('id' => $id, 
+                             'tracker_id' => $tracker_id));
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getId()->returns($id);
+        stub($artifact)->getTrackerId()->returns($tracker_id);
+        $node->setObject($artifact);
+        return $node;
+    }
+    
 }
 
 ?>

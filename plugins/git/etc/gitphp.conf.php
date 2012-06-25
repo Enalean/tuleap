@@ -175,4 +175,12 @@ $gitphp_conf['cacheexpire'] = TRUE;
  * cache expirations, set this low (5-10 seconds).
  */
 $gitphp_conf['cachelifetime'] = 3600;
+
+/**
+ * Allow to redefine where smarty temporary files should be dumped.
+ * Useful when you don't have write access to the smarty path (shared smarty
+ * install).
+ */
+$gitphp_conf['smarty_tmp'] = '/tmp/gitphp-tuleap/smarty';
+
 ?>

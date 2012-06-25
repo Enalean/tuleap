@@ -85,8 +85,7 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     }
     
     public function allowedChildrenTypes() {
-        $hierarchy_factory = Tracker_HierarchyFactory::instance();
-        return $hierarchy_factory->getChildren($this->planning_item->getTracker()->getId());
+        return $this->planning_item->getAllowedChildrenTypes();
     }
 }
 ?>

@@ -128,7 +128,7 @@ class ProjectQuotaManager {
     public function getMaximumQuota() {
         $dum      = new Statistics_DiskUsageManager();
         $maxQuota = intval($dum->getProperty('maximum_quota'));
-        if (!isset($maxQuota)) {
+        if (!$maxQuota) {
             $maxQuota = 50;
         }
         return $maxQuota;

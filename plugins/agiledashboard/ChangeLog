@@ -1,5 +1,11 @@
+Version 0.35 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.34 - Tuleap 5.3
+    * Update mustache renderer
+
 Version 0.33 - Tuleap 5.2
-	* Fix fatal error while duplicating planning
+    * Fix fatal error while duplicating planning
 
 Version 0.32 - Tuleap 5.2
      * Fix regression introduced in 0.31 on templates

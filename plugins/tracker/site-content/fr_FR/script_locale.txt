@@ -23,5 +23,5 @@ codendi.locales['tracker_template'] = {
 };
 codendi.locales['tracker_crosssearch'] = {
     expand_all: 'Déplier tout',
-    collapse_all: 'Replier tout',
+    collapse_all: 'Replier tout'
 };

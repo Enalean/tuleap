@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/TestsPluginFilterIterator.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRunnerPresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRequest.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 require_once dirname(__FILE__) . '/TestsPluginOrderedSuite.php';
 
@@ -181,8 +181,8 @@ class TestsPluginRunner {
     protected function render($navigator, $results) {
         $presenter = new TestsPluginRunnerPresenter($this->request, $navigator, $results);
         $template  = 'testsPluginRunner' . strtoupper($this->request->getDisplay());
-        $renderer  = new MustacheRenderer(dirname(__FILE__) . '/../templates');
-        $renderer->render($template, $presenter);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
+        $renderer->renderToPage($template, $presenter);
         $this->renderDone = true;
     }
 }

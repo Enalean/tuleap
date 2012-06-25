@@ -65,7 +65,8 @@ class Cardwall_ArtifactTreeNodeVisitor {
 
     private function getArtifact(TreeNode $node) {
         $row = $node->getData();
-        return $this->artifact_factory->getArtifactById($row['id']);
+        $artifact_id = isset($row['id']) ? $row['id'] : $node->getId();
+        return $this->artifact_factory->getArtifactById($artifact_id);
     }
 
     private function visitChildren(TreeNode $node) {
