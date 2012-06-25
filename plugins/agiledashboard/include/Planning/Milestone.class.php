@@ -100,6 +100,8 @@ interface Planning_Milestone {
     public function getLinkedArtifacts(User $user);
 
     public function getRemainingEffort();
+    
+    public function getCapacity();
 }
 
 ?>

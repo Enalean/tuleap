@@ -211,11 +211,6 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
 
 class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
 
-    public function setUp() {
-        parent::setUp();
-        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
-    }
-
     public function testRemainingEffortIsNullWhenThereIsNoRemainingEffortField() {
         $this->assertEqual($this->getMilestoneRemainingEffort(), null);
     }
@@ -242,8 +237,34 @@ class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_Mi
     }
 
     private function getMilestoneRemainingEffort() {
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
         return $milestone->getRemainingEffort();
+    }
+}
+
+class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+
+    public function testCapacityIsNullWhenThereIsNoCapacityField() {
+        $this->assertEqual($this->getMilestoneCapacity(), null);
+    }
+
+    public function itRetrievesMilestoneWithCapacityWithActualValue() {
+        $capacity = 225;
+
+        $capacity_field = mock('Tracker_FormElement_Field_Float');
+        stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, 'capacity')->returns($capacity_field);
+
+        $capacity_value = new Tracker_Artifact_ChangesetValue_Float(-1, $capacity_field, false, $capacity);
+        stub($this->artifact)->getValue($capacity_field)->returns($capacity_value);
+
+        $this->assertEqual($this->getMilestoneCapacity(), $capacity);
+    }
+
+    private function getMilestoneCapacity() {
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        return $milestone->getCapacity();
     }
 }
 
