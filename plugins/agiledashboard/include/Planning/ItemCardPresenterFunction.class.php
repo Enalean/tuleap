@@ -24,7 +24,7 @@ require_once 'ItemPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeFunction.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TreeNode/CardPresenterNode.class.php';
 
-class Planning_ItemCardPresenterProvider implements TreeNodeFunction {
+class Planning_ItemCardPresenterFunction implements TreeNodeFunction {
 
     /**
      * @var Planning

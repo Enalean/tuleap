@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/Planning/ArtifactTreeNodeVisitor.class.php';
+require_once dirname(__FILE__) .'/../../include/Planning/ItemCardPresenterFunction.class.php';
 require_once dirname(__FILE__) .'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
@@ -46,7 +46,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $node     = new TreeNode(array('id' => 123));
         $node->setObject($artifact);
         
-        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterProvider($planning, 'baz'));
+        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterFunction($planning, 'baz'));
         $visited_node = $visitor->visit($node);
         $presenter    = $visited_node->getCardPresenter();
         
@@ -63,7 +63,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
                                    aNode()->withObject(anArtifact()->build()),
                                    aNode()->withObject(anArtifact()->build()))
                                ->build();
-        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterProvider(mock('Planning'), 'whatever-class'));
+        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterFunction(mock('Planning'), 'whatever-class'));
         
         $visited_node = $visitor->visit($root_node);
         $all_nodes    = $visited_node->flattenChildren();
@@ -90,7 +90,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         $this->artifact = mock('Tracker_Artifact');
         $this->node     = new TreeNode();
         $this->node->setObject($this->artifact);
-        $this->visitor  = new TreeNodeMapper(new Planning_ItemCardPresenterProvider($planning, 'whatever'));
+        $this->visitor  = new TreeNodeMapper(new Planning_ItemCardPresenterFunction($planning, 'whatever'));
     }
     
     public function itKnowsDraggablePlanningItems() {
