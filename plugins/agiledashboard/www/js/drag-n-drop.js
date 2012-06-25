@@ -3,22 +3,25 @@
 var Planning = {
 
     trackerBaseUrl: '/plugins/tracker/',
-    
-    reload: function() {
-        window.location.reload();
-    },
 
     unAssociateArtifactTo: function (sourceId, targetId) {
-        Planning.executeRequest('unassociate-artifact-to', sourceId, targetId);
+        Planning.executePlanRequest('unassociate-artifact-to', sourceId, targetId);
     },
 
     associateArtifactTo: function (sourceId, targetId) {
-        Planning.executeRequest('associate-artifact-to', sourceId, targetId);
+        Planning.executePlanRequest('associate-artifact-to', sourceId, targetId);
     },
 
-    executeRequest: function (func, sourceId, targetId) {
-        new Ajax.Request(Planning.trackerBaseUrl + '?func='+ func +'&linked-artifact-id=' + sourceId + '&aid=' + targetId, {
-            onSuccess: Planning.reload,
+    executePlanRequest: function (func, sourceId, targetId) {
+        Planning.executeRequest('?func='+ func +'&linked-artifact-id=' + sourceId + '&aid=' + targetId);
+    },
+
+    executeSortRequest: function (func, sourceId, targetId) {
+        Planning.executeRequest('?func='+ func +'&aid=' + sourceId + '&target-id=' + targetId);
+    },
+
+    executeRequest: function (query) {
+        new Ajax.Request(Planning.trackerBaseUrl + query, {
             onFailure: Planning.errorOccured
         });
     },
@@ -29,7 +32,7 @@ var Planning = {
 
     removeItem: function (item, target) {
         var itemId   = parseInt(item.id.match(/art-(\d+)/)[1]);
-        var targetId = parseInt(item.up('.planning-droppable').id.match(/art-(\d+)/)[1]);
+        var targetId = parseInt(target.id.match(/art-(\d+)/)[1]);
         Planning.unAssociateArtifactTo(itemId, targetId);
     },
 
@@ -39,32 +42,50 @@ var Planning = {
         Planning.associateArtifactTo(itemId, targetId);
     },
 
+    sort: function (item) { with (Planning) {
+        var next = $(item).next();
+        var prev = $(item).previous();
+        if (next) {
+            executeSortRequest('higher-priority-than', getArtifactId(item), getArtifactId(next));
+        } else if (prev) {
+            executeSortRequest('lesser-priority-than', getArtifactId(item), getArtifactId(prev));
+        }
+    }},
+
     loadDroppables: function (container) {
         (function ($j) {
-            $j(container).find('.planning-backlog').droppable({
-                hoverClass: 'planning-backlog-hover',
-                accept: '.planning-draggable-alreadyplanned',
-                drop: function (event, ui) {
-                    Planning.removeItem(ui.draggable.get(0), $j(this).get(0));
-                }
+            $j('.planning-backlog ul.cards').sortable({
+                connectWith: '.planning-droppable ul.cards',
+                placeholder: 'card',
+                scroll: true,
+                stop: function (event, ui) { with (Planning) {
+                    var current_item = ui.item.get(0);
+                    var drop_zone    = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
+                    var move_to_plan = $j(drop_zone).hasClass('planning-droppable');
+                    if (move_to_plan) {
+                        dropItem(current_item, drop_zone);
+                    }
+                    sort(current_item);
+                }},
             });
-            $j(container).find('.planning-droppable').droppable({
-                hoverClass: 'planning-droppable-hover',
-                accept: '.planning-draggable-toplan',
-                drop: function (event, ui) {
-                    Planning.dropItem(ui.draggable.get(0), $j(this).get(0));
-                }
+            $j('.planning-droppable ul.cards').sortable({
+                connectWith: '.planning-backlog ul.cards',
+                placeholder: 'card',
+                scroll: true,
+                stop: function (event, ui) { with (Planning) {
+                    var current_item = ui.item.get(0);
+                    var drop_zone    = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
+                    var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
+                    if (move_to_backlog) {
+                        removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
+                    }
+                    sort(current_item);
+                }},
             });
         })(window.jQuery);
     },
 
-    loadDraggables: function (container) {
-        (function ($j) {
-            $j(container).find('.planning-draggable').draggable({
-                revert: 'invalid',
-                cursor: 'move'
-            });
-        })(window.jQuery);
+    getArtifactId: function (card) {
+        return card.id.match(/art-(\d+)/)[1];
     }
-
-};
+}
