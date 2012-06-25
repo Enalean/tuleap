@@ -19,30 +19,12 @@
  */
 require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
 require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
-require_once 'Transition_PostAction_Field.class.php';
+require_once 'Transition_PostAction_Field_Numeric.class.php';
 
 /**
  * Set the date of a field
  */
-class Transition_PostAction_Field_Float extends Transition_PostAction_Field {
-    
-    /**
-     * @var Integer the value
-     */
-    protected $value;
-    
-    /**
-     * Constructor
-     *
-     * @param Transition                   $transition The transition the post action belongs to
-     * @param Integer                      $id         Id of the post action
-     * @param Tracker_FormElement_Field    $field      The field the post action should modify
-     * @param Integer                      $value      The value to set
-     */
-    public function __construct(Transition $transition, $id, $field, $value) {
-        parent::__construct($transition, $id, $field);
-        $this->value = $value;
-    }
+class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric {
     
     /**
      * Get the shortname of the post action
@@ -60,19 +42,6 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field {
      */
     public static function getLabel() {
         return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_float_field');
-    }
-    
-    /**
-     * Say if the action is well defined
-     *
-     * @return bool
-     */
-    public function isDefined() {
-        return $this->getField() && ($this->value != null);
-    }
-    
-    public function getValue() {
-        return $this->value;
     }
     
     /**
@@ -134,27 +103,6 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field {
             if ($field_id != $this->getFieldId() || $value != $this->value) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value);
             }
-        }
-    }
-    
-    /**
-     * Execute actions before transition happens
-     * 
-     * @param Array &$fields_data Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
-     * 
-     * @return void
-     */
-    public function before(array &$fields_data, User $current_user) {
-        // Do something only if the value and the float field are properly defined 
-        if ($this->isDefined()) {
-            $field = $this->getField();
-            if ($field->userCanRead($current_user)) {
-                $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $this->value));
-            }
-           
-            $fields_data[$this->field->getId()] = $this->value;
-            $this->bypass_permissions = true;
         }
     }
     
