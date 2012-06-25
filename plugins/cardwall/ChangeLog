@@ -1,3 +1,9 @@
+Version 0.5.6 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.5.5 - Tuleap 5.3
+    * Update mustache renderer
+
 Version 0.5.4 - Tuleap 5.2
 	* Duplicate settings of cardwalls in trackers
 	* Merge cardwall-in-renderer and cardwall-in-dashbaord codes

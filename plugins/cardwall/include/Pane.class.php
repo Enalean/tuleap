@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
+require_once 'ArtifactTreeNodeVisitor.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -67,11 +68,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         if (! $field) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('agiledashboard-pane', $this->getPresenter($field));
-
-        return ob_get_clean();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+        
+        return $renderer->renderToString('agiledashboard-pane', $this->getPresenter($field));
     }
 
     /**
@@ -79,7 +78,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
         $board_factory      = new Cardwall_BoardFactory();
-        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $this->milestone->getPlannedArtifacts(), $field);
+        $pa                 = $this->milestone->getPlannedArtifacts();
+        Cardwall_ArtifactTreeNodeVisitor::build()->visit($pa);
+        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $pa, $field);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 

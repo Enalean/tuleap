@@ -25,6 +25,7 @@ require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'InjectColumnIdCustomFieldVisitor.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
@@ -109,11 +110,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         }
 
         $presenter = $this->getPresenter($this->getForestsOfArtifacts(explode(',', $matching_ids['id'])), $form);
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('renderer', $presenter);
-
-        return ob_get_clean();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+        
+        return $renderer->renderToString('renderer', $presenter);
     }
 
     /**
