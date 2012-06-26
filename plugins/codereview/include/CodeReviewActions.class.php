@@ -71,7 +71,7 @@ class CodeReviewActions extends Actions {
         $username           = $user->getUserName();
         $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
         $projectname        = $project->getPublicName();
-        $boolean            = svn_utils_check_write_access($username,$projectname,$svnpath);
+        $boolean            = svn_utils_check_write_access($username, $projectname, $svnpath);
         if (!$boolean) {
             $status    = false;
             $msg = "The user '".$username."' has not the right to create a review request.";
