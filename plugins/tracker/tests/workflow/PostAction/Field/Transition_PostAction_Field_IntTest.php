@@ -118,5 +118,10 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
+    
+    public function itAcceptsValue0() {
+        $post_action = anIntFieldPostAction()->withValue(0)->build();
+        $this->assertTrue($post_action->isDefined());
+    }
 }
 ?>

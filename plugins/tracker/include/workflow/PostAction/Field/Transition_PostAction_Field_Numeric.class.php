@@ -49,7 +49,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      * @return bool
      */
     public function isDefined() {
-        return $this->getField() && ($this->value != null);
+        return $this->getField() && ($this->value !== null);
     }
     
     /**

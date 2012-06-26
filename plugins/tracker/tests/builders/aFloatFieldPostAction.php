@@ -30,13 +30,18 @@ class Test_Transition_PostAction_Field_Float_Builder {
     
     private $id;
     
+    public function __construct() {
+        $this->transition = aTransition();
+        $this->field      = aFloatField();
+    }
+    
     public function withTransitionId($transition_id) {
-        $this->transition = aTransition()->withId($transition_id)->build();
+        $this->transition->withId($transition_id);
         return $this;
     }
     
     public function withFieldId($field_id) {
-        $this->field = aFloatField()->withId($field_id)->build();
+        $this->field->withId($field_id);
         return $this;
     }
     
@@ -46,7 +51,10 @@ class Test_Transition_PostAction_Field_Float_Builder {
     }
     
     public function build() {
-        return new Transition_PostAction_Field_Float($this->transition, $this->id, $this->field, $this->value);
+        return new Transition_PostAction_Field_Float($this->transition->build(),
+                                                     $this->id,
+                                                     $this->field->build(),
+                                                     $this->value);
     }
 }
 
