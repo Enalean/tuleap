@@ -54,42 +54,34 @@ var Planning = {
 
     loadDroppables: function (container) {
         (function ($j) {
-            $j('.backlog-content > ul.cards').sortable({
-                connectWith: '.milestone-content > ul.cards',
-                placeholder: 'card placeholder',
-                scroll: true,
-                stop: function (event, ui) { with (Planning) {
-                    var current_item = ui.item.get(0);
-                    var drop_zone    = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
-                    var move_to_plan = $j(drop_zone).hasClass('planning-droppable');
-                    if (move_to_plan) {
-                        dropItem(current_item, drop_zone);
-                    }
-                    sort(current_item);
-                }}
-            }).css('min-height', '1.5em');
-            $j('.milestone-content > ul.cards').sortable({
-                connectWith: '.backlog-content > ul.cards',
-                placeholder: 'card placeholder',
-                scroll: true,
-                stop: function (event, ui) { with (Planning) {
-                    var current_item = ui.item.get(0);
-                    var drop_zone    = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
-                    var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
-                    if (move_to_backlog) {
-                        removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
-                    }
-                    sort(current_item);
-                }}
-            }).css('min-height', '1.5em');
-            $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable({
+            var options = {
                 placeholder: 'card placeholder',
                 scroll: true,
                 stop: function (event, ui) { with (Planning) {
                     var current_item = ui.item.get(0);
                     sort(current_item);
                 }}
-            });
+            };
+            $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable(options);
+
+            options.stop.wrap(function (wrapped_stop) { with (Planning) {
+                var current_item    = ui.item.get(0);
+                var drop_zone       = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
+                var move_to_plan    = $j(drop_zone).hasClass('planning-droppable');
+                var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
+                if (move_to_backlog) {
+                    removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
+                } else if (move_to_plan) {
+                    dropItem(current_item, drop_zone);
+                }
+                wrapped_stop();
+            }});
+
+            options.connectWith = '.milestone-content > ul.cards',
+            $j('.backlog-content > ul.cards').sortable(options).css('min-height', '1.5em');
+
+            options.connectWith = '.backlog-content > ul.cards';
+            $j('.milestone-content > ul.cards').sortable(options).css('min-height', '1.5em');
         })(window.jQuery);
     },
 
