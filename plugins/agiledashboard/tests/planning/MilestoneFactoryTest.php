@@ -50,6 +50,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
     protected $formelement_factory;
     protected $milestone_tracker_id;
     protected $milestone_tracker;
+    protected $user;
     
     public function setUp() {
         parent::setUp();
@@ -219,7 +220,7 @@ class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_Mi
         $remaining_effort = 225;
 
         $remaining_effort_field = mock('Tracker_FormElement_Field_Float');
-        stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, 'remaining_effort')->returns($remaining_effort_field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, 'remaining_effort', $this->user)->returns($remaining_effort_field);
 
         $remaining_effort_value = new Tracker_Artifact_ChangesetValue_Float(-1, $remaining_effort_field, false, $remaining_effort);
         stub($this->artifact)->getValue($remaining_effort_field)->returns($remaining_effort_value);
@@ -231,7 +232,7 @@ class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_Mi
         $remaining_effort = 225;
 
         $remaining_effort_field = stub('Tracker_FormElement_Field_Aggregate')->getComputedValue($this->artifact)->returns($remaining_effort);
-        stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, 'remaining_effort')->returns($remaining_effort_field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, 'remaining_effort', $this->user)->returns($remaining_effort_field);
 
         $this->assertEqual($this->getMilestoneRemainingEffort(), $remaining_effort);
     }
@@ -253,7 +254,7 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
         $capacity = 225;
 
         $capacity_field = mock('Tracker_FormElement_Field_Float');
-        stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, 'capacity')->returns($capacity_field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, 'capacity', $this->user)->returns($capacity_field);
 
         $capacity_value = new Tracker_Artifact_ChangesetValue_Float(-1, $capacity_field, false, $capacity);
         stub($this->artifact)->getValue($capacity_field)->returns($capacity_value);

@@ -85,31 +85,29 @@ class Planning_MilestoneFactory {
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
-            return $this->updateMilestoneWithStuff($milestone);
+            return $this->updateMilestoneContextualInfo($user, $milestone);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
     }
 
-    private function updateMilestoneWithStuff(Planning_ArtifactMilestone $milestone) {
+    private function updateMilestoneContextualInfo(User $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
-            ->setCapacity($this->getFieldValue($milestone, 'capacity'))
-            ->setRemainingEffort($this->getFieldValue($milestone, 'remaining_effort'));
+            ->setCapacity($this->getFieldValue($user, $milestone, 'capacity'))
+            ->setRemainingEffort($this->getFieldValue($user, $milestone, 'remaining_effort'));
     }
 
-    private function getFieldValue(Planning_ArtifactMilestone $milestone, $field_name) {
-        $field_value        = null;
+    private function getFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
         $milestone_artifact = $milestone->getArtifact();
-        $field = $this->formelement_factory->getFormElementByName($milestone_artifact->getTracker()->getId(), $field_name);
-        if ($field instanceof Tracker_FormElement_Field_Numeric) {
-            $value = $milestone_artifact->getValue($field);
-            if ($value) {
-                $field_value = $value->getValue();
-            }
-        } elseif($field instanceof Tracker_FormElement_Field_Aggregate) {
-            $field_value = $field->getComputedValue($milestone_artifact);
+        $field = $this->formelement_factory->getComputableFieldByNameForUser(
+            $milestone_artifact->getTracker()->getId(),
+            $field_name,
+            $user
+        );
+        if ($field) {
+            return $field->getComputedValue($milestone_artifact);
         }
-        return $field_value;
+        return 0;
     }
 
     /**
