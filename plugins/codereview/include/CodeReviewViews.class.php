@@ -185,6 +185,8 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function reviewSubmission() {
+	    $user               = UserManager::instance()->getCurrentUser();
+		$username           = $user->getUserName();
         $project_manager    = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
         $project            = $project_manager->getProject($this->request->get('group_id'));
@@ -213,6 +215,8 @@ class CodeReviewViews extends Views {
         $form .= "   <label for=\"codereview_diff_path\">Path to the diff file</label><br>";
         $form .= "   <input id=\"codereview_diff_path\" name=\"codereview_diff_path\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
+        $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=type=\"hidden\" size=\"32\" value=\"".$username."\"/>";
+		
 
         $formOptionalInput  = "  <p>";
         $formOptionalInput .= "   <label for=\"codereview_testing_done\">Testing done</label><br>";

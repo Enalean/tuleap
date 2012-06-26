@@ -142,15 +142,15 @@ class CodeReviewActions extends Actions {
             $status    = false;
             $invalid[] = 'target_people';
         }
-
-        /*$valid     = new Valid_String('codereview_submit_as');
+        
+        $valid     = new Valid_String('codereview_submit_as');
         $submitAs = trim($this->request->get('codereview_submit_as'));
         if ($this->request->valid($valid) && $submitAs != '') {
             $params['submit_as'] = $submitAs;
         } else {
             $status    = false;
             $invalid[] = 'submit_as';
-        }*/
+        }
 
 
         $valid  = new Valid_String('codereview_rb_user');
@@ -337,7 +337,7 @@ class CodeReviewActions extends Actions {
             $repository      = $reviewRessources['params']['repository'];
             $rb_user         = $reviewRessources['params']['rb_user'];
             $rb_password     = $reviewRessources['params']['rb_password'];
-            $reviewSubmitter = '';//$reviewRessources['params']['submit_as'];
+            $reviewSubmitter = $reviewRessources['params']['submit_as'];
             $testing_done    = '';
             $summary         = $reviewRessources['params']['summary'];
             $target_people   = $reviewRessources['params']['target_people'];
