@@ -122,6 +122,9 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
          }
     }
     
+    /**
+     * @return \Transition_PostAction_Field_FloatDao 
+     */
     protected function getDao() {
         return new Transition_PostAction_Field_FloatDao();
     }

@@ -122,6 +122,9 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
          }
     }
     
+    /**
+     * @return \Transition_PostAction_Field_IntDao 
+     */
     protected function getDao() {
         return new Transition_PostAction_Field_IntDao();
     }

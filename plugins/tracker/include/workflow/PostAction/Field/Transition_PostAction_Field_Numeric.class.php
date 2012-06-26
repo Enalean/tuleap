@@ -20,6 +20,9 @@
 
 require_once 'Transition_PostAction_Field.class.php';
 
+/**
+ * Base class for numeric field post actions. 
+ */
 abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field {
     
     /**
@@ -49,6 +52,9 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
         return $this->getField() && ($this->value != null);
     }
     
+    /**
+     * @return The value set on the field by the post action.
+     */
     public function getValue() {
         return $this->value;
     }
