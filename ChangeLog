@@ -8,6 +8,7 @@ Version 5.3 (not released yet)
 
 	== Development ==
 	Update mustache renderer
+	Start PHP 5.3 cleaning (For Tuleap 5.3 \o/)
 
 Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==

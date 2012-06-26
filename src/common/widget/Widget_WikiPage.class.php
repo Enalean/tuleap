@@ -105,7 +105,7 @@ class Widget_WikiPage extends Widget {
             $this->content_id = $id;
         }
     }
-    function create(&$request) {
+    function create($request) {
         $content_id = false;
         $vGroup_id = new Valid_String('group_id');
         $vGroup_id->setErrorMessage("Can't add empty WikiPage group_id");
@@ -119,7 +119,7 @@ class Widget_WikiPage extends Widget {
                 if (!is_dir($GLOBALS['codendi_cache_dir'] .'/WikiPage')) {
                     mkdir($GLOBALS['codendi_cache_dir'] .'/WikiPage');
                 }
-                $WikiPage_reader =& new SimplePie($this->getFeedUrl($WikiPage['group_id']), $GLOBALS['codendi_cache_dir'] .'/WikiPage', null, $GLOBALS['sys_proxy']);
+                $WikiPage_reader = new SimplePie($this->getFeedUrl($WikiPage['group_id']), $GLOBALS['codendi_cache_dir'] .'/WikiPage', null, $GLOBALS['sys_proxy']);
                 $WikiPage['title'] = $WikiPage_reader->get_title();
             }
             $sql = 'INSERT INTO widget_wikipage (owner_id, owner_type, title, group_id, wiki_page) 
@@ -129,7 +129,7 @@ class Widget_WikiPage extends Widget {
         }
         return $content_id;
     }
-    function updatePreferences(&$request) {
+    function updatePreferences($request) {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

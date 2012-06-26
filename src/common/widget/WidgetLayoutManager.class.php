@@ -71,19 +71,19 @@ class WidgetLayoutManager {
             } else if ($owner_type === self::OWNER_TYPE_GROUP) {
                 echo '<br />';
             }
-            $layout =& new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
+            $layout = new WidgetLayout($data['id'], $data['name'], $data['description'], $data['scope']);
             $sql = 'SELECT * FROM layouts_rows WHERE layout_id = '. $layout->id .' ORDER BY rank';
             $req_rows = db_query($sql);
             while ($data = db_fetch_array($req_rows)) {
-                $row =& new WidgetLayout_Row($data['id'], $data['rank']);
+                $row = new WidgetLayout_Row($data['id'], $data['rank']);
                 $sql = 'SELECT * FROM layouts_rows_columns WHERE layout_row_id = '. $row->id;
                 $req_cols = db_query($sql);
                 while ($data = db_fetch_array($req_cols)) {
-                    $col =& new WidgetLayout_Row_Column($data['id'], $data['width']);
+                    $col = new WidgetLayout_Row_Column($data['id'], $data['width']);
                     $sql = "SELECT * FROM layouts_contents WHERE owner_type = '". $owner_type ."' AND owner_id = ". $owner_id .' AND column_id = '. $col->id .' ORDER BY rank';
                     $req_content = db_query($sql);
                     while ($data = db_fetch_array($req_content)) {
-                        $c =& Widget::getInstance($data['name']);
+                        $c = Widget::getInstance($data['name']);
                         if ($c && $c->isAvailable()) {
                             $c->loadContent($data['content_id']);
                             $col->add($c, $data['is_minimized'], $data['display_preferences']);
@@ -109,7 +109,7 @@ class WidgetLayoutManager {
     */
     function _currentUserCanUpdateLayout($owner_id, $owner_type) {
         $readonly = true;
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         switch ($owner_type) {
         case self::OWNER_TYPE_USER:
                 if (user_getid() == $owner_id) { //Current user can only update its own /my/ page
@@ -156,7 +156,7 @@ class WidgetLayoutManager {
             $sql .= ",($owner_id, '$owner_type', 1, 2, 'myartifacts', 0)";
             $sql .= ",($owner_id, '$owner_type', 1, 2, 'mymonitoredfp', 1)";
             
-            $em =& EventManager::instance();
+            $em = EventManager::instance();
             $widgets = array();
             $em->processEvent('default_widgets_for_new_owner', array('widgets' => &$widgets, 'owner_type' => $owner_type));
             foreach($widgets as $widget) {
