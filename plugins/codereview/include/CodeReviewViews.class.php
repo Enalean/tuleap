@@ -215,7 +215,7 @@ class CodeReviewViews extends Views {
         $form .= "   <label for=\"codereview_diff_path\">Path to the diff file</label><br>";
         $form .= "   <input id=\"codereview_diff_path\" name=\"codereview_diff_path\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
-        $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=type=\"hidden\" size=\"32\" value=\"".$username."\"/>";
+        $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=\"hidden\" size=\"32\" value=\"".$username."\"/>";
 		
 
         $formOptionalInput  = "  <p>";
