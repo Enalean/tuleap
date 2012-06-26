@@ -216,23 +216,11 @@ class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_Mi
         $this->assertEqual($this->getMilestoneRemainingEffort(), null);
     }
 
-    public function itRetrievesMilestoneWithRemainingEffortWithActualValue() {
-        $remaining_effort = 225;
-
-        $remaining_effort_field = mock('Tracker_FormElement_Field_Float');
-        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, 'remaining_effort', $this->user)->returns($remaining_effort_field);
-
-        $remaining_effort_value = new Tracker_Artifact_ChangesetValue_Float(-1, $remaining_effort_field, false, $remaining_effort);
-        stub($this->artifact)->getValue($remaining_effort_field)->returns($remaining_effort_value);
-
-        $this->assertEqual($this->getMilestoneRemainingEffort(), $remaining_effort);
-    }
-
     public function itRetrievesMilestoneWithRemainingEffortWithComputedValue() {
         $remaining_effort = 225;
 
         $remaining_effort_field = stub('Tracker_FormElement_Field_Aggregate')->getComputedValue($this->artifact)->returns($remaining_effort);
-        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, 'remaining_effort', $this->user)->returns($remaining_effort_field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($remaining_effort_field);
 
         $this->assertEqual($this->getMilestoneRemainingEffort(), $remaining_effort);
     }
@@ -253,11 +241,8 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
     public function itRetrievesMilestoneWithCapacityWithActualValue() {
         $capacity = 225;
 
-        $capacity_field = mock('Tracker_FormElement_Field_Float');
-        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, 'capacity', $this->user)->returns($capacity_field);
-
-        $capacity_value = new Tracker_Artifact_ChangesetValue_Float(-1, $capacity_field, false, $capacity);
-        stub($this->artifact)->getValue($capacity_field)->returns($capacity_value);
+        $capacity_field = stub('Tracker_FormElement_Field_Float')->getComputedValue($this->artifact)->returns($capacity);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::CAPACITY_FIELD_NAME, $this->user)->returns($capacity_field);
 
         $this->assertEqual($this->getMilestoneCapacity(), $capacity);
     }

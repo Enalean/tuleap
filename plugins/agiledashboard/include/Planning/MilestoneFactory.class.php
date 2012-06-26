@@ -93,8 +93,8 @@ class Planning_MilestoneFactory {
 
     private function updateMilestoneContextualInfo(User $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
-            ->setCapacity($this->getFieldValue($user, $milestone, 'capacity'))
-            ->setRemainingEffort($this->getFieldValue($user, $milestone, 'remaining_effort'));
+            ->setCapacity($this->getFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
+            ->setRemainingEffort($this->getFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
     }
 
     private function getFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
