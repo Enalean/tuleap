@@ -891,7 +891,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
             101 => '123',
         );
 
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, 0, $user, $email);
     }
 
     function testCreateNewChangeset() {
@@ -985,13 +985,13 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $fields_data = array(
             102 => '123',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, 0, $user, $email);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, 0, $user, $email);
     }
 
     function testCreateNewChangesetWithoutNotification() {
@@ -1085,13 +1085,13 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $fields_data = array(
             102 => '123',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
+        $artifact->createNewChangeset($fields_data, $comment, 0, $user, $email, false);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
+        $artifact->createNewChangeset($fields_data, $comment, 0, $user, $email, false);
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
@@ -1158,7 +1158,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
 
         // Valid
         $fields_data = array();
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, 0, $user, $email);
     }
 
     function testGetCommentators() {
