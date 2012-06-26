@@ -24,7 +24,7 @@ require_once 'TreeNode.class.php';
 /**
  * To be used with @see \TreeNodeMapper
  */
-interface TreeNodeFunction {
+interface TreeNodeCallback {
     
     /**
      * Returns a new TreeNode based on the given one. This function should return a perfectly new node

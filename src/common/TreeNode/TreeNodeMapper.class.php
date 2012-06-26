@@ -19,17 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TreeNodeFunction.class.php';
+require_once 'TreeNodeCallback.class.php';
 
 /**
  * Like array_map this produces a new node tree by calling $callback on every node in the current tree
  */
 class TreeNodeMapper {
 
-    /** @var TreeNodeFunction */
+    /** @var TreeNodeCallback */
     private $function;
     
-    public function __construct(TreeNodeFunction $function) {
+    public function __construct(TreeNodeCallback $function) {
         $this->function = $function;
     }
     

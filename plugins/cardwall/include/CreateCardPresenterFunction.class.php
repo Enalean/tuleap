@@ -18,14 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/TreeNode/TreeNodeFunction.class.php';
+require_once 'common/TreeNode/TreeNodeCallback.class.php';
 require_once 'CardPresenter.class.php';
 require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
 
 /**
  * Creates a CardPresenter given a TreeNode with Artifact
  */
-class Cardwall_CreateCardPresenterFunction implements TreeNodeFunction {
+class Cardwall_CreateCardPresenterFunction implements TreeNodeCallback {
 
     public function apply(TreeNode $node) {
         $artifact = $node->getObject();
