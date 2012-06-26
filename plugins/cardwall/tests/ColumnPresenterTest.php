@@ -30,7 +30,7 @@ class ColumnPresenterTest extends TuleapTestCase {
         $swimline_field_values   = array(100, 221);
         $swimline_id             = 3;
         $this->card_presenter    = mock('Cardwall_CardPresenter');
-        $this->presenter         = new ColumnPresenter($this->card_presenter, $swimline_id, $swimline_field_values, $this->card_field_id);
+        $this->presenter         = new ColumnPresenter($this->card_presenter, $this->card_field_id, $swimline_id, $swimline_field_values);
     }
     
     public function itHasColumnDropInto() {

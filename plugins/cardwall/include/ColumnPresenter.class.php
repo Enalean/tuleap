@@ -29,7 +29,7 @@ class ColumnPresenter {
      */
     private $card_presenter;
     
-    public function __construct(Tracker_CardPresenter $presenter, $swimline_id, array $swimline_field_values, $card_field_id) {
+    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = null) {
         $this->swimline_id           = $swimline_id;
         $this->swimline_field_values = $swimline_field_values;
         $this->card_field_id         = $card_field_id;

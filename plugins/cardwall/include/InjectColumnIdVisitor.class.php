@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'ColumnPresenter.class.php';
+require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
 /**
  * Foreach artifact in a TreeNode, inject the id of the field used for the columns
  */
@@ -38,7 +40,8 @@ class Cardwall_InjectColumnIdVisitor {
     public function visit(TreeNode $node) {
         $data      = $node->getData();
         if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
-            $field = $this->getField($node->getCardPresenter()->getArtifact());
+            $presenter = $node->getCardPresenter();
+            $field     = $this->getField($presenter->getArtifact());
             $data['column_field_id'] = 0;
             if ($field) {
                 $field_id                = $field->getId();
@@ -59,5 +62,15 @@ class Cardwall_InjectColumnIdVisitor {
         $tracker = $artifact->getTracker();
         return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
     }
+}
+
+class Cardwall_ColumnPresenterNode extends Tracker_TreeNode_SpecializedNode {
+
+    function __construct(TreeNode $node, ColumnPresenter $presenter) {
+        parent::__construct($node);
+        
+    }
+//                $new_node = new Cardwall_ColumnPresenterNode($node, new ColumnPresenter($presenter, $field_id));
+
 }
 ?>

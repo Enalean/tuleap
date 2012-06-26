@@ -22,7 +22,19 @@
 /**
  * TreeNode containing a Tracker_CardPresenter
  */
-class Tracker_TreeNode_CardPresenterNode extends TreeNode {
+class Tracker_TreeNode_SpecializedNode extends TreeNode {
+
+    public function __construct(TreeNode $node) {
+        parent::__construct($node->getData(), $node->getId());
+        $this->setChildren($node->getChildren());
+        $this->setObject($node->getObject());
+    }
+}
+
+/**
+ * TreeNode containing a Tracker_CardPresenter
+ */
+class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_SpecializedNode {
 
     /**
      * @var Tracker_CardPresenter
@@ -30,9 +42,7 @@ class Tracker_TreeNode_CardPresenterNode extends TreeNode {
     private $presenter;
     
     public function __construct(TreeNode $node, Tracker_CardPresenter $presenter) {
-        parent::__construct($node->getData(), $node->getId());
-        $this->setChildren($node->getChildren());
-        $this->setObject($node->getObject());
+        parent::__construct($node);
         $this->presenter = $presenter;
     }
 
@@ -47,5 +57,4 @@ class Tracker_TreeNode_CardPresenterNode extends TreeNode {
         return $this->presenter;
     }
 }
-
 ?>
