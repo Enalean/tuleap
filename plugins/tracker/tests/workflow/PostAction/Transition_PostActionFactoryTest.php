@@ -253,7 +253,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
             </postaction_field_invalid>
         ');
         
-        $this->expectException('Transition_InvalidPostActionException');
+        $this->expectException('Transition_PostAction_NotFoundException');
         
         $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
     }

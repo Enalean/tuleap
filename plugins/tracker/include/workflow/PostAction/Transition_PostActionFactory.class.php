@@ -24,8 +24,7 @@ require_once('Field/Transition_PostAction_Field_Float.class.php');
 require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
-
-class Transition_InvalidPostActionException extends Exception {}
+require_once 'Transition_PostAction_NotFoundException.class.php';
 
 /**
  * class Transition_PostActionFactory
@@ -191,7 +190,7 @@ class Transition_PostActionFactory {
             case 'postaction_field_float':
                 return 'Transition_PostAction_Field_Float';
             default:
-                throw new Transition_InvalidPostActionException($xml_tag_name);
+                throw new Transition_PostAction_NotFoundException($xml_tag_name);
         }
     }
     
