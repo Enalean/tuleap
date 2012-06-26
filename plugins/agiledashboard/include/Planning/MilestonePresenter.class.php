@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ItemCardPresenterFunction.class.php';
+require_once 'ItemCardPresenterCallback.class.php';
 require_once 'PlanningPresenter.class.php';
 require_once 'MilestoneLinkPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
@@ -146,7 +146,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
             
             //TODO use null object pattern while still possible?
             if ($root_node) {
-                $visitor = new TreeNodeMapper(new Planning_ItemCardPresenterFunction(
+                $visitor = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(
                             $this->milestone->getPlanning(), 
                             'planning-draggable-alreadyplanned'));
                 $presenter_root_node = $visitor->visit($root_node);
