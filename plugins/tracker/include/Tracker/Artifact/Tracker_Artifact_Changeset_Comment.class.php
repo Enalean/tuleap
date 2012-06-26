@@ -124,7 +124,12 @@ class Tracker_Artifact_Changeset_Comment {
                         if ($this->parent_id && !trim($this->body)) {
                             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                         } else {
-                            $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
+                            if ($this->bodyFormat) {
+                                $level = CODENDI_PURIFIER_LIGHT;
+                            } else {
+                                $level = CODENDI_PURIFIER_BASIC;
+                            }
+                            $html .= $hp->purify($this->body, $level, $this->changeset->artifact->getTracker()->group_id);
                         }
                         $html .= '</div>';
                     }
