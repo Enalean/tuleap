@@ -35,11 +35,12 @@ class Cardwall_BoardFactory {
         $swimline_factory = new Cardwall_SwimlineFactory();
         $column_factory   = new Cardwall_ColumnFactory($field);
 
-        $accumulated_status_fields = $column_id_visitor->accumulateStatusFields($forests_of_artifacts);
+        
         $forests_of_artifacts->accept($column_id_visitor);
 
-        $mappings = $column_factory->getMappings($accumulated_status_fields);
 
+        $accumulated_status_fields = $column_id_visitor->accumulateStatusFields($forests_of_artifacts);
+        $mappings = $column_factory->getMappings($accumulated_status_fields);
         $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
         $i = 0;
         foreach ($forests_of_artifacts->getChildren() as $forest) {
