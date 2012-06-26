@@ -54,8 +54,8 @@ var Planning = {
 
     loadDroppables: function (container) {
         (function ($j) {
-            $j('.planning-backlog ul.cards').sortable({
-                connectWith: '.planning-droppable ul.cards',
+            $j('.backlog-content > ul.cards').sortable({
+                connectWith: '.milestone-content > ul.cards',
                 placeholder: 'card placeholder',
                 scroll: true,
                 stop: function (event, ui) { with (Planning) {
@@ -73,8 +73,8 @@ var Planning = {
                     sort(current_item);
                 }},
             });
-            $j('.planning-droppable ul.cards').sortable({
-                connectWith: '.planning-backlog ul.cards',
+            $j('.milestone-content > ul.cards').sortable({
+                connectWith: '.backlog-content > ul.cards',
                 placeholder: 'card placeholder',
                 scroll: true,
                 stop: function (event, ui) { with (Planning) {
@@ -89,6 +89,14 @@ var Planning = {
                             $j(this).css('height', 'auto');
                         }
                     }
+                    sort(current_item);
+                }},
+            });
+            $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable({
+                placeholder: 'card placeholder',
+                scroll: true,
+                stop: function (event, ui) { with (Planning) {
+                    var current_item = ui.item.get(0);
                     sort(current_item);
                 }},
             });
