@@ -79,17 +79,18 @@ class Transition_PostActionFactory {
     }
     
     /**
-     * Wrapper for Transition_PostAction_Field_DateDao
+     * Returns the corresponding DAO given a post action short name.
      *
-     * @return Transition_PostAction_Field_DateDao
+     * @param string $post_action_short_name
+     * 
+     * @return Transition_PostAction_FieldDao
      */
-    protected function getDao($postaction=null) {
-        if ($postaction == 'field_int') {
-            return new Transition_PostAction_Field_IntDao();
-        } else if ($postaction == 'field_float') {
-            return new Transition_PostAction_Field_FloatDao();
-        }else {
-            return new Transition_PostAction_Field_DateDao();
+    protected function getDao($post_action_short_name) {
+        switch ($post_action_short_name) {
+            case 'field_date':  return new Transition_PostAction_Field_DateDao();
+            case 'field_int':   return new Transition_PostAction_Field_IntDao();
+            case 'field_float': return new Transition_PostAction_Field_FloatDao();
+            default:            throw new Transition_PostAction_NotFoundException();
         }
     }
     
