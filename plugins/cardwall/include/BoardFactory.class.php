@@ -35,8 +35,8 @@ class Cardwall_BoardFactory {
         $swimline_factory = new Cardwall_SwimlineFactory();
         $column_factory   = new Cardwall_ColumnFactory($field);
 
-        $forests_of_artifacts->accept($column_id_visitor);
         $accumulated_status_fields = $column_id_visitor->accumulateStatusFields($forests_of_artifacts);
+        $forests_of_artifacts->accept($column_id_visitor);
 
         $mappings = $column_factory->getMappings($accumulated_status_fields);
 
