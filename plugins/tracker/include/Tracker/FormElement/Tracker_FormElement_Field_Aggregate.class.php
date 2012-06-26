@@ -21,7 +21,7 @@
 require_once 'IComputeValues.class.php';
 require_once 'dao/Tracker_FormElement_Field_AggregateDao.class.php';
 
-class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, IComputeValues {
+class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, Tracker_FormElement_IComputeValues {
 
     public $default_properties = array(
         'target_field_name' => array(
@@ -31,6 +31,13 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
         ),
     );
 
+    /**
+     * Given an artifact, return a numerical value of the field for this artifact.
+     * 
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return float
+     */
     public function getComputedValue(Tracker_Artifact $artifact) {
         $current_user     = UserManager::instance()->getCurrentUser();
         $linked_artifacts = $artifact->getLinkedArtifacts($current_user);

@@ -18,7 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface IComputeValues {
+/**
+ * I'm implemented by fields that are able to produce a numerical value 
+ */
+interface Tracker_FormElement_IComputeValues {
+    
+    /**
+     * Given an artifact, return a numerical value of the field for this artifact.
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return float
+     */
     public function getComputedValue(Tracker_Artifact $artifact);
 }
 

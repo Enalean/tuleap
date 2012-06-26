@@ -250,13 +250,22 @@ class Tracker_FormElementFactory {
         return null;
     }
 
+    /**
+     * Return a field that provides a computable value. This field is used and the user can see its value.
+     *
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param User   $user
+     *
+     * @return \IComputeValues|null 
+     */
     public function getComputableFieldByNameForUser($tracker_id, $field_name, User $user) {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
         if ($field && $field instanceof IComputeValues) {
             return $field;
         }
         return null;
-    } 
+    }
 
     /**
      * Get used formElements by parent id

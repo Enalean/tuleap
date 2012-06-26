@@ -21,7 +21,7 @@
 require_once 'Tracker_FormElement_Field_Alphanum.class.php';
 require_once 'IComputeValues.class.php';
 
-abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements IComputeValues {
+abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues {
     
     public $default_properties = array(
         'maxchars'      => array(
@@ -40,7 +40,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             'size'  => 40,
         ),
     );
-    
+
+    /**
+     * Given an artifact, return a numerical value of the field for this artifact.
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return float
+     */
     public function getComputedValue(Tracker_Artifact $artifact) {
         $value = $artifact->getValue($this);
         if ($value) {
@@ -48,7 +55,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         }
         return null;
     }
-    
+
     public function getQuerySelect() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
