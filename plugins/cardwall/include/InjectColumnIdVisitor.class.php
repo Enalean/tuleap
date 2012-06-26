@@ -25,18 +25,37 @@ require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
  */
 class Cardwall_InjectColumnIdVisitor {
 
-    /**
-     * @var array Accumulated array of Tracker_FormElement_Field_Selectbox
-     */
-    private $accumulated_status_fields = array();
-
-    /**
-     * @return array Accumulated array of Tracker_FormElement_Field_Selectbox
-     */
-    public function getAccumulatedStatusFields() {
-        return $this->accumulated_status_fields;
+    public function accumulateStatusFields(TreeNode $node) {
+        $artifacts = $this->getArtifactsOutOfTree($node);
+        return $this->getIndexedStatusFieldsOf($artifacts);
     }
-
+    
+    private function getArtifactsOutOfTree(TreeNode $root_node) {
+        $artifacts = array();
+        $flat_nodes = $root_node->flatten();
+        foreach ($flat_nodes as $node) {
+            if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
+                $presenter = $node->getCardPresenter();
+                $artifacts[] = $presenter->getArtifact();
+            }
+        }
+        return $artifacts;
+        
+    }
+    private function getIndexedStatusFieldsOf(array $artifacts) {
+        $status_fields = array_filter(array_map(array($this, 'getField'), $artifacts));
+        $indexed_status_fields = $this->indexById($status_fields);
+        return $indexed_status_fields;
+    }
+    
+    private function indexById(array $fields) {
+        $indexed_array = array();
+        foreach ($fields as $field) {
+            $indexed_array[$field->getId()] = $field;
+        }
+        return $indexed_array;
+    }
+        
     public function visit(TreeNode $node) {
         $data      = $node->getData();
         if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
@@ -46,7 +65,6 @@ class Cardwall_InjectColumnIdVisitor {
             if ($field) {
                 $field_id                = $field->getId();
                 $data['column_field_id'] = $field_id;
-                $this->accumulated_status_fields[$field_id] = $field;
             }
             $node->setData($data);
         }

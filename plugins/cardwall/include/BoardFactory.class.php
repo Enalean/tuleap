@@ -36,7 +36,7 @@ class Cardwall_BoardFactory {
         $column_factory   = new Cardwall_ColumnFactory($field);
 
         $forests_of_artifacts->accept($column_id_visitor);
-        $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
+        $accumulated_status_fields = $column_id_visitor->accumulateStatusFields($forests_of_artifacts);
 
         $mappings = $column_factory->getMappings($accumulated_status_fields);
 
