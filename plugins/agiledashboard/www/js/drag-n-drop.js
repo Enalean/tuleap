@@ -56,7 +56,7 @@ var Planning = {
         (function ($j) {
             $j('.planning-backlog ul.cards').sortable({
                 connectWith: '.planning-droppable ul.cards',
-                placeholder: 'card',
+                placeholder: 'card placeholder',
                 scroll: true,
                 stop: function (event, ui) { with (Planning) {
                     var current_item = ui.item.get(0);
@@ -70,7 +70,7 @@ var Planning = {
             });
             $j('.planning-droppable ul.cards').sortable({
                 connectWith: '.planning-backlog ul.cards',
-                placeholder: 'card',
+                placeholder: 'card placeholder',
                 scroll: true,
                 stop: function (event, ui) { with (Planning) {
                     var current_item = ui.item.get(0);
