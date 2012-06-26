@@ -45,7 +45,7 @@ codendi.RTE = Class.create(
         },
         init_rte: function () {
             if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
-                CKEDITOR.instances[this.element.id].destroy();
+                CKEDITOR.instances[this.element.id].destroy(true);
             }
             this.rte = CKEDITOR.replace(this.element.id, { 
                 toolbar: this.options.toolbar === 'basic' ?
