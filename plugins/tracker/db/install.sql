@@ -135,6 +135,12 @@ CREATE TABLE tracker_field_openlist(
     hint VARCHAR(255) NOT NULL
 );
 
+DROP TABLE IF EXISTS tracker_field_aggregate;
+CREATE TABLE tracker_field_aggregate (
+    field_id INT(11) NOT NULL PRIMARY KEY,
+    target_field_name VARCHAR(255) NULL
+);
+
 DROP TABLE IF EXISTS tracker_field_openlist_value;
 CREATE TABLE tracker_field_openlist_value(
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
