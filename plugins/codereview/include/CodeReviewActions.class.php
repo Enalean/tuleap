@@ -113,17 +113,17 @@ class CodeReviewActions extends Actions {
             $reviewers               = explode(",", $target_people);
             $check                   = true;
             $nbr                     = count($reviewers);
-            for($i = 0;$i<$nbr && $check;$i++){
+            for($i = 0; $i<$nbr && $check; $i++){
                 $username = $reviewers[$i];
                 $check    = $this->isProjectMember($username);
-                if ($check){
+                if ($check) {
                     $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
                     $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
                     $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
                     $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
                     $rbusermanager    = new RbUserManager();
                     $exist            = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
-                    if(!$exist){
+                    if(!$exist) {
                         $user    = UserManager::instance()->getUserByUserName($username);
                         $userpwd = $user->getUserPw();
                         $curl    = new TuleapCurl();
@@ -131,7 +131,7 @@ class CodeReviewActions extends Actions {
                     }
                 }
             }
-            if (!$check){
+            if (!$check) {
                 $msg = "The user '".$username."' is not a member of your project.";
                 $GLOBALS['Response']->addFeedBack('error', $msg);
                 $this->controller->view = 'displayFrame';
@@ -153,7 +153,7 @@ class CodeReviewActions extends Actions {
         }*/
 
 
-        $valid     = new Valid_String('codereview_rb_user');
+        $valid  = new Valid_String('codereview_rb_user');
         $rbUser = trim($this->request->get('codereview_rb_user'));
         if ($this->request->valid($valid) && $rbUser != '') {
             $params['rb_user'] = $rbUser;
@@ -210,7 +210,7 @@ class CodeReviewActions extends Actions {
                 $invalid[] = 'server';
             }
 
-            $valid     = new Valid_String('codereview_rb_user');
+            $valid  = new Valid_String('codereview_rb_user');
             $rbUser = trim($this->request->get('codereview_rb_user'));
             if ($this->request->valid($valid) && $rbUser != '') {
                 $params['rb_user'] = $rbUser;
@@ -228,7 +228,7 @@ class CodeReviewActions extends Actions {
                 $invalid[] = 'rb_password';
             }
 
-            $valid   = new Valid_String('review_id');
+            $valid     = new Valid_String('review_id');
             $review_id = trim($this->request->get('review_id'));
             if ($this->request->valid($valid) && $review_id != '') {
                 $params['review_id'] = $review_id;
@@ -248,7 +248,7 @@ class CodeReviewActions extends Actions {
             $status  = true;
             $invalid = array();
 
-            $valid  = new Valid_String('first_revision');
+            $valid     = new Valid_String('first_revision');
             $frevision = trim($this->request->get('first_revision'));
             if ($this->request->valid($valid) && $frevision != '') {
                 $params['frevision'] = $frevision;
@@ -266,7 +266,7 @@ class CodeReviewActions extends Actions {
                 $invalid[] = 'srevision';
             }
 
-            $valid  = new Valid_String('target_directory');
+            $valid     = new Valid_String('target_directory');
             $directory = trim($this->request->get('target_directory'));
             if ($this->request->valid($valid) && $directory != '') {
                 $params['Directory'] = $directory;
@@ -275,7 +275,7 @@ class CodeReviewActions extends Actions {
                 $invalid[] = 'Directory';
             }
 
-            $valid   = new Valid_String('patch_path');
+            $valid      = new Valid_String('patch_path');
             $patch_path = trim($this->request->get('patch_path'));
             if ($this->request->valid($valid) && $patch_path != '') {
                 $params['patch_path'] = $patch_path;
@@ -316,10 +316,10 @@ class CodeReviewActions extends Actions {
     function creatPatchFile() {
         $reviewRessources = $this->validateRequestPatch();
         if ($reviewRessources['status']) {
-            $frevision       = $reviewRessources['params']['frevision'];
-            $srevision       = $reviewRessources['params']['srevision'];
-            $directory       = $reviewRessources['params']['Directory'];
-            $patch_path     = $reviewRessources['params']['patch_path'];
+            $frevision  = $reviewRessources['params']['frevision'];
+            $srevision  = $reviewRessources['params']['srevision'];
+            $directory  = $reviewRessources['params']['Directory'];
+            $patch_path = $reviewRessources['params']['patch_path'];
         }
         exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff1.sh '.$frevision.' '.$srevision.' '.$directory.' '.$patch_path);
     }
@@ -338,10 +338,10 @@ class CodeReviewActions extends Actions {
             $rb_user         = $reviewRessources['params']['rb_user'];
             $rb_password     = $reviewRessources['params']['rb_password'];
             $reviewSubmitter = '';//$reviewRessources['params']['submit_as'];
-            $testing_done    = '';//$reviewRessources['params']['testing_done'];
+            $testing_done    = '';
             $summary         = $reviewRessources['params']['summary'];
             $target_people   = $reviewRessources['params']['target_people'];
-            $description     = '';//$reviewRessources['params']['description'];
+            $description     = '';
             $baseDir         = $reviewRessources['params']['base_dir'];
             $path            = "@".$reviewRessources['params']['diff_path'];
             try {
@@ -365,10 +365,10 @@ class CodeReviewActions extends Actions {
     function publishReviewRequest() {
         $reviewRessources = $this->validatePublishRequest();
         if ($reviewRessources['status']) {
-            $server          = $reviewRessources['params']['server'];
-            $rb_user         = $reviewRessources['params']['rb_user'];
-            $rb_password     = $reviewRessources['params']['rb_password'];
-            $review_id         = $reviewRessources['params']['review_id'];
+            $server      = $reviewRessources['params']['server'];
+            $rb_user     = $reviewRessources['params']['rb_user'];
+            $rb_password = $reviewRessources['params']['rb_password'];
+            $review_id   = $reviewRessources['params']['review_id'];
             try {
                 $this->publishReviewRequestDraft($server, $review_id, $rb_user, $rb_password);
             } catch(CodeReviewException $exception) {
@@ -381,11 +381,11 @@ class CodeReviewActions extends Actions {
     /**
      * Creates a review request
      *
-     * @param String  $server
-     * @param String  $repository
-     * @param String  $rb_user
-     * @param String  $rb_password
-     * @param String  $reviewSubmitter
+     * @param String  $server          The path of reviewboard
+     * @param String  $repository      The repository name
+     * @param String  $rb_user         Reviewboard user name
+     * @param String  $rb_password     Reviewboard user password
+     * @param String  $reviewSubmitter The submitter name
      *
      * @return Integer
      */
@@ -412,14 +412,14 @@ class CodeReviewActions extends Actions {
     /**
      * Update a given review request
      *
-     * @param String  $server
-     * @param Integer $reviewRequestId
-     * @param String  $rb_user
-     * @param String  $rb_password
-     * @param String  $testing_done
-     * @param String  $summary
-     * @param String  $target_people
-     * @param String  $description
+     * @param String  $server          The path of reviewboard
+     * @param Integer $reviewRequestId Review request Id
+     * @param String  $rb_user         Reviewboard user name
+     * @param String  $rb_password     Reviewboard user password
+     * @param String  $testing_done    The testing done text for the review request
+     * @param String  $summary         The summuary of review request
+     * @param String  $target_people   The reviewers
+     * @param String  $description     The descreption of review request
      *
      * @return void
      */
@@ -435,10 +435,10 @@ class CodeReviewActions extends Actions {
     /**
      * Publish a draft review request
      *
-     * @param String   $server
-     * @param Integer  $review request id
-     * @param String   $rb_user
-     * @param String   $rb_password
+     * @param String  $server          The path of reviewboard
+     * @param Integer $reviewRequestId Review request Id
+     * @param String  $rb_user         Reviewboard user name
+     * @param String  $rb_password     Reviewboard user password
      *
      * @return Void
      */
@@ -451,12 +451,12 @@ class CodeReviewActions extends Actions {
     /**
      * Create a new diff
      *
-     * @param String  $server
-     * @param Integer $review request id
-     * @param String  $rb_user
-     * @param String  $rb_password
-     * @param String  $baseDir
-     * @param String  $path
+     * @param String  $server          The path of reviewboard
+     * @param Integer $reviewRequestId Review request Id
+     * @param String  $rb_user         Reviewboard user name
+     * @param String  $rb_password     Reviewboard user password
+     * @param String  $baseDir         Reposytory name
+     * @param String  $path            Reposytory path
      *
      * @return Void
      */
@@ -475,7 +475,7 @@ class CodeReviewActions extends Actions {
         );
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_array);
         $request = curl_exec($ch);
-        $result = json_decode($request, true);
+        $result  = json_decode($request, true);
         if ($result["stat"] == "ok") {
             $diffFileName = $result["diff"]["name"];
             $diffLink     = $result["diff"]["links"];
@@ -490,7 +490,7 @@ class CodeReviewActions extends Actions {
     /**
      * Check if the reviewer is a project member
      *
-     * @param String  $username
+     * @param String  $username The user name
      *
      * @return Boolean
      */
