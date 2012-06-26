@@ -64,15 +64,10 @@ var Planning = {
                     var move_to_plan = $j(drop_zone).hasClass('planning-droppable');
                     if (move_to_plan) {
                         dropItem(current_item, drop_zone);
-                        if (!$j(this).children().length) {
-                            $j(this).css('height', '1.5em');
-                        } else {
-                            $j(this).css('height', 'auto');
-                        }
                     }
                     sort(current_item);
-                }},
-            });
+                }}
+            }).css('min-height', '1.5em');
             $j('.milestone-content > ul.cards').sortable({
                 connectWith: '.backlog-content > ul.cards',
                 placeholder: 'card placeholder',
@@ -83,22 +78,17 @@ var Planning = {
                     var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
                     if (move_to_backlog) {
                         removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
-                        if (!$j(this).children().length) {
-                            $j(this).css('height', '1.5em');
-                        } else {
-                            $j(this).css('height', 'auto');
-                        }
                     }
                     sort(current_item);
-                }},
-            });
+                }}
+            }).css('min-height', '1.5em');
             $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable({
                 placeholder: 'card placeholder',
                 scroll: true,
                 stop: function (event, ui) { with (Planning) {
                     var current_item = ui.item.get(0);
                     sort(current_item);
-                }},
+                }}
             });
         })(window.jQuery);
     },
