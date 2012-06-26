@@ -36,8 +36,8 @@ class Transition_PostActionFactory {
      * @var Array of available post actions classes
      */
     protected $post_actions_classes = array(
-        'field_date'    => 'Transition_PostAction_Field_Date',
-        'field_int' => 'Transition_PostAction_Field_Int',
+        'field_date'  => 'Transition_PostAction_Field_Date',
+        'field_int'   => 'Transition_PostAction_Field_Int',
         'field_float' => 'Transition_PostAction_Field_Float',
     );
     
@@ -124,14 +124,28 @@ class Transition_PostActionFactory {
      * @return Transition_PostAction
      */
     private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
-        $id        = (int)$row['id'];
-        $field     = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
-        $value     = (int)$row[$this->getPostActionValueColumn($shortname)];
-        if ($shortname == 'field_float') {
-            $value     = (float)$row[$this->getPostActionValueColumn($shortname)];
-        }
+        $id    = $this->getIdFromRow($row);
+        $field = $this->getFieldFromRow($row);
+        $value = $this->getValueFromRow($row, $shortname);
         
         return new $klass($transition, $id, $field, $value);
+    }
+    
+    private function getIdFromRow($row) {
+        return (int)$row['id'];
+    }
+    
+    private function getFieldFromRow($row) {
+        return $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
+    }
+    
+    private function getValueFromRow($row, $shortname) {
+        switch ($shortname) {
+            case 'field_date':  return (int) $row['value_type'];
+            case 'field_int':   return (int) $row['value'];
+            case 'field_float': return (float) $row['value'];
+            default: throw new Transition_PostAction_NotFoundException($shortname);
+        }
     }
     
     /**
@@ -145,20 +159,6 @@ class Transition_PostActionFactory {
     private function loadPostActionRows($transition, $shortname) {
         $dao = $this->getDao($shortname);
         return $dao->searchByTransitionId($transition->getTransitionId());
-    }
-    
-    /**
-     * The name of the database column holding the PostAction "value".
-     * 
-     * @param string $shortname The PostAction type shortname.
-     * 
-     * @return string
-     */
-    private function getPostActionValueColumn($shortname) {
-        if ($shortname == 'field_date') {
-            return 'value_type';
-        }
-        return 'value';
     }
     
     /**
@@ -184,25 +184,19 @@ class Transition_PostActionFactory {
     
     private function getPostActionClassFromXmlTagName($xml_tag_name) {
         switch($xml_tag_name) {
-            case 'postaction_field_date':
-                return 'Transition_PostAction_Field_Date';
-            case 'postaction_field_int':
-                return 'Transition_PostAction_Field_Int';
-            case 'postaction_field_float':
-                return 'Transition_PostAction_Field_Float';
-            default:
-                throw new Transition_PostAction_NotFoundException($xml_tag_name);
+            case 'postaction_field_date':  return 'Transition_PostAction_Field_Date';
+            case 'postaction_field_int':   return 'Transition_PostAction_Field_Int';
+            case 'postaction_field_float': return 'Transition_PostAction_Field_Float';
+            default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
         }
     }
     
     private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
         switch($xml_tag_name) {
-            case 'postaction_field_date':
-                return (int) $postaction_attributes['valuetype'];
-            case 'postaction_field_int':
-                return (int) $postaction_attributes['value'];
-            case 'postaction_field_float':
-                return (float) $postaction_attributes['value'];
+            case 'postaction_field_date':  return (int) $postaction_attributes['valuetype'];
+            case 'postaction_field_int':   return (int) $postaction_attributes['value'];
+            case 'postaction_field_float': return (float) $postaction_attributes['value'];
+            default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
         }
     }
     
@@ -221,11 +215,19 @@ class Transition_PostActionFactory {
                    $this->getValue($post_action));
     }
     
+    /**
+     * XXX: PostAction value / value type should be an object representing
+     * the PostAction configuration, allowing DAOs to share the same API.
+     */
     private function getValue(Transition_PostAction $post_action) {
-        if ($post_action->getShortName() == 'field_date') {
-            return $post_action->getValueType();
-        }        
-        return $post_action->getValue();
+        $short_name = $post_action->getShortName();
+        
+        switch($short_name) {
+            case 'field_date':  return $post_action->getValueType();
+            case 'field_int':
+            case 'field_float': return $post_action->getValue();
+            default: throw new Transition_PostAction_NotFoundException($short_name);
+        }
     }
     
     /**
@@ -281,6 +283,7 @@ class Transition_PostActionFactory {
     public function duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping) {
         foreach ($postactions as $postaction) {
             $from_field_id = $postaction->getFieldId();
+            
             foreach ($field_mapping as $mapping) {
                 if ($mapping['from'] == $from_field_id) {
                     $to_field_id = $mapping['to'];
