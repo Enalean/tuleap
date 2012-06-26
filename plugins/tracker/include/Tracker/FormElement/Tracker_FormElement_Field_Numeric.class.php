@@ -18,8 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Alphanum.class.php');
-abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum {
+require_once 'Tracker_FormElement_Field_Alphanum.class.php';
+require_once 'IComputeValues.class.php';
+
+abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements IComputeValues {
     
     public $default_properties = array(
         'maxchars'      => array(
@@ -38,6 +40,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             'size'  => 40,
         ),
     );
+    
+    public function getComputedValue(Tracker_Artifact $artifact) {
+        $value = $artifact->getValue($this);
+        if ($value) {
+            return $value->getValue();
+        }
+        return null;
+    }
     
     public function getQuerySelect() {
         $R1 = 'R1_'. $this->id;

@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_FormElement_Field_AggregateDao.class.php');
+require_once 'IComputeValues.class.php';
+require_once 'dao/Tracker_FormElement_Field_AggregateDao.class.php';
 
-class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
+class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, IComputeValues {
 
     public $default_properties = array(
-        'target_field_name'      => array(
+        'target_field_name' => array(
             'value' => '',
             'type'  => 'string',
             'size'  => 40,
@@ -46,13 +47,8 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     }
 
     private function getTargetFieldValue(Tracker_Artifact $artifact, Tracker_FormElement $field=null) {
-        if ($field instanceof Tracker_FormElement_Field_Aggregate) {
-            return $field->fetchArtifactValueReadOnly($artifact);
-        } elseif($field instanceof Tracker_FormElement_Field_Numeric) {
-            $value = $artifact->getValue($field);
-            if ($value) {
-                return $value->getValue();
-            }
+        if ($field instanceof IComputeValues) {
+            return $field->getComputedValue($artifact);
         }
         return 0;
     }
