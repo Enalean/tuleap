@@ -22,10 +22,12 @@ class ColumnPresenter {
     
     private $swimline_id;
     private $swimline_field_values;
+    private $card_field_id;
     
-    public function __construct($swimline_id, array $swimline_field_values) {
-        $this->swimline_id = $swimline_id;
-        $this->swimline_field_values  = $swimline_field_values;
+    public function __construct($swimline_id, array $swimline_field_values, $card_field_id) {
+        $this->swimline_id           = $swimline_id;
+        $this->swimline_field_values = $swimline_field_values;
+        $this->card_field_id         = $card_field_id;
     }
 
     public function getDropIntoClass() {
@@ -34,6 +36,11 @@ class ColumnPresenter {
             $classes[] = 'drop-into-'.$this->swimline_id.'-'.$id;
         }
         return implode(' ', $classes);
+    }
+
+    public function getCardFieldId() {
+        return $this->card_field_id;
+        
     }
     //put your code here
 }

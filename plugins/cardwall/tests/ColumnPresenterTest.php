@@ -28,12 +28,16 @@ class ColumnPresenterTest extends TuleapTestCase {
         $swimline_field_values   = array(100, 221);
         $swimline_id             = 3;
         $drop_into               = 'drop-into-3-100 drop-into-3-221';
-        $presenter               = new ColumnPresenter($swimline_id, $swimline_field_values);
+        $presenter               = new ColumnPresenter($swimline_id, $swimline_field_values, null);
         $this->assertEqual($drop_into, $presenter->getDropIntoClass());
     }
     
-//    public function itHasColumnFieldId() {
-//        $this->assert
-//    }
+    public function itHasCardFieldId() {
+        $card_field_id           = 9999;
+        $swimline_field_values   = array(100, 221);
+        $swimline_id             = 3;
+        $presenter = new ColumnPresenter($swimline_id, $swimline_field_values, $card_field_id);
+        $this->assertEqual($card_field_id, $presenter->getCardFieldId());
+    }
 }
 ?>
