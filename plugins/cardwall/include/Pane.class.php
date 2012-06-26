@@ -25,7 +25,7 @@ require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
-require_once 'CreateCardPresenterFunction.class.php';
+require_once 'CreateCardPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -84,7 +84,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $board_factory      = new Cardwall_BoardFactory();
         $planned_artifacts  = $this->milestone->getPlannedArtifacts();
 
-        $visitor  = new TreeNodeMapper(new Cardwall_CreateCardPresenterFunction());
+        $visitor  = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $card_presenter_tree = $planned_artifacts->accept($visitor);
 
         $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $card_presenter_tree, $field);
