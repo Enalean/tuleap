@@ -23,10 +23,11 @@
  * Avoid contaminating new classes with singleton lookup
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
-    public function testThereAreNoNewClassFilesContainingSingletonLookups() {
-        $expected_singleton_lookups = 2395;
-        $output                     = $this->getSystemOutput("grep -rc  '::instance()' * | awk -F: 'BEGIN { n=0} {n=n+$2} END { print n}'");
-        $actual_singleton_lookups   = $output[0];
+    
+    public function testThereAreNoNewSingletonLookups() {
+        $expected_singleton_lookups = 2353;
+        $basedir                    = dirname(__FILE__).'/../..';
+        $actual_singleton_lookups   = $this->countSingletonLookupsInProject($basedir);
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
         $this->assertTrue($actual_singleton_lookups <= $expected_singleton_lookups, 
                 "$new_singletons singleton lookup(s) was(were) introduced, please check to see if you can avoid this by injecting it(them)
@@ -37,6 +38,13 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
                  It should be : $actual_singleton_lookups");
     }
     
+    private function countSingletonLookupsInProject($basedir) {
+        $dirs                       = "$basedir/plugins $basedir/src $basedir/tools";
+        $count_command              = "grep -rc  '::instance()' $dirs| awk -F: '{n=n+$2} END { print n}'";
+        $output                     = $this->getSystemOutput($count_command);
+        return $output[0];
+    }
+
     private function getSystemOutput($cmd) {
         $result;
         exec($cmd, $result);
