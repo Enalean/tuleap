@@ -64,6 +64,11 @@ var Planning = {
                     var move_to_plan = $j(drop_zone).hasClass('planning-droppable');
                     if (move_to_plan) {
                         dropItem(current_item, drop_zone);
+                        if (!$j(this).children().length) {
+                            $j(this).css('height', '1.5em');
+                        } else {
+                            $j(this).css('height', 'auto');
+                        }
                     }
                     sort(current_item);
                 }},
@@ -78,6 +83,11 @@ var Planning = {
                     var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
                     if (move_to_backlog) {
                         removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
+                        if (!$j(this).children().length) {
+                            $j(this).css('height', '1.5em');
+                        } else {
+                            $j(this).css('height', 'auto');
+                        }
                     }
                     sort(current_item);
                 }},
