@@ -24,10 +24,16 @@ class ColumnPresenter {
     private $swimline_field_values;
     private $card_field_id;
     
-    public function __construct($swimline_id, array $swimline_field_values, $card_field_id) {
+    /** 
+     * @var Tracker_CardPresenter
+     */
+    private $card_presenter;
+    
+    public function __construct(Tracker_CardPresenter $presenter, $swimline_id, array $swimline_field_values, $card_field_id) {
         $this->swimline_id           = $swimline_id;
         $this->swimline_field_values = $swimline_field_values;
         $this->card_field_id         = $card_field_id;
+        $this->card_presenter        = $presenter;
     }
 
     public function getDropIntoClass() {
@@ -40,9 +46,11 @@ class ColumnPresenter {
 
     public function getCardFieldId() {
         return $this->card_field_id;
-        
     }
-    //put your code here
+
+    public function getCardPresenter() {
+        return $this->card_presenter;
+    }
 }
 
 ?>

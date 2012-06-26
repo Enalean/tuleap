@@ -24,20 +24,26 @@ require_once dirname(__FILE__).'/../include/ColumnPresenter.class.php';
 
 class ColumnPresenterTest extends TuleapTestCase {
     
-    public function itHasColumnDropInto() {
+    public function setUp() {
+        parent::setUp();
+        $this->card_field_id     = 9999;
         $swimline_field_values   = array(100, 221);
         $swimline_id             = 3;
+        $this->card_presenter    = mock('Cardwall_CardPresenter');
+        $this->presenter         = new ColumnPresenter($this->card_presenter, $swimline_id, $swimline_field_values, $this->card_field_id);
+    }
+    
+    public function itHasColumnDropInto() {
         $drop_into               = 'drop-into-3-100 drop-into-3-221';
-        $presenter               = new ColumnPresenter($swimline_id, $swimline_field_values, null);
-        $this->assertEqual($drop_into, $presenter->getDropIntoClass());
+        $this->assertEqual($drop_into, $this->presenter->getDropIntoClass());
     }
     
     public function itHasCardFieldId() {
-        $card_field_id           = 9999;
-        $swimline_field_values   = array(100, 221);
-        $swimline_id             = 3;
-        $presenter = new ColumnPresenter($swimline_id, $swimline_field_values, $card_field_id);
-        $this->assertEqual($card_field_id, $presenter->getCardFieldId());
+        $this->assertEqual($this->card_field_id, $this->presenter->getCardFieldId());
+    }
+    
+    public function itHasACardPresenter() {
+        $this->assertEqual($this->card_presenter, $this->presenter->getCardPresenter());
     }
 }
 ?>
