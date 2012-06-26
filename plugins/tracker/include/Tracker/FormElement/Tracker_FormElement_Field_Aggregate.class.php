@@ -36,21 +36,20 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
         $linked_artifacts = $artifact->getLinkedArtifacts($current_user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
-            $field = $this->getTargetField($linked_artifact);
-            $sum += $this->getTargetFieldValue($linked_artifact, $field);
+            $field = $this->getTargetField($current_user, $linked_artifact);
+            if ($field) {
+                $sum += $field->getComputedValue($linked_artifact);
+            }
         }
         return $sum;
     }
 
-    private function getTargetField(Tracker_Artifact $artifact) {
-        return $this->getFormElementFactory()->getFormElementByName($artifact->getTracker()->getId(), $this->getProperty('target_field_name'));
-    }
-
-    private function getTargetFieldValue(Tracker_Artifact $artifact, Tracker_FormElement $field=null) {
-        if ($field instanceof IComputeValues) {
-            return $field->getComputedValue($artifact);
-        }
-        return 0;
+    private function getTargetField(User $user, Tracker_Artifact $artifact) {
+        return $this->getFormElementFactory()->getComputableFieldByNameForUser(
+            $artifact->getTracker()->getId(),
+            $this->getProperty('target_field_name'),
+            $user
+        );
     }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {

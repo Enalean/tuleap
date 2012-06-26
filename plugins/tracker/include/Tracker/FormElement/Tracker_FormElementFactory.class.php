@@ -249,7 +249,15 @@ class Tracker_FormElementFactory {
         }
         return null;
     }
-    
+
+    public function getComputableFieldByNameForUser($tracker_id, $field_name, User $user) {
+        $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
+        if ($field && $field instanceof IComputeValues) {
+            return $field;
+        }
+        return null;
+    } 
+
     /**
      * Get used formElements by parent id
      * @param int parent_id
