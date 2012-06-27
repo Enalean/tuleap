@@ -29,8 +29,15 @@ class ColumnPresenterCallback implements TreeNodeCallback {
      */
     private $field_retriever;
     
-    public function __construct(Tracker_Artifact_Field_Retriever $retriever = null) {
+    /**
+     * @var Cardwall_MappingCollection
+     */
+    private $mappings;
+
+
+    public function __construct(Tracker_Artifact_Field_Retriever $retriever, Cardwall_MappingCollection $mappings) {
         $this->field_retriever = $retriever;
+        $this->mappings        = $mappings;
     }
     
     public function apply(TreeNode $node) {
@@ -45,8 +52,18 @@ class ColumnPresenterCallback implements TreeNodeCallback {
             $card_field_id = 0;
         }
 
-        $presenter = new ColumnPresenter($node->getCardPresenter(), $card_field_id);
+        $swim_line_values = $this->mappings->getMappingsByFieldId($card_field_id);
+        $presenter        = new ColumnPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
         return new Cardwall_ColumnPresenterNode($node, $presenter);
+    }
+
+    public function getParentNodeId(TreeNode $node) {
+        $parent_node = $node->getParentNode();
+        if ($parent_node) {
+            return $parent_node->getId();
+        } else {
+            return 0;
+        }
     }
     
 }
