@@ -23,21 +23,49 @@ require_once dirname(__FILE__).'/../include/ColumnPresenterCallback.class.php';
 
 class ColumnPresenterCallbackTest extends TuleapTestCase {
     
-    public function itJustClonesTheNodeIfItIsNotAPresenterNode() {
-        $callback = new ColumnPresenterCallback();
-        $node     = aNode()->withId(4444)->build();
-        $result = $callback->apply($node);
-        $this->assertIdentical($node, $result);
-    }
-    
-    public function itCreatesAColumnPresenterNode() {
-        $callback = new ColumnPresenterCallback();
+    public function setUp() {
+        parent::setUp();
+        $this->callback = new ColumnPresenterCallback();
         
-        $node     = aNode()->withId(4444)->build();
+        $this->node     = aNode()->withId(4444)->build();
         $presenter = mock('Cardwall_CardPresenter');
-        $presenter_node     = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
-        $result = $callback->apply($presenter_node);
-        $this->assertIsA($result, 'Cardwall_ColumnPresenterNode');
+        $this->presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
+    }
+//    
+//    public function itJustClonesTheNodeIfItIsNotAPresenterNode() {
+//        $result = $this->callback->apply($this->node);
+//        $this->assertIdentical($this->node, $result);
+//    }
+//    
+//    public function itCreatesAColumnPresenterNode() {
+//        $result = $this->callback->apply($this->presenter_node);
+//        $this->assertIsA($result, 'Cardwall_ColumnPresenterNode');
+//    }
+//    
+//    public function itHasTheSameIdAsTheGivenNode() {
+//        $result = $this->callback->apply($this->presenter_node);
+//        $this->assertEqual($this->node->getId(), $result->getId());
+//    }
+//    
+    public function itHasAColumnPresenterWithASemanticStatusFieldId() {
+        //inject a artifact => field provider
+        $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
+        
+        $tracker = mock('Tracker');
+        $artifact = aMockArtifact()->withTracker($tracker)->build();
+        $tracker_semantic_status = stub('Tracker_Semantic_Status')->getField()->returns($field);
+        $semantic_field_retriever = stub('Tracker_Semantic_IRetrieveSemantic')->getByTracker($tracker)->returns($tracker_semantic_status);
+        
+//        $artifact = mock('Tracker_Artifact');
+//        $artifact_field_retriever = stub('Tracker_Artifact_Field_Retriever')->getField($artifact)->returns($field);
+        
+        $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
+        $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
+
+        $this->callback = new ColumnPresenterCallback($semantic_field_retriever);
+        $result = $this->callback->apply($presenter_node);
+        
+        $this->assertEqual(77777, $result->getColumnPresenter()->getCardFieldId());
     }
 }
 ?>

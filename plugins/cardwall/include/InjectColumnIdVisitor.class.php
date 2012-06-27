@@ -84,10 +84,18 @@ class Cardwall_InjectColumnIdVisitor {
 
 class Cardwall_ColumnPresenterNode extends Tracker_TreeNode_SpecializedNode {
 
+    /** @var ColumnPresenter */
+    private $presenter;
+    
     function __construct(TreeNode $node, ColumnPresenter $presenter) {
         parent::__construct($node);
-        
+        $this->presenter = $presenter;
     }
+    
+    public function getColumnPresenter() {
+        return $this->presenter;
+    }
+
 //                $new_node = new Cardwall_ColumnPresenterNode($node, new ColumnPresenter($presenter, $field_id));
 
 }
