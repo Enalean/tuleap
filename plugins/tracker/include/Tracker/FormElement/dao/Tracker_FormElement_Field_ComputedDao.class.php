@@ -26,7 +26,7 @@ class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_Specific
     
     function __construct() {
         parent::__construct();
-        $this->table_name = 'tracker_field_aggregate';
+        $this->table_name = 'tracker_field_computed';
     }
     
     public function save($field_id, $row) {
