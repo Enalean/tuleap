@@ -34,19 +34,19 @@ class ColumnPresenterCallback implements TreeNodeCallback {
     }
     
     public function apply(TreeNode $node) {
-        if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
-            $artifact = $node->getCardPresenter()->getArtifact();
-            $field = $this->field_retriever->getField($artifact);
-            if ($field) {
-                $card_field_id = $field->getId();
-            } else {
-                $card_field_id = 0;
-            }
-            
-            $presenter = new ColumnPresenter($node->getCardPresenter(), $card_field_id);
-            return new Cardwall_ColumnPresenterNode($node, $presenter);
+        if (!$node instanceof Tracker_TreeNode_CardPresenterNode) {
+            return clone $node;
         }
-        return clone $node;
+        $artifact = $node->getCardPresenter()->getArtifact();
+        $field = $this->field_retriever->getField($artifact);
+        if ($field) {
+            $card_field_id = $field->getId();
+        } else {
+            $card_field_id = 0;
+        }
+
+        $presenter = new ColumnPresenter($node->getCardPresenter(), $card_field_id);
+        return new Cardwall_ColumnPresenterNode($node, $presenter);
     }
     
 }
