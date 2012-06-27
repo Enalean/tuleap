@@ -135,8 +135,8 @@ CREATE TABLE tracker_field_openlist(
     hint VARCHAR(255) NOT NULL
 );
 
-DROP TABLE IF EXISTS tracker_field_aggregate;
-CREATE TABLE tracker_field_aggregate (
+DROP TABLE IF EXISTS tracker_field_computed;
+CREATE TABLE tracker_field_computed (
     field_id INT(11) NOT NULL PRIMARY KEY,
     target_field_name VARCHAR(255) NULL
 );
