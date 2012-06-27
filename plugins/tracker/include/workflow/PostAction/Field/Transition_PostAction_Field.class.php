@@ -86,14 +86,15 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
     }
     
     /**
-     * Check if a post action on a field_id already exists
+     * Check if a post action on field_id already exists
      *
-     * @param $field_id the field_id of the post action
      * @param $request_field_id the field_id from the request
      *
      * @return int, a field id
      */
-    public function getFieldIdOfPostActionToUpdate($field_id, $request_field_id) {
+    public function getFieldIdOfPostActionToUpdate($request_field_id) {
+        $field_id = $this->getFieldId();
+        
         if ($request_field_id != $field_id) {
             $new_field = $this->getFormElementFactory()->getUsedFormElementById($request_field_id);
             

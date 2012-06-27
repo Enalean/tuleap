@@ -92,7 +92,7 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
 
             if ($request->validInArray('workflow_postaction_field_float', new Valid_UInt($this->id))) {
                 $new_field_id = $request->getInArray('workflow_postaction_field_float', $this->id);
-                $field_id = $this->getFieldIdOfPostActionToUpdate($field_id, $new_field_id);
+                $field_id = $this->getFieldIdOfPostActionToUpdate($new_field_id);
                 //Check if value is an float
                 $field = $this->getFormElementFactory()->getUsedFormElementById($field_id);
                 if ($field) {
