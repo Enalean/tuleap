@@ -11,8 +11,8 @@
         {{/canDrop}}
         {{#canDrop}}
             <div class="milestone-content">
+                <div class="milestone-noitems" {{#hasChildren}}style="display:none;"{{/hasChildren}}>No items yet</div>
                 {{^hasChildren}}
-                    <div class="milestone-noitems">No items yet</div>
                     <ul class="cards" style="height:1.5em;"></ul>
                 {{/hasChildren}}
                 {{#hasChildren}}

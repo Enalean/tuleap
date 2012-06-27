@@ -71,8 +71,12 @@ var Planning = {
                 var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
                 if (move_to_backlog) {
                     removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
+                    if ($j(this).children().length == 0) {
+                        $j('.milestone-noitems').show();
+                    }
                 } else if (move_to_plan) {
                     dropItem(current_item, drop_zone);
+                    $j('.milestone-noitems').hide();
                 }
                 wrapped_stop(event, ui);
             }});
