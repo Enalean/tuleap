@@ -79,6 +79,32 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
     }
     
     /**
+     * Check if a post action on a field_id already exists
+     *
+     * @param $field_id the field_id of the post action
+     * @param $request_field_id the field_id from the request
+     *
+     * @return int, a field id
+     */
+    public function getFieldIdOfPostActionToUpdate($field_id, $request_field_id) {
+        if ($request_field_id != $field_id) {
+            $new_field = $this->getFormElementFactory()->getUsedFormElementById($request_field_id);
+            
+            if ($new_field) {
+                $already_used = $this->getDao()->searchByTransitionIdAndFieldId($this->transition->getTransitionId(), $new_field->getId());
+                
+                if (count($already_used)) {
+                    $this->addFeedback('error', 'workflow_admin', 'postaction_on_field_already_exist', array($new_field->getLabel()));
+                } else {
+                    $field_id = $new_field->getId();
+                    return $field_id;
+                }
+            }
+        }
+        return $field_id;
+    }
+    
+    /**
      * Wrapper for Tracker_FormElementFactory
      *
      * @return Tracker_FormElementFactory
