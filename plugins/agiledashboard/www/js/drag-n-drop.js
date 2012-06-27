@@ -65,10 +65,11 @@ var Planning = {
             $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable(options);
 
             options.stop = options.stop.wrap(function (wrapped_stop, event, ui) { with (Planning) {
+                wrapped_stop(event, ui);
                 var current_item    = ui.item.get(0);
                 var drop_zone       = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
-                var move_to_plan    = $j(drop_zone).hasClass('planning-droppable');
-                var move_to_backlog = $j(drop_zone).hasClass('planning-backlog');
+                var move_to_plan    = $j(drop_zone).hasClass('planning-droppable') && $j(this).parents('.planning-backlog').get(0);
+                var move_to_backlog = $j(drop_zone).hasClass('planning-backlog')   && $j(this).parents('.planning-droppable').get(0);
                 if (move_to_backlog) {
                     removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
                     if ($j(this).children().length == 0) {
@@ -78,7 +79,6 @@ var Planning = {
                     dropItem(current_item, drop_zone);
                     $j('.milestone-noitems').hide();
                 }
-                wrapped_stop(event, ui);
             }});
 
             options.connectWith = '.milestone-content > ul.cards',
