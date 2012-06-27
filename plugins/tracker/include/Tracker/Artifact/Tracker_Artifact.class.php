@@ -642,7 +642,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $commentFormat = $request->get('comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
-                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $commentFormat, $current_user, $request->get('email'))) {
+                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), $commentFormat)) {
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
@@ -841,14 +841,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param array   $fields_data       Artifact fields values
      * @param string  $comment           The comment (follow-up) associated with the artifact update
-     * @param string  $commentFormat     The comment (follow-up) type (text/html)
      * @param User    $submitter         The user who is doing the update
      * @param string  $email             The email of the person who updates the artifact if modification is done in anonymous mode
      * @param boolean $send_notification true if a notification must be sent, false otherwise
+     * @param string  $commentFormat     The comment (follow-up) type (text/html)
      *
      * @return boolean True if update is done without error, false otherwise
      */
-    public function createNewChangeset($fields_data, $comment, $commentFormat = 0, $submitter, $email, $send_notification = true) {
+    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $commentFormat = 0) {
         $is_valid = true;
         $is_submission = false;
 
