@@ -29,6 +29,7 @@ require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'InjectColumnIdCustomFieldVisitor.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
+require_once 'ColumnPresenterCallback.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
@@ -136,9 +137,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      */
     private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
         $field              = $this->getField();
-        $visitor            = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
+        $acc_field_provider = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
         $board_factory      = new Cardwall_BoardFactory();
-        $board              = $board_factory->getBoard($visitor, $forest_of_artifacts, $field);
+
+        $col_visitor        = new TreeNodeMapper(new ColumnPresenterCallback(new Tracker_Artifact_Custom_Field_Retriever($field)));
+
+        $board              = $board_factory->getBoard($col_visitor, $acc_field_provider, $forest_of_artifacts, $field);
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
