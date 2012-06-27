@@ -40,7 +40,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return float
      */
     public function getComputedValue(User $user, Tracker_Artifact $artifact) {
-        $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
+        $linked_artifacts = $artifact->getLinkedArtifacts($user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
             $field = $this->getTargetField($user, $linked_artifact);

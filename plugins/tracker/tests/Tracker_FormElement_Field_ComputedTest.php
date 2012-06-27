@@ -44,7 +44,7 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     public function itComputesDirectValues() {
         $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
         $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
-        $artifact      = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
+        $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
         
         $field = mock('Tracker_FormElement_Field_Float');
         stub($field)->getComputedValue($this->user, $sub_artifact1)->returns(5);
@@ -55,6 +55,21 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
+    
+    /*public function itComputesDirectValues() {
+        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
+        $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
+        $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
+        
+        $field = mock('Tracker_FormElement_Field_Float');
+        stub($field)->getComputedValue($this->user, $sub_artifact1)->returns(5);
+        stub($field)->getComputedValue($this->user, $sub_artifact2)->returns(15);
+        
+        
+        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
+        
+        $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
+    }*/
 }
 
 ?>
