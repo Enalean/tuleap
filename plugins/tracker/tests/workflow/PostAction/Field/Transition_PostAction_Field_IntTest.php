@@ -80,7 +80,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
             'field_id' => 'value',
         );
         
-        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($this->field->getLabel(), $expected)));
+        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($this->field->getLabel(), $expected)));
         
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
@@ -98,7 +98,7 @@ class Transition_PostAction_Field_IntTest extends TuleapTestCase {
             'field_id' => 'value',
         );
         
-        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($this->field->getLabel(), $expected)));      
+        $this->post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($this->field->getLabel(), $expected)));      
         $this->post_action->before($fields_data, $user);
         $this->assertEqual($expected, $fields_data[$this->field->getId()]);
     }
