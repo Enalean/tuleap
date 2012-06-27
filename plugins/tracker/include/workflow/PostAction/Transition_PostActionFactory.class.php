@@ -131,14 +131,38 @@ class Transition_PostActionFactory {
         return new $klass($transition, $id, $field, $value);
     }
     
+    /**
+     * Retrieves the id from the given PostAction database row.
+     * 
+     * @param array $row
+     * 
+     * @return int
+     */
     private function getIdFromRow($row) {
         return (int)$row['id'];
     }
     
+    /**
+     * Retrieves the field from the given PostAction database row.
+     * 
+     * @param array $row
+     * 
+     * @return Tracker_FormElement_Field
+     */
     private function getFieldFromRow($row) {
         return $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
     }
     
+    /**
+     * Retrieves the value (or value type) from the given PostAction database row.
+     * 
+     * @param array $row
+     * @param string $shortname
+     * 
+     * @return mixed
+     * 
+     * @throws Transition_PostAction_NotFoundException 
+     */
     private function getValueFromRow($row, $shortname) {
         switch ($shortname) {
             case 'field_date':  return (int) $row['value_type'];
@@ -156,7 +180,7 @@ class Transition_PostActionFactory {
      * 
      * @return DataAccessResult
      */
-    private function loadPostActionRows($transition, $shortname) {
+    private function loadPostActionRows(Transition $transition, $shortname) {
         $dao = $this->getDao($shortname);
         return $dao->searchByTransitionId($transition->getTransitionId());
     }
@@ -170,7 +194,7 @@ class Transition_PostActionFactory {
      * 
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $xml_tag_name          = $xml->getName();
         $post_action_class     = $this->getPostActionClassFromXmlTagName($xml_tag_name);
         $field_id              = $xmlMapping[(string)$xml->field_id['REF']];

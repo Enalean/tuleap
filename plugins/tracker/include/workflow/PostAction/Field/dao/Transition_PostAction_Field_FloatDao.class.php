@@ -25,7 +25,7 @@ require_once 'Transition_PostAction_FieldDao.class.php';
  */
 class Transition_PostAction_Field_FloatDao extends Transition_PostAction_FieldDao {
     
-    function __construct() {
+    public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_workflow_transition_postactions_field_float';
     }
