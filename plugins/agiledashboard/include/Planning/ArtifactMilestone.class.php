@@ -228,6 +228,11 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->remaining_effort;
     }
 
+    /**
+     * @param float $remaining_effort
+     * 
+     * @return Planning_ArtifactMilestone 
+     */
     public function setRemainingEffort($remaining_effort) {
         $this->remaining_effort = $remaining_effort;
         return $this;
@@ -237,6 +242,11 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $this->capacity;
     }
 
+    /**
+     * @param float $capacity
+     * 
+     * @return Planning_ArtifactMilestone 
+     */
     public function setCapacity($capacity) {
         $this->capacity = $capacity;
         return $this;

@@ -101,8 +101,18 @@ interface Planning_Milestone {
      */
     public function getLinkedArtifacts(User $user);
 
+    /**
+     * Return numerical value of remaining effort
+     * 
+     * @return float
+     */
     public function getRemainingEffort();
-    
+
+    /**
+     * Return numerical value of capacity
+     * 
+     * @return float
+     */
     public function getCapacity();
 }
 
