@@ -284,8 +284,8 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     }
 
     public function isOverCapacity() {
-        return $this->milestone->getRemainingEffort() &&
-               $this->milestone->getCapacity() &&
+        return $this->milestone->getRemainingEffort() !== null &&
+               $this->milestone->getCapacity() !== null &&
                $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
     }
 }
