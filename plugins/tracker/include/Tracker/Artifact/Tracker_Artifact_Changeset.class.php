@@ -272,14 +272,15 @@ class Tracker_Artifact_Changeset {
     /**
      * Update the content
      *
-     * @param string $body The new content
-     * @param User   $user The user
+     * @param string  $body          The new content
+     * @param User    $user          The user
+     * @param Boolean $commentFormat Format of the comment
      *
      * @return void
      */
-    public function updateComment($body, $user) {
+    public function updateComment($body, $user, $commentFormat = 0) {
         if ($this->userCanEdit($user)) {
-            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id);
+            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $commentFormat);
         }
     }
 

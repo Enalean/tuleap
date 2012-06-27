@@ -121,9 +121,10 @@ document.observe('dom:loaded', function () {
                     var button = new Element('button').update('Ok').observe('click', function (evt) {
                         var req = new Ajax.Request(location.href, {
                             parameters: {
-                                func:         'update-comment',
-                                changeset_id: id,
-                                content:      textarea.getValue()
+                                func:           'update-comment',
+                                changeset_id:   id,
+                                content:        textarea.getValue(),
+                                comment_format: $('comment_format_html'+id).checked
                             },
                             onSuccess: function (transport) {
                                 if (transport.responseText) {

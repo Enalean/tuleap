@@ -600,8 +600,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
-                        //@TODO retrieve follow up type ??
-                        $changeset->updateComment($request->get('content'), $current_user);
+                        if ($request->get('comment_format') == 'true') {
+                            $commentFormat = true;
+                        } else {
+                            $commentFormat = false;
+                        }
+                        $changeset->updateComment($request->get('content'), $current_user, $commentFormat);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
                             echo $changeset->getComment()->fetchFollowUp();
