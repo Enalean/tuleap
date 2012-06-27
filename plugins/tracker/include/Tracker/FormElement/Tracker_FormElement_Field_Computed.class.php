@@ -19,9 +19,9 @@
  */
 
 require_once 'IComputeValues.class.php';
-require_once 'dao/Tracker_FormElement_Field_AggregateDao.class.php';
+require_once 'dao/Tracker_FormElement_Field_ComputedDao.class.php';
 
-class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, Tracker_FormElement_IComputeValues {
+class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, Tracker_FormElement_IComputeValues {
 
     public $default_properties = array(
         'target_field_name' => array(
@@ -144,7 +144,7 @@ class Tracker_FormElement_Field_Aggregate extends Tracker_FormElement_Field impl
     }
 
     protected function getDao() {
-        return new Tracker_FormElement_Field_AggregateDao();
+        return new Tracker_FormElement_Field_ComputedDao();
     }
 
     public function getCriteriaFrom($criteria) {

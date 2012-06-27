@@ -22,7 +22,7 @@ require_once('Tracker_FormElement_SpecificPropertiesDao.class.php');
 /**
  *  Data Access Object for Tracker_FormElement_Field 
  */
-class Tracker_FormElement_Field_AggregateDao extends Tracker_FormElement_SpecificPropertiesDao {
+class Tracker_FormElement_Field_ComputedDao extends Tracker_FormElement_SpecificPropertiesDao {
     
     function __construct() {
         parent::__construct();
