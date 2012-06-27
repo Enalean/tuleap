@@ -26,11 +26,12 @@ interface Tracker_FormElement_IComputeValues {
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      *
-     * @param Tracker_Artifact $artifact
+     * @param User             $user     The user who see the results
+     * @param Tracker_Artifact $artifact The artifact on which the value is computed
      *
      * @return float
      */
-    public function getComputedValue(Tracker_Artifact $artifact);
+    public function getComputedValue(User $user, Tracker_Artifact $artifact);
 }
 
 ?>

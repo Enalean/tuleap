@@ -105,7 +105,7 @@ class Planning_MilestoneFactory {
             $user
         );
         if ($field) {
-            return $field->getComputedValue($milestone_artifact);
+            return $field->getComputedValue($user, $milestone_artifact);
         }
         return 0;
     }

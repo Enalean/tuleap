@@ -219,7 +219,7 @@ class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_Mi
     public function itRetrievesMilestoneWithRemainingEffortWithComputedValue() {
         $remaining_effort = 225;
 
-        $remaining_effort_field = stub('Tracker_FormElement_Field_Aggregate')->getComputedValue($this->artifact)->returns($remaining_effort);
+        $remaining_effort_field = stub('Tracker_FormElement_Field_Computed')->getComputedValue($this->user, $this->artifact)->returns($remaining_effort);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($remaining_effort_field);
 
         $this->assertEqual($this->getMilestoneRemainingEffort(), $remaining_effort);
@@ -241,7 +241,7 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
     public function itRetrievesMilestoneWithCapacityWithActualValue() {
         $capacity = 225;
 
-        $capacity_field = stub('Tracker_FormElement_Field_Float')->getComputedValue($this->artifact)->returns($capacity);
+        $capacity_field = stub('Tracker_FormElement_Field_Float')->getComputedValue($this->user, $this->artifact)->returns($capacity);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::CAPACITY_FIELD_NAME, $this->user)->returns($capacity_field);
 
         $this->assertEqual($this->getMilestoneCapacity(), $capacity);

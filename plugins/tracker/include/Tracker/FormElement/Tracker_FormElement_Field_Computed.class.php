@@ -34,18 +34,18 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      * 
-     * @param Tracker_Artifact $artifact
+     * @param User             $user     The user who see the results
+     * @param Tracker_Artifact $artifact The artifact on which the value is computed
      * 
      * @return float
      */
-    public function getComputedValue(Tracker_Artifact $artifact) {
-        $current_user     = UserManager::instance()->getCurrentUser();
-        $linked_artifacts = $artifact->getLinkedArtifacts($current_user);
+    public function getComputedValue(User $user, Tracker_Artifact $artifact) {
+        $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
             $field = $this->getTargetField($current_user, $linked_artifact);
             if ($field) {
-                $sum += $field->getComputedValue($linked_artifact);
+                $sum += $field->getComputedValue($user, $linked_artifact);
             }
         }
         return $sum;
@@ -60,7 +60,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->getComputedValue($artifact);
+        $current_user = UserManager::instance()->getCurrentUser();
+        return $this->getComputedValue($current_user, $artifact);
     }
 
     /**
@@ -72,7 +73,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->getComputedValue($artifact);
+        $current_user = UserManager::instance()->getCurrentUser();
+        return $this->getComputedValue($current_user, $artifact);
     }
 
 
@@ -86,7 +88,8 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format = 'text') {
-        return $this->getComputedValue($artifact);
+        $current_user = UserManager::instance()->getCurrentUser();
+        return $this->getComputedValue($current_user, $artifact);
     }
 
     /**
@@ -97,12 +100,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->getComputedValue($artifact);
+        $current_user = UserManager::instance()->getCurrentUser();
+        return $this->getComputedValue($current_user, $artifact);
     }
 
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-        $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
-        return $this->getComputedValue($artifact);
+        $current_user = UserManager::instance()->getCurrentUser();
+        $artifact     = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);
+        return $this->getComputedValue($current_user, $artifact);
     }
 
 
