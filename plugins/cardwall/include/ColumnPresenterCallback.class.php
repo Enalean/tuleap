@@ -21,18 +21,18 @@
 class ColumnPresenterCallback implements TreeNodeCallback {
 
     /**
-     * @var Tracker_Semantic_IRetrieveSemantic
+     * @var Tracker_Artifact_Field_Retriever
      */
-    private $retriever;
+    private $field_retriever;
     
-    public function __construct(Tracker_Semantic_IRetrieveSemantic $retriever = null) {
-        $this->retriever = $retriever;
+    public function __construct(Tracker_Artifact_Field_Retriever $retriever = null) {
+        $this->field_retriever = $retriever;
     }
     
     public function apply(TreeNode $node) {
         if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
-            $tracker = $node->getCardPresenter()->getArtifact()->getTracker();
-            $card_field_id = $this->retriever->getByTracker($tracker)->getField()->getId();
+            $artifact = $node->getCardPresenter()->getArtifact();
+            $card_field_id = $this->field_retriever->getField($artifact)->getId();
             $presenter = new ColumnPresenter($node->getCardPresenter(), $card_field_id);
             return new Cardwall_ColumnPresenterNode($node, $presenter);
         }
