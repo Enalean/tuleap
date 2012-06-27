@@ -105,7 +105,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
                                    'F32-V1' => $this->from_value,
                                    'F32-V0' => $this->to_value);
         
-        $this->factory     = new TransitionFactory();
+        $this->factory     = TestHelper::getPartialMock('TransitionFactory', array());
         
     }
     

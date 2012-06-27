@@ -27,6 +27,9 @@ require_once('PostAction/Transition_PostActionFactory.class.php');
 
 class TransitionFactory {
     
+    protected function __construct() {
+    }
+    
     /**
      * Hold an instance of the class
      */
@@ -43,7 +46,7 @@ class TransitionFactory {
             self::$_instance = new $c;
         }
         return self::$_instance;
-    } 
+    }
     
     /**
      * Build a Transition instance
