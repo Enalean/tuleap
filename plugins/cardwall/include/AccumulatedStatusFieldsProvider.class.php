@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ColumnPresenter.class.php';
 require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
+require_once 'ColumnPresenterCallback.class.php';
 /**
  * Foreach artifact in a TreeNode, inject the id of the field used for the columns
  */
-class Cardwall_InjectColumnIdVisitor {
+class Cardwall_AccumulatedStatusFieldsProvider {
 
     public function accumulateStatusFields(TreeNode $node) {
         $artifacts = $this->getArtifactsOutOfTree($node);
@@ -43,7 +43,8 @@ class Cardwall_InjectColumnIdVisitor {
         
     }
     private function getIndexedStatusFieldsOf(array $artifacts) {
-        $status_fields = array_filter(array_map(array($this, 'getField'), $artifacts));
+        $status_field_retriever = new Tracker_Artifact_Semantic_Status_Field_Retriever();
+        $status_fields = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
         $indexed_status_fields = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
@@ -56,47 +57,5 @@ class Cardwall_InjectColumnIdVisitor {
         return $indexed_array;
     }
         
-    public function visit(TreeNode $node) {
-        if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
-            $data      = $node->getData();
-            $presenter = $node->getCardPresenter();
-            $field     = $this->getField($presenter->getArtifact());
-            $data['column_field_id'] = 0;
-            if ($field) {
-                $field_id                = $field->getId();
-                $data['column_field_id'] = $field_id;
-            }
-            $node->setData($data);
-        }
-        foreach ($node->getChildren() as $child) {
-            $child->accept($this);
-        }
-    }
-
-    /**
-     * @return Tracker_FormElement_Field_Selectbox
-     */
-    protected function getField(Tracker_Artifact $artifact) {
-        $tracker = $artifact->getTracker();
-        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-    }
-}
-
-class Cardwall_ColumnPresenterNode extends Tracker_TreeNode_SpecializedNode {
-
-    /** @var ColumnPresenter */
-    private $presenter;
-    
-    function __construct(TreeNode $node, ColumnPresenter $presenter) {
-        parent::__construct($node);
-        $this->presenter = $presenter;
-    }
-    
-    public function getColumnPresenter() {
-        return $this->presenter;
-    }
-
-//                $new_node = new Cardwall_ColumnPresenterNode($node, new ColumnPresenter($presenter, $field_id));
-
 }
 ?>

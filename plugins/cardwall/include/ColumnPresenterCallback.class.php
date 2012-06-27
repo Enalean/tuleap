@@ -18,6 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once 'ColumnPresenter.class.php';
+require_once 'ColumnPresenterNode.class.php';
+
 class ColumnPresenterCallback implements TreeNodeCallback {
 
     /**

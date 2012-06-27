@@ -27,7 +27,7 @@ require_once 'CardwallCardProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
-require_once 'InjectColumnIdCustomFieldVisitor.class.php';
+require_once 'AccumulatedStatusFieldsProvider.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';
 
@@ -137,7 +137,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      */
     private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
         $field              = $this->getField();
-        $acc_field_provider = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
+        $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
         $board_factory      = new Cardwall_BoardFactory();
 
         $col_visitor        = new TreeNodeMapper(new ColumnPresenterCallback(new Tracker_Artifact_Custom_Field_Retriever($field)));

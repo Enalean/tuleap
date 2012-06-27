@@ -24,7 +24,7 @@ require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
-require_once 'InjectColumnIdVisitor.class.php';
+require_once 'AccumulatedStatusFieldsProvider.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';
 
@@ -89,7 +89,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $card_presenter_tree = $planned_artifacts->accept($visitor);
 
         $col_visitor        = new TreeNodeMapper(new ColumnPresenterCallback(new Tracker_Artifact_Semantic_Status_Field_Retriever()));
-        $acc_field_provider = new Cardwall_InjectColumnIdVisitor();
+        $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
         $board              = $board_factory->getBoard($col_visitor, $acc_field_provider, $card_presenter_tree, $field);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
