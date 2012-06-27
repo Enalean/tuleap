@@ -31,6 +31,7 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         parent::setUp();
         $this->user  = mock('User');
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty'));
+        stub($this->field)->getProperty()->returns('effort');
         
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         Tracker_FormElementFactory::setInstance($this->formelement_factory);
@@ -47,8 +48,8 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
         
         $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->user, $sub_artifact1)->returns(5);
-        stub($field)->getComputedValue($this->user, $sub_artifact2)->returns(15);
+        stub($field)->getComputedValue($this->user, $sub_artifact1, '*')->returns(5);
+        stub($field)->getComputedValue($this->user, $sub_artifact2, '*')->returns(15);
         
         
         stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
@@ -57,14 +58,16 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     }
     
     public function itIgnoreCyclesInChildrens() {
-        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
+        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->withId(150)->build())->build();
         $artifact      = mock('Tracker_Artifact');
+        stub($artifact)->getTracker()->returns(aTracker()->withId(300)->build());
         stub($artifact)->getLinkedArtifacts()->returns(array($artifact, $sub_artifact1));
         
         $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->user, $sub_artifact1)->returns(5);
+        stub($field)->getComputedValue($this->user, $sub_artifact1, '*')->returns(5);
         
-        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser(150, 'effort', $this->user)->returns($field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser(300, 'effort', $this->user)->returns($this->field);
         
         $this->assertEqual(5, $this->field->getComputedValue($this->user, $artifact));
     }

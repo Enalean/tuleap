@@ -34,21 +34,41 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      * 
-     * @param User             $user     The user who see the results
-     * @param Tracker_Artifact $artifact The artifact on which the value is computed
-     * 
+     * @param User             $user                  The user who see the results
+     * @param Tracker_Artifact $artifact              The artifact on which the value is computed
+     * @param Array            $computed_artifact_ids Hash map to store artifacts already computed (avoid cycles)
+     *
      * @return float
      */
-    public function getComputedValue(User $user, Tracker_Artifact $artifact) {
-        $linked_artifacts = $artifact->getLinkedArtifacts($user);
+    public function getComputedValue(User $user, Tracker_Artifact $artifact, &$computed_artifact_ids = array()) {
         $sum = 0;
-        foreach ($linked_artifacts as $linked_artifact) {
-            $field = $this->getTargetField($user, $linked_artifact);
-            if ($field) {
-                $sum += $field->getComputedValue($user, $linked_artifact);
-            }
+        foreach ($artifact->getLinkedArtifacts($user) as $linked_artifact) {
+            $sum += $this->getUniqueFieldValue($user, $linked_artifact, $computed_artifact_ids);
         }
         return $sum;
+    }
+
+    private function getUniqueFieldValue(User $user, Tracker_Artifact $artifact, &$computed_artifact_ids) {
+        if ($this->notAlreadyComputed($artifact, $computed_artifact_ids)) {
+            return $this->getFieldValue($user, $artifact, $computed_artifact_ids);
+        }
+        return 0;
+    }
+
+    private function notAlreadyComputed(Tracker_Artifact $artifact, &$computed_artifact_ids) {
+        if (!isset($computed_artifact_ids[$artifact->getId()])) {
+            $computed_artifact_ids[$artifact->getId()] = true;
+            return true;
+        }
+        return false;
+    }
+
+    private function getFieldValue(User $user, Tracker_Artifact $artifact, &$computed_artifact_ids) {
+        $field = $this->getTargetField($user, $artifact);
+        if ($field) {
+            return $field->getComputedValue($user, $artifact, $computed_artifact_ids);
+        }
+        return 0;
     }
 
     private function getTargetField(User $user, Tracker_Artifact $artifact) {
@@ -59,6 +79,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         );
     }
 
+    /**
+     *
+     * @param Tracker_Artifact                $artifact
+     * @param Tracker_Artifact_ChangesetValue $value
+     * @param Array                           $submitted_values
+     *
+     * @return string
+     */
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $current_user = UserManager::instance()->getCurrentUser();
         return $this->getComputedValue($current_user, $artifact);
