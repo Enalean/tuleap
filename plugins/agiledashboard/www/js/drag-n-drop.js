@@ -64,7 +64,7 @@ var Planning = {
             };
             $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable(options);
 
-            options.stop.wrap(function (wrapped_stop) { with (Planning) {
+            options.stop = options.stop.wrap(function (wrapped_stop, event, ui) { with (Planning) {
                 var current_item    = ui.item.get(0);
                 var drop_zone       = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
                 var move_to_plan    = $j(drop_zone).hasClass('planning-droppable');
@@ -74,14 +74,14 @@ var Planning = {
                 } else if (move_to_plan) {
                     dropItem(current_item, drop_zone);
                 }
-                wrapped_stop();
+                wrapped_stop(event, ui);
             }});
 
             options.connectWith = '.milestone-content > ul.cards',
-            $j('.backlog-content > ul.cards').sortable(options).css('min-height', '1.5em');
+            $j('.backlog-content > ul.cards').sortable(options);
 
             options.connectWith = '.backlog-content > ul.cards';
-            $j('.milestone-content > ul.cards').sortable(options).css('min-height', '1.5em');
+            $j('.milestone-content > ul.cards').sortable(options);
         })(window.jQuery);
     },
 
