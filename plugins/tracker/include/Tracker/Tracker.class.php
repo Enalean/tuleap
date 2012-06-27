@@ -1786,7 +1786,7 @@ EOS;
         $this->displayFooter($layout);
     }
 
-    public function updateArtifactsMasschange($submitter , $masschange_aids, $masschange_data, $comment, $send_notifications) {
+    public function updateArtifactsMasschange($submitter , $masschange_aids, $masschange_data, $comment, $send_notifications, $commentFormat) {
         //building data for update
         $fields_data  = array();
         foreach ( $masschange_data as $field_id => $data ) {
@@ -1807,7 +1807,7 @@ EOS;
                 continue;
             }
             
-            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications) ) {
+            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $commentFormat)) {
                 $not_updated_aids[] = $aid;
                 continue;
             }
