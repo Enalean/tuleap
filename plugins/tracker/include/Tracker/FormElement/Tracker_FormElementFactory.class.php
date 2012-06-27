@@ -257,7 +257,7 @@ class Tracker_FormElementFactory {
      * @param string $field_name
      * @param User   $user
      *
-     * @return \IComputeValues|null 
+     * @return Tracker_FormElement_IComputeValues
      */
     public function getComputableFieldByNameForUser($tracker_id, $field_name, User $user) {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
