@@ -22,7 +22,10 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 class Tracker_Artifact_PriorityDao extends DataAccessObject {
 
-    public function artifactHasAHigherPriorityThan($artifact_id, $successor_id) {
+    /**
+     * @return bool true if success
+     */
+    public function moveArtifactBefore($artifact_id, $successor_id) {
         $this->da->startTransaction();
         $predecessor_id = $this->serchPredecessor($successor_id);
         if ($predecessor_id !== false && $this->removeAndInsert($predecessor_id, $artifact_id)) {
@@ -33,7 +36,10 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         return false;
     }
 
-    public function artifactHasALesserPriorityThan($artifact_id, $predecessor_id) {
+    /**
+     * @return bool true if success
+     */
+    public function moveArtifactAfter($artifact_id, $predecessor_id) {
         $this->da->startTransaction();
         if ($this->removeAndInsert($predecessor_id, $artifact_id)) {
             $this->da->commit();
@@ -43,7 +49,10 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         return false;
     }
 
-    public function artifactHasTheLowestPriority($artifact_id) {
+    /**
+     * @return bool true if success
+     */
+    public function putArtifactAtTheEnd($artifact_id) {
         $this->da->startTransaction();
         $predecessor_id = $this->serchPredecessor(null);
         if ($predecessor_id !== false && $this->insert($predecessor_id, $artifact_id)) {

@@ -666,11 +666,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
             case 'higher-priority-than':
                 $dao = new Tracker_Artifact_PriorityDao();
-                $dao->artifactHasAHigherPriorityThan($this->getId(), (int)$request->get('target-id'));
+                $dao->moveArtifactBefore($this->getId(), (int)$request->get('target-id'));
                 break;
             case 'lesser-priority-than':
                 $dao = new Tracker_Artifact_PriorityDao();
-                $dao->artifactHasALesserPriorityThan($this->getId(), (int)$request->get('target-id'));
+                $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
                 break;
             default:
                 if ($request->isAjax()) {

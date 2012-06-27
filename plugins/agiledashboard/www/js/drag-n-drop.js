@@ -52,7 +52,7 @@ var Planning = {
         }
     }},
 
-    loadDroppables: function (container) {
+    loadSortables: function (container) {
         (function ($j) {
             var options = {
                 placeholder: 'card placeholder',

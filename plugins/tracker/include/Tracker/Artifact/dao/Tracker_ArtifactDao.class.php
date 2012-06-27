@@ -271,7 +271,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateArtifactId()) {
             $priority_dao = new Tracker_Artifact_PriorityDao();
-            if ($priority_dao->artifactHasTheLowestPriority($id)) {
+            if ($priority_dao->putArtifactAtTheEnd($id)) {
                 $sql = "INSERT INTO $this->table_name
                         (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
                         VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";

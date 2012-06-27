@@ -1,5 +1,18 @@
 --TEST--
 Test artifact priorities in db
+--DESCRIPTION--
+This file tests the various artifact linked list manipulations.
+
+Please run this each time you update the PriorityDao class.
+
+Usage: update the ini section to match your environment for the include_path.
+       $ pear run-tests PriorityDao.phpt
+
+/!\ Warning /!\
+The tests are run against a test database named 'test', as 'root' user with no password on 'localhost'. 
+It's fine in a dev environment. *Do not run this on a production environment or you may lose sensitive data.*
+
+@TODO: integration with Continuous Integration ?
 --INI--
 include_path=/home/nicolas/tuleap/src:.
 ;include_path=/usr/share/codendi/src:.
@@ -39,17 +52,17 @@ include_path=/home/nicolas/tuleap/src:.
     dump_priorities("Table is empty");
     $dao->update("INSERT INTO tracker_artifact_priority VALUES (NULL, 1, 0), (1, NULL, 1)");
     dump_priorities("Table contains one element");
-    $dao->artifactHasTheLowestPriority(42);
+    $dao->putArtifactAtTheEnd(42);
     dump_priorities("An element is inserted at the end");
-    $dao->artifactHasAHigherPriorityThan(42,1);
+    $dao->moveArtifactBefore(42,1);
     dump_priorities("42 is > than 1");
-    $dao->artifactHasTheLowestPriority(66);
-    $dao->artifactHasTheLowestPriority(123);
-    $dao->artifactHasTheLowestPriority(101);
+    $dao->putArtifactAtTheEnd(66);
+    $dao->putArtifactAtTheEnd(123);
+    $dao->putArtifactAtTheEnd(101);
     dump_priorities("Three more elements are added at the end");
-    $dao->artifactHasAHigherPriorityThan(1,101);
+    $dao->moveArtifactBefore(1,101);
     dump_priorities("1 is > than 101");
-    $dao->artifactHasALesserPriorityThan(42, 1);
+    $dao->moveArtifactAfter(42, 1);
     dump_priorities("42 is < than 1");
 --EXPECT--
 Table is empty

@@ -5,5 +5,5 @@ document.observe('dom:loaded', function () {
             select.form.submit();
         });
     });
-    Planning.loadDroppables(document.body);
+    Planning.loadSortables(document.body);
 });
