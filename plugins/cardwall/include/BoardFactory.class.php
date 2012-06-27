@@ -31,17 +31,24 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard($column_id_visitor, $mappings, TreeNode $forests_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
+    public function getBoard($field_retriever, $field, $forests_of_artifacts) {
+        $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
+        $column_factory     = new Cardwall_ColumnFactory($field);
+        $mapping_collection = $column_factory->getMappings($acc_field_provider->accumulateStatusFields($forests_of_artifacts));
+        $column_id_visitor  = new TreeNodeMapper(
+                                new ColumnPresenterCallback(
+                                    $field_retriever,
+                                    $mapping_collection));
+
         $swimline_factory = new Cardwall_SwimlineFactory();
 
         $forests_of_presenters = $forests_of_artifacts->accept($column_id_visitor);
         
-        $column_factory   = new Cardwall_ColumnFactory($field);
-
         $columns   = $column_factory->getColumns();
         $swimlines = $swimline_factory->getSwimlines($columns, $forests_of_presenters->getChildren());
 
-        return new Cardwall_Board($swimlines, $columns, $mappings);
+        return new Cardwall_Board($swimlines, $columns, $mapping_collection);
+
     }
 }
 ?>
