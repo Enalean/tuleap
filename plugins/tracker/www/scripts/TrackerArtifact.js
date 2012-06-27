@@ -98,14 +98,18 @@ document.observe('dom:loaded', function () {
                 if (comment_panel.visible()) {
                     
                     var textarea = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
-                    textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body')
-                                                  .innerHTML
-                                                  .stripTags();
+                    if ($('tracker_artifact_followup_comment_body_format_'+id).value == 1) {
+                        textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML;
+                        var htmlFormat = true;
+                    } else {
+                        textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML.stripTags();
+                        var htmlFormat = false;
+                    }
                     
                     var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
                     var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
-                    new RTE_Tracker_FollowUp(textarea, {toggle: true, default_in_html: false, id: id});
+                    new RTE_Tracker_FollowUp(textarea, {toggle: true, default_in_html: false, id: id, htmlFormat: htmlFormat});
                     while (textarea.offsetWidth < comment_panel.offsetWidth) {
                         textarea.cols++;
                     }

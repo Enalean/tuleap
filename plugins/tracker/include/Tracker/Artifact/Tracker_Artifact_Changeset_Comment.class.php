@@ -120,6 +120,7 @@ class Tracker_Artifact_Changeset_Comment {
                         $html .= '</div>';
                     }
                     if (!$forMail || !empty($this->body)) {
+                        $html .= '<input type="hidden" id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" value="'.$this->bodyFormat.'" >';
                         $html .= '<div class="tracker_artifact_followup_comment_body">';
                         if ($this->parent_id && !trim($this->body)) {
                             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
