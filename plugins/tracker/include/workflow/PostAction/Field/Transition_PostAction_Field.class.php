@@ -46,6 +46,13 @@ abstract class Transition_PostAction_Field extends Transition_PostAction {
     }
     
     /**
+     * @see Transition_PostAction
+     */
+    public function getCssClasses() {
+        return 'workflow_action_field '.parent::getCssClasses();
+    }
+    
+    /**
      * Return the field associated to this post action
      *
      * @return Tracker_FormElement_Field

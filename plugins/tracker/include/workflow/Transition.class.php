@@ -198,11 +198,11 @@ class Transition {
         if ($post_actions = $this->getPostActions()) {
             $html .= '<table class="workflow_actions" width="100%" cellpadding="0" cellspacing="10">';
             foreach ($post_actions as $pa) {
-                $classname = 'workflow_actions_'. $pa->getShortName();
+                $classnames = $pa->getCssClasses();
                 $html .= '<tr><td>';
 
                 // the action itself
-                $html .= '<div class="workflow_action '. $hp->purify($classname) .'">';
+                $html .= '<div class="'. $hp->purify($classnames) .'">';
                 if (!$pa->isDefined()) {
                     $html .= '<div class="alert-message block-message warning">'. $GLOBALS['Language']->getText('workflow_admin', 'post_action_not_defined') .'</div>';
                 }
