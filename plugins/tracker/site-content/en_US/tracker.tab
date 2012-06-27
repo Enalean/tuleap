@@ -1003,7 +1003,7 @@ plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	aggregate_label	Computed value
-plugin_tracker_formelement_admin	aggregate_description	Compute value from linked artifacts
+plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
 plugin_tracker_formelement_admin	burndown_label	Burndown Chart

@@ -166,14 +166,14 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown.png');
+        return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
+        return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
     protected function getDao() {
