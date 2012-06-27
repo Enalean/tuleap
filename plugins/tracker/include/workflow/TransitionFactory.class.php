@@ -27,9 +27,6 @@ require_once('PostAction/Transition_PostActionFactory.class.php');
 
 class TransitionFactory {
     
-    public function __construct() {
-    }
-    
     /**
      * Hold an instance of the class
      */
