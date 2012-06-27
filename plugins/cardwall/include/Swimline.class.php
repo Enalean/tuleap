@@ -33,13 +33,16 @@ class Cardwall_Swimline {
      */
     public $cells = array();
 
+    public $swimline_id;
+    
     /**
      * @param string $title
      * @param array  $cells
      */
     public function __construct(TreeNode $node, array $cells) {
-        $this->node  = $node;
-        $this->cells = $cells;
+        $this->node        = $node;
+        $this->cells       = $cells;
+        $this->swimline_id = $node->getId();
     }
 }
 ?>

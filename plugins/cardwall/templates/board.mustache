@@ -26,16 +26,16 @@
 
             <tbody>
                 {{#swimlines}}
-                    <tr valign="top">
+                    <tr valign="top" id="swimline-{{swimline_id}}">
                         {{#has_swimline_header}}
                             {{#node}}
-                                {{#getData}}
+                                {{#getColumnPresenter}}
                                     <td>
                                         <ul class="nodrag">
                                             <li>{{> card}}</td>
                                         </ul>
                                     </td>
-                                {{/getData}}
+                                {{/getColumnPresenter}}
                             {{/node}}
                         {{/has_swimline_header}}
                         {{#cells}}
