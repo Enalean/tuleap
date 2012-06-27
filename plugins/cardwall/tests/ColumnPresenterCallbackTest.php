@@ -67,8 +67,4 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
     }
 }
 
-interface Tracker_Artifact_Field_Retriever {
-    
-    function getField(Tracker_Artifact $artifact);
-}
 ?>

@@ -26,6 +26,7 @@ require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
+require_once 'ColumnPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -87,7 +88,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $visitor  = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $card_presenter_tree = $planned_artifacts->accept($visitor);
 
-        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $card_presenter_tree, $field);
+        $col_visitor        = new TreeNodeMapper(new ColumnPresenterCallback(new Tracker_Artifact_Semantic_Status_Field_Retriever()));
+        $acc_field_provider = new Cardwall_InjectColumnIdVisitor();
+        $board              = $board_factory->getBoard($col_visitor, $acc_field_provider, $card_presenter_tree, $field);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 

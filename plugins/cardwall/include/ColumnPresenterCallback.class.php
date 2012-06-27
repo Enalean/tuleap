@@ -32,21 +32,54 @@ class ColumnPresenterCallback implements TreeNodeCallback {
     public function apply(TreeNode $node) {
         if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
             $artifact = $node->getCardPresenter()->getArtifact();
-            $card_field_id = $this->field_retriever->getField($artifact)->getId();
+            $field = $this->field_retriever->getField($artifact);
+            if ($field) {
+                $card_field_id = $field->getId();
+            } else {
+                $card_field_id = 0;
+            }
+            
             $presenter = new ColumnPresenter($node->getCardPresenter(), $card_field_id);
             return new Cardwall_ColumnPresenterNode($node, $presenter);
         }
         return clone $node;
-//                    $data      = $node->getData();
-//            $presenter = $node->getCardPresenter();
-//            $field     = $this->getField($presenter->getArtifact());
-//            $data['column_field_id'] = 0;
-//            if ($field) {
-//                $field_id                = $field->getId();
-//                $data['column_field_id'] = $field_id;
-//            }
-//            $node->setData($data);
+    }
+    
+}
 
+interface Tracker_Artifact_Field_Retriever {
+    
+    function getField(Tracker_Artifact $artifact);
+}
+
+class Tracker_Artifact_Semantic_Status_Field_Retriever implements Tracker_Artifact_Field_Retriever {
+
+    /**
+     * @return Tracker_FormElement_Field_Selectbox
+     */
+    public function getField(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+    }
+}
+
+class Tracker_Artifact_Custom_Field_Retriever implements Tracker_Artifact_Field_Retriever {
+
+    /**
+     * @var Tracker_FormElement_Field_Selectbox
+     */
+    private $field;
+
+    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
+        $this->field = $field;
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact is ignored!
+     * @return Tracker_FormElement_Field_Selectbox
+     */
+    public function getField(Tracker_Artifact $artifact) {
+        return $this->field;
     }
 }
 

@@ -54,8 +54,7 @@ class Cardwall_SwimlineFactory {
     }
 
     private function addNodeToCell(TreeNode $node, Cardwall_Column $column, array &$artifacts) {
-        $presenter       = $node->getCardPresenter();
-        $artifact        = $presenter->getArtifact();
+        $artifact        = $node->getColumnPresenter()->getCardPresenter()->getArtifact();
         if ($this->isArtifactInCell($artifact, $column)) {
             $artifacts[] = $node;
         }

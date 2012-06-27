@@ -31,15 +31,15 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard(Cardwall_InjectColumnIdVisitor $column_id_visitor, TreeNode $forests_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
+    public function getBoard($column_id_visitor, $acc_field_provider, TreeNode $forests_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
         $swimline_factory = new Cardwall_SwimlineFactory();
         $column_factory   = new Cardwall_ColumnFactory($field);
 
         
-        $forests_of_artifacts->accept($column_id_visitor);
+        $tmp = $forests_of_artifacts->accept($column_id_visitor);
+        $forests_of_artifacts = $tmp;
 
-
-        $accumulated_status_fields = $column_id_visitor->accumulateStatusFields($forests_of_artifacts);
+        $accumulated_status_fields = $acc_field_provider->accumulateStatusFields($forests_of_artifacts);
         $mappings = $column_factory->getMappings($accumulated_status_fields);
         $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
         $i = 0;

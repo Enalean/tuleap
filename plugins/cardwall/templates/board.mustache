@@ -42,11 +42,11 @@
                             <td>
                                 <ul>
                                     {{#artifacts}}
-                                        {{#getData}}
-                                            <li class="cardwall_board_postit {{drop-into-class}}" id="cardwall_board_postit-{{getId}}" data-column-field-id="{{column_field_id}}">
+                                        {{#getColumnPresenter}}
+                                            <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
                                                 {{> card}}
                                             </li>
-                                        {{/getData}}
+                                        {{/getColumnPresenter}}
                                     {{/artifacts}}
                                 </ul>
                             </td>
