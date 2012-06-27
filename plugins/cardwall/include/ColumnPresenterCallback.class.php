@@ -52,7 +52,7 @@ class ColumnPresenterCallback implements TreeNodeCallback {
             $card_field_id = 0;
         }
 
-        $swim_line_values = $this->mappings->getMappingsByFieldId($card_field_id);
+        $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
         $presenter        = new ColumnPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
         return new Cardwall_ColumnPresenterNode($node, $presenter);
     }

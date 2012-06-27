@@ -31,21 +31,22 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard($column_id_visitor, $acc_field_provider, TreeNode $forests_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
+    public function getBoard($column_id_visitor, $mappings, TreeNode $forests_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
         $swimline_factory = new Cardwall_SwimlineFactory();
-        $column_factory   = new Cardwall_ColumnFactory($field);
 
         
         $tmp = $forests_of_artifacts->accept($column_id_visitor);
         $forests_of_artifacts = $tmp;
 
-        $accumulated_status_fields = $acc_field_provider->accumulateStatusFields($forests_of_artifacts);
-        $mappings = $column_factory->getMappings($accumulated_status_fields);
-        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
-        $i = 0;
-        foreach ($forests_of_artifacts->getChildren() as $forest) {
-            $forest->accept($drop_into_visitor, $i++);
-        }
+        
+        $column_factory   = new Cardwall_ColumnFactory($field);
+//        $accumulated_status_fields = $acc_field_provider->accumulateStatusFields($forests_of_artifacts);
+//        $mappings = $column_factory->getMappings($accumulated_status_fields);
+//        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
+//        $i = 0;
+//        foreach ($forests_of_artifacts->getChildren() as $forest) {
+//            $forest->accept($drop_into_visitor, $i++);
+//        }
 
         $columns   = $column_factory->getColumns();
         $swimlines = $swimline_factory->getSwimlines($columns, $forests_of_artifacts->getChildren());

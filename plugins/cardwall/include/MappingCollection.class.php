@@ -54,5 +54,13 @@ class Cardwall_MappingCollection implements IteratorAggregate {
         }
         return array();
     }
+
+    public function getSwimLineValues($field_id) {
+        $swim_line_values = array();
+        foreach ($this->getMappingsByFieldId($field_id) as $mapping) {
+            $swim_line_values[] = $mapping->column_id;
+        }
+        return $swim_line_values;
+    }
 }
 ?>

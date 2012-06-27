@@ -205,7 +205,10 @@ class TreeNode /*implements Visitable*/ {
      */
     function setChildren(&$children) {
         if(is_array($this->children)) {
-            $this->children =& $children;
+            $this->children = array();
+            foreach ($children as $child) {
+                $this->addChild($child);
+            }
         }
         else {
             trigger_error(get_class($this).'::setChildren => require: "array" given: "'.gettype($children).'"', E_USER_ERROR);

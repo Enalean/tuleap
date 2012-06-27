@@ -100,7 +100,7 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
         $parent_node        = new TreeNode();
         $parent_node->addChild($presenter_node);
 
-        $mapping_collection = stub('Cardwall_MappingCollection')->getMappingsByFieldId(77777)->returns(array(123, 456));
+        $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues(77777)->returns(array(123, 456));
         
         $this->callback = new ColumnPresenterCallback($artifact_field_retriever, $mapping_collection);
         $result = $this->callback->apply($presenter_node);
