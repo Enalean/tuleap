@@ -203,15 +203,16 @@ document.observe('dom:loaded', function () {
     );
     
     if ($('tracker_artifact_canned_response_sb')) {
-        var artifact_followup_comment_has_changed = $('artifact_followup_comment').value !== '';
-        $('artifact_followup_comment').observe('change', function () {
-            artifact_followup_comment_has_changed = $('artifact_followup_comment').value !== '';
+        var artifact_followup_comment_has_changed = $('tracker_followup_comment_new').value !== '';
+        $('tracker_followup_comment_new').observe('change', function () {
+            artifact_followup_comment_has_changed = $('tracker_followup_comment_new').value !== '';
         });
         $('tracker_artifact_canned_response_sb').observe('change', function (evt) {
+            $('tracker_followup_comment_new').style.getPropertyValue('display');
             var sb = Event.element(evt);
             var value = '';
             if (artifact_followup_comment_has_changed) {
-                value += $('artifact_followup_comment').value;
+                value += $('tracker_followup_comment_new').value;
                 if (sb.getValue()) {
                     if (value.substring(value.length - 1) !== "\n") {
                         value += "\n\n";
@@ -221,7 +222,10 @@ document.observe('dom:loaded', function () {
                 }
             }
             value += sb.getValue();
-            $('artifact_followup_comment').value = value;
+            $('tracker_followup_comment_new').value = value;
+            if (CKEDITOR.instances && CKEDITOR.instances['tracker_followup_comment_new']) {
+                CKEDITOR.instances['tracker_followup_comment_new'].setData(CKEDITOR.instances['tracker_followup_comment_new'].getData()+'<p>'+value+'</p>');
+            }
         });
     }
     
@@ -234,4 +238,3 @@ document.observe('dom:loaded', function () {
 });
 
 codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
-
