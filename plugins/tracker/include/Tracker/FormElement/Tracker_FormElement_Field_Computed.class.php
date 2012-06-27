@@ -43,7 +43,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         $sum = 0;
         foreach ($linked_artifacts as $linked_artifact) {
-            $field = $this->getTargetField($current_user, $linked_artifact);
+            $field = $this->getTargetField($user, $linked_artifact);
             if ($field) {
                 $sum += $field->getComputedValue($user, $linked_artifact);
             }
