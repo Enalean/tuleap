@@ -23,22 +23,39 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 class Tracker_Artifact_PriorityDao extends DataAccessObject {
 
     public function artifactHasAHigherPriorityThan($artifact_id, $successor_id) {
-        //TODO: Transaction?
+        $this->da->startTransaction();
         $predecessor_id = $this->serchPredecessor($successor_id);
-        $this->remove($artifact_id);
-        $this->insert($predecessor_id, $artifact_id);
+        if ($predecessor_id !== false && $this->removeAndInsert($predecessor_id, $artifact_id)) {
+            $this->da->commit();
+            return true;
+        }
+        $this->da->rollback();
+        return false;
     }
 
     public function artifactHasALesserPriorityThan($artifact_id, $predecessor_id) {
-        //TODO: Transaction?
-        $this->remove($artifact_id);
-        $this->insert($predecessor_id, $artifact_id);
+        $this->da->startTransaction();
+        if ($this->removeAndInsert($predecessor_id, $artifact_id)) {
+            $this->da->commit();
+            return true;
+        }
+        $this->da->rollback();
+        return false;
     }
 
     public function artifactHasTheLowestPriority($artifact_id) {
-        //TODO: Transaction?
+        $this->da->startTransaction();
         $predecessor_id = $this->serchPredecessor(null);
-        $this->insert($predecessor_id, $artifact_id);
+        if ($predecessor_id !== false && $this->insert($predecessor_id, $artifact_id)) {
+            $this->da->commit();
+            return true;
+        }
+        $this->da->rollback();
+        return false;
+    }
+
+    private function removeAndInsert($predecessor_id, $artifact_id) {
+        return $this->remove($artifact_id) && $this->insert($predecessor_id, $artifact_id);
     }
 
     private function serchPredecessor($id) {
@@ -46,8 +63,12 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         $sql = "SELECT curr_id
                 FROM tracker_artifact_priority
                 WHERE succ_id $equals_id";
-        $row = $this->retrieve($sql)->getRow();
-        return $row['curr_id'];
+        $result = $this->retrieve($sql);
+        if ($result) {
+            $row = $result->getRow();
+            return $row['curr_id'];
+        }
+        return false;
     }
 
     /**
@@ -61,25 +82,27 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
                         INNER JOIN tracker_artifact_priority AS item_to_remove
                                 ON (previous_parent.succ_id = item_to_remove.curr_id AND item_to_remove.curr_id = $id)
                 SET previous_parent.succ_id = item_to_remove.succ_id";
-        $this->update($sql);
+        $result = $this->update($sql);
+        if (!$result) return false;
 
         // Reorder things
         $sql = "UPDATE tracker_artifact_priority AS next_sibling
                         INNER JOIN tracker_artifact_priority AS item_to_remove
                                 ON (next_sibling.rank > item_to_remove.rank AND item_to_remove.curr_id = $id)
                 SET next_sibling.rank = next_sibling.rank - 1";
-        $this->update($sql);
+        $result = $this->update($sql);
+        if (!$result) return false;
 
         // Remove the item
         $sql = "DELETE FROM tracker_artifact_priority WHERE curr_id = $id";
-        $this->update($sql);
+        return $this->update($sql);
     }
 
     /**
      * After $predecessor_id, insert $id
      */
     private function insert($predecessor_id, $id) {
-        $id             = $this->da->escapeInt($id);
+        $id = $this->da->escapeInt($id);
         if ($predecessor_id === null) {
             $equals_predecessor_id       = 'IS NULL';
             $differs_from_predecessor_id = 'IS NOT NULL';
@@ -94,7 +117,8 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
                 SELECT $id, new_parent.succ_id, new_parent.rank
                 FROM tracker_artifact_priority AS new_parent
                 WHERE new_parent.curr_id $equals_predecessor_id";
-        $this->update($sql);
+        $result = $this->update($sql);
+        if (!$result) return false;
 
         // Reorder things
         $sql = "UPDATE tracker_artifact_priority AS next_sibling
@@ -103,13 +127,14 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
                                     AND next_sibling.curr_id $differs_from_predecessor_id
                                     AND new_item.curr_id = $id)
                 SET next_sibling.rank = next_sibling.rank + 1";
-        $this->update($sql);
+        $result = $this->update($sql);
+        if (!$result) return false;
 
         // Fix successor pointer of the predecessor
         $sql = "UPDATE tracker_artifact_priority AS new_parent
                 SET new_parent.succ_id = $id
                 WHERE new_parent.curr_id $equals_predecessor_id";
-        $this->update($sql);
+        return $this->update($sql);
     }
 }
 ?>

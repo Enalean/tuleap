@@ -300,5 +300,25 @@ class DataAccess {
         return mysql_data_seek($result, $row_number);
     }
 
+    /**
+     * Start a sql transaction
+     */
+    public function startTransaction() {
+        return $this->query('START TRANSACTION');
+    }
+
+    /**
+     * Rollback a sql transaction
+     */
+    public function rollback() {
+        return $this->query('ROLLBACK');
+    }
+
+    /**
+     * Commit a sql transaction
+     */
+    public function commit() {
+        return $this->query('COMMIT');
+    }
 }
 ?>

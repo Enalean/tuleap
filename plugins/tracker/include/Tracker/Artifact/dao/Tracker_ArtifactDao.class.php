@@ -270,13 +270,14 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $submitted_by             = $this->da->escapeInt($submitted_by);
         $id_sharing = new TrackerIdSharingDao();
         if ($id = $id_sharing->generateArtifactId()) {
-            $sql = "INSERT INTO $this->table_name 
-                    (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
-                    VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
-            if ($this->update($sql)) {
-                $priority_dao = new Tracker_Artifact_PriorityDao();
-                $priority_dao->artifactHasTheLowestPriority($id);
-                return $id;
+            $priority_dao = new Tracker_Artifact_PriorityDao();
+            if ($priority_dao->artifactHasTheLowestPriority($id)) {
+                $sql = "INSERT INTO $this->table_name
+                        (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
+                        VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
+                if ($this->update($sql)) {
+                    return $id;
+                }
             }
         }
         return false;
