@@ -28,7 +28,12 @@ function aDateFieldPostAction() {
 
 class Test_Transition_PostAction_Field_Date_Builder {
     
-    private $id;
+    private $id         = 0;
+    private $value_type = 0;
+    
+    public function __construct() {
+        $this->transition = aTransition()->build();
+    }
     
     public function withTransitionId($transition_id) {
         $this->transition = aTransition()->withId($transition_id)->build();
