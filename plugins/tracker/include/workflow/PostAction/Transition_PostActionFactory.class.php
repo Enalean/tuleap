@@ -206,15 +206,47 @@ class Transition_PostActionFactory {
         }
     }
     
-    private function getPostActionClassFromXmlTagName($xml_tag_name) {
-        switch($xml_tag_name) {
-            case 'postaction_field_date':  return 'Transition_PostAction_Field_Date';
-            case 'postaction_field_int':   return 'Transition_PostAction_Field_Int';
-            case 'postaction_field_float': return 'Transition_PostAction_Field_Float';
-            default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
-        }
+    /**
+     * Return the PostAction short name, given an XML tag name.
+     * 
+     * @param string $xml_tag_name
+     * 
+     * @return string
+     */
+    private function getShortNameFromXmlTagName($xml_tag_name) {
+        return str_replace('postaction_', '', $xml_tag_name);
     }
     
+    /**
+     * Return the PostAction class, given an XML tag name.
+     * 
+     * @param string $xml_tag_name
+     * 
+     * @return string
+     * 
+     * @throws Transition_PostAction_NotFoundException
+     */
+    private function getPostActionClassFromXmlTagName($xml_tag_name) {
+        $short_name = $this->getShortNameFromXmlTagName($xml_tag_name);
+        
+        if (! key_exists($short_name, $this->post_actions_classes)) {
+            throw new Transition_PostAction_NotFoundException($short_name);
+        }
+        
+        return $this->post_actions_classes[$short_name];
+    }
+    
+    /**
+     * Extract the PostAction value from the attributes,
+     * deducing the PostAction type from the XML tag name.
+     * 
+     * @param string $xml_tag_name
+     * @param array $postaction_attributes
+     * 
+     * @return mixed
+     * 
+     * @throws Transition_PostAction_NotFoundException 
+     */
     private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
         switch($xml_tag_name) {
             case 'postaction_field_date':  return (int) $postaction_attributes['valuetype'];
