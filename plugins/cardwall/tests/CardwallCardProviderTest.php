@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/CardwallCardProvider.class.php';
+require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
+require_once 'src/common/TreeNode/TreeNodeMapper.class.php';
 class CardwallCardProviderTest extends TuleapTestCase {
         
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
@@ -75,20 +78,5 @@ class CardwallCardProviderTest extends TuleapTestCase {
         
     }
     
-    public function itCallsTheArtifactVisitor() {
-        $provider = new CardwallCardProvider();
-        $artifact = aMockArtifact()->withId(4)->build();
-
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        stub($artifact_factory)->getArtifactById(4)->returns($artifact);
-        $visitor = mock('TreeNodeMapper');
-        $visitor->expectOnce('visit');
-        $provider->flatForestOfArtifacts(array(4), $artifact_factory, $visitor);
-    }
-    
-    public function itTheVisitorCreatesACardwallPresenterForEveryArtifactNode() {
-//        $this->assert
-    }
-
 }
 ?>

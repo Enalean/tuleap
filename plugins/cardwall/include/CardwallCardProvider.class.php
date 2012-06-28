@@ -24,10 +24,9 @@
  */
 class CardwallCardProvider {
 
-    public function flatForestOfArtifacts($artifact_ids, $artifact_factory, $visitor) {
+    public function flatForestOfArtifacts($artifact_ids, $artifact_factory) {
         $cards  = $this->getCards($artifact_ids, $artifact_factory);
-        $root   = $this->wrapInAThreeLevelArtifactTree($cards);
-        return $root->accept($visitor);
+        return $this->wrapInAThreeLevelArtifactTree($cards);
     }
     
     public function wrapInAThreeLevelArtifactTree($cards) {

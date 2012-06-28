@@ -127,9 +127,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @return TreeNode
      */
     public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
-        $visitor  = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
-        $provider = new CardwallCardProvider($artifact_factory, $visitor);
-        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory, $visitor);
+        $provider = new CardwallCardProvider();
+        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory);
     }
     
     /**
@@ -141,14 +140,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
 
         $field_retriever    = new Tracker_Artifact_Custom_Field_Retriever($field);
         
-//        $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
-//        $column_factory     = new Cardwall_ColumnFactory($field);
-//        $mapping_collection = $column_factory->getMappings($acc_field_provider->accumulateStatusFields($forest_of_artifacts));
-//        $col_visitor        = new TreeNodeMapper(
-//                                new ColumnPresenterCallback(
-//                                    $field_retriever,
-//                                    $mapping_collection));
-//        $board              = $board_factory->getBoard($col_visitor, $mapping_collection, $forest_of_artifacts, $field);
         $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts);
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
 

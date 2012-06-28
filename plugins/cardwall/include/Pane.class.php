@@ -83,11 +83,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $board_factory      = new Cardwall_BoardFactory();
         $planned_artifacts  = $this->milestone->getPlannedArtifacts();
 
-        $visitor  = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $field_retriever    = new Tracker_Artifact_Semantic_Status_Field_Retriever();
-        $forests_of_artifacts = $planned_artifacts->accept($visitor);
 
-        $board              = $board_factory->getBoard($field_retriever, $field, $forests_of_artifacts);
+        $board              = $board_factory->getBoard($field_retriever, $field, $planned_artifacts);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
 
