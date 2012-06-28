@@ -28,7 +28,7 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
         $field = mock('Tracker_FormElement_Field_MultiselectBox');
         $artifact = mock('Tracker_Artifact');
 
-        $field_retriever = stub('Tracker_Artifact_Field_Retriever')->getField($artifact)->returns($field);
+        $field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         $this->callback = new ColumnPresenterCallback($field_retriever, new Cardwall_MappingCollection());
         
         $this->node     = aNode()->withId(4444)->build();
@@ -55,7 +55,7 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
         $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
         
         $artifact = mock('Tracker_Artifact');
-        $artifact_field_retriever = stub('Tracker_Artifact_Field_Retriever')->getField($artifact)->returns($field);
+        $artifact_field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         
         $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
         $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
@@ -72,7 +72,7 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
         $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
         
         $artifact = mock('Tracker_Artifact');
-        $artifact_field_retriever = stub('Tracker_Artifact_Field_Retriever')->getField($artifact)->returns($field);
+        $artifact_field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         
         $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
         $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
@@ -93,7 +93,7 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
         $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
         
         $artifact = mock('Tracker_Artifact');
-        $artifact_field_retriever = stub('Tracker_Artifact_Field_Retriever')->getField($artifact)->returns($field);
+        $artifact_field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         
         $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
         $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);

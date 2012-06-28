@@ -21,12 +21,12 @@
 
 require_once 'ColumnPresenter.class.php';
 require_once 'ColumnPresenterNode.class.php';
-require_once dirname(__FILE__).'/../../tracker/include/Tracker/Artifact_Field_Retriever.class.php';
+require_once dirname(__FILE__).'/../../tracker/include/Tracker/IProvideFieldGivenAnArtifact.class.php';
 
 class ColumnPresenterCallback implements TreeNodeCallback {
 
     /**
-     * @var Tracker_Artifact_Field_Retriever
+     * @var Tracker_IProvideFieldGivenAnArtifact
      */
     private $field_retriever;
     
@@ -36,7 +36,7 @@ class ColumnPresenterCallback implements TreeNodeCallback {
     private $mappings;
 
 
-    public function __construct(Tracker_Artifact_Field_Retriever $retriever, Cardwall_MappingCollection $mappings) {
+    public function __construct(Tracker_IProvideFieldGivenAnArtifact $retriever, Cardwall_MappingCollection $mappings) {
         $this->field_retriever = $retriever;
         $this->mappings        = $mappings;
     }
@@ -64,7 +64,7 @@ class ColumnPresenterCallback implements TreeNodeCallback {
     
 }
 
-class Tracker_Artifact_Semantic_Status_Field_Retriever implements Tracker_Artifact_Field_Retriever {
+class Tracker_Artifact_Semantic_Status_Field_Retriever implements Tracker_IProvideFieldGivenAnArtifact {
 
     /**
      * @return Tracker_FormElement_Field_Selectbox
@@ -75,7 +75,7 @@ class Tracker_Artifact_Semantic_Status_Field_Retriever implements Tracker_Artifa
     }
 }
 
-class Tracker_Artifact_Custom_Field_Retriever implements Tracker_Artifact_Field_Retriever {
+class Tracker_Artifact_Custom_Field_Retriever implements Tracker_IProvideFieldGivenAnArtifact {
 
     /**
      * @var Tracker_FormElement_Field_Selectbox

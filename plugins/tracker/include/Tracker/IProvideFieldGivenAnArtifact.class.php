@@ -20,7 +20,7 @@
  */
 
 
-interface Tracker_Artifact_Field_Retriever {
+interface Tracker_IProvideFieldGivenAnArtifact {
     
     function getField(Tracker_Artifact $artifact);
 }
