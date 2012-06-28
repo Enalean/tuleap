@@ -1136,6 +1136,10 @@ td.first-column {
     background: #ffe;
     min-width: 200px;
 }
+.card.placeholder {
+    border:1px dashed #3A87AD;
+    background: url(/themes/common/images/backstripes.gif);
+}
 .card-actions {
     float:right;
 }

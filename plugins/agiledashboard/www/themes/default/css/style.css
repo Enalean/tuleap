@@ -55,6 +55,11 @@
     font-style: normal;
 }
 
+.milestone-content > ul.cards,
+.backlog-content > ul.cards {
+    min-height: 1.5em;
+}
+
 .backlog-actions, 
 .card-actions {
     float:right;

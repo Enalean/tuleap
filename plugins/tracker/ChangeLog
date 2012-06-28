@@ -1,3 +1,7 @@
+Version 5.7.32 - Tuleap 5.3
+    * Now artifacts are ordered by priority in the cross search.
+    * Provide internal api to change the priority of artifacts
+
 Version 5.7.31 - Tuleap 5.3
     * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
 

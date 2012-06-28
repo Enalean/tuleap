@@ -575,8 +575,7 @@ class LdapPlugin extends Plugin {
     function cancelChangeAndUserLdap($params) {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $user_info = $user->data_array;
-        if($GLOBALS['sys_auth_type'] == 'ldap' && $user_info['ldap_id']!='') {
+        if($GLOBALS['sys_auth_type'] == 'ldap' && $user->getLdapId() != '') {
             exit_permission_denied();
         }
     }

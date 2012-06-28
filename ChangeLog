@@ -1,14 +1,17 @@
 Version 5.3 (not released yet)
 	== Plugins ==
-	* Cardwall: 0.5.6
-	* Tracker: 5.7.31
-	* Agildashboard: 0.35
+	* Cardwall: 0.5.7
+	* Tracker: 5.7.32
+	* Agildashboard: 0.36
 	* FullTextSearch: 0.6
 	* Test: 5
+	* LDAP: 3.16
 
 	== Development ==
 	Update mustache renderer
 	Start PHP 5.3 cleaning (For Tuleap 5.3 \o/)
+	Introduce transactions methods in DataAccess
+	Display queries sorted by time taken in debug mode
 
 Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==

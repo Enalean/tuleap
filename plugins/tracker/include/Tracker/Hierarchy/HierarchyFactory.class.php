@@ -28,6 +28,11 @@ class Tracker_HierarchyFactory {
     private static $_instance;
     
     /**
+     * @var array of tracker id (children of a tracker)
+     */
+    private $cache_children_of_tracker = array();
+
+    /**
      * Used to instanciate some related trackers according to their hierarchy,
      * without the need of a tree structure (e.g. retrieve direct children of a
      * given Tracker).
@@ -64,13 +69,13 @@ class Tracker_HierarchyFactory {
     }
     
     public function getChildren($tracker_id) {
-        $children = array();
-        
-        foreach($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
-            $children[] = $this->tracker_factory->getTrackerById($row['id']);
+        if (!isset($this->cache_children_of_tracker[$tracker_id])) {
+            $this->cache_children_of_tracker[$tracker_id] = array();
+            foreach($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
+                $this->cache_children_of_tracker[$tracker_id][] = $this->tracker_factory->getTrackerById($row['id']);
+            }
         }
-        
-        return $children;
+        return $this->cache_children_of_tracker[$tracker_id];
     }
 
     /**

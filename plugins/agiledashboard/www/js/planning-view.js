@@ -5,6 +5,5 @@ document.observe('dom:loaded', function () {
             select.form.submit();
         });
     });
-    Planning.loadDraggables(document.body);
-    Planning.loadDroppables(document.body);
+    Planning.loadSortables(document.body);
 });
