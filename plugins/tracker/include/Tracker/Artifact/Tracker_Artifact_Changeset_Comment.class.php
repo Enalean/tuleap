@@ -81,11 +81,11 @@ class Tracker_Artifact_Changeset_Comment {
     public function fetchFollowUp($format='html', $forMail = false, $ignoreEmptyBody = false) {
         if ($ignoreEmptyBody || !empty($this->body)) {
             $uh = UserHelper::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             switch ($format) {
                 case 'html':
                     $html = '';
-                    $hp = Codendi_HTMLPurifier::instance();
-                    if ($forMail) {                        
+                    if ($forMail) {
                         $html .= '<div class="tracker_artifact_followup_title">';
                         $html .= '<span class="tracker_artifact_followup_title_user">';
                         $user = UserManager::instance()->getUserById($this->submitted_by);
@@ -147,7 +147,13 @@ class Tracker_Artifact_Changeset_Comment {
                     //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
                     //}
                     if ( !empty($this->body) ) {
-                        $output .= PHP_EOL.PHP_EOL.$this->body.PHP_EOL.PHP_EOL;
+                        if ($this->bodyFormat) {
+                            $level = CODENDI_PURIFIER_STRIP_HTML;
+                        } else {
+                            $level = CODENDI_PURIFIER_DISABLED;
+                        }
+                        $body = $hp->purify($this->body, $level);
+                        $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
                     }
                     return $output;
                     break;

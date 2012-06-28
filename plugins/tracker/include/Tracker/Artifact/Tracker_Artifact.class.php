@@ -254,6 +254,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
+        $hp = Codendi_HTMLPurifier::instance();
         $output = '';
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
@@ -276,13 +277,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     break;
                 case 'text':
                     $user = $um->getUserById($comment->submitted_by);
-                    $output = PHP_EOL;
+                    $output .= PHP_EOL;
                     $output .= '----------------------------- ';
                     $output .= PHP_EOL;
                     $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
                     $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
                     $output .= PHP_EOL;
-                    $output .= $comment->body;
+                    if ($comment->bodyFormat) {
+                        $level = CODENDI_PURIFIER_STRIP_HTML;
+                    } else {
+                        $level = CODENDI_PURIFIER_DISABLED;
+                    }
+                    $output .= $hp->purify($comment->body, $level);
                     $output .= PHP_EOL;
                     $output .= PHP_EOL;
                     break;
