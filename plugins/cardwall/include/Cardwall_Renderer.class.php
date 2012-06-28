@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
 require_once 'RendererPresenter.class.php';
-require_once 'Cardwall_ArtifactNodeTreeProvider.class.php';
+require_once 'ArtifactNodeTreeProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
