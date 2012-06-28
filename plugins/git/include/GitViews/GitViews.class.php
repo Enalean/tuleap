@@ -349,13 +349,13 @@ class GitViews extends PluginViews {
         if ($gitphp_path) {
             $this->initGitPhpEnvironement();
         } else {
-            $gitphp_path = dirname(__FILE__).'/../gitphp';
+            $gitphp_path = GIT_BASE_DIR .'/../gitphp';
         }
         return $gitphp_path.'/index.php';
     }
 
     private function initGitPhpEnvironement() {
-        define('GITPHP_CONFIGDIR', dirname(__FILE__).'/../etc/');
+        define('GITPHP_CONFIGDIR', GIT_BASE_DIR .'/../etc/');
         ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
     }
 
