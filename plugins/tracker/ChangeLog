@@ -1,3 +1,6 @@
+Version 5.7.35 - Tuleap 5.3
+    * Fix artifact disappearance
+
 Version 5.7.34 - Tuleap 5.3
     * Add new field type "Computed" that is able to sum values of a given field in linked artifacts.
 
