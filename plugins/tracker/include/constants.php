@@ -92,4 +92,19 @@ define('TRACKER_EVENT_ADMIN_ITEMS', 'tracker_event_admin_items');
  *  default processing (eg: display the tracker)
  */
 define('TRACKER_EVENT_PROCESS', 'tracker_event_process');
+
+/**
+ * An artifact has just been (un)associated to another one
+ *
+ * Parameters:
+ * 'artifact'             => The artifact which receive the (un)association
+ * 'linked-artifact-id'   => The (previously) linked artifact id
+ * 'request'              => The request
+ * 'user'                 => The user who made the request
+ * 'form_element_factory' => The FormElementFactory
+ *
+ * Expected results:
+ *  No expected results
+ */
+define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_association_edited');
 ?>

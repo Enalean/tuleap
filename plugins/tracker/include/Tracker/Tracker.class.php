@@ -385,7 +385,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-perms-fields':
-            	    if ($this->userIsAdmin($current_user)) {
+                if ($this->userIsAdmin($current_user)) {
                     if ($request->exist('update')) {
                         if ($request->exist('permissions') && is_array($request->get('permissions'))) {
                             plugin_tracker_permission_process_update_fields_permissions(

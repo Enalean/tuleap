@@ -1002,6 +1002,8 @@ plugin_tracker_artifact_changeset	header_artifact	ARTIFACT
 plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
+plugin_tracker_formelement_admin	aggregate_label	Computed value
+plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
 plugin_tracker_formelement_admin	burndown_label	Burndown Chart
@@ -1090,6 +1092,7 @@ plugin_tracker_formelement_property	rows	Rows
 plugin_tracker_formelement_property	cols	Columns
 plugin_tracker_formelement_property	static_value	Static value
 plugin_tracker_formelement_property	default_value_today	Today
+plugin_tracker_formelement_property	target_field_name	Target field
 
 plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permission Denied
