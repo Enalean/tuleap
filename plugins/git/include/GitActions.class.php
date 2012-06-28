@@ -56,7 +56,7 @@ class GitActions extends PluginActions {
      * @param GitRepositoryFactory $factory            The factory to manage repositories
      * @param SystemEventManager   $systemEventManager The system manager
      */
-    public function __construct($controller, SystemEventManager $systemEventManager, GitRepositoryFactory $factory) {
+    public function __construct(Git $controller, SystemEventManager $systemEventManager, GitRepositoryFactory $factory) {
         parent::__construct($controller);
         $this->systemEventManager = $systemEventManager;
         $this->factory            = $factory;
@@ -82,27 +82,14 @@ class GitActions extends PluginActions {
         
         $repository = $this->factory->getRepositoryById($repositoryId);
         if ($repository) {
-            if ( $repository->hasChild() ) {
+            if ($repository->canBeDeleted()) {
+                $this->markAsDeleted($repository);
+                $c->addInfo( $this->getText('actions_delete_process') );
+                $c->addInfo( $this->getText('actions_delete_backup').' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir') );
+            } else {
                 $c->addError( $this->getText('backend_delete_haschild_error') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
                 return false;
-            }
-
-            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-                try {
-                    $repository->delete();
-                    $c->addInfo( $this->getText('actions_delete_ok') );
-                } catch (Exception $e) {
-                    $c->addError($e->getMessage());
-                }
-            } else {
-                $this->systemEventManager->createEvent(
-                    'GIT_REPO_DELETE',
-                    $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId,
-                    SystemEvent::PRIORITY_MEDIUM
-                );
-                $c->addInfo( $this->getText('actions_delete_process') );
-                $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
             }
         } else {
             $c->addError($this->getText('actions_repo_not_found'));
@@ -110,7 +97,29 @@ class GitActions extends PluginActions {
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
 
+    private function markAsDeleted(GitRepository $repository) {
+        $repository->markAsDeleted();
+        $this->systemEventManager->createEvent(
+            'GIT_REPO_DELETE',
+            $repository->getProjectId().SystemEvent::PARAMETER_SEPARATOR.$repository->getId(),
+            SystemEvent::PRIORITY_MEDIUM
+        );
+    }
+
+    private function createGitshellReference($projectId, $repositoryName) {
+        $this->systemEventManager->createEvent(
+            'GIT_REPO_CREATE',
+            $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.UserManager::instance()->getCurrentUser()->getId(),
+            SystemEvent::PRIORITY_MEDIUM
+        );
+        $this->getController()->redirect('/plugins/git/?action=index&group_id='.$projectId);
+        exit;
+    }
+    
     public function createReference($projectId, $repositoryName) {
+        // Uncomment the following line only for debug prupose if you ever need to
+        // create a gitshell repo (good luck, luke, may the force be with you).
+        //$this->createGitshellReference($projectId, $repositoryName);
         $c         = $this->getController();
         $projectId = intval( $projectId );
         

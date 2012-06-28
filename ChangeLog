@@ -6,6 +6,7 @@ Version 5.3 (not released yet)
 	* FullTextSearch: 0.6
 	* Test: 5
 	* LDAP: 3.16
+        * Git: 2.6.3
 
 	== Development ==
 	Update mustache renderer
