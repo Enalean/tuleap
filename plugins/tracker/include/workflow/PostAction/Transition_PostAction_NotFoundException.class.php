@@ -18,31 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MockFieldBuilder {
-    public function __construct() {
-        $this->field = mock('Tracker_FormElement_Field_SelectBox');
-    }
-    
-    public function withId($id) {
-        stub($this->field)->getId()->returns($id);
-        return $this;
-    }
-    
-    public function withValueForChangesetId($value_id, $changeset_id) {
-        $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
-        
-        stub($this->field)->getBind()->returns($bind);
-        stub($bind)->getChangesetValues($changeset_id)->returns(array(array('id' => $value_id)));
-        
-        return $this;
-    }
-    
-    public function build() {
-        return $this->field;
-    }
-}
-
-function aMockField() {
-    return new MockFieldBuilder();
+/**
+ * Thrown when failing at retrieving an exception from some name.
+ */
+class Transition_PostAction_NotFoundException extends Exception {
 }
 ?>

@@ -18,31 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MockFieldBuilder {
-    public function __construct() {
-        $this->field = mock('Tracker_FormElement_Field_SelectBox');
-    }
-    
-    public function withId($id) {
-        stub($this->field)->getId()->returns($id);
-        return $this;
-    }
-    
-    public function withValueForChangesetId($value_id, $changeset_id) {
-        $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
-        
-        stub($this->field)->getBind()->returns($bind);
-        stub($bind)->getChangesetValues($changeset_id)->returns(array(array('id' => $value_id)));
-        
-        return $this;
-    }
-    
-    public function build() {
-        return $this->field;
-    }
-}
+require_once 'Transition_PostAction_FieldDao.class.php';
 
-function aMockField() {
-    return new MockFieldBuilder();
+/**
+ * Data Acces object which deals with tracker_workflow_transition_postactions_field_int table
+ */
+class Transition_PostAction_Field_IntDao extends Transition_PostAction_FieldDao {
+    
+    public function __construct() {
+        parent::__construct();
+        $this->table_name = 'tracker_workflow_transition_postactions_field_int';
+    }
+    
+    /**
+     * @see Transition_PostAction_FieldDao
+     */
+    protected function escapeValue($value) {
+        return $this->da->escapeInt($value);
+    }
 }
 ?>
