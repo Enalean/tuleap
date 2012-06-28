@@ -22,7 +22,15 @@ var Planning = {
 
     executeRequest: function (query) {
         new Ajax.Request(Planning.trackerBaseUrl + query, {
-            onFailure: Planning.errorOccured
+            onFailure: Planning.errorOccured,
+            onSuccess: function (transport) {
+                if (transport.responseJSON && transport.responseJSON.remaining_effort) {
+                    $$('.release_planner .planning_remaining_effort').each(function (element) {
+                        element.update(transport.responseJSON.remaining_effort);
+                        new Effect.Highlight(element);
+                    });
+                }
+            }
         });
     },
 

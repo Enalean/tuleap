@@ -653,6 +653,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (count($artlink_fields)) {
                     $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
+                    if ($request->isAjax()) {
+                        //Send the new remaining effort if any
+                        $field = $this->formElementFactory->getComputableFieldByNameForUser(
+                            $this->getTracker()->getId(),
+                            'remaining_effort',
+                            $current_user
+                        );
+                        if ($field) {
+                            $remaining_effort = $field->getComputedValue($current_user, $this);
+    
+                            header('Content-type: application/json');
+                            echo json_encode(array('remaining_effort' => $remaining_effort));
+                        }
+                    }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
                     $GLOBALS['Response']->sendStatusCode(400);
@@ -662,6 +676,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
+                } else if ($request->isAjax()) {
+                    //Send the new remaining effort if any
+                    $field = $this->formElementFactory->getComputableFieldByNameForUser(
+                        $this->getTracker()->getId(),
+                        'remaining_effort',
+                        $current_user
+                    );
+                    if ($field) {
+                        $remaining_effort = $field->getComputedValue($current_user, $this);
+
+                        header('Content-type: application/json');
+                        echo json_encode(array('remaining_effort' => $remaining_effort));
+                    }
                 }
                 break;
             case 'higher-priority-than':
