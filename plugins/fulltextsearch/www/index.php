@@ -19,7 +19,6 @@
  */
 
 require_once 'pre.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
 
 // First, check plugin availability
 $plugin_manager = PluginManager::instance();

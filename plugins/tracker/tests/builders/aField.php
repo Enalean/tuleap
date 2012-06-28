@@ -29,6 +29,14 @@ function aTextField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
 }
 
+function anIntegerField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Integer');
+}
+
+function aFloatField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Float');
+}
+
 function aStringField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
 }

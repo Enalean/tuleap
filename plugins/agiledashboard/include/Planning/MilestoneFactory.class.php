@@ -21,6 +21,7 @@
 require_once 'ArtifactMilestone.class.php';
 require_once 'NoMilestone.class.php';
 require_once 'Item.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ArtifactNode.class.php';
 
 /**
  * Loads planning milestones from the persistence layer.
@@ -72,7 +73,7 @@ class Planning_MilestoneFactory {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
             return new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
@@ -92,8 +93,7 @@ class Planning_MilestoneFactory {
         $hierarchy_children_ids = $this->getSubMilestonesArtifactIds($user, $milestone_artifact);
 
         foreach ($artifacts_tree->getChildren() as $node) {
-            $data = $node->getData();
-            if (in_array($data['id'], $hierarchy_children_ids)) {
+            if (in_array($node->getId(), $hierarchy_children_ids)) {
                 $artifacts_tree->removeChild(null, $node);
             }
         }
@@ -109,20 +109,13 @@ class Planning_MilestoneFactory {
      * @return TreeNode
      */
     public function getPlannedArtifacts(User             $user,
-                                        Planning         $planning,
                                         Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
 
-        $id              = $milestone_artifact->getId();
-        $backlog_tracker = $planning->getBacklogTracker();
 
-        $node = new TreeNode(array('id'                   => $id,
-                                   'allowedChildrenTypes' => array($backlog_tracker),
-                                   'artifact'             => $milestone_artifact));
-        $node->setId($id);
-        // TODO: $node->setObject(new Planning_Item($milestone_artifact, $planning)) ?
-        $this->addChildrenPlannedArtifacts($user, $milestone_artifact, $node, array(), $planning);
-        
+        $parents = array();
+
+        $node = $this->makeNodeWithChildren($user, $milestone_artifact, $parents);
         return $node;
     }
 
@@ -139,21 +132,22 @@ class Planning_MilestoneFactory {
     private function addChildrenPlannedArtifacts(User             $user,
                                                  Tracker_Artifact $artifact,
                                                  TreeNode         $parent_node,
-                                                 array            $parents,
-                                                 Planning         $planning) {
+                                                 array            $parents) {
         $linked_artifacts = $artifact->getUniqueLinkedArtifacts($user);
         if (! $linked_artifacts) return false;
         if (in_array($artifact->getId(), $parents)) return false;
         
         $parents[] = $artifact->getId();
         foreach ($linked_artifacts as $linked_artifact) {
-            $node = new TreeNode(array('id'       => $linked_artifact->getId(),
-                                       'artifact' => $linked_artifact));
-            $node->setId($linked_artifact->getId());
-            $node->setObject(new Planning_Item($linked_artifact, $planning));
-            $this->addChildrenPlannedArtifacts($user, $linked_artifact, $node, $parents, $planning);
+            $node = $this->makeNodeWithChildren($user, $linked_artifact, $parents);
             $parent_node->addChild($node);
         }
+    }
+
+    private function makeNodeWithChildren($user, $artifact, $parents) {
+        $node = new ArtifactNode($artifact);
+        $this->addChildrenPlannedArtifacts($user, $artifact, $node, $parents);
+        return $node;
     }
     
     /**
@@ -253,10 +247,11 @@ class Planning_MilestoneFactory {
         $milestones = array();
         $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $planning, $artifact);
+            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
         }
         return $milestones;
     }
+
 }
 ?>

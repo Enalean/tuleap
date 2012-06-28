@@ -18,17 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../templating/TemplateRendererTestBase.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'Transition_PostAction_FieldDao.class.php';
 
 /**
- * Replace this class or add a class for every template engine 
+ * Data Acces object which deals with tracker_workflow_transition_postactions_field_float table
  */
-class MustacheRendererTest extends TemplateRendererTestBase {
-    function setUp() {
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
-        parent::setUp();
+class Transition_PostAction_Field_FloatDao extends Transition_PostAction_FieldDao {
+    
+    public function __construct() {
+        parent::__construct();
+        $this->table_name = 'tracker_workflow_transition_postactions_field_float';
+    }
+    
+    /**
+     * @see Transition_PostAction_FieldDao
+     */
+    protected function escapeValue($value) {
+        return floatval($value);
     }
 }
-
 ?>

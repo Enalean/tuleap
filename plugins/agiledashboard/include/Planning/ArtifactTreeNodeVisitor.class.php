@@ -21,6 +21,7 @@
 require_once 'Planning.class.php';
 require_once 'Item.class.php';
 require_once 'ItemPresenter.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TreeNode/CardPresenterNode.class.php';
 
 /**
  * This visitor injects various artifact related data in a TreeNode to be used in mustache
@@ -37,16 +38,8 @@ class Planning_ArtifactTreeNodeVisitor {
      */
     private $classname;
     
-    /**
-     * @var Tracker_ArtifactFactory
-     */
-    private $artifact_factory;
-    
-    public function __construct(Planning                $planning,
-                                Tracker_ArtifactFactory $artifact_factory,
-                                                        $classname) {
+    public function __construct(Planning $planning, $classname) {
         $this->planning         = $planning;
-        $this->artifact_factory = $artifact_factory;
         $this->classname        = $classname;
     }
     
@@ -56,36 +49,47 @@ class Planning_ArtifactTreeNodeVisitor {
      * @return Planning_ArtifactTreeNodeVisitor
      */
     public static function build(Planning $planning, $classname) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        
-        return new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, $classname);
+        return new Planning_ArtifactTreeNodeVisitor($planning, $classname);
     }
 
+    /**
+     * Makes a new TreeNode hierarchy identical to the given one, but changes the types
+     * @param TreeNode $node
+     * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
+     */
     public function visit(TreeNode $node) {
-        $this->decorate($node);
-        $this->visitChildren($node);
+        $new_node = $this->decorate($node);
+        $new_node->setChildren($this->visitChildren($node));
+        return $new_node;
     }
     
+    /**
+     * TODO something is wrong since we return different types here
+     * When on the left side of the planning, the top node is just 
+     * a node holding the other nodes, and we cant use an array of nodes because there are card-actions available for it...
+     * 
+     * Makes a CardPresenterNode out of $node if $node contains an artifact
+     * @param TreeNode $node
+     * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
+     */
     private function decorate(TreeNode $node) {
-        $artifact = $this->getArtifact($node);
+        $artifact = $node->getObject();
         
         if ($artifact) {
             $planning_item = new Planning_Item($artifact, $this->planning);
             $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
-            
-            $node->setObject($presenter);
+            $presenter_node = Tracker_TreeNode_CardPresenterNode::build($node, $presenter);
+            return $presenter_node;
         }
-    }
-    
-    private function getArtifact(TreeNode $node) {
-        $row = $node->getData();
-        return $this->artifact_factory->getArtifactById($row['id']);
+        return $node;
     }
     
     private function visitChildren(TreeNode $node) {
+        $children = array();
         foreach ($node->getChildren() as $child) {
-            $child->accept($this);
+            $children[] = $child->accept($this);
         }
+        return $children;
     }
 }
 

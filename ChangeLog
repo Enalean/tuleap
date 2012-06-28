@@ -1,9 +1,24 @@
-Version 5.2 (Not Released Yet)
+Version 5.3 (not released yet)
+	== Plugins ==
+	* Cardwall: 0.5.7
+	* Tracker: 5.7.33
+	* Agildashboard: 0.36
+	* FullTextSearch: 0.6
+	* Test: 5
+	* LDAP: 3.16
+
+	== Development ==
+	Update mustache renderer
+	Start PHP 5.3 cleaning (For Tuleap 5.3 \o/)
+	Introduce transactions methods in DataAccess
+	Display queries sorted by time taken in debug mode
+
+Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==
 	* Fix chart legend display (Contrib STMicroelectronics)
 	* Fix ssh keys when no unix account: With Gitolite, it's possible to have
-	a ssh key without having a unix account. However, the interface doesn't
-	allow it.
+	  a ssh key without having a unix account. However, the interface doesn't
+	  allow it.
 
 	== Enhancement ==
 	* SOAP: 5.2
@@ -15,9 +30,9 @@ Version 5.2 (Not Released Yet)
 	* Tracker: 5.7.29
 	* Agildashboard: 0.33
 	* Docman: 2.25.7
-	* Git: 2.6.1
+	* Git: 2.6.2
 	* Ldap: 3.15
-	* Statistics: 0.17
+	* Statistics: 0.18
 	* FullTextSearch: 0.4
 
         == CLI ==

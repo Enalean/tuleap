@@ -193,6 +193,7 @@ class Git extends PluginController {
             );
         } else {
             $this->addPermittedAction('index');
+            $this->addPermittedAction('view_last_git_pushes');
             if ($this->user->isMember($this->groupId)) {
                 $this->addPermittedAction('fork_repositories');
                 $this->addPermittedAction('do_fork_repositories');

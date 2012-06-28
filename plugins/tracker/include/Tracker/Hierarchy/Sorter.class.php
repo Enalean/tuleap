@@ -18,10 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Hierarchy.class.php';
+require_once dirname(__FILE__).'/../CrossSearch/ArtifactNode.class.php';
+
 /**
  * Sorts artifacts in a TreeNode structure 
  */
+
 class Tracker_Hierarchy_Sorter {
+    
+    /**
+     *
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    
+    
+    public function __construct(Tracker_ArtifactFactory $factory = null) {
+        $this->artifact_factory = isset($factory) ? $factory : Tracker_ArtifactFactory::instance();
+    }
     
     /**
      * Create a tree from the given list according to the hierarchy definition
@@ -58,21 +73,19 @@ class Tracker_Hierarchy_Sorter {
         }
     }
     
-    private function appendArtifactAndSonsToParent(TreeNode $parent, Tracker_Hierarchy $hierarchy, array $artifacts, array $artifact, array &$artifacts_in_tree) {
-        $id = $artifact['id'];
+    private function appendArtifactAndSonsToParent(TreeNode $parent, Tracker_Hierarchy $hierarchy, array $artifacts, array $artifact_info, array &$artifacts_in_tree) {
+        $id = $artifact_info['id'];
         
         if (!isset($artifacts_in_tree[$id])) {
-            $node = new TreeNode();
-            
-            $node->setId($id);
-            $node->setData($artifact);
+            $artifact = $this->artifact_factory->getArtifactById($id);
+            $node = new ArtifactNode($artifact, $artifact_info);
             $parent->addChild($node);
             
             $artifacts_in_tree[$id] = true;
-            $artifactlinks          = explode(',', $artifact['artifactlinks']);
+            $artifactlinks          = explode(',', $artifact_info['artifactlinks']);
             
             foreach ($artifactlinks as $link_id) {
-                if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact, $hierarchy)) {
+                if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact_info, $hierarchy)) {
                     $this->appendArtifactAndSonsToParent($node, $hierarchy, $artifacts, $artifacts[$link_id], $artifacts_in_tree);
                 }
             }
@@ -130,7 +143,7 @@ class Tracker_Hierarchy_Sorter {
     private function getArtifactsFromArtifactInfo($artifacts_info) {
         $artifacts = array();
         foreach ($artifacts_info as $artifact_info) {
-            $artifacts[] = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_info['id']);
+            $artifacts[] = $this->artifact_factory->getArtifactById($artifact_info['id']);
         }
         return $artifacts;
     }
@@ -138,6 +151,7 @@ class Tracker_Hierarchy_Sorter {
     private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info) {
         foreach ($artifacts as $artifact) {
             $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));
+            $node->setObject($artifact);
             $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user), $artifacts_info);
             $root->addChild($node);
         }

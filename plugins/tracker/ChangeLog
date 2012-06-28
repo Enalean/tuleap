@@ -1,3 +1,17 @@
+Version 5.7.33 - Tuleap 5.3
+    * Add new post actions on the workflow: set a int/float field to a specific value.
+      Eg: in the cardwall, if you drag a task to "done", remaining effort is set to 0.
+
+Version 5.7.32 - Tuleap 5.3
+    * Now artifacts are ordered by priority in the cross search.
+    * Provide internal api to change the priority of artifacts
+
+Version 5.7.31 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 5.7.30 - Tuleap 5.3
+    * Update mustache renderer
+
 Version 5.7.29 - Tuleap 5.2
     * Do not put extra comma which leads to a javascript error in IE
 

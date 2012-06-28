@@ -25,6 +25,7 @@ require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
+require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
@@ -663,6 +664,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
                 break;
+            case 'higher-priority-than':
+                $dao = new Tracker_Artifact_PriorityDao();
+                $dao->moveArtifactBefore($this->getId(), (int)$request->get('target-id'));
+                break;
+            case 'lesser-priority-than':
+                $dao = new Tracker_Artifact_PriorityDao();
+                $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
+                break;
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -1214,7 +1223,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getLinkedArtifactsOfHierarchy(User $user) {
         $artifact_links = $this->getLinkedArtifacts($user);
-        $allowed_trackers = $this->getHierarchyFactory()->getChildren($this->getTracker()->getId());
+        $allowed_trackers = $this->getAllowedChildrenTypes();
         foreach ($artifact_links as $artifact_link) {
             $tracker = $artifact_link->getTracker();
             if (in_array($tracker, $allowed_trackers)) {
@@ -1233,7 +1242,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Array of Tracker_Artifact
      */
     public function getHierarchyLinkedArtifacts(User $user) {
-        $allowed_trackers = $this->getHierarchyFactory()->getChildren($this->getTrackerId());
+        $allowed_trackers = $this->getAllowedChildrenTypes();
         $artifact_links   = $this->getLinkedArtifacts($user);
         foreach ($artifact_links as $key => $artifact) {
             if ( ! in_array($artifact->getTracker(), $allowed_trackers)) {
@@ -1241,6 +1250,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         }
         return $artifact_links;
+    }
+    
+    /**
+     * @return array of Tracker
+     */
+    public function getAllowedChildrenTypes() {
+        return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
     }
     
     /**

@@ -1,6 +1,8 @@
 DROP TABLE IF EXISTS tracker_workflow;
 DROP TABLE IF EXISTS tracker_workflow_transition;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_date;
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
 
 DROP TABLE IF EXISTS widget_renderer;
 
@@ -48,6 +50,7 @@ DROP TABLE IF EXISTS tracker_report_criteria_openlist_value;
 DROP TABLE IF EXISTS tracker_report_criteria_permissionsonartifact_value;
 DROP TABLE IF EXISTS tracker_field_list_bind_decorator;
 DROP TABLE IF EXISTS tracker_artifact;
+DROP TABLE IF EXISTS tracker_artifact_priority;
 DROP TABLE IF EXISTS tracker_tooltip;
 DROP TABLE IF EXISTS tracker_global_notification;
 DROP TABLE IF EXISTS tracker_watcher;

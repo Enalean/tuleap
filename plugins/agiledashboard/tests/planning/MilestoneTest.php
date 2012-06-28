@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/NoMilestone.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
@@ -135,10 +136,10 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
         $child1_artifact   = aMockArtifact()->withId(1111)->withTitle('child artifact 1')->build();
         $child2_artifact   = aMockArtifact()->withId(2222)->withTitle('child artifact 2')->build();
-        $planned_artifacts = aNode()->withArtifact($root_artifact)
+        $planned_artifacts = aNode()->withObject($root_artifact)
                                     ->withChildren(
-                                        aNode()->withArtifact($child1_artifact),
-                                        aNode()->withArtifact($child2_artifact))
+                                        aNode()->withObject($child1_artifact),
+                                        aNode()->withObject($child2_artifact))
                                     ->build();
 
         
@@ -151,10 +152,10 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
         $depth1_artifact   = aMockArtifact()->withId(1111)->withTitle('depth 1 artifact')->build();
         $depth2_artifact   = aMockArtifact()->withId(2222)->withTitle('depth 2 artifact')->build();
-        $planned_artifacts = aNode()->withArtifact($root_artifact)
+        $planned_artifacts = aNode()->withObject($root_artifact)
                                     ->withChild(
-                                        aNode()->withArtifact($depth1_artifact)
-                                               ->withChild(aNode()->withArtifact($depth2_artifact)))
+                                        aNode()->withObject($depth1_artifact)
+                                               ->withChild(aNode()->withObject($depth2_artifact)))
                                     ->build();
 
         
@@ -170,9 +171,9 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $artifact          = aMockArtifact()->withId(1111)
                                             ->withUniqueLinkedArtifacts(array($linked_artifact_1, $linked_artifact_2))
                                             ->build();
-        $planned_artifacts = aNode()->withArtifact($root_artifact)
+        $planned_artifacts = aNode()->withObject($root_artifact)
                                     ->withChild(
-                                        aNode()->withArtifact($artifact))
+                                        aNode()->withObject($artifact))
                                     ->build();
 
         
