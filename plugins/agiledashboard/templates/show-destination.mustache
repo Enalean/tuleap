@@ -10,11 +10,13 @@
             {{{errorCantDrop}}}
         {{/canDrop}}
         {{#canDrop}}
+            {{#canDisplayRemainingEffort}}
             <div>
                 {{#isOverCapacity}}<span class="planning_overcapacity">{{/isOverCapacity}}
                 {{{getRemainingEffort}}}
                 {{#isOverCapacity}}</span>{{/isOverCapacity}}
             </div>
+            {{/canDisplayRemainingEffort}}
             <div>
                 {{^hasChildren}}
                     No items yet

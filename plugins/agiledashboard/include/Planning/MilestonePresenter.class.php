@@ -271,12 +271,18 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
 
+    public function canDisplayRemainingEffort() {
+        return $this->milestone->getRemainingEffort() !== null && $this->milestone->getCapacity() !== null;
+    }
+
     public function getRemainingEffort() {
         $html = '';
-        if ($this->milestone->getRemainingEffort()) {
-            $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
-            $html .= '&nbsp;<span class="planning_remaining_effort">'.$this->milestone->getRemainingEffort().'</span>';
-        }
+
+        $remaining_effort = $this->milestone->getRemainingEffort();
+        $remaining_effort = $remaining_effort !== null ? $remaining_effort : 0;
+
+        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
+        $html .= '&nbsp;<span class="planning_remaining_effort">'.$remaining_effort.'</span>';
         if ($this->milestone->getCapacity()) {
             $html .= '&nbsp;/&nbsp;'.$this->milestone->getCapacity();
         }
@@ -284,8 +290,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     }
 
     public function isOverCapacity() {
-        return $this->milestone->getRemainingEffort() !== null &&
-               $this->milestone->getCapacity() !== null &&
+        return $this->canDisplayRemainingEffort() &&
                $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
     }
 }
