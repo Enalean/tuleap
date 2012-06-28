@@ -61,7 +61,7 @@ class Git_PostReceiveMailManager {
      *
      *  @return Boolean
      */
-    function removeMailByRepository($repository, $mail = null) {
+    function removeMailByRepository($repository, $mail) {
         if ($this->dao->removeNotification($repository->getId(), $mail)) {
             $repository->loadNotifiedMails();
             return $repository->getBackend()->changeRepositoryMailingList($repository);
@@ -69,6 +69,20 @@ class Git_PostReceiveMailManager {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
             return false;
         }
+    }
+
+    /**
+     * On repository deletion, remove notified people in DB.
+     *
+     * As repository is meant to be deleted, there is no need to propagate
+     * change to backend.
+     *
+     * @param GitRepository $repository
+     *
+     * @return Boolean
+     */
+    public function markRepositoryAsDeleted(GitRepository $repository) {
+        return $this->dao->removeNotification($repository->getId(), null);
     }
 
     /**

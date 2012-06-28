@@ -678,37 +678,37 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Delete a repository (reference and fork)
-     *
-     * @param Boolean $ignoreHasChildren If true delete will ignore if the repo has childrens
-     *
-     * @return Boolean
+     * Physically delete a repository already marked for deletion
      */
-    public function delete($ignoreHasChildren = false) {
-        $project = $this->getProject();
-        //if empty project name -> get out of here
-        if ( !empty($project) ) {
-            if (  $project->getUnixName() == '' ) {
-                return false;
-            }
+    public function delete() {
+        $this->getBackend()->delete($this);
+    }
+
+    /**
+     * Perform logical deletion repository in DB
+     * 
+     * @todo: makes deletion of repo in gitolite asynchronous
+     * 
+     * @throws GitBackendException 
+     */
+    public function markAsDeleted() {
+        if ($this->canBeDeleted()) {
+            $this->forceMarkAsDeleted();
         } else {
-            return false;
+            throw new GitBackendException($GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error'));
         }
-        //if empty name -> get out of here
-        $name  = $this->getName();
-        if ( empty($name) ) {
-            return false;
-        }        
-        $date  = $this->getDeletionDate();
-        if ( empty($date) || $date == '0000-00-00 00:00:00') {
-            $this->setDeletionDate( date('Y-m-d H:i:s') );
-        }
+    }
 
-        //remove notification from DB
+    /**
+     * Force logical deletion of repository
+     */
+    public function forceMarkAsDeleted() {
+        $this->setDeletionDate(date('Y-m-d H:i:s'));
+
         $postRecMailManager = $this->getPostReceiveMailManager();
-        $postRecMailManager->removeMailByRepository($this);
+        $postRecMailManager->markRepositoryAsDeleted($this);
 
-        $this->getBackend()->delete($this, $ignoreHasChildren);
+        $this->getBackend()->markAsDeleted($this);
     }
 
     /**
@@ -735,6 +735,7 @@ class GitRepository implements DVCSRepository {
     public function isAlreadyNotified ($mail) {
         return (in_array($mail, $this->getNotifiedMails())) ;
     }
+
     /**
      * Add the @mail to the config git section and to DB
      * 
@@ -859,9 +860,12 @@ class GitRepository implements DVCSRepository {
      * @return Boolean
      */
     public function canBeDeleted() {
-        $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
-        $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
-        return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
+        if ($this->getPath() && $this->getBackend()->canBeDeleted($this)) {
+            $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
+            $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
+            return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
+        }
+        return false;
     }
     
     /**

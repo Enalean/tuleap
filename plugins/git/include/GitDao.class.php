@@ -403,10 +403,19 @@ class GitDao extends DataAccessObject {
         $query = 'SELECT * '.
                  ' FROM '.$this->getTable().
                  ' WHERE '.self::REPOSITORY_ID.'='.$id.
-                 ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+                 ' AND '.self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'";
         return $this->retrieve($query);
     }
 
+    public function searchDeletedRepositoryById($id) {
+        $id = $this->da->escapeInt($id);
+        $query = 'SELECT * '.
+                 ' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_ID.'='.$id.
+                 ' AND '.self::REPOSITORY_DELETION_DATE." != '0000-00-00 00:00:00'";
+        return $this->retrieve($query);
+    }
+    
     /**
      * Retrieve Git repository data given its name and its group name.
      *
