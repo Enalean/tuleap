@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'InjectDropIntoClassnamesVisitor.class.php';
 require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'Board.class.php';

@@ -19,13 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/CardwallCardProvider.class.php';
+require_once dirname(__FILE__).'/../include/Cardwall_ArtifactNodeTreeProvider.class.php';
 require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
 require_once 'src/common/TreeNode/TreeNodeMapper.class.php';
-class CardwallCardProviderTest extends TuleapTestCase {
+class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
-        $provider = new CardwallCardProvider();
+        $provider = new Cardwall_ArtifactNodeTreeProvider();
         
         $root_node = $provider->wrapInAThreeLevelArtifactTree(array());
         
@@ -35,7 +35,7 @@ class CardwallCardProviderTest extends TuleapTestCase {
     }
     
     public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone() {
-        $provider = new CardwallCardProvider();
+        $provider = new Cardwall_ArtifactNodeTreeProvider();
         
         $artifact4 = aMockArtifact()->withId(4)->build();
         
@@ -54,7 +54,7 @@ class CardwallCardProviderTest extends TuleapTestCase {
     }
     
     public function itCreatesAnArtifactNodeForEveryArtifactId() {
-        $provider = new CardwallCardProvider();
+        $provider = new Cardwall_ArtifactNodeTreeProvider();
         $artifact_factory = mock('Tracker_ArtifactFactory');
         
         $artifact4 = aMockArtifact()->withId(4)->build();

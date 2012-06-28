@@ -22,7 +22,7 @@
  * Provides a TreeNode/ArtifactNode tree given some artifact ids. Organisation of nodes :
  * root -> forest -> artifactNodes
  */
-class CardwallCardProvider {
+class Cardwall_ArtifactNodeTreeProvider {
 
     public function flatForestOfArtifacts($artifact_ids, $artifact_factory) {
         $cards  = $this->getCards($artifact_ids, $artifact_factory);

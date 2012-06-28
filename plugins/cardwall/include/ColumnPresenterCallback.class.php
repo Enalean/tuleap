@@ -21,6 +21,7 @@
 
 require_once 'ColumnPresenter.class.php';
 require_once 'ColumnPresenterNode.class.php';
+require_once dirname(__FILE__).'/../../tracker/include/Tracker/Artifact_Field_Retriever.class.php';
 
 class ColumnPresenterCallback implements TreeNodeCallback {
 
@@ -61,11 +62,6 @@ class ColumnPresenterCallback implements TreeNodeCallback {
         return $field ? $field->getId() : 0;
     }
     
-}
-
-interface Tracker_Artifact_Field_Retriever {
-    
-    function getField(Tracker_Artifact $artifact);
 }
 
 class Tracker_Artifact_Semantic_Status_Field_Retriever implements Tracker_Artifact_Field_Retriever {
