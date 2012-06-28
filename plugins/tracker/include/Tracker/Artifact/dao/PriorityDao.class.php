@@ -20,14 +20,28 @@
 
 require_once 'common/dao/include/DataAccessObject.class.php';
 
+/**
+ * Manage artifacts priority in database
+ *
+ * @see PriorityDao.phpt for the test cases
+ */
 class Tracker_Artifact_PriorityDao extends DataAccessObject {
 
     /**
+     * Move an artifact before another one
+     *
+     * A -> B -> C -> D
+     *
+     * moveArtifactBefore(A, D) =>
+     * B -> C -> A -> D
+     *
+     * @see PriorityDao.phpt for the test cases
+     *
      * @return bool true if success
      */
     public function moveArtifactBefore($artifact_id, $successor_id) {
         $this->da->startTransaction();
-        $predecessor_id = $this->serchPredecessor($successor_id);
+        $predecessor_id = $this->searchPredecessor($successor_id);
         if ($predecessor_id !== false && $this->removeAndInsert($predecessor_id, $artifact_id)) {
             $this->da->commit();
             return true;
@@ -37,6 +51,15 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     }
 
     /**
+     * Move an artifact after another one
+     *
+     * A -> B -> C -> D
+     *
+     * moveArtifactAfter(A, D) =>
+     * B -> C -> D -> A
+     *
+     * @see PriorityDao.phpt for the test cases
+     *
      * @return bool true if success
      */
     public function moveArtifactAfter($artifact_id, $predecessor_id) {
@@ -50,11 +73,20 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     }
 
     /**
+     * Put an artifact at the end
+     *
+     * A -> B -> C -> D
+     *
+     * putArtifactAtTheEnd(E) =>
+     * A -> B -> C -> D -> E
+     *
+     * @see PriorityDao.phpt for the test cases
+     *
      * @return bool true if success
      */
     public function putArtifactAtTheEnd($artifact_id) {
         $this->da->startTransaction();
-        $predecessor_id = $this->serchPredecessor(null);
+        $predecessor_id = $this->searchPredecessor(null);
         if ($predecessor_id !== false && $this->insert($predecessor_id, $artifact_id)) {
             $this->da->commit();
             return true;
@@ -67,7 +99,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
         return $this->remove($artifact_id) && $this->insert($predecessor_id, $artifact_id);
     }
 
-    private function serchPredecessor($id) {
+    private function searchPredecessor($id) {
         $equals_id = $id === null ? 'IS NULL' : '= '. $this->da->escapeInt($id);
         $sql = "SELECT curr_id
                 FROM tracker_artifact_priority
