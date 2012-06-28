@@ -44,26 +44,21 @@ class ColumnPresenterCallback implements TreeNodeCallback {
         if (!$node instanceof Tracker_TreeNode_CardPresenterNode) {
             return clone $node;
         }
-        $artifact = $node->getCardPresenter()->getArtifact();
-        $field = $this->field_retriever->getField($artifact);
-        if ($field) {
-            $card_field_id = $field->getId();
-        } else {
-            $card_field_id = 0;
-        }
-
+        $artifact         = $node->getCardPresenter()->getArtifact();
+        $card_field_id    = $this->getFieldId($artifact);
         $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
         $presenter        = new ColumnPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
         return new Cardwall_ColumnPresenterNode($node, $presenter);
     }
 
-    public function getParentNodeId(TreeNode $node) {
+    private function getParentNodeId(TreeNode $node) {
         $parent_node = $node->getParentNode();
-        if ($parent_node) {
-            return $parent_node->getId();
-        } else {
-            return 0;
-        }
+        return $parent_node ? $parent_node->getId() : 0;
+    }
+
+    private function getFieldId($artifact) {
+        $field = $this->field_retriever->getField($artifact);
+        return $field ? $field->getId() : 0;
     }
     
 }
@@ -91,7 +86,7 @@ class Tracker_Artifact_Custom_Field_Retriever implements Tracker_Artifact_Field_
      */
     private $field;
 
-    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
+    public function __construct(Tracker_FormElement_Field_Selectbox $field) {
         $this->field = $field;
     }
 
