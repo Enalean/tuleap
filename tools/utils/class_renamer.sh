@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# renames a class, modifying the filename and all imports accordingly
+
 set -x
 
 old_name=$1
