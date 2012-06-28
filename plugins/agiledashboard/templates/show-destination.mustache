@@ -4,19 +4,19 @@
             {{> card-actions}}
         {{/getCardPresenter}}
         {{> select-destination}}
+        {{#canDisplayRemainingEffort}}
+        <div>
+            {{#isOverCapacity}}<span class="planning_overcapacity">{{/isOverCapacity}}
+            {{{getRemainingEffort}}}
+            {{#isOverCapacity}}</span>{{/isOverCapacity}}
+        </div>
+        {{/canDisplayRemainingEffort}}
         <hr />
         <p class="help">{{plannedArtifactsHelp}}</p>
         {{^canDrop}}
             {{{errorCantDrop}}}
         {{/canDrop}}
         {{#canDrop}}
-            {{#canDisplayRemainingEffort}}
-            <div>
-                {{#isOverCapacity}}<span class="planning_overcapacity">{{/isOverCapacity}}
-                {{{getRemainingEffort}}}
-                {{#isOverCapacity}}</span>{{/isOverCapacity}}
-            </div>
-            {{/canDisplayRemainingEffort}}
             <div>
                 {{^hasChildren}}
                     No items yet

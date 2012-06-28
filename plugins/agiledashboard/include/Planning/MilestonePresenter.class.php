@@ -276,16 +276,13 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     }
 
     public function getRemainingEffort() {
-        $html = '';
+        $remaining_effort = $this->milestone->getRemainingEffort() !== null ? $this->milestone->getRemainingEffort() : 0;
+        $capacity         = $this->milestone->getCapacity() !== null ? $this->milestone->getCapacity() : 0;
 
-        $remaining_effort = $this->milestone->getRemainingEffort();
-        $remaining_effort = $remaining_effort !== null ? $remaining_effort : 0;
-
+        $html  = '';
         $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
         $html .= '&nbsp;<span class="planning_remaining_effort">'.$remaining_effort.'</span>';
-        if ($this->milestone->getCapacity()) {
-            $html .= '&nbsp;/&nbsp;'.$this->milestone->getCapacity();
-        }
+        $html .= '&nbsp;/&nbsp;'.$capacity;
         return $html;
     }
 
