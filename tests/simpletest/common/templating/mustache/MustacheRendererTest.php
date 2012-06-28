@@ -18,15 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once dirname(__FILE__).'/../TemplateRendererTestBase.php';
+require_once 'common/templating/mustache/MustacheRenderer.class.php';
 
-// First, check plugin availability
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('fulltextsearch');
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.get_server_url());
+/**
+ * Replace this class or add a class for every template engine 
+ */
+class MustacheRendererTest extends TemplateRendererTestBase {
+    function setUp() {
+        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
+        parent::setUp();
+    }
 }
 
 ?>

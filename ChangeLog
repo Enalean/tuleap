@@ -1,9 +1,21 @@
-Version 5.2 (Not Released Yet)
+Version 5.3 (not released yet)
+	== Plugins ==
+	* Cardwall: 0.5.6
+	* Tracker: 5.7.31
+	* Agildashboard: 0.35
+	* FullTextSearch: 0.6
+	* Test: 5
+
+	== Development ==
+	Update mustache renderer
+	Start PHP 5.3 cleaning (For Tuleap 5.3 \o/)
+
+Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==
 	* Fix chart legend display (Contrib STMicroelectronics)
 	* Fix ssh keys when no unix account: With Gitolite, it's possible to have
-	a ssh key without having a unix account. However, the interface doesn't
-	allow it.
+	  a ssh key without having a unix account. However, the interface doesn't
+	  allow it.
 
 	== Enhancement ==
 	* SOAP: 5.2

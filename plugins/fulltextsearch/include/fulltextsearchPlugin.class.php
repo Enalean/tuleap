@@ -26,6 +26,8 @@ class fulltextsearchPlugin extends Plugin {
 
     public function __construct($id) {
         parent::__construct($id);
+        $this->setScope(Plugin::SCOPE_PROJECT);
+        $this->allowed_for_project = array();
 
         // docman
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
@@ -37,6 +39,20 @@ class fulltextsearchPlugin extends Plugin {
         
         // style
         $this->_addHook('cssfile', 'cssfile', false);
+    }
+
+    /**
+     * Return true if given project has the right to use this plugin.
+     *
+     * @param string $group_id
+     *
+     * @return bool
+     */
+    function isAllowed($group_id) {
+        if(!isset($this->allowedForProject[$group_id])) {
+            $this->allowed_for_project[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
+        }
+        return $this->allowed_for_project[$group_id];
     }
 
     private function getActions() {
@@ -53,7 +69,9 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_update($params) {
-        $this->getActions()->updateDocument($params);
+        if ($this->isAllowed($params['item']->getGroupId())) {
+            $this->getActions()->updateDocument($params);
+        }
     }
 
     /**
@@ -62,7 +80,9 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
-        $this->getActions()->indexNewDocument($params);
+        if ($this->isAllowed($params['item']->getGroupId())) {
+            $this->getActions()->indexNewDocument($params);
+        }
     }
 
     /**
@@ -71,7 +91,9 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_del($params) {
-        $this->getActions()->delete($params);
+        if ($this->isAllowed($params['item']->getGroupId())) {
+            $this->getActions()->delete($params);
+        }
     }
 
     /**

@@ -22,6 +22,7 @@
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../../include/Tracker/TreeNode/CardPresenterNode.class.php';
 require_once dirname(__FILE__).'/../../include/Tracker/CardPresenter.class.php';
+require_once dirname(__FILE__).'/../builders/aMockArtifact.php';
 
 class Tracker_TreeNode_CardPresenterNodeTest extends TuleapTestCase {
     
@@ -35,14 +36,14 @@ class Tracker_TreeNode_CardPresenterNodeTest extends TuleapTestCase {
         $presenter_node = Tracker_TreeNode_CardPresenterNode::build($tree_node, mock('Tracker_CardPresenter'));
         $this->assertEqual($tree_node->getId(), $presenter_node->getId());
         $this->assertIdentical($tree_node->getData(), $presenter_node->getData());
-        $this->assertIdentical($tree_node->getChildren(), $presenter_node->getChildren());
-        $this->assertIdentical($tree_node->getObject(), $presenter_node->getObject());
+        $this->assertEqual($tree_node->getChildren(), $presenter_node->getChildren());
+        $this->assertEqual($tree_node->getObject(), $presenter_node->getObject());
     }
     
     public function itHoldsTheGivenPresenter() {
         $presenter      = mock('Tracker_CardPresenter');
-        $presenter_node = Tracker_TreeNode_CardPresenterNode::build(mock('TreeNode'), $presenter);
-        $this->assertIdentical($presenter, $presenter_node->getCardPresenter());
+        $presenter_node = Tracker_TreeNode_CardPresenterNode::build(new TreeNode(), $presenter);
+        $this->assertEqual($presenter, $presenter_node->getCardPresenter());
     }
 }
 ?>

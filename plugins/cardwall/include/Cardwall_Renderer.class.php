@@ -30,6 +30,7 @@ require_once 'Form.class.php';
 require_once 'AccumulatedStatusFieldsProvider.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
@@ -116,11 +117,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $artifact_ids     = explode(',', $matching_ids['id']);
         $artifacts = $this->getForestsOfArtifacts($artifact_ids, Tracker_ArtifactFactory::instance());
         $presenter = $this->getPresenter($artifacts, $form);
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        ob_start();
-        $renderer->render('renderer', $presenter);
 
-        return ob_get_clean();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+        
+        return $renderer->renderToString('renderer', $presenter);
     }
 
     /**

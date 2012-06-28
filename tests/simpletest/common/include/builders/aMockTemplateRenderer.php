@@ -18,15 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
+require_once 'common/templating/TemplateRenderer.class.php';
 
-// First, check plugin availability
-$plugin_manager = PluginManager::instance();
-$plugin         = $plugin_manager->getPluginByName('fulltextsearch');
-if ($plugin && $plugin_manager->isPluginAvailable($plugin)) {
-    $plugin->process();
-} else {
-    header('Location: '.get_server_url());
+/**
+ * Concrete TemplateRenderer subclass, for mocking purpose.
+ */
+class DummyTemplateRenderer extends TemplateRenderer {
+    
+    /**
+     * @see TemplateRenderer
+     */
+    public function renderToString($template_name, $presenter) {
+        return '';
+    }
 }
 
+class MockTemplateRendererBuilder {
+    public function __construct() {
+        $this->renderer = mock('DummyTemplateRenderer');
+    }
+    
+    public function build() {
+        return $this->renderer;
+    }
+}
+
+function aMockTemplateRenderer() {
+    return new MockTemplateRendererBuilder();
+}
 ?>
