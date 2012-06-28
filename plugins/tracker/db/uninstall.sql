@@ -48,6 +48,7 @@ DROP TABLE IF EXISTS tracker_report_criteria_openlist_value;
 DROP TABLE IF EXISTS tracker_report_criteria_permissionsonartifact_value;
 DROP TABLE IF EXISTS tracker_field_list_bind_decorator;
 DROP TABLE IF EXISTS tracker_artifact;
+DROP TABLE IF EXISTS tracker_artifact_priority;
 DROP TABLE IF EXISTS tracker_tooltip;
 DROP TABLE IF EXISTS tracker_global_notification;
 DROP TABLE IF EXISTS tracker_watcher;
