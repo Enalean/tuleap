@@ -6,9 +6,9 @@
         {{> select-destination}}
         {{#canDisplayRemainingEffort}}
         <div>
-            {{#isOverCapacity}}<span class="planning_overcapacity">{{/isOverCapacity}}
+            <span class="{{#isOverCapacity}}planning_overcapacity{{/isOverCapacity}}">
             {{{getRemainingEffort}}}
-            {{#isOverCapacity}}</span>{{/isOverCapacity}}
+            </span>
         </div>
         {{/canDisplayRemainingEffort}}
         <hr />
