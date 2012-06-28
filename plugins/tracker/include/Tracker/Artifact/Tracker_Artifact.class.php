@@ -25,6 +25,7 @@ require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
+require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
@@ -662,6 +663,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
+                break;
+            case 'higher-priority-than':
+                $dao = new Tracker_Artifact_PriorityDao();
+                $dao->moveArtifactBefore($this->getId(), (int)$request->get('target-id'));
+                break;
+            case 'lesser-priority-than':
+                $dao = new Tracker_Artifact_PriorityDao();
+                $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
                 break;
             default:
                 if ($request->isAjax()) {

@@ -195,7 +195,7 @@ class Tracker_CrossSearch_Query {
     }
 
     private function isSemanticEmpty() {
-        return ($this->semantic_criteria['title'] == '' && $this->isSemanticStatusEmpty());
+        return (!$this->getTitle() && $this->isSemanticStatusEmpty());
     }
 
     private function isSemanticStatusEmpty() {

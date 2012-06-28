@@ -128,7 +128,7 @@ class Widget_TwitterFollow extends Widget {
             $this->content_id = $id;
         }
     }
-    function create(&$request) {
+    function create($request) {
         $content_id = false;
         $vUser = new Valid_String('user');
         $vUser->setErrorMessage("Can't add empty twitterfollow user");
@@ -142,7 +142,7 @@ class Widget_TwitterFollow extends Widget {
                 if (!is_dir($GLOBALS['codendi_cache_dir'] .'/twitterfollow')) {
                     mkdir($GLOBALS['codendi_cache_dir'] .'/twitterfollow');
                 }
-                $twitterfollow_reader =& new SimplePie($this->getFeedUrl($twitterfollow['user']), $GLOBALS['codendi_cache_dir'] .'/twitterfollow', null, $GLOBALS['sys_proxy']);
+                $twitterfollow_reader = new SimplePie($this->getFeedUrl($twitterfollow['user']), $GLOBALS['codendi_cache_dir'] .'/twitterfollow', null, $GLOBALS['sys_proxy']);
                 $twitterfollow['title'] = $twitterfollow_reader->get_title();
             }
             $sql = 'INSERT INTO widget_twitterfollow (owner_id, owner_type, title, user) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($twitterfollow['title']) ."', '". db_escape_string($twitterfollow['user']) ."')";
@@ -151,7 +151,7 @@ class Widget_TwitterFollow extends Widget {
         }
         return $content_id;
     }
-    function updatePreferences(&$request) {
+    function updatePreferences($request) {
         $done = false;
         $vContentId = new Valid_UInt('content_id');
         $vContentId->required();

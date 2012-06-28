@@ -121,8 +121,7 @@ class Planning_MilestoneFactory {
         $hierarchy_children_ids = $this->getSubMilestonesArtifactIds($user, $milestone_artifact);
 
         foreach ($artifacts_tree->getChildren() as $node) {
-            $data = $node->getData();
-            if (in_array($data['id'], $hierarchy_children_ids)) {
+            if (in_array($node->getId(), $hierarchy_children_ids)) {
                 $artifacts_tree->removeChild(null, $node);
             }
         }
