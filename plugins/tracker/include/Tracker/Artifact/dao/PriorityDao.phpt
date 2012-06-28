@@ -64,6 +64,10 @@ include_path=/home/nicolas/tuleap/src:.
     dump_priorities("1 is > than 101");
     $dao->moveArtifactAfter(42, 1);
     dump_priorities("42 is < than 1");
+    $dao->moveArtifactBefore(42,101);
+    dump_priorities("42 is > than 101 (nothing changed)");
+    $dao->moveArtifactAfter(1,123);
+    dump_priorities("1 is < than 123 (nothing changed)");
 --EXPECT--
 Table is empty
 .
@@ -98,6 +102,22 @@ Three more elements are added at the end
 101,,5,
 .
 42 is < than 1
+,66,0,
+66,123,1,
+123,1,2,
+1,42,3,
+42,101,4,
+101,,5,
+.
+42 is > than 101 (nothing changed)
+,66,0,
+66,123,1,
+123,1,2,
+1,42,3,
+42,101,4,
+101,,5,
+.
+1 is < than 123 (nothing changed)
 ,66,0,
 66,123,1,
 123,1,2,
