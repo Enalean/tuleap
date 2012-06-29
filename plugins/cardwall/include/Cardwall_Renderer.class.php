@@ -28,6 +28,7 @@ require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'AccumulatedStatusFieldsProvider.class.php';
+require_once 'CustomFieldRetriever.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';

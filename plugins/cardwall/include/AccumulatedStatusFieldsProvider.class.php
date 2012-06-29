@@ -20,6 +20,8 @@
 
 require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
 require_once 'ColumnPresenterCallback.class.php';
+require_once 'SemanticStatusFieldRetriever.class.php';
+
 /**
  * Foreach artifact in a TreeNode, inject the id of the field used for the columns
  */
