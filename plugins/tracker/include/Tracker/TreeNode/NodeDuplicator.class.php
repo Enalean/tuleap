@@ -19,28 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'NodeDuplicator.class.php';
+require_once 'src/common/TreeNode/TreeNode.class.php';
 
 /**
- * TreeNode containing a Tracker_CardPresenter
+ * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
  */
-class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_NodeDuplicator {
+abstract class Tracker_TreeNode_NodeDuplicator extends TreeNode {
 
-    /**
-     * @var Tracker_CardPresenter
-     */
-    private $presenter;
-    
-    public function __construct(TreeNode $node, Tracker_CardPresenter $presenter) {
-        parent::__construct($node);
-        $this->presenter = $presenter;
-    }
-
-    /**
-     * @return Tracker_CardPresenter
-     */
-    public function getCardPresenter() {
-        return $this->presenter;
+    public function __construct(TreeNode $node) {
+        parent::__construct($node->getData(), $node->getId());
+        $this->setChildren($node->getChildren());
+        $this->setObject($node->getObject());
     }
 }
+
 ?>

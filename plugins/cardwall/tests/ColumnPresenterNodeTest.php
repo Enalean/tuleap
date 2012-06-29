@@ -19,28 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'NodeDuplicator.class.php';
+require_once dirname(__FILE__).'/../../tracker/tests/TreeNode/NodeDuplicatorTest.php';
 
-/**
- * TreeNode containing a Tracker_CardPresenter
- */
-class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_NodeDuplicator {
-
-    /**
-     * @var Tracker_CardPresenter
-     */
-    private $presenter;
+class Cardwall_ColumnPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorTest {
     
-    public function __construct(TreeNode $node, Tracker_CardPresenter $presenter) {
-        parent::__construct($node);
-        $this->presenter = $presenter;
-    }
-
-    /**
-     * @return Tracker_CardPresenter
-     */
-    public function getCardPresenter() {
-        return $this->presenter;
+    protected function newNode(TreeNode $tree_node) {
+        return new Cardwall_ColumnPresenterNode($tree_node, mock('ColumnPresenter'));
     }
 }
 ?>
