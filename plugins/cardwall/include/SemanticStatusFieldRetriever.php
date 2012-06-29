@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_SemanticStatusFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
+class Cardwall_SemanticStatusFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
 
     /**
      * @return Tracker_FormElement_Field_Selectbox
