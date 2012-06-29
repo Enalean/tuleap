@@ -39,11 +39,6 @@ EOT;
             if ($res === false) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column body_format to tracker_changeset_comment table: '.implode(', ', $this->db->dbh->errorInfo()));
             }
-            $sql = "UPDATE tracker_changeset_comment set body_format = 0";
-            $res = $this->db->dbh->exec($sql);
-            if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while initializing body_format with some data: '.implode(', ', $this->db->dbh->errorInfo()));
-            }
         }
     }
 
