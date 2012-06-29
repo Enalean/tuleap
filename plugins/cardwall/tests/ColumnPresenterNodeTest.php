@@ -20,9 +20,16 @@
  */
 
 require_once dirname(__FILE__).'/../../tracker/tests/TreeNode/NodeDuplicatorTest.php';
+require_once dirname(__FILE__).'/../include/ColumnPresenter.class.php';
 
-class Cardwall_ColumnPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorTest {
-    
+class Cardwall_ColumnPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorContract {
+
+    public function itHoldsTheGivenPresenter() {
+        $presenter      = mock('ColumnPresenter');
+        $presenter_node = new Cardwall_ColumnPresenterNode(new TreeNode(), $presenter);
+        $this->assertEqual($presenter, $presenter_node->getColumnPresenter());
+    }
+
     protected function newNode(TreeNode $tree_node) {
         return new Cardwall_ColumnPresenterNode($tree_node, mock('ColumnPresenter'));
     }

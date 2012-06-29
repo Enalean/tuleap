@@ -25,7 +25,7 @@ require_once dirname(__FILE__).'/../../include/Tracker/CardPresenter.class.php';
 require_once dirname(__FILE__).'/../builders/aMockArtifact.php';
 require_once 'NodeDuplicatorTest.php';
 
-class Tracker_TreeNode_CardPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorTest {
+class Tracker_TreeNode_CardPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorContract {
     
     public function itHoldsTheGivenPresenter() {
         $presenter      = mock('Tracker_CardPresenter');
