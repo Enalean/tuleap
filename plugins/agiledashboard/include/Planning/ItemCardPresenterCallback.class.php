@@ -56,7 +56,7 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         if ($artifact) {
             $planning_item = new Planning_Item($artifact, $this->planning);
             $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
-            $presenter_node = Tracker_TreeNode_CardPresenterNode::build($node, $presenter);
+            $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
             return $presenter_node;
         }
         return $node;

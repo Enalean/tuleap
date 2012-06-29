@@ -33,7 +33,7 @@ class Tracker_TreeNode_CardPresenterNodeTest extends TuleapTestCase {
                                  ->withObject(mock('Tracker_Artifact'))
                                  ->build();
         
-        $presenter_node = Tracker_TreeNode_CardPresenterNode::build($tree_node, mock('Tracker_CardPresenter'));
+        $presenter_node = new Tracker_TreeNode_CardPresenterNode($tree_node, mock('Tracker_CardPresenter'));
         $this->assertEqual($tree_node->getId(), $presenter_node->getId());
         $this->assertIdentical($tree_node->getData(), $presenter_node->getData());
         $this->assertEqual($tree_node->getChildren(), $presenter_node->getChildren());
@@ -42,7 +42,7 @@ class Tracker_TreeNode_CardPresenterNodeTest extends TuleapTestCase {
     
     public function itHoldsTheGivenPresenter() {
         $presenter      = mock('Tracker_CardPresenter');
-        $presenter_node = Tracker_TreeNode_CardPresenterNode::build(new TreeNode(), $presenter);
+        $presenter_node = new Tracker_TreeNode_CardPresenterNode(new TreeNode(), $presenter);
         $this->assertEqual($presenter, $presenter_node->getCardPresenter());
     }
 }

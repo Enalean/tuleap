@@ -46,10 +46,6 @@ class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_SpecializedNod
         $this->presenter = $presenter;
     }
 
-    public static function build(TreeNode $node, Tracker_CardPresenter $presenter) {
-        return new Tracker_TreeNode_CardPresenterNode($node, $presenter);
-    }
-
     /**
      * @return Tracker_CardPresenter
      */
