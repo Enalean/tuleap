@@ -434,9 +434,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getTitle() {
         if ($title_field = Tracker_Semantic_Title::load($this->getTracker())->getField()) {
             if ($title_field->userCanRead()) {
-                if ($title_field_value = $this->getLastChangeset()->getValue($title_field)) {
-                    if ($title = $title_field_value->getText()) {
-                        return $title;
+                if ($last_changeset = $this->getLastChangeset()) {
+                    if ($title_field_value = $last_changeset->getValue($title_field)) {
+                        if ($title = $title_field_value->getText()) {
+                            return $title;
+                        }
                     }
                 }
             }
