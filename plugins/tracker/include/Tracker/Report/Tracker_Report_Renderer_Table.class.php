@@ -1657,6 +1657,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      */
     protected function saveRendererProperties ($renderer_id) {
         $dao = new Tracker_Report_Renderer_TableDao();
+        if (!$dao->searchByRendererId($renderer_id)->getRow()) {
+            $dao->saveas($renderer_id, $this->chunksz, $this->multisort);
+        }
         $dao->save($renderer_id, $this->chunksz, $this->multisort);
     }
     
@@ -1705,7 +1708,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *     
      * @return bool true if success, false if failure
      */
-    public function update() {        
+    public function update() {
         $success = true;
         if ($this->id > 0) {
             //first delete existing columns and sort
@@ -1721,7 +1724,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             
             //MultiSort/Chunksz
             $this->saveRendererProperties($this->id);
-                        
+            
             //Sort
             $this->saveSortRenderer($this->id);
             
