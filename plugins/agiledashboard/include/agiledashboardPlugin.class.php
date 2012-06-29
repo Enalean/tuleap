@@ -41,6 +41,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
+            $this->_addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
         }
     }
@@ -142,6 +143,32 @@ class AgileDashboardPlugin extends Plugin {
         require_once 'AgileDashboardRouter.class.php';
         $router = new AgileDashboardRouter($this);
         $router->route($request);
+    }
+
+    public function tracker_event_artifact_association_edited($params) {
+        if ($params['request']->isAjax()) {
+            require_once AGILEDASHBOARD_BASE_DIR .'/Planning/Milestone.class.php';
+            $capacity         = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::CAPACITY_FIELD_NAME);
+            $remaining_effort = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::REMAINING_EFFORT_FIELD_NAME);
+
+            header('Content-type: application/json');
+            echo json_encode(array(
+                'remaining_effort' => $remaining_effort,
+                'is_over_capacity' => $capacity !== null && $remaining_effort !== null && $capacity < $remaining_effort,
+            ));
+        }
+    }
+
+    private function getFieldValue(Tracker_FormElementFactory $form_element_factory, User $user, Tracker_Artifact $artifact, $field_name) {
+        $field = $form_element_factory->getComputableFieldByNameForUser(
+            $artifact->getTracker()->getId(),
+            $field_name,
+            $user
+        );
+        if ($field) {
+            return $field->getComputedValue($user, $artifact);
+        }
+        return 0;
     }
 }
 

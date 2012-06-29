@@ -22,7 +22,26 @@ var Planning = {
 
     executeRequest: function (query) {
         new Ajax.Request(Planning.trackerBaseUrl + query, {
-            onFailure: Planning.errorOccured
+            onFailure: Planning.errorOccured,
+            onSuccess: function (transport) {
+                if (transport.responseJSON && typeof transport.responseJSON.remaining_effort !== undefined) {
+                    $$('.release_planner .planning_remaining_effort').each(function (element) {
+                        element.update(transport.responseJSON.remaining_effort);
+                        if (transport.responseJSON.is_over_capacity) {
+                            element.up('span').addClassName('planning_overcapacity');
+                        } else {
+                            element.up('span').removeClassName('planning_overcapacity');
+                        }
+                        new Effect.Highlight(element, {
+                            queue: {
+                                position: 'end',
+                                scope: 'remaining_effort',
+                                limit: 2
+                            }
+                        });
+                    });
+                }
+            }
         });
     },
 

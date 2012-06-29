@@ -116,3 +116,11 @@
     display: inline-block;
     width: .8em;
 }
+
+.planning_overcapacity {
+    font-weight: bold;
+}
+
+.planning_overcapacity .planning_remaining_effort {
+    color: red;
+}

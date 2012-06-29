@@ -35,6 +35,30 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_date (
   INDEX idx_wf_transition_id( transition_id )
 );
 
+--  
+--  Table structure for workflow_transition_postactions_field_int
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_int (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  field_id int(11) UNSIGNED default NULL,
+  value int(11) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+);
+
+--  
+--  Table structure for workflow_transition_postactions_field_float
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  field_id int(11) UNSIGNED default NULL,
+  value FLOAT(10,4) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+);
+
 DROP TABLE IF EXISTS tracker_widget_renderer;
 CREATE TABLE tracker_widget_renderer (
    id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
@@ -133,6 +157,12 @@ DROP TABLE IF EXISTS tracker_field_openlist;
 CREATE TABLE tracker_field_openlist(
     field_id INT(11) NOT NULL PRIMARY KEY,
     hint VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS tracker_field_computed;
+CREATE TABLE tracker_field_computed (
+    field_id INT(11) NOT NULL PRIMARY KEY,
+    target_field_name VARCHAR(255) NULL
 );
 
 DROP TABLE IF EXISTS tracker_field_openlist_value;

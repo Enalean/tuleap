@@ -41,6 +41,7 @@ require_once('Tracker_FormElement_Field_SubmittedOn.class.php');
 require_once('Tracker_FormElement_Field_ArtifactLink.class.php');
 require_once('Tracker_FormElement_Field_PermissionsOnArtifact.class.php');
 require_once('Tracker_FormElement_Field_Burndown.class.php');
+require_once('Tracker_FormElement_Field_Computed.class.php');
 require_once('Tracker_FormElement_Field_CrossReferences.class.php');
 require_once('Tracker_FormElement_Container_Fieldset.class.php');
 require_once('Tracker_FormElement_Container_Column.class.php');
@@ -83,12 +84,13 @@ class Tracker_FormElementFactory {
     );
     
     protected $special_classnames     = array(
-        'aid'      => 'Tracker_FormElement_Field_ArtifactId',
-        'lud'      => 'Tracker_FormElement_Field_LastUpdateDate',
-        'subby'    => 'Tracker_FormElement_Field_SubmittedBy',
-        'subon'    => 'Tracker_FormElement_Field_SubmittedOn',
-        'cross'    => 'Tracker_FormElement_Field_CrossReferences',
-        'burndown' => 'Tracker_FormElement_Field_Burndown',
+        'aid'       => 'Tracker_FormElement_Field_ArtifactId',
+        'lud'       => 'Tracker_FormElement_Field_LastUpdateDate',
+        'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
+        'subon'     => 'Tracker_FormElement_Field_SubmittedOn',
+        'cross'     => 'Tracker_FormElement_Field_CrossReferences',
+        'burndown'  => 'Tracker_FormElement_Field_Burndown',
+        'computed'  => 'Tracker_FormElement_Field_Computed'
     );
     protected $group_classnames       = array(
         'fieldset' => 'Tracker_FormElement_Container_Fieldset',
@@ -252,7 +254,24 @@ class Tracker_FormElementFactory {
         }
         return null;
     }
-    
+
+    /**
+     * Return a field that provides a computable value. This field is used and the user can see its value.
+     *
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param User   $user
+     *
+     * @return Tracker_FormElement_IComputeValues
+     */
+    public function getComputableFieldByNameForUser($tracker_id, $field_name, User $user) {
+        $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
+        if ($field && $field instanceof Tracker_FormElement_IComputeValues) {
+            return $field;
+        }
+        return null;
+    }
+
     /**
      * Get used formElements by parent id
      * @param int parent_id

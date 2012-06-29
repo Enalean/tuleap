@@ -39,16 +39,24 @@ class Planning_MilestoneFactory {
     private $artifact_factory;
 
     /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formelement_factory;
+
+    /**
      * Instanciates a new milestone factory.
      *
-     * @param PlanningFactory         $planning_factory The factory to delegate planning retrieval.
-     * @param Tracker_ArtifactFactory $artifact_factory The factory to delegate artifacts retrieval.
+     * @param PlanningFactory            $planning_factory    The factory to delegate planning retrieval.
+     * @param Tracker_ArtifactFactory    $artifact_factory    The factory to delegate artifacts retrieval.
+     * @param Tracker_FormElementFactory $formelement_factory The factory to delegate artifacts retrieval.
      */
-    public function __construct(PlanningFactory         $planning_factory,
-                                Tracker_ArtifactFactory $artifact_factory) {
+    public function __construct(PlanningFactory            $planning_factory,
+                                Tracker_ArtifactFactory    $artifact_factory,
+                                Tracker_FormElementFactory $formelement_factory) {
 
-        $this->planning_factory = $planning_factory;
-        $this->artifact_factory = $artifact_factory;
+        $this->planning_factory    = $planning_factory;
+        $this->artifact_factory    = $artifact_factory;
+        $this->formelement_factory = $formelement_factory;
     }
 
     /**
@@ -76,10 +84,30 @@ class Planning_MilestoneFactory {
             $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
 
-            return new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            return $this->updateMilestoneContextualInfo($user, $milestone);
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
+    }
+
+    private function updateMilestoneContextualInfo(User $user, Planning_ArtifactMilestone $milestone) {
+        return $milestone
+            ->setCapacity($this->getFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
+            ->setRemainingEffort($this->getFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
+    }
+
+    private function getFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
+        $milestone_artifact = $milestone->getArtifact();
+        $field = $this->formelement_factory->getComputableFieldByNameForUser(
+            $milestone_artifact->getTracker()->getId(),
+            $field_name,
+            $user
+        );
+        if ($field) {
+            return $field->getComputedValue($user, $milestone_artifact);
+        }
+        return 0;
     }
 
     /**

@@ -108,6 +108,12 @@ class Planning_NoMilestone implements Planning_Milestone {
         
     }
 
-
+    public function getRemainingEffort() {
+        return null;
+    }
+    
+    public function getCapacity() {
+        return null;
+    }
 }
 ?>

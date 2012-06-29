@@ -71,7 +71,23 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      * @var array of Planning_Milestone
      */
     private $sub_milestones = array();
-    
+
+    /**
+     * The effort needed to complete the milestone. It's a numerical quantification
+     * of the workload.
+     *
+     * @var Float
+     */
+    private $remaining_effort = null;
+
+    /**
+     * The estimated workforce of the team for given milestone.
+     * It's set at the beginning of the Milestone and shall not change during its life.
+     *
+     * @var Float
+     */
+    private $capacity = null;
+
     /**
      * @param Project $project
      * @param Planning $planning
@@ -206,6 +222,34 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             $artifacts   = array_merge($artifacts, $artifact->getUniqueLinkedArtifacts($user));
             $this->addChildrenNodes($node, $artifacts, $user);
         }
+    }
+
+    public function getRemainingEffort() {
+        return $this->remaining_effort;
+    }
+
+    /**
+     * @param float $remaining_effort
+     * 
+     * @return Planning_ArtifactMilestone 
+     */
+    public function setRemainingEffort($remaining_effort) {
+        $this->remaining_effort = $remaining_effort;
+        return $this;
+    }
+
+    public function getCapacity() {
+        return $this->capacity;
+    }
+
+    /**
+     * @param float $capacity
+     * 
+     * @return Planning_ArtifactMilestone 
+     */
+    public function setCapacity($capacity) {
+        $this->capacity = $capacity;
+        return $this;
     }
 }
 

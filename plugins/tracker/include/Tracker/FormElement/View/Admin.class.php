@@ -46,6 +46,7 @@ class Tracker_FormElement_View_Admin {
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
         $html .= '</p>';
+        $html .= '<p>'.$this->formElement->getFactoryDescription().'</p>';
         return $html;
     }
     
@@ -53,7 +54,7 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
-
+        $html .= '<p>'.$this->formElement->getFactoryDescription().'</p>';
         $html .= '</p>';
         return $html;
     }

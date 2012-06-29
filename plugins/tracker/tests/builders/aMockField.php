@@ -23,6 +23,11 @@ class MockFieldBuilder {
         $this->field = mock('Tracker_FormElement_Field_SelectBox');
     }
     
+    public function withId($id) {
+        stub($this->field)->getId()->returns($id);
+        return $this;
+    }
+    
     public function withValueForChangesetId($value_id, $changeset_id) {
         $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
         

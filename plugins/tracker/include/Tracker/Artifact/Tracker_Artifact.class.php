@@ -655,6 +655,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (count($artlink_fields)) {
                     $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
+                    $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
                     $GLOBALS['Response']->sendStatusCode(400);
@@ -664,6 +665,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
+                } else {
+                    $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 }
                 break;
             case 'higher-priority-than':
@@ -1377,6 +1380,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             array(
                 'request'  => $request,
                 'artifact' => $this,
+            )
+        );
+    }
+
+    private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
+            array(
+                'artifact'             => $this,
+                'linked-artifact-id'   => $linked_artifact_id,
+                'request'              => $request,
+                'user'                 => $current_user,
+                'form_element_factory' => $this->getFormElementFactory(),
             )
         );
     }

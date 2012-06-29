@@ -270,5 +270,25 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function editLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
     }
+
+    public function canDisplayRemainingEffort() {
+        return $this->milestone->getRemainingEffort() !== null && $this->milestone->getCapacity() !== null;
+    }
+
+    public function getRemainingEffort() {
+        $remaining_effort = $this->milestone->getRemainingEffort() != null ? $this->milestone->getRemainingEffort() : 0;
+        $capacity         = $this->milestone->getCapacity() != null ? $this->milestone->getCapacity() : 0;
+
+        $html  = '';
+        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
+        $html .= '&nbsp;<span class="planning_remaining_effort">'.$remaining_effort.'</span>';
+        $html .= '&nbsp;/&nbsp;'.$capacity;
+        return $html;
+    }
+
+    public function isOverCapacity() {
+        return $this->canDisplayRemainingEffort() &&
+               $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
+    }
 }
 ?>
