@@ -33,6 +33,9 @@ class Cardwall_Swimline {
      */
     public $cells = array();
 
+    /**
+     * @var int
+     */
     public $swimline_id;
     
     /**

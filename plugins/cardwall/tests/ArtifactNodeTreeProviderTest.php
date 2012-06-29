@@ -22,6 +22,7 @@
 require_once dirname(__FILE__).'/../include/ArtifactNodeTreeProvider.class.php';
 require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
 require_once 'src/common/TreeNode/TreeNodeMapper.class.php';
+
 class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {

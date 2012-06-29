@@ -33,12 +33,22 @@ class TreeNodeMapper {
         $this->function = $function;
     }
     
+    /**
+     * @param TreeNode $node
+     * 
+     * @return TreeNode
+     */
     public function visit(TreeNode $node) {
         $new_node = $this->function->apply($node);
         $new_node->setChildren($this->applyToChildren($node));
         return $new_node;
     }
 
+    /**
+     * @param TreeNode $node
+     * 
+     * @return array of TreeNode
+     */
     private function applyToChildren(TreeNode $node) {
         $children = array();
         foreach ($node->getChildren() as $child) {
