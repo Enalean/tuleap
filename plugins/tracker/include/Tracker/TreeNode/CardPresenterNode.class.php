@@ -22,7 +22,7 @@
 /**
  * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
  */
-class Tracker_TreeNode_SpecializedNode extends TreeNode {
+class Tracker_TreeNode_NodeDuplicator extends TreeNode {
 
     public function __construct(TreeNode $node) {
         parent::__construct($node->getData(), $node->getId());
@@ -34,7 +34,7 @@ class Tracker_TreeNode_SpecializedNode extends TreeNode {
 /**
  * TreeNode containing a Tracker_CardPresenter
  */
-class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_SpecializedNode {
+class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_NodeDuplicator {
 
     /**
      * @var Tracker_CardPresenter

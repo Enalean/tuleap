@@ -25,7 +25,7 @@ require_once TRACKER_BASE_DIR.'/Tracker/TreeNode/CardPresenterNode.class.php';
 /**
  * A TreeNode holding a ColumnPresenter
  */
-class Cardwall_ColumnPresenterNode extends Tracker_TreeNode_SpecializedNode {
+class Cardwall_ColumnPresenterNode extends Tracker_TreeNode_NodeDuplicator {
 
     /** @var ColumnPresenter */
     private $presenter;
