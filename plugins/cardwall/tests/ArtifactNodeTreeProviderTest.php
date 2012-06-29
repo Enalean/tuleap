@@ -25,7 +25,7 @@ require_once 'src/common/TreeNode/TreeNodeMapper.class.php';
 class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
         
     public function itCreatesTwoLevelsEvenIfNoArtifactIdsAreGiven() {
-        $provider = new Cardwall_ArtifactNodeTreeProvider();
+        $provider  = new Cardwall_ArtifactNodeTreeProvider();
         
         $root_node = $provider->wrapInAThreeLevelArtifactTree(array());
         
@@ -35,18 +35,18 @@ class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {
     }
     
     public function itCreatesAThreeLevelTreeBecauseItMustLookLikeTheNodeTreeFromAMilestone() {
-        $provider = new Cardwall_ArtifactNodeTreeProvider();
-        
+        $provider  = new Cardwall_ArtifactNodeTreeProvider();
         $artifact4 = aMockArtifact()->withId(4)->build();
         
         $root_node = $provider->wrapInAThreeLevelArtifactTree(array(new ArtifactNode($artifact4)));
+
         $this->assertTrue($root_node->hasChildren());
         $this->assertTrue($root_node->getChild(0)->hasChildren());
         $cards = $root_node->getChild(0)->getChildren();
 
         $this->assertEqual(1, count($cards));
         $card = $cards[0];
-        $id = $card->getId();
+        $id   = $card->getId();
         $this->assertEqual($id, 4);
         $artifact = $card->getArtifact();
         $this->assertIdentical($artifact, $artifact4);
