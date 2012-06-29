@@ -28,89 +28,66 @@ class ColumnPresenterCallbackTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $field = mock('Tracker_FormElement_Field_MultiselectBox');
-        $artifact = mock('Tracker_Artifact');
-
-        $field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
-        $this->callback = new ColumnPresenterCallback($field_retriever, new Cardwall_MappingCollection());
         
-        $this->node     = aNode()->withId(4444)->build();
-        $presenter =  stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
-        $this->presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
+        $this->field_id = 77777;
+        $this->field    = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns($this->field_id);
+        $this->artifact = mock('Tracker_Artifact');
+        
+        $this->node                 = aNode()->withId(4444)->build();
+        $this->card_presenter       = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
+        $this->card_presenter_node  = new Tracker_TreeNode_CardPresenterNode($this->node, $this->card_presenter);
+        
+        $this->field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
+        $this->callback        = new ColumnPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
     }
     
     public function itJustClonesTheNodeIfItIsNotAPresenterNode() {
-        $result = $this->callback->apply($this->node);
-        $this->assertIdentical($this->node, $result);
+        $column_presenter_node = $this->callback->apply($this->node);
+        $this->assertIdentical($this->node, $column_presenter_node);
     }
     
     public function itCreatesAColumnPresenterNode() {
-        $result = $this->callback->apply($this->presenter_node);
-        $this->assertIsA($result, 'Cardwall_ColumnPresenterNode');
+        $column_presenter_node = $this->callback->apply($this->card_presenter_node);
+        $this->assertIsA($column_presenter_node, 'Cardwall_ColumnPresenterNode');
     }
     
     public function itHasTheSameIdAsTheGivenNode() {
-        $result = $this->callback->apply($this->presenter_node);
-        $this->assertEqual($this->node->getId(), $result->getId());
+        $column_presenter_node = $this->callback->apply($this->card_presenter_node);
+        $this->assertEqual($this->node->getId(), $column_presenter_node->getId());
     }
     
     public function itHasAColumnPresenterWithASemanticStatusFieldId() {
-        $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
+        $column_presenter_callback = new ColumnPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
+        $column_presenter_node     = $column_presenter_callback->apply($this->card_presenter_node);
         
-        $artifact = mock('Tracker_Artifact');
-        $artifact_field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
-        
-        $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
-        $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
-
-        $this->callback = new ColumnPresenterCallback($artifact_field_retriever, new Cardwall_MappingCollection());
-        $result = $this->callback->apply($presenter_node);
-    
-        $expected_presenter = new ColumnPresenter($presenter, 77777);
-        
-        $this->assertIdentical($expected_presenter, $result->getColumnPresenter());
+        $this->assertIdentical($column_presenter_node->getColumnPresenter(),
+                               new ColumnPresenter($this->card_presenter, $this->field_id));
     }
     
     public function itHasAColumnPresenterWithSwimLineId() {
-        $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
-        
-        $artifact = mock('Tracker_Artifact');
-        $artifact_field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
-        
-        $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
-        $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
-        $parent_node        = new TreeNode();
-        $parent_node->addChild($presenter_node);
+        $parent_node = new TreeNode();
+        $parent_node->addChild($this->card_presenter_node);
 
         $mapping_collection = new Cardwall_MappingCollection();
         
-        $this->callback = new ColumnPresenterCallback($artifact_field_retriever, $mapping_collection);
-        $result = $this->callback->apply($presenter_node);
-    
-        $expected_presenter = new ColumnPresenter($presenter, 77777, $parent_node->getId());
+        $column_presenter_callback = new ColumnPresenterCallback($this->field_retriever, $mapping_collection);
+        $column_presenter_node     = $column_presenter_callback->apply($this->card_presenter_node);
         
-        $this->assertEqual($expected_presenter, $result->getColumnPresenter());  
+        $this->assertEqual($column_presenter_node->getColumnPresenter(),
+                           new ColumnPresenter($this->card_presenter, $this->field_id, $parent_node->getId()));
     }
     
     public function itHasAColumnPresenterWithSwimLineValueCollection() {
-        $field = stub('Tracker_FormElement_Field_MultiselectBox')->getId()->returns(77777);
-        
-        $artifact = mock('Tracker_Artifact');
-        $artifact_field_retriever = stub('Tracker_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
-        
-        $presenter = stub('Cardwall_CardPresenter')->getArtifact()->returns($artifact);
-        $presenter_node     = new Tracker_TreeNode_CardPresenterNode($this->node, $presenter);
-        $parent_node        = new TreeNode();
-        $parent_node->addChild($presenter_node);
+        $parent_node = new TreeNode();
+        $parent_node->addChild($this->card_presenter_node);
 
-        $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues(77777)->returns(array(123, 456));
+        $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues($this->field_id)->returns(array(123, 456));
         
-        $this->callback = new ColumnPresenterCallback($artifact_field_retriever, $mapping_collection);
-        $result = $this->callback->apply($presenter_node);
-    
-        $expected_presenter = new ColumnPresenter($presenter, 77777, $parent_node->getId(), array(123, 456));
+        $column_presenter_callback = new ColumnPresenterCallback($this->field_retriever, $mapping_collection);
+        $column_presenter_node     = $column_presenter_callback->apply($this->card_presenter_node);
         
-        $this->assertEqual($expected_presenter, $result->getColumnPresenter());  
+        $this->assertEqual($column_presenter_node->getColumnPresenter(),
+                           new ColumnPresenter($this->card_presenter, $this->field_id, $parent_node->getId(), array(123, 456)));
     }
 }
 
