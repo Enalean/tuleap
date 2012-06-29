@@ -35,15 +35,9 @@ class Cardwall_BoardFactory {
         $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
         $mapping_collection = $column_factory->getMappings($acc_field_provider->accumulateStatusFields($forests_of_artifacts));
         
-        // get presenters
         $forests_of_column_presenters = $this->transformIntoForestOfColumnPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
-        
-        // get columns
-        $columns   = $column_factory->getColumns();
-        
-        // get swimlines
-        $swimline_factory = new Cardwall_SwimlineFactory();
-        $swimlines = $swimline_factory->getSwimlines($columns, $forests_of_column_presenters->getChildren());
+        $columns                      = $column_factory->getColumns();
+        $swimlines                    = $this->getSwimlines($columns, $forests_of_column_presenters);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
 
@@ -54,6 +48,11 @@ class Cardwall_BoardFactory {
         $card_presenter_visitor     = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $forests_of_card_presenters = $forests_of_artifacts->accept($card_presenter_visitor);
         return $forests_of_card_presenters->accept($column_id_visitor);
+    }
+
+    private function getSwimlines(array $columns, TreeNode $forests_of_column_presenters) {
+        $swimline_factory = new Cardwall_SwimlineFactory();
+        return $swimline_factory->getSwimlines($columns, $forests_of_column_presenters->getChildren());
     }
 }
 ?>
