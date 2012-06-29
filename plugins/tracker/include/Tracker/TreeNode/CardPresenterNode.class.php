@@ -20,7 +20,7 @@
  */
 
 /**
- * TreeNode containing a Tracker_CardPresenter
+ * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
  */
 class Tracker_TreeNode_SpecializedNode extends TreeNode {
 
