@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php'
 
 class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
     
-    public function itIntegrates() {
+    public function itIntegratesWithThe_ArtifactNodeTreeProvider() {
         $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
         $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
         $artifact_factory = mock('Tracker_ArtifactFactory');
