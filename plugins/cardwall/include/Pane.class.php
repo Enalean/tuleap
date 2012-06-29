@@ -83,7 +83,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $board_factory      = new Cardwall_BoardFactory();
         $planned_artifacts  = $this->milestone->getPlannedArtifacts();
 
-        $field_retriever    = new Tracker_Artifact_Semantic_Status_Field_Retriever();
+        $field_retriever    = new Tracker_Artifact_SemanticStatusFieldRetriever();
 
         $board              = $board_factory->getBoard($field_retriever, $field, $planned_artifacts);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();

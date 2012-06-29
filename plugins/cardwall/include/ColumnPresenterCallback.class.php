@@ -64,35 +64,5 @@ class ColumnPresenterCallback implements TreeNodeCallback {
     
 }
 
-class Tracker_Artifact_Semantic_Status_Field_Retriever implements Tracker_IProvideFieldGivenAnArtifact {
-
-    /**
-     * @return Tracker_FormElement_Field_Selectbox
-     */
-    public function getField(Tracker_Artifact $artifact) {
-        $tracker = $artifact->getTracker();
-        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-    }
-}
-
-class Tracker_Artifact_Custom_Field_Retriever implements Tracker_IProvideFieldGivenAnArtifact {
-
-    /**
-     * @var Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
-
-    public function __construct(Tracker_FormElement_Field_Selectbox $field) {
-        $this->field = $field;
-    }
-
-    /**
-     * @param Tracker_Artifact $artifact is ignored!
-     * @return Tracker_FormElement_Field_Selectbox
-     */
-    public function getField(Tracker_Artifact $artifact) {
-        return $this->field;
-    }
-}
 
 ?>

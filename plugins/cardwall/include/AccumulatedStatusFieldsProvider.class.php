@@ -43,7 +43,7 @@ class Cardwall_AccumulatedStatusFieldsProvider {
         
     }
     private function getIndexedStatusFieldsOf(array $artifacts) {
-        $status_field_retriever = new Tracker_Artifact_Semantic_Status_Field_Retriever();
+        $status_field_retriever = new Tracker_Artifact_SemanticStatusFieldRetriever();
         $status_fields = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
         $indexed_status_fields = $this->indexById($status_fields);
         return $indexed_status_fields;
