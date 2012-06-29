@@ -19,9 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Retrieves the semantic status field of the given artifact
+ */
 class Cardwall_FieldRetrievers_SemanticStatusFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
 
     /**
+     * Retrieves the semantic status field of the given artifact
+     * 
      * @return Tracker_FormElement_Field_Selectbox
      */
     public function getField(Tracker_Artifact $artifact) {

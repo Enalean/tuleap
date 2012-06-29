@@ -19,7 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+/**
+ * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
+ */
 interface Tracker_IProvideFieldGivenAnArtifact {
     
     function getField(Tracker_Artifact $artifact);

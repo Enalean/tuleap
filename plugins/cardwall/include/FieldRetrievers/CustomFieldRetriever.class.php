@@ -19,7 +19,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+/**
+ * Returns the field fixed in the constructor no matter what artifact is given
+ * 
+ * @see Tracker_IProvideFieldGivenAnArtifact
+ */
 class Cardwall_FieldRetrievers_CustomFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
 
     /**
@@ -33,6 +37,7 @@ class Cardwall_FieldRetrievers_CustomFieldRetriever implements Tracker_IProvideF
 
     /**
      * @param Tracker_Artifact $artifact is ignored!
+     * 
      * @return Tracker_FormElement_Field_Selectbox
      */
     public function getField(Tracker_Artifact $artifact) {
