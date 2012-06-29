@@ -19,6 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../tracker/include/constants.php';
+require_once TRACKER_BASE_DIR.'/Tracker/TreeNode/CardPresenterNode.class.php';
+
 /**
  * A TreeNode holding a ColumnPresenter
  */

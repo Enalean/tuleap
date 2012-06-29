@@ -21,7 +21,9 @@
 
 require_once 'ColumnPresenter.class.php';
 require_once 'ColumnPresenterNode.class.php';
+require_once 'MappingCollection.class.php';
 require_once dirname(__FILE__).'/../../tracker/include/Tracker/IProvideFieldGivenAnArtifact.class.php';
+require_once 'common/TreeNode/TreeNodeCallback.class.php';
 
 class ColumnPresenterCallback implements TreeNodeCallback {
 

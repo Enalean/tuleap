@@ -20,6 +20,9 @@
  */
 
 require_once dirname(__FILE__).'/../include/ColumnPresenterCallback.class.php';
+require_once dirname(__FILE__).'/../include/CardPresenter.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aTreeNode.php';
 
 class ColumnPresenterCallbackTest extends TuleapTestCase {
     
