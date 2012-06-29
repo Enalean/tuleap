@@ -28,7 +28,7 @@ require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'AccumulatedStatusFieldsProvider.class.php';
-require_once 'CustomFieldRetriever.class.php';
+require_once 'FieldRetrievers/CustomFieldRetriever.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
@@ -139,7 +139,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $field              = $this->getField();
         $board_factory      = new Cardwall_BoardFactory();
 
-        $field_retriever    = new Cardwall_CustomFieldRetriever($field);
+        $field_retriever    = new Cardwall_FieldRetrievers_CustomFieldRetriever($field);
         
         $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts);
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;

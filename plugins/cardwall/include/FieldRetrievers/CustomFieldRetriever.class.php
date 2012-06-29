@@ -20,7 +20,7 @@
  */
 
 
-class Cardwall_CustomFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
+class Cardwall_FieldRetrievers_CustomFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
 
     /**
      * @var Tracker_FormElement_Field_Selectbox

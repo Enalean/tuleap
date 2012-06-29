@@ -20,7 +20,7 @@
 
 require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
 require_once 'ColumnPresenterCallback.class.php';
-require_once 'SemanticStatusFieldRetriever.class.php';
+require_once 'FieldRetrievers/SemanticStatusFieldRetriever.class.php';
 
 /**
  * Foreach artifact in a TreeNode, inject the id of the field used for the columns
@@ -45,7 +45,7 @@ class Cardwall_AccumulatedStatusFieldsProvider {
         
     }
     private function getIndexedStatusFieldsOf(array $artifacts) {
-        $status_field_retriever = new Cardwall_SemanticStatusFieldRetriever();
+        $status_field_retriever = new Cardwall_FieldRetrievers_SemanticStatusFieldRetriever();
         $status_fields = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
         $indexed_status_fields = $this->indexById($status_fields);
         return $indexed_status_fields;
