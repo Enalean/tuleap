@@ -153,7 +153,7 @@ echo '</td></tr>';
 
 //{{{ Distributed architecture
 if (in_array($service['short_name'], array('file', 'svn'))) {
-    $sf =& new ServerFactory();
+    $sf = new ServerFactory();
     $servers = $sf->getAllServers();
     if ($servers && count($servers) > 1) {
         echo '<tr><td colspan="2"><b>Server</b></tr>';

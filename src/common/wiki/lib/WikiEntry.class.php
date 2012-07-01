@@ -166,7 +166,7 @@ class WikiEntry {
 
         $weArray = array();
         while($row = db_fetch_array($res)) {
-            $we =& new WikiEntry();
+            $we = new WikiEntry();
             $we->setFromRow($row);
             $weArray[] =& $we;
             unset($we);

@@ -453,7 +453,7 @@ class ArtifactHtml extends Artifact {
                         $field_value = $this->getValue($field->getName());
                 }
                 
-                $field_html  =& new ArtifactFieldHtml($field);
+                $field_html  = new ArtifactFieldHtml($field);
                 $label       = $field_html->labelDisplay(false,false,!$read_only);
                 $label      .= ($field->isEmptyOk() ? '':'<span class="highlight"><big>*</big></b></span>');
                 

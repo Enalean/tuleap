@@ -66,8 +66,8 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	}
 
 	print "\t<TABLE width=100% cellpadding=0 cellspacing=0 border=0>";
-        $frspf =& new FRSPackageFactory();
-        $frsrf =& new FRSReleaseFactory();
+        $frspf = new FRSPackageFactory();
+        $frsrf = new FRSReleaseFactory();
 	for ($i=0; $i<$rows; $i++) {
 	  $row_new = db_fetch_array($res_new);
 	  // avoid dupulicates of different file types
