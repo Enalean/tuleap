@@ -9,12 +9,21 @@
 require_once('pre.php');
 require('../snippet/snippet_utils.php');
 
+$by = "unknown";
+if(isset($_GET['by'])) {
+  $by = $_GET['by'];
+}
 
 snippet_header(array('title'=>$Language->getText('snippet_browse','s_library'), 
 		     'header'=>$Language->getText('snippet_browse','s_browsing'),
 		     'help' => 'TheMainMenu.html#CodeSnippetBrowsing'));
 
 if ($by=='lang') {
+
+  $lang = "unknown";
+  if(isset($_GET['lang'])) {
+    $lang = $_GET['lang'];
+  }
 
 	$sql="SELECT user.user_name,snippet.description,snippet.snippet_id,snippet.name ".
 		"FROM snippet,user ".
@@ -27,6 +36,11 @@ if ($by=='lang') {
 	echo '<H2>'.$Language->getText('snippet_browse','s_by_lang',snippet_data_get_language_from_id($lang)).'</H2>';
 
 } else if ($by=='cat') {
+
+  $cat = "unknown";
+  if(isset($_GET['cat'])) {
+    $cat = $_GET['cat'];
+  }
 
 	$sql="SELECT user.user_name,snippet.description,snippet.snippet_id,snippet.name ".
 		"FROM snippet,user ".
