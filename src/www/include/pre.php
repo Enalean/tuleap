@@ -271,7 +271,7 @@ if (!IS_SCRIPT) {
     require_once('common/include/URLVerificationFactory.class.php');
     $urlVerifFactory = new URLVerificationFactory();
     $urlVerif = $urlVerifFactory->getURLVerification($_SERVER);
-    //$urlVerif->assertValidUrl($_SERVER);
+    $urlVerif->assertValidUrl($_SERVER);
 }
 
 require_once('common/include/URL.class.php');
