@@ -21,19 +21,19 @@ if (!isset($legal_acceptance )) $legal_acceptance="unknown";
 $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name']))));
 
 
-    if ($legal_acceptance == 'ACCEPT') {
+    if (isset($_POST['legal_acceptance']) && ($_POST['legal_acceptance'] == 'ACCEPT')) {
 
 	license_accepted();
 	echo license_msg_accepted();
 
-    } else if ($legal_acceptance == 'DECLINE') {
+    } else if (isset($_POST['legal_acceptance']) && ($_POST['legal_acceptance'] == 'DECLINE')) {
 
 	license_declined();
 	echo '<p><span class="highlight">'.license_msg_declined().'</span></p>';
 
     } else {
 
-        echo '<FORM ACTION="'.$PHP_SELF.'" METHOD="POST" name="license_form">'.
+        echo '<FORM ACTION="'.$_SERVER['PHP_SELF'].'" METHOD="POST" name="license_form">'.
 	    "\n<table><tr><td>\n";
 
 	// Preamble
