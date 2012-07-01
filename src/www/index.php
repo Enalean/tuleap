@@ -6,6 +6,9 @@
 //
 // 
 
+error_reporting(E_ALL);
+ini_set('display_errors', True);
+
 require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');

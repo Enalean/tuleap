@@ -53,7 +53,7 @@ class ArtifactRuleFactory {
     function &instance() {
         static $_artifactrulefactory_instance;
         if (!$_artifactrulefactory_instance) {
-            $rules_dao         =& new ArtifactRuleDao(CodendiDataAccess::instance());
+            $rules_dao         = new ArtifactRuleDao(CodendiDataAccess::instance());
             $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;
@@ -92,16 +92,16 @@ class ArtifactRuleFactory {
         //We create Rule
         switch ($data['rule_type']) {
             case $this->RULETYPE_HIDDEN:
-                $rule =& new ArtifactRuleHidden($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
+                $rule = new ArtifactRuleHidden($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
                 break;
             case $this->RULETYPE_DISABLED:
-                $rule =& new ArtifactRuleDisabled($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
+                $rule = new ArtifactRuleDisabled($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
                 break;
             case $this->RULETYPE_MANDATORY:
-                $rule =& new ArtifactRuleMandatory($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
+                $rule = new ArtifactRuleMandatory($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
                 break;
             default: //RULETYPE_VALUE
-                $rule =& new ArtifactRuleValue($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
+                $rule = new ArtifactRuleValue($data['id'], $data['group_artifact_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
                 break;
         }
         return $rule;
