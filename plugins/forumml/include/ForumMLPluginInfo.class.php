@@ -47,7 +47,7 @@ class ForumMLPluginInfo extends PluginInfo {
                 {
                     $value = $variable['value'];
                 }
-                $descriptor =& new PropertyDescriptor($key, $value);
+                $descriptor = new PropertyDescriptor($key, $value);
                 $this->_addPropertyDescriptor($descriptor);
             }
         }	
