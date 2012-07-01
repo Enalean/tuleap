@@ -16,17 +16,20 @@ if (!(user_isloggedin() && user_is_super_user())) {
     exit_error('ERROR',$Language->getText('admin_approve_license', 'error'));
 }
 
-if (!isset($legal_acceptance )) $legal_acceptance="unknown";
+$legal_acceptance="unknown";
+if (isset($_POST['legal_acceptance'])) {
+    $legal_acceptance = $_POST['legal_acceptance'];
+} 
 
 $HTML->header(array('title'=>$Language->getText('admin_approve_license', 'title',array($GLOBALS['sys_name']))));
 
 
-    if (isset($_POST['legal_acceptance']) && ($_POST['legal_acceptance'] == 'ACCEPT')) {
+    if ($legal_acceptance == 'ACCEPT') {
 
 	license_accepted();
 	echo license_msg_accepted();
 
-    } else if (isset($_POST['legal_acceptance']) && ($_POST['legal_acceptance'] == 'DECLINE')) {
+    } else if ($legal_acceptance == 'DECLINE') {
 
 	license_declined();
 	echo '<p><span class="highlight">'.license_msg_declined().'</span></p>';
