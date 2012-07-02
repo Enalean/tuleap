@@ -33,7 +33,8 @@ class Cardwall_BoardFactory {
     public function getBoard($field_retriever, $field, $forests_of_artifacts) {
         $column_factory     = new Cardwall_ColumnFactory($field);
         $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
-        $mapping_collection = $column_factory->getMappings($acc_field_provider->accumulateStatusFields($forests_of_artifacts));
+        $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
+        $mapping_collection = $column_factory->getMappings($status_fields);
         
         $forests_of_column_presenters = $this->transformIntoForestOfColumnPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
         $columns                      = $column_factory->getColumns();

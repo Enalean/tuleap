@@ -28,7 +28,7 @@ require_once 'FieldRetrievers/SemanticStatusFieldRetriever.class.php';
  */
 class Cardwall_AccumulatedStatusFieldsProvider {
 
-    public function accumulateStatusFields(TreeNode $node) {
+    public function extractAndIndexStatusFields(TreeNode $node) {
         $artifacts = $this->getArtifactsOutOfTree($node);
         return $this->getIndexedStatusFieldsOf($artifacts);
     }
