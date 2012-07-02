@@ -20,7 +20,7 @@
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'BoardFactory.class.php';
-require_once 'PaneContentPresenter.class.php';
+require_once 'BoardView.class.php';
 require_once 'QrCode.class.php';
 require_once 'InjectColumnIdVisitor.class.php';
 require_once 'ArtifactTreeNodeVisitor.class.php';
@@ -68,23 +68,22 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         if (! $field) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
         }
-        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         
-        return $renderer->renderToString('agiledashboard-pane', $this->getPresenter($field));
+        return $this->getView($field)->renderToString();
     }
 
     /**
      * @return Cardwall_PaneContentPresenter
      */
-    private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
+    private function getView(Tracker_FormElement_Field_Selectbox $field = null) {
         $board_factory      = new Cardwall_BoardFactory();
         $pa                 = $this->milestone->getPlannedArtifacts();
         Cardwall_ArtifactTreeNodeVisitor::build()->visit($pa);
         $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $pa, $field);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
-
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title);
+        
+        return new BoardView($board, $this->getQrCode(), $redirect_parameter, $backlog_title);
     }
 
     /**

@@ -17,17 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once TRACKER_BASE_DIR .'/Tracker/CardPresenter.class.php';
 
-class Cardwall_CardPresenter implements Tracker_CardPresenter{
+require_once 'TemplateView.class.php';
 
-    /**
-     * @var Tracker_Artifact
-     */
-    public $artifact;
-
-    public function __construct(Tracker_Artifact $artifact) {
+class Cardwall_CardActionsView extends TemplateView {
+    
+    private $artifact;
+    
+    public function __construct(Tracker_Artifact $artifact, View $parent_view) {
+        parent::__construct('card_actions', $parent_view);
         $this->artifact = $artifact;
+        $this->planning_redirect_parameter = $parent_view->planning_redirect_parameter;
     }
 
     /**
