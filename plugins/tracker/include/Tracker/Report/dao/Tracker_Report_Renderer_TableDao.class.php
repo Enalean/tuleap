@@ -52,16 +52,6 @@ class Tracker_Report_Renderer_TableDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function saveas($renderer_id, $chunksz, $multisort) {
-        $renderer_id = $this->da->escapeInt($renderer_id);
-        $chunksz     = $this->da->escapeInt($chunksz);
-        $multisort   = $multisort ? 1 : 0;
-        $sql = "INSERT INTO $this->table_name
-                (renderer_id, chunksz, multisort)
-                VALUES ($renderer_id, $chunksz, $multisort)";
-        return $this->update($sql);
-    }
-    
     function delete($renderer_id) {
         $sql = "DELETE FROM $this->table_name WHERE renderer_id = ". $this->da->escapeInt($renderer_id);
         return $this->update($sql);

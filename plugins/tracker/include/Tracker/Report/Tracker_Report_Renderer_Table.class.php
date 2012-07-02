@@ -1658,7 +1658,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     protected function saveRendererProperties ($renderer_id) {
         $dao = new Tracker_Report_Renderer_TableDao();
         if (!$dao->searchByRendererId($renderer_id)->getRow()) {
-            $dao->saveas($renderer_id, $this->chunksz, $this->multisort);
+            $dao->create($renderer_id, $this->chunksz);
         }
         $dao->save($renderer_id, $this->chunksz, $this->multisort);
     }
