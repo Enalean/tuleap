@@ -37,6 +37,7 @@ class AgileDashboardPlugin extends Plugin {
         if (defined('TRACKER_BASE_URL')) {
             require_once 'constants.php';
             $this->_addHook('cssfile', 'cssfile', false);
+            $this->_addHook(Event::JAVASCRIPT, 'javascript', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
@@ -137,6 +138,11 @@ class AgileDashboardPlugin extends Plugin {
                 $this->getPluginPath().'/js/planning-view.js',
             )
         );
+    }
+    
+    public function javascript($params) {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'agiledashboard');
+        echo PHP_EOL;
     }
     
     public function process(Codendi_Request $request) {
