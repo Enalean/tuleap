@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'NodeDuplicator.class.php';
+require_once 'common/TreeNode/NodeDuplicator.class.php';
 
 /**
  * TreeNode containing a Tracker_CardPresenter
  */
-class Tracker_TreeNode_CardPresenterNode extends Tracker_TreeNode_NodeDuplicator {
+class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator {
 
     /**
      * @var Tracker_CardPresenter

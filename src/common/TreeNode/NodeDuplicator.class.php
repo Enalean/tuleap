@@ -24,7 +24,7 @@ require_once 'common/TreeNode/TreeNode.class.php';
 /**
  * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
  */
-abstract class Tracker_TreeNode_NodeDuplicator extends TreeNode {
+abstract class NodeDuplicator extends TreeNode {
 
     public function __construct(TreeNode $node) {
         parent::__construct($node->getData(), $node->getId());

@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_TreeNode_NodeDuplicatorContract extends TuleapTestCase {
+abstract class NodeDuplicatorContract extends TuleapTestCase {
     
     public function itCopiesAllPropertiesOfTheGivenNode() {
         $tree_node      = aNode()->withId(3)

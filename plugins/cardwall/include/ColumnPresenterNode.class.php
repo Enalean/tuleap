@@ -20,12 +20,12 @@
  */
 
 require_once dirname(__FILE__).'/../../tracker/include/constants.php';
-require_once TRACKER_BASE_DIR.'/Tracker/TreeNode/CardPresenterNode.class.php';
+require_once 'common/TreeNode/NodeDuplicator.class.php';
 
 /**
  * A TreeNode holding a ColumnPresenter
  */
-class Cardwall_ColumnPresenterNode extends Tracker_TreeNode_NodeDuplicator {
+class Cardwall_ColumnPresenterNode extends NodeDuplicator {
 
     /** @var ColumnPresenter */
     private $presenter;
