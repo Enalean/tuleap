@@ -27,7 +27,6 @@ require_once 'ArtifactNodeTreeProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
-require_once 'AccumulatedStatusFieldsProvider.class.php';
 require_once 'FieldRetrievers/CustomFieldRetriever.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';

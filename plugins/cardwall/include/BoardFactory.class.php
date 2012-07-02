@@ -21,6 +21,7 @@
 require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'Board.class.php';
+require_once 'StatusFieldsExtractor.class.php';
 
 /**
  * Builds Board given artifacts (for swimlines/cards) and a field (for columns)
@@ -32,7 +33,7 @@ class Cardwall_BoardFactory {
      */
     public function getBoard($field_retriever, $field, $forests_of_artifacts) {
         $column_factory     = new Cardwall_ColumnFactory($field);
-        $acc_field_provider = new Cardwall_AccumulatedStatusFieldsProvider();
+        $acc_field_provider = new Cardwall_StatusFieldsExtractor();
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         $mapping_collection = $column_factory->getMappings($status_fields);
         

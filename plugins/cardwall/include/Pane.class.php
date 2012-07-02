@@ -24,7 +24,6 @@ require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
-require_once 'AccumulatedStatusFieldsProvider.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
 require_once 'ColumnPresenterCallback.class.php';
 
