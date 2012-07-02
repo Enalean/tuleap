@@ -37,18 +37,18 @@ class Cardwall_StatusFieldsExtractor {
         $artifacts = array();
         $flat_nodes = $root_node->flatten();
         foreach ($flat_nodes as $node) {
-            $this->appendIfCardPresenterNode($artifacts, $node);
+            $this->appendIfArtifactNode($artifacts, $node);
         }
         return $artifacts;
         
     }
 
-    private function appendIfCardPresenterNode(array &$artifacts, TreeNode $node) {
-        if ($node instanceof Tracker_TreeNode_CardPresenterNode) {
-            $artifacts[] = $node->getCardPresenter()->getArtifact();
+    private function appendIfArtifactNode(array &$artifacts, TreeNode $node) {
+        if ($node instanceof ArtifactNode) {
+            $artifacts[] = $node->getArtifact();
         }
     }
-        
+                
     private function getIndexedStatusFieldsOf(array $artifacts) {
         $status_field_retriever = new Cardwall_FieldRetrievers_SemanticStatusFieldRetriever();
         $status_fields = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
