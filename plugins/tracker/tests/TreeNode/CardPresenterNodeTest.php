@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/bui
 require_once dirname(__FILE__).'/../../include/Tracker/TreeNode/CardPresenterNode.class.php';
 require_once dirname(__FILE__).'/../../include/Tracker/CardPresenter.class.php';
 require_once dirname(__FILE__).'/../builders/aMockArtifact.php';
-require_once 'NodeDuplicatorTest.php';
+require_once 'NodeDuplicatorContract.php';
 
 class Tracker_TreeNode_CardPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorContract {
     

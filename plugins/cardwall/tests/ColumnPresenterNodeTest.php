@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../tracker/tests/TreeNode/NodeDuplicatorTest.php';
+require_once dirname(__FILE__).'/../../tracker/tests/TreeNode/NodeDuplicatorContract.php';
 require_once dirname(__FILE__).'/../include/ColumnPresenter.class.php';
 
 class Cardwall_ColumnPresenterNodeTest extends Tracker_TreeNode_NodeDuplicatorContract {
