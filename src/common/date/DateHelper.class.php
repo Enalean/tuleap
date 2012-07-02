@@ -125,6 +125,8 @@ class DateHelper {
 
     /**
      * Decide whetehr a distance in days respects a period
+     * Example: if the period is 3 the method should return true only for distances
+     * that are multiples of 3 like: 3, 6, 9, 27, 501
      *
      * @param Integer $distance Distance in days
      * @param Integer $period   Period to respect
@@ -136,4 +138,5 @@ class DateHelper {
     }
 
 }
+
 ?>
