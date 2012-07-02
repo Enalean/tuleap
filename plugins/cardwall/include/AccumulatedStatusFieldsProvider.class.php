@@ -23,7 +23,8 @@ require_once 'ColumnPresenterCallback.class.php';
 require_once 'FieldRetrievers/SemanticStatusFieldRetriever.class.php';
 
 /**
- * Foreach artifact in a TreeNode, inject the id of the field used for the columns
+ * Foreach artifact in a TreeNode tree, make a collection of the semantic status fields and
+ * index them by their id
  */
 class Cardwall_AccumulatedStatusFieldsProvider {
 

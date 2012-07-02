@@ -25,6 +25,9 @@ require_once 'MappingCollection.class.php';
 require_once dirname(__FILE__).'/../../tracker/include/Tracker/IProvideFieldGivenAnArtifact.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
 
+/**
+ * Create a Cardwall_ColumnPresnterNode given a Tracker_TreeNode_CardPresenterNode
+ */
 class ColumnPresenterCallback implements TreeNodeCallback {
 
     /**
@@ -43,6 +46,9 @@ class ColumnPresenterCallback implements TreeNodeCallback {
         $this->mappings        = $mappings;
     }
     
+    /**
+     * @see TreeNodeCallback and class comment
+     */
     public function apply(TreeNode $node) {
         if (!$node instanceof Tracker_TreeNode_CardPresenterNode) {
             return clone $node;
