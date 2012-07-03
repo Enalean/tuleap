@@ -42,7 +42,11 @@ class Docman_ApprovalTableReminder {
         $tables = array();
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                $table = new Docman_ApprovalTableItem();
+                if ($row['item_id']) {
+                    $table = new Docman_ApprovalTableItem();
+                } else {
+                    $table = new Docman_ApprovalTableFile();
+                }
                 $table->initFromRow($row);
                 $distance = DateHelper::dateDiffInDays($table->getDate(), $_SERVER['REQUEST_TIME']);
                 if ($distance > 0 && DateHelper::isPeriodicallyDistant($distance, $table->getNotificationOccurence())) {
@@ -128,13 +132,20 @@ class Docman_ApprovalTableReminder {
      * @return Boolean
      */
     private function notifyIndividual(Docman_ApprovalTable $table, $reviewerId) {
-        $hp            = Codendi_HTMLPurifier::instance();
-
+        $hp       = Codendi_HTMLPurifier::instance();
         $um       = UserManager::instance();
         $reviewer = $um->getUserById($reviewerId);
 
+        
+        if ($table instanceof Docman_ApprovalTableFile) {
+            $versionFactory = new Docman_VersionFactory();
+            $version        = $versionFactory->getSpecificVersionById($table->getVersionId(), 'plugin_docman_version');
+            $itemId         = $version->getItemId();
+        } else {
+            $itemId = $table->getItemId();
+        }
         $itemFactory = new Docman_ItemFactory();
-        $docmanItem  = $itemFactory->getItemFromDb($table->getItemId());
+        $docmanItem  = $itemFactory->getItemFromDb($itemId);
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
 
         $mailMgr   = new MailManager();
