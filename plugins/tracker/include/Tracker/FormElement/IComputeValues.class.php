@@ -31,7 +31,7 @@ interface Tracker_FormElement_IComputeValues {
      *
      * @return float
      */
-    public function getComputedValue(User $user, Tracker_Artifact $artifact);
+    public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null);
 }
 
 ?>

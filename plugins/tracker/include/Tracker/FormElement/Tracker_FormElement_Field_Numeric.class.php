@@ -49,7 +49,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      *
      * @return float
      */
-    public function getComputedValue(User $user, Tracker_Artifact $artifact) {
+    public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null) {
         $value = $artifact->getValue($this);
         if ($value) {
             return $value->getValue();
