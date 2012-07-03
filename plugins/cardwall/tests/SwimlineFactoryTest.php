@@ -36,6 +36,32 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical(array(), $swimlines);
     }
     
+    public function itReturnsANestedArrayOfPresenterNodesIfThereAreColumnsButNoNodes() {
+        $factory = new Cardwall_SwimlineFactory();
+        $id = $label = $bgcolor = $fgcolor = 0;
+        $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
+        $nodes   = array();
+        $swimlines = $factory->getCellsOfSwimline($columns, $nodes);
+        var_dump($swimlines);
+        $expected = array(
+                        array('presenter_nodes' => array()));
+        $this->assertIdentical($expected, $swimlines);
+    }
+    
+    public function itReturnsANestedArrayOfPresenterNodes() {
+        $factory = new Cardwall_SwimlineFactory();
+        $label   = 'ongoing';
+        $id = $bgcolor = $fgcolor = 0;
+        $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
+        $artifact = stub('Tracker_Artifact')->getStatus()->returns($label);
+        $node     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact);
+        
+        $swimlines = $factory->getCellsOfSwimline($columns, array($node));
+        $expected = array(
+                        array('presenter_nodes' => array($node)));
+        $this->assertIdentical($expected, $swimlines);
+    }
+    
     
     
     public function whatAboutIfThereAreNoNodes() {
