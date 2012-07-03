@@ -25,6 +25,7 @@ require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
+require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
@@ -433,9 +434,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getTitle() {
         if ($title_field = Tracker_Semantic_Title::load($this->getTracker())->getField()) {
             if ($title_field->userCanRead()) {
-                if ($title_field_value = $this->getLastChangeset()->getValue($title_field)) {
-                    if ($title = $title_field_value->getText()) {
-                        return $title;
+                if ($last_changeset = $this->getLastChangeset()) {
+                    if ($title_field_value = $last_changeset->getValue($title_field)) {
+                        if ($title = $title_field_value->getText()) {
+                            return $title;
+                        }
                     }
                 }
             }
@@ -652,6 +655,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (count($artlink_fields)) {
                     $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
+                    $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
                     $GLOBALS['Response']->sendStatusCode(400);
@@ -661,7 +665,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $linked_artifact_id = $request->get('linked-artifact-id');
                 if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
+                } else {
+                    $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 }
+                break;
+            case 'higher-priority-than':
+                $dao = new Tracker_Artifact_PriorityDao();
+                $dao->moveArtifactBefore($this->getId(), (int)$request->get('target-id'));
+                break;
+            case 'lesser-priority-than':
+                $dao = new Tracker_Artifact_PriorityDao();
+                $dao->moveArtifactAfter($this->getId(), (int)$request->get('target-id'));
                 break;
             default:
                 if ($request->isAjax()) {
@@ -1366,6 +1380,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             array(
                 'request'  => $request,
                 'artifact' => $this,
+            )
+        );
+    }
+
+    private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
+            array(
+                'artifact'             => $this,
+                'linked-artifact-id'   => $linked_artifact_id,
+                'request'              => $request,
+                'user'                 => $current_user,
+                'form_element_factory' => $this->getFormElementFactory(),
             )
         );
     }

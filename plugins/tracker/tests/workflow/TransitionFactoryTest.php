@@ -94,4 +94,83 @@ class TransitionFactoryTest extends UnitTestCase {
     }
 }
 
+class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->field = aMockField()->build();
+        $this->from_value  = mock('Tracker_FormElement_Field_List_Value');
+        $this->to_value    = mock('Tracker_FormElement_Field_List_Value');
+        $this->xml_mapping = array('F1'     => $this->field,
+                                   'F32-V1' => $this->from_value,
+                                   'F32-V0' => $this->to_value);
+        
+        $this->factory     = TestHelper::getPartialMock('TransitionFactory', array());
+        
+    }
+    
+    public function itReconstitutesDatePostActions() {
+        
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <postactions>
+                    <postaction_field_date valuetype="1">
+                        <field_id REF="F1"/>
+                    </postaction_field_date>
+                </postactions>
+            </transition>
+        ');
+        
+        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
+        $post_actions = $transition->getPostActions();
+        
+        $this->assertCount($post_actions, 1);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
+    }
+    
+    public function itReconstitutesIntPostActions() {
+        
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <postactions>
+                    <postaction_field_int value="1">
+                        <field_id REF="F1"/>
+                    </postaction_field_int>
+                </postactions>
+            </transition>
+        ');
+        
+        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
+        $post_actions = $transition->getPostActions();
+        
+        $this->assertCount($post_actions, 1);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
+    }
+    
+    public function itReconstitutesFloatPostActions() {
+        
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <postactions>
+                    <postaction_field_float value="1.2">
+                        <field_id REF="F1"/>
+                    </postaction_field_float>
+                </postactions>
+            </transition>
+        ');
+        
+        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
+        $post_actions = $transition->getPostActions();
+        
+        $this->assertCount($post_actions, 1);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
+    }
+}
+
 ?>

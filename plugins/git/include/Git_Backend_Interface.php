@@ -21,6 +21,7 @@
 
 interface Git_Backend_Interface {
     const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
+
     /**
      * Initialize a new reference repository
      * 
@@ -112,16 +113,27 @@ interface Git_Backend_Interface {
      * @return true if success, false otherwise
      */
     public function renameProject(Project $project, $newName);
-    
-     /**
-     * Delete a repository
-     *
-     * @param GitRepository $repository
-     * @param Boolean       $ignoreHasChildren If true delete will ignore if the repo has childrens
+
+    /**
+     * Check if repository can be deleted
      *
      * @return Boolean
      */
-    public function delete($repository, $ignoreHasChildren = false);
+    public function canBeDeleted(GitRepository $repository);
+
+    /**
+     * Perform logical deletion repository in DB
+     *
+     * @param GitRepository $repository
+     */
+    public function markAsDeleted(GitRepository $repository);
+
+    /**
+     * Physically delete a repository already marked for deletion
+     *
+     * @param GitRepository $repository
+     */
+    public function delete(GitRepository $repository);
 
 }
 ?>

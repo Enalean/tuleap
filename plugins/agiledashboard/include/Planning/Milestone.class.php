@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,7 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Describe what a Milestone business object should present.
+ */
 interface Planning_Milestone {
+    const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
+    const CAPACITY_FIELD_NAME         = 'capacity';
 
     /**
      * @return int The project identifier.
@@ -96,7 +100,20 @@ interface Planning_Milestone {
      * @return Array of Tracker_Artifact
      */
     public function getLinkedArtifacts(User $user);
-    
+
+    /**
+     * Return numerical value of remaining effort
+     * 
+     * @return float
+     */
+    public function getRemainingEffort();
+
+    /**
+     * Return numerical value of capacity
+     * 
+     * @return float
+     */
+    public function getCapacity();
 }
 
 ?>

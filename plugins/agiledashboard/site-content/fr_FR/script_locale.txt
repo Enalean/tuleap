@@ -1,0 +1,4 @@
+codendi.locales['agiledashboard'] = {
+    saving:      'Sauvegarde en cours...',
+    saving_done: 'Sauvegarde effectuée'
+};

@@ -184,6 +184,14 @@ abstract class TuleapTestCase extends UnitTestCase {
         $this->assertTrue($var >= $lower_bound,  "$var should be greater than or equal to $lower_bound");
     }
 
-
+    /**
+     * Asserts that an array has the expected number of items.
+     * 
+     * @param array $array
+     * @param int $expected_count
+     */
+    protected function assertCount($array, $expected_count) {
+        return $this->assertEqual(count($array), $expected_count);
+    }
 }
 ?>

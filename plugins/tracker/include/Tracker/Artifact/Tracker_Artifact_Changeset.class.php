@@ -37,6 +37,11 @@ class Tracker_Artifact_Changeset {
     public $email;
 
     protected $values;
+    
+    /**
+     * @var Tracker_Artifact_Changeset_Comment
+     */
+    private $latest_comment;
 
     /**
      * Constructor
@@ -305,9 +310,10 @@ class Tracker_Artifact_Changeset {
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
     public function getComment() {
-        $comment = null;
+        if (isset($this->latest_comment)) return $this->latest_comment;
+        
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
-            $comment = new Tracker_Artifact_Changeset_Comment($row['id'],
+            $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
                                                     $this,
                                                     $row['comment_type_id'],
                                                     $row['canned_response_id'],
@@ -316,7 +322,7 @@ class Tracker_Artifact_Changeset {
                                                     $row['body'],
                                                     $row['parent_id']);
         }
-        return $comment;
+        return $this->latest_comment;
     }
 
     /**

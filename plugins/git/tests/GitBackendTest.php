@@ -138,40 +138,6 @@ class GitBackendTest extends UnitTestCase {
         $backend->setUpRepository($repo);
     }
 
-    public function testDeleteProjectRepositoriesNothingToDelete() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array());
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesDeleteFail() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array(2 => array(), 1 => array(), 3 => array()));
-        $backend->setReturnValue('getDao', $dao);
-        $sem = new MockSystemEventManager();
-        $backend->setReturnValue('getSystemEventManager', $sem);
-        $backend->expectOnce('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesSuccess() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array(2 => array(), 1 => array(), 3 => array()));
-        $backend->setReturnValue('getDao', $dao);
-        $sem = new MockSystemEventManager();
-        $backend->setReturnValue('getSystemEventManager', $sem);
-        $backend->expectOnce('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
     public function testArchiveCreatesATarGz() {
         $this->GivenThereIsARepositorySetUp();
         

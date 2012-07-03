@@ -13,27 +13,34 @@
     </ul>
     <div class="tab-content">
         {{#isPlannerPaneActive}}
-            <table cellspacing="5" id="planner" class="tab-pane active">
-                <tbody>
-                    <tr valign="top">
-                        <td width="50%">
-                            <div class="planning-backlog">
-                                <h3>{{planningBacklogTitle}}</h3>
-                                {{{backlogSearchView}}}
-                            </div>
-                        </td>
-                        <td>
-                            <h3>{{planningPlanTitle}}</h3>
-                            {{^hasSelectedArtifact}}
-                                {{> select-destination}}
-                            {{/hasSelectedArtifact}}
-                            {{#hasSelectedArtifact}}
-                                {{> show-destination}}
-                            {{/hasSelectedArtifact}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="planner" class="tab-pane active">
+                <div class="planner_feedback">
+                    <div>
+                        <ul class="feedback_warning"><li></li></ul>
+                    </div>
+                </div>
+                <table cellspacing="5">
+                    <tbody>
+                        <tr valign="top">
+                            <td width="50%">
+                                <div class="planning-backlog">
+                                    <h3>{{planningBacklogTitle}}</h3>
+                                    {{{backlogSearchView}}}
+                                </div>
+                            </td>
+                            <td>
+                                <h3>{{planningPlanTitle}}</h3>
+                                {{^hasSelectedArtifact}}
+                                    {{> select-destination}}
+                                {{/hasSelectedArtifact}}
+                                {{#hasSelectedArtifact}}
+                                    {{> show-destination}}
+                                {{/hasSelectedArtifact}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         {{/isPlannerPaneActive}}
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}

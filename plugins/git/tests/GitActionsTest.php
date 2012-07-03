@@ -696,4 +696,62 @@ class GitActionsTest extends TuleapTestCase {
     }
 }
 
+class GitActions_Delete_Tests extends TuleapTestCase {
+    protected $git_actions;
+    protected $project_id;
+    protected $repository_id;
+    protected $repository;
+    protected $system_event_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->project_id    = 101;
+        $this->repository_id = 69;
+
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getId()->returns($this->repository_id);
+        stub($this->repository)->getProjectId()->returns($this->project_id);
+
+        $this->system_event_manager = mock('SystemEventManager');
+        $controler                  = stub('Git')->getPlugin()->returns(mock('gitPlugin'));
+        $git_repository_factory     = mock('GitRepositoryFactory');
+
+        stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
+
+        $this->git_actions = new GitActions($controler, $this->system_event_manager, $git_repository_factory);
+    }
+
+    public function itMarksRepositoryAsDeleted() {
+        stub($this->repository)->canBeDeleted()->returns(true);
+
+        $this->repository->expectOnce('markAsDeleted');
+
+        $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
+    }
+
+    public function itTriggersASystemEventForPhysicalRemove() {
+        stub($this->repository)->canBeDeleted()->returns(true);
+
+        $this->system_event_manager->expectOnce(
+            'createEvent',
+            array(
+                'GIT_REPO_DELETE',
+                $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id,
+                '*'
+            )
+        );
+
+        $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
+    }
+
+    public function itDoesntDeleteWhenRepositoryCannotBeDeleted() {
+        stub($this->repository)->canBeDeleted()->returns(false);
+
+        $this->repository->expectNever('markAsDeleted');
+        $this->system_event_manager->expectNever('createEvent');
+        $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
+    }
+}
+
 ?>

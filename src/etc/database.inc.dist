@@ -31,7 +31,8 @@ $sys_enablessl="0";
 
 // for phpWiki
 $sys_server="mysql";
-$sys_server_join="30";
+//The value should be 20 due to mysql max join limit
+$sys_server_join="20";
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
