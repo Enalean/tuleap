@@ -81,6 +81,38 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
     
+    public function itIgnoresNodesIfThereIsNoMatchingLabel() {
+        $factory = new Cardwall_SwimlineFactory();
+        $column_label   = 'ongoing';
+        $id = $bgcolor = $fgcolor = 0;
+        $columns = array(new Cardwall_Column($id, $column_label, $bgcolor, $fgcolor));
+        $artifact_label = 'in progress';
+        $artifact = stub('Tracker_Artifact')->getStatus()->returns($artifact_label);
+        $node     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact);
+        
+        $swimlines = $factory->getCellsOfSwimline($columns, array($node));
+        $expected = array(
+                        array('presenter_nodes' => array()));
+        $this->assertIdentical($expected, $swimlines);
+    }
+    
+    public function itPutsNodesWithNullStatusIntoTheColumnWithId100() {
+        $factory = new Cardwall_SwimlineFactory();
+        $column_label   = '';
+        $bgcolor = $fgcolor = 0;
+        $columns = array(new Cardwall_Column(100, $column_label, $bgcolor, $fgcolor), 
+                         new Cardwall_Column(200, 'in progress', $bgcolor, $fgcolor));
+        $null_status = null;
+        $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);
+        $node     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact);
+        
+        $swimlines = $factory->getCellsOfSwimline($columns, array($node));
+        $expected = array(
+                        array('presenter_nodes' => array($node)),
+                        array('presenter_nodes' => array()));
+        $this->assertIdentical($expected, $swimlines);
+    }
+    
     
     
     public function whatAboutIfThereAreNoNodes() {
