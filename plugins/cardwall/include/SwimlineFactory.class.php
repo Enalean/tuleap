@@ -31,13 +31,13 @@ class Cardwall_SwimlineFactory {
     public function getSwimlines(array $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
-            $cells = $this->getCells($columns, $child->getChildren());
+            $cells = $this->getCellsOfSwimline($columns, $child->getChildren());
             $swimlines[] = new Cardwall_Swimline($child, $cells);
         }
         return $swimlines;
     }
 
-    private function getCells(array $columns, array $nodes) {
+    public function getCellsOfSwimline(array $columns, array $nodes) {
         $cells = array();
         foreach ($columns as $column) {
             $cells[] = $this->getCell($column, $nodes);
