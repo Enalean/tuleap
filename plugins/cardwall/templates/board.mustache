@@ -26,28 +26,28 @@
 
             <tbody>
                 {{#swimlines}}
-                    <tr valign="top">
+                    <tr valign="top" id="swimline-{{swimline_id}}">
                         {{#has_swimline_header}}
                             {{#node}}
-                                {{#getData}}
+                                {{#getCardInCellPresenter}}
                                     <td>
                                         <ul class="nodrag">
                                             <li>{{> card}}</td>
                                         </ul>
                                     </td>
-                                {{/getData}}
+                                {{/getCardInCellPresenter}}
                             {{/node}}
                         {{/has_swimline_header}}
                         {{#cells}}
                             <td>
                                 <ul>
-                                    {{#artifacts}}
-                                        {{#getData}}
-                                            <li class="cardwall_board_postit {{drop-into-class}}" id="cardwall_board_postit-{{getId}}" data-column-field-id="{{column_field_id}}">
+                                    {{#presenter_nodes}}
+                                        {{#getCardInCellPresenter}}
+                                            <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
                                                 {{> card}}
                                             </li>
-                                        {{/getData}}
-                                    {{/artifacts}}
+                                        {{/getCardInCellPresenter}}
+                                    {{/presenter_nodes}}
                                 </ul>
                             </td>
                         {{/cells}}

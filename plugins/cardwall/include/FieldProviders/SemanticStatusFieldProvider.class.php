@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -17,29 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'InjectColumnIdVisitor.class.php';
 
 /**
- * Foreach artifact in a TreeNode, inject the id of the field used for the column
- *
- * There we use only one custom field instead of status semantic
+ * Retrieves the semantic status field of the given artifact
  */
-class Cardwall_InjectColumnIdCustomFieldVisitor extends Cardwall_InjectColumnIdVisitor {
+class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
 
     /**
-     * @var Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
-
-    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
-        $this->field = $field;
-    }
-
-    /**
+     * Retrieves the semantic status field of the given artifact
+     * 
      * @return Tracker_FormElement_Field_Selectbox
      */
-    protected function getField(Tracker_Artifact $artifact) {
-        return $this->field;
+    public function getField(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
     }
 }
+
 ?>

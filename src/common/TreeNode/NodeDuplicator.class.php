@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,34 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'TreeNode.class.php';
+
 /**
- * A swimline in the dashboard
+ * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
  */
-class Cardwall_Swimline {
+abstract class NodeDuplicator extends TreeNode {
 
-    /**
-     * @var TreeNode
-     */
-    public $node;
-
-    /**
-     * @var array
-     */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
-    
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    public function __construct(TreeNode $node) {
+        parent::__construct($node->getData(), $node->getId());
+        $this->setChildren($node->getChildren());
+        $this->setObject($node->getObject());
     }
 }
+
 ?>

@@ -18,34 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/TreeNodeCallback.class.php';
+require_once 'CardPresenter.class.php';
+require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
+
 /**
- * A swimline in the dashboard
+ * Creates a CardPresenter given a TreeNode with Artifact
  */
-class Cardwall_Swimline {
+class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
 
     /**
-     * @var TreeNode
+     * @see TreeNodeCallback
+     * 
+     * @param TreeNode $node
+     * @return \Tracker_TreeNode_CardPresenterNode
      */
-    public $node;
-
-    /**
-     * @var array
-     */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
-    
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    public function apply(TreeNode $node) {
+        if (! $node instanceof ArtifactNode) {
+            return clone $node;
+        }
+        $presenter = new Cardwall_CardPresenter($node->getArtifact());
+        $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
+        return $new_node;
     }
 }
+
 ?>
