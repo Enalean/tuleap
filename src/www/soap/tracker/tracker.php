@@ -3293,7 +3293,7 @@ function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $a
  *              - the add failed
  */
 function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id, $format) {
-    global $art_field_fact, $ath;
+    global $art_field_fact; 
     if (session_continue($sessionKey)) {
         try {
             $pm = ProjectManager::instance();
@@ -3302,21 +3302,21 @@ function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact
             return $e;
         }
 
-        $ath = new ArtifactType($grp,$group_artifact_id);
-        if (!$ath || !is_object($ath)) {
+        $at = new ArtifactType($grp,$group_artifact_id);
+        if (!$at || !is_object($at)) {
             return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','addArtifactFollowup');
-        } elseif ($ath->isError()) {
-            return new SoapFault(get_artifact_type_fault,$ath->getErrorMessage(),'addArtifactFollowup');
+        } elseif ($at->isError()) {
+            return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'addArtifactFollowup');
         }
 
-        $art_field_fact = new ArtifactFieldFactory($ath);
+        $art_field_fact = new ArtifactFieldFactory($at);
         if (!$art_field_fact || !is_object($art_field_fact)) {
             return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifactFollowup');
         } elseif ($art_field_fact->isError()) {
             return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifactFollowup');
         }
 
-        $a = new Artifact($ath,$artifact_id);
+        $a = new Artifact($at,$artifact_id);
         if (!$a || !is_object($a)) {
             return new SoapFault(get_artifact_fault,'Could Not Get Artifact','addArtifactFollowup');
         } elseif ($a->isError()) {
@@ -3328,7 +3328,7 @@ function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact
         } else {
             // Send notification
             $agnf =& new ArtifactGlobalNotificationFactory();
-            $addresses = $agnf->getAllAddresses($ath->getID(), true);
+            $addresses = $agnf->getAllAddresses($at->getID(), true);
             $a->mailFollowupWithPermissions($addresses, $changes);
             return true;
         }
