@@ -65,7 +65,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return mixed
      */
     private function getComputedValueAt(Tracker_Artifact $artifact, $timestamp) {
-        $row = $this->getValueDao()->getValueAt($artifact, $timestamp);
+        $row = $this->getValueDao()->getValueAt($artifact->getId(), $this->getId(), $timestamp);
         return $row['value'];
     }
 

@@ -34,18 +34,21 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
     }
     
     public function itDelegatesRetrievalOfTheOldValueToTheDaoWhenGivenATimestamp() {
+        $artifact_id    = 4528;
+        $field_id       = 195;
         $user           = aUser()->build();
         $artifact_value = stub('Tracker_Artifact_ChangesetValue_Float')->getValue()->returns(123.45);
         $value_dao      = mock('Tracker_FormElement_Field_Value_FloatDao');
-        $artifact       = aMockArtifact()->withValue($artifact_value)->build();
-        $field          = TestHelper::getPartialMock('Tracker_FormElement_Field_Float', array('getValueDao'));
+        $artifact       = aMockArtifact()->withId($artifact_id)->withValue($artifact_value)->build();
+        $field          = TestHelper::getPartialMock('Tracker_FormElement_Field_Float', array('getId', 'getValueDao'));
         $timestamp      = 9340590569;
-        $value          = array('value' => 67.89);
+        $value          = 67.89;
         
+        stub($field)->getId()->returns($field_id);
         stub($field)->getValueDao()->returns($value_dao);
-        stub($value_dao)->getValueAt($artifact, $timestamp)->returns($value);
+        stub($value_dao)->getValueAt($artifact_id, $field_id, $timestamp)->returns(array('value' => $value));
         
-        $this->assertIdentical(67.89, $field->getComputedValue($user, $artifact, $timestamp));
+        $this->assertIdentical($value, $field->getComputedValue($user, $artifact, $timestamp));
     }
 }
 
