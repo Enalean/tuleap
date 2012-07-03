@@ -21,7 +21,7 @@
 require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
 require_once 'Tracker_FormElement_Field_BurndownException.class.php';
 require_once dirname(__FILE__).'/../Chart/Data/LinkedArtifacts.class.php';
-require_once dirname(__FILE__).'/../Chart/Burndown.class.php';
+require_once dirname(__FILE__).'/../Chart/BurndownComputed.class.php';
 require_once 'common/chart/ErrorChart.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
@@ -193,14 +193,31 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     public function fetchBurndownImage(Tracker_Artifact $artifact, User $user) {
         if ($this->userCanRead($user)) {
-            $linked_artifacts = $this->getLinkedArtifacts($artifact, $user);
-            $burndown         = $this->getBurndown($linked_artifacts, $user);
-            $burndown->setStartDate($this->getBurndownStartDate($artifact, $user));
-            $burndown->setDuration($this->getBurndownDuration($artifact, $user));
+            $start_date = $this->getBurndownStartDate($artifact, $user);
+            $duration   = $this->getBurndownDuration($artifact, $user);
+            $burndown   = $this->getBurndown($this->getBurndownData($artifact, $user, $start_date, $duration));
+            
             $burndown->display();
         } else {
             throw new Tracker_FormElement_Field_BurndownException('burndown_permission_denied');
         }
+    }
+    
+    public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
+        $field         = $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
+        $start_effort  = $field->getComputedValue($user, $artifact, strtotime("+0 day 23 hours 59 minutes 59 seconds", $start_date));
+        $slope         = - $start_effort / $duration;
+        $burndown_data = new Tracker_Chart_Data_Burndown();
+        
+        for($i = 0; $i < $duration; $i++) {
+            $timestamp = strtotime("+$i day 23 hours 59 minutes 59 seconds", $start_date);
+            
+            $burndown_data->remaining_effort[] = $field->getComputedValue($user, $artifact, $timestamp);
+            $burndown_data->dates[]            = date('M-d', $timestamp);
+            $burndown_data->ideal_effort[]     = floatval($slope * $i + $start_effort);
+        }
+        
+        return $burndown_data;
     }
     
     /**
@@ -221,15 +238,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     /**
-     * Returns a Burndown rendering object for given linked artifacts
+     * Returns a Burndown rendering object for given data
      * 
-     * @param Array of Tracker_Artifact $linked_artifacts
+     * @param Tracker_Chart_Data_Burndown $burndown_data
      * 
      * @return \Tracker_Chart_Burndown 
      */
-    protected function getBurndown($linked_artifacts, User $user) {
-        $burndown_data = new Tracker_Chart_Burndown_Data_LinkedArtifacts($linked_artifacts, self::REMAINING_EFFORT_FIELD_NAME, $user);
-        return new Tracker_Chart_Burndown($burndown_data);
+    protected function getBurndown(Tracker_Chart_Data_Burndown $burndown_data) {
+        return new Tracker_Chart_BurndownComputed($burndown_data);
     }
 
     /**

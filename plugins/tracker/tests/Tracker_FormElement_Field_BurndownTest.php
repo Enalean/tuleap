@@ -91,11 +91,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->sprint_tracker_id = 113;
         $this->sprint_tracker    = aTracker()->withId($this->sprint_tracker_id)->build();
         
-        $this->timestamp            = 1334095200;
+        $this->timestamp            = mktime(0, 0, 0, 7, 3, 2012);
         $this->start_date_field     = stub('Tracker_FormElement_Field_Date');
         $this->start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
         
-        $this->duration           = 13;
+        $this->duration           = 5;
         $this->duration_field     = stub('Tracker_FormElement_Field_Integer');
         $this->duration_changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getValue()->returns($this->duration);
         
@@ -123,20 +123,34 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         Tracker_FormElementFactory::clearInstance();
     }
     
+    
+    public function itFetchDataFromStartDateToDuration() {
+        $field = mock('Tracker_FormElement_Field_Float');
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 3, 2012))->returns(10);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 4, 2012))->returns(9);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 5, 2012))->returns(8);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 6, 2012))->returns(7);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 7, 2012))->returns(6);
+        stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
+        
+        $data = $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
+        $this->assertEqual($data->remaining_effort, array(10,9,8,7,6));
+    }
+    
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
-        $task_54          = anArtifact()->withId(54)->withTracker(aTracker()->build())->build();
-        $bug_55           = anArtifact()->withId(55)->withTracker(aTracker()->build())->build();
-        $linked_artifacts = array($task_54, $bug_55);
-        stub($this->sprint)->getLinkedArtifacts()->returns($linked_artifacts);
+        $burndown_data  = new Tracker_Chart_Data_Burndown();
+        $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
+        $this->burndown = mock('Tracker_Chart_BurndownComputed');
         
-        $this->field->expectOnce('getBurndown', array($linked_artifacts, $this->current_user));
-        $this->burndown->expectOnce('setStartDate', array($this->timestamp));
-        $this->burndown->expectOnce('setDuration', array($this->duration));
+        stub($this->field)->getBurndown($burndown_data)->returns($this->burndown);
+        stub($this->field)->userCanRead()->returns(true);
+        stub($this->field)->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration)->returns($burndown_data);
         
+        $this->burndown->expectOnce('display');
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
     
-    public function itDisplaysAMessageWhenThereAreNoLinkedArtifacts() {
+    public function _itDisplaysAMessageWhenThereAreNoLinkedArtifacts() {
         stub($this->sprint)->getLinkedArtifacts()->returns(array());
         
         $this->expectException(new Tracker_FormElement_Field_BurndownException('burndown_no_linked_artifacts'));
