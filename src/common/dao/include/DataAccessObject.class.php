@@ -71,9 +71,7 @@ class DataAccessObject {
      * @return mixed
      */
     protected function retrieveFirstRow($sql) {
-        foreach($this->retrieve($sql) as $row) {
-            return $row;
-        }
+        return $this->retrieve($sql)->getRow();
     }
     
     /**

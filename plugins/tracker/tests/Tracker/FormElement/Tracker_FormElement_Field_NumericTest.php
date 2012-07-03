@@ -30,7 +30,22 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
         $field          = aFloatField()->build();
         $actual_value   = $field->getComputedValue($user, $artifact);
         
-        $this->assertEqual($actual_value, 123.45);
+        $this->assertEqual(123.45, $actual_value);
+    }
+    
+    public function itDelegatesRetrievalOfTheOldValueToTheDaoWhenGivenATimestamp() {
+        $user           = aUser()->build();
+        $artifact_value = stub('Tracker_Artifact_ChangesetValue_Float')->getValue()->returns(123.45);
+        $value_dao      = mock('Tracker_FormElement_Field_Value_FloatDao');
+        $artifact       = aMockArtifact()->withValue($artifact_value)->build();
+        $field          = TestHelper::getPartialMock('Tracker_FormElement_Field_Float', array('getValueDao'));
+        $timestamp      = 9340590569;
+        $value          = array('value' => 67.89);
+        
+        stub($field)->getValueDao()->returns($value_dao);
+        stub($value_dao)->getValueAt($user, $artifact, $timestamp)->returns($value);
+        
+        $this->assertIdentical(67.89, $field->getComputedValue($user, $artifact, $timestamp));
     }
 }
 

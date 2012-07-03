@@ -58,5 +58,9 @@ class Tracker_FormElement_Field_Value_FloatDao extends Tracker_FormElement_Field
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
     }
+    
+    public function getValueAt() {
+        
+    }
 }
 ?>
