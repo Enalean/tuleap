@@ -1,3 +1,6 @@
+.cardwall_board-actions {
+    text-align: right;
+}
 .cardwall_board table {
     clear:both;
     border-collapse: collapse;

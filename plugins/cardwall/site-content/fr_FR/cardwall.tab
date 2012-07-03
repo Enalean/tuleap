@@ -14,3 +14,4 @@ plugin_cardwall	on_top_enabled	Un cardwall existe maintenant au dessus de l'outi
 plugin_cardwall	on_top_disabled	Cardwall désactivé
 plugin_cardwall	on_top_label	Activer un cardwall au dessus de l'outil de suivi
 plugin_cardwall	on_top_miss_status	L'outil de suivi doit avoir une semantic status définie
+plugin_cardwall	configure_cardwall_label	Congigurer

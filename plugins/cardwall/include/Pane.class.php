@@ -83,8 +83,9 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $pa, $field);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+        $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title);
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $configure_url);
     }
 
     /**

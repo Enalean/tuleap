@@ -138,7 +138,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     }
 
     /**
-     * @return Cardwall_PaneContentPresenter
+     * @return Cardwall_RendererPresenter
      */
     private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
         $field              = $this->getField();

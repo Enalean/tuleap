@@ -14,3 +14,4 @@ plugin_cardwall	on_top_enabled	Now a cardwall exists on top of the tracker
 plugin_cardwall	on_top_disabled	Cardwall disabled
 plugin_cardwall	on_top_label	Enable cardwall on top of this tracker
 plugin_cardwall	on_top_miss_status	The tracker must have a status semantic
+plugin_cardwall	configure_cardwall_label	Congigure
