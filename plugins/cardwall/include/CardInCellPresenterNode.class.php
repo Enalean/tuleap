@@ -23,19 +23,19 @@ require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once 'common/TreeNode/NodeDuplicator.class.php';
 
 /**
- * A TreeNode holding a ColumnPresenter
+ * A TreeNode holding a CardInCellPresenter
  */
-class Cardwall_ColumnPresenterNode extends NodeDuplicator {
+class Cardwall_CardInCellPresenterNode extends NodeDuplicator {
 
-    /** @var ColumnPresenter */
+    /** @var CardInCellPresenter */
     private $presenter;
     
-    function __construct(TreeNode $node, ColumnPresenter $presenter) {
+    function __construct(TreeNode $node, CardInCellPresenter $presenter) {
         parent::__construct($node);
         $this->presenter = $presenter;
     }
     
-    public function getColumnPresenter() {
+    public function getCardInCellPresenter() {
         return $this->presenter;
     }
 }

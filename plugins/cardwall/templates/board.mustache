@@ -29,24 +29,24 @@
                     <tr valign="top" id="swimline-{{swimline_id}}">
                         {{#has_swimline_header}}
                             {{#node}}
-                                {{#getColumnPresenter}}
+                                {{#getCardInCellPresenter}}
                                     <td>
                                         <ul class="nodrag">
                                             <li>{{> card}}</td>
                                         </ul>
                                     </td>
-                                {{/getColumnPresenter}}
+                                {{/getCardInCellPresenter}}
                             {{/node}}
                         {{/has_swimline_header}}
                         {{#cells}}
                             <td>
                                 <ul>
                                     {{#presenter_nodes}}
-                                        {{#getColumnPresenter}}
+                                        {{#getCardInCellPresenter}}
                                             <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
                                                 {{> card}}
                                             </li>
-                                        {{/getColumnPresenter}}
+                                        {{/getCardInCellPresenter}}
                                     {{/presenter_nodes}}
                                 </ul>
                             </td>

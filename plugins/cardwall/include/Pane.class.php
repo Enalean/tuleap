@@ -25,7 +25,7 @@ require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
-require_once 'ColumnPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard

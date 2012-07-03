@@ -19,9 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/ColumnPresenter.class.php';
+require_once dirname(__FILE__).'/../include/CardInCellPresenter.class.php';
 
-class ColumnPresenterTest extends TuleapTestCase {
+class CardInCellPresenterTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
@@ -29,7 +29,7 @@ class ColumnPresenterTest extends TuleapTestCase {
         $swimline_field_values   = array(100, 221);
         $swimline_id             = 3;
         $this->card_presenter    = mock('Cardwall_CardPresenter');
-        $this->presenter         = new ColumnPresenter($this->card_presenter, $this->card_field_id, $swimline_id, $swimline_field_values);
+        $this->presenter         = new CardInCellPresenter($this->card_presenter, $this->card_field_id, $swimline_id, $swimline_field_values);
     }
     
     public function itHasColumnDropInto() {

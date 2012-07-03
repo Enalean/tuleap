@@ -31,7 +31,7 @@ class Cardwall_FieldRetrievers_CustomFieldRetriever implements Tracker_IProvideF
      */
     private $field;
 
-    public function __construct(Tracker_FormElement_Field_Selectbox $field) {
+    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
         $this->field = $field;
     }
 

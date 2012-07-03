@@ -29,7 +29,7 @@ require_once 'QrCode.class.php';
 require_once 'Form.class.php';
 require_once 'FieldRetrievers/CustomFieldRetriever.class.php';
 require_once 'CreateCardPresenterCallback.class.php';
-require_once 'ColumnPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {

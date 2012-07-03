@@ -37,7 +37,7 @@ class Cardwall_BoardFactory {
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         $mapping_collection = $column_factory->getMappings($status_fields);
         
-        $forests_of_column_presenters = $this->transformIntoForestOfColumnPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
+        $forests_of_column_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
         $columns                      = $column_factory->getColumns();
         $swimlines                    = $this->getSwimlines($columns, $forests_of_column_presenters);
 
@@ -45,11 +45,11 @@ class Cardwall_BoardFactory {
 
     }
 
-    private function transformIntoForestOfColumnPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
+    private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
         $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
 
-        $column_id_mapper           = new TreeNodeMapper(new ColumnPresenterCallback($field_retriever, $mapping_collection));
+        $column_id_mapper           = new TreeNodeMapper(new CardInCellPresenterCallback($field_retriever, $mapping_collection));
         return $column_id_mapper->map($forests_of_card_presenters);
     }
 

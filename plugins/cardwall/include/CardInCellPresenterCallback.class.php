@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ColumnPresenter.class.php';
-require_once 'ColumnPresenterNode.class.php';
+require_once 'CardInCellPresenter.class.php';
+require_once 'CardInCellPresenterNode.class.php';
 require_once 'MappingCollection.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/IProvideFieldGivenAnArtifact.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
@@ -28,7 +28,7 @@ require_once 'common/TreeNode/TreeNodeCallback.class.php';
 /**
  * Create a Cardwall_ColumnPresnterNode given a Tracker_TreeNode_CardPresenterNode
  */
-class ColumnPresenterCallback implements TreeNodeCallback {
+class CardInCellPresenterCallback implements TreeNodeCallback {
 
     /**
      * @var Tracker_IProvideFieldGivenAnArtifact
@@ -55,8 +55,8 @@ class ColumnPresenterCallback implements TreeNodeCallback {
         }
         $card_field_id    = $this->getFieldId($node);
         $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
-        $presenter        = new ColumnPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
-        return new Cardwall_ColumnPresenterNode($node, $presenter);
+        $presenter        = new CardInCellPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
+        return new Cardwall_CardInCellPresenterNode($node, $presenter);
     }
 
     private function getParentNodeId(TreeNode $node) {

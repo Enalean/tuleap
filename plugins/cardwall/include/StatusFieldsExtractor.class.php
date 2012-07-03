@@ -19,7 +19,7 @@
  */
 
 require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
-require_once 'ColumnPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 require_once 'FieldRetrievers/SemanticStatusFieldRetriever.class.php';
 
 /**
