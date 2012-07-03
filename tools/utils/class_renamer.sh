@@ -9,7 +9,7 @@ new_name=$2
 
 # Replace imports and class names
 files=$(grep -rl  $old_name *)
-gsed -i "s/$old_name/$new_name/" $files
+sed -i "s/$old_name/$new_name/" $files
 
 # rename file
 old_file_full_path=$(find . -name *${old_name}.class.php)
