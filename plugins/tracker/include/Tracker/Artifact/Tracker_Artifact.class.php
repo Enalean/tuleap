@@ -129,41 +129,36 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($can_access) {
             // Full access
             $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_FULL');
-            if ( $rows !== false ) {
-                foreach ( $rows as $row ) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        return true;
-                    }
+            foreach ( $rows as $row ) {
+                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                    return true;
                 }
             }
 
             // 'submitter' access
             $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_SUBMITTER');
-            if ( $rows !== false ) {
-                foreach ($rows as $row) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        // check that submitter is also a member
-                        $user_subby = $um->getUserById($this->getSubmittedBy());
-                        if ($user_subby->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                            return true;
-                        }
+            foreach ($rows as $row) {
+                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                    // check that submitter is also a member
+                    $user_subby = $um->getUserById($this->getSubmittedBy());
+                    if ($user_subby->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                        return true;
                     }
                 }
             }
+
             // 'assignee' access
             $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_ASSIGNEE');
-            if ( $rows !==  false ) {
-                foreach ($rows as $row) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        $contributor_field = $this->getTracker()->getContributorField();
-                        if ($contributor_field) {
-                            // check that one of the assignees is also a member
-                            $assignees = $this->getValue($contributor_field)->getValue();
-                            foreach ($assignees as $assignee) {
-                                $user_assignee = $um->getUserById($assignee);
-                                if ($user_assignee->isMemberOfUGroup( $row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                                    return true;
-                                }
+            foreach ($rows as $row) {
+                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                    $contributor_field = $this->getTracker()->getContributorField();
+                    if ($contributor_field) {
+                        // check that one of the assignees is also a member
+                        $assignees = $this->getValue($contributor_field)->getValue();
+                        foreach ($assignees as $assignee) {
+                            $user_assignee = $um->getUserById($assignee);
+                            if ($user_assignee->isMemberOfUGroup( $row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                                return true;
                             }
                         }
                     }
