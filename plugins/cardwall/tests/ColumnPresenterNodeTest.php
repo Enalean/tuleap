@@ -19,10 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeDuplicatorContract.php';
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
 require_once dirname(__FILE__).'/../include/ColumnPresenter.class.php';
 
-class Cardwall_ColumnPresenterNodeTest extends NodeDuplicatorContract {
+class Cardwall_ColumnPresenterNodeTest extends NodeDuplicatorContractTest {
 
     public function itHoldsTheGivenPresenter() {
         $presenter      = mock('ColumnPresenter');
