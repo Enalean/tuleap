@@ -70,27 +70,6 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
 
         $this->assertEqual(5, $this->field->getComputedValue($this->user, $artifact));
     }
-}
-
-class Tracker_FormElement_Field_ComputedBackInTimeTest extends TuleapTestCase {
-    private $user;
-    private $field;
-    private $formelement_factory;
-
-    public function setUp() {
-        parent::setUp();
-        $this->user  = mock('User');
-        $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty'));
-        stub($this->field)->getProperty()->returns('effort');
-
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
-        Tracker_FormElementFactory::setInstance($this->formelement_factory);
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        Tracker_FormElementFactory::clearInstance();
-    }
 
     public function itComputesRemainingEffortAtAGivenTime() {
         $timestamp = mktime(23, 59, 59, 7, 3, 2012);
@@ -108,4 +87,5 @@ class Tracker_FormElement_Field_ComputedBackInTimeTest extends TuleapTestCase {
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact, $timestamp));
     }
 }
+
 ?>
