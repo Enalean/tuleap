@@ -25,13 +25,13 @@ require_once dirname(__FILE__).'/../include/CardInCellPresenter.class.php';
 class Cardwall_CardInCellPresenterNodeTest extends NodeDuplicatorContractTest {
 
     public function itHoldsTheGivenPresenter() {
-        $presenter      = mock('CardInCellPresenter');
+        $presenter      = mock('Cardwall_CardInCellPresenter');
         $presenter_node = new Cardwall_CardInCellPresenterNode(new TreeNode(), $presenter);
         $this->assertEqual($presenter, $presenter_node->getCardInCellPresenter());
     }
 
     protected function newNode(TreeNode $tree_node) {
-        return new Cardwall_CardInCellPresenterNode($tree_node, mock('CardInCellPresenter'));
+        return new Cardwall_CardInCellPresenterNode($tree_node, mock('Cardwall_CardInCellPresenter'));
     }
 }
 ?>
