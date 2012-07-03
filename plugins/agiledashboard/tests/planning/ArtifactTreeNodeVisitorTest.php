@@ -46,8 +46,8 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $node     = new TreeNode(array('id' => 123));
         $node->setObject($artifact);
         
-        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, 'baz'));
-        $visited_node = $visitor->visit($node);
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, 'baz'));
+        $visited_node = $card_mapper->map($node);
         $presenter    = $visited_node->getCardPresenter();
         
         $this->assertEqual(123, $presenter->getId());
@@ -63,9 +63,9 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
                                    aNode()->withObject(anArtifact()->build()),
                                    aNode()->withObject(anArtifact()->build()))
                                ->build();
-        $visitor      = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), 'whatever-class'));
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), 'whatever-class'));
         
-        $visited_node = $visitor->visit($root_node);
+        $visited_node = $card_mapper->map($root_node);
         $all_nodes    = $visited_node->flattenChildren();
 
         $this->assertEqual(count($all_nodes), count($root_node->flattenChildren()));
@@ -90,13 +90,13 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         $this->artifact = mock('Tracker_Artifact');
         $this->node     = new TreeNode();
         $this->node->setObject($this->artifact);
-        $this->visitor  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, 'whatever'));
+        $this->card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, 'whatever'));
     }
     
     public function itKnowsDraggablePlanningItems() {
         stub($this->artifact)->getTracker()->returns($this->planning_tracker);
         
-        $node = $this->visitor->visit($this->node);
+        $node = $this->card_mapper->map($this->node);
         
         $this->assertEqual('whatever planning-draggable', $node->getCardPresenter()->getCssClasses());
     }
@@ -104,7 +104,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
     public function itKnowsNonDraggablePlanningItems() {
         stub($this->artifact)->getTracker()->returns($this->other_tracker);
         
-        $node = $this->visitor->visit($this->node);
+        $node = $this->card_mapper->map($this->node);
         
         $this->assertEqual('whatever', $node->getCardPresenter()->getCssClasses());
     }
