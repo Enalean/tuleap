@@ -49,7 +49,7 @@ class Cardwall_BoardFactory {
         $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
 
-        $column_id_mapper           = new TreeNodeMapper(new CardInCellPresenterCallback($field_retriever, $mapping_collection));
+        $column_id_mapper           = new TreeNodeMapper(new Cardwall_CardInCellPresenterCallback($field_retriever, $mapping_collection));
         return $column_id_mapper->map($forests_of_card_presenters);
     }
 

@@ -28,7 +28,7 @@ require_once 'common/TreeNode/TreeNodeCallback.class.php';
 /**
  * Create a Cardwall_ColumnPresnterNode given a Tracker_TreeNode_CardPresenterNode
  */
-class CardInCellPresenterCallback implements TreeNodeCallback {
+class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
 
     /**
      * @var Tracker_IProvideFieldGivenAnArtifact
@@ -55,7 +55,7 @@ class CardInCellPresenterCallback implements TreeNodeCallback {
         }
         $card_field_id    = $this->getFieldId($node);
         $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
-        $presenter        = new CardInCellPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
+        $presenter        = new Cardwall_CardInCellPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
         return new Cardwall_CardInCellPresenterNode($node, $presenter);
     }
 
