@@ -40,11 +40,8 @@ class TreeNodeMapper {
      */
     public function visit(TreeNode $node) {
         $new_node = $this->function->apply($node);
-        $new_node->setChildren(array());
-        foreach ($node->getChildren() as $child) {
-            $new_node->addChild($child->accept($this));
-        }
-
+        $children = array_map(array($this, 'visit'), $node->getChildren());
+        $new_node->setChildren($children);
         return $new_node;
     }
 }
