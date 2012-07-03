@@ -42,25 +42,25 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
     }
 
     public function itJustClonesTheNodeIfItIsNotAPresenterNode() {
-        $column_presenter_node = $this->callback->apply($this->node);
-        $this->assertIdentical($this->node, $column_presenter_node);
+        $cardincell_presenter_node = $this->callback->apply($this->node);
+        $this->assertIdentical($this->node, $cardincell_presenter_node);
     }
 
     public function itCreatesACardInCellPresenterNode() {
-        $column_presenter_node = $this->callback->apply($this->card_presenter_node);
-        $this->assertIsA($column_presenter_node, 'Cardwall_CardInCellPresenterNode');
+        $cardincell_presenter_node = $this->callback->apply($this->card_presenter_node);
+        $this->assertIsA($cardincell_presenter_node, 'Cardwall_CardInCellPresenterNode');
     }
 
     public function itHasTheSameIdAsTheGivenNode() {
-        $column_presenter_node = $this->callback->apply($this->card_presenter_node);
-        $this->assertEqual($this->node->getId(), $column_presenter_node->getId());
+        $cardincell_presenter_node = $this->callback->apply($this->card_presenter_node);
+        $this->assertEqual($this->node->getId(), $cardincell_presenter_node->getId());
     }
 
     public function itHasACardInCellPresenterWithASemanticStatusFieldId() {
-        $column_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
-        $column_presenter_node     = $column_presenter_callback->apply($this->card_presenter_node);
+        $cardincell_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
+        $cardincell_presenter_node     = $cardincell_presenter_callback->apply($this->card_presenter_node);
 
-        $this->assertIdentical($column_presenter_node->getCardInCellPresenter(),
+        $this->assertIdentical($cardincell_presenter_node->getCardInCellPresenter(),
                                new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id));
     }
 
@@ -70,10 +70,10 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
 
         $mapping_collection = new Cardwall_MappingCollection();
 
-        $column_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, $mapping_collection);
-        $column_presenter_node     = $column_presenter_callback->apply($this->card_presenter_node);
+        $cardincell_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, $mapping_collection);
+        $cardincell_presenter_node     = $cardincell_presenter_callback->apply($this->card_presenter_node);
 
-        $this->assertEqual($column_presenter_node->getCardInCellPresenter(),
+        $this->assertEqual($cardincell_presenter_node->getCardInCellPresenter(),
                            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $parent_node->getId()));
     }
 
@@ -83,10 +83,10 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
 
         $mapping_collection = stub('Cardwall_MappingCollection')->getSwimLineValues($this->field_id)->returns(array(123, 456));
 
-        $column_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, $mapping_collection);
-        $column_presenter_node     = $column_presenter_callback->apply($this->card_presenter_node);
+        $cardincell_presenter_callback = new Cardwall_CardInCellPresenterCallback($this->field_retriever, $mapping_collection);
+        $cardincell_presenter_node     = $cardincell_presenter_callback->apply($this->card_presenter_node);
 
-        $this->assertEqual($column_presenter_node->getCardInCellPresenter(),
+        $this->assertEqual($cardincell_presenter_node->getCardInCellPresenter(),
                            new Cardwall_CardInCellPresenter($this->card_presenter, $this->field_id, $parent_node->getId(), array(123, 456)));
     }
 }
