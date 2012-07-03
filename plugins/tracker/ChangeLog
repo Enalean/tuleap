@@ -1,7 +1,10 @@
+Version 5.7.38 - Tuleap 5.3
+    * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
+
 Version 5.7.37 - Tuleap 5.3
     * Fix sla #830: chunksz are saved in reports
     * Fix missing report header when cardwall renderer was added.
-    
+
 Version 5.7.36 - Tuleap 5.3
     * Fix artifact disappearance
 

@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
-require_once 'InjectColumnIdVisitor.class.php';
-require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'CreateCardPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -78,9 +80,11 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
         $board_factory      = new Cardwall_BoardFactory();
-        $pa                 = $this->milestone->getPlannedArtifacts();
-        Cardwall_ArtifactTreeNodeVisitor::build()->visit($pa);
-        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $pa, $field);
+        $planned_artifacts  = $this->milestone->getPlannedArtifacts();
+
+        $field_retriever    = new Cardwall_FieldProviders_SemanticStatusFieldRetriever();
+
+        $board              = $board_factory->getBoard($field_retriever, $field, $planned_artifacts);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
         $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
