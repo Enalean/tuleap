@@ -4,6 +4,35 @@ var Planning = {
 
     trackerBaseUrl: '/plugins/tracker/',
 
+    activeRequestCount: 0,
+
+    toggleFeedback: function () {
+        var feedback_is_displayed = $('planner').hasClassName('show_feedback');
+        if (Planning.activeRequestCount) {
+            $('planner')
+                .addClassName('show_feedback')
+                .down('ul')
+                    .removeClassName('feedback_info')
+                    .addClassName('feedback_warning')
+                    .down('li')
+                        .update(codendi.locales.agiledashboard.saving);
+        } else if (! Planning.activeRequestCount && feedback_is_displayed) {
+            $('planner')
+                .down('ul')
+                    .removeClassName('feedback_warning')
+                    .addClassName('feedback_info')
+                    .down('li')
+                        .update(codendi.locales.agiledashboard.saving_done);
+            Planning.hideFeedback.delay(5);
+        }
+    },
+
+    hideFeedback: function() {
+        if ( ! Planning.activeRequestCount) {
+            $('planner').removeClassName('show_feedback');
+        }
+    },
+
     unAssociateArtifactTo: function (sourceId, targetId) {
         Planning.executePlanRequest('unassociate-artifact-to', sourceId, targetId);
     },
@@ -21,9 +50,11 @@ var Planning = {
     },
 
     executeRequest: function (query) {
+        ++Planning.activeRequestCount;
         new Ajax.Request(Planning.trackerBaseUrl + query, {
             onFailure: Planning.errorOccured,
             onSuccess: function (transport) {
+                --Planning.activeRequestCount;
                 if (transport.responseJSON && typeof transport.responseJSON.remaining_effort !== undefined) {
                     $$('.release_planner .planning_remaining_effort').each(function (element) {
                         element.update(transport.responseJSON.remaining_effort);
@@ -46,6 +77,7 @@ var Planning = {
     },
 
     errorOccured: function (transport) {
+        --Planning.activeRequestCount;
         codendi.feedback.log('error', transport.responseText);
     },
 
