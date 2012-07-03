@@ -22,7 +22,7 @@
 /**
  * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
  */
-interface Tracker_IProvideFieldGivenAnArtifact {
+interface Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact {
     
     /**
      * @return Tracker_FormElement_Field

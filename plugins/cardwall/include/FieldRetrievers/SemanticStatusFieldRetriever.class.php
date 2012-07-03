@@ -22,7 +22,7 @@
 /**
  * Retrieves the semantic status field of the given artifact
  */
-class Cardwall_FieldRetrievers_SemanticStatusFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
+class Cardwall_FieldRetrievers_SemanticStatusFieldRetriever implements Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact {
 
     /**
      * Retrieves the semantic status field of the given artifact

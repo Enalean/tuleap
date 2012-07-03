@@ -22,9 +22,9 @@
 /**
  * Returns the field fixed in the constructor no matter what artifact is given
  * 
- * @see Tracker_IProvideFieldGivenAnArtifact
+ * @see Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact
  */
-class Cardwall_FieldRetrievers_CustomFieldRetriever implements Tracker_IProvideFieldGivenAnArtifact {
+class Cardwall_FieldRetrievers_CustomFieldRetriever implements Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact {
 
     /**
      * @var Tracker_FormElement_Field_Selectbox
