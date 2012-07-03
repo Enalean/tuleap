@@ -20,14 +20,19 @@
  */
 
 /**
- * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
+ * Retrieves the semantic status field of the given artifact
  */
-interface Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact {
-    
+class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
+
     /**
-     * @return Tracker_FormElement_Field
+     * Retrieves the semantic status field of the given artifact
+     * 
+     * @return Tracker_FormElement_Field_Selectbox
      */
-    function getField(Tracker_Artifact $artifact);
+    public function getField(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+    }
 }
 
 ?>

@@ -20,18 +20,28 @@
  */
 
 /**
- * Retrieves the semantic status field of the given artifact
+ * Returns the field fixed in the constructor no matter what artifact is given
+ * 
+ * @see Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
  */
-class Cardwall_FieldRetrievers_SemanticStatusFieldRetriever implements Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact {
+class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
 
     /**
-     * Retrieves the semantic status field of the given artifact
+     * @var Tracker_FormElement_Field_Selectbox
+     */
+    private $field;
+
+    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
+        $this->field = $field;
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact is ignored!
      * 
      * @return Tracker_FormElement_Field_Selectbox
      */
     public function getField(Tracker_Artifact $artifact) {
-        $tracker = $artifact->getTracker();
-        return Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
+        return $this->field;
     }
 }
 

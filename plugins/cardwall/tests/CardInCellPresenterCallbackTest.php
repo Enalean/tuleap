@@ -37,7 +37,7 @@ class CardInCellPresenterCallbackTest extends TuleapTestCase {
         $this->card_presenter       = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
         $this->card_presenter_node  = new Tracker_TreeNode_CardPresenterNode($this->node, $this->card_presenter);
 
-        $this->field_retriever = stub('Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
+        $this->field_retriever = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
         $this->callback        = new Cardwall_CardInCellPresenterCallback($this->field_retriever, new Cardwall_MappingCollection());
     }
 

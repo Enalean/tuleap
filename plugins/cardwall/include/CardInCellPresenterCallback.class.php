@@ -22,7 +22,7 @@
 require_once 'CardInCellPresenter.class.php';
 require_once 'CardInCellPresenterNode.class.php';
 require_once 'MappingCollection.class.php';
-require_once 'FieldRetrievers/IProvideFieldGivenAnArtifact.class.php';
+require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
 
 /**
@@ -31,7 +31,7 @@ require_once 'common/TreeNode/TreeNodeCallback.class.php';
 class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
 
     /**
-     * @var Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact
+     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
      */
     private $field_retriever;
     
@@ -41,7 +41,7 @@ class Cardwall_CardInCellPresenterCallback implements TreeNodeCallback {
     private $mappings;
 
 
-    public function __construct(Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact $retriever, Cardwall_MappingCollection $mappings) {
+    public function __construct(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $retriever, Cardwall_MappingCollection $mappings) {
         $this->field_retriever = $retriever;
         $this->mappings        = $mappings;
     }

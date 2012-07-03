@@ -20,29 +20,14 @@
  */
 
 /**
- * Returns the field fixed in the constructor no matter what artifact is given
- * 
- * @see Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact
+ * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
  */
-class Cardwall_FieldRetrievers_CustomFieldRetriever implements Cardwall_FieldRetrievers_IProvideFieldGivenAnArtifact {
-
+interface Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
+    
     /**
-     * @var Tracker_FormElement_Field_Selectbox
+     * @return Tracker_FormElement_Field
      */
-    private $field;
-
-    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
-        $this->field = $field;
-    }
-
-    /**
-     * @param Tracker_Artifact $artifact is ignored!
-     * 
-     * @return Tracker_FormElement_Field_Selectbox
-     */
-    public function getField(Tracker_Artifact $artifact) {
-        return $this->field;
-    }
+    function getField(Tracker_Artifact $artifact);
 }
 
 ?>
