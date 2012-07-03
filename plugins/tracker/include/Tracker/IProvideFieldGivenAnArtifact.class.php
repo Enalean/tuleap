@@ -24,6 +24,9 @@
  */
 interface Tracker_IProvideFieldGivenAnArtifact {
     
+    /**
+     * @return Tracker_FormElement_Field
+     */
     function getField(Tracker_Artifact $artifact);
 }
 
