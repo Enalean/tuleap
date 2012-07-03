@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/TreeNode/TreeNode.class.php';
+require_once 'TreeNode.class.php';
 
 /**
  * Extend this and you'll be able to duplicate all properties of TreeNode into a TreeNode of another type
