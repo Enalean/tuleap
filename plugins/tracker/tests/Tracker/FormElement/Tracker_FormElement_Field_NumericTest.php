@@ -43,7 +43,7 @@ class Tracker_FormElement_Field_Numeric_GetComputedValueTest extends TuleapTestC
         $value          = array('value' => 67.89);
         
         stub($field)->getValueDao()->returns($value_dao);
-        stub($value_dao)->getValueAt($user, $artifact, $timestamp)->returns($value);
+        stub($value_dao)->getValueAt($artifact, $timestamp)->returns($value);
         
         $this->assertIdentical(67.89, $field->getComputedValue($user, $artifact, $timestamp));
     }
