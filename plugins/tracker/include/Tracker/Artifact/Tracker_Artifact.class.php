@@ -58,6 +58,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $hierarchy_factory;
 
     /**
+     * @var string
+     */
+    private $title;
+
+    /**
      * Constructor
      *
      * @param int     $id                       The Id of the artifact
@@ -427,18 +432,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string the title of the artifact, or null if no title defined in semantics
      */
     public function getTitle() {
-        if ($title_field = Tracker_Semantic_Title::load($this->getTracker())->getField()) {
-            if ($title_field->userCanRead()) {
-                if ($last_changeset = $this->getLastChangeset()) {
-                    if ($title_field_value = $last_changeset->getValue($title_field)) {
-                        if ($title = $title_field_value->getText()) {
-                            return $title;
+        if ( ! isset($this->title)) {
+            $this->title = null;
+            if ($title_field = Tracker_Semantic_Title::load($this->getTracker())->getField()) {
+                if ($title_field->userCanRead()) {
+                    if ($last_changeset = $this->getLastChangeset()) {
+                        if ($title_field_value = $last_changeset->getValue($title_field)) {
+                            $this->title = $title_field_value->getText();
                         }
                     }
                 }
             }
         }
-        return null;
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     /**

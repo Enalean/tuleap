@@ -36,9 +36,14 @@ class Tracker_ArtifactDao extends DataAccessObject {
     
     public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
-                FROM $this->table_name
-                WHERE tracker_id = $tracker_id ";
+        $sql = "SELECT A.*, CVT.value AS title
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    LEFT JOIN (
+                        tracker_changeset_value AS CV
+                        INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV.changeset_id)";
         return $this->retrieve($sql);
     }
     
