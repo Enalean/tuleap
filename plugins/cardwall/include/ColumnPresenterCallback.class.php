@@ -22,7 +22,7 @@
 require_once 'ColumnPresenter.class.php';
 require_once 'ColumnPresenterNode.class.php';
 require_once 'MappingCollection.class.php';
-require_once dirname(__FILE__).'/../../tracker/include/Tracker/IProvideFieldGivenAnArtifact.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/IProvideFieldGivenAnArtifact.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
 
 /**
@@ -53,8 +53,7 @@ class ColumnPresenterCallback implements TreeNodeCallback {
         if (!$node instanceof Tracker_TreeNode_CardPresenterNode) {
             return clone $node;
         }
-        $artifact         = $node->getCardPresenter()->getArtifact();
-        $card_field_id    = $this->getFieldId($artifact);
+        $card_field_id    = $this->getFieldId($node);
         $swim_line_values = $this->mappings->getSwimLineValues($card_field_id);
         $presenter        = new ColumnPresenter($node->getCardPresenter(), $card_field_id, $this->getParentNodeId($node), $swim_line_values);
         return new Cardwall_ColumnPresenterNode($node, $presenter);
@@ -65,8 +64,9 @@ class ColumnPresenterCallback implements TreeNodeCallback {
         return $parent_node ? $parent_node->getId() : 0;
     }
 
-    private function getFieldId($artifact) {
-        $field = $this->field_retriever->getField($artifact);
+    private function getFieldId(Tracker_TreeNode_CardPresenterNode $node) {
+        $artifact = $node->getCardPresenter()->getArtifact();
+        $field    = $this->field_retriever->getField($artifact);
         return $field ? $field->getId() : 0;
     }
     

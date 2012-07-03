@@ -46,9 +46,10 @@ class Cardwall_BoardFactory {
     }
 
     private function transformIntoForestOfColumnPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
-        $column_id_visitor          = new TreeNodeMapper(new ColumnPresenterCallback($field_retriever, $mapping_collection));
         $card_presenter_visitor     = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
         $forests_of_card_presenters = $forests_of_artifacts->accept($card_presenter_visitor);
+
+        $column_id_visitor          = new TreeNodeMapper(new ColumnPresenterCallback($field_retriever, $mapping_collection));
         return $forests_of_card_presenters->accept($column_id_visitor);
     }
 

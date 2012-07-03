@@ -34,7 +34,7 @@ class Cardwall_StatusFieldsExtractor {
     }
     
     private function getArtifactsOutOfTree(TreeNode $root_node) {
-        $artifacts = array();
+        $artifacts  = array();
         $flat_nodes = $root_node->flatten();
         foreach ($flat_nodes as $node) {
             $this->appendIfArtifactNode($artifacts, $node);
@@ -51,8 +51,8 @@ class Cardwall_StatusFieldsExtractor {
                 
     private function getIndexedStatusFieldsOf(array $artifacts) {
         $status_field_retriever = new Cardwall_FieldRetrievers_SemanticStatusFieldRetriever();
-        $status_fields = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
-        $indexed_status_fields = $this->indexById($status_fields);
+        $status_fields          = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
+        $indexed_status_fields  = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
     

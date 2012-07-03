@@ -146,9 +146,12 @@ class Planning_MilestonePresenter extends PlanningPresenter {
             
             //TODO use null object pattern while still possible?
             if ($root_node) {
-                $visitor = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(
-                            $this->milestone->getPlanning(), 
-                            'planning-draggable-alreadyplanned'));
+                $visitor = new TreeNodeMapper(
+                    new Planning_ItemCardPresenterCallback(
+                        $this->milestone->getPlanning(), 
+                        'planning-draggable-alreadyplanned'
+                    )
+                );
                 $presenter_root_node = $visitor->visit($root_node);
             }
         }

@@ -22,7 +22,7 @@ require_once 'Planning.class.php';
 require_once 'Item.class.php';
 require_once 'ItemPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TreeNode/CardPresenterNode.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/TreeNode/CardPresenterNode.class.php';
 
 class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
 
@@ -30,38 +30,39 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
      * @var Planning
      */
     private $planning;
-    
+
     /**
      * @var string the css class name
      */
     private $classname;
-    
+
     public function __construct(Planning $planning, $classname) {
-        $this->planning         = $planning;
-        $this->classname        = $classname;
+        $this->planning  = $planning;
+        $this->classname = $classname;
     }
-    
+
     /**
-     * TODO something is wrong since we return different types here
-     * When on the left side of the planning, the top node is just 
-     * a node holding the other nodes, and we cant use an array of nodes because there are card-actions available for it...
-     * 
      * Makes a CardPresenterNode out of $node if $node contains an artifact
+     *
+     * TODO something is wrong since we return different types here
+     * When on the left side of the planning, the top node is just
+     * a node holding the other nodes, and we cant use an array of nodes because
+     * there are card-actions available for it...
+     *
      * @param TreeNode $node
+     *
      * @return \Tracker_TreeNode_CardPresenterNode or \TreeNode
      */
     public function apply(TreeNode $node) {
         $artifact = $node->getObject();
-        
+
         if ($artifact) {
-            $planning_item = new Planning_Item($artifact, $this->planning);
-            $presenter     = new Planning_ItemPresenter($planning_item, $this->classname);
+            $planning_item  = new Planning_Item($artifact, $this->planning);
+            $presenter      = new Planning_ItemPresenter($planning_item, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
             return $presenter_node;
         }
         return $node;
     }
-
 }
-
 ?>
