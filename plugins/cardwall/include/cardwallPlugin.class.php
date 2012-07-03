@@ -49,6 +49,7 @@ class cardwallPlugin extends Plugin {
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
+            $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id);
         }
     }
 
@@ -161,7 +162,9 @@ class cardwallPlugin extends Plugin {
                 break;
             case 'admin-cardwall-update':
                 if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->updateCardwallOnTop($params['tracker']->getId(), $params['request']->get('cardwall_on_top'));
+                    $this->updateCardwallOnTop($params['tracker'], $params['request']->get('cardwall_on_top'));
+                    $this->updateCardwallOnTopColumns($params['tracker'], $params['request']);
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&func=admin-cardwall');
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
@@ -183,22 +186,84 @@ class cardwallPlugin extends Plugin {
         $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_label');
         $html .= '</label>';
         $html .= '</p>';
+        if ($checked) {
+            $html .= '<blockquote>';
+            $html .= $this->fetchColumnDefinition($tracker);
+            $html .= '</blockquote>';
+        }
         $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         $html .= '</form>';
         echo $html;
         $tracker->displayFooter($layout);
     }
     
-    private function updateCardwallOnTop($tracker_id, $is_enabled) {
-        $this->getCSRFToken($tracker_id)->check();
-        if ($is_enabled) {
-            $this->getOnTopDao()->enable($tracker_id);
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
+    private function fetchColumnDefinition(Tracker $tracker) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $field = $tracker->getStatusField();
+        if ($field) {
+            $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $hp->Purify($field->getLabel()) .') of this tracker.' .'</p>';
+            $html .= 'TODO: display such columns';
+            $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
         } else {
-            $this->getOnTopDao()->disable($tracker_id);
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
+            $columns_rows = $this->getOnTopColumnDao()->searchColumnsByTrackerId($tracker->getId());
+            if (!count($columns_rows)) {
+                $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
+            }
+            $html .= '<table><thead><tr>';
+            $html .= '<td></td>';
+            foreach ($columns_rows as $row) {
+                $html .= '<td>';
+                $html .= '<input type="text" name="column['. (int)$row['id'] .'][label]" value="'. $hp->purify($row['label']) .'" />';
+                $html .= '</td>';
+            }
+            $html .= '<td>';
+            $html .= '<label>'. 'New column:'. ' <input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+            $html .= '</td>';
+            $html .= '</tr></thead>';
+            $html .= '<tbody>';
+            if (count($columns_rows)) {
+                // Here be trackers
+            }
+            $html .= '</tbody></table>';
         }
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
+        return $html;
+    }
+    
+    private function updateCardwallOnTop(Tracker $tracker, $please_enable) {
+        $tracker_id = $tracker->getId();
+        $this->getCSRFToken($tracker_id)->check();
+        $is_enabled = $this->getOnTopDao()->isEnabled($tracker_id);
+        if ($please_enable) {
+            if ( ! $is_enabled) {
+                $this->getOnTopDao()->enable($tracker_id);
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
+            }
+        } else {
+            if ($is_enabled) {
+                $this->getOnTopDao()->disable($tracker_id);
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
+            }
+        }
+    }
+    
+    private function updateCardwallOnTopColumns(Tracker $tracker, Codendi_Request $request) {
+        if ($request->get('new_column')) {
+            $this->getOnTopColumnDao()->create($tracker->getId(), $request->get('new_column'));
+            $GLOBALS['Response']->addFeedback('info', 'New column added successfully');
+        }
+        if ($request->get('column')) {
+            foreach ($request->get('column') as $id => $column_definition) {
+                if (empty($column_definition['label'])) {
+                    $this->getOnTopColumnDao()->delete($tracker->getId(), $id);
+                    $GLOBALS['Response']->addFeedback('info', 'Column removed');
+                } else {
+                    if ($this->getOnTopColumnDao()->save($tracker->getId(), $id, $column_definition['label'])) {
+                        $GLOBALS['Response']->addFeedback('info', 'Column '. $column_definition['label'] .' changed');
+                    }
+                }
+            }
+        }
     }
     
     /**
@@ -207,6 +272,14 @@ class cardwallPlugin extends Plugin {
     private function getOnTopDao() {
         require_once 'OnTopDao.class.php';
         return new Cardwall_OnTopDao();
+    }
+    
+    /**
+     * @return Cardwall_OnTopColumnDao
+     */
+    private function getOnTopColumnDao() {
+        require_once 'OnTopColumnDao.class.php';
+        return new Cardwall_OnTopColumnDao();
     }
     
     /**

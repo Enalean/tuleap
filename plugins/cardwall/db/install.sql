@@ -8,3 +8,14 @@ DROP TABLE IF EXISTS plugin_cardwall_on_top;
 CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top(
     tracker_id int(11) NOT NULL PRIMARY KEY
 );
+
+DROP TABLE IF EXISTS plugin_cardwall_on_top_column;
+CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top_column(
+    id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    tracker_id INT(11) NOT NULL,
+    label VARCHAR(255) NOT NULL,
+    bg_red TINYINT UNSIGNED NULL,
+    bg_green TINYINT UNSIGNED NULL,
+    bg_blue TINYINT UNSIGNED NULL,
+    INDEX idx_tracker_id(tracker_id)
+);
