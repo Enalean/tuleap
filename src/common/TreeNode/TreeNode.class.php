@@ -201,11 +201,11 @@ class TreeNode /*implements Visitable*/ {
     /**
      * Set children. 
      *
-     * @param &$children array of TreeNode
+     * @param $children array of TreeNode
      */
-    function setChildren(&$children) {
+    function setChildren($children) {
         if(is_array($this->children)) {
-            $this->children = array();
+            $this->clearChildren();
             foreach ($children as $child) {
                 $this->addChild($child);
             }
@@ -215,6 +215,12 @@ class TreeNode /*implements Visitable*/ {
         }
     }
 
+    /**
+     * Remove existing children
+     */
+    public function clearChildren() {
+        $this->children = array();
+    }
 
     /**
      * Return true if Node has children. 
