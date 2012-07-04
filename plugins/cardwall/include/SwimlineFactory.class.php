@@ -80,13 +80,6 @@ class Cardwall_SwimlineFactory {
         return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
 
-    public function isArtifactInCell2(Tracker_Artifact                                     $artifact, 
-                                      Cardwall_Column                                      $column, 
-                                      Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
-        $artifact_status = $field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
-        return $artifact_status === $column->label
-                || $artifact_status === null && $column->id == 100;
-    }
 
 }
 ?>

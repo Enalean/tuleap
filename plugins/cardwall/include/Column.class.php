@@ -53,5 +53,13 @@ class Cardwall_Column {
         $this->bgcolor = $bgcolor;
         $this->fgcolor = $fgcolor;
     }
+    
+    public function isArtifactInCell2(Tracker_Artifact                                     $artifact, 
+                                      Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+        $artifact_status = $field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
+        return $artifact_status === $this->label
+                || $artifact_status === null && $this->id == 100;
+    }
+
 }
 ?>
