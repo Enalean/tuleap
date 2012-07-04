@@ -25,7 +25,7 @@ class Tracker_Chart_Data_BurndownTimePeriodTest extends TuleapTestCase {
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 2);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         
-        $this->assertEqual($burndown_data->getHumanReadableDates(), array('Jul-04', 'Jul-05'));
+        $this->assertEqual($burndown_data->getHumanReadableDates(), array('Jul-04', 'Jul-05', 'Jul-06'));
     }
 }
 ?>

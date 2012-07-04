@@ -152,7 +152,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $data = $this->field->getBurndownData($this->sprint, $this->current_user, $start_date, $this->duration);
         $remaining_effort = $data->getRemainingEffort();
 
-        $this->assertEqual($remaining_effort, array(10,9,8,null,null));
+        $this->assertEqual($remaining_effort, array(10, 9, 8, null, null, null));
     }
 
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {

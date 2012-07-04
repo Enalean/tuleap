@@ -58,7 +58,7 @@ class Tracker_Chart_Data_BurndownTimePeriod {
     public function getHumanReadableDates() {
         $dates = array();
         
-        for($day_offset = 0; $day_offset < $this->duration; $day_offset++) {
+        for($day_offset = 0; $day_offset <= $this->duration; $day_offset++) {
             $day     = strtotime("+$day_offset days", $this->start_date);
             $dates[] = date('M-d', $day);
         }

@@ -214,7 +214,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
             if ($timestamp <= $tonight) {
                 $remaining_effort = $field->getComputedValue($user, $artifact, $timestamp);
-                $burndown_data->addRemainingEffort($remaining_effort, $timestamp);
+                $burndown_data->addRemainingEffort($remaining_effort);
             }
         }
 

@@ -35,15 +35,16 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addRemainingEffort(14);
         $burndown_data->addRemainingEffort(13);
+        $burndown_data->addRemainingEffort(12);
 
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13));
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 12));
     }
 
     public function itCompletesMissingRemainingEffortWithLastValue() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addRemainingEffort(14);
 
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 14, 14));
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 14, 14, 14));
     }
 
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture() {
@@ -53,7 +54,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $burndown_data->addRemainingEffort(14);
 
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, null, null, null));
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, null, null, null, null));
     }
 
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture2() {
@@ -64,14 +65,14 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $burndown_data->addRemainingEffort(14);
         $burndown_data->addRemainingEffort(13);
 
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 13, null, null));
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 13, null, null, null));
     }
 
     public function itComputesIdealBurndownWhenAddingRemainingEffort() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addRemainingEffort(5);
 
-        $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1));
+        $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
 }
 

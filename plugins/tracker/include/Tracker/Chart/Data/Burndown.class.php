@@ -49,7 +49,7 @@ class Tracker_Chart_Data_Burndown {
     }
 
     public function getRemainingEffort() {
-        for ($i = 0; $i < $this->getDuration(); $i++) {
+        for ($i = 0; $i <= $this->getDuration(); $i++) {
             if (!isset($this->remaining_effort[$i])) {
                 $this->addRemainingEffort($last_value);
             }
@@ -70,7 +70,7 @@ class Tracker_Chart_Data_Burndown {
         $start_effort = $this->remaining_effort[0];
         $slope        = - ($start_effort / $this->getDuration());
 
-        for($i = 0; $i < $this->getDuration(); $i++) {
+        for($i = 0; $i <= $this->getDuration(); $i++) {
             $this->ideal_effort[] = floatval($slope * $i + $start_effort);
         }
         return $this->ideal_effort;
