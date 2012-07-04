@@ -48,15 +48,15 @@ class Cardwall_SwimlineFactory {
     private function getCell(Cardwall_Column $column, array $nodes) {
         $presenters = array();
         foreach ($nodes as $node) {
-            $this->addNodeToCell($node, $column, $presenters);
+            $this->addNodeToCell($node->getCardInCellPresenter(), $column, $presenters);
         }
         return array('cardincell_presenters' => $presenters);;
     }
 
-    private function addNodeToCell(Cardwall_CardInCellPresenterNode $node, Cardwall_Column $column, array &$presenters) {
-        $artifact        = $node->getArtifact();
+    private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
+        $artifact        = $presenter->getArtifact();
         if ($this->isArtifactInCell($artifact, $column)) {
-            $presenters[] = $node->getCardInCellPresenter();
+            $presenters[] = $presenter;
         }
     }
 

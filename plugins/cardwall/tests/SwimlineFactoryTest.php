@@ -53,9 +53,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $id = $bgcolor = $fgcolor = 0;
         $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($label);
-        $node     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact);
-        $cardincell_presenter = mock('Cardwall_CardInCellPresenter');
-        stub($node)->getCardInCellPresenter()->returns($cardincell_presenter);
+        $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
+        $node     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter);
         
         $swimlines = $factory->getCellsOfSwimline($columns, array($node));
         $expected = array(
@@ -72,12 +71,10 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
                          new Cardwall_Column($id, $label_2, $bgcolor, $fgcolor));
         $artifact1 = stub('Tracker_Artifact')->getStatus()->returns($label_1);
         $artifact2 = stub('Tracker_Artifact')->getStatus()->returns($label_2);
-        $node1     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact1);
-        $node2     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact2);
-        $cardincell_presenter1 = mock('Cardwall_CardInCellPresenter');
-        $cardincell_presenter2 = mock('Cardwall_CardInCellPresenter');
-        stub($node1)->getCardInCellPresenter()->returns($cardincell_presenter1);
-        stub($node2)->getCardInCellPresenter()->returns($cardincell_presenter2);
+        $cardincell_presenter1 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact1);
+        $cardincell_presenter2 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact2);
+        $node1     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter1);
+        $node2     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter2);
         
         $swimlines = $factory->getCellsOfSwimline($columns, array($node1, $node2));
         $expected = array(
@@ -93,7 +90,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $columns = array(new Cardwall_Column($id, $column_label, $bgcolor, $fgcolor));
         $artifact_label = 'in progress';
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($artifact_label);
-        $node     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact);
+        $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
+        $node     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter);
 
         $swimlines = $factory->getCellsOfSwimline($columns, array($node));
         $expected = array(
@@ -109,8 +107,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
                          new Cardwall_Column(200, 'in progress', $bgcolor, $fgcolor));
         $null_status = null;
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);
-        $node     = stub('Cardwall_CardInCellPresenterNode')->getArtifact()->returns($artifact);
-        $cardincell_presenter = mock('Cardwall_CardInCellPresenter');
+        $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
+        $node     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter);
         stub($node)->getCardInCellPresenter()->returns($cardincell_presenter);
         
         $swimlines = $factory->getCellsOfSwimline($columns, array($node));
