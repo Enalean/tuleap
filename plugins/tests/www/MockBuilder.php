@@ -73,7 +73,7 @@ class OngoingIntelligentStub {
     }
 
     public function __call($name, $arguments) {
-        $this->method = $name;
+        $this->method    = $name;
         $this->arguments = $arguments;
         return $this;
     }
@@ -89,6 +89,11 @@ class OngoingIntelligentStub {
 
     public function never() {
         $this->mock->expectNever($this->method);
+        return $this;
+    }
+
+    public function at($timing) {
+        $this->mock->expectAt($timing, $this->method, $this->arguments);
         return $this;
     }
 

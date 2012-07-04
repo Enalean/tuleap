@@ -90,6 +90,17 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         stub($mock)->greet()->never();
         //$mock->greet();
     }
+
+    public function itEnsuresThatMethodIsCalledAtWithArguments() {
+        $mock = mock('Toto');
+        stub($mock)->greet('Lerdorf')->at(0);
+        stub($mock)->greet()->at(2);
+        stub($mock)->greet('Rasmus', 'Lerdorf')->at(1);
+        $mock->greet('Lerdorf');
+        //$mock->greet('Tutu');
+        $mock->greet('Rasmus', 'Lerdorf');
+        $mock->greet();
+    }
 }
 
 class Toto {
