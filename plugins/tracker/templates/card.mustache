@@ -4,5 +4,11 @@
     <a href="#" class="toggle-collapse">+</a>
     {{getTitle}}
     &nbsp;
+    <p>
+    {{#getFields}}
+        {{getLabel}}
+        <b>{{getValue}}</b>
+    {{/getFields}}
+    </p>
 </div>
 {{/getCardPresenter}}
