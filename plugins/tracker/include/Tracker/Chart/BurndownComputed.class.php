@@ -49,9 +49,9 @@ class Tracker_Chart_BurndownComputed extends Tracker_Chart_Burndown {
 
         $colors = $graph->getThemedColors();
 
-        $graph->xaxis->SetTickLabels($this->burndown_data->dates);
+        $graph->xaxis->SetTickLabels($this->burndown_data->getHumanReadableDates());
         
-        $remaining_effort = new LinePlot($this->burndown_data->remaining_effort);
+        $remaining_effort = new LinePlot($this->burndown_data->getRemainingEffort());
         $remaining_effort->SetColor($colors[1] . ':0.7');
         $remaining_effort->SetWeight(2);
         $remaining_effort->SetLegend('Remaining effort');
@@ -61,7 +61,7 @@ class Tracker_Chart_BurndownComputed extends Tracker_Chart_Burndown {
         $remaining_effort->mark->SetSize(3);
         $graph->Add($remaining_effort);
 
-        $ideal_burndown = new LinePlot($this->burndown_data->ideal_effort);
+        $ideal_burndown = new LinePlot($this->burndown_data->getIdealEffort());
         $ideal_burndown->SetColor($colors[0] . ':1.25');
         $ideal_burndown->SetLegend('Ideal Burndown');
         $graph->Add($ideal_burndown);

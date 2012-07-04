@@ -19,9 +19,36 @@
  */
 
 class Tracker_Chart_Data_Burndown {
-    public $remaining_effort = array();
-    public $dates            = array();
-    public $ideal_effort     = array();
+    private $duration;
+    private $remaining_effort     = array();
+    private $human_readable_dates = array();
+    private $ideal_effort         = array();
+
+    public function __construct($duration) {
+        $this->duration = $duration;
+    }
+
+    public function addRemainingEffort($remaining_effort, $timestamp) {
+        $this->remaining_effort[]     = $remaining_effort;
+        $this->human_readable_dates[] = date('M-d', $timestamp);
+    }
+
+    public function getRemainingEffort() {
+        return $this->remaining_effort;
+    }
+
+    public function getHumanReadableDates() {
+        return $this->human_readable_dates;
+    }
+
+    public function getIdealEffort() {
+        $start_effort = $this->remaining_effort[0];
+        $slope = - ($start_effort / $this->duration);
+        for($i = 0; $i < $this->duration; $i++) {
+            $this->ideal_effort[] = floatval($slope * $i + $start_effort);
+        }
+        return $this->ideal_effort;
+    }
 }
 
 ?>

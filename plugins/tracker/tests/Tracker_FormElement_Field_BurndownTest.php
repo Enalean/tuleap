@@ -134,11 +134,11 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
         
         $data = $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
-        $this->assertEqual($data->remaining_effort, array(10,9,8,7,6));
+        $this->assertEqual($data->getRemainingEffort(), array(10,9,8,7,6));
     }
     
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
-        $burndown_data  = new Tracker_Chart_Data_Burndown();
+        $burndown_data  = new Tracker_Chart_Data_Burndown($this->duration);
         $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
         $this->burndown = mock('Tracker_Chart_BurndownComputed');
         

@@ -205,18 +205,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
         $field         = $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
-        $start_effort  = $field->getComputedValue($user, $artifact, strtotime("+0 day 23 hours 59 minutes 59 seconds", $start_date));
-        $slope         = - $start_effort / $duration;
-        $burndown_data = new Tracker_Chart_Data_Burndown();
-        
+        $burndown_data = new Tracker_Chart_Data_Burndown($duration);
+
         for($i = 0; $i < $duration; $i++) {
-            $timestamp = strtotime("+$i day 23 hours 59 minutes 59 seconds", $start_date);
-            
-            $burndown_data->remaining_effort[] = $field->getComputedValue($user, $artifact, $timestamp);
-            $burndown_data->dates[]            = date('M-d', $timestamp);
-            $burndown_data->ideal_effort[]     = floatval($slope * $i + $start_effort);
+            $timestamp        = strtotime("+$i day 23 hours 59 minutes 59 seconds", $start_date);
+            $remaining_effort = $field->getComputedValue($user, $artifact, $timestamp);
+            $burndown_data->addRemainingEffort($remaining_effort, $timestamp);
         }
-        
+
         return $burndown_data;
     }
     
