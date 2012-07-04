@@ -44,19 +44,24 @@ class Cardwall_Column {
     public $fgcolor;
 
     /**
+     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+     */
+    private $field_provider;
+    
+    /**
      * @param int    $id
      * @param string $label
      */
-    public function __construct($id, $label, $bgcolor, $fgcolor) {
+    public function __construct($id, $label, $bgcolor, $fgcolor, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider = null) {
         $this->id      = $id;
         $this->label   = $label;
         $this->bgcolor = $bgcolor;
         $this->fgcolor = $fgcolor;
+        $this->field_provider = $field_provider;
     }
     
-    public function isArtifactInCell2(Tracker_Artifact                                     $artifact, 
-                                      Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
-        $artifact_status = $field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
+    public function isArtifactInCell2(Tracker_Artifact $artifact) {
+        $artifact_status = $this->field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
         return $artifact_status === $this->label
                 || $artifact_status === null && $this->id == 100;
     }
