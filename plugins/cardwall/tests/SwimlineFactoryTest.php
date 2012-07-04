@@ -120,8 +120,8 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
     
     public function itIsInTheCellIfTheLabelMatches() {
         $factory = new Cardwall_SwimlineFactory();
-        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getLabel()->returns('ongoing');
         $artifact = mock('Tracker_Artifact');
+        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getValueFor($artifact->getLastChangeset())->returns('ongoing');
         $field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         $id = $bgcolor = $fgcolor = 0;
         $column   = new Cardwall_Column($id, 'ongoing', $bgcolor, $fgcolor);
@@ -130,8 +130,8 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
     
     public function itIsNotInTheCellIfTheLabelDoesntMatch() {
         $factory = new Cardwall_SwimlineFactory();
-        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getLabel()->returns('ongoing');
         $artifact = mock('Tracker_Artifact');
+        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getValueFor($artifact->getLastChangeset())->returns('ongoing');
         $field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         $id = $bgcolor = $fgcolor = 0;
         $column   = new Cardwall_Column($id, 'done', $bgcolor, $fgcolor);
@@ -141,8 +141,8 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
     public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
         $factory = new Cardwall_SwimlineFactory();
         $null_status = null;
-        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getLabel()->returns($null_status);
         $artifact = mock('Tracker_Artifact');
+        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getValueFor($artifact->getLastChangeset())->returns($null_status);
         $field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
         $bgcolor = $fgcolor = 0;
         $column   = new Cardwall_Column(100, 'done', $bgcolor, $fgcolor);
