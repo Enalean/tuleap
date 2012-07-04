@@ -20,49 +20,48 @@
  */
 
 class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
-    public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoNodes() {
+    public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() {
         $factory = new Cardwall_SwimlineFactory();
         $columns = array();
-        $nodes   = array();
-        $swimlines = $factory->getCellsOfSwimline($columns, $nodes);
+        $presenters   = array();
+        $swimlines = $factory->getCellsOfSwimline($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
-    public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomeNodes() {
+    public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters() {
         $factory = new Cardwall_SwimlineFactory();
         $columns = array();
-        $nodes   = array(aNode()->build());
-        $swimlines = $factory->getCellsOfSwimline($columns, $nodes);
+        $presenters   = array(mock('Cardwall_CardInCellPresenter'));
+        $swimlines = $factory->getCellsOfSwimline($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
-    public function itReturnsANestedArrayOfPresenterNodesIfThereAreColumnsButNoNodes() {
+    public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
         $factory = new Cardwall_SwimlineFactory();
         $id = $label = $bgcolor = $fgcolor = 0;
         $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
-        $nodes   = array();
-        $swimlines = $factory->getCellsOfSwimline($columns, $nodes);
+        $presenters   = array();
+        $swimlines = $factory->getCellsOfSwimline($columns, $presenters);
         $expected = array(
                         array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itReturnsANestedArrayOfPresenterNodes() {
+    public function itReturnsANestedArrayOfPresenterPresenters() {
         $factory = new Cardwall_SwimlineFactory();
         $label   = 'ongoing';
         $id = $bgcolor = $fgcolor = 0;
         $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($label);
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
-        $node     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter);
         
-        $swimlines = $factory->getCellsOfSwimline($columns, array($node));
+        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
         $expected = array(
                         array('cardincell_presenters' => array($cardincell_presenter)));
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itSortsNodesIntoColumsBasedOnTheMatchBetweenArtifactAndFieldLabel() {
+    public function itSortsPresentersIntoColumsBasedOnTheMatchBetweenArtifactAndFieldLabel() {
         $factory = new Cardwall_SwimlineFactory();
         $label_1   = 'ongoing';
         $label_2   = 'review';
@@ -73,17 +72,15 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $artifact2 = stub('Tracker_Artifact')->getStatus()->returns($label_2);
         $cardincell_presenter1 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact1);
         $cardincell_presenter2 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact2);
-        $node1     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter1);
-        $node2     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter2);
         
-        $swimlines = $factory->getCellsOfSwimline($columns, array($node1, $node2));
+        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter1, $cardincell_presenter2));
         $expected = array(
                         array('cardincell_presenters' => array($cardincell_presenter1)),
                         array('cardincell_presenters' => array($cardincell_presenter2)));
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itIgnoresNodesIfThereIsNoMatchingLabel() {
+    public function itIgnoresPresentersIfThereIsNoMatchingLabel() {
         $factory = new Cardwall_SwimlineFactory();
         $column_label   = 'ongoing';
         $id = $bgcolor = $fgcolor = 0;
@@ -91,15 +88,14 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $artifact_label = 'in progress';
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($artifact_label);
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
-        $node     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter);
 
-        $swimlines = $factory->getCellsOfSwimline($columns, array($node));
+        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
         $expected = array(
                         array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itPutsNodesWithNullStatusIntoTheColumnWithId100() {
+    public function itPutsPresentersWithNullStatusIntoTheColumnWithId100() {
         $factory = new Cardwall_SwimlineFactory();
         $column_label   = '';
         $bgcolor = $fgcolor = 0;
@@ -108,10 +104,8 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $null_status = null;
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
-        $node     = stub('Cardwall_CardInCellPresenterNode')->getCardInCellPresenter()->returns($cardincell_presenter);
-        stub($node)->getCardInCellPresenter()->returns($cardincell_presenter);
         
-        $swimlines = $factory->getCellsOfSwimline($columns, array($node));
+        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
         $expected = array(
                         array('cardincell_presenters' => array($cardincell_presenter)),
                         array('cardincell_presenters' => array()));

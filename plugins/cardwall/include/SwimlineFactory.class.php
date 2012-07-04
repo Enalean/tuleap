@@ -31,19 +31,24 @@ class Cardwall_SwimlineFactory {
     public function getSwimlines(array $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
-            $cells = $this->getCellsOfSwimline($columns, $child->getChildren());
+            $potential_presenters = $this->extractPotentialPresentersFrom($child->getChildren());
+            $cells = $this->getCellsOfSwimline($columns, $potential_presenters);
             $swimlines[] = new Cardwall_Swimline($child, $cells);
         }
         return $swimlines;
     }
 
-    public function getCellsOfSwimline(array $columns, array $nodes) {
+    private function extractPotentialPresentersFrom(array $nodes) {
+        $potential_presenters = array();
+        foreach ($nodes as $node) {
+            $potential_presenters[] = $node->getCardInCellPresenter();
+        }
+        return $potential_presenters;
+    }
+
+    public function getCellsOfSwimline(array $columns, array $potential_presenters) {
         $cells = array();
         foreach ($columns as $column) {
-            $potential_presenters = array();
-            foreach ($nodes as $node) {
-                $potential_presenters[] = $node->getCardInCellPresenter();
-            }
             $cells[] = $this->getCell($column, $potential_presenters);
         }
         return $cells;
@@ -51,7 +56,6 @@ class Cardwall_SwimlineFactory {
 
     private function getCell(Cardwall_Column $column, array $potential_presenters) {
         $presenters = array();
-        
         foreach ($potential_presenters as $p) {
             $this->addNodeToCell($p, $column, $presenters);
         }
@@ -69,5 +73,6 @@ class Cardwall_SwimlineFactory {
         $artifact_status = $artifact->getStatus();
         return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
+
 }
 ?>
