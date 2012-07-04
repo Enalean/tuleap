@@ -230,12 +230,19 @@ class cardwallPlugin extends Plugin {
             foreach ($mapping_fields as $i => $row) {
                 $mapping_tracker = TrackerFactory::instance()->getTrackerById($row['tracker_id']);
                 $trackers = array_diff($trackers, array($mapping_tracker));
-                $html .= '<tr class="'. html_get_alt_row_color($i + 1) .'">';
+                $html .= '<tr class="'. html_get_alt_row_color($i + 1) .'" valign="top">';
                 $html .= '<td>';
-                $html .= $hp->purify($mapping_tracker->getName());
+                $html .= $hp->purify($mapping_tracker->getName()) .'<br />';
                 $field = Tracker_FormElementFactory::instance()->getFieldById($row['field_id']);
-                if ($field) {
+                $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
+                if (!$field) {
+                    $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
                 }
+                foreach (Tracker_FormElementFactory::instance()->getUsedSbFields($mapping_tracker) as $sb_field) {
+                    $selected = $field == $sb_field ? 'selected="selected"' : '';
+                    $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $hp->purify($sb_field->getLabel()) .'</option>';
+                }
+                $html .= '</select>';
                 $html .= '</td>';
                 foreach ($columns_raws as $raw) {
                     $html .= '<td>';
@@ -306,6 +313,16 @@ class cardwallPlugin extends Plugin {
             $new_mapping_tracker = TrackerFactory::instance()->getTrackerById($request->get('add_mapping_on'));
             if ($new_mapping_tracker && $this->getOnTopColumnMappingFieldDao()->create($tracker->getId(), $new_mapping_tracker->getId(), null)) {
                 $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($new_mapping_tracker->getName()) .' added');
+            }
+        }
+        if (is_array($request->get('mapping_field'))) {
+            foreach ($request->get('mapping_field') as $mapping_tracker_id => $field_id) {
+                $mapping_tracker = TrackerFactory::instance()->getTrackerById($mapping_tracker_id);
+                $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
+                var_dump($field_id);
+                if ($mapping_tracker && $field && $field->getTracker() == $mapping_tracker && $this->getOnTopColumnMappingFieldDao()->save($tracker->getId(), $mapping_tracker_id, $field_id)) {
+                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' changed to '. $hp->purify($field->getLabel()));
+                }
             }
         }
         if (is_array($request->get('delete_mapping'))) {

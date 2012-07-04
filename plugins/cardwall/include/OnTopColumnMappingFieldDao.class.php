@@ -32,8 +32,9 @@ class Cardwall_OnTopColumnMappingFieldDao extends DataAccessObject {
     public function create($cardwall_tracker_id, $tracker_id, $field_id) {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
-        $field_id            = " NULL ";
-        if ($field_id !== null) {
+        if ($field_id === null) {
+            $field_id = " NULL ";
+        } else {
             $field_id = $this->da->escapeInt($field_id);
         }
         $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field (cardwall_tracker_id, tracker_id, field_id)
@@ -44,15 +45,16 @@ class Cardwall_OnTopColumnMappingFieldDao extends DataAccessObject {
     public function save($cardwall_tracker_id, $tracker_id, $field_id) {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
-        $field_id            = " NULL ";
-        if ($field_id !== null) {
+        if ($field_id === null) {
+            $field_id = " NULL ";
+        } else {
             $field_id = $this->da->escapeInt($field_id);
         }
-        $sql = "UPDATE plugin_cardwall_on_top_column_mapping_field
-                SET field_id = $field_id
-                WHERE tracker_id = $tracker_id
-                  AND cardwall_tracker_id = $cardwall_tracker_id";
-        return $this->update($sql);
+        $sql = "REPLACE INTO plugin_cardwall_on_top_column_mapping_field (cardwall_tracker_id, tracker_id, field_id)
+                VALUES ($cardwall_tracker_id, $tracker_id, $field_id)";
+        if ($this->update($sql)) {
+            return $this->da->affectedRows();
+        }
     }
 
     public function delete($cardwall_tracker_id, $tracker_id) {
