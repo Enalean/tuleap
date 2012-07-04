@@ -23,7 +23,10 @@
  */
 class Cardwall_Swimline {
 
-    public $cardincell_presenter;
+    /**
+     * @var Tracker_CardPresenter 
+     */
+    private $card_presenter;
 
     /**
      * @var array
@@ -41,14 +44,17 @@ class Cardwall_Swimline {
      */
     public function __construct(TreeNode $node, array $cells) {
         if ($node instanceof Cardwall_CardInCellPresenterNode) {
-            $this->cardincell_presenter = $node->getCardInCellPresenter();
+            $this->card_presenter = $node->getCardInCellPresenter()->getCardPresenter();
         }
         $this->cells       = $cells;
         $this->swimline_id = $node->getId();
     }
-    
+
+    /**
+     * @return Tracker_CardPresenter
+     */
     public function getCardPresenter() {
-        return $this->cardincell_presenter->getCardPresenter();
+        return $this->card_presenter;
     }
 }
 ?>

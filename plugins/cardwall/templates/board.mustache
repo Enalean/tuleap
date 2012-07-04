@@ -28,19 +28,19 @@
                 {{#swimlines}}
                     <tr valign="top" id="swimline-{{swimline_id}}">
                         {{#has_swimline_header}}
-                                    <td>
-                                        <ul class="nodrag">
-                                            <li>{{> card}}</td>
-                                        </ul>
-                                    </td>
+                            <td>
+                                <ul class="nodrag">
+                                    <li>{{> card}}</td>
+                                </ul>
+                            </td>
                         {{/has_swimline_header}}
                         {{#cells}}
                             <td>
                                 <ul>
                                     {{#presenter_nodes}}
-                                            <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
-                                                {{> card}}
-                                            </li>
+                                        <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
+                                            {{> card}}
+                                        </li>
                                     {{/presenter_nodes}}
                                 </ul>
                             </td>
