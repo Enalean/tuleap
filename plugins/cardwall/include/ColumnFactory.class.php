@@ -59,7 +59,7 @@ class Cardwall_ColumnFactory {
         $this->columns = array();
         foreach ($values as $value) {
             list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider);
         }
         return $this->columns;
     }

@@ -70,16 +70,10 @@ class Cardwall_SwimlineFactory {
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
         $artifact        = $presenter->getArtifact();
-        if ($this->isArtifactInCell($artifact, $column)) {
+        if ($column->isInColumn($artifact)) {
             $presenters[] = $presenter;
         }
     }
-
-    public function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
-        $artifact_status = $artifact->getStatus();
-        return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
-    }
-
 
 }
 ?>

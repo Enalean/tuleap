@@ -40,8 +40,7 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     
     public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
         $factory = new Cardwall_SwimlineFactory();
-        $id = $label = $bgcolor = $fgcolor = 0;
-        $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
+        $columns = array(mock('Cardwall_Column'));
         $presenters   = array();
         $swimlines = $factory->getCellsOfSwimline($columns, $presenters);
         $expected = array(
@@ -49,12 +48,12 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itReturnsANestedArrayOfPresenterPresenters() {
+    public function itReturnsANestedArrayOfPresenters() {
         $factory = new Cardwall_SwimlineFactory();
         $label   = 'ongoing';
-        $id = $bgcolor = $fgcolor = 0;
-        $columns = array(new Cardwall_Column($id, $label, $bgcolor, $fgcolor));
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($label);
+        $column   = stub('Cardwall_Column')->isInColumn($artifact)->returns(true);
+        $columns = array($column);
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
         
         $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
@@ -67,11 +66,10 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $factory = new Cardwall_SwimlineFactory();
         $label_1   = 'ongoing';
         $label_2   = 'review';
-        $id = $bgcolor = $fgcolor = 0;
-        $columns = array(new Cardwall_Column($id, $label_1, $bgcolor, $fgcolor),
-                         new Cardwall_Column($id, $label_2, $bgcolor, $fgcolor));
         $artifact1 = stub('Tracker_Artifact')->getStatus()->returns($label_1);
         $artifact2 = stub('Tracker_Artifact')->getStatus()->returns($label_2);
+        $columns = array(stub('Cardwall_Column')->isInColumn($artifact1)->returns(true),
+                         stub('Cardwall_Column')->isInColumn($artifact2)->returns(true));
         $cardincell_presenter1 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact1);
         $cardincell_presenter2 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact2);
         
@@ -84,11 +82,9 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     
     public function itIgnoresPresentersIfThereIsNoMatchingLabel() {
         $factory = new Cardwall_SwimlineFactory();
-        $column_label   = 'ongoing';
-        $id = $bgcolor = $fgcolor = 0;
-        $columns = array(new Cardwall_Column($id, $column_label, $bgcolor, $fgcolor));
         $artifact_label = 'in progress';
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($artifact_label);
+        $columns = array(stub('Cardwall_Column')->isInColumn($artifact)->returns(false));
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
 
         $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
@@ -99,12 +95,10 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     
     public function itPutsPresentersWithNullStatusIntoTheColumnWithId100() {
         $factory = new Cardwall_SwimlineFactory();
-        $column_label   = '';
-        $bgcolor = $fgcolor = 0;
-        $columns = array(new Cardwall_Column(100, $column_label, $bgcolor, $fgcolor), 
-                         new Cardwall_Column(200, 'in progress', $bgcolor, $fgcolor));
         $null_status = null;
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);
+        $columns = array(stub('Cardwall_Column')->isInColumn($artifact)->returns(true), 
+                         stub('Cardwall_Column')->isInColumn($artifact)->returns(false));
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
         
         $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));

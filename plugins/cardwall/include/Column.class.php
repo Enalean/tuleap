@@ -61,7 +61,11 @@ class Cardwall_Column {
     }
     
     public function isInColumn(Tracker_Artifact $artifact) {
-        $artifact_status = $this->field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
+        $field           = $this->field_provider->getField($artifact);
+        $artifact_status = null;
+        if ($field) {
+            $artifact_status = $field->getValueFor($artifact->getLastChangeset());
+        }
         return $artifact_status === $this->label
                 || $artifact_status === null && $this->id == 100;
     }
