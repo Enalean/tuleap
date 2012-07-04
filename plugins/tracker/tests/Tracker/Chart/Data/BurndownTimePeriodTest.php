@@ -26,7 +26,7 @@ class Tracker_Chart_Data_BurndownTimePeriodTest extends TuleapTestCase {
         $start_date    = mktime(0, 0, 0, 7, 4, 2012);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 2);
         
-        $this->assertEqual($time_period->getHumanReadableDates(), array('Jul-04', 'Jul-05', 'Jul-06'));
+        $this->assertEqual($time_period->getHumanReadableDates(), array('Wed 04', 'Thu 05', 'Fri 06'));
     }
     
     public function itProvidesAListOfTheDayOffsetsInTheTimePeriod() {
