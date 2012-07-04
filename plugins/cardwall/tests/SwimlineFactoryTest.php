@@ -113,4 +113,32 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     }
     
 }
+
+class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
+    
+    public function itIsInTheCellIfTheLabelMatches() {
+        $factory = new Cardwall_SwimlineFactory();
+        $artifact = stub('Tracker_Artifact')->getStatus()->returns('ongoing');
+        $id = $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column($id, 'ongoing', $bgcolor, $fgcolor);
+        $this->assertTrue($factory->isArtifactInCell($artifact, $column));
+    }
+    
+    public function itIsNotInTheCellIfTheLabelDoesntMatch() {
+        $factory = new Cardwall_SwimlineFactory();
+        $artifact = stub('Tracker_Artifact')->getStatus()->returns('ongoing');
+        $id = $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column($id, 'done', $bgcolor, $fgcolor);
+        $this->assertFalse($factory->isArtifactInCell($artifact, $column));
+    }
+    
+    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
+        $factory = new Cardwall_SwimlineFactory();
+        $null_status = null;
+        $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);
+        $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column(100, 'unimportant', $bgcolor, $fgcolor);
+        $this->assertTrue($factory->isArtifactInCell($artifact, $column));
+    }
+}
 ?>

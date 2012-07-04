@@ -74,7 +74,7 @@ class Cardwall_SwimlineFactory {
         }
     }
 
-    private function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
+    public function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
         $artifact_status = $artifact->getStatus();
         return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
     }
