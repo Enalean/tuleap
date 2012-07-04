@@ -46,7 +46,7 @@ class Cardwall_CardFieldPresenter {
     public function getValue() {
         $value = $this->field->fetchCardValue($this->artifact);
         return $value;
-    }        
+    }
 }
 
 ?>
