@@ -18,30 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'BurndownTimePeriod.class.php';
+
 class Tracker_Chart_Data_Burndown {
     
     /**
-     * @var int The burndown start date as a Unix timestamp.
+     * @var Tracker_Chart_Data_BurndownTimePeriod
      */
-    private $start_date;
+    private $time_period;
+    
+    private $remaining_effort = array();
+    private $ideal_effort     = array();
+
+    public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period) {
+        $this->time_period = $time_period;
+    }
     
     /**
-     * @var int The burndown time period duration in days.
+     * @return int The Burndown time period duration in days.
      */
-    private $duration;
-    
-    private $remaining_effort     = array();
-    private $human_readable_dates = array();
-    private $ideal_effort         = array();
-
-    public function __construct($start_date, $duration) {
-        $this->start_date = $start_date;
-        $this->duration   = $duration;
-        
-        for($day_offset = 0; $day_offset < $duration; $day_offset++) {
-            $day = strtotime("+$day_offset days", $start_date);
-            $this->human_readable_dates[] = date('M-d', $day);
-        }
+    private function getDuration() {
+        return $this->time_period->getDuration();
     }
 
     public function addRemainingEffort($remaining_effort, $timestamp) {
@@ -53,13 +50,14 @@ class Tracker_Chart_Data_Burndown {
     }
 
     public function getHumanReadableDates() {
-        return $this->human_readable_dates;
+        return $this->time_period->getHumanReadableDates();
     }
 
     public function getIdealEffort() {
         $start_effort = $this->remaining_effort[0];
-        $slope = - ($start_effort / $this->duration);
-        for($i = 0; $i < $this->duration; $i++) {
+        $slope        = - ($start_effort / $this->getDuration());
+        
+        for($i = 0; $i < $this->getDuration(); $i++) {
             $this->ideal_effort[] = floatval($slope * $i + $start_effort);
         }
         return $this->ideal_effort;

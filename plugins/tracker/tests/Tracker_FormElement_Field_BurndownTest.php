@@ -138,7 +138,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     }
     
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
-        $burndown_data  = new Tracker_Chart_Data_Burndown($this->timestamp, $this->duration);
+        $time_period    = new Tracker_Chart_Data_BurndownTimePeriod($this->timestamp, $this->duration);
+        $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);
         $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
         $this->burndown = mock('Tracker_Chart_BurndownComputed');
         
