@@ -31,21 +31,26 @@ class Cardwall_SwimlineFactory {
     public function getSwimlines(array $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
-            $potential_presenters = $this->extractPotentialPresentersFrom($child->getChildren());
+            $potential_presenters = $this->extractPresentersFrom($child->getChildren());
             $cells = $this->getCellsOfSwimline($columns, $potential_presenters);
             $swimlines[] = new Cardwall_Swimline($child, $cells);
         }
         return $swimlines;
     }
 
-    private function extractPotentialPresentersFrom(array $nodes) {
-        $potential_presenters = array();
+    private function extractPresentersFrom(array $nodes) {
+        $presenters = array();
         foreach ($nodes as $node) {
-            $potential_presenters[] = $node->getCardInCellPresenter();
+            $presenters[] = $node->getCardInCellPresenter();
         }
-        return $potential_presenters;
+        return $presenters;
     }
 
+    /**
+     * @param array of Cardwall_Column $columns
+     * @param array of Cardwall_CardInCellPresenter $potential_presenters
+     * @return type
+     */
     public function getCellsOfSwimline(array $columns, array $potential_presenters) {
         $cells = array();
         foreach ($columns as $column) {
@@ -55,11 +60,11 @@ class Cardwall_SwimlineFactory {
     }
 
     private function getCell(Cardwall_Column $column, array $potential_presenters) {
-        $presenters = array();
+        $retained_presenters = array();
         foreach ($potential_presenters as $p) {
-            $this->addNodeToCell($p, $column, $presenters);
+            $this->addNodeToCell($p, $column, $retained_presenters);
         }
-        return array('cardincell_presenters' => $presenters);;
+        return array('cardincell_presenters' => $retained_presenters);;
     }
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
