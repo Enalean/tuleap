@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/SwimlineFactory.class.php';
+
 class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() {
         $factory = new Cardwall_SwimlineFactory();
@@ -118,13 +120,44 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
     
     public function itIsInTheCellIfTheLabelMatches() {
         $factory = new Cardwall_SwimlineFactory();
+        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getLabel()->returns('ongoing');
+        $artifact = mock('Tracker_Artifact');
+        $field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
+        $id = $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column($id, 'ongoing', $bgcolor, $fgcolor);
+        $this->assertTrue($factory->isArtifactInCell2($artifact, $column, $field_provider));
+    }
+    
+    public function itIsNotInTheCellIfTheLabelDoesntMatch() {
+        $factory = new Cardwall_SwimlineFactory();
+        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getLabel()->returns('ongoing');
+        $artifact = mock('Tracker_Artifact');
+        $field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
+        $id = $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column($id, 'done', $bgcolor, $fgcolor);
+        $this->assertFalse($factory->isArtifactInCell2($artifact, $column, $field_provider));
+    }
+
+    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
+        $factory = new Cardwall_SwimlineFactory();
+        $null_status = null;
+        $field = stub('Tracker_FormElement_Field_MultiSelectbox')->getLabel()->returns($null_status);
+        $artifact = mock('Tracker_Artifact');
+        $field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($artifact)->returns($field);
+        $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column(100, 'done', $bgcolor, $fgcolor);
+        $this->assertTrue($factory->isArtifactInCell2($artifact, $column, $field_provider));
+    
+    }
+    
+    public function itIsInTheCellIfTheLabelMatches_old() {
+        $factory = new Cardwall_SwimlineFactory();
         $artifact = stub('Tracker_Artifact')->getStatus()->returns('ongoing');
         $id = $bgcolor = $fgcolor = 0;
         $column   = new Cardwall_Column($id, 'ongoing', $bgcolor, $fgcolor);
         $this->assertTrue($factory->isArtifactInCell($artifact, $column));
     }
-    
-    public function itIsNotInTheCellIfTheLabelDoesntMatch() {
+    public function itIsNotInTheCellIfTheLabelDoesntMatch_old() {
         $factory = new Cardwall_SwimlineFactory();
         $artifact = stub('Tracker_Artifact')->getStatus()->returns('ongoing');
         $id = $bgcolor = $fgcolor = 0;
@@ -132,7 +165,7 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
         $this->assertFalse($factory->isArtifactInCell($artifact, $column));
     }
     
-    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
+    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100_old() {
         $factory = new Cardwall_SwimlineFactory();
         $null_status = null;
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);

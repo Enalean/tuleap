@@ -19,6 +19,7 @@
  */
 
 require_once 'Swimline.class.php';
+require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 
 /**
  * Build swimlines for the dashboard
@@ -77,6 +78,14 @@ class Cardwall_SwimlineFactory {
     public function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
         $artifact_status = $artifact->getStatus();
         return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
+    }
+
+    public function isArtifactInCell2(Tracker_Artifact                                     $artifact, 
+                                      Cardwall_Column                                      $column, 
+                                      Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+        $artifact_status = $field_provider->getField($artifact)->getLabel() ;
+        return $artifact_status == $column->label
+                || $artifact_status === null;
     }
 
 }
