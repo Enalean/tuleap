@@ -164,7 +164,14 @@ class cardwallPlugin extends Plugin {
                 break;
             case 'admin-cardwall-update':
                 if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->updateCardwallOnTop($params['tracker'], $params['request']->get('cardwall_on_top'));
+                    $this->getCSRFToken($params['tracker']->getId())->check();
+                    
+                    require_once 'OnTop/Config/Updater.class.php';
+                    require_once 'OnTop/Config/Command/EnableCardwallOnTop.class.php';
+                    $updater = new Cardwall_OnTop_Config_Updater();
+                    $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($params['tracker'], $this->getOnTopDao()));
+                    $updater->process($params['request']);
+                    
                     $this->updateCardwallOnTopColumns($params['tracker'], $params['request']);
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&func=admin-cardwall');
                 } else {
@@ -274,10 +281,9 @@ class cardwallPlugin extends Plugin {
         }
         return $html;
     }
-
+/*
     private function updateCardwallOnTop(Tracker $tracker, $please_enable) {
         $tracker_id = $tracker->getId();
-        $this->getCSRFToken($tracker_id)->check();
         $is_enabled = $this->getOnTopDao()->isEnabled($tracker_id);
         if ($please_enable) {
             if ( ! $is_enabled) {
@@ -291,7 +297,7 @@ class cardwallPlugin extends Plugin {
             }
         }
     }
-
+*/
     private function updateCardwallOnTopColumns(Tracker $tracker, Codendi_Request $request) {
         $hp = Codendi_HTMLPurifier::instance();
         if ($request->get('new_column')) {
@@ -337,11 +343,11 @@ class cardwallPlugin extends Plugin {
     }
 
     /**
-     * @return Cardwall_OnTopDao
+     * @return Cardwall_OnTop_Dao
      */
     private function getOnTopDao() {
-        require_once 'OnTopDao.class.php';
-        return new Cardwall_OnTopDao();
+        require_once 'OnTop/Dao.class.php';
+        return new Cardwall_OnTop_Dao();
     }
 
     /**

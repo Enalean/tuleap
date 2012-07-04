@@ -18,11 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Cardwall_OnTop_Config_Command {
+abstract class Cardwall_OnTop_Config_Command {
+
+    /**
+     * @var Tracker
+     */
+    protected $tracker;
+
+    public function __construct(Tracker $tracker) {
+        $this->tracker = $tracker;
+    }
 
     /**
      * @return void
      */
-    public function execute(Codendi_Request $request);
+    public abstract function execute(Codendi_Request $request);
 }
 ?>

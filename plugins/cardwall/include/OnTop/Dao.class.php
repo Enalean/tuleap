@@ -19,7 +19,7 @@
  */
 
 
-class Cardwall_OnTopDao extends DataAccessObject {
+class Cardwall_OnTop_Dao extends DataAccessObject {
 
     /**
      * @return boolean
