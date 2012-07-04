@@ -21,22 +21,27 @@
 require_once dirname(__FILE__).'/../../../../include/Tracker/Chart/Data/Burndown.class.php';
 
 class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
-
+    private $start_date;
+    private $step;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->start_date = mktime(0, 0, 0, 7, 4, 2012);
+    }
+    
     public function itAddRemainingEffort() {
-        $burndown_data = new Tracker_Chart_Data_Burndown(10);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->start_date, 10);
         $burndown_data->addRemainingEffort(12, $_SERVER['REQUEST_TIME']);
         $this->assertEqual($burndown_data->getRemainingEffort(), array(12));
     }
     
-    public function itComputesDateWhenAddingRemainingEffort() {
-        $burndown_data = new Tracker_Chart_Data_Burndown(10);
-        $burndown_data->addRemainingEffort(12, mktime(0, 0, 0, 7, 4, 2012));
-        $burndown_data->addRemainingEffort(11, mktime(0, 0, 0, 7, 5, 2012));
+    public function itComputesDateBasedOnStartDate() {
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->start_date, 2);
         $this->assertEqual($burndown_data->getHumanReadableDates(), array('Jul-04', 'Jul-05'));
     }
     
     public function itComputesIdealBurndownWhenAddingRemainingEffort() {
-        $burndown_data = new Tracker_Chart_Data_Burndown(5);
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->start_date, 5);
         $burndown_data->addRemainingEffort(5, mktime(0, 0, 0, 7, 4, 2012));
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1));
     }

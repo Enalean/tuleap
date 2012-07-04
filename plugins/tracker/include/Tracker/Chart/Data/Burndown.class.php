@@ -19,18 +19,33 @@
  */
 
 class Tracker_Chart_Data_Burndown {
+    
+    /**
+     * @var int The burndown start date as a Unix timestamp.
+     */
+    private $start_date;
+    
+    /**
+     * @var int The burndown time period duration in days.
+     */
     private $duration;
+    
     private $remaining_effort     = array();
     private $human_readable_dates = array();
     private $ideal_effort         = array();
 
-    public function __construct($duration) {
-        $this->duration = $duration;
+    public function __construct($start_date, $duration) {
+        $this->start_date = $start_date;
+        $this->duration   = $duration;
+        
+        for($day_offset = 0; $day_offset < $duration; $day_offset++) {
+            $day = strtotime("+$day_offset days", $start_date);
+            $this->human_readable_dates[] = date('M-d', $day);
+        }
     }
 
     public function addRemainingEffort($remaining_effort, $timestamp) {
-        $this->remaining_effort[]     = $remaining_effort;
-        $this->human_readable_dates[] = date('M-d', $timestamp);
+        $this->remaining_effort[] = $remaining_effort;
     }
 
     public function getRemainingEffort() {
