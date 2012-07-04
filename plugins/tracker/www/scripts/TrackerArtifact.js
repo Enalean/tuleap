@@ -119,11 +119,16 @@ document.observe('dom:loaded', function () {
                     comment_panel.hide();
                     textarea.focus();
                     var button = new Element('button').update('Ok').observe('click', function (evt) {
+                        if (CKEDITOR.instances && CKEDITOR.instances['tracker_followup_comment_edit_'+id]) {
+                            var content = CKEDITOR.instances['tracker_followup_comment_edit_'+id].getData();
+                        } else {
+                            var content = $('tracker_followup_comment_edit_'+id).getValue();
+                        }
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',
                                 changeset_id:   id,
-                                content:        textarea.getValue(),
+                                content:        content,
                                 comment_format: $('comment_format_html'+id).checked
                             },
                             onSuccess: function (transport) {
