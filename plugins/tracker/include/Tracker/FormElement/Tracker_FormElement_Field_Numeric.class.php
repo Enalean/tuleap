@@ -50,10 +50,12 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return mixed
      */
     public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null) {
-        if ($timestamp) {
-            return $this->getComputedValueAt($artifact, $timestamp);
-        } else {
-            return $this->getCurrentComputedValue($artifact);
+        if ($this->userCanRead($user)) {
+            if ($timestamp) {
+                return $this->getComputedValueAt($artifact, $timestamp);
+            } else {
+                return $this->getCurrentComputedValue($artifact);
+            }
         }
     }
 
