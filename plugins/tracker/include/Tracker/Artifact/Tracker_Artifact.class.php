@@ -283,7 +283,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
                     $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
                     $output .= PHP_EOL;
-                    if ($comment->bodyFormat) {
+                    if ($comment->bodyFormat == Tracker_Artifact_Changeset_Comment::HTML_COMMENT) {
                         $level = CODENDI_PURIFIER_STRIP_HTML;
                     } else {
                         $level = CODENDI_PURIFIER_DISABLED;
@@ -607,9 +607,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
                         if ($request->get('comment_format') == 'true') {
-                            $commentFormat = true;
+                            $commentFormat = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
                         } else {
-                            $commentFormat = false;
+                            $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
                         }
                         $changeset->updateComment($request->get('content'), $current_user, $commentFormat);
                         if ($request->isAjax()) {

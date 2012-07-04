@@ -21,7 +21,16 @@
 require_once('common/date/DateHelper.class.php');
 
 class Tracker_Artifact_Changeset_Comment {
+    /**
+     * @const Changeset comment format is text.
+     */
+    const TEXT_COMMENT = 0;
     
+    /**
+     * @const Changeset comment format is HTML
+     */
+    const HTML_COMMENT = 1;
+
     public $id;
     /**
      *
@@ -35,6 +44,8 @@ class Tracker_Artifact_Changeset_Comment {
     public $body;
     public $bodyFormat;
     public $parent_id;
+    
+    
     
     /**
      * Constructor
@@ -125,7 +136,7 @@ class Tracker_Artifact_Changeset_Comment {
                         if ($this->parent_id && !trim($this->body)) {
                             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                         } else {
-                            if ($this->bodyFormat) {
+                            if ($this->bodyFormat == self::HTML_COMMENT) {
                                 $level = CODENDI_PURIFIER_LIGHT;
                             } else {
                                 $level = CODENDI_PURIFIER_BASIC;
@@ -147,7 +158,7 @@ class Tracker_Artifact_Changeset_Comment {
                     //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
                     //}
                     if ( !empty($this->body) ) {
-                        if ($this->bodyFormat) {
+                        if ($this->bodyFormat == self::HTML_COMMENT) {
                             $level = CODENDI_PURIFIER_STRIP_HTML;
                         } else {
                             $level = CODENDI_PURIFIER_DISABLED;
