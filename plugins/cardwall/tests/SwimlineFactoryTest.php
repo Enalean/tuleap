@@ -48,21 +48,7 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itReturnsANestedArrayOfPresenters() {
-        $factory = new Cardwall_SwimlineFactory();
-        $label   = 'ongoing';
-        $artifact = stub('Tracker_Artifact')->getStatus()->returns($label);
-        $column   = stub('Cardwall_Column')->isInColumn($artifact)->returns(true);
-        $columns = array($column);
-        $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
-        
-        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
-        $expected = array(
-                        array('cardincell_presenters' => array($cardincell_presenter)));
-        $this->assertIdentical($expected, $swimlines);
-    }
-    
-    public function itSortsPresentersIntoColumsBasedOnTheMatchBetweenArtifactAndFieldLabel() {
+    public function itAsksTheColumnIfItGoesInThere() {
         $factory = new Cardwall_SwimlineFactory();
         $label_1   = 'ongoing';
         $label_2   = 'review';
@@ -80,7 +66,7 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $this->assertIdentical($expected, $swimlines);
     }
     
-    public function itIgnoresPresentersIfThereIsNoMatchingLabel() {
+    public function itIgnoresPresentersIfThereIsNoMatchingColumn() {
         $factory = new Cardwall_SwimlineFactory();
         $artifact_label = 'in progress';
         $artifact = stub('Tracker_Artifact')->getStatus()->returns($artifact_label);
@@ -92,77 +78,6 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
                         array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
     }
-    
-    public function itPutsPresentersWithNullStatusIntoTheColumnWithId100() {
-        $factory = new Cardwall_SwimlineFactory();
-        $null_status = null;
-        $artifact = stub('Tracker_Artifact')->getStatus()->returns($null_status);
-        $columns = array(stub('Cardwall_Column')->isInColumn($artifact)->returns(true), 
-                         stub('Cardwall_Column')->isInColumn($artifact)->returns(false));
-        $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
-        
-        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
-        $expected = array(
-                        array('cardincell_presenters' => array($cardincell_presenter)),
-                        array('cardincell_presenters' => array()));
-        $this->assertIdentical($expected, $swimlines);
-    }
-    
 }
 
-class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        $this->artifact = mock('Tracker_Artifact');
-        $this->field = mock('Tracker_FormElement_Field_MultiSelectbox');
-        $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
-    }
-    
-    public function itIsInTheCellIfTheLabelMatches() {
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
-        $column   = $this->newCardwall_Column(0, 'ongoing');
-        $this->assertIn($column);
-    }
-    
-    public function itIsNotInTheCellIfTheLabelDoesntMatch() {
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
-        $column   = $this->newCardwall_Column(0, 'done');
-        $this->assertNotIn($column);
-    }
-
-    public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
-        $null_status = null;
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns($null_status);
-        $column   = $this->newCardwall_Column(100, 'done');
-        $this->assertIn($column);
-    }
-
-    public function itIsNotInTheCellIfItHasNoStatus() {
-        $null_status = null;
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns($null_status);
-        $column   = $this->newCardwall_Column(123, 'done');
-        $this->assertNotIn($column);
-    }
-
-    public function itIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100() {
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
-        $column   = $this->newCardwall_Column(100, 'done');
-        $this->assertNotIn($column);
-    }
-
-    private function assertIn($column) {
-         $this->assertTrue($column->isInColumn($this->artifact));
-    }
-    
-    private function assertNotIn($column) {
-         $this->assertFalse($column->isInColumn($this->artifact));
-    }
-
-    public function newCardwall_Column($id, $label) {
-        $bgcolor = $fgcolor = 0;
-        return new Cardwall_Column($id, $label, $bgcolor, $fgcolor, $this->field_provider);
-    }
-    
-}
 ?>
