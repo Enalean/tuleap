@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $this->sprint_tracker_id = 113;
         $this->sprint_tracker    = aTracker()->withId($this->sprint_tracker_id)->build();
         
-        $this->timestamp            = mktime(0, 0, 0, 7, 3, 2012);
+        $this->timestamp            = mktime(0, 0, 0, 7, 3, 2011);
         $this->start_date_field     = stub('Tracker_FormElement_Field_Date');
         $this->start_date_changeset_value = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($this->timestamp);
         
@@ -123,20 +123,38 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         Tracker_FormElementFactory::clearInstance();
     }
     
-    
-    public function itFetchDataFromStartDateToDuration() {
+    public function _itFetchDataFromStartDateToDuration() {
         $field = mock('Tracker_FormElement_Field_Float');
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 3, 2012))->returns(10);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 4, 2012))->returns(9);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 5, 2012))->returns(8);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 6, 2012))->returns(7);
-        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 7, 2012))->returns(6);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 3, 2011))->returns(10);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 4, 2011))->returns(9);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 5, 2011))->returns(8);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 6, 2011))->returns(7);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, mktime(23, 59, 59, 7, 7, 2011))->returns(6);
         stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
         
         $data = $this->field->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration);
         $this->assertEqual($data->getRemainingEffort(), array(10,9,8,7,6));
     }
-    
+
+    public function itDoesNotFetchDataInTheFuture() {
+        $field = mock('Tracker_FormElement_Field_Float');
+
+        $today = mktime(23, 59, 59);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('-2 days', $today))->returns(10);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('-1 day', $today))->returns(9);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('+0 day', $today))->returns(8);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('+1 day', $today))->returns(7);
+        stub($field)->getComputedValue($this->current_user, $this->sprint, strtotime('+2 days', $today))->returns(6);
+        stub($this->form_element_factory)->getComputableFieldByNameForUser($this->sprint_tracker_id, 'remaining_effort', $this->current_user)->returns($field);
+
+        $start_date = strtotime('-2 days', mktime(0, 0, 0));
+
+        $data = $this->field->getBurndownData($this->sprint, $this->current_user, $start_date, $this->duration);
+        $remaining_effort = $data->getRemainingEffort();
+
+        $this->assertEqual($remaining_effort, array(10,9,8,null,null));
+    }
+
     public function itCreatesABurndownWithArtifactLinkedArtifactsAStartDateAndADuration() {
         $time_period    = new Tracker_Chart_Data_BurndownTimePeriod($this->timestamp, $this->duration);
         $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);

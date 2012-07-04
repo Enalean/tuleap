@@ -53,7 +53,7 @@ class Tracker_Chart_Data_Burndown {
             if (!isset($this->remaining_effort[$i])) {
                 $this->addRemainingEffort($last_value);
             }
-            if ($this->day_counter > time()) {
+            if ($this->day_counter > $_SERVER['REQUEST_TIME']) {
                 $last_value = null;
             } else {
                 $last_value = $this->remaining_effort[$i];

@@ -47,7 +47,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     }
 
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture() {
-        $start_date    = strtotime('-1 day');
+        $start_date    = strtotime('-1 day', $_SERVER['REQUEST_TIME']);
         $duration      = 5;
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
@@ -57,7 +57,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     }
 
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture2() {
-        $start_date    = strtotime('-2 day');
+        $start_date    = strtotime('-2 day', $_SERVER['REQUEST_TIME']);
         $duration      = 5;
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
