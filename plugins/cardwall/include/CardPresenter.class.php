@@ -23,13 +23,22 @@ require_once 'CardFieldPresenter.class.php';
 class Cardwall_CardPresenter implements Tracker_CardPresenter{
     
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
+    const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
+    
     /**
      * @var Tracker_Artifact
      */
     private $artifact;
+    
+    /**
+     * @var Array
+     */
+    private $displayed_fields;
 
     public function __construct(Tracker_Artifact $artifact) {
-        $this->artifact           = $artifact;
+        $this->artifact = $artifact;
+        $this->displayed_fields   = array(Cardwall_CardPresenter::REMAINING_EFFORT_FIELD_NAME,
+                                          Cardwall_CardPresenter::ASSIGNED_TO_FIELD_NAME);
     }
 
     /**
@@ -47,17 +56,20 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     }
     
     public function getFields() {
-        $value                = '';
-        $user                 = UserManager::instance()->getCurrentUser();
-        $field_name           = Cardwall_CardPresenter::REMAINING_EFFORT_FIELD_NAME;
-        $form_element_factory = Tracker_FormElementFactory::instance();
+        $diplayed_fields_presenter = array();
+        $user                      = UserManager::instance()->getCurrentUser();
+        $form_element_factory      = Tracker_FormElementFactory::instance();
         
-        $field = $form_element_factory->getComputableFieldByNameForUser(
-                $this->artifact->getTracker()->getId(),
-                $field_name,
-                $user
-        );    
-        return array(new Cardwall_CardFieldPresenter($field, $this->artifact));
+        foreach ($this->displayed_fields as $diplayed_field_name) {
+            $field = $form_element_factory->getUsedFieldByName(
+                        $this->artifact->getTracker()->getId(),
+                        $diplayed_field_name);
+            
+            if ($field && $field->userCanRead($user)) {
+                $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($field, $this->artifact);
+            }
+        }
+        return $diplayed_fields_presenter;
     }
     
     /**

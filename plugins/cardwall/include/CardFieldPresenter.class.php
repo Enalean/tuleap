@@ -44,8 +44,7 @@ class Cardwall_CardFieldPresenter {
     }
     
     public function getValue() {
-        $user = UserManager::instance()->getCurrentUser();
-        $value = $this->field->getComputedValue($user, $this->artifact);
+        $value = $this->field->fetchCardValue($this->artifact);
         return $value;
     }        
 }
