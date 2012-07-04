@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/Plugin.class.php');
+require_once 'common/plugin/Plugin.class.php';
+require_once 'constants.php';
 
 /**
  * CardwallPlugin
@@ -38,7 +39,7 @@ class cardwallPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED,   'tracker_event_trackers_duplicated', false);
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
-            
+
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
             }
@@ -50,6 +51,7 @@ class cardwallPlugin extends Plugin {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
             $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id);
+            $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['field_mapping']);
         }
     }
 
@@ -61,7 +63,7 @@ class cardwallPlugin extends Plugin {
     public function tracker_report_renderer_types($params) {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_cardwall', 'title');
     }
-    
+
     /**
      * This hook asks to create a new instance of a renderer
      *
@@ -109,7 +111,7 @@ class cardwallPlugin extends Plugin {
             }
         }
     }
-    
+
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
             require_once('CardwallPluginInfo.class.php');
@@ -117,7 +119,7 @@ class cardwallPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
@@ -129,7 +131,7 @@ class cardwallPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
         }
     }
-    
+
     function jsFile($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
@@ -138,7 +140,7 @@ class cardwallPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
         }
     }
-    
+
     function tracker_event_admin_items($params) {
         $params['items']['plugin_cardwall'] = array(
             'url'         => TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&amp;func=admin-cardwall',
@@ -148,7 +150,7 @@ class cardwallPlugin extends Plugin {
             'img'         => $this->getThemePath() .'/images/ic/48/sticky-note.png',
         );
     }
-    
+
     function tracker_event_process($params) {
         switch ($params['func']) {
             case 'admin-cardwall':
@@ -162,7 +164,20 @@ class cardwallPlugin extends Plugin {
                 break;
             case 'admin-cardwall-update':
                 if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->updateCardwallOnTop($params['tracker'], $params['request']->get('cardwall_on_top'));
+                    $this->getCSRFToken($params['tracker']->getId())->check();
+                    
+                    require_once 'OnTop/Config/Updater.class.php';
+                    require_once 'OnTop/Config/Command/EnableCardwallOnTop.class.php';
+                    require_once 'OnTop/Config/Command/CreateColumn.class.php';
+                    require_once 'OnTop/Config/Command/UpdateColumns.class.php';
+                    require_once 'OnTop/Config/Command/DeleteColumns.class.php';
+                    $updater = new Cardwall_OnTop_Config_Updater();
+                    $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($params['tracker'], $this->getOnTopDao()));
+                    $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateColumn($params['tracker'], $this->getOnTopColumnDao()));
+                    $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateColumns($params['tracker'], $this->getOnTopColumnDao()));
+                    $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteColumns($params['tracker'], $this->getOnTopColumnDao()));
+                    $updater->process($params['request']);
+                    
                     $this->updateCardwallOnTopColumns($params['tracker'], $params['request']);
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&func=admin-cardwall');
                 } else {
@@ -172,7 +187,7 @@ class cardwallPlugin extends Plugin {
                 break;
         }
     }
-    
+
     private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout) {
         $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
         $checked = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
@@ -196,92 +211,147 @@ class cardwallPlugin extends Plugin {
         echo $html;
         $tracker->displayFooter($layout);
     }
-    
+
     private function fetchColumnDefinition(Tracker $tracker) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html  = '';
-        $field = $tracker->getStatusField();
+        $hp       = Codendi_HTMLPurifier::instance();
+        $html     = '';
+        $trackers = TrackerFactory::instance()->getTrackersByGroupId($tracker->getGroupId());
+        $trackers = array_diff($trackers, array($tracker));
+        $field    = $tracker->getStatusField();
         if ($field) {
             $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $hp->Purify($field->getLabel()) .') of this tracker.' .'</p>';
             $html .= 'TODO: display such columns';
             $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
         } else {
-            $columns_rows = $this->getOnTopColumnDao()->searchColumnsByTrackerId($tracker->getId());
-            if (!count($columns_rows)) {
+            $columns_raws = $this->getOnTopColumnDao()->searchColumnsByTrackerId($tracker->getId());
+            if (!count($columns_raws)) {
                 $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
             }
-            $html .= '<table><thead><tr>';
+            $html .= '<table><thead><tr valign="bottom">';
             $html .= '<td></td>';
-            foreach ($columns_rows as $row) {
+            foreach ($columns_raws as $raw) {
                 $html .= '<td>';
-                $html .= '<input type="text" name="column['. (int)$row['id'] .'][label]" value="'. $hp->purify($row['label']) .'" />';
+                $html .= '<input type="text" name="column['. (int)$raw['id'] .'][label]" value="'. $hp->purify($raw['label']) .'" />';
                 $html .= '</td>';
             }
             $html .= '<td>';
-            $html .= '<label>'. 'New column:'. ' <input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+            $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
             $html .= '</td>';
+            $html .= '<td>'. $GLOBALS['Language']->getText('global', 'btn_delete') .'</td>';
             $html .= '</tr></thead>';
             $html .= '<tbody>';
-            if (count($columns_rows)) {
-                // Here be trackers
+            $mapping_fields = $this->getOnTopColumnMappingFieldDao()->searchMappingFields($tracker->getId());
+            foreach ($mapping_fields as $i => $row) {
+                $mapping_tracker = TrackerFactory::instance()->getTrackerById($row['tracker_id']);
+                $trackers = array_diff($trackers, array($mapping_tracker));
+                $html .= '<tr class="'. html_get_alt_row_color($i + 1) .'" valign="top">';
+                $html .= '<td>';
+                $html .= $hp->purify($mapping_tracker->getName()) .'<br />';
+                $field = Tracker_FormElementFactory::instance()->getFieldById($row['field_id']);
+                $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
+                if (!$field) {
+                    $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+                }
+                foreach (Tracker_FormElementFactory::instance()->getUsedSbFields($mapping_tracker) as $sb_field) {
+                    $selected = $field == $sb_field ? 'selected="selected"' : '';
+                    $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $hp->purify($sb_field->getLabel()) .'</option>';
+                }
+                $html .= '</select>';
+                $html .= '</td>';
+                foreach ($columns_raws as $raw) {
+                    $html .= '<td>';
+                    $html .= '</td>';
+                }
+                $html .= '<td>';
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= '<input type="checkbox" name="delete_mapping[]" value="'. (int)$mapping_tracker->getId() .'" />';
+                $html .= '</td>';
+                $html .= '</tr>';
+            }
+            if (count($columns_raws) && count($trackers)) {
+                $colspan = count($columns_raws) + 2;
+                $html .= '<tr>';
+                $html .= '<td colspan="'. $colspan .'">';
+                $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
+                $html .= '<select name="add_mapping_on">';
+                $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+                foreach ($trackers as $new_tracker) {
+                    $html .= '<option value="'. $new_tracker->getId() .'">'. $hp->purify($new_tracker->getName()) .'</option>';
+                }
+                $html .= '</select>';
+                $html .= '</td>';
+                $html .= '</tr>';
             }
             $html .= '</tbody></table>';
         }
         return $html;
     }
-    
-    private function updateCardwallOnTop(Tracker $tracker, $please_enable) {
-        $tracker_id = $tracker->getId();
-        $this->getCSRFToken($tracker_id)->check();
-        $is_enabled = $this->getOnTopDao()->isEnabled($tracker_id);
-        if ($please_enable) {
-            if ( ! $is_enabled) {
-                $this->getOnTopDao()->enable($tracker_id);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
-            }
-        } else {
-            if ($is_enabled) {
-                $this->getOnTopDao()->disable($tracker_id);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
-            }
-        }
-    }
-    
+
     private function updateCardwallOnTopColumns(Tracker $tracker, Codendi_Request $request) {
-        if ($request->get('new_column')) {
-            $this->getOnTopColumnDao()->create($tracker->getId(), $request->get('new_column'));
-            $GLOBALS['Response']->addFeedback('info', 'New column added successfully');
+        $hp = Codendi_HTMLPurifier::instance();
+        //if ($request->get('column')) {
+        //    foreach ($request->get('column') as $id => $column_definition) {
+        //        if (empty($column_definition['label'])) {
+        //            $this->getOnTopColumnDao()->delete($tracker->getId(), $id);
+        //            $GLOBALS['Response']->addFeedback('info', 'Column removed');
+        //        } else {
+        //            if ($this->getOnTopColumnDao()->save($tracker->getId(), $id, $column_definition['label'])) {
+        //                $GLOBALS['Response']->addFeedback('info', 'Column '. $hp->purify($column_definition['label']) .' changed');
+        //            }
+        //        }
+        //    }
+        //}
+        if ($request->get('add_mapping_on')) {
+            $new_mapping_tracker = TrackerFactory::instance()->getTrackerById($request->get('add_mapping_on'));
+            if ($new_mapping_tracker && $this->getOnTopColumnMappingFieldDao()->create($tracker->getId(), $new_mapping_tracker->getId(), null)) {
+                $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($new_mapping_tracker->getName()) .' added');
+            }
         }
-        if ($request->get('column')) {
-            foreach ($request->get('column') as $id => $column_definition) {
-                if (empty($column_definition['label'])) {
-                    $this->getOnTopColumnDao()->delete($tracker->getId(), $id);
-                    $GLOBALS['Response']->addFeedback('info', 'Column removed');
-                } else {
-                    if ($this->getOnTopColumnDao()->save($tracker->getId(), $id, $column_definition['label'])) {
-                        $GLOBALS['Response']->addFeedback('info', 'Column '. $column_definition['label'] .' changed');
-                    }
+        if (is_array($request->get('mapping_field'))) {
+            foreach ($request->get('mapping_field') as $mapping_tracker_id => $field_id) {
+                $mapping_tracker = TrackerFactory::instance()->getTrackerById($mapping_tracker_id);
+                $field = Tracker_FormElementFactory::instance()->getFieldById($field_id);
+                var_dump($field_id);
+                if ($mapping_tracker && $field && $field->getTracker() == $mapping_tracker && $this->getOnTopColumnMappingFieldDao()->save($tracker->getId(), $mapping_tracker_id, $field_id)) {
+                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' changed to '. $hp->purify($field->getLabel()));
+                }
+            }
+        }
+        if (is_array($request->get('delete_mapping'))) {
+            foreach ($request->get('delete_mapping') as $mapping_tracker_id) {
+                $mapping_tracker = TrackerFactory::instance()->getTrackerById($mapping_tracker_id);
+                if ($mapping_tracker && $this->getOnTopColumnMappingFieldDao()->delete($tracker->getId(), $mapping_tracker_id)) {
+                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' removed');
                 }
             }
         }
     }
-    
+
     /**
-     * @return Cardwall_OnTopDao
+     * @return Cardwall_OnTop_Dao
      */
     private function getOnTopDao() {
-        require_once 'OnTopDao.class.php';
-        return new Cardwall_OnTopDao();
+        require_once 'OnTop/Dao.class.php';
+        return new Cardwall_OnTop_Dao();
     }
-    
+
     /**
-     * @return Cardwall_OnTopColumnDao
+     * @return Cardwall_OnTop_ColumnDao
      */
     private function getOnTopColumnDao() {
-        require_once 'OnTopColumnDao.class.php';
-        return new Cardwall_OnTopColumnDao();
+        require_once 'OnTop/ColumnDao.class.php';
+        return new Cardwall_OnTop_ColumnDao();
     }
-    
+
+    /**
+     * @return Cardwall_OnTopColumnMappingFieldDao
+     */
+    private function getOnTopColumnMappingFieldDao() {
+        require_once 'OnTopColumnMappingFieldDao.class.php';
+        return new Cardwall_OnTopColumnMappingFieldDao();
+    }
+
     /**
      * @return CSRFSynchronizerToken
      */
@@ -289,7 +359,7 @@ class cardwallPlugin extends Plugin {
         require_once 'common/include/CSRFSynchronizerToken.class.php';
         return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
     }
-    
+
     public function agiledashboard_event_additional_panes_on_milestone($params) {
         $tracker  = $params['milestone']->getArtifact()->getTracker();
 

@@ -70,7 +70,37 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
 
         $this->assertEqual($mock->greet('John Doe'), 'Hello, John Doe');
         $this->assertEqual($mock->greet('Rasmus', 'Lerdorf'), 'Hello, Rasmus Lerdorf');
-    }    
+    }
+
+    public function itEnsuresThatMethodIsCalledOnceWithoutArguments() {
+        $mock = mock('Toto');
+        stub($mock)->greet()->once();
+        $mock->greet();
+    }
+
+    public function itEnsuresThatMethodIsCalledOnceWithArguments() {
+        $mock = mock('Toto');
+        stub($mock)->greet('Rasmus', 'Lerdorf')->once();
+        $mock->greet('Rasmus', 'Lerdorf');
+        //$mock->greet('Rasmus');
+    }
+
+    public function itEnsuresThatMethodIsNeverCalled() {
+        $mock = mock('Toto');
+        stub($mock)->greet()->never();
+        //$mock->greet();
+    }
+
+    public function itEnsuresThatMethodIsCalledAtWithArguments() {
+        $mock = mock('Toto');
+        stub($mock)->greet('Lerdorf')->at(0);
+        stub($mock)->greet()->at(2);
+        stub($mock)->greet('Rasmus', 'Lerdorf')->at(1);
+        $mock->greet('Lerdorf');
+        //$mock->greet('Tutu');
+        $mock->greet('Rasmus', 'Lerdorf');
+        $mock->greet();
+    }
 }
 
 class Toto {
