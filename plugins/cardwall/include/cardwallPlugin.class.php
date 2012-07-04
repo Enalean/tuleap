@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/Plugin.class.php');
+require_once 'common/plugin/Plugin.class.php';
+require_once 'constants.php';
 
 /**
  * CardwallPlugin
