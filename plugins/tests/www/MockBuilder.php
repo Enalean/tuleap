@@ -78,6 +78,15 @@ class OngoingIntelligentStub {
         return $this;
     }
 
+    public function once() {
+        if (empty($this->arguments)) {
+            $this->mock->expectOnce($this->method);
+        } else {
+            $this->mock->expectOnce($this->method, $this->arguments);
+        }
+        return $this;
+    }
+
     /**
      * @return the configured mock 
      */
@@ -89,7 +98,6 @@ class OngoingIntelligentStub {
         }
         return $this->mock;
     }
-    
 
 }
 ?>
