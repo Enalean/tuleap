@@ -20,12 +20,13 @@
 
 require_once dirname(__FILE__) .'/../../../../../tracker/include/constants.php';
 require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command/UpdateColumns.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnDao.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command/CreateMappingField.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldDao.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
-class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_Command_CreateMappingFieldTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -34,19 +35,19 @@ class Cardwall_OnTop_Config_Command_UpdateColumnsTest extends TuleapTestCase {
         $tracker = mock('Tracker');
         stub($tracker)->getId()->returns($this->tracker_id);
 
-        $this->dao     = mock('Cardwall_OnTop_ColumnDao');
-        $this->command = new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $this->dao);
+        $task_tracker = mock('Tracker');
+        stub($task_tracker)->getId()->returns(42);
+
+        $tracker_factory = mock('TrackerFactory');
+        stub($tracker_factory)->getTrackerById('42')->returns($task_tracker);
+
+        $this->dao     = mock('Cardwall_OnTop_ColumnMappingFieldDao');
+        $this->command = new Cardwall_OnTop_Config_Command_CreateMappingField($tracker, $this->dao, $tracker_factory);
     }
 
-    public function itUpdatesAllColumns() {
-        $request = aRequest()->with('column', array(
-            12 => array('label' => 'Todo'),
-            13 => array('label' => ''),
-            14 => array('label' => 'Done'))
-        )->build();
-        stub($this->dao)->save($this->tracker_id, 12, 'Todo')->at(0);
-        stub($this->dao)->save($this->tracker_id, 14, 'Done')->at(1);
-        stub($this->dao)->save()->count(2);
+    public function itCreatesANewMappingField() {
+        $request = aRequest()->with('add_mapping_on', '42')->build();
+        stub($this->dao)->create($this->tracker_id, 42, null)->once();
         $this->command->execute($request);
     }
 }
