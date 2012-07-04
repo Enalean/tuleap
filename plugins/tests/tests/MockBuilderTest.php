@@ -101,6 +101,15 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         $mock->greet('Rasmus', 'Lerdorf');
         $mock->greet();
     }
+
+    public function itEnsuresThatMethodIsCalledNTimes() {
+        $mock = mock('Toto');
+        stub($mock)->greet()->count(3);
+        $mock->greet('Lerdorf');
+        //$mock->greet('Tutu');
+        $mock->greet('Rasmus', 'Lerdorf');
+        $mock->greet();
+    }
 }
 
 class Toto {

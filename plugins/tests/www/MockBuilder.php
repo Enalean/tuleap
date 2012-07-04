@@ -97,6 +97,11 @@ class OngoingIntelligentStub {
         return $this;
     }
 
+    public function count($count) {
+        $this->mock->expectCallCount($this->method, $count);
+        return $this;
+    }
+
     /**
      * @return the configured mock 
      */
