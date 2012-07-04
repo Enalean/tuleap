@@ -87,6 +87,11 @@ class OngoingIntelligentStub {
         return $this;
     }
 
+    public function never() {
+        $this->mock->expectNever($this->method);
+        return $this;
+    }
+
     /**
      * @return the configured mock 
      */
