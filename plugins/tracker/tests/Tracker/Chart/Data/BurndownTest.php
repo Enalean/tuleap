@@ -33,7 +33,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 10);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         
-        $burndown_data->addRemainingEffort(12, $_SERVER['REQUEST_TIME']);
+        $burndown_data->addRemainingEffort(12);
         
         $this->assertEqual($burndown_data->getRemainingEffort(), array(12));
     }
@@ -42,7 +42,7 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         
-        $burndown_data->addRemainingEffort(5, mktime(0, 0, 0, 7, 4, 2012));
+        $burndown_data->addRemainingEffort(5);
         
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1));
     }

@@ -41,7 +41,7 @@ class Tracker_Chart_Data_Burndown {
         return $this->time_period->getDuration();
     }
 
-    public function addRemainingEffort($remaining_effort, $timestamp) {
+    public function addRemainingEffort($remaining_effort) {
         $this->remaining_effort[] = $remaining_effort;
     }
 
