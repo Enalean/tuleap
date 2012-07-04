@@ -23,11 +23,6 @@
  */
 class Cardwall_Swimline {
 
-    /**
-     * @var TreeNode
-     */
-    public $node;
-    
     public $cardincell_presenter;
 
     /**
@@ -45,10 +40,15 @@ class Cardwall_Swimline {
      * @param array  $cells
      */
     public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cardincell_presenter = $node->getCardInCellPresenter();
+        if ($node instanceof Cardwall_CardInCellPresenterNode) {
+            $this->cardincell_presenter = $node->getCardInCellPresenter();
+        }
         $this->cells       = $cells;
         $this->swimline_id = $node->getId();
+    }
+    
+    public function getCardPresenter() {
+        return $this->cardincell_presenter->getCardPresenter();
     }
 }
 ?>
