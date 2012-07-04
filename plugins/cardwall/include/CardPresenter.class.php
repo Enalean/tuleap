@@ -56,13 +56,8 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
                 $this->artifact->getTracker()->getId(),
                 $field_name,
                 $user
-        );
-        
-        if ($field) {
-            $value = $field->getComputedValue($user, $this->artifact);
-        }  
-        
-        return array(new Cardwall_CardFieldPresenter($field, $value));
+        );    
+        return array(new Cardwall_CardFieldPresenter($field, $this->artifact));
     }
     
     /**

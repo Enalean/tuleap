@@ -26,13 +26,13 @@ class Cardwall_CardFieldPresenter {
     private $field;
     
     /**
-     * @var string
+     * @var Tracker_Artifact
      */
-    private $value;
+    private $artifact;
     
-    public function __construct(Tracker_FormElement_Field $field, $value) {
+    public function __construct(Tracker_FormElement_Field $field, Tracker_Artifact $artifact) {
         $this->field = $field;
-        $this->value = $value;
+        $this->artifact = $artifact;
     }
     
     public function getLabel() {
@@ -44,7 +44,9 @@ class Cardwall_CardFieldPresenter {
     }
     
     public function getValue() {
-        return $this->value;
+        $user = UserManager::instance()->getCurrentUser();
+        $value = $this->field->getComputedValue($user, $this->artifact);
+        return $value;
     }        
 }
 
