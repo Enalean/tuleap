@@ -87,5 +87,7 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     public function allowedChildrenTypes() {
         return $this->planning_item->getAllowedChildrenTypes();
     }
+    
+    public function getFields() {}
 }
 ?>

@@ -32,6 +32,11 @@ interface Tracker_CardPresenter {
      * @var string
      */
     public function getTitle();
+    
+    /**
+     * @var array
+     */
+    public function getFields();
 
     /**
      * @var string
