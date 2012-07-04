@@ -59,13 +59,14 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
         $diplayed_fields_presenter = array();
         $user                      = UserManager::instance()->getCurrentUser();
         $form_element_factory      = Tracker_FormElementFactory::instance();
-        
+        $tracker_id                = $this->artifact->getTracker()->getId();
         foreach ($this->displayed_fields as $diplayed_field_name) {
-            $field = $form_element_factory->getUsedFieldByName(
-                        $this->artifact->getTracker()->getId(),
-                        $diplayed_field_name);
+            $field = $form_element_factory->getUsedFieldByNameForUser(
+                        $tracker_id,
+                        $diplayed_field_name,
+                        $user);
             
-            if ($field && $field->userCanRead($user)) {
+            if ($field) {
                 $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($field, $this->artifact);
             }
         }
