@@ -940,7 +940,7 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment, $commentFormat = 0) {
+function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment, $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
     if (session_continue($sessionKey)) {
         $user = UserManager::instance()->getCurrentUser();
         $pm = ProjectManager::instance();
