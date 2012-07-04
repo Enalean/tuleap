@@ -17,6 +17,7 @@
 
 var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
     initialize: function ($super, element, options) {
+        options = Object.extend({toolbar: 'minimal'}, options || { });
         this.options = Object.extend({htmlFormat : false, id : 0}, options || { });
         $super(element, options);
         // This div contains comment format selection buttons
