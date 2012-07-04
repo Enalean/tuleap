@@ -213,7 +213,7 @@ class cardwallPlugin extends Plugin {
             if (!count($columns_raws)) {
                 $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
             }
-            $html .= '<table><thead><tr>';
+            $html .= '<table><thead><tr valign="bottom">';
             $html .= '<td></td>';
             foreach ($columns_raws as $raw) {
                 $html .= '<td>';
@@ -221,8 +221,9 @@ class cardwallPlugin extends Plugin {
                 $html .= '</td>';
             }
             $html .= '<td>';
-            $html .= '<label>'. 'New column:'. ' <input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+            $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
             $html .= '</td>';
+            $html .= '<td>'. $GLOBALS['Language']->getText('global', 'btn_delete') .'</td>';
             $html .= '</tr></thead>';
             $html .= '<tbody>';
             $mapping_fields = $this->getOnTopColumnMappingFieldDao()->searchMappingFields($tracker->getId());
@@ -241,7 +242,9 @@ class cardwallPlugin extends Plugin {
                     $html .= '</td>';
                 }
                 $html .= '<td>';
-                //here be delete action
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= '<input type="checkbox" name="delete_mapping[]" value="'. (int)$mapping_tracker->getId() .'" />';
                 $html .= '</td>';
                 $html .= '</tr>';
             }
@@ -303,6 +306,14 @@ class cardwallPlugin extends Plugin {
             $new_mapping_tracker = TrackerFactory::instance()->getTrackerById($request->get('add_mapping_on'));
             if ($new_mapping_tracker && $this->getOnTopColumnMappingFieldDao()->create($tracker->getId(), $new_mapping_tracker->getId(), null)) {
                 $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($new_mapping_tracker->getName()) .' added');
+            }
+        }
+        if (is_array($request->get('delete_mapping'))) {
+            foreach ($request->get('delete_mapping') as $mapping_tracker_id) {
+                $mapping_tracker = TrackerFactory::instance()->getTrackerById($mapping_tracker_id);
+                if ($mapping_tracker && $this->getOnTopColumnMappingFieldDao()->delete($tracker->getId(), $mapping_tracker_id)) {
+                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' removed');
+                }
             }
         }
     }
