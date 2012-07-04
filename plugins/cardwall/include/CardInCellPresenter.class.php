@@ -55,6 +55,10 @@ class Cardwall_CardInCellPresenter {
     public function getArtifact() {
         return $this->card_presenter->getArtifact();
     }
+    
+    public function getId() {
+        return $this->card_presenter->getId();
+    }
 }
 
 ?>
