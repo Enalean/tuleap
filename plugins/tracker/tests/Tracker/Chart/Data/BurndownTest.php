@@ -21,26 +21,56 @@
 require_once dirname(__FILE__).'/../../../../include/Tracker/Chart/Data/Burndown.class.php';
 
 class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
-    
+    private $start_date;
     private $time_period;
-    
+
     public function setUp() {
         parent::setUp();
-        $start_date        = mktime(0, 0, 0, 7, 4, 2012);
-        $this->time_period = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 5);
+        $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
+        $this->time_period = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 5);
     }
-    
-    public function itAddRemainingEffort() {
+
+    public function itAddsRemainingEffort() {
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 2);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $burndown_data->addRemainingEffort(14);
+        $burndown_data->addRemainingEffort(13);
+
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13));
+    }
+
+    public function itCompletesMissingRemainingEffortWithLastValue() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
-        $burndown_data->addRemainingEffort(12);
-        
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(12));
+        $burndown_data->addRemainingEffort(14);
+
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 14, 14));
     }
-    
+
+    public function itDoesNotCompleteRemainingEffortValuesInTheFuture() {
+        $start_date    = strtotime('-1 day');
+        $duration      = 5;
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $burndown_data->addRemainingEffort(14);
+
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, null, null, null));
+    }
+
+    public function itDoesNotCompleteRemainingEffortValuesInTheFuture2() {
+        $start_date    = strtotime('-2 day');
+        $duration      = 5;
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $burndown_data->addRemainingEffort(14);
+        $burndown_data->addRemainingEffort(13);
+
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 13, 13, null, null));
+    }
+
     public function itComputesIdealBurndownWhenAddingRemainingEffort() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addRemainingEffort(5);
-        
+
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1));
     }
 }

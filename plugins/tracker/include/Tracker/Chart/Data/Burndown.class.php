@@ -21,19 +21,21 @@
 require_once 'BurndownTimePeriod.class.php';
 
 class Tracker_Chart_Data_Burndown {
-    
+
     /**
      * @var Tracker_Chart_Data_BurndownTimePeriod
      */
     private $time_period;
-    
+
     private $remaining_effort = array();
     private $ideal_effort     = array();
+    private $day_counter      = array();
 
     public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period) {
         $this->time_period = $time_period;
+        $this->day_counter = $time_period->getStartDate();
     }
-    
+
     /**
      * @return int The Burndown time period duration in days.
      */
@@ -43,9 +45,20 @@ class Tracker_Chart_Data_Burndown {
 
     public function addRemainingEffort($remaining_effort) {
         $this->remaining_effort[] = $remaining_effort;
+        $this->day_counter = strtotime("+1 day", $this->day_counter);
     }
 
     public function getRemainingEffort() {
+        for ($i = 0; $i < $this->getDuration(); $i++) {
+            if (!isset($this->remaining_effort[$i])) {
+                $this->addRemainingEffort($last_value);
+            }
+            if ($this->day_counter > time()) {
+                $last_value = null;
+            } else {
+                $last_value = $this->remaining_effort[$i];
+            }
+        }
         return $this->remaining_effort;
     }
 
@@ -56,7 +69,7 @@ class Tracker_Chart_Data_Burndown {
     public function getIdealEffort() {
         $start_effort = $this->remaining_effort[0];
         $slope        = - ($start_effort / $this->getDuration());
-        
+
         for($i = 0; $i < $this->getDuration(); $i++) {
             $this->ideal_effort[] = floatval($slope * $i + $start_effort);
         }
