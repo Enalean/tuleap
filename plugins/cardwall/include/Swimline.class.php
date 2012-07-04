@@ -27,6 +27,8 @@ class Cardwall_Swimline {
      * @var TreeNode
      */
     public $node;
+    
+    public $cardincell_presenter;
 
     /**
      * @var array
@@ -44,6 +46,7 @@ class Cardwall_Swimline {
      */
     public function __construct(TreeNode $node, array $cells) {
         $this->node        = $node;
+        $this->cardincell_presenter = $node->getCardInCellPresenter();
         $this->cells       = $cells;
         $this->swimline_id = $node->getId();
     }
