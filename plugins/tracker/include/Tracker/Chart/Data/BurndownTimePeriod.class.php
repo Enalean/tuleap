@@ -60,7 +60,7 @@ class Tracker_Chart_Data_BurndownTimePeriod {
         
         foreach($this->getDayOffsets() as $day_offset) {
             $day     = strtotime("+$day_offset days", $this->start_date);
-            $dates[] = date('M-d', $day);
+            $dates[] = date('D d', $day);
         }
         
         return $dates;
