@@ -21,7 +21,7 @@
 require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
 require_once 'Tracker_FormElement_Field_BurndownException.class.php';
 require_once dirname(__FILE__).'/../Chart/Data/LinkedArtifacts.class.php';
-require_once dirname(__FILE__).'/../Chart/BurndownComputed.class.php';
+require_once dirname(__FILE__).'/../Chart/BurndownView.class.php';
 require_once 'common/chart/ErrorChart.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {
@@ -243,10 +243,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * 
      * @param Tracker_Chart_Data_Burndown $burndown_data
      * 
-     * @return \Tracker_Chart_Burndown 
+     * @return \Tracker_Chart_BurndownView
      */
     protected function getBurndown(Tracker_Chart_Data_Burndown $burndown_data) {
-        return new Tracker_Chart_BurndownComputed($burndown_data);
+        return new Tracker_Chart_BurndownView($burndown_data);
     }
 
     /**

@@ -26,7 +26,7 @@ require_once 'Data/Burndown.class.php';
  * - displaying a Burndown chart
  * - prepare data for display
  */
-class Tracker_Chart_BurndownComputed extends Tracker_Chart_Burndown {
+class Tracker_Chart_BurndownView extends Tracker_Chart_Burndown {
 
     /**
      * @var Tracker_Chart_Data_Burndown

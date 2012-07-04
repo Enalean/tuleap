@@ -81,7 +81,7 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
     protected $form_element_factory;
     protected $last_changeset;
     protected $field;
-    protected $burndown;
+    protected $burndown_view;
     protected $timestamp;
     protected $duration;
     
@@ -113,8 +113,8 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead'));
         
-        $this->burndown = mock('Tracker_Chart_Burndown');
-        stub($this->field)->getBurndown()->returns($this->burndown);
+        $this->burndown_view = mock('Tracker_Chart_Burndown');
+        stub($this->field)->getBurndown()->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
     }
     
@@ -159,13 +159,13 @@ class Tracker_FormElement_Field_Burndown_FetchBurndownImageTest extends TuleapTe
         $time_period    = new Tracker_Chart_Data_BurndownTimePeriod($this->timestamp, $this->duration);
         $burndown_data  = new Tracker_Chart_Data_Burndown($time_period);
         $this->field    = TestHelper::getPartialMock('Tracker_FormElement_Field_Burndown', array('getBurndown', 'displayErrorImage', 'userCanRead', 'getBurndownData'));
-        $this->burndown = mock('Tracker_Chart_BurndownComputed');
+        $this->burndown_view = mock('Tracker_Chart_BurndownView');
         
-        stub($this->field)->getBurndown($burndown_data)->returns($this->burndown);
+        stub($this->field)->getBurndown($burndown_data)->returns($this->burndown_view);
         stub($this->field)->userCanRead()->returns(true);
         stub($this->field)->getBurndownData($this->sprint, $this->current_user, $this->timestamp, $this->duration)->returns($burndown_data);
         
-        $this->burndown->expectOnce('display');
+        $this->burndown_view->expectOnce('display');
         $this->field->fetchBurndownImage($this->sprint, $this->current_user);
     }
     
