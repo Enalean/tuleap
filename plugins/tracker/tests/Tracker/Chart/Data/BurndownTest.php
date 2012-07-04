@@ -22,26 +22,23 @@ require_once dirname(__FILE__).'/../../../../include/Tracker/Chart/Data/Burndown
 
 class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     
-    private $start_date;
+    private $time_period;
     
     public function setUp() {
         parent::setUp();
-        $this->start_date = mktime(0, 0, 0, 7, 4, 2012);
+        $start_date        = mktime(0, 0, 0, 7, 4, 2012);
+        $this->time_period = new Tracker_Chart_Data_BurndownTimePeriod($start_date, 5);
     }
     
     public function itAddRemainingEffort() {
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 10);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
-        
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addRemainingEffort(12);
         
         $this->assertEqual($burndown_data->getRemainingEffort(), array(12));
     }
     
     public function itComputesIdealBurndownWhenAddingRemainingEffort() {
-        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 5);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
-        
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
         $burndown_data->addRemainingEffort(5);
         
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1));
