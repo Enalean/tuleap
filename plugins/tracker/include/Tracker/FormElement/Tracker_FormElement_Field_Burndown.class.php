@@ -209,8 +209,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 
-        for($i = 0; $i < $duration; $i++) {
-            $timestamp = strtotime("+$i day 23 hours 59 minutes 59 seconds", $start_date);
+        foreach($time_period->getDayOffsets() as $day_offset) {
+            $timestamp = strtotime("+$day_offset day 23 hours 59 minutes 59 seconds", $start_date);
 
             if ($timestamp <= $tonight) {
                 $remaining_effort = $field->getComputedValue($user, $artifact, $timestamp);

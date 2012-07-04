@@ -58,12 +58,21 @@ class Tracker_Chart_Data_BurndownTimePeriod {
     public function getHumanReadableDates() {
         $dates = array();
         
-        for($day_offset = 0; $day_offset <= $this->duration; $day_offset++) {
+        foreach($this->getDayOffsets() as $day_offset) {
             $day     = strtotime("+$day_offset days", $this->start_date);
             $dates[] = date('M-d', $day);
         }
         
         return $dates;
+    }
+    
+    /**
+     * To be used to iterate consistently over burndown time period
+     * 
+     * @return array of int
+     */
+    public function getDayOffsets() {
+        return range(0, $this->duration);
     }
 }
 ?>
