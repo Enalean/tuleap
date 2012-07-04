@@ -60,7 +60,7 @@ class Cardwall_Column {
         $this->field_provider = $field_provider;
     }
     
-    public function isArtifactInCell2(Tracker_Artifact $artifact) {
+    public function isInColumn(Tracker_Artifact $artifact) {
         $artifact_status = $this->field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
         return $artifact_status === $this->label
                 || $artifact_status === null && $this->id == 100;

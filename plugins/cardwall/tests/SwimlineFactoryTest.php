@@ -158,11 +158,11 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
     }
 
     private function assertIn($column) {
-         $this->assertTrue($column->isArtifactInCell2($this->artifact));
+         $this->assertTrue($column->isInColumn($this->artifact));
     }
     
     private function assertNotIn($column) {
-         $this->assertFalse($column->isArtifactInCell2($this->artifact));
+         $this->assertFalse($column->isInColumn($this->artifact));
     }
 
     public function newCardwall_Column($id, $label) {
