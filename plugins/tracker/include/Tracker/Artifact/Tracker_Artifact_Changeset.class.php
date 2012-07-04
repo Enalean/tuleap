@@ -278,7 +278,7 @@ class Tracker_Artifact_Changeset {
      *
      * @return void
      */
-    public function updateComment($body, $user, $commentFormat = 0) {
+    public function updateComment($body, $user, $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         if ($this->userCanEdit($user)) {
             $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $commentFormat);
         }

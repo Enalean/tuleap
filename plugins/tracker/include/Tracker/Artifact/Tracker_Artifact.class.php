@@ -854,7 +854,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return boolean True if update is done without error, false otherwise
      */
-    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $commentFormat = 0) {
+    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         $is_valid = true;
         $is_submission = false;
 
