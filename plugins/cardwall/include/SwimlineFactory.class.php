@@ -85,7 +85,7 @@ class Cardwall_SwimlineFactory {
                                       Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $artifact_status = $field_provider->getField($artifact)->getValueFor($artifact->getLastChangeset());
         return $artifact_status === $column->label
-                || $artifact_status === null;
+                || $artifact_status === null && $column->id == 100;
     }
 
 }

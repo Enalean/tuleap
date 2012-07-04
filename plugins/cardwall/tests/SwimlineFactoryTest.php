@@ -146,7 +146,21 @@ class Cardwall_SwimlineFactory_isArtifactInCellTest extends TuleapTestCase {
         $bgcolor = $fgcolor = 0;
         $column   = new Cardwall_Column(100, 'done', $bgcolor, $fgcolor);
         $this->assertTrue($this->factory->isArtifactInCell2($this->artifact, $column, $this->field_provider));
-    
+    }
+
+    public function itIsNotInTheCellIfItHasNoStatus() {
+        $null_status = null;
+        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns($null_status);
+        $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column(123, 'done', $bgcolor, $fgcolor);
+        $this->assertFalse($this->factory->isArtifactInCell2($this->artifact, $column, $this->field_provider));
+    }
+
+    public function itIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100() {
+        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
+        $bgcolor = $fgcolor = 0;
+        $column   = new Cardwall_Column(100, 'done', $bgcolor, $fgcolor);
+        $this->assertFalse($this->factory->isArtifactInCell2($this->artifact, $column, $this->field_provider));
     }
     
     public function itIsInTheCellIfTheLabelMatches_old() {
