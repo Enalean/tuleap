@@ -24,6 +24,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
+    const IMPEDIMENT_FIELD_NAME       = "impediment";
     
     /**
      * @var Tracker_Artifact
@@ -38,7 +39,8 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     public function __construct(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
         $this->displayed_fields   = array(Cardwall_CardPresenter::REMAINING_EFFORT_FIELD_NAME,
-                                          Cardwall_CardPresenter::ASSIGNED_TO_FIELD_NAME);
+                                          Cardwall_CardPresenter::ASSIGNED_TO_FIELD_NAME,
+                                          Cardwall_CardPresenter::IMPEDIMENT_FIELD_NAME);
     }
 
     /**
