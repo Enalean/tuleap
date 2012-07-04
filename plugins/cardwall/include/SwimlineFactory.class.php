@@ -40,16 +40,16 @@ class Cardwall_SwimlineFactory {
     public function getCellsOfSwimline(array $columns, array $nodes) {
         $cells = array();
         foreach ($columns as $column) {
-            $cells[] = $this->getCell($column, $nodes);
+            $potential_presenters = array();
+            foreach ($nodes as $node) {
+                $potential_presenters[] = $node->getCardInCellPresenter();
+            }
+            $cells[] = $this->getCell($column, $potential_presenters);
         }
         return $cells;
     }
 
-    private function getCell(Cardwall_Column $column, array $nodes) {
-        $potential_presenters = array();
-        foreach ($nodes as $node) {
-            $potential_presenters[] = $node->getCardInCellPresenter();
-        }
+    private function getCell(Cardwall_Column $column, array $potential_presenters) {
         $presenters = array();
         
         foreach ($potential_presenters as $p) {
