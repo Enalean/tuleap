@@ -37,8 +37,15 @@ class Cardwall_ColumnFactory {
      */
     private $columns = array();
 
-    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
+    /**
+     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+     */
+    private $field_provider;
+    
+    public function __construct(Tracker_FormElement_Field_Selectbox                  $field,
+                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->field = $field;
+        $this->field_provider = $field_provider;
     }
 
     /**
@@ -46,14 +53,13 @@ class Cardwall_ColumnFactory {
      */
     public function getColumns() {
         if ($this->columns) return $this->columns;
-        if (! $this->field) return array();
 
         $values        = $this->field->getVisibleValuesPlusNoneIfAny();
         $decorators    = $this->field->getBind()->getDecorators();
         $this->columns = array();
         foreach ($values as $value) {
             list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider);
         }
         return $this->columns;
     }
