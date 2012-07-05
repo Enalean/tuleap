@@ -282,6 +282,16 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         
         return $timestamp;
     }
+    
+    private function getBurndownDurationField(Tracker_Artifact $artifact, User $user) {
+        $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME, $user);
+        
+        if (! $field) {
+            throw new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning');
+        }
+        
+        return $field;
+    }
 
     /**
      * Returns the sprint duration for burndown rendering
@@ -291,14 +301,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Integer
      */
     private function getBurndownDuration(Tracker_Artifact $artifact, User $user) {
-        $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($artifact->getTracker()->getId(), self::DURATION_FIELD_NAME, $user);
-        if ($field) {
-            if ($duration = $artifact->getValue($field)->getValue()) {
-                return $duration;
-            }
+        $field    = $this->getBurndownDurationField($artifact, $user);
+        $duration = $artifact->getValue($field)->getValue();
+        
+        if (! $duration) {
             throw new Tracker_FormElement_Field_BurndownException('burndown_empty_duration_warning');
         }
-        throw new Tracker_FormElement_Field_BurndownException('burndown_missing_duration_warning');
+        
+        return $duration;
     }
         
     /**
