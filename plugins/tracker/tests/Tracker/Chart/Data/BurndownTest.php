@@ -76,4 +76,20 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     }
 }
 
+class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
+    private $start_date;
+    private $time_period;
+
+    public function setUp() {
+        parent::setUp();
+        $this->start_date  = mktime(0, 0, 0, 7, 4, 2011);
+        $this->time_period = new Tracker_Chart_Data_BurndownTimePeriod($this->start_date, 5);
+    }
+    
+    public function itHasNoRemainingEffort() {
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(null, null, null, null, null, null));
+    }
+}
+
 ?>

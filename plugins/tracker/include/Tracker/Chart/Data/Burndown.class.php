@@ -49,6 +49,7 @@ class Tracker_Chart_Data_Burndown {
     }
 
     public function getRemainingEffort() {
+        $last_value = null;
         foreach($this->time_period->getDayOffsets() as $day_offset) {
             if (!isset($this->remaining_effort[$day_offset])) {
                 $this->addRemainingEffort($last_value);
