@@ -23,7 +23,8 @@ require_once('pre.php');
 require_once('account.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 
-$user = UserManager::instance()->getCurrentUser();
+$user_manager = UserManager::instance();
+$user = $user_manager->getCurrentUser();
 if ($user->isAnonymous()) {
     session_redirect("/account/");
 } 
@@ -80,7 +81,7 @@ if ($request->isPost() && isset($_FILES['avatar']['tmp_name']) && ( ! $_FILES['a
             imagedestroy($source);
             imagedestroy($destination);
             $user->sethasAvatar();
-            UserManager::instance()->updateDb($user);
+            $user_manager->updateDb($user);
         }
     }
 }
