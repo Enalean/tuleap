@@ -156,24 +156,20 @@ class cardwallPlugin extends Plugin {
         $element_factory  = Tracker_FormElementFactory::instance();
         $tracker          = $params['tracker'];
         $tracker_id       = $tracker->getId();
+        if (! $tracker->userIsAdmin($params['user'])) {
+            $this->denyAccess($tracker_id);
+        }
+        
         switch ($params['func']) {
             case 'admin-cardwall':
-                if ($tracker->userIsAdmin($params['user'])) {
-                    $this->displayAdminOnTop($tracker, $params['layout'], $tracker_factory, $element_factory);
-                    $params['nothing_has_been_done'] = false;
-                } else {
-                    $this->denyAccess($tracker_id);
-                }
+                $this->displayAdminOnTop($tracker, $params['layout'], $tracker_factory, $element_factory);
+                $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
-                if ($tracker->userIsAdmin($params['user'])) {
-                    $this->getCSRFToken($tracker_id)->check();
-                    $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory)
-                            ->process($params['request']);
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
-                } else {
-                    $this->denyAccess($tracker_id);
-                }
+                $this->getCSRFToken($tracker_id)->check();
+                $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory)
+                        ->process($params['request']);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
                 break;
         }
     }
