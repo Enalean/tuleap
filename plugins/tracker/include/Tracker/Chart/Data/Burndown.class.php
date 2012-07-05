@@ -45,7 +45,21 @@ class Tracker_Chart_Data_Burndown {
 
     public function addRemainingEffort($remaining_effort) {
         $this->remaining_effort[] = $remaining_effort;
-        $this->day_counter = strtotime("+1 day", $this->day_counter);
+        $this->day_counter        = strtotime("+1 day", $this->day_counter);
+        
+        if($remaining_effort !== null && $this->remaining_effort[0] === null) {
+            $this->fillInInitialRemainingEffortValues($remaining_effort);
+        }
+    }
+    
+    private function fillInInitialRemainingEffortValues($value) {
+        for ($i = $this->getLastDayOffset(); $i >= 0; $i--) {
+            $this->remaining_effort[$i] = $value;
+        }
+    }
+    
+    private function getLastDayOffset() {
+        return count($this->remaining_effort) - 1;
     }
 
     public function getRemainingEffort() {
@@ -64,18 +78,7 @@ class Tracker_Chart_Data_Burndown {
                 $last_value = $this->remaining_effort[$day_offset];
             }
         }
-
-        $next_value = null;
-        foreach(array_reverse($this->time_period->getDayOffsets()) as $day_offset) {
-            $current_value = $this->remaining_effort[$day_offset];
-
-            if ($current_value === null) {
-                $this->remaining_effort[$day_offset] = $next_value;
-            }
-
-            $next_value = $this->remaining_effort[$day_offset];
-        }
-
+        
         return $this->remaining_effort;
     }
 

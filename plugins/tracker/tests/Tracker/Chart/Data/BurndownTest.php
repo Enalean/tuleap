@@ -69,7 +69,6 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $burndown_data->addRemainingEffort(null);
         $burndown_data->addRemainingEffort(14);
 
-        var_dump($burndown_data->getRemainingEffort());
         $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, null, null, null));
     }
     
