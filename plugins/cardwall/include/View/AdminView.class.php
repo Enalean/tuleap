@@ -22,7 +22,7 @@
 /**
  * Display the admin of the Cardwall
  */
-class Cardwall_AdminView {
+class Cardwall_AdminView extends Abstract_View {
 
     public function displayAdminOnTop(Tracker $tracker,
                                        Tracker_IDisplayTrackerLayout $layout,
@@ -36,103 +36,50 @@ class Cardwall_AdminView {
         $tracker_id = $tracker->getId();
         $checked    = $ontop_dao->isEnabled($tracker_id) ? 'checked="checked"' : '';
         $token_html = $token->fetchHTMLInput();
+        $formview = new Cardwall_AdminFormView();
         
-        $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $this   ->displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
-        $tracker->displayFooter($layout);
+        $tracker ->displayAdminItemHeader($layout, 'plugin_cardwall');
+        $formview->displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
+        $tracker ->displayFooter($layout);
     }
 
-    private function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory,
-                                           $column_dao,
-                                           $mappings_dao) {
-        $hp       = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
-        $trackers = array_diff($trackers, array($tracker));
-        $field    = $tracker->getStatusField();
-        if ($field) {
-            $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $hp->Purify($field->getLabel()) .') of this tracker.' .'</p>';
-            $html .= 'TODO: display such columns';
-            $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
-        } else {
-            $columns_raws = $column_dao->searchColumnsByTrackerId($tracker->getId());
-            if (!count($columns_raws)) {
-                $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
-            }
-            $html .= '<table><thead><tr valign="bottom">';
-            $html .= '<td></td>';
-            foreach ($columns_raws as $raw) {
-                $html .= '<td>';
-                $html .= '<input type="text" name="column['. (int)$raw['id'] .'][label]" value="'. $hp->purify($raw['label']) .'" />';
-                $html .= '</td>';
-            }
-            $html .= '<td>';
-            $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
-            $html .= '</td>';
-            $html .= '<td>'. $this->translate('global', 'btn_delete') .'</td>';
-            $html .= '</tr></thead>';
-            $html .= '<tbody>';
-            $mapping_fields = $mappings_dao->searchMappingFields($tracker->getId());
-            foreach ($mapping_fields as $i => $row) {
-                $mapping_tracker = $tracker_factory->getTrackerById($row['tracker_id']);
-                $trackers = array_diff($trackers, array($mapping_tracker));
-                $html .= '<tr class="'. html_get_alt_row_color($i + 1) .'" valign="top">';
-                $html .= '<td>';
-                $html .= $hp->purify($mapping_tracker->getName()) .'<br />';
-                $field = $element_factory->getFieldById($row['field_id']);
-                $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
-                if (!$field) {
-                    $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
-                }
-                foreach ($element_factory->getUsedSbFields($mapping_tracker) as $sb_field) {
-                    $selected = $field == $sb_field ? 'selected="selected"' : '';
-                    $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $hp->purify($sb_field->getLabel()) .'</option>';
-                }
-                $html .= '</select>';
-                $html .= '</td>';
-                foreach ($columns_raws as $raw) {
-                    $html .= '<td>';
-                    $html .= '</td>';
-                }
-                $html .= '<td>';
-                $html .= '</td>';
-                $html .= '<td>';
-                $html .= '<input type="checkbox" name="delete_mapping[]" value="'. (int)$mapping_tracker->getId() .'" />';
-                $html .= '</td>';
-                $html .= '</tr>';
-            }
-            if (count($columns_raws) && count($trackers)) {
-                $colspan = count($columns_raws) + 2;
-                $html .= '<tr>';
-                $html .= '<td colspan="'. $colspan .'">';
-                $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
-                $html .= '<select name="add_mapping_on">';
-                $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
-                foreach ($trackers as $new_tracker) {
-                    $html .= '<option value="'. $new_tracker->getId() .'">'. $hp->purify($new_tracker->getName()) .'</option>';
-                }
-                $html .= '</select>';
-                $html .= '</td>';
-                $html .= '</tr>';
-            }
-            $html .= '</tbody></table>';
-        }
-        return $html;
+
+}
+
+abstract class Abstract_View {
+    
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $hp;
+
+    public function __construct() {
+        $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    private function translate($page, $category, $args = "") {
+    protected function purify($value) {
+        return $this->hp->purify($value);
+    }
+
+    protected function translate($page, $category, $args = "") {
         return $GLOBALS['Language']->getText($page, $category, $args);
     }
 
-    public function urlForAdminUpdate($tracker_id) {
+
+}
+
+class Cardwall_AdminFormView extends Abstract_View {
+    
+    private function urlForAdminUpdate($tracker_id) {
         return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';        
     }
 
-    private function displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
+    public function displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
         echo $this->generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
     }
     
     private function generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
+        $column_definition = new Cardwall_AdminColumnDefinitionView();
         $update_url = $this->urlForAdminUpdate($tracker->getId());
 
         $html  = '';
@@ -147,7 +94,7 @@ class Cardwall_AdminView {
         $html .= '</p>';
         if ($checked) {
             $html .= '<blockquote>';
-            $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
+            $html .= $column_definition->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
             $html .= '</blockquote>';
         }
         $html .= '<input type="submit" value="'. $this->translate('global', 'btn_submit') .'" />';
@@ -155,6 +102,98 @@ class Cardwall_AdminView {
         return $html;
     }
 
+}
+
+class Cardwall_AdminColumnDefinitionView extends Abstract_View {
+
+    public function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory,
+                                           $column_dao,
+                                           $mappings_dao) {
+        $html     = '';
+        $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
+        $trackers = array_diff($trackers, array($tracker));
+        $field    = $tracker->getStatusField();
+        if ($field) {
+            $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
+            $html .= 'TODO: display such columns';
+            $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
+        } else {
+            $columns_raws = $column_dao->searchColumnsByTrackerId($tracker->getId());
+            if (!count($columns_raws)) {
+                $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
+            }
+            $html .= '<table><thead><tr valign="bottom">';
+            $html .= '<td></td>';
+            foreach ($columns_raws as $raw) {
+                $html .= '<td>';
+                $html .= '<input type="text" name="column['. (int)$raw['id'] .'][label]" value="'. $this->purify($raw['label']) .'" />';
+                $html .= '</td>';
+            }
+            $html .= '<td>';
+            $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+            $html .= '</td>';
+            $html .= '<td>'. $this->translate('global', 'btn_delete') .'</td>';
+            $html .= '</tr></thead>';
+            $html .= '<tbody>';
+            $mapping_fields = $mappings_dao->searchMappingFields($tracker->getId());
+            foreach ($mapping_fields as $row_number => $row) {
+                $mapping_tracker = $tracker_factory->getTrackerById($row['tracker_id']);
+                $used_sb_fields = $element_factory->getUsedSbFields($mapping_tracker);
+                $trackers = array_diff($trackers, array($mapping_tracker));
+                $field = $element_factory->getFieldById($row['field_id']);
+                
+                $html .= $this->listExistingMappings($row_number, $mapping_tracker, $used_sb_fields, $field, $columns_raws);
+            }
+            if (count($columns_raws) && count($trackers)) {
+                $html .= $this->addCustomMapping($columns_raws, $trackers);
+            }
+            $html .= '</tbody></table>';
+        }
+        return $html;
+    }
+
+    private function listExistingMappings($row_number, $mapping_tracker, $used_sb_fields, $field, $columns_raws) {
+        $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
+        $html .= '<td>';
+        $html .= $this->purify($mapping_tracker->getName()) .'<br />';
+        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
+        if (!$field) {
+            $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        }
+        foreach ($used_sb_fields as $sb_field) {
+            $selected = $field == $sb_field ? 'selected="selected"' : '';
+            $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $this->purify($sb_field->getLabel()) .'</option>';
+        }
+        $html .= '</select>';
+        $html .= '</td>';
+        foreach ($columns_raws as $raw) {
+            $html .= '<td>';
+            $html .= '</td>';
+        }
+        $html .= '<td>';
+        $html .= '</td>';
+        $html .= '<td>';
+        $html .= '<input type="checkbox" name="delete_mapping[]" value="'. (int)$mapping_tracker->getId() .'" />';
+        $html .= '</td>';
+        $html .= '</tr>';
+        return $html;
+    }    
+
+    private function addCustomMapping($columns_raws, $trackers) {
+        $colspan = count($columns_raws) + 2;
+        $html  = '<tr>';
+        $html .= '<td colspan="'. $colspan .'">';
+        $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
+        $html .= '<select name="add_mapping_on">';
+        $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        foreach ($trackers as $new_tracker) {
+            $html .= '<option value="'. $new_tracker->getId() .'">'. $this->purify($new_tracker->getName()) .'</option>';
+        }
+        $html .= '</select>';
+        $html .= '</td>';
+        $html .= '</tr>';
+        return $html;
+    }
 }
 
 ?>
