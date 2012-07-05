@@ -203,12 +203,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
-    private function getRemainingEffortField(Tracker_Artifact $artifact, User $user) {
+    private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, User $user) {
         return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
     }
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $field         = $this->getRemainingEffortField($artifact, $user);
+        $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
@@ -252,6 +252,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function getBurndown(Tracker_Chart_Data_Burndown $burndown_data) {
         return new Tracker_Chart_BurndownView($burndown_data);
     }
+    
+    private function getBurndownStartDateField(Tracker_Artifact $artifact, User $user) {
+        $form_element_factory = $this->getFormElementFactory();
+        $start_date_field     = $form_element_factory->getUsedFieldByNameForUser($artifact->getTracker()->getId(),
+                                                                                 self::START_DATE_FIELD_NAME,
+                                                                                 $user);
+        if (! $start_date_field) {
+            throw new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning');
+        }
+        
+        return $start_date_field;
+    }
 
     /**
      * Returns the sprint start_date as a Timestamp field value of given artifact
@@ -261,14 +273,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return Integer
      */
     private function getBurndownStartDate(Tracker_Artifact $artifact, User $user) {
-        $start_date_field = $this->getFormElementFactory()->getUsedFieldByNameForUser($artifact->getTracker()->getId(), self::START_DATE_FIELD_NAME, $user);
-        if ($start_date_field) {
-            if ($timestamp = $artifact->getValue($start_date_field)->getTimestamp()) {
-                return $timestamp;
-            }
+        $start_date_field = $this->getBurndownStartDateField($artifact, $user);
+        $timestamp        = $artifact->getValue($start_date_field)->getTimestamp();
+        
+        if (! $timestamp) {
             throw new Tracker_FormElement_Field_BurndownException('burndown_empty_start_date_warning');
         }
-        throw new Tracker_FormElement_Field_BurndownException('burndown_missing_start_date_warning');
+        
+        return $timestamp;
     }
 
     /**
