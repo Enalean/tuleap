@@ -103,13 +103,53 @@ class Cardwall_AdminFormView extends Abstract_View {
     }
 
 }
+class Cardwall_OnTop_Config_Trackers {
 
+    private $project_trackers;
+    private $tracker;
+    private $mapped_trackers;
+    private $non_mapped_trackers;
+    
+    function __construct(array $project_trackers, Tracker $tracker, Cardwall_OnTop_Config_MappimgFields $mapping_fields) {
+        $this->non_mapped_trackers = $project_trackers;
+    }
+    
+    public function getMappedTrackers() {
+        return $this->mapped_trackers;
+    }
+    
+    public function getNonMappedTrackers() {
+        return $this->non_mapped_trackers;
+    }
+
+}
+
+class Cardwall_OnTop_Config_MappimgField {
+    private $field;
+    private $tracker;
+    public function __construct(Tracker $tracker, TrackerTracker_FormElement_Field $field = null) {
+        $this->field   = $field;
+        $this->tracker = $tracker;
+    }
+}
+
+class Cardwall_OnTop_Config_MappimgFields {
+    private $mapping_fields;
+    public function __construct(array $mapping_fields) {
+        $this->mapping_fields = $mapping_fields;
+    }
+    
+    public function getTrackers() {
+        
+    }
+}
 class Cardwall_AdminColumnDefinitionView extends Abstract_View {
 
     public function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory,
                                            $column_dao,
                                            $mappings_dao) {
         $html     = '';
+        $o_trackers = new Cardwall_OnTop_Config_Trackers($tracker_factory->getTrackersByGroupId($tracker->getGroupId()), $tracker);
         $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $trackers = array_diff($trackers, array($tracker));
         $field    = $tracker->getStatusField();
