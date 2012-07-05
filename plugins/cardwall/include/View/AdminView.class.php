@@ -32,29 +32,13 @@ class Cardwall_AdminView {
                                        $ontop_dao,
                                        $column_dao,
                                        $mappings_dao) {
-        $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
+
         $tracker_id = $tracker->getId();
         $checked    = $ontop_dao->isEnabled($tracker_id) ? 'checked="checked"' : '';
         $token_html = $token->fetchHTMLInput();
         
-        $html  = '';
-        $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
-        $html .= $token_html;
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
-        $html .= '<label class="checkbox">';
-        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
-        $html .= $this->translate('plugin_cardwall', 'on_top_label');
-        $html .= '</label>';
-        $html .= '</p>';
-        if ($checked) {
-            $html .= '<blockquote>';
-            $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
-            $html .= '</blockquote>';
-        }
-        $html .= '<input type="submit" value="'. $this->translate('global', 'btn_submit') .'" />';
-        $html .= '</form>';
-        echo $html;
+        $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
+        $this   ->displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
         $tracker->displayFooter($layout);
     }
 
@@ -137,7 +121,38 @@ class Cardwall_AdminView {
     }
 
     private function translate($page, $category, $args = "") {
-        $GLOBALS['Language']->getText($page, $category, $args);
+        return $GLOBALS['Language']->getText($page, $category, $args);
+    }
+
+    public function urlForAdminUpdate($tracker_id) {
+        return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';        
+    }
+
+    private function displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
+        echo $this->generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
+    }
+    
+    private function generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
+        $update_url = $this->urlForAdminUpdate($tracker->getId());
+
+        $html  = '';
+        $html .= '<form action="'.$update_url .'" METHOD="POST">';
+        $html .= $token_html;
+        $html .= '<p>';
+        $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
+        $html .= '<label class="checkbox">';
+        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
+        $html .= $this->translate('plugin_cardwall', 'on_top_label');
+        $html .= '</label>';
+        $html .= '</p>';
+        if ($checked) {
+            $html .= '<blockquote>';
+            $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
+            $html .= '</blockquote>';
+        }
+        $html .= '<input type="submit" value="'. $this->translate('global', 'btn_submit') .'" />';
+        $html .= '</form>';
+        return $html;
     }
 
 }
