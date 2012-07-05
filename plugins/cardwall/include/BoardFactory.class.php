@@ -44,7 +44,6 @@ class Cardwall_BoardFactory {
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
-
     }
 
     private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {

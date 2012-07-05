@@ -42,7 +42,7 @@ class Cardwall_ColumnFactory {
      */
     private $field_provider;
     
-    public function __construct(Tracker_FormElement_Field_Selectbox $field = null, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+    public function __construct(Tracker_FormElement_Field_Selectbox $field, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->field = $field;
         $this->field_provider = $field_provider;
     }
@@ -52,7 +52,6 @@ class Cardwall_ColumnFactory {
      */
     public function getColumns() {
         if ($this->columns) return $this->columns;
-        if (! $this->field) return array();
 
         $values        = $this->field->getVisibleValuesPlusNoneIfAny();
         $decorators    = $this->field->getBind()->getDecorators();

@@ -31,7 +31,7 @@ class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProv
      */
     private $field;
 
-    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
+    public function __construct(Tracker_FormElement_Field_Selectbox $field) {
         $this->field = $field;
     }
 
