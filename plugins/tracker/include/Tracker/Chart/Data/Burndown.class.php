@@ -51,7 +51,7 @@ class Tracker_Chart_Data_Burndown {
     public function getRemainingEffort() {
         $last_value = null;
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            if (!isset($this->remaining_effort[$day_offset])) {
+            if (!array_key_exists($day_offset, $this->remaining_effort)) {
                 $this->addRemainingEffort($last_value);
             }
             if ($this->day_counter > $_SERVER['REQUEST_TIME']) {
