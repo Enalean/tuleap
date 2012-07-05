@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,34 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'TreeNode.class.php';
+
 /**
- * A swimline in the dashboard
+ * To be used with @see \TreeNodeMapper
  */
-class Cardwall_Swimline {
-
-    /**
-     * @var TreeNode
-     */
-    public $node;
-
-    /**
-     * @var array
-     */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
+interface TreeNodeCallback {
     
     /**
-     * @param string $title
-     * @param array  $cells
+     * Returns a new TreeNode based on the given one. This function should return a perfectly new node
+     * 
+     * @param TreeNode $node
+     * @return TreeNode
      */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
-    }
+    function apply(TreeNode $node);
 }
 ?>

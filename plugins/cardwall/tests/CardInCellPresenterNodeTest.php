@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,34 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * A swimline in the dashboard
- */
-class Cardwall_Swimline {
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
+require_once dirname(__FILE__).'/../include/CardInCellPresenter.class.php';
 
-    /**
-     * @var TreeNode
-     */
-    public $node;
+class Cardwall_CardInCellPresenterNodeTest extends NodeDuplicatorContractTest {
 
-    /**
-     * @var array
-     */
-    public $cells = array();
+    public function itHoldsTheGivenPresenter() {
+        $presenter      = mock('Cardwall_CardInCellPresenter');
+        $presenter_node = new Cardwall_CardInCellPresenterNode(new TreeNode(), $presenter);
+        $this->assertEqual($presenter, $presenter_node->getCardInCellPresenter());
+    }
 
-    /**
-     * @var int
-     */
-    public $swimline_id;
-    
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    protected function newNode(TreeNode $tree_node) {
+        return new Cardwall_CardInCellPresenterNode($tree_node, mock('Cardwall_CardInCellPresenter'));
     }
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,34 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../tracker/include/constants.php';
+require_once 'common/TreeNode/NodeDuplicator.class.php';
+
 /**
- * A swimline in the dashboard
+ * A TreeNode holding a CardInCellPresenter
  */
-class Cardwall_Swimline {
+class Cardwall_CardInCellPresenterNode extends NodeDuplicator {
 
-    /**
-     * @var TreeNode
-     */
-    public $node;
-
-    /**
-     * @var array
-     */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
+    /** @var Cardwall_CardInCellPresenter */
+    private $presenter;
     
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    function __construct(TreeNode $node, Cardwall_CardInCellPresenter $presenter) {
+        parent::__construct($node);
+        $this->presenter = $presenter;
+    }
+    
+    public function getCardInCellPresenter() {
+        return $this->presenter;
     }
 }
+
 ?>

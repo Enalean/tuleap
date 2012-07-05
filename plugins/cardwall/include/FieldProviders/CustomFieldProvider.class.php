@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,33 +20,29 @@
  */
 
 /**
- * A swimline in the dashboard
+ * Returns the field fixed in the constructor no matter what artifact is given
+ * 
+ * @see Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
  */
-class Cardwall_Swimline {
+class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
 
     /**
-     * @var TreeNode
+     * @var Tracker_FormElement_Field_Selectbox
      */
-    public $node;
+    private $field;
+
+    public function __construct(Tracker_FormElement_Field_Selectbox $field = null) {
+        $this->field = $field;
+    }
 
     /**
-     * @var array
+     * @param Tracker_Artifact $artifact is ignored!
+     * 
+     * @return Tracker_FormElement_Field_Selectbox
      */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
-    
-    /**
-     * @param string $title
-     * @param array  $cells
-     */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    public function getField(Tracker_Artifact $artifact) {
+        return $this->field;
     }
 }
+
 ?>

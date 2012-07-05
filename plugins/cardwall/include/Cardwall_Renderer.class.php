@@ -18,13 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
+require_once TRACKER_BASE_DIR .'/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
-require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
 require_once 'RendererPresenter.class.php';
+require_once 'ArtifactNodeTreeProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
-require_once 'InjectColumnIdCustomFieldVisitor.class.php';
+require_once 'FieldProviders/CustomFieldProvider.class.php';
+require_once 'CreateCardPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
@@ -109,7 +114,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
         }
 
-        $presenter = $this->getPresenter($this->getForestsOfArtifacts(explode(',', $matching_ids['id'])), $form);
+        $artifact_ids     = explode(',', $matching_ids['id']);
+        $artifacts = $this->getForestsOfArtifacts($artifact_ids, Tracker_ArtifactFactory::instance());
+        $presenter = $this->getPresenter($artifacts, $form);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         
         return $renderer->renderToString('renderer', $presenter);
@@ -118,33 +126,21 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * @return TreeNode
      */
-    private function getForestsOfArtifacts(array $artifact_ids) {
-        $forest = new TreeNode();
-        foreach ($artifact_ids as $id) {
-            $node = new TreeNode();
-            $node->setId((int)$id);
-            $node->setData(array(
-                'id' => (int)$id,
-            ));
-            $forest->addChild($node);
-        }
-        $root = new TreeNode();
-        $root->addChild($forest);
-
-        $visitor = Cardwall_ArtifactTreeNodeVisitor::build();
-        $root->accept($visitor);
-
-        return $root;
+    public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
+        $provider = new Cardwall_ArtifactNodeTreeProvider();
+        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory);
     }
-
+    
     /**
      * @return Cardwall_PaneContentPresenter
      */
     private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
         $field              = $this->getField();
-        $visitor            = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
         $board_factory      = new Cardwall_BoardFactory();
-        $board              = $board_factory->getBoard($visitor, $forest_of_artifacts, $field);
+
+        $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
+        
+        $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts);
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
@@ -266,5 +262,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $root->addAttribute('field_id', $mapping);
         }
     }
+
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,33 +20,14 @@
  */
 
 /**
- * A swimline in the dashboard
+ * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field 
  */
-class Cardwall_Swimline {
-
-    /**
-     * @var TreeNode
-     */
-    public $node;
-
-    /**
-     * @var array
-     */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
+interface Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
     
     /**
-     * @param string $title
-     * @param array  $cells
+     * @return Tracker_FormElement_Field
      */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
-    }
+    function getField(Tracker_Artifact $artifact);
 }
+
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,34 +19,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'TreeNodeCallback.class.php';
+
 /**
- * A swimline in the dashboard
+ * Like array_map this produces a new node tree by calling $callback on every node in the current tree
  */
-class Cardwall_Swimline {
+class TreeNodeMapper {
 
-    /**
-     * @var TreeNode
-     */
-    public $node;
-
-    /**
-     * @var array
-     */
-    public $cells = array();
-
-    /**
-     * @var int
-     */
-    public $swimline_id;
+    /** @var TreeNodeCallback */
+    private $function;
+    
+    public function __construct(TreeNodeCallback $function) {
+        $this->function = $function;
+    }
     
     /**
-     * @param string $title
-     * @param array  $cells
+     * Create a new node by applying the function to the node and recursively over its children
+     *
+     * @param TreeNode $node
+     * 
+     * @return TreeNode
      */
-    public function __construct(TreeNode $node, array $cells) {
-        $this->node        = $node;
-        $this->cells       = $cells;
-        $this->swimline_id = $node->getId();
+    public function map(TreeNode $node) {
+        $new_node = $this->function->apply($node);
+        $children = array_map(array($this, 'map'), $node->getChildren());
+        $new_node->setChildren($children);
+        return $new_node;
     }
 }
+
 ?>
