@@ -91,6 +91,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
     
+    public function __toString() {
+        return "Tracker #".$this->id;
+    }
+
     /**
      * @return string the url of the form to submit a new artifact
      */

@@ -24,11 +24,24 @@ require_once dirname(__FILE__).'/../../../include/View/AdminView.class.php';
 class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTestCase {
     
     public function itReturnsAllTrackersWhenNothingIsMapped() {
-        $trackers = array(aTracker()->build(),
-                          aTracker()->build());
+        $trackers = array(10 => aTracker()->withId(10)->build(),
+                          11 => aTracker()->withId(11)->build());
         $mappings = new Cardwall_OnTop_Config_MappimgFields(array());
-        $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, mock('Tracker'), $mappings);
+        $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, aTracker()->withId(77)->build(), $mappings);
         $this->assertEqual($trackers, $config_trackers->getNonMappedTrackers());
+    }
+    
+    public function itStripsTheCurrentTracker() {
+        $current_tracker = aTracker()->withId(10)->build();
+        $other_tracker   = aTracker()->withId(99)->build();
+        $trackers = array(10 => $current_tracker,
+                          99 => $other_tracker);
+        $mappings = new Cardwall_OnTop_Config_MappimgFields(array());
+        $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
+        $this->assertEqual(array(99 => $other_tracker), $config_trackers->getNonMappedTrackers());
+    }
+    
+    public function itdoesSomething() {
     }
 }
 ?>

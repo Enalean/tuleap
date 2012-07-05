@@ -111,7 +111,7 @@ class Cardwall_OnTop_Config_Trackers {
     private $non_mapped_trackers;
     
     function __construct(array $project_trackers, Tracker $tracker, Cardwall_OnTop_Config_MappimgFields $mapping_fields) {
-        $this->non_mapped_trackers = $project_trackers;
+        $this->non_mapped_trackers = array_diff($project_trackers, array($tracker));
     }
     
     public function getMappedTrackers() {
@@ -124,7 +124,7 @@ class Cardwall_OnTop_Config_Trackers {
 
 }
 
-class Cardwall_OnTop_Config_MappimgField {
+class Cardwall_OnTop_Config_MappingField {
     private $field;
     private $tracker;
     public function __construct(Tracker $tracker, TrackerTracker_FormElement_Field $field = null) {
