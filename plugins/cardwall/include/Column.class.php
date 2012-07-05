@@ -52,7 +52,8 @@ class Cardwall_Column {
      * @param int    $id
      * @param string $label
      */
-    public function __construct($id, $label, $bgcolor, $fgcolor, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider = null) {
+    public function __construct($id, $label, $bgcolor, $fgcolor, 
+                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->id      = $id;
         $this->label   = $label;
         $this->bgcolor = $bgcolor;
@@ -66,8 +67,19 @@ class Cardwall_Column {
         if ($field) {
             $artifact_status = $field->getValueFor($artifact->getLastChangeset());
         }
-        return $artifact_status === $this->label
-                || $artifact_status === null && $this->id == 100;
+        return $this->isMatchForThisColumn($artifact_status);
+    }
+
+    private function isMatchForThisColumn($artifact_status) {
+        return $this->matchesLabel($artifact_status) || $this->matchesTheNoneColumn($artifact_status);
+    }
+
+    private function matchesLabel($artifact_status) {
+        return $artifact_status === $this->label;
+    }
+
+    private function matchesTheNoneColumn($artifact_status) {
+        return $artifact_status === null && $this->id == 100;
     }
 
 }

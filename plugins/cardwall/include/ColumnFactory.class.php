@@ -42,7 +42,8 @@ class Cardwall_ColumnFactory {
      */
     private $field_provider;
     
-    public function __construct(Tracker_FormElement_Field_Selectbox $field, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+    public function __construct(Tracker_FormElement_Field_Selectbox                  $field,
+                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->field = $field;
         $this->field_provider = $field_provider;
     }
