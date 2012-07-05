@@ -56,6 +56,19 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
         $this->assertEqual(20, $this->field->getComputedValue($this->user, $artifact));
     }
 
+    public function itReturnsNullWhenThereAreNoData() {
+        $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->build())->build();
+        $sub_artifact2 = anArtifact()->withId(2)->withTracker(aTracker()->build())->build();
+        $artifact      = stub('Tracker_Artifact')->getLinkedArtifacts()->returns(array($sub_artifact1, $sub_artifact2));
+
+        $field = mock('Tracker_FormElement_Field_Float');
+        stub($field)->getComputedValue()->returns(null);
+
+        stub($this->formelement_factory)->getComputableFieldByNameForUser()->returns($field);
+
+        $this->assertIdentical(null, $this->field->getComputedValue($this->user, $artifact));
+    }
+
     public function itIgnoreCyclesInChildrens() {
         $sub_artifact1 = anArtifact()->withId(1)->withTracker(aTracker()->withId(150)->build())->build();
         $artifact      = mock('Tracker_Artifact');

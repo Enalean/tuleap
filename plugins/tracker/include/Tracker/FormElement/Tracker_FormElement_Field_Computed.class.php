@@ -41,9 +41,17 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
      * @return float
      */
     public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null, &$computed_artifact_ids = array()) {
-        $sum = 0;
+        $sum = null;
         foreach ($artifact->getLinkedArtifacts($user) as $linked_artifact) {
-            $sum += $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
+            $value = $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
+            $sum   = $this->sumIfNotNull($sum, $value);
+        }
+        return $sum;
+    }
+
+    private function sumIfNotNull($sum, $value) {
+        if ($value !== null) {
+            $sum += $value;
         }
         return $sum;
     }
@@ -52,7 +60,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         if ($this->notAlreadyComputed($artifact, $computed_artifact_ids)) {
             return $this->getFieldValue($user, $artifact, $timestamp, $computed_artifact_ids);
         }
-        return 0;
+        return null;
     }
 
     private function notAlreadyComputed(Tracker_Artifact $artifact, &$computed_artifact_ids) {
@@ -68,7 +76,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         if ($field) {
             return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids);
         }
-        return 0;
+        return null;
     }
 
     private function getTargetField(User $user, Tracker_Artifact $artifact) {
