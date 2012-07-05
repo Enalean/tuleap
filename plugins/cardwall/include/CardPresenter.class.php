@@ -129,8 +129,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
      * @see Tracker_CardPresenter
      */
     public function allowedChildrenTypes() {
-        $hierarchy_factory = Tracker_HierarchyFactory::instance();
-        return $hierarchy_factory->getChildren($this->artifact->getTracker()->getId());
+        return $this->artifact->getAllowedChildrenTypes();
     }
 }
 ?>
