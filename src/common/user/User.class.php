@@ -1197,15 +1197,15 @@ class User {
       *
       * @return string html
       */
-     public function fetchHtmlAvatar() {
+     public function fetchHtmlAvatar($width = 50) {
          $purifier = Codendi_HTMLPurifier::instance();
          $html = '';
-         $html .= '<div class="avatar">';
+         $html .= '<div class="avatar" title="'. $purifier->purify($this->getRealName()) .'" style="width: '. $width .'px; height: '. $width .'px;">';
          if ($this->isAnonymous()) {
-             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s=50&amp;d=wavatar" />';
+             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar" />';
          } else {
              if ($this->hasAvatar()) {
-                 $html .= '<img src="/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" />';
+                 $html .= '<img src="/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" width="'. $width .'" />';
              }
          }
          $html .= '</div>';

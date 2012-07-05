@@ -756,6 +756,25 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return $html;
     }
+    
+    /**
+     * @see Tracker_FormElement_Field::fetchCardValue()
+     */
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        $html = '';
+        //We have to fetch all values of the changeset as we are a list of value
+        //This is the case only if we are multiple but an old changeset may 
+        //contain multiple values
+        $values = array();
+        foreach($this->getBind()->getChangesetValues($artifact->getLastChangeset()->id) as $v) {
+            $val = $this->getBind()->formatCardValue($v);
+            if ($val != '') {
+                $values[] = $val;
+            }
+        }
+        $html .= implode(' ', $values);
+        return $html;
+    }
         
     /**
      * Update the form element.

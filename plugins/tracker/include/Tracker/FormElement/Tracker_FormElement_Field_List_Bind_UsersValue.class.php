@@ -77,6 +77,13 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->getLink();
     }
     
+    public function fetchCard() {
+        if ($this->getId() == 100) {
+            return '';
+        }
+        return $this->getUser()->fetchHtmlAvatar(16);
+    }
+    
     public function fetchFormattedForCSV() {
         return $this->getUsername();
     }
