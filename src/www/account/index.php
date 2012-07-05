@@ -39,6 +39,13 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</le
 </UL>
 
 &nbsp;<BR>
+
+<?php if (Config::get('sys_enable_avatars')) {
+    echo $user->fetchHtmlAvatar();
+    echo '<a href="/account/change_avatar.php">[ change avatar ]</a>';
+}
+?>
+
 <TABLE width=100% border=0>
 
 <TR valign=top>

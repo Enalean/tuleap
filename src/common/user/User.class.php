@@ -202,6 +202,7 @@ class User {
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
         $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
+        $this->has_avatar         = isset($row['has_avatar'])         ? $row['has_avatar']         : null;
         
         $this->id = $this->user_id;
         
@@ -253,7 +254,8 @@ class User {
             'theme'              => $this->theme,
             'language_id'        => $this->language_id,
             'last_pwd_update'    => $this->last_pwd_update,
-            'expiry_date'        => $this->expiry_date
+            'expiry_date'        => $this->expiry_date,
+            'has_avatar'         => $this->has_avatar,
         );
     }
     
