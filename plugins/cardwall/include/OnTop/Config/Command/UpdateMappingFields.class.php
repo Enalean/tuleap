@@ -53,15 +53,45 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     public function execute(Codendi_Request $request) {
         if (is_array($request->get('mapping_field'))) {
+            $mapping_fields = $this->getMappingFields();
             foreach ($request->get('mapping_field') as $mapping_tracker_id => $field_id) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
-                $field = $this->form_element_factory->getFieldById($field_id);
-                if ($mapping_tracker && $field && $field->getTracker() == $mapping_tracker && $this->dao->save($this->tracker->getId(), $mapping_tracker_id, $field_id)) {
-                    $hp = Codendi_HTMLPurifier::instance();
-                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' changed to '. $hp->purify($field->getLabel()));
-                }
+                $field           = $this->form_element_factory->getFieldById($field_id);
+                $this->save($mapping_fields, $mapping_tracker, $field);
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getMappingFields() {
+        $mapping_fields = array();
+        $mapping_fields_rows = $this->dao->searchMappingFields($this->tracker->getId());
+        foreach ($mapping_fields_rows as $row) {
+            $mapping_fields[$row['tracker_id']] = $row['field_id'];
+        }
+        return $mapping_fields;
+    }
+
+    /**
+     * @return void
+     */
+    private function save(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+        if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field) && $this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
+            $hp = Codendi_HTMLPurifier::instance();
+            $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' changed to '. $hp->purify($field->getLabel()));
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function canSaveNewField(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+        return $mapping_tracker &&
+            $field &&
+            $field->getTracker() == $mapping_tracker &&
+            ( !isset($mapping_fields[$mapping_tracker->getId()]) || $mapping_fields[$mapping_tracker->getId()] != $field->getId());
     }
 }
 ?>

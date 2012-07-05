@@ -49,10 +49,12 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
 
         $status_field   = aMockField()->withId(123)->withTracker($task_tracker)->build();
         $assignto_field = aMockField()->withId(321)->withTracker($story_tracker)->build();
+        $stage_field    = aMockField()->withId(322)->withTracker($story_tracker)->build();
 
         $element_factory = mock('Tracker_FormElementFactory');
         stub($element_factory)->getFieldById('123')->returns($status_field);
         stub($element_factory)->getFieldById('321')->returns($assignto_field);
+        stub($element_factory)->getFieldById('322')->returns($stage_field);
 
         $this->dao     = mock('Cardwall_OnTop_ColumnMappingFieldDao');
         $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $this->dao, $tracker_factory, $element_factory);
@@ -65,9 +67,48 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
                 '69' => '321',
             )
         )->build();
-        stub($this->dao)->save($this->tracker_id, 42, '123')->at(0);
-        stub($this->dao)->save($this->tracker_id, 69, '321')->at(1);
+        stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
+            TestHelper::arrayToDar(
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 42,
+                    'field_id'            => 100
+                ),
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 69,
+                    'field_id'            => null
+                )
+            )
+        );
+        stub($this->dao)->save($this->tracker_id, 42, 123)->at(0);
+        stub($this->dao)->save($this->tracker_id, 69, 321)->at(1);
         stub($this->dao)->save()->count(2);
+        $this->command->execute($request);
+    }
+
+    public function itDoesntUpdatesMappingFieldsIfItIsNotNeeded() {
+        $request = aRequest()->with('mapping_field',
+            array(
+                '42' => '123',
+                '69' => '322',
+            )
+        )->build();
+        stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
+            TestHelper::arrayToDar(
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 42,
+                    'field_id'            => 123
+                ),
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 69,
+                    'field_id'            => 321
+                )
+            )
+        );
+        stub($this->dao)->save($this->tracker_id, 69, 322)->once();
         $this->command->execute($request);
     }
 }
