@@ -152,21 +152,22 @@ class cardwallPlugin extends Plugin {
     }
 
     function tracker_event_process($params) {
-        $tracker_factory  = TrackerFactory::instance();
-        $element_factory  = Tracker_FormElementFactory::instance();
         $tracker          = $params['tracker'];
         $tracker_id       = $tracker->getId();
         if (! $tracker->userIsAdmin($params['user'])) {
             $this->denyAccess($tracker_id);
         }
         
+        $tracker_factory  = TrackerFactory::instance();
+        $element_factory  = Tracker_FormElementFactory::instance();
+        $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                $this->displayAdminOnTop($tracker, $params['layout'], $tracker_factory, $element_factory);
+                $this->displayAdminOnTop($tracker, $params['layout'], $tracker_factory, $element_factory, $token);
                 $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
-                $this->getCSRFToken($tracker_id)->check();
+                $token->check();
                 $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory)
                         ->process($params['request']);
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
@@ -205,15 +206,15 @@ class cardwallPlugin extends Plugin {
         return $updater;
     }
 
-    private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+    private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory, CSRFSynchronizerToken $token) {
         $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
         $tracker_id = $tracker->getId();
         $checked    = $this->getOnTopDao()->isEnabled($tracker_id) ? 'checked="checked"' : '';
-        $token      = $this->getCSRFToken($tracker_id)->fetchHTMLInput();
+        $token_html = $token->fetchHTMLInput();
         
         $html  = '';
         $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
-        $html .= $token;
+        $html .= $token_html;
         $html .= '<p>';
         $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
         $html .= '<label class="checkbox">';
