@@ -2,12 +2,13 @@
 <div class="card">
     {{> card-actions}}
     <a href="#" class="toggle-collapse">+</a>
-    {{getTitle}}
+    <b>{{getTitle}}</b>
     &nbsp;
     <p>
     {{#getFields}}
-        {{getLabel}}
+        {{getLabel}}:
         <b>{{{getValue}}}</b>
+        <br>
     {{/getFields}}
     </p>
 </div>
