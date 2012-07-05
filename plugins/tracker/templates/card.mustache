@@ -2,14 +2,7 @@
 <div class="card">
     {{> card-actions}}
     <a href="#" class="toggle-collapse">+</a>
-    <b>{{getTitle}}</b>
-    &nbsp;
-    <p>
-    {{#getFields}}
-        {{getLabel}}:
-        <b>{{{getValue}}}</b>
-        <br>
-    {{/getFields}}
-    </p>
+    {{getTitle}}
+    {{> card-details}}
 </div>
 {{/getCardPresenter}}
