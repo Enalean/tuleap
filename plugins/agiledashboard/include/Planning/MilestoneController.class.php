@@ -160,10 +160,16 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, $this->milestone->getGroupId());
-        $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->milestone->getPlanning());
-        $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
-        return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
+        $parent_milestones      = $this->milestone_factory->getParentMilestones($this->milestone);
+        $breadcrumbs_milestones = array_merge($parent_milestones, array($this->milestone));
+        $breadcrumbs_generators = array();
+        
+        foreach($breadcrumbs_milestones as $milestone) {
+            $breadcrumbs_generators[] = new BreadCrumb_Artifact($plugin_path, $milestone->getArtifact());
+        }
+        
+        $breadcrumbs_merger_class = new ReflectionClass('BreadCrumb_Merger');
+        return $breadcrumbs_merger_class->newInstanceArgs($breadcrumbs_generators);
     }
 }
 

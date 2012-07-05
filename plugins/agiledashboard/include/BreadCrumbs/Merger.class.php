@@ -30,12 +30,9 @@ class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
     private $generators;
     
     /**
-     * Takes a variable number of generators 
-     * @param BreadCrumb_BreadCrumbGenerator $breadCrumb1
-     * @param BreadCrumb_BreadCrumbGenerator $breadCrumb2
-     * @param BreadCrumb_BreadCrumbGenerator $andMore 
+     * Takes a variable number of generators
      */
-    function __construct(BreadCrumb_BreadCrumbGenerator $breadCrumb1, BreadCrumb_BreadCrumbGenerator $breadCrumb2, BreadCrumb_BreadCrumbGenerator $andMore = null) {
+    function __construct() {
         $this->generators = func_get_args();
     }
 

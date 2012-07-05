@@ -386,4 +386,31 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $project_manager;
     }
 }
+
+class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
+    
+    public function itIncludesBreadcrumbsForParentMilestones() {
+        $request            = aRequest()->build();
+        $milestone_factory  = mock('Planning_MilestoneFactory');
+        $project_manager    = mock('ProjectManager');
+        
+        $product = stub('Planning_Milestone')->getArtifact()->returns(aMockArtifact()->withId(1)->withTitle('Product X')->build());
+        $release = stub('Planning_Milestone')->getArtifact()->returns(aMockArtifact()->withId(2)->withTitle('Release 1.0')->build());
+        $sprint  = stub('Planning_Milestone')->getArtifact()->returns(aMockArtifact()->withId(3)->withTitle('Sprint 1')->build());
+        
+        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($sprint);
+        stub($milestone_factory)->getParentMilestones($sprint)->returns(array($product, $release));
+        
+        $controller  = new Planning_MilestoneController($request, $milestone_factory, $project_manager);
+        $breadcrumbs = $controller->getBreadcrumbs('/plugin/path')->getCrumbs();
+        
+        $this->assertCount($breadcrumbs, 3);
+        $this->assertEqual($breadcrumbs[0]['title'], 'Product X');
+        $this->assertEqual($breadcrumbs[0]['url'], '/plugin/path/?aid=1');
+        $this->assertEqual($breadcrumbs[1]['title'], 'Release 1.0');
+        $this->assertEqual($breadcrumbs[1]['url'], '/plugin/path/?aid=2');
+        $this->assertEqual($breadcrumbs[2]['title'], 'Sprint 1');
+        $this->assertEqual($breadcrumbs[2]['url'], '/plugin/path/?aid=3');
+    }
+}
 ?>
