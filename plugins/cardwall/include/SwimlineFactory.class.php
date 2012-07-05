@@ -32,11 +32,15 @@ class Cardwall_SwimlineFactory {
     public function getSwimlines(array $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
-            $potential_presenters = $this->extractPresentersFrom($child->getChildren());
-            $cells = $this->getCells($columns, $potential_presenters);
-            $swimlines[] = new Cardwall_Swimline($child, $cells);
+            $swimlines[] = $this->getSwimline($columns, $child);
         }
         return $swimlines;
+    }
+
+    private function getSwimline($columns, TreeNode $child) {
+        $potential_presenters = $this->extractPresentersFrom($child->getChildren());
+        $cells = $this->getCells($columns, $potential_presenters);
+        return new Cardwall_Swimline($child, $cells);
     }
 
     private function extractPresentersFrom(array $nodes) {
@@ -47,10 +51,13 @@ class Cardwall_SwimlineFactory {
         return $presenters;
     }
 
+
     /**
+     * public for testing
+     * 
      * @param array of Cardwall_Column $columns
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
-     * @return type
+     * @return array
      */
     public function getCells(array $columns, array $potential_presenters) {
         $cells = array();
