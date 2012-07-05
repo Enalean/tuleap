@@ -163,7 +163,14 @@ class cardwallPlugin extends Plugin {
         $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                $this->displayAdminOnTop($tracker, $params['layout'], $tracker_factory, $element_factory, $token);
+                $this->displayAdminOnTop($tracker, 
+                                         $params['layout'], 
+                                         $tracker_factory, 
+                                         $element_factory, 
+                                         $token,
+                                         $this->getOnTopDao(),
+                                         $this->getOnTopColumnDao(),
+                                         $this->getOnTopColumnMappingFieldDao());
                 $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
@@ -206,10 +213,17 @@ class cardwallPlugin extends Plugin {
         return $updater;
     }
 
-    private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory, CSRFSynchronizerToken $token) {
+    private function displayAdminOnTop(Tracker $tracker,
+                                       Tracker_IDisplayTrackerLayout $layout,
+                                       TrackerFactory $tracker_factory,
+                                       Tracker_FormElementFactory $element_factory,
+                                       CSRFSynchronizerToken $token,
+                                       $ontop_dao,
+                                       $column_dao,
+                                       $mappings_dao) {
         $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
         $tracker_id = $tracker->getId();
-        $checked    = $this->getOnTopDao()->isEnabled($tracker_id) ? 'checked="checked"' : '';
+        $checked    = $ontop_dao->isEnabled($tracker_id) ? 'checked="checked"' : '';
         $token_html = $token->fetchHTMLInput();
         
         $html  = '';
@@ -224,7 +238,7 @@ class cardwallPlugin extends Plugin {
         $html .= '</p>';
         if ($checked) {
             $html .= '<blockquote>';
-            $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory);
+            $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
             $html .= '</blockquote>';
         }
         $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -233,7 +247,9 @@ class cardwallPlugin extends Plugin {
         $tracker->displayFooter($layout);
     }
 
-    private function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+    private function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory,
+                                           $column_dao,
+                                           $mappings_dao) {
         $hp       = Codendi_HTMLPurifier::instance();
         $html     = '';
         $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
@@ -244,7 +260,7 @@ class cardwallPlugin extends Plugin {
             $html .= 'TODO: display such columns';
             $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
         } else {
-            $columns_raws = $this->getOnTopColumnDao()->searchColumnsByTrackerId($tracker->getId());
+            $columns_raws = $column_dao->searchColumnsByTrackerId($tracker->getId());
             if (!count($columns_raws)) {
                 $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
             }
@@ -261,7 +277,7 @@ class cardwallPlugin extends Plugin {
             $html .= '<td>'. $GLOBALS['Language']->getText('global', 'btn_delete') .'</td>';
             $html .= '</tr></thead>';
             $html .= '<tbody>';
-            $mapping_fields = $this->getOnTopColumnMappingFieldDao()->searchMappingFields($tracker->getId());
+            $mapping_fields = $mappings_dao->searchMappingFields($tracker->getId());
             foreach ($mapping_fields as $i => $row) {
                 $mapping_tracker = $tracker_factory->getTrackerById($row['tracker_id']);
                 $trackers = array_diff($trackers, array($mapping_tracker));
