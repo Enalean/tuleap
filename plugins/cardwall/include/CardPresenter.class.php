@@ -76,6 +76,10 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
         return $diplayed_fields_presenter;
     }
     
+    public function hasFields() {
+        return count($this->getFields()) > 0;
+    }
+    
     /**
      * @see Tracker_CardPresenter
      */

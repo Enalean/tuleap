@@ -40,6 +40,7 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     public function __construct(Planning_Item $planning_item, $css_classes = '') {
         $this->planning_item = $planning_item;
         $this->css_classes   = $css_classes;
+        $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
     }
     
     public function getId() {
@@ -88,6 +89,12 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
         return $this->planning_item->getAllowedChildrenTypes();
     }
     
-    public function getFields() {}
+    public function getFields() {
+        return array();
+    }
+    
+    public function hasFields() {
+        return count($this->getFields()) > 0;
+    }
 }
 ?>
