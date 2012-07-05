@@ -51,8 +51,7 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
             foreach ($request->get('delete_mapping') as $mapping_tracker_id) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
                 if ($mapping_tracker && $this->dao->delete($this->tracker->getId(), $mapping_tracker_id)) {
-                    $hp = Codendi_HTMLPurifier::instance();
-                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' removed');
+                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' removed');
                 }
             }
         }
