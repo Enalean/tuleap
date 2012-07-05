@@ -26,8 +26,9 @@ interface Tracker_FormElement_IComputeValues {
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      *
-     * @param User             $user     The user who see the results
-     * @param Tracker_Artifact $artifact The artifact on which the value is computed
+     * @param User             $user      The user who see the results
+     * @param Tracker_Artifact $artifact  The artifact on which the value is computed
+     * @param Integer          $timestamp Timestamp in seconds if we want a value in the past
      *
      * @return float
      */
