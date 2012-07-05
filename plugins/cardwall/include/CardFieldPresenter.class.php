@@ -35,17 +35,8 @@ class Cardwall_CardFieldPresenter {
         $this->artifact = $artifact;
     }
     
-    public function getLabel() {
-        return $this->field->getLabel();
-    }
-    
     public function getField() {
-        return $this->field;
-    }
-    
-    public function getValue() {
-        $value = $this->field->fetchCardValue($this->artifact);
-        return $value;
+        return $this->field->fetchCard($this->artifact);
     }
 }
 

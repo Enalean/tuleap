@@ -458,10 +458,25 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
-    public function fetchCardValue(Tracker_Artifact $artifact) {
+    protected function fetchCardValue(Tracker_Artifact $artifact) {
         return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
     }
     
+    /**
+     * Fetch the html code to display the field in card
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string
+     */
+    public function fetchCard(Tracker_Artifact $artifact) {
+        $value = $this->fetchCardValue($artifact);
+        if ($value) {
+            return '<tr><td>'. $this->getLabel().":</td><td>". $value .'</td></tr>';
+        }
+        return null;
+    }
+
     /**
      * Get the value corresponding to the $value_id
      * @param int $value_id
