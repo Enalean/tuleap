@@ -38,9 +38,9 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
 
     public function __construct(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
-        $this->displayed_fields   = array(Cardwall_CardPresenter::REMAINING_EFFORT_FIELD_NAME,
-                                          Cardwall_CardPresenter::ASSIGNED_TO_FIELD_NAME,
-                                          Cardwall_CardPresenter::IMPEDIMENT_FIELD_NAME);
+        $this->displayed_fields   = array(self::REMAINING_EFFORT_FIELD_NAME,
+                                          self::ASSIGNED_TO_FIELD_NAME,
+                                          self::IMPEDIMENT_FIELD_NAME);
     }
 
     /**
