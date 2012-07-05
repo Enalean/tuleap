@@ -29,11 +29,9 @@ class Tracker_Chart_Data_Burndown {
 
     private $remaining_effort = array();
     private $ideal_effort     = array();
-    private $day_counter      = array();
 
     public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period) {
         $this->time_period = $time_period;
-        $this->day_counter = $time_period->getStartDate();
     }
 
     /**
@@ -45,8 +43,6 @@ class Tracker_Chart_Data_Burndown {
 
     public function addRemainingEffort($remaining_effort) {
         $this->remaining_effort[] = $remaining_effort;
-        $this->day_counter        = strtotime("+1 day", $this->day_counter);
-        
         if($remaining_effort !== null && $this->remaining_effort[0] === null) {
             $this->fillInInitialRemainingEffortValues($remaining_effort);
         }
@@ -63,23 +59,25 @@ class Tracker_Chart_Data_Burndown {
     }
 
     public function getRemainingEffort() {
-        //var_dump($this->remaining_effort);
-        $first_effort = $this->getFirstEffort();
-        $last_value   = $first_effort;
-
+        $normalized_remaining_effort = array();
+        $day_counter = $this->time_period->getStartDate();
+        $last_value   = null;
         foreach($this->time_period->getDayOffsets() as $day_offset) {
+            $day_counter = strtotime("+1 day", $day_counter);
             if (! array_key_exists($day_offset, $this->remaining_effort)) {
-                $this->addRemainingEffort($last_value);
+                $normalized_remaining_effort[] = $last_value;
+            } else {
+                $normalized_remaining_effort[] = $this->remaining_effort[$day_offset];
             }
 
-            if ($this->isInTheFutur()) {
+            if ($this->isInTheFutur($day_counter)) {
                 $last_value = null;
             } else {
-                $last_value = $this->remaining_effort[$day_offset];
+                $last_value = $normalized_remaining_effort[$day_offset];
             }
         }
         
-        return $this->remaining_effort;
+        return $normalized_remaining_effort;
     }
 
     private function getFirstEffort() {
@@ -91,8 +89,8 @@ class Tracker_Chart_Data_Burndown {
         return null;
     }
 
-    private function isInTheFutur() {
-        return $this->day_counter > $_SERVER['REQUEST_TIME'];
+    private function isInTheFutur($day_counter) {
+        return $day_counter > $_SERVER['REQUEST_TIME'];
     }
 
     public function getHumanReadableDates() {
