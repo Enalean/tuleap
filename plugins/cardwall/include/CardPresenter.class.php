@@ -41,6 +41,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
         $this->displayed_fields   = array(self::REMAINING_EFFORT_FIELD_NAME,
                                           self::ASSIGNED_TO_FIELD_NAME,
                                           self::IMPEDIMENT_FIELD_NAME);
+        $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
     }
 
     /**

@@ -1,8 +1,12 @@
-&nbsp;
-<p>
-{{#getFields}}
-    {{getLabel}}:
-    <b>{{{getValue}}}</b>
-    <br>
-{{/getFields}}
-</p>
+<div class="card-details">
+    <div class="toggler-hide-noajax">
+        <i class="icon-caret-right"></i><i class="icon-caret-down"></i>{{details}}
+    </div>
+    <div>
+        {{#getFields}}
+            {{getLabel}}:
+            <b>{{{getValue}}}</b>
+            <br />
+        {{/getFields}}
+    </div>
+</div>

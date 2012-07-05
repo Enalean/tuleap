@@ -1163,4 +1163,21 @@ td.first-column {
     color: #005580;
     background: none;
 }
+.card-details > .toggler,
+.card-details > .toggler-hide,
+.card-details > .toggler-hide-noajax,
+.card-details > .toggler-noajax {
+    color: gray;
+    background-image: none;
+    font-size: 0.8em;
+    padding-left: 0px;
+}
+.card-details > .toggler-hide > .icon-caret-down,
+.card-details > .toggler-hide-noajax > .icon-caret-down {
+    display: none;
+}
+.card-details > .toggler > .icon-caret-right,
+.card-details > .toggler-noajax > .icon-caret-right {
+    display: none;
+}
 /* }}} */
