@@ -203,8 +203,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
+    private function getRemainingEffortField(Tracker_Artifact $artifact, User $user) {
+        return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
+    }
+    
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $field         = $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
+        $field         = $this->getRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
