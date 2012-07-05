@@ -44,7 +44,7 @@ class Cardwall_AdminView {
         $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
         $html .= '<label class="checkbox">';
         $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
-        $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_label');
+        $html .= $this->translate('plugin_cardwall', 'on_top_label');
         $html .= '</label>';
         $html .= '</p>';
         if ($checked) {
@@ -52,7 +52,7 @@ class Cardwall_AdminView {
             $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
             $html .= '</blockquote>';
         }
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '<input type="submit" value="'. $this->translate('global', 'btn_submit') .'" />';
         $html .= '</form>';
         echo $html;
         $tracker->displayFooter($layout);
@@ -85,7 +85,7 @@ class Cardwall_AdminView {
             $html .= '<td>';
             $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
             $html .= '</td>';
-            $html .= '<td>'. $GLOBALS['Language']->getText('global', 'btn_delete') .'</td>';
+            $html .= '<td>'. $this->translate('global', 'btn_delete') .'</td>';
             $html .= '</tr></thead>';
             $html .= '<tbody>';
             $mapping_fields = $mappings_dao->searchMappingFields($tracker->getId());
@@ -98,7 +98,7 @@ class Cardwall_AdminView {
                 $field = $element_factory->getFieldById($row['field_id']);
                 $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
                 if (!$field) {
-                    $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+                    $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
                 }
                 foreach ($element_factory->getUsedSbFields($mapping_tracker) as $sb_field) {
                     $selected = $field == $sb_field ? 'selected="selected"' : '';
@@ -123,7 +123,7 @@ class Cardwall_AdminView {
                 $html .= '<td colspan="'. $colspan .'">';
                 $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
                 $html .= '<select name="add_mapping_on">';
-                $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+                $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
                 foreach ($trackers as $new_tracker) {
                     $html .= '<option value="'. $new_tracker->getId() .'">'. $hp->purify($new_tracker->getName()) .'</option>';
                 }
@@ -134,6 +134,10 @@ class Cardwall_AdminView {
             $html .= '</tbody></table>';
         }
         return $html;
+    }
+
+    private function translate($page, $category, $args = "") {
+        $GLOBALS['Language']->getText($page, $category, $args);
     }
 
 }
