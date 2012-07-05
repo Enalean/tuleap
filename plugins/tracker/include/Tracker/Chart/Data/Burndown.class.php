@@ -34,13 +34,15 @@ class Tracker_Chart_Data_Burndown {
         $this->time_period = $time_period;
     }
 
-    /**
-     * @return int The Burndown time period duration in days.
-     */
     private function getDuration() {
         return $this->time_period->getDuration();
     }
 
+    /**
+     * Add a new remaining effort value
+     * 
+     * @param type $remaining_effort 
+     */
     public function addRemainingEffort($remaining_effort) {
         $this->remaining_effort[] = $remaining_effort;
         if($remaining_effort !== null && $this->remaining_effort[0] === null) {
@@ -58,6 +60,11 @@ class Tracker_Chart_Data_Burndown {
         return count($this->remaining_effort) - 1;
     }
 
+    /**
+     * Returns the remaining effort values for each day to display on Burndown
+     * 
+     * @return Array
+     */
     public function getRemainingEffort() {
         $remaining_effort = array();
         $current_day      = $this->time_period->getStartDate();
@@ -93,18 +100,34 @@ class Tracker_Chart_Data_Burndown {
         return $day > $_SERVER['REQUEST_TIME'];
     }
 
+    /**
+     * Returns the Burndown dates in a human readable fashion
+     * 
+     * @return Array
+     */
     public function getHumanReadableDates() {
         return $this->time_period->getHumanReadableDates();
     }
 
+    /**
+     * Returns the Ideal Burndown based on the initial remaining effort.
+     * 
+     * @return Array
+     */
     public function getIdealEffort() {
-        $start_effort = $this->remaining_effort[0];
-        $slope        = - ($start_effort / $this->getDuration());
-
+        $start_effort = $this->getFirstEffort();
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            $this->ideal_effort[] = floatval($slope * $day_offset + $start_effort);
+            $this->ideal_effort[] = $this->getIdealEffortAtDay($day_offset, $start_effort);
         }
         return $this->ideal_effort;
+    }
+    
+    private function getIdealEffortAtDay($day, $start_effort) {
+        if ($start_effort !== null) {
+            $slope = - ($start_effort / $this->getDuration());
+            return floatval($slope * $day + $start_effort);
+        }
+        return 0;
     }
 }
 

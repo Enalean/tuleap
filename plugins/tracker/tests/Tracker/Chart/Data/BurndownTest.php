@@ -113,7 +113,7 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
     
     public function itHasNoRemainingEffort() {
         $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(null, null, null));
+        $this->assertIdentical($burndown_data->getRemainingEffort(), array(null, null, null));
     }
 
     public function itReturnsValidRemainingEffortWhenOnlyAddingNull() {
@@ -121,7 +121,12 @@ class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
         $burndown_data->addRemainingEffort(null);
         $burndown_data->addRemainingEffort(null);
         $burndown_data->addRemainingEffort(null);
-        $this->assertEqual($burndown_data->getRemainingEffort(), array(null, null, null));
+        $this->assertIdentical($burndown_data->getRemainingEffort(), array(null, null, null));
+    }
+    
+    public function itHasNoIdealBurndown() {
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
+        $this->assertIdentical($burndown_data->getIdealEffort(), array(0, 0, 0));
     }
 }
 
