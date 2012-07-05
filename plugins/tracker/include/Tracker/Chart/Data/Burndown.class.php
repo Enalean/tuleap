@@ -20,6 +20,9 @@
 
 require_once 'BurndownTimePeriod.class.php';
 
+/**
+ * Storage data for Burndown display via JPgraph
+ */
 class Tracker_Chart_Data_Burndown {
 
     /**
@@ -34,16 +37,12 @@ class Tracker_Chart_Data_Burndown {
         $this->time_period = $time_period;
     }
 
-    private function getDuration() {
-        return $this->time_period->getDuration();
-    }
-
     /**
-     * Add a new remaining effort value
-     * 
-     * @param type $remaining_effort 
+     * Stack a new remaining effort value
+     *
+     * @param Float|Null $remaining_effort
      */
-    public function addRemainingEffort($remaining_effort) {
+    public function pushRemainingEffort($remaining_effort) {
         $this->remaining_effort[] = $remaining_effort;
         if($remaining_effort !== null && $this->remaining_effort[0] === null) {
             $this->fillInInitialRemainingEffortValues($remaining_effort);
@@ -62,7 +61,7 @@ class Tracker_Chart_Data_Burndown {
 
     /**
      * Returns the remaining effort values for each day to display on Burndown
-     * 
+     *
      * @return Array
      */
     public function getRemainingEffort() {
@@ -102,7 +101,7 @@ class Tracker_Chart_Data_Burndown {
 
     /**
      * Returns the Burndown dates in a human readable fashion
-     * 
+     *
      * @return Array
      */
     public function getHumanReadableDates() {
@@ -111,7 +110,7 @@ class Tracker_Chart_Data_Burndown {
 
     /**
      * Returns the Ideal Burndown based on the initial remaining effort.
-     * 
+     *
      * @return Array
      */
     public function getIdealEffort() {
@@ -121,13 +120,17 @@ class Tracker_Chart_Data_Burndown {
         }
         return $this->ideal_effort;
     }
-    
+
     private function getIdealEffortAtDay($day, $start_effort) {
         if ($start_effort !== null) {
             $slope = - ($start_effort / $this->getDuration());
             return floatval($slope * $day + $start_effort);
         }
         return 0;
+    }
+
+    private function getDuration() {
+        return $this->time_period->getDuration();
     }
 }
 
