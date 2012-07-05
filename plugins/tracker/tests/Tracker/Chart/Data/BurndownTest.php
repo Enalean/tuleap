@@ -47,6 +47,32 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
         $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 14, 14, 14));
     }
 
+
+    public function testWhenRemainingEffortValuesDoesntStartInTheSameTimeThanStartDate() {
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period);
+        $burndown_data->addRemainingEffort(null);
+        $burndown_data->addRemainingEffort(null);
+        $burndown_data->addRemainingEffort(14);
+        $burndown_data->addRemainingEffort(13);
+        $burndown_data->addRemainingEffort(12);
+        $burndown_data->addRemainingEffort(11);
+
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, 13, 12, 11));
+    }
+
+    public function testWhenRemainingEffortValuesDoesntStartInTheSameTimeThanStartDate2() {
+        $start_date    = strtotime('-2 day', $_SERVER['REQUEST_TIME']);
+        $duration      = 5;
+        $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $burndown_data->addRemainingEffort(null);
+        $burndown_data->addRemainingEffort(null);
+        $burndown_data->addRemainingEffort(14);
+
+        var_dump($burndown_data->getRemainingEffort());
+        $this->assertEqual($burndown_data->getRemainingEffort(), array(14, 14, 14, null, null, null));
+    }
+    
     public function itDoesNotCompleteRemainingEffortValuesInTheFuture() {
         $start_date    = strtotime('-1 day', $_SERVER['REQUEST_TIME']);
         $duration      = 5;

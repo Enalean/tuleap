@@ -49,18 +49,47 @@ class Tracker_Chart_Data_Burndown {
     }
 
     public function getRemainingEffort() {
-        $last_value = null;
+        //var_dump($this->remaining_effort);
+        $first_effort = $this->getFirstEffort();
+        $last_value   = $first_effort;
+
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            if (!array_key_exists($day_offset, $this->remaining_effort)) {
+            if (! array_key_exists($day_offset, $this->remaining_effort)) {
                 $this->addRemainingEffort($last_value);
             }
-            if ($this->day_counter > $_SERVER['REQUEST_TIME']) {
+
+            if ($this->isInTheFutur()) {
                 $last_value = null;
             } else {
                 $last_value = $this->remaining_effort[$day_offset];
             }
         }
+
+        $next_value = null;
+        foreach(array_reverse($this->time_period->getDayOffsets()) as $day_offset) {
+            $current_value = $this->remaining_effort[$day_offset];
+
+            if ($current_value === null) {
+                $this->remaining_effort[$day_offset] = $next_value;
+            }
+
+            $next_value = $this->remaining_effort[$day_offset];
+        }
+
         return $this->remaining_effort;
+    }
+
+    private function getFirstEffort() {
+        foreach($this->remaining_effort as $effort) {
+            if ($effort !== null) {
+                return $effort;
+            }
+        }
+        return null;
+    }
+
+    private function isInTheFutur() {
+        return $this->day_counter > $_SERVER['REQUEST_TIME'];
     }
 
     public function getHumanReadableDates() {
