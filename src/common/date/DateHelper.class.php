@@ -23,6 +23,8 @@ class DateHelper {
     const INCLUDE_SECONDS = 1;
     const WITH_TITLE      = 1;
     
+    const SECONDS_IN_A_DAY = 86400;
+
     /**
      * Give the apporximate distance between a time and now
      *
@@ -116,11 +118,7 @@ class DateHelper {
      * @return Integer
      */
     public static function dateDiffInDays($start, $end) {
-        $hours        = 24;
-        $minutes      = 60;
-        $seconds      = 60;
-        $dayInSeconds = $hours * $minutes * $seconds;
-        return floor(($end - $start) / $dayInSeconds);
+        return floor(($end - $start) / self::SECONDS_IN_A_DAY);
     }
 
     /**
