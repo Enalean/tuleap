@@ -47,37 +47,37 @@ class Tracker_Chart_Data_Burndown {
             $this->fillInInitialRemainingEffortValues($remaining_effort);
         }
     }
-    
+
     private function fillInInitialRemainingEffortValues($value) {
         for ($i = $this->getLastDayOffset(); $i >= 0; $i--) {
             $this->remaining_effort[$i] = $value;
         }
     }
-    
+
     private function getLastDayOffset() {
         return count($this->remaining_effort) - 1;
     }
 
     public function getRemainingEffort() {
-        $normalized_remaining_effort = array();
-        $day_counter = $this->time_period->getStartDate();
-        $last_value   = null;
+        $remaining_effort = array();
+        $current_day      = $this->time_period->getStartDate();
+        $last_value       = null;
+
         foreach($this->time_period->getDayOffsets() as $day_offset) {
-            $day_counter = strtotime("+1 day", $day_counter);
-            if (! array_key_exists($day_offset, $this->remaining_effort)) {
-                $normalized_remaining_effort[] = $last_value;
+
+            if ($this->isInTheFutur($current_day)) {
+                $remaining_effort[] = null;
+            } else if (array_key_exists($day_offset, $this->remaining_effort)) {
+                $remaining_effort[] = $this->remaining_effort[$day_offset];
             } else {
-                $normalized_remaining_effort[] = $this->remaining_effort[$day_offset];
+                $remaining_effort[] = $last_value;
             }
 
-            if ($this->isInTheFutur($day_counter)) {
-                $last_value = null;
-            } else {
-                $last_value = $normalized_remaining_effort[$day_offset];
-            }
+            $last_value  = $remaining_effort[$day_offset];
+            $current_day = strtotime("+1 day", $current_day);
         }
-        
-        return $normalized_remaining_effort;
+
+        return $remaining_effort;
     }
 
     private function getFirstEffort() {
@@ -89,8 +89,8 @@ class Tracker_Chart_Data_Burndown {
         return null;
     }
 
-    private function isInTheFutur($day_counter) {
-        return $day_counter > $_SERVER['REQUEST_TIME'];
+    private function isInTheFutur($day) {
+        return $day > $_SERVER['REQUEST_TIME'];
     }
 
     public function getHumanReadableDates() {
