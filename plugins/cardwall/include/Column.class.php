@@ -65,7 +65,7 @@ class Cardwall_Column {
         $field           = $this->field_provider->getField($artifact);
         $artifact_status = null;
         if ($field) {
-            $artifact_status = $field->getValueFor($artifact->getLastChangeset());
+            $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
         return $this->isMatchForThisColumn($artifact_status);
     }

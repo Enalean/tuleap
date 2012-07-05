@@ -603,7 +603,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
      */
-    public function getValueFor(Tracker_Artifact_Changeset $changeset) {
+    public function getFirstValueFor(Tracker_Artifact_Changeset $changeset) {
         if ($this->userCanRead()) {
             if ($last_values = $changeset->getValue($this)->getListValues()) {
                 // let's assume there is no more that one status

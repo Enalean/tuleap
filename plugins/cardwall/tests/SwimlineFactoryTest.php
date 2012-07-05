@@ -32,21 +32,21 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() {
         $columns    = array();
         $presenters = array();
-        $swimlines  = $this->factory->getCellsOfSwimline($columns, $presenters);
+        $swimlines  = $this->factory->getCells($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters() {
         $columns    = array();
         $presenters = array(mock('Cardwall_CardInCellPresenter'));
-        $swimlines  = $this->factory->getCellsOfSwimline($columns, $presenters);
+        $swimlines  = $this->factory->getCells($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
     public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
         $columns    = array(mock('Cardwall_Column'));
         $presenters = array();
-        $swimlines  = $this->factory->getCellsOfSwimline($columns, $presenters);
+        $swimlines  = $this->factory->getCells($columns, $presenters);
         $expected   = array(
                           array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
@@ -60,7 +60,7 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $cardincell_presenter1 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact1);
         $cardincell_presenter2 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact2);
         
-        $swimlines = $this->factory->getCellsOfSwimline($columns, array($cardincell_presenter1, $cardincell_presenter2));
+        $swimlines = $this->factory->getCells($columns, array($cardincell_presenter1, $cardincell_presenter2));
         $expected  = array(
                         array('cardincell_presenters' => array($cardincell_presenter1)),
                         array('cardincell_presenters' => array($cardincell_presenter2)));
@@ -72,7 +72,7 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
         $columns  = array(stub('Cardwall_Column')->isInColumn($artifact)->returns(false));
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
 
-        $swimlines = $this->factory->getCellsOfSwimline($columns, array($cardincell_presenter));
+        $swimlines = $this->factory->getCells($columns, array($cardincell_presenter));
         $expected  = array(
                         array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);

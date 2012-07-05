@@ -29,33 +29,33 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     }
     
     public function itIsInTheCellIfTheLabelMatches() {
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
+        stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(0, 'ongoing');
         $this->assertIn($column);
     }
     
     public function itIsNotInTheCellIfTheLabelDoesntMatch() {
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
+        stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(0, 'done');
         $this->assertNotIn($column);
     }
 
     public function itIsInTheCellIfItHasNoStatusAndTheColumnHasId100() {
         $null_status = null;
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns($null_status);
+        stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns($null_status);
         $column   = $this->newCardwall_Column(100, 'done');
         $this->assertIn($column);
     }
 
     public function itIsNotInTheCellIfItHasNoStatus() {
         $null_status = null;
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns($null_status);
+        stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns($null_status);
         $column   = $this->newCardwall_Column(123, 'done');
         $this->assertNotIn($column);
     }
 
     public function itIsNotInTheCellIfHasANonMatchingLabelTheColumnIdIs100() {
-        stub($this->field)->getValueFor($this->artifact->getLastChangeset())->returns('ongoing');
+        stub($this->field)->getFirstValueFor($this->artifact->getLastChangeset())->returns('ongoing');
         $column   = $this->newCardwall_Column(100, 'done');
         $this->assertNotIn($column);
     }

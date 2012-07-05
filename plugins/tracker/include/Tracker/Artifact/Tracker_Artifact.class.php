@@ -453,7 +453,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getStatus() {
         if ($status_field = Tracker_Semantic_Status::load($this->getTracker())->getField()) {
-            return $status_field->getValueFor($this->getLastChangeset());
+            return $status_field->getFirstValueFor($this->getLastChangeset());
         }
         return null;
     }
