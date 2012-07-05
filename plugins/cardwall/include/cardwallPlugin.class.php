@@ -205,10 +205,13 @@ class cardwallPlugin extends Plugin {
 
     private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout) {
         $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $checked = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
+        $checked    = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
+        $tracker_id = $tracker->getId();
+        $token      = $this->getCSRFToken($tracker_id)->fetchHTMLInput();
+        
         $html  = '';
-        $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker->getId() .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
-        $html .= $this->getCSRFToken($tracker->getId())->fetchHTMLInput();
+        $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
+        $html .= $token;
         $html .= '<p>';
         $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
         $html .= '<label class="checkbox">';
