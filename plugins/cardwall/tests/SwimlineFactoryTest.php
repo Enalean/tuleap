@@ -20,47 +20,47 @@
  */
 
 require_once dirname(__FILE__).'/../include/SwimlineFactory.class.php';
+require_once dirname(__FILE__).'/../../tracker/tests/builders/anArtifact.php';
 
 class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     
+    public function setUp() {
+        parent::setUp();
+        $this->factory    = new Cardwall_SwimlineFactory();
+    }
+    
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() {
-        $factory    = new Cardwall_SwimlineFactory();
         $columns    = array();
         $presenters = array();
-        $swimlines  = $factory->getCellsOfSwimline($columns, $presenters);
+        $swimlines  = $this->factory->getCellsOfSwimline($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters() {
-        $factory    = new Cardwall_SwimlineFactory();
         $columns    = array();
         $presenters = array(mock('Cardwall_CardInCellPresenter'));
-        $swimlines  = $factory->getCellsOfSwimline($columns, $presenters);
+        $swimlines  = $this->factory->getCellsOfSwimline($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
     public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
-        $factory    = new Cardwall_SwimlineFactory();
         $columns    = array(mock('Cardwall_Column'));
         $presenters = array();
-        $swimlines  = $factory->getCellsOfSwimline($columns, $presenters);
+        $swimlines  = $this->factory->getCellsOfSwimline($columns, $presenters);
         $expected   = array(
                           array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
     }
     
     public function itAsksTheColumnIfItGoesInThere() {
-        $factory   = new Cardwall_SwimlineFactory();
-        $label_1   = 'ongoing';
-        $label_2   = 'review';
-        $artifact1 = stub('Tracker_Artifact')->getStatus()->returns($label_1);
-        $artifact2 = stub('Tracker_Artifact')->getStatus()->returns($label_2);
+        $artifact1 = anArtifact()->withId(1)->build();
+        $artifact2 = anArtifact()->withId(2)->build();
         $columns   = array(stub('Cardwall_Column')->isInColumn($artifact1)->returns(true),
-                         stub('Cardwall_Column')->isInColumn($artifact2)->returns(true));
+                           stub('Cardwall_Column')->isInColumn($artifact2)->returns(true));
         $cardincell_presenter1 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact1);
         $cardincell_presenter2 = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact2);
         
-        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter1, $cardincell_presenter2));
+        $swimlines = $this->factory->getCellsOfSwimline($columns, array($cardincell_presenter1, $cardincell_presenter2));
         $expected  = array(
                         array('cardincell_presenters' => array($cardincell_presenter1)),
                         array('cardincell_presenters' => array($cardincell_presenter2)));
@@ -68,13 +68,11 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     }
     
     public function itIgnoresPresentersIfThereIsNoMatchingColumn() {
-        $factory  = new Cardwall_SwimlineFactory();
-        $label    = 'in progress';
-        $artifact = stub('Tracker_Artifact')->getStatus()->returns($label);
+        $artifact = anArtifact()->build();
         $columns  = array(stub('Cardwall_Column')->isInColumn($artifact)->returns(false));
         $cardincell_presenter = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
 
-        $swimlines = $factory->getCellsOfSwimline($columns, array($cardincell_presenter));
+        $swimlines = $this->factory->getCellsOfSwimline($columns, array($cardincell_presenter));
         $expected  = array(
                         array('cardincell_presenters' => array()));
         $this->assertIdentical($expected, $swimlines);
