@@ -154,28 +154,33 @@ class cardwallPlugin extends Plugin {
     function tracker_event_process($params) {
         $tracker_factory  = TrackerFactory::instance();
         $element_factory  = Tracker_FormElementFactory::instance();
+        $tracker          = $params['tracker'];
+        $tracker_id       = $tracker->getId();
         switch ($params['func']) {
             case 'admin-cardwall':
-                if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->displayAdminOnTop($params['tracker'], $params['layout'], $tracker_factory, $element_factory);
+                if ($tracker->userIsAdmin($params['user'])) {
+                    $this->displayAdminOnTop($tracker, $params['layout'], $tracker_factory, $element_factory);
                     $params['nothing_has_been_done'] = false;
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
+                    $this->denyAccess($tracker_id);
                 }
                 break;
             case 'admin-cardwall-update':
-                if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->getCSRFToken($params['tracker']->getId())->check();
-                    $this->getOnTopConfigUpdater($params['tracker'], $tracker_factory, $element_factory)
+                if ($tracker->userIsAdmin($params['user'])) {
+                    $this->getCSRFToken($tracker_id)->check();
+                    $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory)
                             ->process($params['request']);
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&func=admin-cardwall');
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
+                    $this->denyAccess($tracker_id);
                 }
                 break;
         }
+    }
+
+    private function denyAccess($tracker_id) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
     }
 
     /**
@@ -206,8 +211,8 @@ class cardwallPlugin extends Plugin {
 
     private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
         $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $checked    = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
         $tracker_id = $tracker->getId();
+        $checked    = $this->getOnTopDao()->isEnabled($tracker_id) ? 'checked="checked"' : '';
         $token      = $this->getCSRFToken($tracker_id)->fetchHTMLInput();
         
         $html  = '';
