@@ -81,7 +81,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         if ($this->getId() == 100) {
             return '';
         }
-        return $this->getUser()->fetchHtmlAvatar(16);
+        return '<div style="display: inline-block;">'. $this->getUser()->fetchHtmlAvatar(16) .'</div>';
     }
     
     public function fetchFormattedForCSV() {
