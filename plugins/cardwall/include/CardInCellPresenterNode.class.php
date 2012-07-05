@@ -38,6 +38,10 @@ class Cardwall_CardInCellPresenterNode extends NodeDuplicator {
     public function getCardInCellPresenter() {
         return $this->presenter;
     }
+    
+    public function getArtifact() {
+        return $this->presenter->getArtifact();
+    }
 }
 
 ?>

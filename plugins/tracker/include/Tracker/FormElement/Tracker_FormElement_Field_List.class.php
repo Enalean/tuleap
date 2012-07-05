@@ -598,6 +598,22 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $values;
     }
 
+    /**
+     * 
+     * @param Tracker_Artifact_Changeset $changeset
+     * @return string
+     */
+    public function getFirstValueFor(Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead()) {
+            if ($last_values = $changeset->getValue($this)->getListValues()) {
+                // let's assume there is no more that one status
+                if ($label = array_shift($last_values)->getLabel()) {
+                    return $label;
+                }
+            }
+        }
+    }
+
     protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
         $html = '';
         $multiple = ' ';
