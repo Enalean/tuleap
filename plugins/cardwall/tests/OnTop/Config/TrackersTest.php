@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../../include/View/AdminView.class.php';
 require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aTracker.php';
 
 class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTestCase {
-    
+
     public function itReturnsAllTrackersWhenNothingIsMapped() {
         $trackers = array(10 => aTracker()->withId(10)->build(),
                           11 => aTracker()->withId(11)->build());
@@ -31,7 +31,7 @@ class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTest
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, aTracker()->withId(77)->build(), $mappings);
         $this->assertEqual($trackers, $config_trackers->getNonMappedTrackers());
     }
-    
+
     public function itStripsTheCurrentTracker() {
         $current_tracker = aTracker()->withId(10)->build();
         $other_tracker   = aTracker()->withId(99)->build();
@@ -41,7 +41,7 @@ class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTest
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
         $this->assertEqual(array(99 => $other_tracker), $config_trackers->getNonMappedTrackers());
     }
-    
+
     public function itStripsTheMappedTracker() {
         $current_tracker = aTracker()->withId(10)->build();
         $story_tracker   = aTracker()->withId(11)->build();
@@ -60,6 +60,54 @@ class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTest
         );
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
         $this->assertEqual(array(99 => $other_tracker), $config_trackers->getNonMappedTrackers());
+    }
+}
+
+class Cardwall_OnTop_Config_Trackers_getMappedTrackersTest extends TuleapTestCase {
+
+    public function itReturnsTheMappedTracker() {
+        $current_tracker = aTracker()->withId(10)->build();
+        $story_tracker   = aTracker()->withId(11)->build();
+        $task_tracker    = aTracker()->withId(12)->build();
+        $other_tracker   = aTracker()->withId(99)->build();
+        $trackers = array(10 => $current_tracker,
+                          11 => $story_tracker,
+                          12 => $task_tracker,
+                          99 => $other_tracker);
+
+        $mapped_trackers = array(
+            11 => $story_tracker,
+            12 => $task_tracker,
+        );
+        $mappings = mock('Cardwall_OnTop_Config_MappimgFields');
+        stub($mappings)->getTrackers()->returns($mapped_trackers);
+        $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
+        $this->assertEqual($mapped_trackers, $config_trackers->getMappedTrackers());
+    }
+
+    public function itStripsTheCurrentTracker() {
+        $current_tracker = aTracker()->withId(10)->build();
+        $story_tracker   = aTracker()->withId(11)->build();
+        $task_tracker    = aTracker()->withId(12)->build();
+        $other_tracker   = aTracker()->withId(99)->build();
+        $trackers = array(10 => $current_tracker,
+                          11 => $story_tracker,
+                          12 => $task_tracker,
+                          99 => $other_tracker);
+
+        $mapped_trackers = array(
+            10 => $current_tracker,
+            11 => $story_tracker,
+            12 => $task_tracker,
+        );
+        $expected = array(
+            11 => $story_tracker,
+            12 => $task_tracker,
+        );
+        $mappings = mock('Cardwall_OnTop_Config_MappimgFields');
+        stub($mappings)->getTrackers()->returns($mapped_trackers);
+        $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
+        $this->assertEqual($expected, $config_trackers->getMappedTrackers());
     }
 }
 ?>

@@ -37,7 +37,7 @@ class Cardwall_AdminView extends Abstract_View {
         $checked    = $ontop_dao->isEnabled($tracker_id) ? 'checked="checked"' : '';
         $token_html = $token->fetchHTMLInput();
         $formview = new Cardwall_AdminFormView();
-        
+
         $tracker ->displayAdminItemHeader($layout, 'plugin_cardwall');
         $formview->displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
         $tracker ->displayFooter($layout);
@@ -47,7 +47,7 @@ class Cardwall_AdminView extends Abstract_View {
 }
 
 abstract class Abstract_View {
-    
+
     /**
      * @var Codendi_HTMLPurifier
      */
@@ -69,15 +69,15 @@ abstract class Abstract_View {
 }
 
 class Cardwall_AdminFormView extends Abstract_View {
-    
+
     private function urlForAdminUpdate($tracker_id) {
-        return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';        
+        return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';
     }
 
     public function displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
         echo $this->generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao);
     }
-    
+
     private function generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao) {
         $column_definition = new Cardwall_AdminColumnDefinitionView();
         $update_url = $this->urlForAdminUpdate($tracker->getId());
@@ -109,16 +109,18 @@ class Cardwall_OnTop_Config_Trackers {
     private $tracker;
     private $mapped_trackers;
     private $non_mapped_trackers;
-    
+
     function __construct(array $project_trackers, Tracker $tracker, Cardwall_OnTop_Config_MappimgFields $mapping_fields) {
-        $project_trackers = array_diff($project_trackers, array($tracker));
-        $this->non_mapped_trackers = array_diff($project_trackers, $mapping_fields->getTrackers());
+        $project_trackers          = array_diff($project_trackers, array($tracker));
+        $mapped_trackers           = $mapping_fields->getTrackers();
+        $this->non_mapped_trackers = array_diff($project_trackers, $mapped_trackers);
+        $this->mapped_trackers     = array_diff($mapped_trackers, array($tracker));
     }
-    
+
     public function getMappedTrackers() {
         return $this->mapped_trackers;
     }
-    
+
     public function getNonMappedTrackers() {
         return $this->non_mapped_trackers;
     }
@@ -139,7 +141,7 @@ class Cardwall_OnTop_Config_MappimgFields {
     public function __construct(array $mapping_fields) {
         $this->mapping_fields = $mapping_fields;
     }
-    
+
     public function getTrackers() {
         return array();
     }
@@ -182,7 +184,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
                 $used_sb_fields = $element_factory->getUsedSbFields($mapping_tracker);
                 $trackers = array_diff($trackers, array($mapping_tracker));
                 $field = $element_factory->getFieldById($row['field_id']);
-                
+
                 $html .= $this->listExistingMappings($row_number, $mapping_tracker, $used_sb_fields, $field, $columns_raws);
             }
             if (count($columns_raws) && count($trackers)) {
@@ -218,7 +220,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         $html .= '</td>';
         $html .= '</tr>';
         return $html;
-    }    
+    }
 
     private function addCustomMapping($columns_raws, $trackers) {
         $colspan = count($columns_raws) + 2;
