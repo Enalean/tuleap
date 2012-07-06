@@ -116,5 +116,15 @@ class OngoingIntelligentStub {
     public function returnsEmptyDar() {
         $this->returns(TestHelper::emptyDar());
     }
+    
+    /**
+     * Ease returns of DatabaseAccessResult with errors
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsDarWithErrors()
+     */
+    public function returnsDarWithErrors() {
+        $this->returns(TestHelper::errorDar());
+    }
 }
 ?>

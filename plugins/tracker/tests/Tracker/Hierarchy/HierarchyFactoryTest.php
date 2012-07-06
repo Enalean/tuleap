@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/HierarchyFactory.class.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/TrackerFactory.class.php';
+require_once dirname(__FILE__).'/../../../include/constants.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Hierarchy/HierarchyFactory.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/anArtifact.php';
 require_once dirname(__FILE__).'/../../builders/aMockTracker.php';
 
 Mock::generate('Tracker_Hierarchy_Dao');
@@ -156,4 +158,79 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
         return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'));
     }
 }
+
+class Tracker_HierarchyFactoryGetParentTest extends TuleapTestCase {
+    private $dao;
+    private $hierarchy_factory;
+    private $user;
+    private $artifact;
+    private $artifact_id;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->artifact_id = 123;
+        $this->artifact    = anArtifact()->withId($this->artifact_id)->build();
+
+        $this->dao     = mock('Tracker_Hierarchy_Dao');
+        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, mock('TrackerFactory'));
+
+        $this->user    = aUser()->build();
+    }
+
+    public function itReturnsTheParent() {
+        $artifact_row = array(
+            'id'                       => '345',
+            'tracker_id'               => '112',
+            'submitted_by'             => '12',
+            'submitted_on'             => '2',
+            'use_artifact_permissions' => '0'
+        );
+        stub($this->dao)->getParentsInHierarchy($this->artifact_id)->returnsDar($artifact_row);
+
+        $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
+        $this->assertEqual($parent->getId(), 345);
+    }
+
+    public function itReturnsNullWhenNoParents() {
+        stub($this->dao)->getParentsInHierarchy()->returnsEmptyDar();
+
+        $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
+        $this->assertEqual($parent, null);
+    }
+
+    public function itReturnsNullWhenDatabaseReturnsCrap() {
+        stub($this->dao)->getParentsInHierarchy()->returns(false);
+
+        $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
+        $this->assertEqual($parent, null);
+    }
+
+    public function itReturnsNullWhenDatabaseReturnsError() {
+        stub($this->dao)->getParentsInHierarchy()->returnsDarWithErrors();
+
+        $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
+        $this->assertEqual($parent, null);
+    }
+
+    public function itThrowAnExceptionWhen2Parents() {
+        $artifact_row = array(
+            'tracker_id'               => '112',
+            'submitted_by'             => '12',
+            'submitted_on'             => '2',
+            'use_artifact_permissions' => '0'
+        );
+        $artifact_345_row       = $artifact_row;
+        $artifact_345_row['id'] = '345';
+        $artifact_346_row       = $artifact_row;
+        $artifact_346_row['id'] = '346';
+        
+        stub($this->dao)->getParentsInHierarchy()->returnsDar($artifact_345_row, $artifact_346_row);
+
+        $this->expectException('Tracker_Hierarchy_MoreThanOneParentException');
+
+        $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
+    }
+}
+
 ?>

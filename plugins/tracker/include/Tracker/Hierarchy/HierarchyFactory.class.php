@@ -20,6 +20,7 @@
 
 require_once 'Hierarchy.class.php';
 require_once 'Dao.class.php';
+require_once 'MoreThanOneParentException.class.php';
 
 class Tracker_HierarchyFactory {
     
@@ -77,7 +78,7 @@ class Tracker_HierarchyFactory {
         }
         return $this->cache_children_of_tracker[$tracker_id];
     }
-
+    
     /**
      * Return the whole hierarchy (parents and descendants) that involve the given trackers
      *
@@ -110,6 +111,34 @@ class Tracker_HierarchyFactory {
         return $hierarchy;
     }
 
+    public function getParentArtifact(User $user, Tracker_Artifact $child) {
+        $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
+        if ($dar && !$dar->isError()) {
+            switch ($dar->rowCount()) {
+                case 0:
+                    return null;
+                case 1:
+                    return Tracker_ArtifactFactory::instance()->getInstanceFromRow($dar->getRow());
+                default:
+                    $parent_ids = array();
+                    foreach ($dar as $row) {
+                        $parent_ids[] = $row['id'];
+                    }
+                    throw new Tracker_Hierarchy_MoreThanOneParentException($child->getId(), $parent_ids);
+            }
+        }
+        return null;
+    }
+
+    public function getAllAncestors(User $user, Tracker_Artifact $child) {
+        $parent = $this->getParentArtifact($user, $child);
+        if ($parent === null) {
+            return array();
+        } else {
+            return array_merge(array($parent), $this->getAllAncestors($user, $parent));
+        }
+    }
+    
     /*
      * Duplicate a tracker hierarchy
      * 
