@@ -40,7 +40,7 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
     public function itRetrievesTheChildrenOfAGivenTracker() {
         $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
         $tracker_factory   = mock('TrackerFactory');
-        $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory);
+        $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory, mock('Tracker_ArtifactFactory'));
         
         $tracker_id = 1;
         $child_ids  = array(array('id' => 11), array('id' => 12));
@@ -155,7 +155,7 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
             $dao = new MockTracker_Hierarchy_Dao();
             $dao->setReturnValue('searchTrackerHierarchy', array());
         }
-        return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'));
+        return new Tracker_HierarchyFactory($dao, mock('TrackerFactory'), mock('Tracker_ArtifactFactory'));
     }
 }
 
@@ -173,7 +173,7 @@ class Tracker_HierarchyFactoryGetParentTest extends TuleapTestCase {
         $this->artifact    = anArtifact()->withId($this->artifact_id)->build();
 
         $this->dao     = mock('Tracker_Hierarchy_Dao');
-        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, mock('TrackerFactory'));
+        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, mock('TrackerFactory'), Tracker_ArtifactFactory::instance());
 
         $this->user    = aUser()->build();
     }

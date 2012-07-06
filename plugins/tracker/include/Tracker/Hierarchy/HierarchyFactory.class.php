@@ -23,15 +23,18 @@ require_once 'Dao.class.php';
 require_once 'MoreThanOneParentException.class.php';
 
 class Tracker_HierarchyFactory {
-    
-    protected $hierarchy_dao;
-    
+
     private static $_instance;
     
     /**
      * @var array of tracker id (children of a tracker)
      */
     private $cache_children_of_tracker = array();
+
+    /**
+     * @var Tracker_Hierarchy_Dao
+     */
+    private $hierarchy_dao;
 
     /**
      * Used to instanciate some related trackers according to their hierarchy,
@@ -41,12 +44,20 @@ class Tracker_HierarchyFactory {
      * @var TrackerFactory
      */
     private $tracker_factory;
-    
-    public function __construct(Tracker_Hierarchy_Dao $hierarchy_dao, TrackerFactory $tracker_factory) {
-        $this->hierarchy_dao   = $hierarchy_dao;
-        $this->tracker_factory = $tracker_factory;
+
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    public function __construct(Tracker_Hierarchy_Dao   $hierarchy_dao,
+                                TrackerFactory          $tracker_factory,
+                                Tracker_ArtifactFactory $artifact_factory) {
+        $this->hierarchy_dao    = $hierarchy_dao;
+        $this->tracker_factory  = $tracker_factory;
+        $this->artifact_factory = $artifact_factory;
     }
-    
+
     /**
      * Returns an instance of Tracker_HierarchyFactory (creating it when needed).
      * 
@@ -56,7 +67,7 @@ class Tracker_HierarchyFactory {
      */
     public static function instance() {
         if (! self::$_instance) {
-            self::$_instance = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance());
+            self::$_instance = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance(), Tracker_ArtifactFactory::instance());
         }
         return self::$_instance;
     }
@@ -118,7 +129,7 @@ class Tracker_HierarchyFactory {
                 case 0:
                     return null;
                 case 1:
-                    return Tracker_ArtifactFactory::instance()->getInstanceFromRow($dar->getRow());
+                    return $this->artifact_factory->getInstanceFromRow($dar->getRow());
                 default:
                     $parent_ids = array();
                     foreach ($dar as $row) {
