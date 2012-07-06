@@ -105,8 +105,6 @@ class Cardwall_AdminFormView extends Abstract_View {
 }
 class Cardwall_OnTop_Config_Trackers {
 
-    private $project_trackers;
-    private $tracker;
     private $mapped_trackers;
     private $non_mapped_trackers;
 
@@ -152,7 +150,8 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
                                            $column_dao,
                                            $mappings_dao) {
         $html     = '';
-        $o_trackers = new Cardwall_OnTop_Config_Trackers($tracker_factory->getTrackersByGroupId($tracker->getGroupId()), $tracker);
+        $project_trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
+        $o_trackers = new Cardwall_OnTop_Config_Trackers($project_trackers, $tracker, new Cardwall_OnTop_Config_MappimgFields(array()));
         $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $trackers = array_diff($trackers, array($tracker));
         $field    = $tracker->getStatusField();
