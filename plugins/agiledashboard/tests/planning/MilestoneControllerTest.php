@@ -403,19 +403,28 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         $this->product     = aMilestone()->withArtifact(aMockArtifact()->withId(1)->withTitle('Product X')->build())->build();
         $this->release     = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Release 1.0')->build())->build();
         $this->sprint      = aMilestone()->withArtifact(aMockArtifact()->withId(3)->withTitle('Sprint 1')->build())->build();
+        
+        $this->milestone_factory = mock('Planning_MilestoneFactory');
+        $this->project_manager   = mock('ProjectManager');
+        
+        $current_user_builder = aUser();
+        $this->current_user   = $current_user_builder->build();
+        $this->request        = aRequest()->withUser($current_user_builder)->build();
+    }
+
+    public function itHasNoBreadCrumbWhenThereIsNoMilestone() {
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns(mock('Planning_NoMilestone'));
+        
+        $controller = new Planning_MilestoneController($this->request, $this->milestone_factory, $this->project_manager);
+        $breadcrumb = $controller->getBreadcrumbs($this->plugin_path);
+        $this->assertIsA($breadcrumb, 'BreadCrumb_NoCrumb');
     }
 
     public function itIncludesBreadcrumbsForParentMilestones() {
-        $current_user_builder = aUser();
-        $current_user         = $current_user_builder->build();
-        $request              = aRequest()->withUser($current_user_builder)->build();
-        $milestone_factory    = mock('Planning_MilestoneFactory');
-        $project_manager      = mock('ProjectManager');
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
+        stub($this->milestone_factory)->getMilestoneWithAncestors($this->current_user, $this->sprint)->returns(array($this->product, $this->release, $this->sprint));
 
-        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
-        stub($milestone_factory)->getMilestoneWithAncestors($current_user, $this->sprint)->returns(array($this->product, $this->release, $this->sprint));
-
-        $controller  = new Planning_MilestoneController($request, $milestone_factory, $project_manager);
+        $controller  = new Planning_MilestoneController($this->request, $this->milestone_factory, $this->project_manager);
 
         $breadcrumbs = $controller->getBreadcrumbs($this->plugin_path);
         $this->assertEqualToBreadCrumbWithAllMilestones($breadcrumbs);

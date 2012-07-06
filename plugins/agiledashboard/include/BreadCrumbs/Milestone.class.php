@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'BreadCrumbGenerator.class.php';
+
 class BreadCrumb_Milestone implements BreadCrumb_BreadCrumbGenerator {
 
     private $plugin_path;

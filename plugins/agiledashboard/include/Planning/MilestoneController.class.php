@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Milestone.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/NoCrumb.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 require_once 'SearchContentView.class.php';
 require_once 'MilestonePresenter.class.php';
@@ -171,7 +170,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
             $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
         }
-        //return new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
+        return new BreadCrumb_NoCrumb();
     }
 
     private function getMilestoneWithAncestors() {
