@@ -20,8 +20,8 @@
 
 require_once dirname(__FILE__) .'/../../../../../tracker/include/constants.php';
 require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command/UpdateMappingFields.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnDao.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command/UpdateMappingFieldValues.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
@@ -56,7 +56,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldValuesTest extends TuleapT
         stub($element_factory)->getFieldById('321')->returns($assignto_field);
         stub($element_factory)->getFieldById('322')->returns($stage_field);
 
-        $this->dao     = mock('Cardwall_OnTop_ColumnMappingFieldDao');
+        $this->dao     = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
         $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFieldValues($tracker, $this->dao, $tracker_factory, $element_factory);
     }
 
@@ -67,23 +67,6 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldValuesTest extends TuleapT
                 '69' => '321',
             )
         )->build();
-        stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
-            TestHelper::arrayToDar(
-                array(
-                    'cardwall_tracker_id' => 666,
-                    'tracker_id'          => 42,
-                    'field_id'            => 100
-                ),
-                array(
-                    'cardwall_tracker_id' => 666,
-                    'tracker_id'          => 69,
-                    'field_id'            => null
-                )
-            )
-        );
-        stub($this->dao)->save($this->tracker_id, 42, 123)->at(0);
-        stub($this->dao)->save($this->tracker_id, 69, 321)->at(1);
-        stub($this->dao)->save()->count(2);
         $this->command->execute($request);
     }
 
@@ -94,21 +77,6 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldValuesTest extends TuleapT
                 '69' => '322',
             )
         )->build();
-        stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
-            TestHelper::arrayToDar(
-                array(
-                    'cardwall_tracker_id' => 666,
-                    'tracker_id'          => 42,
-                    'field_id'            => 123
-                ),
-                array(
-                    'cardwall_tracker_id' => 666,
-                    'tracker_id'          => 69,
-                    'field_id'            => 321
-                )
-            )
-        );
-        stub($this->dao)->save($this->tracker_id, 69, 322)->once();
         $this->command->execute($request);
     }
 }
