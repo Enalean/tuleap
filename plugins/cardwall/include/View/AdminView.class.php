@@ -241,7 +241,7 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory {
     /**
      * @return Cardwall_OnTop_Config_MappimgFieldValueCollection
      */
-    public function create(Tracker $tracker) {
+    public function getCollection(Tracker $tracker) {
         $collection = new Cardwall_OnTop_Config_MappimgFieldValueCollection();
         foreach ($this->dao->searchMappingFieldValues($tracker->getId()) as $row) {
             //TODO: if $row['field_id'] is null, it means that we target the semantic status

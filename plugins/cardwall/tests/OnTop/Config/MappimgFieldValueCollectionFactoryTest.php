@@ -39,7 +39,7 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactoryTest extends Tulea
 
     public function itCreatesAnEmptyCollectionIfNothingIsStoredInTheDatabase() {
         stub($this->dao)->searchMappingFieldValues($this->tracker_id)->returns(TestHelper::arrayToDar());
-        $collection = $this->factory->create($this->tracker);
+        $collection = $this->factory->getCollection($this->tracker);
         $this->assertEqual(0, count($collection));
     }
 
@@ -58,7 +58,7 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactoryTest extends Tulea
                 'column_id'           => '1',
             )
         ));
-        $collection = $this->factory->create($this->tracker);
+        $collection = $this->factory->getCollection($this->tracker);
         $this->assertEqual(2, count($collection));
     }
 }
