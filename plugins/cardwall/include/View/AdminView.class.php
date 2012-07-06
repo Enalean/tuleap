@@ -130,47 +130,6 @@ class Cardwall_AdminFormView extends Abstract_View {
     }
 
 }
-class Cardwall_OnTop_Config_Trackers {
-
-    private $mapped_trackers;
-    private $non_mapped_trackers;
-
-    function __construct(array $project_trackers, Tracker $tracker, Cardwall_OnTop_Config_MappingFields $mapping_fields) {
-        $project_trackers          = array_diff($project_trackers, array($tracker));
-        $mapped_trackers           = $mapping_fields->getTrackers();
-        $this->non_mapped_trackers = array_diff($project_trackers, $mapped_trackers);
-        $this->mapped_trackers     = array_diff($mapped_trackers, array($tracker));
-    }
-
-    public function getMappedTrackers() {
-        return $this->mapped_trackers;
-    }
-
-    public function getNonMappedTrackers() {
-        return $this->non_mapped_trackers;
-    }
-
-}
-
-class Cardwall_OnTop_Config_MappingField {
-    private $field;
-    private $tracker;
-    public function __construct(Tracker $tracker, TrackerTracker_FormElement_Field $field = null) {
-        $this->field   = $field;
-        $this->tracker = $tracker;
-    }
-}
-
-class Cardwall_OnTop_Config_MappingFields {
-    private $mapping_fields;
-    public function __construct(array $mapping_fields) {
-        $this->mapping_fields = $mapping_fields;
-    }
-
-    public function getTrackers() {
-        return array();
-    }
-}
 
 class Cardwall_OnTop_Config_Column {
     /**
