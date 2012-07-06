@@ -73,10 +73,6 @@ $params = array (
 
 file_utils_header($params);
 
-    /*print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='.
-     $group_id .'&amp;id=' . 
-     $package_id .'" title="'. 
-    $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'"*/
 if ($request->get('func') == 'delete_package') {
     $package_id = $request->get('id');
     $group_id   = $request->get('group_id');
@@ -103,7 +99,7 @@ if ($request->get('func') == 'delete_release') {
     $html  = '';
     $html .= '<p><form action="showfiles.php?group_id='.$request->get('group_id').'" id="delete_release" class="frs_confirm_delete">';
     $html .= $GLOBALS['Language']->getText('file_admin_editreleases', 'delete');
-    $html .= '<br>'.$GLOBALS['Language']->getText('file_admin_editpackages', 'warn');
+    $html .= '<br>'.$GLOBALS['Language']->getText('file_admin_editreleases', 'warn');
     $html .= '<div class="frs_confirm_delete_buttons">';
     $html .= '<input type="hidden" name="action" value="confirm_delete_release" />';
     $html .= '<input type="hidden" name="group_id" value="'.$group_id.'" />';
@@ -239,7 +235,7 @@ while (list ($package_id, $package) = each($packages)) {
             print '</a>';
             if ($frspf->userCanAdmin($user, $group_id)) {
                 print ' <a href="showfiles.php?func=delete_package&amp;group_id='.$group_id
-                .'&amp;id='. $package_id .'" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'">'
+                .'&amp;id='.$package_id.'" title="'.$hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'">'
                 .$GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
             }
         }
@@ -329,7 +325,6 @@ while (list ($package_id, $package) = each($packages)) {
                     }
                     print '</TD></TR>' . "\n";
                     print '</table>';
-                    
                     // get the files in this release....
                     $res_file = $frsff->getFRSFileInfoListByReleaseFromDb($package_release->getReleaseID());
                     $num_files = count($res_file);
