@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -e
+
+handle_initial_install() {
+    # Create the various users
+    adduser --quiet --system --group --gecos "FTP Administrator" \
+	    --no-create-home --home /var/lib/tuleap/ftp ftpadmin
+    adduser --quiet --system --group --gecos "FTP User" \
+	    --no-create-home --home /var/lib/tuleap/ftp ftp
+    adduser --quiet --system --group --gecos "Dummy Tuleap User" \
+	    --no-create-home --home /var/lib/tuleap/dumps dummy
+    # Ensures www-data is part of the required groups
+    ensure_user_in_group www-data list
+    ensure_user_in_group www-data ftpadmin
+}
+
+handle_upgrade() {
+    # Re-generate language files
+    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/generate_language_files.php
+    # XXX: disabled to verify if anything breaks
+    # chown -R www-data:www-data /var/cache/codendi/lang
+
+    # Remove existing combined js
+    rm -f /usr/share/tuleap/src/www/scripts/combined/*.js
+
+    # Remove soap cache
+    rm -f /tmp/wsdl-*
+}
+
+ensure_user_in_group() {
+    if ! id -G -n $1 | grep -q -E "(^| )$2( |$)"; then
+	adduser "$1" "$2"
+    fi
+}
+
+case "$1" in
+    configure)
+	if [ -z "$2" ]; then
+	    handle_initial_install
+	else
+	    handle_upgrade
+	fi
+    ;;
+esac
+
+#DEBHELPER#
+

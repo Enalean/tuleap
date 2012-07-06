@@ -1,0 +1,243 @@
+Source: tuleap
+Section: devel
+Priority: optional
+Maintainer: Tuleap Packaging Team <tuleap-devel@tuleap.net>
+Uploaders: Raphaël Hertzog <raphael@freexian.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.3
+Homepage: http://www.tuleap.net
+Vcs-Git: ssh://gitolite@tuleap.net:tuleap/tuleap/stable.git
+Vcs-Browser: https://tuleap.net/plugins/git/index.php/101/view/58/
+
+Package: tuleap
+Architecture: all
+Depends: ${misc:Depends}, ${perl:Depends},
+ adduser,
+ php5-cli,
+# Apache related
+ libapache2-mod-php5,
+ apache2-mpm-prefork | httpd,
+ libapache2-mod-auth-mysql,
+# PHP modules and related
+ php5-mysql, php5-xsl, php5-gd,
+ php-pear, php-apc, php-htmlpurifier,
+# Debian has zendframework and Ubuntu zend-framework ?!
+ zendframework | zend-framework,
+# Perl and related (note: perl-suid needed but not in wheezy)
+ libgd-gd2-perl,
+# perl-suid, # not in wheezy...
+ perl, libdbi-perl, libdbd-mysql-perl, liburi-perl, libhtml-tagset-perl,
+ libhtml-parser-perl, libwww-perl, libdate-manip-perl,
+# NSS integration
+ libnss-mysql-bg,
+ nscd,
+# Specific to tuleap
+ libphp-jpgraph-tuleap,
+ forgeupgrade,
+# Misc
+ mysql-client,
+ ttf-dejavu,
+ openssl,
+ curl, tmpreaper
+Recommends: mysql-server
+Suggests: python
+Description: Web-based forge that address all the aspects of product development
+ Tuleap is a forge developed by Enalean that started as a fork of Xerox's
+ Codendi.
+ .
+ This is the main package that you should install to get a reasonably complete
+ forge installation.
+
+Package: tuleap-all
+Architecture: all
+Depends: ${misc:Depends}, tuleap,
+ tuleap-install,
+ tuleap-core-mailman,
+ tuleap-core-subversion,
+ tuleap-plugin-forumml,
+ tuleap-plugin-git,
+ tuleap-plugin-docmanwatermark,
+ tuleap-plugin-ldap,
+ tuleap-plugin-im,
+ tuleap-plugin-hudson,
+ tuleap-plugin-webdav,
+ tuleap-plugin-tracker,
+ tuleap-plugin-graphontrackers,
+ tuleap-theme-tuleap
+Description: Tuleap meta package with all dependencies
+ This package install all Tuleap components to have a large view of
+ what the platform proposes.
+ .
+ This includes most of the plugins but doesn't include all the themes however.
+
+Package: tuleap-install
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Setup script for the Tuleap forge
+ This package contains the setup script for the Tuleap platform.
+ It is meant to be installed at the initial setup of the platform and
+ recommended to uninstall it after.
+
+Package: tuleap-core-mailman
+Architecture: all
+Depends: tuleap (= ${source:Version}), mailman-tuleap, ${misc:Depends}
+Description: Mailman component for the Tuleap forge
+ This package contains the mailman plugin for the Tuleap platform.
+
+Package: tuleap-core-subversion
+Architecture: all
+Depends: tuleap (= ${source:Version}), viewvc-tuleap, subversion, libapache2-svn, libsvn-perl, highlight, ${misc:Depends}
+Description: Subversion component for the Tuleap forge
+ This package contains the Subversion plugin for the Tuleap platform.
+
+Package: tuleap-core-subversion-modperl
+Architecture: all
+Depends: tuleap-core-subversion (= ${source:Version}), libapache2-mod-perl2, ${misc:Depends}, ${perl:Depends}
+Description: mod_perl based authentication for Tuleap's subversion component
+ This package provides an authentication mechanism for Tuleap's Subversion
+ component based on mod_perl rather than mod_mysql.
+ .
+ This module might help server with big Subversion usage. mod_mysql + mod_svn
+ seems to have memory leak issues.
+
+# NOTE: tuleap-core-cvs is disabled for now because tuleap-cvs
+# won't be packaged... at least not right from the start.
+#
+#Package: tuleap-core-cvs
+#Architecture: all
+#Depends: tuleap, viewvc-tuleap, cvs-tuleap, xinetd, rcs, cvsgraph, highlight
+#Description: CVS component for the Tuleap forge
+# This package contains the CVS plugin for the Tuleap platform.
+
+Package: tuleap-plugin-forumml
+Architecture: all
+Depends: tuleap (= ${source:Version}), tuleap-core-mailman, php-mail-mimedecode, php-mail-mime, php-mail-mbox, php-mail, ${misc:Depends}, ${perl:Depends}
+Description: ForumML plugin for Tuleap
+ ForumML brings to Tuleap a very nice mail archive viewer and the possibility
+ to send mails through the web interface. It can replace the forums.
+
+Package: tuleap-plugin-git
+Architecture: all
+Depends: tuleap (= ${source:Version}), adduser, git (>= 1:1.6), php-geshi, smarty3, gitolite, ${misc:Depends}, ${perl:Depends}
+Description: Git plugin for Tuleap
+ Integration of git distributed software configuration management tool together
+ with Tuleap.
+
+Package: tuleap-plugin-docmanwatermark
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Tuleap plugin for PDF watermarking
+ PDF Watermark plugin. Provide the possibility to add a customizable banner to
+ PDF file uploaded in Docman.
+
+Package: tuleap-plugin-ldap
+Architecture: all
+Depends: tuleap (= ${source:Version}), php5-ldap, libnet-ldap-perl, python-ldap, ${misc:Depends}
+Description: Tuleap plugin to manage LDAP integration
+ LDAP Plugin for Tuleap. Provides LDAP information, LDAP
+ authentication, user and group management.
+
+Package: tuleap-plugin-im
+Architecture: all
+Depends: tuleap (= ${source:Version}), openfire, openfire-tuleap-plugins, ${misc:Depends}, ${perl:Depends}
+Description: Instant Messaging Plugin for Tuleap
+ Provides instant messaging capabilities, based on a Jabber/XMPP server.
+
+Package: tuleap-plugin-hudson
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Hudson plugin for Tuleap
+ Plugin to install the Tuleap Hudson plugin for continuous integration.
+
+Package: tuleap-plugin-webdav
+Architecture: all
+Depends: tuleap (= ${source:Version}), php-sabredav, ${misc:Depends}
+Description: WebDAV plugin for Tuleap
+ Plugin to access to file releases & docman though WebDAV.
+
+# NOTE: Disabled because there's no Debian package for php-oci8
+#Package: tuleap-plugin-requesthelp
+#Architecture: all
+#Depends: tuleap (= ${source:Version}), php-oci8, ${misc:Depends}
+#Description: Insert Remedy tickets using Codex
+# Plugin to insert Remedy tickets using Codex (used for ST only).
+
+Package: tuleap-plugin-tracker
+Architecture: all
+Depends: tuleap (= ${source:Version}), xsltproc, ${misc:Depends}
+Description: Tracker v5 for Tuleap
+ New tracker generation for Tuleap.
+
+Package: tuleap-plugin-graphontrackers
+Architecture: all
+Depends: tuleap-plugin-tracker (= ${source:Version}), ${misc:Depends}
+Description: Graphs for Tracker v5
+ Graphs for new tracker generation.
+
+Package: tuleap-plugin-cardwall
+Architecture: all
+Depends: tuleap-plugin-tracker (= ${source:Version}), ${misc:Depends}
+Description: Cardwall for Tracker v5
+ Fancy cardwall output on top of Tracker v5.
+
+Package: tuleap-plugin-agiledashboard
+Architecture: all
+Depends: tuleap-plugin-tracker (= ${source:Version}), tuleap-plugin-cardwall (= ${source:Version}), ${misc:Depends}
+Description: Agile dashboard for Tuleap
+ Agile Dashboard aims to provide an nice integration of Scrum/Kanban
+ tool on top of Tracker.
+
+Package: tuleap-plugin-fulltextsearch
+Architecture: all
+Depends: tuleap (= ${source:Version}), elasticsearch, ${misc:Depends}
+Description: Full-Text Search for Tuleap
+ Allows documents of the docman to be searched in a full-text manner.
+
+Package: tuleap-theme-codex
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Codex theme for Tuleap
+ This package provides the Codex theme for Tuleap.
+
+Package: tuleap-theme-codextab
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: CodexTab theme for Tuleap
+ This package provides the CodexTab theme for Tuleap.
+
+Package: tuleap-theme-dawn
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Dawn theme for Tuleap
+ This package provides the Dawn theme for Tuleap.
+
+Package: tuleap-theme-savannah
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Savannah theme for Tuleap
+ This package provides the Savannah theme for Tuleap.
+
+Package: tuleap-theme-sttab
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: STTab theme for Tuleap
+ This package provides the ST Microelectronices theme (STTab) for Tuleap.
+
+Package: tuleap-theme-codexstn
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: CodexSTN theme for Tuleap
+ This package provides the ST-Ericsson theme (CodexSTN) for Tuleap.
+
+Package: tuleap-theme-steerforge
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: SteerForge theme for Tuleap
+ This package provides the SteerForge theme for Tuleap.
+
+Package: tuleap-theme-tuleap
+Architecture: all
+Depends: tuleap (= ${source:Version}), ${misc:Depends}
+Description: Tuleap theme for Tuleap
+ This package provides the default theme for Tuleap, it is unsurprisingly named
+ Tuleap.

@@ -1,0 +1,58 @@
+#!/usr/bin/make -f
+
+APP_DIR = debian/tuleap/usr/share/tuleap
+
+%:
+	dh $@
+
+override_dh_install:
+	# Copy files for main tuleap package
+	dh_install -ptuleap -Xsrc/www/themes -XCORE_MAILMAN_VERSION -XCORE_SUBVERSION_VERSION -XCORE_CVS_VERSION -XLICENSE -XCOPYING -XLICENCE -Xlicense.txt
+	mkdir -p $(APP_DIR)/src/www/themes
+	cp -ar src/www/themes/common $(APP_DIR)/src/www/themes/
+	# Drop src/www/scripts/combined/ to be replaced by symlink
+	rm -rf $(APP_DIR)/src/www/scripts/combined/
+	# Drop unneccessary file
+	rm -f $(APP_DIR)/src/utils/DocmanUploader.pl
+	rm -f $(APP_DIR)/src/utils/DocmanLegacyDownloader.pl
+	# Copy files for other packages
+	dh_install --remaining-packages -XLICENSE -XCOPYING -XLICENCE -Xlicense.txt -X.gitignore -XDebugger/CVS -Xjabbex_api/_tests
+	rm -f debian/tuleap-plugin-forumml/usr/share/tuleap/plugins/forumml/bin/ml_arch_2_DB.pl
+	# Update default configuration and other files for debian-specific
+	# changes
+	debian/update-installed-files
+
+override_dh_fixperms:
+	dh_fixperms
+	chown -R www-data:www-data \
+		debian/tuleap-plugin-git/var/cache/tuleap/smarty \
+		debian/tuleap-plugin-webdav/var/cache/tuleap/plugins/webdav/locks
+	chown www-data:www-data \
+		debian/tuleap/var/cache/tuleap/javascript \
+		debian/tuleap-plugin-git/var/lib/tuleap/gitroot \
+		debian/tuleap-plugin-git/var/lib/tuleap/gitolite \
+		debian/tuleap-plugin-tracker/var/lib/tuleap/tracker
+
+override_dh_builddeb:
+	dh_builddeb -- -Zxz
+
+override_dh_auto_test:
+	true
+
+# TODO:
+# * reactivate test suite once it has been fixed to work with PHP 5.3
+#
+# * /var/run/forumml to be created with appropriate permissions in init
+#   scripts of plugin-forumml?
+#
+# * setuid/setgit bits in tuleap to replace by sudo config file for
+#   usr/lib/tuleap/bin/log_accum => as www-data
+#   usr/lib/tuleap/bin/fileforge => as root
+#
+# * setuid/setgid bits in plugin-forumml to replace by sudo config file
+#   for usr/lib/tuleap/bin/mail_2_DB.pl => as www-data
+#
+# * setuid/setgid bits in plugin-git to replace by sudo config file for
+#   usr/lib/tuleap/bin/{gl-membership.pl, git-log.pl, git-ci.pl} => as
+#   www-data
+#

@@ -1,0 +1,4 @@
+plugins/git usr/share/tuleap/plugins/
+plugins/git/bin/gl-membership.pl usr/lib/tuleap/bin/
+plugins/git/bin/git-log.pl usr/lib/tuleap/bin/
+plugins/git/bin/git-ci.pl usr/lib/tuleap/bin/

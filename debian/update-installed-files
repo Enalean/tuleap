@@ -1,0 +1,24 @@
+#!/bin/sh
+
+LOCAL_INC=debian/tuleap/usr/share/tuleap/src/etc/local.inc.dist
+
+update_parameter() {
+    perl -pi -e "s|^\$$1\s*=.*$|\$$1 = \"$2\";|" $LOCAL_INC
+}
+
+update_paths_in() {
+    local file=$1
+    perl -pi -e 's|/usr/share/codendi|/usr/share/tuleap|' $file
+    perl -pi -e 's|/usr/lib/codendi|/usr/lib/tuleap|' $file
+    perl -pi -e 's|/var/lib/codendi|/var/lib/tuleap|' $file
+    perl -pi -e 's|/etc/codendi|/etc/tuleap|' $file
+}
+
+for file in $(grep -r -l /codendi debian/tuleap/); do
+    update_paths_in $file
+done
+
+update_parameter codendi_cache_dir /var/cache/tuleap
+update_parameter sys_http_user www-data
+update_parameter codendi_shell_skel /etc/tuleap_skel
+

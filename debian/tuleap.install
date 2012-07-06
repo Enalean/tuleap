@@ -1,0 +1,31 @@
+tools usr/share/tuleap/
+cli usr/share/tuleap/
+site-content usr/share/tuleap/
+VERSION usr/share/tuleap/
+src usr/share/tuleap/
+# Default plugins
+plugins/admindelegation usr/share/tuleap/plugins/
+plugins/docman usr/share/tuleap/plugins/
+plugins/graphontrackers usr/share/tuleap/plugins/
+plugins/pluginsadministration usr/share/tuleap/plugins/
+plugins/projectlinks usr/share/tuleap/plugins/
+plugins/statistics usr/share/tuleap/plugins/
+plugins/tracker_date_reminder usr/share/tuleap/plugins/
+plugins/userlog usr/share/tuleap/plugins/
+# Helper scripts
+src/utils/gotohell usr/lib/tuleap/bin/
+src/utils/backup_job usr/lib/tuleap/bin/
+src/utils/svn/backup_subversion.sh usr/lib/tuleap/bin/
+src/utils/cvs1/log_accum usr/lib/tuleap/bin/
+src/utils/cvs1/commit_prep usr/lib/tuleap/bin/
+src/utils/cvs1/cvssh usr/lib/tuleap/bin/
+src/utils/cvs1/cvssh-restricted usr/lib/tuleap/bin/
+src/utils/svn/commit-email.pl usr/lib/tuleap/bin/
+src/utils/svn/codendi_svn_pre_commit.php usr/lib/tuleap/bin/
+src/utils/fileforge.pl usr/lib/tuleap/bin/
+# Init script src/utils/init.d/codendi not installed here since
+# dh_installinit install its own version
+#
+# Cron files src/utils/cron.d/* not installed since it is
+# auto-installed by the init script.
+
