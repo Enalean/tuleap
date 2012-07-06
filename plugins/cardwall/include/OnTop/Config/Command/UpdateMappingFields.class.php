@@ -79,8 +79,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     private function save(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
         if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field) && $this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
-            $hp = Codendi_HTMLPurifier::instance();
-            $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($mapping_tracker->getName()) .' changed to '. $hp->purify($field->getLabel()));
+            $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
         }
     }
 

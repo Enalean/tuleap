@@ -20,6 +20,7 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
+require_once 'View/AdminView.class.php';
 
 /**
  * CardwallPlugin
@@ -152,30 +153,40 @@ class cardwallPlugin extends Plugin {
     }
 
     function tracker_event_process($params) {
+        $tracker          = $params['tracker'];
+        $tracker_id       = $tracker->getId();
+        if (! $tracker->userIsAdmin($params['user'])) {
+            $this->denyAccess($tracker_id);
+        }
+        
         $tracker_factory  = TrackerFactory::instance();
         $element_factory  = Tracker_FormElementFactory::instance();
+        $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->displayAdminOnTop($params['tracker'], $params['layout'], $tracker_factory, $element_factory);
-                    $params['nothing_has_been_done'] = false;
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
-                }
+                $admin_view = new Cardwall_AdminView();
+                $admin_view->displayAdminOnTop($tracker, 
+                                         $params['layout'], 
+                                         $tracker_factory, 
+                                         $element_factory, 
+                                         $token,
+                                         $this->getOnTopDao(),
+                                         $this->getOnTopColumnDao(),
+                                         $this->getOnTopColumnMappingFieldDao());
+                $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
-                if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->getCSRFToken($params['tracker']->getId())->check();
-                    $this->getOnTopConfigUpdater($params['tracker'], $tracker_factory, $element_factory)
-                            ->process($params['request']);
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&func=admin-cardwall');
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
-                }
+                $token->check();
+                $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory)
+                        ->process($params['request']);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
                 break;
         }
+    }
+
+    private function denyAccess($tracker_id) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
     }
 
     /**
@@ -203,110 +214,6 @@ class cardwallPlugin extends Plugin {
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $mappingfield_dao, $tracker_factory));
         return $updater;
     }
-
-    private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
-        $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $checked    = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
-        $tracker_id = $tracker->getId();
-        $token      = $this->getCSRFToken($tracker_id)->fetchHTMLInput();
-        
-        $html  = '';
-        $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
-        $html .= $token;
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
-        $html .= '<label class="checkbox">';
-        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
-        $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_label');
-        $html .= '</label>';
-        $html .= '</p>';
-        if ($checked) {
-            $html .= '<blockquote>';
-            $html .= $this->fetchColumnDefinition($tracker, $tracker_factory, $element_factory);
-            $html .= '</blockquote>';
-        }
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html .= '</form>';
-        echo $html;
-        $tracker->displayFooter($layout);
-    }
-
-    private function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
-        $hp       = Codendi_HTMLPurifier::instance();
-        $html     = '';
-        $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
-        $trackers = array_diff($trackers, array($tracker));
-        $field    = $tracker->getStatusField();
-        if ($field) {
-            $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $hp->Purify($field->getLabel()) .') of this tracker.' .'</p>';
-            $html .= 'TODO: display such columns';
-            $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
-        } else {
-            $columns_raws = $this->getOnTopColumnDao()->searchColumnsByTrackerId($tracker->getId());
-            if (!count($columns_raws)) {
-                $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
-            }
-            $html .= '<table><thead><tr valign="bottom">';
-            $html .= '<td></td>';
-            foreach ($columns_raws as $raw) {
-                $html .= '<td>';
-                $html .= '<input type="text" name="column['. (int)$raw['id'] .'][label]" value="'. $hp->purify($raw['label']) .'" />';
-                $html .= '</td>';
-            }
-            $html .= '<td>';
-            $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
-            $html .= '</td>';
-            $html .= '<td>'. $GLOBALS['Language']->getText('global', 'btn_delete') .'</td>';
-            $html .= '</tr></thead>';
-            $html .= '<tbody>';
-            $mapping_fields = $this->getOnTopColumnMappingFieldDao()->searchMappingFields($tracker->getId());
-            foreach ($mapping_fields as $i => $row) {
-                $mapping_tracker = $tracker_factory->getTrackerById($row['tracker_id']);
-                $trackers = array_diff($trackers, array($mapping_tracker));
-                $html .= '<tr class="'. html_get_alt_row_color($i + 1) .'" valign="top">';
-                $html .= '<td>';
-                $html .= $hp->purify($mapping_tracker->getName()) .'<br />';
-                $field = $element_factory->getFieldById($row['field_id']);
-                $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
-                if (!$field) {
-                    $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-                }
-                foreach ($element_factory->getUsedSbFields($mapping_tracker) as $sb_field) {
-                    $selected = $field == $sb_field ? 'selected="selected"' : '';
-                    $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $hp->purify($sb_field->getLabel()) .'</option>';
-                }
-                $html .= '</select>';
-                $html .= '</td>';
-                foreach ($columns_raws as $raw) {
-                    $html .= '<td>';
-                    $html .= '</td>';
-                }
-                $html .= '<td>';
-                $html .= '</td>';
-                $html .= '<td>';
-                $html .= '<input type="checkbox" name="delete_mapping[]" value="'. (int)$mapping_tracker->getId() .'" />';
-                $html .= '</td>';
-                $html .= '</tr>';
-            }
-            if (count($columns_raws) && count($trackers)) {
-                $colspan = count($columns_raws) + 2;
-                $html .= '<tr>';
-                $html .= '<td colspan="'. $colspan .'">';
-                $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
-                $html .= '<select name="add_mapping_on">';
-                $html .= '<option>'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-                foreach ($trackers as $new_tracker) {
-                    $html .= '<option value="'. $new_tracker->getId() .'">'. $hp->purify($new_tracker->getName()) .'</option>';
-                }
-                $html .= '</select>';
-                $html .= '</td>';
-                $html .= '</tr>';
-            }
-            $html .= '</tbody></table>';
-        }
-        return $html;
-    }
-
     /**
      * @return Cardwall_OnTop_Dao
      */
@@ -398,5 +305,4 @@ class cardwallPlugin extends Plugin {
         return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
     }
 }
-
 ?>

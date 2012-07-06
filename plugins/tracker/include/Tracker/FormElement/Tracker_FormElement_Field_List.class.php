@@ -598,6 +598,22 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $values;
     }
 
+    /**
+     * 
+     * @param Tracker_Artifact_Changeset $changeset
+     * @return string
+     */
+    public function getFirstValueFor(Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead()) {
+            if ($last_values = $changeset->getValue($this)->getListValues()) {
+                // let's assume there is no more that one status
+                if ($label = array_shift($last_values)->getLabel()) {
+                    return $label;
+                }
+            }
+        }
+    }
+
     protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
         $html = '';
         $multiple = ' ';
@@ -754,6 +770,25 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($value) {
             $html .= $this->fetchChangesetValue($artifact->id, $artifact->getLastChangeset()->id, $value);
         }
+        return $html;
+    }
+    
+    /**
+     * @see Tracker_FormElement_Field::fetchCardValue()
+     */
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        $html = '';
+        //We have to fetch all values of the changeset as we are a list of value
+        //This is the case only if we are multiple but an old changeset may 
+        //contain multiple values
+        $values = array();
+        foreach($this->getBind()->getChangesetValues($artifact->getLastChangeset()->id) as $v) {
+            $val = $this->getBind()->formatCardValue($v);
+            if ($val != '') {
+                $values[] = $val;
+            }
+        }
+        $html .= implode(' ', $values);
         return $html;
     }
         

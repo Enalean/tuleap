@@ -27,7 +27,15 @@ require_once 'FieldProviders/SemanticStatusFieldProvider.class.php';
  * index them by their id
  */
 class Cardwall_StatusFieldsExtractor {
+    
+    /**
+     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+     */
+    private $field_provider;
 
+    public function __construct(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+        $this->field_provider = $field_provider;
+    }
     public function extractAndIndexStatusFields(TreeNode $node) {
         $artifacts = $this->getArtifactsOutOfTree($node);
         return $this->getIndexedStatusFieldsOf($artifacts);
@@ -50,8 +58,7 @@ class Cardwall_StatusFieldsExtractor {
     }
                 
     private function getIndexedStatusFieldsOf(array $artifacts) {
-        $status_field_retriever = new Cardwall_FieldProviders_SemanticStatusFieldRetriever();
-        $status_fields          = array_filter(array_map(array($status_field_retriever, 'getField'), $artifacts));
+        $status_fields          = array_filter(array_map(array($this->field_provider, 'getField'), $artifacts));
         $indexed_status_fields  = $this->indexById($status_fields);
         return $indexed_status_fields;
     }

@@ -50,8 +50,7 @@ class Cardwall_OnTop_Config_Command_CreateMappingField extends Cardwall_OnTop_Co
         if ($request->get('add_mapping_on')) {
             $new_mapping_tracker = $this->tracker_factory->getTrackerById($request->get('add_mapping_on'));
             if ($new_mapping_tracker && $this->dao->create($this->tracker->getId(), $new_mapping_tracker->getId(), null)) {
-                $hp = Codendi_HTMLPurifier::instance();
-                $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $hp->purify($new_mapping_tracker->getName()) .' added');
+                $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $new_mapping_tracker->getName() .' added');
             }
         }
     }

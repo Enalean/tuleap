@@ -42,9 +42,9 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
     public function execute(Codendi_Request $request) {
         if ($request->get('column')) {
             foreach ($request->get('column') as $id => $column_definition) {
-                if ( !empty($column_definition['label']) && $this->dao->save($this->tracker->getId(), $id, $column_definition['label'])) {
-                    $hp = Codendi_HTMLPurifier::instance();
-                    $GLOBALS['Response']->addFeedback('info', 'Column '. $hp->purify($column_definition['label']) .' changed');
+                $column_label = $column_definition['label'];
+                if ( !empty($column_label) && $this->dao->save($this->tracker->getId(), $id, $column_label)) {
+                    $GLOBALS['Response']->addFeedback('info', "Column $column_label changed");
                 }
             }
         }

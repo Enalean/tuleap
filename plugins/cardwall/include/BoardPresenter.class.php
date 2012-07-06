@@ -65,5 +65,12 @@ abstract class Cardwall_BoardPresenter {
         $this->qrcode          = $qrcode;
         $this->planning_redirect_parameter = $redirect_parameter;
     }
+
+    /**
+     *@var int
+     */
+    public function column_width() {
+        return round(100 / (count($this->board->columns) + ($this->has_swimline_header ? 1 : 0)));
+    }
 }
 ?>

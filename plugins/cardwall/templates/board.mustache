@@ -6,10 +6,10 @@
         <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
             <colgroup>
                 {{#has_swimline_header}}
-                    <col />
+                    <col width="{{column_width}}%" />
                 {{/has_swimline_header}}
                 {{#columns}}
-                    <col id="cardwall_board_column-{{id}}" />
+                    <col id="cardwall_board_column-{{id}}" width="{{column_width}}%" />
                 {{/columns}}
             </colgroup>
 
@@ -28,26 +28,20 @@
                 {{#swimlines}}
                     <tr valign="top" id="swimline-{{swimline_id}}">
                         {{#has_swimline_header}}
-                            {{#node}}
-                                {{#getCardInCellPresenter}}
-                                    <td>
-                                        <ul class="nodrag">
-                                            <li>{{> card}}</td>
-                                        </ul>
-                                    </td>
-                                {{/getCardInCellPresenter}}
-                            {{/node}}
+                            <td>
+                                <ul class="nodrag">
+                                    <li>{{> card}}</td>
+                                </ul>
+                            </td>
                         {{/has_swimline_header}}
                         {{#cells}}
                             <td>
                                 <ul>
-                                    {{#presenter_nodes}}
-                                        {{#getCardInCellPresenter}}
-                                            <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
-                                                {{> card}}
-                                            </li>
-                                        {{/getCardInCellPresenter}}
-                                    {{/presenter_nodes}}
+                                    {{#cardincell_presenters}}
+                                        <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
+                                            {{> card}}
+                                        </li>
+                                    {{/cardincell_presenters}}
                                 </ul>
                             </td>
                         {{/cells}}
