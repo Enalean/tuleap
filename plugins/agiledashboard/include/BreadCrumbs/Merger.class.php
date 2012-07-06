@@ -36,6 +36,10 @@ class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
         $this->generators = func_get_args();
     }
 
+    function push(BreadCrumb_BreadCrumbGenerator $generator) {
+        $this->generators[] = $generator;
+    }
+
     public function getCrumbs() {
         $crumbs = array();
         foreach ($this->generators as $crumb) {
