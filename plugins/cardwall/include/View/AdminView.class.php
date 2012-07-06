@@ -20,6 +20,9 @@
  */
 
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappimgFieldValueCollectionFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingsFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMapping.class.php';
 
 /**
  * Display the admin of the Cardwall
@@ -265,88 +268,4 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
 }
 
 
-
-class Cardwall_OnTop_Config_TrackerFieldMappingsFactory {
-    
-    /** @var TrackerFactory */
-    private $tracker_factory;
-    
-    /** @var Cardwall_OnTop_ColumnMappingFieldDao */
-    private $dao;
-    
-    /** @var Cardwall_OnTop_Config_TrackerFieldMappingFactory */
-    private $field_mapping_factory;
-    
-    public function __construct(TrackerFactory $tracker_factory, 
-                                Cardwall_OnTop_ColumnMappingFieldDao $dao,
-                                Cardwall_OnTop_Config_TrackerFieldMappingFactory $field_mappping_factory) {
-        $this->tracker_factory       = $tracker_factory;
-        $this->dao                   = $dao;
-        $this->field_mapping_factory = $field_mappping_factory;
-    }
-    
-    public function getMappings(Tracker $cardwall_tracker) {
-        $trackers = $this->tracker_factory->getTrackersByGroupId($cardwall_tracker->getGroupId());
-        $raw_mappings = $this->dao->searchMappingFields($cardwall_tracker->getId());
-        $mappings = array();
-        foreach ($raw_mappings as $raw_mapping) {
-            $tracker    = $trackers[$raw_mapping['tracker_id']];
-            $field_id   = $raw_mapping['field_id'];
-            $mappings[] = $this->field_mapping_factory->newMapping($tracker, $field_id);
-        }
-        
-        return $mappings; 
-    }
-
-    public function getNonMappedTrackers(Tracker $current_tracker) {
-        $project_trackers = $this->tracker_factory->getTrackersByGroupId($current_tracker->getGroupId());
-        $raw_mappings = $this->dao->searchMappingFields($current_tracker->getId());
-        
-        $mapped_tracker_ids = array();
-        foreach ($raw_mappings as $raw_mapping) {
-            $mapped_tracker_ids[] = $raw_mapping['tracker_id'];
-        }
-        
-        $retained_trackers = array();
-        foreach ($project_trackers as $id => $tracker) {
-            if ($id != $current_tracker->getId() && !in_array($id, $mapped_tracker_ids)) {
-                $retained_trackers[$id] = $tracker;
-                
-            }
-        }
-        return $retained_trackers;
-    }
-}
-    
-
-class Cardwall_OnTop_Config_TrackerFieldMapping {
-    public $tracker;
-    public $selected_field;
-    public $available_fields;
-    
-    public function __construct($tracker, $selected_field, $available_fields) {
-        $this->tracker          = $tracker;
-        $this->selected_field   = $selected_field;
-        $this->available_fields = $available_fields;
-        ;
-    }
-
-}
-
-class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
-
-    /** @var Tracker_FormElementFactory */
-    private $factory;
-    
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
-    }
-
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
-    }
-
-}
 ?>
