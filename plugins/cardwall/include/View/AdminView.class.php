@@ -50,7 +50,7 @@ class Cardwall_AdminView extends Abstract_View {
             $columns[] = new Cardwall_OnTop_Config_Column($raw['id'], $raw['label']);
         }
 
-        $column_definition_view = new Cardwall_AdminColumnDefinitionView($columns);
+        $column_definition_view = new Cardwall_AdminFreestyleColumnDefinitionView($columns);
         $formview   = new Cardwall_AdminFormView($column_definition_view);
 
         $mapping_values_factory = new Cardwall_OnTop_Config_MappingFieldValueCollectionFactory($mapping_values_dao, $element_factory);
@@ -90,10 +90,10 @@ abstract class Abstract_View {
 
 class Cardwall_AdminFormView extends Abstract_View {
 
-    /** @var Cardwall_AdminColumnDefinitionView */
+    /** @var Cardwall_AdminFreestyleColumnDefinitionView */
     private $subview;
     
-    public function __construct(Cardwall_AdminColumnDefinitionView $column_definition_view) {
+    public function __construct(Cardwall_AdminFreestyleColumnDefinitionView $column_definition_view) {
         parent::__construct();
         $this->subview = $column_definition_view;
     }
@@ -153,7 +153,11 @@ class Cardwall_OnTop_Config_Column {
     
 }
 
-class Cardwall_AdminColumnDefinitionView extends Abstract_View {
+//interface Cardwall_AdminColumnDefinitionView {
+//    
+//}
+
+class Cardwall_AdminFreestyleColumnDefinitionView extends Abstract_View {
 
     /** @var array of Cardwall_OnTop_Config_Column */
     private $columns;

@@ -23,6 +23,7 @@ require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMapping.class.php';
 
 class Cardwall_OnTop_Config_TrackerFieldMappingFactory_newMappingTest extends TuleapTestCase {
         
