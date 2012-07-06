@@ -86,8 +86,8 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
                 )
             )
         );
-        stub($this->dao)->save($this->tracker_id, 42, 123)->at(0);
-        stub($this->dao)->save($this->tracker_id, 69, 321)->at(1);
+        stub($this->dao)->save($this->tracker_id, 42, 123)->at(0)->returns(true);
+        stub($this->dao)->save($this->tracker_id, 69, 321)->at(1)->returns(true);
         stub($this->dao)->save()->count(2);
         $this->command->execute($request);
     }
@@ -139,19 +139,43 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
             TestHelper::arrayToDar(
                 array(
                     'cardwall_tracker_id' => 666,
-                    'tracker_id'          => 42,
-                    'field_id'            => 100
-                ),
-                array(
-                    'cardwall_tracker_id' => 666,
                     'tracker_id'          => 69,
-                    'field_id'            => null
+                    'field_id'            => 321
                 )
             )
         );
         stub($this->value_dao)->save($this->tracker_id, 69, 321, 9001, 11)->at(0);
         stub($this->value_dao)->save($this->tracker_id, 69, 321, 9002, 11)->at(1);
         stub($this->value_dao)->save()->count(2);
+        $this->command->execute($request);
+    }
+
+    public function itDoesntUpdateMappingValuesIfTheFieldChange() {
+        $request = aRequest()->with('mapping_field',
+            array(
+                '69' => array(
+                    'field' => '321',
+                    'values' => array(
+                        '11' => array(
+                            '9001',
+                            '9002'
+                        ),
+                    )
+                ),
+            )
+        )->build();
+        stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
+            TestHelper::arrayToDar(
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 69,
+                    'field_id'            => 666,
+                )
+            )
+        );
+        stub($this->dao)->save()->returns(true);
+        stub($this->value_dao)->save()->never();
+        stub($this->value_dao)->delete($this->tracker_id, 69)->once();
         $this->command->execute($request);
     }
 }

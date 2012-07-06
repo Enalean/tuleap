@@ -225,7 +225,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
                     $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. (int)$column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
                     foreach ($field_values as $value) {
                         $selected = $mapping_values->has($field, $value->getId(), $column_id) ? 'selected="selected"' : '';
-                        $html .= '<option vlaue="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
+                        $html .= '<option value="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
                     }
                     $html .= '</select>';
                 } else {

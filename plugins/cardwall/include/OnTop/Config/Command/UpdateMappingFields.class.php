@@ -65,14 +65,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
             $field_id = (int)$mapping_tracker_info['field'];
             $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
             $field           = $this->form_element_factory->getFieldById($field_id);
-            $this->save($mapping_fields, $mapping_tracker, $field);
-
-            if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) continue;
-            foreach ($mapping_tracker_info['values'] as $column_id => $values) {
-                foreach ($values as $value_id) {
-                    $this->value_dao->save($this->tracker->getId(), $mapping_tracker_id, $field_id, (int)$value_id, $column_id);
-                }
-            }
+            $this->save($mapping_tracker_info, $mapping_fields, $mapping_tracker, $field);
         }
     }
 
@@ -91,11 +84,20 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     /**
      * @return void
      */
-    private function save(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+    private function save(array $mapping_tracker_info, array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
         if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field)) {
             if ($this->fieldHasChanged($mapping_fields, $mapping_tracker, $field)) {
                 if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
+                    $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
                     $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
+                }
+            } else {
+                if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) return;
+                foreach ($mapping_tracker_info['values'] as $column_id => $values) {
+                    foreach ($values as $value_id) {
+                        $this->value_dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), (int)$value_id, $column_id);
+                        $GLOBALS['Response']->addFeedback('info', 'Mapping values for '. $field->getLabel() .' changed.');
+                    }
                 }
             }
         }
