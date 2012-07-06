@@ -115,24 +115,24 @@ class Cardwall_OnTop_Config_Trackers_getMappedTrackersTest extends TuleapTestCas
     }
 }
 
-class Cardwall_OnTop_Config_FieldMappingsFactory_getMappingsTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_TrackerFieldMappingsFactory_getMappingsTest extends TuleapTestCase {
     
     public function itReturnsAnEmptyMappingIfThereAreNoMappings() {
-        $field_mappng_factory = mock('Cardwall_OnTop_Config_FieldMappingFactory');
+        $field_mappng_factory = mock('Cardwall_OnTop_Config_TrackerFieldMappingFactory');
         $tracker_factory = mock('TrackerFactory');
         $mapping_dao     = stub('Cardwall_OnTop_ColumnMappingFieldDao')->searchMappingFields()->returns(array());
         $tracker         = aTracker()->build();
-        $factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mapping_dao, $field_mappng_factory);
+        $factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mapping_dao, $field_mappng_factory);
         $this->assertIdentical(array(), $factory->getMappings($tracker));
     }
     
     public function itReturnsAnEmptyMappingIfThereAreNoMoreTrackers() {
         $tracker         = aTracker()->withId(3)->withProjectId(234)->build();
-        $field_mapping_factory = mock('Cardwall_OnTop_Config_FieldMappingFactory');
+        $field_mapping_factory = mock('Cardwall_OnTop_Config_TrackerFieldMappingFactory');
         $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId(234)->returns(array(3 => $tracker));
         $mapping_dao     = stub('Cardwall_OnTop_ColumnMappingFieldDao')->searchMappingFields()->returns(array());
         $tracker         = aTracker()->withProjectId(234)->build();
-        $factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mapping_dao, $field_mapping_factory);
+        $factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mapping_dao, $field_mapping_factory);
         $this->assertIdentical(array(), $factory->getMappings($tracker));
     }
 
@@ -151,18 +151,18 @@ class Cardwall_OnTop_Config_FieldMappingsFactory_getMappingsTest extends TuleapT
                                 array('tracker_id' => 20, 'field_id' => $field_id2));
         $mapping1 = mock('Cardwall_OnTop_Config_TrackerFieldMapping');
         $mapping2 = mock('Cardwall_OnTop_Config_TrackerFieldMapping');
-        $field_mapping_factory = mock('Cardwall_OnTop_Config_FieldMappingFactory');
+        $field_mapping_factory = mock('Cardwall_OnTop_Config_TrackerFieldMappingFactory');
         stub($field_mapping_factory)->newMapping($other_tracker1, $field_id1)->returns($mapping1);
         stub($field_mapping_factory)->newMapping($other_tracker2, $field_id2)->returns($mapping2);
         $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId($group_id)->returns($project_trackers);
         $mapping_dao     = stub('Cardwall_OnTop_ColumnMappingFieldDao')->searchMappingFields($tracker->getId())->returns($raw_mappings);
-        $factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mapping_dao, $field_mapping_factory);
+        $factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mapping_dao, $field_mapping_factory);
         $this->assertEqual(array($mapping1, $mapping2), $factory->getMappings($tracker));
     }
     
 }
 
-class Cardwall_OnTop_Config_FieldMappingsFactory_getNonMappedTrackersTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_TrackerFieldMappingsFactory_getNonMappedTrackersTest extends TuleapTestCase {
     public function itRemovesTheCurrentTrackerFromTheProjectTrackers() {
         $group_id        = 234;
         $tracker         = aTracker()->withId(3)->withProjectId($group_id)->build();
@@ -172,13 +172,13 @@ class Cardwall_OnTop_Config_FieldMappingsFactory_getNonMappedTrackersTest extend
                                  10 => $other_tracker1,
                                  20 => $other_tracker2);
 
-        $field_mappng_factory = mock('Cardwall_OnTop_Config_FieldMappingFactory');
+        $field_mappng_factory = mock('Cardwall_OnTop_Config_TrackerFieldMappingFactory');
         $tracker_factory      = stub('TrackerFactory')->getTrackersByGroupId($group_id)->returns($project_trackers);
         $mapping_dao          = stub('Cardwall_OnTop_ColumnMappingFieldDao')->searchMappingFields()->returns(array());
         $expected_trackers    = array(10 => $other_tracker1,
                                       20 => $other_tracker2);
 
-        $factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mapping_dao, $field_mappng_factory);
+        $factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mapping_dao, $field_mappng_factory);
         
         $this->assertIdentical($expected_trackers, $factory->getNonMappedTrackers($tracker));
     }
@@ -194,20 +194,20 @@ class Cardwall_OnTop_Config_FieldMappingsFactory_getNonMappedTrackersTest extend
 
         $raw_mappings    = array(array('tracker_id' => 20));
         
-        $field_mappng_factory = mock('Cardwall_OnTop_Config_FieldMappingFactory');
+        $field_mappng_factory = mock('Cardwall_OnTop_Config_TrackerFieldMappingFactory');
         $tracker_factory      = stub('TrackerFactory')->getTrackersByGroupId($group_id)->returns($project_trackers);
         $mapping_dao          = stub('Cardwall_OnTop_ColumnMappingFieldDao')->searchMappingFields($tracker->getId())->returns($raw_mappings);
         
         $expected_trackers    = array(10 => $nonmapped_tracker);
 
-        $factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mapping_dao, $field_mappng_factory);
+        $factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mapping_dao, $field_mappng_factory);
         
         $this->assertIdentical($expected_trackers, $factory->getNonMappedTrackers($tracker));
     }
 }
 
     
-class Cardwall_OnTop_Config_FieldMappingFactory_newMappingTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_TrackerFieldMappingFactory_newMappingTest extends TuleapTestCase {
         
     public function itReturnsAMappingWithFieldTrackerAndAvailableFields() {
         $tracker         = aTracker()->withId(3)->build();
@@ -220,7 +220,7 @@ class Cardwall_OnTop_Config_FieldMappingFactory_newMappingTest extends TuleapTes
         
         $expected_mapping = new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $field, $fields);
         
-        $factory = new Cardwall_OnTop_Config_FieldMappingFactory($element_factory);
+        $factory = new Cardwall_OnTop_Config_TrackerFieldMappingFactory($element_factory);
         $actual_mapping = $factory->newMapping($tracker, 123);
         
         $this->assertEqual($expected_mapping, $actual_mapping);

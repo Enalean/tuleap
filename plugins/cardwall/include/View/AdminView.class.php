@@ -44,7 +44,7 @@ class Cardwall_AdminView extends Abstract_View {
         $mapping_values_factory = new Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory($mapping_values_dao, $element_factory);
         $mapping_values         = $mapping_values_factory->getCollection($tracker);
 
-        $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
+        $mappings_factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_TrackerFieldMappingFactory($element_factory));
 
         $tracker ->displayAdminItemHeader($layout, 'plugin_cardwall');
         $formview->displayAdminForm($token_html, $checked, $tracker, $column_dao, $mapping_values, $mappings_factory);
@@ -266,7 +266,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
 
 
 
-class Cardwall_OnTop_Config_FieldMappingsFactory {
+class Cardwall_OnTop_Config_TrackerFieldMappingsFactory {
     
     /** @var TrackerFactory */
     private $tracker_factory;
@@ -274,12 +274,12 @@ class Cardwall_OnTop_Config_FieldMappingsFactory {
     /** @var Cardwall_OnTop_ColumnMappingFieldDao */
     private $dao;
     
-    /** @var Cardwall_OnTop_Config_FieldMappingFactory */
+    /** @var Cardwall_OnTop_Config_TrackerFieldMappingFactory */
     private $field_mapping_factory;
     
     public function __construct(TrackerFactory $tracker_factory, 
                                 Cardwall_OnTop_ColumnMappingFieldDao $dao,
-                                Cardwall_OnTop_Config_FieldMappingFactory $field_mappping_factory) {
+                                Cardwall_OnTop_Config_TrackerFieldMappingFactory $field_mappping_factory) {
         $this->tracker_factory       = $tracker_factory;
         $this->dao                   = $dao;
         $this->field_mapping_factory = $field_mappping_factory;
@@ -333,7 +333,7 @@ class Cardwall_OnTop_Config_TrackerFieldMapping {
 
 }
 
-class Cardwall_OnTop_Config_FieldMappingFactory {
+class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
 
     /** @var Tracker_FormElementFactory */
     private $factory;
