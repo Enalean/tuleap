@@ -47,7 +47,10 @@ class TestHelper {
      * @return Mock
      */
     public static function arrayToDar() {
-        $argList  = func_get_args();
+        return self::argListToDar(func_get_args());
+    }
+
+    public static function argListToDar($argList) {
         $dar      = new MockDataAccessResult();
         $rowCount = 0;
         foreach ($argList as $row) {
@@ -61,7 +64,7 @@ class TestHelper {
         $dar->setReturnValue('isError', false);
         return $dar;
     }
-    
+
     public static function emptyDar() {
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('valid',    false);

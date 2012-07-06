@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/TestHelper.class.php';
+
 /**
  * Returns a DSL like mockgenerator
  * 
@@ -89,7 +91,30 @@ class OngoingIntelligentStub {
         }
         return $this->mock;
     }
-    
 
+    /**
+     * Ease return of DatabaseAccessResult objects:
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsDar(array('id' => '1'), array('id' => '2'));
+     *
+     * Returns 2 rows out of the database:
+     * |Id|
+     * |1 |
+     * |2 |
+     */
+    public function returnsDar() {
+        $this->returns(TestHelper::argListToDar(func_get_args()));
+    }
+
+    /**
+     * Ease returns of empty DatabaseAccessResult
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsEmptyDar()
+     */
+    public function returnsEmptyDar() {
+        $this->returns(TestHelper::emptyDar());
+    }
 }
 ?>
