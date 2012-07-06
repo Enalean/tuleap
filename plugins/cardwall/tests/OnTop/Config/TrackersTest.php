@@ -197,40 +197,20 @@ class Cardwall_OnTop_Config_FieldMappingsFactory {
 class Cardwall_OnTop_Config_FieldMappingFactory_newMappingTest extends TuleapTestCase {
         
     public function itReturnsAMappingWithFieldTrackerAndAvailableFields() {
-//        $group_id        = 234;
-//        $other_tracker1  = aTracker()->withId(10)->build();
-//        $other_tracker2  = aTracker()->withId(20)->build();
-//        $project_trackers= array(3  => $tracker,
-//                                 10 => $other_tracker1,
-//                                 20 => $other_tracker2);
-//        $raw_mappings    = array( 
-//                                array('tracker_id' => 10, 'field_id' => 123),
-//                                array('tracker_id' => 20, 'field_id' => 456));
-//        
-//        $field123        = aSelectBoxField()->withId(123)->build();
-//        $field456        = aSelectBoxField()->withId(456)->build();
-//        $element_factory = mock('Tracker_FormElementFactory');
-//        stub($element_factory)->getFieldById(123)->returns($field123);
-//        stub($element_factory)->getFieldById(456)->returns($field456);
-//        $tracker_factory = stub('TrackerFactory')->getTrackersByGroupId($group_id)->returns($project_trackers);
-//        $mapping_dao     = stub('Cardwall_OnTop_ColumnMappingFieldDao')->searchMappingFields($tracker->getId())->returns($raw_mappings);
-//        
         $tracker         = aTracker()->withId(3)->build();
         $field = aSelectBoxField()->build();
         $element_factory = stub('Tracker_FormElementFactory')->getFieldById(123)->returns($field);
         $fields = array(
                     aSelectBoxField()->build(),
                     aSelectBoxField()->build());
+        stub($element_factory)->getUsedSbFields($tracker)->returns($fields);
         
-        $fields = array();
         $expected_mapping = new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $field, $fields);
         
         $factory = new Cardwall_OnTop_Config_FieldMappingFactory($element_factory);
         $actual_mapping = $factory->newMapping($tracker, 123);
         
         $this->assertEqual($expected_mapping, $actual_mapping);
-//        $factory = new Cardwall_OnTop_Config_FieldMappingsFactory($element_factory, $tracker_factory, $mapping_dao);
-//        $this->assertIdentical(array(), $factory->getMappings($tracker));
     }
     
     public function testTheMappingsContainAvailableSelectBoxFields() {
@@ -267,8 +247,7 @@ class Cardwall_OnTop_Config_FieldMappingFactory {
 
     public function newMapping(Tracker $tracker, $field_id) {
         $selected_field = $this->factory->getFieldById($field_id);
-//        $available_fields = $this->factory->getUsedSbFields($tracker);
-        $available_fields = array();    
+        $available_fields = $this->factory->getUsedSbFields($tracker);
         return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
     }
 
