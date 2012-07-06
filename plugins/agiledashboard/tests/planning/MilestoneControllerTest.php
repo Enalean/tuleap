@@ -29,6 +29,7 @@ require_once AGILEDASHBOARD_BASE_DIR .'/Planning/NoMilestone.class.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aTracker.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aField.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
+require_once $current_dir.'/../builders/aMilestone.php';
 require_once $current_dir.'/../builders/aPlanning.php';
 require_once $current_dir.'/../builders/aPlanningFactory.php';
 require_once $current_dir.'/../builders/aPlanningController.php';
@@ -389,34 +390,43 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 }
 
 class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
+    private $plugin_path;
+    private $product;
+    private $release;
+    private $sprint;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->plugin_path = '/plugin/path';
+
+        $this->product     = aMilestone()->withArtifact(aMockArtifact()->withId(1)->withTitle('Product X')->build())->build();
+        $this->release     = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Release 1.0')->build())->build();
+        $this->sprint      = aMilestone()->withArtifact(aMockArtifact()->withId(3)->withTitle('Sprint 1')->build())->build();
+    }
 
     public function itIncludesBreadcrumbsForParentMilestones() {
-        $current_user_builder = aUser();
-        $current_user         = $current_user_builder->build();
-        $request              = aRequest()->withUser($current_user_builder)->build();
+        $request              = aRequest()->build();
         $milestone_factory    = mock('Planning_MilestoneFactory');
         $project_manager      = mock('ProjectManager');
 
-        $product = aMockArtifact()->withId(1)->withTitle('Product X')->build();
-        $release = aMockArtifact()->withId(2)->withTitle('Release 1.0')->build();
-        $sprint  = aMockArtifact()->withId(3)->withTitle('Sprint 1')->build();
-
-        stub($sprint)->getAllAncestors($current_user)->returns(array($product, $release));
-
-        $sprint_milestone  = stub('Planning_Milestone')->getArtifact()->returns($sprint);
-
-        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($sprint_milestone);
+        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
+        stub($milestone_factory)->getMilestoneWithAncestors($this->sprint)->returns(array($this->product, $this->release, $this->sprint));
 
         $controller  = new Planning_MilestoneController($request, $milestone_factory, $project_manager);
-        $breadcrumbs = $controller->getBreadcrumbs('/plugin/path')->getCrumbs();
 
-        $this->assertCount($breadcrumbs, 3);
-        $this->assertEqual($breadcrumbs[0]['title'], 'Product X');
-        $this->assertEqual($breadcrumbs[0]['url'], '/plugin/path/?aid=1');
-        $this->assertEqual($breadcrumbs[1]['title'], 'Release 1.0');
-        $this->assertEqual($breadcrumbs[1]['url'], '/plugin/path/?aid=2');
-        $this->assertEqual($breadcrumbs[2]['title'], 'Sprint 1');
-        $this->assertEqual($breadcrumbs[2]['url'], '/plugin/path/?aid=3');
+        $breadcrumbs = $controller->getBreadcrumbs($this->plugin_path);
+        $this->assertEqualToBreadCrumbWithAllMilestones($breadcrumbs);
     }
+
+    public function assertEqualToBreadCrumbWithAllMilestones($breadcrumbs) {
+        $expected_crumbs = new BreadCrumb_Merger(
+            new BreadCrumb_Milestone($this->plugin_path, $this->product),
+            new BreadCrumb_Milestone($this->plugin_path, $this->release),
+            new BreadCrumb_Milestone($this->plugin_path, $this->sprint)
+        );
+        $this->assertEqual($expected_crumbs, $breadcrumbs);
+    }
+    
 }
 ?>

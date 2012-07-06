@@ -20,7 +20,7 @@
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Milestone.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 require_once 'SearchContentView.class.php';
 require_once 'MilestonePresenter.class.php';
@@ -162,21 +162,22 @@ class Planning_MilestoneController extends MVC2_Controller {
     public function getBreadcrumbs($plugin_path) {
         try {
             if ($this->milestone->getArtifact()) {
-                $breadcrumbs_merger     = new BreadCrumb_Merger();
-                foreach($this->getMilestoneArtifactWithAncestors() as $artifact) {
-                    $breadcrumbs_merger->push(new BreadCrumb_Artifact($plugin_path, $artifact));
+                $breadcrumbs_merger = new BreadCrumb_Merger();
+                foreach($this->milestone_factory->getMilestoneWithAncestors($this->milestone) as $milestone) {
+                    $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
                 }
                 return $breadcrumbs_merger;
             }
         } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
             $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
         }
-        return new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
+        //return new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
     }
 
     private function getMilestoneArtifactWithAncestors() {
-        $parent_artifacts = $this->milestone->getArtifact()->getAllAncestors($this->getCurrentUser());
-        return array_merge($parent_artifacts, array($this->milestone->getArtifact()));
+        //$parent_artifacts = $this->milestone->getArtifact()->getAllAncestors($this->getCurrentUser());
+        //return array_merge($parent_artifacts, array($this->milestone->getArtifact()));
+        return $this->milestone->getArtifact()->getAllAncestors($this->getCurrentUser());
     }
 }
 
