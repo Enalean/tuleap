@@ -50,7 +50,13 @@ class Cardwall_AdminView extends Abstract_View {
             $columns[] = new Cardwall_OnTop_Config_Column($raw['id'], $raw['label']);
         }
 
-        $column_definition_view = new Cardwall_AdminFreestyleColumnDefinitionView($columns);
+        if  ($tracker->hasSemanticsStatus()) {
+            //TODO, shoul be constructed with semantic status values instead of columns
+            $column_definition_view = new Cardwall_AdminSemanticStatusColumnDefinitionView($columns);
+        } else {
+            $column_definition_view = new Cardwall_AdminFreestyleColumnDefinitionView($columns);
+        }
+        
         $formview   = new Cardwall_AdminFormView($column_definition_view);
 
         $mapping_values_factory = new Cardwall_OnTop_Config_MappingFieldValueCollectionFactory($mapping_values_dao, $element_factory);
@@ -90,10 +96,10 @@ abstract class Abstract_View {
 
 class Cardwall_AdminFormView extends Abstract_View {
 
-    /** @var Cardwall_AdminFreestyleColumnDefinitionView */
+    /** @var Cardwall_AdminColumnDefinitionView */
     private $subview;
     
-    public function __construct(Cardwall_AdminFreestyleColumnDefinitionView $column_definition_view) {
+    public function __construct(Cardwall_AdminColumnDefinitionView $column_definition_view) {
         parent::__construct();
         $this->subview = $column_definition_view;
     }
@@ -153,11 +159,26 @@ class Cardwall_OnTop_Config_Column {
     
 }
 
-//interface Cardwall_AdminColumnDefinitionView {
-//    
-//}
+interface Cardwall_AdminColumnDefinitionView {
+    function fetchColumnDefinition(Tracker $tracker,
+                                   Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values,
+                                   $mappings_factory);
+}
 
-class Cardwall_AdminFreestyleColumnDefinitionView extends Abstract_View {
+class Cardwall_AdminSemanticStatusColumnDefinitionView extends Abstract_View implements Cardwall_AdminColumnDefinitionView {
+    
+    public function fetchColumnDefinition(Tracker $tracker, Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values, $mappings_factory) {
+        $field    = $tracker->getStatusField();
+
+        $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
+        $html .= 'TODO: display such columns';
+        $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
+        
+    }
+}
+
+    
+class Cardwall_AdminFreestyleColumnDefinitionView extends Abstract_View implements Cardwall_AdminColumnDefinitionView {
 
     /** @var array of Cardwall_OnTop_Config_Column */
     private $columns;
@@ -172,13 +193,6 @@ class Cardwall_AdminFreestyleColumnDefinitionView extends Abstract_View {
                                           $mappings_factory) {
         $html     = '';
         
-        $field    = $tracker->getStatusField();
-
-        if ($field) {
-            $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
-            $html .= 'TODO: display such columns';
-            $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
-        } else {
             $mappings = $mappings_factory->getMappings($tracker);
             $non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
 
@@ -210,7 +224,7 @@ class Cardwall_AdminFreestyleColumnDefinitionView extends Abstract_View {
                 $html .= $this->addCustomMapping($column_count, $non_mapped_trackers);
             }
             $html .= '</tbody></table>';
-        }
+        
         return $html;
     }
 
