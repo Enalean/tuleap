@@ -169,7 +169,7 @@ class Cardwall_OnTop_Config_MappimgFieldValue {
     private $column;
 
     public function __construct(Tracker $current_tracker, Tracker_FormElement_Field $field, $value, $column) {
-        $this->current_tracker = $tracker;
+        $this->current_tracker = $current_tracker;
         $this->field           = $field;
         $this->value           = $value;
         $this->column          = $column;
