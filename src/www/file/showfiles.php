@@ -47,9 +47,9 @@ foreach ($res as $package) {
     if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())) {
         if ($request->existAndNonEmpty('release_id')) {
             if($request->valid(new Valid_UInt('release_id'))) {
-        	    $release_id = $request->get('release_id');
+                $release_id = $request->get('release_id');
                 $row3 = & $frsrf->getFRSReleaseFromDb($release_id);
-            }             	
+            }
         }
         if (!$request->existAndNonEmpty('release_id') || $row3->getPackageID() == $package->getPackageID()) {
             $packages[$package->getPackageID()] = $package;
@@ -72,6 +72,61 @@ $params = array (
 ), 'pv' => $pv);
 
 file_utils_header($params);
+
+    /*print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='.
+     $group_id .'&amp;id=' . 
+     $package_id .'" title="'. 
+    $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'"*/
+if ($request->get('func') == 'delete_package') {
+    $package_id = $request->get('id');
+    $group_id   = $request->get('group_id');
+    $html  = '';
+    $html .= '<p><form action="showfiles.php?group_id='.$request->get('group_id').'" id="delete_release" class="frs_confirm_delete">';
+    $html .= $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML);
+    $html .= '<br>'.$GLOBALS['Language']->getText('file_admin_editpackages', 'warn');
+    $html .= '<div class="frs_confirm_delete_buttons">';
+    $html .= '<input type="hidden" name="action" value="confirm_delete_package" />';
+    $html .= '<input type="hidden" name="group_id" value="'.$group_id.'" />';
+    $html .= '<input type="hidden" name="package_id" value="'.$package_id.'" />';
+    $html .= '<input type="submit" name="cancel_delete_package" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'" />';
+    $html .= '<input type="submit" name="delete_package" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'" />';
+    $html .= '</div>';
+    $html .= '</form></p>';
+    print $html;
+}
+
+if ($request->get('func') == 'delete_release') {
+    $release_id = $request->get('id');
+    $group_id   = $request->get('group_id');
+    $package_id = $request->get('package_id');
+
+    $html  = '';
+    $html .= '<p><form action="showfiles.php?group_id='.$request->get('group_id').'" id="delete_release" class="frs_confirm_delete">';
+    $html .= $GLOBALS['Language']->getText('file_admin_editreleases', 'delete');
+    $html .= '<br>'.$GLOBALS['Language']->getText('file_admin_editpackages', 'warn');
+    $html .= '<div class="frs_confirm_delete_buttons">';
+    $html .= '<input type="hidden" name="action" value="confirm_delete_release" />';
+    $html .= '<input type="hidden" name="group_id" value="'.$group_id.'" />';
+    $html .= '<input type="hidden" name="package_id" value="'.$package_id.'" />';
+    $html .= '<input type="hidden" name="release_id" value="'.$release_id.'" />';
+    $html .= '<input type="submit" name="cancel_delete_release" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'" />';
+    $html .= '<input type="submit" name="delete_release" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'" />';
+    $html .= '</div>';
+    $html .= '</form></p>';
+    print $html;
+}
+
+if ($request->get('delete_package') && $request->get('action') == 'confirm_delete_package' ) {
+    $GLOBALS['Response']->redirect('admin/package.php?func=delete&group_id='.$request->get('group_id').'&id='.$request->get('package_id'));
+} elseif ($request->get('cancel_delete_package')) {
+    $GLOBALS['Response']->redirect('showfiles.php?group_id='.$request->get('group_id'));
+}
+if ($request->get('delete_release') && $request->get('action') == 'confirm_delete_release' ) {
+    $GLOBALS['Response']->redirect('admin/release.php?func=delete&group_id='.$request->get('group_id').'&package_id='.$request->get('package_id').'&id='.$request->get('release_id'));
+} elseif ($request->get('cancel_delete_release')) {
+    $GLOBALS['Response']->redirect('showfiles.php?group_id='.$request->get('group_id'));
+}
+
 $hp =& Codendi_HTMLPurifier::instance();
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
@@ -183,8 +238,9 @@ while (list ($package_id, $package) = each($packages)) {
             }
             print '</a>';
             if ($frspf->userCanAdmin($user, $group_id)) {
-                print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), CODENDI_PURIFIER_CONVERT_HTML)  .'\');">'
-                            . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
+                print ' <a href="showfiles.php?func=delete_package&amp;group_id='.$group_id
+                .'&amp;id='. $package_id .'" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'">'
+                .$GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
             }
         }
         print '</legend>';
@@ -233,10 +289,10 @@ while (list ($package_id, $package) = each($packages)) {
                     // Highlight the release if one was chosen
                     if ($request->existAndNonEmpty('release_id')) {
                         if($request->valid(new Valid_UInt('release_id'))) {
-            	            $release_id = $request->get('release_id');
-            	            if ($release_id == $package_release->getReleaseID()) {
-            	            	$bgcolor = 'boxitemalt';
-            	            }
+                            $release_id = $request->get('release_id');
+                            if ($release_id == $package_release->getReleaseID()) {
+                                $bgcolor = 'boxitemalt';
+                            }
                         } else {
                             $bgcolor = 'boxitem';
                         }
@@ -266,8 +322,10 @@ while (list ($package_id, $package) = each($packages)) {
                     print '</td> ';
                     print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
                     if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
-                        print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), CODENDI_PURIFIER_CONVERT_HTML) .'\');">'
-                        . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
+                        print ' <a href="showfiles.php?func=delete_release&amp;group_id='. $group_id
+                        .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID()
+                        . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)
+                        .'" >'. $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                     }
                     print '</TD></TR>' . "\n";
                     print '</table>';
@@ -401,7 +459,7 @@ if (!$pv) {
 }
 // project totals (statistics) 
 if (isset ($proj_stats['size'])) {
-	
+
     $total_size = FRSFile::convertBytesToKbytes($proj_stats['size']);
 
     print '<p>';
