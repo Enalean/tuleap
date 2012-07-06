@@ -234,7 +234,8 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory {
     private $element_factory;
 
     public function __construct(Cardwall_OnTop_ColumnMappingFieldValueDao $dao, Tracker_FormElementFactory $element_factory) {
-        $this->dao = $dao;
+        $this->dao             = $dao;
+        $this->element_factory = $element_factory;
     }
 
     /**
@@ -242,6 +243,20 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory {
      */
     public function create(Tracker $tracker) {
         $collection = new Cardwall_OnTop_Config_MappimgFieldValueCollection();
+        foreach ($this->dao->searchMappingFieldValues($tracker->getId()) as $row) {
+            //TODO: if $row['field_id'] is null, it means that we target the semantic status
+            $field = $this->element_factory->getFieldById($row['field_id']);
+            if ($field) {
+                $collection->add(
+                    new Cardwall_OnTop_Config_MappimgFieldValue(
+                        $tracker,
+                        $field,
+                        $row['value_id'],
+                        $row['column_id']
+                    )
+                );
+            }
+        }
         return $collection;
     }
 }

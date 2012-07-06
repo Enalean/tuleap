@@ -24,14 +24,42 @@ require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aField.php';
 
 class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactoryTest extends TuleapTestCase {
 
-    function itCreatesAnEmptyCollectionIfNothingIsStoredInTheDatabase() {
-        $dao             = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
-        $element_factory = mock('Tracker_FormElementFactory');
-        $tracker_id = 66;
-        $factory    = new Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory($dao, $element_factory);
+    public function setUp() {
+        $this->dao             = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
+        $this->element_factory = mock('Tracker_FormElementFactory');
+        $this->tracker_id      = 66;
+        $this->tracker         = aTracker()->withId($this->tracker_id)->build();
+        $this->factory         = new Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory($this->dao, $this->element_factory);
 
-        $collection = $factory->create(aTracker()->withId($tracker_id)->build());
+        $status_field = aSelectboxField()->withId(121)->build();
+        $stage_field  = aSelectboxField()->withId(122)->build();
+        stub($this->element_factory)->getFieldById('121')->returns($status_field);
+        stub($this->element_factory)->getFieldById('122')->returns($stage_field);
+    }
+
+    public function itCreatesAnEmptyCollectionIfNothingIsStoredInTheDatabase() {
+        stub($this->dao)->searchMappingFieldValues($this->tracker_id)->returns(TestHelper::arrayToDar());
+        $collection = $this->factory->create($this->tracker);
         $this->assertEqual(0, count($collection));
+    }
+
+    public function itCreatesACollectionFromTheDataStorage() {
+        stub($this->dao)->searchMappingFieldValues($this->tracker_id)->returns(TestHelper::arrayToDar(
+            array(
+                'tracker_id'          => '1331',
+                'field_id'            => '121',
+                'value_id'            => '11',
+                'column_id'           => '1',
+            ),
+            array(
+                'tracker_id'          => '1332',
+                'field_id'            => '122',
+                'value_id'            => '12',
+                'column_id'           => '1',
+            )
+        ));
+        $collection = $this->factory->create($this->tracker);
+        $this->assertEqual(2, count($collection));
     }
 }
 ?>
