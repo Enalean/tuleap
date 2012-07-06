@@ -44,8 +44,10 @@ class Cardwall_AdminView extends Abstract_View {
         $mapping_values_factory = new Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory($mapping_values_dao, $element_factory);
         $mapping_values         = $mapping_values_factory->getCollection($tracker);
 
+        $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
+
         $tracker ->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $formview->displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao, $mapping_values);
+        $formview->displayAdminForm($token_html, $checked, $tracker, $column_dao, $mapping_values, $mappings_factory);
         $tracker ->displayFooter($layout);
     }
 
@@ -80,11 +82,11 @@ class Cardwall_AdminFormView extends Abstract_View {
         return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';
     }
 
-    public function displayAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
-        echo $this->generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao, $mapping_values);
+    public function displayAdminForm($token_html, $checked, $tracker, $column_dao, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values, $mappings_factory) {
+        echo $this->generateAdminForm($token_html, $checked, $tracker, $column_dao, $mapping_values, $mappings_factory);
     }
 
-    private function generateAdminForm($token_html, $checked, $tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
+    private function generateAdminForm($token_html, $checked, $tracker, $column_dao, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values, $mappings_factory) {
         $column_definition = new Cardwall_AdminColumnDefinitionView();
         $update_url = $this->urlForAdminUpdate($tracker->getId());
 
@@ -100,7 +102,7 @@ class Cardwall_AdminFormView extends Abstract_View {
         $html .= '</p>';
         if ($checked) {
             $html .= '<blockquote>';
-            $html .= $column_definition->fetchColumnDefinition($tracker, $tracker_factory, $element_factory, $column_dao, $mappings_dao, $mapping_values);
+            $html .= $column_definition->fetchColumnDefinition($tracker, $column_dao, $mapping_values, $mappings_factory);
             $html .= '</blockquote>';
         }
         $html .= '<input type="submit" value="'. $this->translate('global', 'btn_submit') .'" />';
@@ -153,10 +155,10 @@ class Cardwall_OnTop_Config_MappimgFields {
 
 class Cardwall_AdminColumnDefinitionView extends Abstract_View {
 
-    public function fetchColumnDefinition(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory,
+    public function fetchColumnDefinition(Tracker $tracker,
                                            $column_dao,
-                                           $mappings_dao,
-                                           Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
+                                           Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values,
+                                           $mappings_factory) {
         $html     = '';
         
         $field    = $tracker->getStatusField();
@@ -166,7 +168,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
             $html .= 'TODO: display such columns';
             $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
         } else {
-            $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
+//            $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
             $mappings = $mappings_factory->getMappings($tracker);
             $non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
 
