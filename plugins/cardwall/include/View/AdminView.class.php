@@ -206,9 +206,9 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
         $html .= '<td>';
         $html .= $this->purify($mapping_tracker->getName()) .'<br />';
-        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .']">';
+        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
         if (!$field) {
-            $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
+            $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
         }
         foreach ($used_sb_fields as $sb_field) {
             $selected = $field == $sb_field ? 'selected="selected"' : '';
@@ -217,13 +217,14 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         $html .= '</select>';
         $html .= '</td>';
         foreach ($columns_raws as $raw) {
+            $column_id = $raw['id'];
             $html .= '<td>';
             if ($field) {
                 $field_values = $field->getVisibleValuesPlusNoneIfAny();
                 if ($field_values) {
-                    $html .= '<select name="" multiple="multiple" size="'. count($field_values) .'">';
+                    $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. (int)$column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
                     foreach ($field_values as $value) {
-                        $selected = $mapping_values->has($field, $value->getId(), $raw['id']) ? 'selected="selected"' : '';
+                        $selected = $mapping_values->has($field, $value->getId(), $column_id) ? 'selected="selected"' : '';
                         $html .= '<option vlaue="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
                     }
                     $html .= '</select>';
@@ -248,7 +249,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         $html .= '<td colspan="'. $colspan .'">';
         $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
         $html .= '<select name="add_mapping_on">';
-        $html .= '<option>'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
         foreach ($trackers as $new_tracker) {
             $html .= '<option value="'. $new_tracker->getId() .'">'. $this->purify($new_tracker->getName()) .'</option>';
         }

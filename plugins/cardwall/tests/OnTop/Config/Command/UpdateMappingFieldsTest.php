@@ -52,19 +52,24 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
         $stage_field    = aMockField()->withId(322)->withTracker($story_tracker)->build();
 
         $element_factory = mock('Tracker_FormElementFactory');
-        stub($element_factory)->getFieldById('123')->returns($status_field);
-        stub($element_factory)->getFieldById('321')->returns($assignto_field);
-        stub($element_factory)->getFieldById('322')->returns($stage_field);
+        stub($element_factory)->getFieldById(123)->returns($status_field);
+        stub($element_factory)->getFieldById(321)->returns($assignto_field);
+        stub($element_factory)->getFieldById(322)->returns($stage_field);
 
-        $this->dao     = mock('Cardwall_OnTop_ColumnMappingFieldDao');
-        $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $this->dao, $tracker_factory, $element_factory);
+        $this->dao       = mock('Cardwall_OnTop_ColumnMappingFieldDao');
+        $this->value_dao = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
+        $this->command = new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $this->dao, $this->value_dao, $tracker_factory, $element_factory);
     }
 
     public function itUpdatesMappingFields() {
         $request = aRequest()->with('mapping_field',
             array(
-                '42' => '123',
-                '69' => '321',
+                '42' => array(
+                    'field' => '123',
+                ),
+                '69' => array(
+                    'field' => '321',
+                ),
             )
         )->build();
         stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
@@ -90,8 +95,12 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
     public function itDoesntUpdatesMappingFieldsIfItIsNotNeeded() {
         $request = aRequest()->with('mapping_field',
             array(
-                '42' => '123',
-                '69' => '322',
+                '42' => array(
+                    'field' => '123',
+                ),
+                '69' => array(
+                    'field' => '322',
+                ),
             )
         )->build();
         stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
@@ -109,6 +118,40 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
             )
         );
         stub($this->dao)->save($this->tracker_id, 69, 322)->once();
+        $this->command->execute($request);
+    }
+
+    public function itUpdatesMappingFieldValues() {
+        $request = aRequest()->with('mapping_field',
+            array(
+                '69' => array(
+                    'field' => '321',
+                    'values' => array(
+                        '11' => array(
+                            '9001',
+                            '9002'
+                        ),
+                    )
+                ),
+            )
+        )->build();
+        stub($this->dao)->searchMappingFields($this->tracker_id)->returns(
+            TestHelper::arrayToDar(
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 42,
+                    'field_id'            => 100
+                ),
+                array(
+                    'cardwall_tracker_id' => 666,
+                    'tracker_id'          => 69,
+                    'field_id'            => null
+                )
+            )
+        );
+        stub($this->value_dao)->save($this->tracker_id, 69, 321, 9001, 11)->at(0);
+        stub($this->value_dao)->save($this->tracker_id, 69, 321, 9002, 11)->at(1);
+        stub($this->value_dao)->save()->count(2);
         $this->command->execute($request);
     }
 }

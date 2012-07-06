@@ -32,6 +32,11 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     private $dao;
 
     /**
+     * @var Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private $value_dao;
+
+    /**
      * @var TrackerFactory
      */
     private $tracker_factory;
@@ -41,9 +46,10 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     private $form_element_factory;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, TrackerFactory $tracker_factory, Tracker_FormElementFactory $form_element_factory) {
+    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao, TrackerFactory $tracker_factory, Tracker_FormElementFactory $form_element_factory) {
         parent::__construct($tracker);
         $this->dao                  = $dao;
+        $this->value_dao            = $value_dao;
         $this->tracker_factory      = $tracker_factory;
         $this->form_element_factory = $form_element_factory;
     }
@@ -52,12 +58,20 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     public function execute(Codendi_Request $request) {
-        if (is_array($request->get('mapping_field'))) {
-            $mapping_fields = $this->getMappingFields();
-            foreach ($request->get('mapping_field') as $mapping_tracker_id => $field_id) {
-                $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
-                $field           = $this->form_element_factory->getFieldById($field_id);
-                $this->save($mapping_fields, $mapping_tracker, $field);
+        if (!is_array($request->get('mapping_field'))) continue;
+        $mapping_fields = $this->getMappingFields();
+        foreach ($request->get('mapping_field') as $mapping_tracker_id => $mapping_tracker_info) {
+            if (!isset($mapping_tracker_info['field'])) continue;
+            $field_id = (int)$mapping_tracker_info['field'];
+            $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
+            $field           = $this->form_element_factory->getFieldById($field_id);
+            $this->save($mapping_fields, $mapping_tracker, $field);
+
+            if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) continue;
+            foreach ($mapping_tracker_info['values'] as $column_id => $values) {
+                foreach ($values as $value_id) {
+                    $this->value_dao->save($this->tracker->getId(), $mapping_tracker_id, $field_id, (int)$value_id, $column_id);
+                }
             }
         }
     }
@@ -78,8 +92,12 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      * @return void
      */
     private function save(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
-        if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field) && $this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
-            $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
+        if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field)) {
+            if ($this->fieldHasChanged($mapping_fields, $mapping_tracker, $field)) {
+                if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
+                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
+                }
+            }
         }
     }
 
@@ -87,10 +105,14 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      * @return bool
      */
     private function canSaveNewField(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
-        return $mapping_tracker &&
-            $field &&
-            $field->getTracker() == $mapping_tracker &&
-            ( !isset($mapping_fields[$mapping_tracker->getId()]) || $mapping_fields[$mapping_tracker->getId()] != $field->getId());
+        return $mapping_tracker && $field && $field->getTracker() == $mapping_tracker;
+    }
+
+    /**
+     * @return bool
+     */
+    private function fieldHasChanged(array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
+        return !isset($mapping_fields[$mapping_tracker->getId()]) || $mapping_fields[$mapping_tracker->getId()] != $field->getId();
     }
 }
 ?>

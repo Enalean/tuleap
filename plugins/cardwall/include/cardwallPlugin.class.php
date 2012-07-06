@@ -198,6 +198,7 @@ class cardwallPlugin extends Plugin {
         $dao              = $this->getOnTopDao();
         $column_dao       = $this->getOnTopColumnDao();
         $mappingfield_dao = $this->getOnTopColumnMappingFieldDao();
+        $mappingvalue_dao = $this->getOnTopColumnMappingFieldValueDao();
         require_once 'OnTop/Config/Updater.class.php';
         require_once 'OnTop/Config/Command/EnableCardwallOnTop.class.php';
         require_once 'OnTop/Config/Command/CreateColumn.class.php';
@@ -212,7 +213,7 @@ class cardwallPlugin extends Plugin {
         $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateMappingField($tracker, $mappingfield_dao, $tracker_factory));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $mappingfield_dao, $tracker_factory, $element_factory));
+        $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory, $element_factory));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $mappingfield_dao, $tracker_factory));
         return $updater;
     }

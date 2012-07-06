@@ -29,21 +29,6 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function create($cardwall_tracker_id, $tracker_id, $field_id, $value_id, $column_id) {
-        $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
-        $tracker_id          = $this->da->escapeInt($tracker_id);
-        $value_id            = $this->da->escapeInt($value_id);
-        $column_id           = $this->da->escapeInt($column_id);
-        if ($field_id === null) {
-            $field_id = " NULL ";
-        } else {
-            $field_id = $this->da->escapeInt($field_id);
-        }
-        $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field_value (cardwall_tracker_id, tracker_id, field_id, value_id, column_id)
-                VALUES ($cardwall_tracker_id, $tracker_id, $field_id, $value_id, $column_id)";
-        return $this->update($sql);
-    }
-
     public function save($cardwall_tracker_id, $tracker_id, $field_id, $value_id, $column_id) {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
