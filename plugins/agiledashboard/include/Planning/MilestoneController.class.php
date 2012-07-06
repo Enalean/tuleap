@@ -163,7 +163,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         try {
             if ($this->milestone->getArtifact()) {
                 $breadcrumbs_merger = new BreadCrumb_Merger();
-                foreach($this->milestone_factory->getMilestoneWithAncestors($this->milestone) as $milestone) {
+                foreach($this->getMilestoneWithAncestors() as $milestone) {
                     $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
                 }
                 return $breadcrumbs_merger;
@@ -174,10 +174,8 @@ class Planning_MilestoneController extends MVC2_Controller {
         //return new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
     }
 
-    private function getMilestoneArtifactWithAncestors() {
-        //$parent_artifacts = $this->milestone->getArtifact()->getAllAncestors($this->getCurrentUser());
-        //return array_merge($parent_artifacts, array($this->milestone->getArtifact()));
-        return $this->milestone->getArtifact()->getAllAncestors($this->getCurrentUser());
+    private function getMilestoneWithAncestors() {
+        return $this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone);
     }
 }
 

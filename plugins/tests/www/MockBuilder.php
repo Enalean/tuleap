@@ -68,6 +68,19 @@ function mock($classname) {
     return new $mockclassname();
 }
 
+function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
+    if (is_object($classname_or_simpletest_mock)) {
+        $mock = $classname_or_simpletest_mock;
+    } else {
+        $mock = partial_mock($classname_or_simpletest_mock);
+    }
+    return new OngoingIntelligentStub($mock);
+}
+
+function partial_mock($classname, array $mocked_methods) {
+    return TestHelper::getPartialMock($classname, $mocked_methods);
+}
+
 class OngoingIntelligentStub {
 
     function __construct($mock) {

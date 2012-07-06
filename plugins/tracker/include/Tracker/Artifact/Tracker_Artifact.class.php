@@ -1282,6 +1282,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
 
+    /**
+     * @param User $user
+     *
+     * @return Array of Tracker_Artifact
+     */
     public function getAllAncestors(User $user) {
         return $this->getHierarchyFactory()->getAllAncestors($user, $this);
     }

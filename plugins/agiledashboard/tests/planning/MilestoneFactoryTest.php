@@ -333,4 +333,41 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
     }
 }
 
+class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->current_user     = aUser()->build();
+        $this->planning_factory = mock('PlanningFactory');
+        $this->milestone_factory = new Planning_MilestoneFactory($this->planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'));
+    }
+    
+    public function itBuildTheMilestonesWhenNoParents() {
+        $sprint_artifact  = stub('Tracker_Artifact')->getAllAncestors($this->current_user)->returns(array());
+        $sprint_milestone = aMilestone()->withArtifact($sprint_artifact)->build();
+        
+        $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $sprint_milestone);
+        $this->assertEqual($milestones, array($sprint_milestone));
+    }
+    
+    public function itBuildTheMilestoneForAllParents() {
+        $project = mock('Project');
+        
+        $release_tracker  = aTracker()->withId(2)->withProject($project)->build();
+        $release_artifact = aMockArtifact()->withTracker($release_tracker)->build();
+        
+        $sprint_artifact  = stub('Tracker_Artifact')->getAllAncestors($this->current_user)->returns(array($release_artifact));
+        $sprint_milestone = aMilestone()->withArtifact($sprint_artifact)->build();
+        
+        $release_planning = mock('Planning');
+        stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
+        
+        $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $sprint_milestone);
+        
+        $release_milestone = new Planning_ArtifactMilestone($project, $release_planning, $release_artifact);
+        
+        $this->assertEqual($milestones, array($release_milestone, $sprint_milestone));
+    }
+}
+
 ?>
