@@ -191,7 +191,7 @@ class Cardwall_OnTop_Config_MappimgFieldValue {
     }
 }
 
-class Cardwall_OnTop_Config_MappimgFieldValueCollection {
+class Cardwall_OnTop_Config_MappimgFieldValueCollection implements Countable {
 
     /**
      * @var array
@@ -210,6 +210,39 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollection {
             return $this->mapping_values[$field->getId()][$column];
         }
         return array();
+    }
+
+    /**
+     * @return int
+     */
+    public function count() {
+        return count($this->mapping_values);
+    }
+}
+
+require_once dirname(__FILE__) .'/../OnTop/ColumnMappingFieldValueDao.class.php';
+class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory {
+
+    /**
+     * @var Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private $dao;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $element_factory;
+
+    public function __construct(Cardwall_OnTop_ColumnMappingFieldValueDao $dao, Tracker_FormElementFactory $element_factory) {
+        $this->dao = $dao;
+    }
+
+    /**
+     * @return Cardwall_OnTop_Config_MappimgFieldValueCollection
+     */
+    public function create(Tracker $tracker) {
+        $collection = new Cardwall_OnTop_Config_MappimgFieldValueCollection();
+        return $collection;
     }
 }
 
