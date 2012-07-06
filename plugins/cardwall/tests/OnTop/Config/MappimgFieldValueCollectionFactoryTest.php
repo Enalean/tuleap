@@ -19,9 +19,10 @@
  */
 
 require_once dirname(__FILE__) .'/../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../include/View/AdminView.class.php';
-require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aTracker.php';
-require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aField.php';
+require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappimgFieldValueCollectionFactory.class.php';
+require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
+require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
 
 class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactoryTest extends TuleapTestCase {
 

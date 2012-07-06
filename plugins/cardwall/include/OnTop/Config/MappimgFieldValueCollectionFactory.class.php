@@ -18,78 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_OnTop_Config_MappimgFieldValue {
+require_once 'MappimgFieldValue.class.php';
+require_once 'MappimgFieldValueCollection.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
 
-    /**
-     * @var Tracker
-     */
-    private $current_tracker;
-
-    /**
-     * @var TrackerTracker_FormElement_Field
-     */
-    private $field;
-
-    /**
-     * @var int
-     */
-    private $value;
-
-    /**
-     * @var int
-     */
-    private $column;
-
-    public function __construct(Tracker $current_tracker, Tracker_FormElement_Field $field, $value, $column) {
-        $this->current_tracker = $current_tracker;
-        $this->field           = $field;
-        $this->value           = $value;
-        $this->column          = $column;
-    }
-
-    public function getValue() {
-        return $this->value;
-    }
-
-    public function getColumn() {
-        return $this->column;
-    }
-
-    /**
-     * @return Tracker_FormElement_Field
-     */
-    public function getField() {
-        return $this->field;
-    }
-}
-
-class Cardwall_OnTop_Config_MappimgFieldValueCollection implements Countable {
-
-    /**
-     * @var array
-     */
-    private $mapping_values = array();
-
-    public function add(Cardwall_OnTop_Config_MappimgFieldValue $mapping_value) {
-        $this->mapping_values[$mapping_value->getField()->getId()][$mapping_value->getColumn()][$mapping_value->getValue()] = $mapping_value;
-    }
-
-    /**
-     * @return array of Cardwall_OnTop_Config_MappimgFieldValue
-     */
-    public function has(Tracker_FormElement_Field $field, $value, $column) {
-        return isset($this->mapping_values[$field->getId()][$column][$value]);
-    }
-
-    /**
-     * @return int
-     */
-    public function count() {
-        return count($this->mapping_values);
-    }
-}
-
-require_once dirname(__FILE__) .'/../ColumnMappingFieldValueDao.class.php';
 class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory {
 
     /**
