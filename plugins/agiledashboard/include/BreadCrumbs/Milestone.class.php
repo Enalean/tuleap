@@ -23,11 +23,12 @@ class BreadCrumb_Milestone implements BreadCrumb_BreadCrumbGenerator {
 
     private $plugin_path;
     private $milestone;
-    
+
     public function __construct($plugin_path, Planning_Milestone $milestone) {
         $this->plugin_path = $plugin_path;
-        $this->milestone    = $milestone;
+        $this->milestone   = $milestone;
     }
+
     public function getCrumbs() {
         $hp             = Codendi_HTMLPurifier::instance();
         $url_parameters = array(
