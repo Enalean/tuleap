@@ -76,18 +76,19 @@ file_utils_header($params);
 if ($request->get('func') == 'delete_package') {
     $package_id = $request->get('id');
     $group_id   = $request->get('group_id');
-    $html  = '';
-    $html .= '<p><form action="showfiles.php?group_id='.$request->get('group_id').'" id="delete_release" class="frs_confirm_delete">';
+
+    $html  = '<p><div id="delete_package" class="frs_confirm_delete">';
     $html .= $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML);
     $html .= '<br>'.$GLOBALS['Language']->getText('file_admin_editpackages', 'warn');
     $html .= '<div class="frs_confirm_delete_buttons">';
-    $html .= '<input type="hidden" name="action" value="confirm_delete_package" />';
-    $html .= '<input type="hidden" name="group_id" value="'.$group_id.'" />';
-    $html .= '<input type="hidden" name="package_id" value="'.$package_id.'" />';
-    $html .= '<input type="submit" name="cancel_delete_package" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'" />';
-    $html .= '<input type="submit" name="delete_package" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'" />';
+    $html .= '<a href="showfiles.php?group_id='.$group_id.'">'
+             .$GLOBALS['HTML']->getImage('ic/cross.png')
+             .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'&nbsp;&nbsp;</a>';
+    $html .= '&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&group_id='.$group_id.'&id='.$package_id.'">'
+            .$GLOBALS['HTML']->getImage('ic/check.png')
+            .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'</a>';
     $html .= '</div>';
-    $html .= '</form></p>';
+    $html .= '</div></p>';
     print $html;
 }
 
@@ -96,31 +97,19 @@ if ($request->get('func') == 'delete_release') {
     $group_id   = $request->get('group_id');
     $package_id = $request->get('package_id');
 
-    $html  = '';
-    $html .= '<p><form action="showfiles.php?group_id='.$request->get('group_id').'" id="delete_release" class="frs_confirm_delete">';
+    $html  = '<p><div id="delete_release" class="frs_confirm_delete">';
     $html .= $GLOBALS['Language']->getText('file_admin_editreleases', 'delete');
     $html .= '<br>'.$GLOBALS['Language']->getText('file_admin_editreleases', 'warn');
     $html .= '<div class="frs_confirm_delete_buttons">';
-    $html .= '<input type="hidden" name="action" value="confirm_delete_release" />';
-    $html .= '<input type="hidden" name="group_id" value="'.$group_id.'" />';
-    $html .= '<input type="hidden" name="package_id" value="'.$package_id.'" />';
-    $html .= '<input type="hidden" name="release_id" value="'.$release_id.'" />';
-    $html .= '<input type="submit" name="cancel_delete_release" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'" />';
-    $html .= '<input type="submit" name="delete_release" value="'.$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'" />';
+    $html .= '<a href="showfiles.php?group_id='.$group_id.'">'
+             .$GLOBALS['HTML']->getImage('ic/cross.png')
+             .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'&nbsp;&nbsp;</a>';
+    $html .= '&nbsp;&nbsp;&nbsp;<a href="admin/release.php?func=delete&group_id='.$group_id.'&package_id='.$package_id.'&id='.$release_id.'">'
+            .$GLOBALS['HTML']->getImage('ic/check.png')
+            .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'</a>';
     $html .= '</div>';
-    $html .= '</form></p>';
+    $html .= '</div></p>';
     print $html;
-}
-
-if ($request->get('delete_package') && $request->get('action') == 'confirm_delete_package' ) {
-    $GLOBALS['Response']->redirect('admin/package.php?func=delete&group_id='.$request->get('group_id').'&id='.$request->get('package_id'));
-} elseif ($request->get('cancel_delete_package')) {
-    $GLOBALS['Response']->redirect('showfiles.php?group_id='.$request->get('group_id'));
-}
-if ($request->get('delete_release') && $request->get('action') == 'confirm_delete_release' ) {
-    $GLOBALS['Response']->redirect('admin/release.php?func=delete&group_id='.$request->get('group_id').'&package_id='.$request->get('package_id').'&id='.$request->get('release_id'));
-} elseif ($request->get('cancel_delete_release')) {
-    $GLOBALS['Response']->redirect('showfiles.php?group_id='.$request->get('group_id'));
 }
 
 $hp =& Codendi_HTMLPurifier::instance();
