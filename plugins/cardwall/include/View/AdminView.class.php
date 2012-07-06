@@ -156,6 +156,28 @@ class Cardwall_OnTop_Config_MappimgFields {
     }
 }
 
+class Cardwall_OnTop_Config_Column {
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $label;
+
+    /**
+     * @param int    $id
+     * @param string $label
+     */
+    public function __construct($id, $label) {
+        $this->id      = (int)$id;
+        $this->label   = (string)$label;
+    }
+    
+}
+
 class Cardwall_AdminColumnDefinitionView extends Abstract_View {
 
     public function fetchColumnDefinition(Tracker $tracker,
@@ -171,19 +193,24 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
             $html .= 'TODO: display such columns';
             $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
         } else {
-//            $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
             $mappings = $mappings_factory->getMappings($tracker);
             $non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
 
             $columns_raws = $column_dao->searchColumnsByTrackerId($tracker->getId());
-            if (!count($columns_raws)) {
+            $columns = array();
+            foreach ($columns_raws as $raw) {
+                $columns[] = new Cardwall_OnTop_Config_Column($raw['id'], $raw['label']);
+            }
+            
+            $column_count = count($columns);
+            if (!$column_count) {
                 $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
             }
             $html .= '<table><thead><tr valign="bottom">';
             $html .= '<td></td>';
-            foreach ($columns_raws as $raw) {
+            foreach ($columns as $column) {
                 $html .= '<td>';
-                $html .= '<input type="text" name="column['. (int)$raw['id'] .'][label]" value="'. $this->purify($raw['label']) .'" />';
+                $html .= '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
                 $html .= '</td>';
             }
             $html .= '<td>';
@@ -194,18 +221,18 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
             $html .= '<tbody>';
             $row_number = 0;
             foreach ($mappings as $mapping) {
-                $html .= $this->listExistingMappings($row_number, $mapping, $columns_raws, $mapping_values);
+                $html .= $this->listExistingMappings($row_number, $mapping, $columns, $mapping_values);
                 $row_number++;
             }
-            if (count($columns_raws) && count($non_mapped_trackers)) {
-                $html .= $this->addCustomMapping($columns_raws, $non_mapped_trackers);
+            if ($column_count && count($non_mapped_trackers)) {
+                $html .= $this->addCustomMapping($column_count, $non_mapped_trackers);
             }
             $html .= '</tbody></table>';
         }
         return $html;
     }
 
-    private function listExistingMappings($row_number, $mapping, $columns_raws, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
+    private function listExistingMappings($row_number, $mapping, $columns, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
         $mapping_tracker = $mapping->tracker;
         $used_sb_fields = $mapping->available_fields;
         $field = $mapping->selected_field;
@@ -223,13 +250,13 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         }
         $html .= '</select>';
         $html .= '</td>';
-        foreach ($columns_raws as $raw) {
-            $column_id = $raw['id'];
+        foreach ($columns as $column) {
+            $column_id = $column->id;
             $html .= '<td>';
             if ($field) {
                 $field_values = $field->getVisibleValuesPlusNoneIfAny();
                 if ($field_values) {
-                    $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. (int)$column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
+                    $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
                     foreach ($field_values as $value) {
                         $selected = $mapping_values->has($field, $value->getId(), $column_id) ? 'selected="selected"' : '';
                         $html .= '<option value="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
@@ -250,8 +277,8 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         return $html;
     }
 
-    private function addCustomMapping($columns_raws, $trackers) {
-        $colspan = count($columns_raws) + 2;
+    private function addCustomMapping($column_count, $trackers) {
+        $colspan = $column_count + 2;
         $html  = '<tr>';
         $html .= '<td colspan="'. $colspan .'">';
         $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
