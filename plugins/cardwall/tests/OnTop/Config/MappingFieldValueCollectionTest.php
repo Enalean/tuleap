@@ -20,19 +20,19 @@
 
 require_once dirname(__FILE__) .'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappimgFieldValueCollection.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappingFieldValueCollection.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
 
-class Cardwall_OnTop_Config_MappimgFieldValueCollectionTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_MappingFieldValueCollectionTest extends TuleapTestCase {
     
     function itReturnsTrusIfTheCollectionContainsAMapping() {
         $tracker = aTracker()->build();
         $field   = aSelectBoxField()->withId(42)->build();
-        $mapping_value_1 = new Cardwall_OnTop_Config_MappimgFieldValue($tracker, $field, 101, 1);
-        $mapping_value_2 = new Cardwall_OnTop_Config_MappimgFieldValue($tracker, $field, 102, 2);
-        $mapping_value_3 = new Cardwall_OnTop_Config_MappimgFieldValue($tracker, $field, 103, 2);
-        $collection = new Cardwall_OnTop_Config_MappimgFieldValueCollection();
+        $mapping_value_1 = new Cardwall_OnTop_Config_MappingFieldValue($tracker, $field, 101, 1);
+        $mapping_value_2 = new Cardwall_OnTop_Config_MappingFieldValue($tracker, $field, 102, 2);
+        $mapping_value_3 = new Cardwall_OnTop_Config_MappingFieldValue($tracker, $field, 103, 2);
+        $collection = new Cardwall_OnTop_Config_MappingFieldValueCollection();
         $collection->add($mapping_value_1);
         $collection->add($mapping_value_2);
         $collection->add($mapping_value_3);

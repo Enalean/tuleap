@@ -30,7 +30,7 @@ class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTest
     public function itReturnsAllTrackersWhenNothingIsMapped() {
         $trackers = array(10 => aTracker()->withId(10)->build(),
                           11 => aTracker()->withId(11)->build());
-        $mappings = new Cardwall_OnTop_Config_MappimgFields(array());
+        $mappings = new Cardwall_OnTop_Config_MappingFields(array());
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, aTracker()->withId(77)->build(), $mappings);
         $this->assertEqual($trackers, $config_trackers->getNonMappedTrackers());
     }
@@ -40,7 +40,7 @@ class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTest
         $other_tracker   = aTracker()->withId(99)->build();
         $trackers = array(10 => $current_tracker,
                           99 => $other_tracker);
-        $mappings = new Cardwall_OnTop_Config_MappimgFields(array());
+        $mappings = new Cardwall_OnTop_Config_MappingFields(array());
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
         $this->assertEqual(array(99 => $other_tracker), $config_trackers->getNonMappedTrackers());
     }
@@ -54,7 +54,7 @@ class Cardwall_OnTop_Config_Trackers_getNonMappedTrackersTest extends TuleapTest
                           11 => $story_tracker,
                           12 => $task_tracker,
                           99 => $other_tracker);
-        $mappings = mock('Cardwall_OnTop_Config_MappimgFields');
+        $mappings = mock('Cardwall_OnTop_Config_MappingFields');
         stub($mappings)->getTrackers()->returns(
             array(
                 11 => $story_tracker,
@@ -82,7 +82,7 @@ class Cardwall_OnTop_Config_Trackers_getMappedTrackersTest extends TuleapTestCas
             11 => $story_tracker,
             12 => $task_tracker,
         );
-        $mappings = mock('Cardwall_OnTop_Config_MappimgFields');
+        $mappings = mock('Cardwall_OnTop_Config_MappingFields');
         stub($mappings)->getTrackers()->returns($mapped_trackers);
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
         $this->assertEqual($mapped_trackers, $config_trackers->getMappedTrackers());
@@ -107,7 +107,7 @@ class Cardwall_OnTop_Config_Trackers_getMappedTrackersTest extends TuleapTestCas
             11 => $story_tracker,
             12 => $task_tracker,
         );
-        $mappings = mock('Cardwall_OnTop_Config_MappimgFields');
+        $mappings = mock('Cardwall_OnTop_Config_MappingFields');
         stub($mappings)->getTrackers()->returns($mapped_trackers);
         $config_trackers = new Cardwall_OnTop_Config_Trackers($trackers, $current_tracker, $mappings);
         $this->assertEqual($expected, $config_trackers->getMappedTrackers());

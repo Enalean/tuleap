@@ -18,21 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'MappimgFieldValue.class.php';
+require_once 'MappingFieldValue.class.php';
 
-class Cardwall_OnTop_Config_MappimgFieldValueCollection implements Countable {
+class Cardwall_OnTop_Config_MappingFieldValueCollection implements Countable {
 
     /**
      * @var array
      */
     private $mapping_values = array();
 
-    public function add(Cardwall_OnTop_Config_MappimgFieldValue $mapping_value) {
+    public function add(Cardwall_OnTop_Config_MappingFieldValue $mapping_value) {
         $this->mapping_values[$mapping_value->getField()->getId()][$mapping_value->getColumn()][$mapping_value->getValue()] = $mapping_value;
     }
 
     /**
-     * @return array of Cardwall_OnTop_Config_MappimgFieldValue
+     * @return array of Cardwall_OnTop_Config_MappingFieldValue
      */
     public function has(Tracker_FormElement_Field $field, $value, $column) {
         return isset($this->mapping_values[$field->getId()][$column][$value]);

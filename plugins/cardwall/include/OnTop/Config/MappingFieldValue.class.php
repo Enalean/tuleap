@@ -21,7 +21,7 @@
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElement_Field.class.php';
 
-class Cardwall_OnTop_Config_MappimgFieldValue {
+class Cardwall_OnTop_Config_MappingFieldValue {
 
     /**
      * @var Tracker

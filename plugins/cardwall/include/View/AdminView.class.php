@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappimgFieldValueCollectionFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappingFieldValueCollectionFactory.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingsFactory.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingFactory.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMapping.class.php';
@@ -53,7 +53,7 @@ class Cardwall_AdminView extends Abstract_View {
         $column_definition_view = new Cardwall_AdminColumnDefinitionView($columns);
         $formview   = new Cardwall_AdminFormView($column_definition_view);
 
-        $mapping_values_factory = new Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory($mapping_values_dao, $element_factory);
+        $mapping_values_factory = new Cardwall_OnTop_Config_MappingFieldValueCollectionFactory($mapping_values_dao, $element_factory);
         $mapping_values         = $mapping_values_factory->getCollection($tracker);
 
         $mappings_factory = new Cardwall_OnTop_Config_TrackerFieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_TrackerFieldMappingFactory($element_factory));
@@ -102,11 +102,11 @@ class Cardwall_AdminFormView extends Abstract_View {
         return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';
     }
 
-    public function displayAdminForm($token_html, $checked, $tracker, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values, $mappings_factory) {
+    public function displayAdminForm($token_html, $checked, $tracker, Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values, $mappings_factory) {
         echo $this->generateAdminForm($token_html, $checked, $tracker, $mapping_values, $mappings_factory);
     }
 
-    private function generateAdminForm($token_html, $checked, $tracker, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values, $mappings_factory) {
+    private function generateAdminForm($token_html, $checked, $tracker, Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values, $mappings_factory) {
         $update_url = $this->urlForAdminUpdate($tracker->getId());
 
         $html  = '';
@@ -135,7 +135,7 @@ class Cardwall_OnTop_Config_Trackers {
     private $mapped_trackers;
     private $non_mapped_trackers;
 
-    function __construct(array $project_trackers, Tracker $tracker, Cardwall_OnTop_Config_MappimgFields $mapping_fields) {
+    function __construct(array $project_trackers, Tracker $tracker, Cardwall_OnTop_Config_MappingFields $mapping_fields) {
         $project_trackers          = array_diff($project_trackers, array($tracker));
         $mapped_trackers           = $mapping_fields->getTrackers();
         $this->non_mapped_trackers = array_diff($project_trackers, $mapped_trackers);
@@ -161,7 +161,7 @@ class Cardwall_OnTop_Config_MappingField {
     }
 }
 
-class Cardwall_OnTop_Config_MappimgFields {
+class Cardwall_OnTop_Config_MappingFields {
     private $mapping_fields;
     public function __construct(array $mapping_fields) {
         $this->mapping_fields = $mapping_fields;
@@ -205,7 +205,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
     }
     
     public function fetchColumnDefinition(Tracker $tracker,
-                                          Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values,
+                                          Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values,
                                           $mappings_factory) {
         $html     = '';
         
@@ -251,7 +251,7 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         return $html;
     }
 
-    private function listExistingMappings($row_number, $mapping, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
+    private function listExistingMappings($row_number, $mapping, Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values) {
         $mapping_tracker = $mapping->tracker;
         $used_sb_fields = $mapping->available_fields;
         $field = $mapping->selected_field;

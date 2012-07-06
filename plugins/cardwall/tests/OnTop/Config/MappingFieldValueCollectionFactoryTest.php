@@ -20,18 +20,18 @@
 
 require_once dirname(__FILE__) .'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappimgFieldValueCollectionFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappingFieldValueCollectionFactory.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
 
-class Cardwall_OnTop_Config_MappimgFieldValueCollectionFactoryTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_MappingFieldValueCollectionFactoryTest extends TuleapTestCase {
 
     public function setUp() {
         $this->dao             = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
         $this->element_factory = mock('Tracker_FormElementFactory');
         $this->tracker_id      = 66;
         $this->tracker         = aTracker()->withId($this->tracker_id)->build();
-        $this->factory         = new Cardwall_OnTop_Config_MappimgFieldValueCollectionFactory($this->dao, $this->element_factory);
+        $this->factory         = new Cardwall_OnTop_Config_MappingFieldValueCollectionFactory($this->dao, $this->element_factory);
 
         $status_field = aSelectboxField()->withId(121)->build();
         $stage_field  = aSelectboxField()->withId(122)->build();
