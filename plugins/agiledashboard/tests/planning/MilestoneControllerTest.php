@@ -34,6 +34,7 @@ require_once $current_dir.'/../builders/aPlanningFactory.php';
 require_once $current_dir.'/../builders/aPlanningController.php';
 require_once $current_dir.'/../../../../tests/simpletest/common/include/builders/aRequest.php';
 require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ViewBuilder.class.php';
+require_once TRACKER_BASE_DIR .'/../tests/builders/aMockArtifact.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -388,22 +389,27 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 }
 
 class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
-    
+
     public function itIncludesBreadcrumbsForParentMilestones() {
-        $request            = aRequest()->build();
-        $milestone_factory  = mock('Planning_MilestoneFactory');
-        $project_manager    = mock('ProjectManager');
-        
-        $product = stub('Planning_Milestone')->getArtifact()->returns(aMockArtifact()->withId(1)->withTitle('Product X')->build());
-        $release = stub('Planning_Milestone')->getArtifact()->returns(aMockArtifact()->withId(2)->withTitle('Release 1.0')->build());
-        $sprint  = stub('Planning_Milestone')->getArtifact()->returns(aMockArtifact()->withId(3)->withTitle('Sprint 1')->build());
-        
-        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($sprint);
-        stub($milestone_factory)->getParentMilestones($sprint)->returns(array($product, $release));
-        
+        $current_user_builder = aUser();
+        $current_user         = $current_user_builder->build();
+        $request              = aRequest()->withUser($current_user_builder)->build();
+        $milestone_factory    = mock('Planning_MilestoneFactory');
+        $project_manager      = mock('ProjectManager');
+
+        $product = aMockArtifact()->withId(1)->withTitle('Product X')->build();
+        $release = aMockArtifact()->withId(2)->withTitle('Release 1.0')->build();
+        $sprint  = aMockArtifact()->withId(3)->withTitle('Sprint 1')->build();
+
+        stub($sprint)->getAllAncestors($current_user)->returns(array($product, $release));
+
+        $sprint_milestone  = stub('Planning_Milestone')->getArtifact()->returns($sprint);
+
+        stub($milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($sprint_milestone);
+
         $controller  = new Planning_MilestoneController($request, $milestone_factory, $project_manager);
         $breadcrumbs = $controller->getBreadcrumbs('/plugin/path')->getCrumbs();
-        
+
         $this->assertCount($breadcrumbs, 3);
         $this->assertEqual($breadcrumbs[0]['title'], 'Product X');
         $this->assertEqual($breadcrumbs[0]['url'], '/plugin/path/?aid=1');

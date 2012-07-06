@@ -126,16 +126,7 @@ class Planning_MilestoneFactory {
             }
         }
     }
-    
-    /**
-     * @param Planning_Milestone $milestone
-     * 
-     * @return array of Planning_Milestone
-     */
-    public function getParentMilestones(Planning_Milestone $milestone) {
-        return array($milestone); // TODO
-    }
-    
+
     /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *

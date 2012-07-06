@@ -160,16 +160,23 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $parent_milestones      = $this->milestone_factory->getParentMilestones($this->milestone);
-        $breadcrumbs_milestones = array_merge($parent_milestones, array($this->milestone));
-        $breadcrumbs_generators = array();
-        
-        foreach($breadcrumbs_milestones as $milestone) {
-            $breadcrumbs_generators[] = new BreadCrumb_Artifact($plugin_path, $milestone->getArtifact());
+        try {
+            if ($this->milestone->getArtifact()) {
+                $parent_artifacts       = $this->milestone->getArtifact()->getAllAncestors($this->getCurrentUser());
+                $breadcrumbs_milestones = array_merge($parent_artifacts, array($this->milestone->getArtifact()));
+                $breadcrumbs_generators = array();
+
+                foreach($breadcrumbs_milestones as $artifact) {
+                    $breadcrumbs_generators[] = new BreadCrumb_Artifact($plugin_path, $artifact);
+                }
+
+                $breadcrumbs_merger_class = new ReflectionClass('BreadCrumb_Merger');
+                return $breadcrumbs_merger_class->newInstanceArgs($breadcrumbs_generators);
+            }
+        } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
+            $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
         }
-        
-        $breadcrumbs_merger_class = new ReflectionClass('BreadCrumb_Merger');
-        return $breadcrumbs_merger_class->newInstanceArgs($breadcrumbs_generators);
+        return new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
     }
 }
 
