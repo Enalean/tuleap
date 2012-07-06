@@ -48,7 +48,7 @@ class Docman_NotificationsManager extends NotificationsManager {
         $this->_feedback     = $feedback;
         $this->_item_factory =  $this->_getItemFactory();
         $this->_messages     =  array();
-        if ($g = $this->_groupGetObject($group_id)) {
+        if (($g = $this->_groupGetObject($group_id)) && !$g->isError()) {
             $this->_group_name = $g->getPublicName();
         }
     }
