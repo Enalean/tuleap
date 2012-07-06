@@ -1133,13 +1133,19 @@ td.first-column {
   margin-left: 2em;
 }
 .card {
-    padding: 0.25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
     margin-bottom: 1em;
     border:1px solid #B2B39D;
     background: #ffe;
     min-width: 200px;
+    padding: 0px;
+    padding-left: 5px;
+    color: #333;
+}
+.card-container {
+    background: #ffe;
+    padding: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 .card.placeholder {
     border:1px dashed #3A87AD;

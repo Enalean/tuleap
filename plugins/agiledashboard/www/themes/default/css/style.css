@@ -63,16 +63,6 @@
 .cards .cards {
   margin-left: 2em;
 }
-.card {
-    padding: 0.25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    margin-bottom: 1em;
-    border:1px solid #B2B39D;
-    background: #f8f8f8;
-    min-width: 200px;
-    color: gray;
-}
 
 .planning-draggable > .card {
     background: #ffe;
