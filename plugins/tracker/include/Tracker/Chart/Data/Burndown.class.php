@@ -50,13 +50,10 @@ class Tracker_Chart_Data_Burndown {
     }
 
     private function fillInInitialRemainingEffortValues($value) {
-        for ($i = $this->getLastDayOffset(); $i >= 0; $i--) {
+        $last_day_offset = count($this->remaining_effort) - 1;
+        for ($i = $last_day_offset; $i >= 0; $i--) {
             $this->remaining_effort[$i] = $value;
         }
-    }
-
-    private function getLastDayOffset() {
-        return count($this->remaining_effort) - 1;
     }
 
     /**
