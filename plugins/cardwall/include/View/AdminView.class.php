@@ -161,7 +161,6 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
         
         $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
         $mappings = $mappings_factory->getMappings($tracker);
-        $project_trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $trackers = array_diff($trackers, array($tracker));
         $field    = $tracker->getStatusField();
@@ -296,6 +295,25 @@ class Cardwall_OnTop_Config_FieldMappingsFactory {
         }
         
         return $mappings; 
+    }
+
+    public function getNonMappedTrackers(Tracker $current_tracker) {
+        $project_trackers = $this->tracker_factory->getTrackersByGroupId($current_tracker->getGroupId());
+        $raw_mappings = $this->dao->searchMappingFields($current_tracker->getId());
+        
+        $mapped_tracker_ids = array();
+        foreach ($raw_mappings as $raw_mapping) {
+            $mapped_tracker_ids[] = $raw_mapping['tracker_id'];
+        }
+        
+        $retained_trackers = array();
+        foreach ($project_trackers as $id => $tracker) {
+            if ($id != $current_tracker->getId() && !in_array($id, $mapped_tracker_ids)) {
+                $retained_trackers[$id] = $tracker;
+                
+            }
+        }
+        return $retained_trackers;
     }
 }
     
