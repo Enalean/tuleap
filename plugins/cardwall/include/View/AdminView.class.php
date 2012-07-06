@@ -159,16 +159,17 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
                                            Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
         $html     = '';
         
-        $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
-        $mappings = $mappings_factory->getMappings($tracker);
-        $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
-        $trackers = array_diff($trackers, array($tracker));
         $field    = $tracker->getStatusField();
+
         if ($field) {
             $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
             $html .= 'TODO: display such columns';
             $html .= '<p>'. 'Maybe you wanna choose your own set of columns?' .'</p>';
         } else {
+            $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
+            $mappings = $mappings_factory->getMappings($tracker);
+            $non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
+
             $columns_raws = $column_dao->searchColumnsByTrackerId($tracker->getId());
             if (!count($columns_raws)) {
                 $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
@@ -188,24 +189,22 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
             $html .= '<tbody>';
             $row_number = 0;
             foreach ($mappings as $mapping) {
-                
-                $mapping_tracker = $mapping->tracker;
-                $used_sb_fields = $mapping->available_fields;
-                $field = $mapping->selected_field;
-                $trackers = array_diff($trackers, array($mapping_tracker));
-
-                $html .= $this->listExistingMappings($row_number, $mapping_tracker, $used_sb_fields, $field, $columns_raws, $mapping_values);
+                $html .= $this->listExistingMappings($row_number, $mapping, $columns_raws, $mapping_values);
                 $row_number++;
             }
-            if (count($columns_raws) && count($trackers)) {
-                $html .= $this->addCustomMapping($columns_raws, $trackers);
+            if (count($columns_raws) && count($non_mapped_trackers)) {
+                $html .= $this->addCustomMapping($columns_raws, $non_mapped_trackers);
             }
             $html .= '</tbody></table>';
         }
         return $html;
     }
 
-    private function listExistingMappings($row_number, $mapping_tracker, $used_sb_fields, $field, $columns_raws, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
+    private function listExistingMappings($row_number, $mapping, $columns_raws, Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
+        $mapping_tracker = $mapping->tracker;
+        $used_sb_fields = $mapping->available_fields;
+        $field = $mapping->selected_field;
+
         $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
         $html .= '<td>';
         $html .= $this->purify($mapping_tracker->getName()) .'<br />';
