@@ -53,6 +53,7 @@ class cardwallPlugin extends Plugin {
             $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
             $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id);
             $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['field_mapping']);
+            $this->getOnTopColumnMappingFieldValueDao()->duplicate();
         }
     }
 
@@ -172,7 +173,8 @@ class cardwallPlugin extends Plugin {
                                          $token,
                                          $this->getOnTopDao(),
                                          $this->getOnTopColumnDao(),
-                                         $this->getOnTopColumnMappingFieldDao());
+                                         $this->getOnTopColumnMappingFieldDao(),
+                                         $this->getOnTopColumnMappingFieldValueDao());
                 $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
@@ -236,6 +238,14 @@ class cardwallPlugin extends Plugin {
     private function getOnTopColumnMappingFieldDao() {
         require_once 'OnTop/ColumnMappingFieldDao.class.php';
         return new Cardwall_OnTop_ColumnMappingFieldDao();
+    }
+
+    /**
+     * @return Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private function getOnTopColumnMappingFieldValueDao() {
+        require_once 'OnTop/ColumnMappingFieldValueDao.class.php';
+        return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 
     /**
