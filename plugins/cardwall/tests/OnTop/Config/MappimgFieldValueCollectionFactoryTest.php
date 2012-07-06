@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../include/View/AdminView.class.php';
 require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aTracker.php';
 require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aField.php';
