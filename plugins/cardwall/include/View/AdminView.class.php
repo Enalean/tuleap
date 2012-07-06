@@ -192,38 +192,37 @@ class Cardwall_AdminFreestyleColumnDefinitionView extends Abstract_View implemen
                                           Cardwall_OnTop_Config_MappingFieldValueCollection $mapping_values,
                                           $mappings_factory) {
         $html     = '';
-        
-            $mappings = $mappings_factory->getMappings($tracker);
-            $non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
+        $mappings = $mappings_factory->getMappings($tracker);
+        $non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
 
-            
-            if (! $this->columns) {
-                $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
-            }
-            $html .= '<table><thead><tr valign="bottom">';
-            $html .= '<td></td>';
-            foreach ($this->columns as $column) {
-                $html .= '<td>';
-                $html .= '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
-                $html .= '</td>';
-            }
+
+        if (! $this->columns) {
+            $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
+        }
+        $html .= '<table><thead><tr valign="bottom">';
+        $html .= '<td></td>';
+        foreach ($this->columns as $column) {
             $html .= '<td>';
-            $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+            $html .= '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
             $html .= '</td>';
-            $html .= '<td>'. $this->translate('global', 'btn_delete') .'</td>';
-            $html .= '</tr></thead>';
-            $html .= '<tbody>';
-            $row_number = 0;
-            foreach ($mappings as $mapping) {
-                $html .= $this->listExistingMappings($row_number, $mapping, $mapping_values);
-                $row_number++;
-            }
+        }
+        $html .= '<td>';
+        $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+        $html .= '</td>';
+        $html .= '<td>'. $this->translate('global', 'btn_delete') .'</td>';
+        $html .= '</tr></thead>';
+        $html .= '<tbody>';
+        $row_number = 0;
+        foreach ($mappings as $mapping) {
+            $html .= $this->listExistingMappings($row_number, $mapping, $mapping_values);
+            $row_number++;
+        }
 
-            $column_count = count($this->columns);
-            if ($column_count && $non_mapped_trackers) {
-                $html .= $this->addCustomMapping($column_count, $non_mapped_trackers);
-            }
-            $html .= '</tbody></table>';
+        $column_count = count($this->columns);
+        if ($column_count && $non_mapped_trackers) {
+            $html .= $this->addCustomMapping($column_count, $non_mapped_trackers);
+        }
+        $html .= '</tbody></table>';
         
         return $html;
     }
