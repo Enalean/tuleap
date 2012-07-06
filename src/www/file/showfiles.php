@@ -83,10 +83,10 @@ if ($request->get('func') == 'delete_package') {
     $html .= '<div class="frs_confirm_delete_buttons">';
     $html .= '<a href="showfiles.php?group_id='.$group_id.'">'
              .$GLOBALS['HTML']->getImage('ic/cross.png')
-             .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'&nbsp;&nbsp;</a>';
+             .$GLOBALS['Language']->getText('file_admin_editreleases', 'details_delete_cancel').'&nbsp;&nbsp;</a>';
     $html .= '&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&group_id='.$group_id.'&id='.$package_id.'">'
             .$GLOBALS['HTML']->getImage('ic/check.png')
-            .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'</a>';
+            .$GLOBALS['Language']->getText('file_admin_editreleases', 'details_delete_confirm').'</a>';
     $html .= '</div>';
     $html .= '</div></p>';
     print $html;
@@ -103,10 +103,10 @@ if ($request->get('func') == 'delete_release') {
     $html .= '<div class="frs_confirm_delete_buttons">';
     $html .= '<a href="showfiles.php?group_id='.$group_id.'">'
              .$GLOBALS['HTML']->getImage('ic/cross.png')
-             .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_cancel').'&nbsp;&nbsp;</a>';
+             .$GLOBALS['Language']->getText('file_admin_editreleases', 'details_delete_cancel').'&nbsp;&nbsp;</a>';
     $html .= '&nbsp;&nbsp;&nbsp;<a href="admin/release.php?func=delete&group_id='.$group_id.'&package_id='.$package_id.'&id='.$release_id.'">'
             .$GLOBALS['HTML']->getImage('ic/check.png')
-            .$GLOBALS['Language']->getText('plugin_docman', 'details_delete_confirm').'</a>';
+            .$GLOBALS['Language']->getText('file_admin_editreleases', 'details_delete_confirm').'</a>';
     $html .= '</div>';
     $html .= '</div></p>';
     print $html;
