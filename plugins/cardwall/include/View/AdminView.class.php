@@ -202,17 +202,14 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollection implements Countable {
     private $mapping_values = array();
 
     public function add(Cardwall_OnTop_Config_MappimgFieldValue $mapping_value) {
-        $this->mapping_values[$mapping_value->getField()->getId()][$mapping_value->getColumn()][] = $mapping_value;
+        $this->mapping_values[$mapping_value->getField()->getId()][$mapping_value->getColumn()][$mapping_value->getValue()] = $mapping_value;
     }
 
     /**
      * @return array of Cardwall_OnTop_Config_MappimgFieldValue
      */
-    public function get(Tracker_FormElement_Field $field, $column) {
-        if (isset($this->mapping_values[$field->getId()][$column])) {
-            return $this->mapping_values[$field->getId()][$column];
-        }
-        return array();
+    public function has(Tracker_FormElement_Field $field, $value, $column) {
+        return isset($this->mapping_values[$field->getId()][$column][$value]);
     }
 
     /**
@@ -336,7 +333,8 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
                 if ($field_values) {
                     $html .= '<select name="" multiple="multiple" size="'. count($field_values) .'">';
                     foreach ($field_values as $value) {
-                        $html .= '<option vlaue="'. $value->getId() .'">'. $value->getLabel() .'</option>';
+                        $selected = $mapping_values->has($field, $value->getId(), $raw['id']) ? 'selected="selected"' : '';
+                        $html .= '<option vlaue="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
                     }
                     $html .= '</select>';
                 } else {

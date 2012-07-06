@@ -24,7 +24,7 @@ require_once dirname(__FILE__).'/../../../../tracker/tests/builders/aField.php';
 
 class Cardwall_OnTop_Config_MappimgFieldValueCollectionTest extends TuleapTestCase {
     
-    function itIndexMappingValuesByColumnAndField() {
+    function itReturnsTrusIfTheCollectionContainsAMapping() {
         $tracker = aTracker()->build();
         $field   = aSelectBoxField()->withId(42)->build();
         $mapping_value_1 = new Cardwall_OnTop_Config_MappimgFieldValue($tracker, $field, 101, 1);
@@ -35,9 +35,9 @@ class Cardwall_OnTop_Config_MappimgFieldValueCollectionTest extends TuleapTestCa
         $collection->add($mapping_value_2);
         $collection->add($mapping_value_3);
         
-        $this->assertEqual(array($mapping_value_1), $collection->get($field, 1));
-        $this->assertEqual(array($mapping_value_2, $mapping_value_3), $collection->get($field, 2));
-        $this->assertEqual(array(), $collection->get($field, 3));
+        $this->assertTrue($collection->has($field, 101, 1));
+        $this->assertTrue($collection->has($field, 102, 2));
+        $this->assertFalse($collection->has($field, 103, 3));
     }
 }
 ?>
