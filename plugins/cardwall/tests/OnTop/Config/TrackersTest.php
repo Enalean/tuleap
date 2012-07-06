@@ -161,39 +161,6 @@ class Cardwall_OnTop_Config_FieldMappingsFactory_getMappingsTest extends TuleapT
     }
     
 }
-
-class Cardwall_OnTop_Config_FieldMappingsFactory {
-    
-    /** @var TrackerFactory */
-    private $tracker_factory;
-    
-    /** @var Cardwall_OnTop_ColumnMappingFieldDao */
-    private $dao;
-    
-    /** @var Cardwall_OnTop_Config_FieldMappingFactory */
-    private $field_mapping_factory;
-    
-    public function __construct(TrackerFactory $tracker_factory, 
-                                Cardwall_OnTop_ColumnMappingFieldDao $dao,
-                                Cardwall_OnTop_Config_FieldMappingFactory $field_mappping_factory) {
-        $this->tracker_factory       = $tracker_factory;
-        $this->dao                   = $dao;
-        $this->field_mapping_factory = $field_mappping_factory;
-    }
-    
-    public function getMappings(Tracker $cardwall_tracker) {
-        $trackers = $this->tracker_factory->getTrackersByGroupId($cardwall_tracker->getGroupId());
-        $raw_mappings = $this->dao->searchMappingFields($cardwall_tracker->getId());
-        $mappings = array();
-        foreach ($raw_mappings as $raw_mapping) {
-            $tracker    = $trackers[$raw_mapping['tracker_id']];
-            $field_id   = $raw_mapping['field_id'];
-            $mappings[] = $this->field_mapping_factory->newMapping($tracker, $field_id);
-        }
-        
-        return $mappings; 
-    }
-}
 class Cardwall_OnTop_Config_FieldMappingFactory_newMappingTest extends TuleapTestCase {
         
     public function itReturnsAMappingWithFieldTrackerAndAvailableFields() {
@@ -220,36 +187,4 @@ class Cardwall_OnTop_Config_FieldMappingFactory_newMappingTest extends TuleapTes
     
 }
 
-    
-
-class Cardwall_OnTop_Config_TrackerFieldMapping {
-    public $tracker;
-    public $selected_field;
-    public $available_fields;
-    
-    public function __construct($tracker, $selected_field, $available_fields) {
-        $this->tracker          = $tracker;
-        $this->selected_field   = $selected_field;
-        $this->available_fields = $available_fields;
-        ;
-    }
-
-}
-
-class Cardwall_OnTop_Config_FieldMappingFactory {
-
-    /** @var Tracker_FormElementFactory */
-    private $factory;
-    
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
-    }
-
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
-    }
-
-}
 ?>

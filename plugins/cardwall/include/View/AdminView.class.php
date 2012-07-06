@@ -158,8 +158,10 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
                                            $mappings_dao,
                                            Cardwall_OnTop_Config_MappimgFieldValueCollection $mapping_values) {
         $html     = '';
+        
+        $mappings_factory = new Cardwall_OnTop_Config_FieldMappingsFactory($tracker_factory, $mappings_dao, new Cardwall_OnTop_Config_FieldMappingFactory($element_factory));
+        $mappings = $mappings_factory->getMappings($tracker);
         $project_trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
-        $o_trackers = new Cardwall_OnTop_Config_Trackers($project_trackers, $tracker, new Cardwall_OnTop_Config_MappimgFields(array()));
         $trackers = $tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $trackers = array_diff($trackers, array($tracker));
         $field    = $tracker->getStatusField();
@@ -185,14 +187,16 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
             $html .= '<td>'. $this->translate('global', 'btn_delete') .'</td>';
             $html .= '</tr></thead>';
             $html .= '<tbody>';
-            $mapping_fields = $mappings_dao->searchMappingFields($tracker->getId());
-            foreach ($mapping_fields as $row_number => $row) {
-                $mapping_tracker = $tracker_factory->getTrackerById($row['tracker_id']);
-                $used_sb_fields = $element_factory->getUsedSbFields($mapping_tracker);
+            $row_number = 0;
+            foreach ($mappings as $mapping) {
+                
+                $mapping_tracker = $mapping->tracker;
+                $used_sb_fields = $mapping->available_fields;
+                $field = $mapping->selected_field;
                 $trackers = array_diff($trackers, array($mapping_tracker));
-                $field = $element_factory->getFieldById($row['field_id']);
 
                 $html .= $this->listExistingMappings($row_number, $mapping_tracker, $used_sb_fields, $field, $columns_raws, $mapping_values);
+                $row_number++;
             }
             if (count($columns_raws) && count($trackers)) {
                 $html .= $this->addCustomMapping($columns_raws, $trackers);
@@ -260,4 +264,70 @@ class Cardwall_AdminColumnDefinitionView extends Abstract_View {
     }
 }
 
+
+
+class Cardwall_OnTop_Config_FieldMappingsFactory {
+    
+    /** @var TrackerFactory */
+    private $tracker_factory;
+    
+    /** @var Cardwall_OnTop_ColumnMappingFieldDao */
+    private $dao;
+    
+    /** @var Cardwall_OnTop_Config_FieldMappingFactory */
+    private $field_mapping_factory;
+    
+    public function __construct(TrackerFactory $tracker_factory, 
+                                Cardwall_OnTop_ColumnMappingFieldDao $dao,
+                                Cardwall_OnTop_Config_FieldMappingFactory $field_mappping_factory) {
+        $this->tracker_factory       = $tracker_factory;
+        $this->dao                   = $dao;
+        $this->field_mapping_factory = $field_mappping_factory;
+    }
+    
+    public function getMappings(Tracker $cardwall_tracker) {
+        $trackers = $this->tracker_factory->getTrackersByGroupId($cardwall_tracker->getGroupId());
+        $raw_mappings = $this->dao->searchMappingFields($cardwall_tracker->getId());
+        $mappings = array();
+        foreach ($raw_mappings as $raw_mapping) {
+            $tracker    = $trackers[$raw_mapping['tracker_id']];
+            $field_id   = $raw_mapping['field_id'];
+            $mappings[] = $this->field_mapping_factory->newMapping($tracker, $field_id);
+        }
+        
+        return $mappings; 
+    }
+}
+    
+
+class Cardwall_OnTop_Config_TrackerFieldMapping {
+    public $tracker;
+    public $selected_field;
+    public $available_fields;
+    
+    public function __construct($tracker, $selected_field, $available_fields) {
+        $this->tracker          = $tracker;
+        $this->selected_field   = $selected_field;
+        $this->available_fields = $available_fields;
+        ;
+    }
+
+}
+
+class Cardwall_OnTop_Config_FieldMappingFactory {
+
+    /** @var Tracker_FormElementFactory */
+    private $factory;
+    
+    function __construct(Tracker_FormElementFactory $factory) {
+        $this->factory = $factory;
+    }
+
+    public function newMapping(Tracker $tracker, $field_id) {
+        $selected_field = $this->factory->getFieldById($field_id);
+        $available_fields = $this->factory->getUsedSbFields($tracker);
+        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
+    }
+
+}
 ?>
