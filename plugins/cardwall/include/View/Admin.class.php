@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+require_once CARDWALL_BASE_DIR .'/View.class.php';
+require_once 'Admin/SemanticStatusColumnDefinition.class.php';
+require_once 'Admin/FreestyleColumnDefinition.class.php';
+require_once 'Admin/Form.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappingFieldValueCollectionFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingsFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingFactory.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/ColumnFactory.class.php';
+
+/**
+ * Display the admin of the Cardwall
+ */
+class Cardwall_View_Admin extends Cardwall_View {
+
+    public function displayAdminOnTop(
+        Tracker_IDisplayTrackerLayout $layout,
+        CSRFSynchronizerToken $token,
+        Cardwall_OnTop_Config $config
+    ) {
+
+        if  ($config->getTracker()->hasSemanticsStatus()) {
+            //TODO, shoul be constructed with semantic status values instead of columns
+            $column_definition_view = new Cardwall_View_Admin_SemanticStatusColumnDefinition($config);
+        } else {
+            $column_definition_view = new Cardwall_View_Admin_FreestyleColumnDefinition($config);
+        }
+
+        $checked    = $config->isEnabled() ? 'checked="checked"' : '';
+        $token_html = $token->fetchHTMLInput();
+        $formview   = new Cardwall_View_Admin_Form($column_definition_view);
+
+        $config->getTracker()->displayAdminItemHeader($layout, 'plugin_cardwall');
+        $formview->displayAdminForm($token_html, $checked, $config->getTracker()->getId());
+        $config->getTracker()->displayFooter($layout);
+    }
+}
+?>

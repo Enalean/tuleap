@@ -20,7 +20,7 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
-require_once 'View/AdminView.class.php';
+require_once 'View/Admin.class.php';
 
 /**
  * CardwallPlugin
@@ -165,16 +165,34 @@ class cardwallPlugin extends Plugin {
         $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                $admin_view = new Cardwall_AdminView();
-                $admin_view->displayAdminOnTop($tracker, 
-                                         $params['layout'], 
-                                         $tracker_factory, 
-                                         $element_factory, 
-                                         $token,
-                                         $this->getOnTopDao(),
-                                         $this->getOnTopColumnDao(),
-                                         $this->getOnTopColumnMappingFieldDao(),
-                                         $this->getOnTopColumnMappingFieldValueDao());
+                require_once 'OnTop/Config.class.php';
+                require_once 'OnTop/Config/ColumnFactory.class.php';
+                require_once 'OnTop/Config/TrackerMappingFactory.class.php';
+                require_once 'OnTop/Config/ValueMappingFactory.class.php';
+                
+                $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
+                
+                $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
+                    $column_factory, 
+                    $this->getOnTopColumnMappingFieldValueDao()
+                );
+                
+                $tracker_mapping_factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
+                    $tracker_factory,
+                    $element_factory,
+                    $this->getOnTopColumnMappingFieldDao(),
+                    $value_mapping_factory
+                );
+                
+                $config = new Cardwall_OnTop_Config(
+                    $tracker,
+                    $this->getOnTopDao(),
+                    $column_factory,
+                    $tracker_mapping_factory
+                );
+                
+                $admin_view = new Cardwall_View_Admin();
+                $admin_view->displayAdminOnTop($params['layout'], $token, $config);
                 $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':

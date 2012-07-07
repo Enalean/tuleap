@@ -25,21 +25,40 @@ require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
 
 class Cardwall_OnTop_Config_MappingFieldValueCollectionTest extends TuleapTestCase {
-    
-    function itReturnsTrusIfTheCollectionContainsAMapping() {
-        $tracker = aTracker()->build();
-        $field   = aSelectBoxField()->withId(42)->build();
-        $mapping_value_1 = new Cardwall_OnTop_Config_MappingFieldValue($tracker, $field, 101, 1);
-        $mapping_value_2 = new Cardwall_OnTop_Config_MappingFieldValue($tracker, $field, 102, 2);
-        $mapping_value_3 = new Cardwall_OnTop_Config_MappingFieldValue($tracker, $field, 103, 2);
-        $collection = new Cardwall_OnTop_Config_MappingFieldValueCollection();
-        $collection->add($mapping_value_1);
-        $collection->add($mapping_value_2);
-        $collection->add($mapping_value_3);
-        
-        $this->assertTrue($collection->has($field, 101, 1));
-        $this->assertTrue($collection->has($field, 102, 2));
-        $this->assertFalse($collection->has($field, 103, 3));
+
+    public function setUp() {
+        $this->tracker       = aTracker()->withId(66)->build();
+        $this->field         = aSelectBoxField()->withId(42)->build();
+        $this->story_tracker = aTracker()->withId(10)->build();
+        $this->bugs_tracker  = aTracker()->withId(11)->build();
+        $this->bugs_field    = aSelectBoxField()->withId(43)->build();
+
+        $this->mapping_value_1 = new Cardwall_OnTop_Config_MappingFieldValue($this->tracker, $this->field, 101, 1);
+        $this->mapping_value_2 = new Cardwall_OnTop_Config_MappingFieldValue($this->tracker, $this->field, 102, 2);
+        $this->mapping_value_3 = new Cardwall_OnTop_Config_MappingFieldValue($this->tracker, $this->field, 103, 2);
+        $this->mapping_value_4 = new Cardwall_OnTop_Config_MappingFieldValue($this->story_tracker, $this->bugs_field, 104, 3);
+
+        $this->collection = new Cardwall_OnTop_Config_MappingFieldValueCollection();
+        $this->collection->add($this->mapping_value_1);
+        $this->collection->add($this->mapping_value_2);
+        $this->collection->add($this->mapping_value_3);
+        $this->collection->add($this->mapping_value_4);
+    }
+
+    function itReturnsTrueIfTheCollectionContainsAMapping() {
+        $this->assertTrue($this->collection->has($this->tracker,$this->field, 101, 1));
+        $this->assertTrue($this->collection->has($this->tracker,$this->field, 102, 2));
+        $this->assertFalse($this->collection->has($this->tracker,$this->field, 103, 3));
+    }
+
+    function itReturnsTheMappingsOfATracker() {
+        $expected = array(
+            $this->mapping_value_1,
+            $this->mapping_value_2,
+            $this->mapping_value_3
+        );
+        $this->assertEqual($expected, $this->collection->getForTracker($this->tracker));
+        $this->assertFalse($this->collection->getForTracker($this->bugs_tracker));
     }
 }
 ?>

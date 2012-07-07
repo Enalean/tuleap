@@ -58,7 +58,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     public function execute(Codendi_Request $request) {
-        if (!is_array($request->get('mapping_field'))) continue;
+        if (!is_array($request->get('mapping_field'))) return;
         $mapping_fields = $this->getMappingFields();
         foreach ($request->get('mapping_field') as $mapping_tracker_id => $mapping_tracker_info) {
             if (!isset($mapping_tracker_info['field'])) continue;

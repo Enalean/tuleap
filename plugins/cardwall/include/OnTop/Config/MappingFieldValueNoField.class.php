@@ -18,22 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerFieldMapping.class.php';
+require_once 'MappingFieldValue.class.php';
 
-class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
+class Cardwall_OnTop_Config_MappingFieldValueNoField extends Cardwall_OnTop_Config_MappingFieldValue {
 
-    /** @var Tracker_FormElementFactory */
-    private $factory;
-
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
+    public function __construct(Tracker $tracker) {
+        $this->tracker = $tracker;
     }
 
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
+    /**
+     * @return int
+     */
+    public function getFieldId() {
     }
-
 }
 ?>

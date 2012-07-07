@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,22 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerFieldMapping.class.php';
+require_once 'ColumnDefinition.class.php';
 
-class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
+class Cardwall_View_Admin_SemanticStatusColumnDefinition extends Cardwall_View_Admin_ColumnDefinition {
 
-    /** @var Tracker_FormElementFactory */
-    private $factory;
+    public function fetchColumnDefinition() {
+        $field    = $this->config->getTracker()->getStatusField();
 
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
+        $html  = '';
+        $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
+        
+        $html .= '<p>'. 'TODO: Maybe you wanna choose your own set of columns?' .'</p>';
+        $html .= '<p>'. 'TODO: Or else we may have to disable the edition of the column labels' .'</p>';
+        $html .= $this->fetchMappings();
+        
+        return $html;
     }
-
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
-    }
-
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,22 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerFieldMapping.class.php';
+require_once 'ColumnDefinition.class.php';
 
-class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
+class Cardwall_View_Admin_FreestyleColumnDefinition extends Cardwall_View_Admin_ColumnDefinition {
 
-    /** @var Tracker_FormElementFactory */
-    private $factory;
+    public function fetchColumnDefinition() {
+        $html     = '';
+        //$non_mapped_trackers = $mappings_factory->getNonMappedTrackers($tracker);
 
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
+
+        if (! $this->config->getColumns()) {
+            $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
+        }
+        
+        $html .= $this->fetchMappings();
+        return $html;
     }
-
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
-    }
-
 }
 ?>

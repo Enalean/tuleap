@@ -20,29 +20,43 @@
 
 require_once 'MappingFieldValue.class.php';
 
-class Cardwall_OnTop_Config_MappingFieldValueCollection implements Countable {
+class Cardwall_OnTop_Config_MappingFieldValueCollection {
 
     /**
      * @var array
      */
     private $mapping_values = array();
 
+    /**
+     * @var array of Cardwall_OnTop_Config_MappingFieldValue
+     */
+    private $mapping_values_by_tracker = array();
+
     public function add(Cardwall_OnTop_Config_MappingFieldValue $mapping_value) {
-        $this->mapping_values[$mapping_value->getField()->getId()][$mapping_value->getColumn()][$mapping_value->getValue()] = $mapping_value;
+        $this->mapping_values
+            [$mapping_value->getTracker()->getId()]
+            [$mapping_value->getFieldId()]
+            [$mapping_value->getColumn()]
+            [$mapping_value->getValue()] = $mapping_value;
+
+        $this->mapping_values_by_tracker
+            [$mapping_value->getTracker()->getId()][] = $mapping_value;
     }
 
     /**
      * @return array of Cardwall_OnTop_Config_MappingFieldValue
      */
-    public function has(Tracker_FormElement_Field $field, $value, $column) {
-        return isset($this->mapping_values[$field->getId()][$column][$value]);
+    public function has(Tracker $tracker, Tracker_FormElement_Field $field, $value, $column) {
+        return isset($this->mapping_values[$tracker->getId()][$field->getId()][$column][$value]);
     }
 
     /**
-     * @return int
+     * @return array of Cardwall_OnTop_Config_MappingFieldValue or null
      */
-    public function count() {
-        return count($this->mapping_values);
+    public function getForTracker(Tracker $tracker) {
+        if (isset($this->mapping_values_by_tracker[$tracker->getId()])) {
+            return $this->mapping_values_by_tracker[$tracker->getId()];
+        }
     }
 }
 ?>

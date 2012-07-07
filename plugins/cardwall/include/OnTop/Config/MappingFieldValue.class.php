@@ -26,28 +26,28 @@ class Cardwall_OnTop_Config_MappingFieldValue {
     /**
      * @var Tracker
      */
-    private $current_tracker;
+    protected $tracker;
 
     /**
      * @var TrackerTracker_FormElement_Field
      */
-    private $field;
+    protected $field;
 
     /**
      * @var int
      */
-    private $value;
+    protected $value;
 
     /**
      * @var int
      */
-    private $column;
+    protected $column;
 
-    public function __construct(Tracker $current_tracker, Tracker_FormElement_Field $field, $value, $column) {
-        $this->current_tracker = $current_tracker;
-        $this->field           = $field;
-        $this->value           = $value;
-        $this->column          = $column;
+    public function __construct(Tracker $tracker, Tracker_FormElement_Field $field, $value, $column) {
+        $this->tracker = $tracker;
+        $this->field   = $field;
+        $this->value   = $value;
+        $this->column  = $column;
     }
 
     public function getValue() {
@@ -63,6 +63,20 @@ class Cardwall_OnTop_Config_MappingFieldValue {
      */
     public function getField() {
         return $this->field;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFieldId() {
+        return $this->field->getId();
+    }
+
+    /**
+     * @return Tracker_FormElement_Field
+     */
+    public function getTracker() {
+        return $this->tracker;
     }
 }
 ?>

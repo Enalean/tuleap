@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,22 +19,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerFieldMapping.class.php';
+abstract class Cardwall_View {
 
-class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
+    /**
+     * @var Codendi_HTMLPurifier
+     */
+    private $hp;
 
-    /** @var Tracker_FormElementFactory */
-    private $factory;
-
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
+    public function __construct() {
+        $this->hp = Codendi_HTMLPurifier::instance();
     }
 
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
+    /**
+     * @return string
+     */
+    protected function purify($value) {
+        return $this->hp->purify($value);
     }
 
+    /**
+     * @return string
+     */
+    protected function translate($page, $category, $args = "") {
+        return $GLOBALS['Language']->getText($page, $category, $args);
+    }
 }
 ?>

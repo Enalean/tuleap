@@ -29,6 +29,11 @@ class MockTrackerBuilder {
         return $this;
     }
     
+    public function withProjectId($id) {
+        stub($this->tracker)->getGroupId()->returns($id);
+        return $this;
+    }
+    
     public function withName($name) {
         stub($this->tracker)->getName()->returns($name);
         return $this;
@@ -36,6 +41,11 @@ class MockTrackerBuilder {
     
     public function withItemName($item_name) {
         stub($this->tracker)->getItemName()->returns($item_name);
+        return $this;
+    }
+    
+    public function withStatusField($field) {
+        stub($this->tracker)->getStatusField()->returns($field);
         return $this;
     }
     

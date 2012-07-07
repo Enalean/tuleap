@@ -30,7 +30,6 @@ class Cardwall_OnTop_Config_TrackerFieldMapping {
         $this->tracker          = $tracker;
         $this->selected_field   = $selected_field;
         $this->available_fields = $available_fields;
-        ;
     }
 
 }

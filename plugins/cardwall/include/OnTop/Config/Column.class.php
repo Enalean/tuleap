@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,22 +19,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerFieldMapping.class.php';
+class Cardwall_OnTop_Config_Column {
+    /**
+     * @var int
+     */
+    public $id;
 
-class Cardwall_OnTop_Config_TrackerFieldMappingFactory {
+    /**
+     * @var string
+     */
+    public $label;
 
-    /** @var Tracker_FormElementFactory */
-    private $factory;
-
-    function __construct(Tracker_FormElementFactory $factory) {
-        $this->factory = $factory;
+    /**
+     * @param int    $id
+     * @param string $label
+     */
+    public function __construct($id, $label) {
+        $this->id    = (int)$id;
+        $this->label = (string)$label;
     }
 
-    public function newMapping(Tracker $tracker, $field_id) {
-        $selected_field = $this->factory->getFieldById($field_id);
-        $available_fields = $this->factory->getUsedSbFields($tracker);
-        return new Cardwall_OnTop_Config_TrackerFieldMapping($tracker, $selected_field, $available_fields);
+    /**
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getLabel() {
+        return $this->label;
+    }
 }
 ?>

@@ -259,8 +259,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXML($root, $formsMapping) {
-        parent::exportToXML(&$root, $formsMapping);
+    public function exportToXML(&$root, $formsMapping) {
+        parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
             $root->addAttribute('field_id', $mapping);
         }
