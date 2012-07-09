@@ -86,9 +86,9 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
 
     public function itLoadStatusValues() {
         $columns = array(
-            new Cardwall_OnTop_Config_Column(1, 'Todo'),
-            new Cardwall_OnTop_Config_Column(2, 'In Progress'),
-            new Cardwall_OnTop_Config_Column(3, 'Done'),
+            new Cardwall_OnTop_Config_Column(1, 'Todo', 'white', 'black'),
+            new Cardwall_OnTop_Config_Column(2, 'In Progress', 'white', 'black'),
+            new Cardwall_OnTop_Config_Column(3, 'Done', 'white', 'black'),
         );
 
         $mappings = $this->factory->getStatusMappings($this->tracker_10, $columns);

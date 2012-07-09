@@ -47,6 +47,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->bind;
     }
     
+    /**
+     * @return array of Tracker_FormElement_Field_List_BindDecorator
+     */
+    public function getDecorators() {
+        return $this->getBind()->getDecorators();
+    }
+    
     public function setBind($bind) {
         $this->bind = $bind;
     }

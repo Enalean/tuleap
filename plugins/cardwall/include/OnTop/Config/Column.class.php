@@ -31,12 +31,26 @@ class Cardwall_OnTop_Config_Column {
     public $label;
 
     /**
+     * @var string
+     */
+    public $bgcolor;
+
+    /**
+     * @var string
+     */
+    public $fgcolor;
+
+    /**
      * @param int    $id
      * @param string $label
+     * @param string $bgcolor
+     * @param string $fgcolor
      */
-    public function __construct($id, $label) {
-        $this->id    = (int)$id;
-        $this->label = (string)$label;
+    public function __construct($id, $label, $bgcolor, $fgcolor) {
+        $this->id      = (int)$id;
+        $this->label   = (string)$label;
+        $this->bgcolor = $bgcolor;
+        $this->fgcolor = $fgcolor;
     }
 
     /**
@@ -51,6 +65,20 @@ class Cardwall_OnTop_Config_Column {
      */
     public function getLabel() {
         return $this->label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBgcolor() {
+        return $this->bgcolor;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFgcolor() {
+        return $this->fgcolor;
     }
 }
 ?>

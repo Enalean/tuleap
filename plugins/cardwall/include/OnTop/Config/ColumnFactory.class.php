@@ -24,6 +24,10 @@ require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
 
+    const DEFAULT_BGCOLOR = 'white';
+    const LIGHT_FGCOLOR   = 'white';
+    const DARK_FGCOLOR    = 'black';
+
     /**
      * @var Cardwall_OnTop_ColumnDao
      */
@@ -47,7 +51,8 @@ class Cardwall_OnTop_Config_ColumnFactory {
     private function getColumnsFromDao(Tracker $tracker) {
         $columns = array();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
-            $columns[] = new Cardwall_OnTop_Config_Column($row['id'], $row['label']);
+            list($bgcolor, $fgcolor) = $this->getColumnColorsFromRow($row);
+            $columns[] = new Cardwall_OnTop_Config_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
         }
         return $columns;
     }
@@ -59,11 +64,45 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $columns = array();
         $field   = $tracker->getStatusField();
         if ($field) {
+            $decorators = $field->getDecorators();
             foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
-                $columns[] = new Cardwall_OnTop_Config_Column($value->getId(), $value->getLabel());
+                list($bgcolor, $fgcolor) = $this->getColumnColorsFromListValue($value, $decorators);
+                $columns[] = new Cardwall_OnTop_Config_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
             }
         }
         return $columns;
+    }
+
+    private function getColumnColorsFromListValue($value, $decorators) {
+        $id      = (int)$value->getId();
+        $bgcolor = self::DEFAULT_BGCOLOR;
+        $fgcolor = self::DARK_FGCOLOR;
+        if (isset($decorators[$id])) {
+            $bgcolor = $decorators[$id]->css($bgcolor);
+            $fgcolor = $decorators[$id]->isDark() ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
+        }
+        return array($bgcolor, $fgcolor);
+    }
+
+    private function getColumnColorsFromRow($row) {
+        $bgcolor = self::DEFAULT_BGCOLOR;
+        $fgcolor = self::DARK_FGCOLOR;
+        $r = $row['bg_red'];
+        $g = $row['bg_green'];
+        $b = $row['bg_blue'];
+        if ($r !== null && $g !== null && $b !== null) {
+            $bgcolor = "rgb($r, $g, $b)";
+            $fgcolor = $this->isDark($r, $g, $b) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
+        }
+        return array($bgcolor, $fgcolor);
+    }
+
+    /**
+     * @todo: DRY (@see Decorator class)
+     * @return bool
+     */
+    public function isDark($r, $g, $b) {
+        return (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128;
     }
 }
 ?>

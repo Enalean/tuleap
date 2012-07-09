@@ -47,18 +47,28 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         stub($this->tracker)->getStatusField()->returns($this->status_field);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar(
             array(
-                'id'    => 1,
-                'label' => 'Todo',
+                'id'       => 1,
+                'label'    => 'Todo',
+                'bg_red'   => '123',
+                'bg_green' => '12',
+                'bg_blue'  => '10',
             ),
             array(
                 'id'    => 2,
                 'label' => 'On Going',
+                'bg_red'   => null,
+                'bg_green' => null,
+                'bg_blue'  => null,
             )
         ));
         $columns = $this->factory->getColumns($this->tracker);
 
         $this->assertEqual(2, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
+        $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());
+        $this->assertEqual("white", $columns[0]->getFgcolor());
+        $this->assertEqual("white", $columns[1]->getBgcolor());
+        $this->assertEqual("black", $columns[1]->getFgcolor());
     }
 
     public function itBuildColumnsFromTheStatusValuesIfNoCustomSettings() {
