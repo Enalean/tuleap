@@ -35,7 +35,7 @@ if ($request->isPost() && isset($_FILES['avatar']['tmp_name']) && ( ! $_FILES['a
     $filename = $_FILES['avatar']['tmp_name'];
     if ($size = getimagesize($filename)) {
         $user_id = (string)$user->getId();
-        $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/')
+        $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
         $path =  $avatar_path .DIRECTORY_SEPARATOR. 
             substr($user_id, -2, 1) .DIRECTORY_SEPARATOR. 
             substr($user_id, -1, 1) .DIRECTORY_SEPARATOR.
