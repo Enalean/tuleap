@@ -33,7 +33,8 @@ if (db_numrows($res_user) < 1) {
     
     if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
         if (db_result($res_user, 0, 'has_avatar')) {
-            $path = $GLOBALS['sys_avatar_path'] .DIRECTORY_SEPARATOR.
+            $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
+            $path = $avatar_path .DIRECTORY_SEPARATOR.
                     substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
                     DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
             if (is_file($path)) {
