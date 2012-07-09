@@ -51,8 +51,8 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         $html .= '</tr></thead>';
         $html .= '<tbody>';
         $row_number = 0;
-        foreach ($this->config->getTrackers() as $tracker) {
-            $html .= $this->listExistingMappings($row_number, $tracker);
+        foreach ($this->config->getMappings() as $mapping) {
+            $html .= $this->listExistingMappings($row_number, $mapping);
             $row_number++;
         }
 
@@ -65,11 +65,10 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         return $html;
     }
 
-    private function listExistingMappings($row_number, Tracker $mapping_tracker) {
-        $mappings = $this->config->getMappings();
-        $mapping = $mappings[$mapping_tracker->getId()];
+    private function listExistingMappings($row_number, $mapping) {
+        $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
-        $field = $mapping->getField();
+        $field          = $mapping->getField();
         $mapping_values = $mapping->getValueMappings();
 
         $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
@@ -94,6 +93,9 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
                     $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
                     foreach ($field_values as $value) {
                         $selected = '';
+                        // if ($mapping_values->isSelected($value, $column)) {
+                        //     $selected = 'selected="selected"';
+                        // }
                         if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
                             $selected = 'selected="selected"';
                         }
