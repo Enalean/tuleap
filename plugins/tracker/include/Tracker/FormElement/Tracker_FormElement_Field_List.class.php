@@ -599,6 +599,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
+     * @return Tracker_FormElement_Field_List_Value or null if not found
+     */
+    public function getListValueById($value_id) {
+        $values = $this->getVisibleValuesPlusNoneIfAny();
+        return isset($values[$value_id]) ? $values[$value_id] : null;
+    }
+
+    /**
      * 
      * @param Tracker_Artifact_Changeset $changeset
      * @return string

@@ -31,15 +31,15 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
 
         $this->dao      = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
         $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
-        $this->factory  = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $column_factory, $this->dao);
+        $this->factory  = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $this->dao);
 
         $this->field_123    = aMockField()->withId(123)->build();
         $this->field_124    = aMockField()->withId(124)->build();
         $this->status_field = aMockField()->withId(125)->build();
 
-        stub($this->field_124)->getValue(1001)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1001));
-        stub($this->field_124)->getValue(1002)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1002));
-        stub($this->status_field)->getValue(1000)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1000));
+        stub($this->field_124)->getListValueById(1001)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1001));
+        stub($this->field_124)->getListValueById(1002)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1002));
+        stub($this->status_field)->getListValueById(1000)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1000));
 
         stub($element_factory)->getFieldById(123)->returns($this->field_123);
         stub($element_factory)->getFieldById(124)->returns($this->field_124);

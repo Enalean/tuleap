@@ -77,7 +77,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
         $mappings = array();
         foreach ($this->dao->searchMappingFieldValues($tracker->getId()) as $row) {
             $field = $this->element_factory->getFieldById($row['field_id']);
-            $value = $field->getValue($row['value_id']);
+            $value = $field->getListValueById($row['value_id']);
             $mappings[$row['tracker_id']][$row['field_id']][$row['value_id']] = new Cardwall_OnTop_Config_ValueMapping(
                 $value,
                 $row['column_id']
