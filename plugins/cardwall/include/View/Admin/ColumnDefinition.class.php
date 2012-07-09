@@ -38,7 +38,7 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
 
     protected function fetchMappings() {
         $html  = '';
-        $html .= '<table><thead><tr valign="bottom">';
+        $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="bottom">';
         $html .= '<td></td>';
         foreach ($this->config->getColumns() as $column) {
             $html .= '<td>';
@@ -68,9 +68,10 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         $mapping_values = $mapping->getValueMappings();
 
         $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
-        $html .= '<td>';
+        $html .= '<td class="not-freestyle">';
         $html .= $this->purify($mapping_tracker->getName()) .'<br />';
-        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
+        $disabled = $field ? 'disabled="disabled"' : '';
+        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]" '. $disabled .'>';
         if (!$field) {
             $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
         }
