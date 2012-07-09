@@ -40,3 +40,4 @@ class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
         $this->assertEqual('whatever', $config->getMappings());
     }
 }
+?>
