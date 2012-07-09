@@ -30,16 +30,17 @@ if ($user->isAnonymous()) {
 } 
 $csrf = new CSRFSynchronizerToken('/account/change_avatar.php');
 
-if ($request->isPost() && isset($_FILES['avatar']['tmp_name']) && ( ! $_FILES['avatar']['error']) && Config::get('sys_enable_avatars')) {
+if ($request->isPost() && isset($_FILES['avatar']['tmp_name']) && ( ! $_FILES['avatar']['error']) && Config::get('sys_enable_avatars', true)) {
     $csrf->check();
     $filename = $_FILES['avatar']['tmp_name'];
     if ($size = getimagesize($filename)) {
         $user_id = (string)$user->getId();
-        $path = $GLOBALS['sys_avatar_path'] .DIRECTORY_SEPARATOR. 
-                               substr($user_id, -2, 1) .DIRECTORY_SEPARATOR. 
-                               substr($user_id, -1, 1) .DIRECTORY_SEPARATOR.
-                               $user_id .DIRECTORY_SEPARATOR.
-                               'avatar';
+        $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/')
+        $path =  $avatar_path .DIRECTORY_SEPARATOR. 
+            substr($user_id, -2, 1) .DIRECTORY_SEPARATOR. 
+            substr($user_id, -1, 1) .DIRECTORY_SEPARATOR.
+            $user_id .DIRECTORY_SEPARATOR.
+            'avatar';
         $avatar_witdh = 50;
         $avatar_height = 50;
         $thumbnail_width  = $size[0];
