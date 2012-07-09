@@ -602,8 +602,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return Tracker_FormElement_Field_List_Value or null if not found
      */
     public function getListValueById($value_id) {
-        $values = $this->getVisibleValuesPlusNoneIfAny();
-        return isset($values[$value_id]) ? $values[$value_id] : null;
+        foreach ($this->getVisibleValuesPlusNoneIfAny() as $value) {
+            if ($value->getId() == $value_id) {
+                return $value;
+            }
+        }
     }
 
     /**
