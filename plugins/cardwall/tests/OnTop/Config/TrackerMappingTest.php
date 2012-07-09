@@ -61,5 +61,4 @@ class Cardwall_OnTop_Config_TrackerMappingTest extends TuleapTestCase {
         $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column));
     }
 }
-
-
+?>
