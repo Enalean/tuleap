@@ -42,7 +42,7 @@ echo '<fieldset><legend>'. $Language->getText('account_options', 'title') .'</le
 
 <?php if (Config::get('sys_enable_avatars')) {
     echo $user->fetchHtmlAvatar();
-    echo '<a href="/account/change_avatar.php">[ change avatar ]</a>';
+    echo '<a href="/account/change_avatar.php">[ '. $GLOBALS['Language']->getText('account_change_avatar', 'link') .' ]</a>';
 }
 ?>
 

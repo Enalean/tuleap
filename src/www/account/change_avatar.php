@@ -22,72 +22,49 @@
 require_once('pre.php');
 require_once('account.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
+require_once('common/include/lib/Upload.class.php');
 
 $user_manager = UserManager::instance();
 $user = $user_manager->getCurrentUser();
 if ($user->isAnonymous()) {
     session_redirect("/account/");
-} 
+}
 $csrf = new CSRFSynchronizerToken('/account/change_avatar.php');
 
-if ($request->isPost() && isset($_FILES['avatar']['tmp_name']) && ( ! $_FILES['avatar']['error']) && Config::get('sys_enable_avatars', true)) {
-    $csrf->check();
-    $filename = $_FILES['avatar']['tmp_name'];
-    if ($size = getimagesize($filename)) {
-        $user_id = (string)$user->getId();
+if (isset($_FILES['avatar'])) {
+    $handle = new Upload($_FILES['avatar']);
+    $handle->image_resize           = true;
+    $handle->image_ratio_crop       = 'L';
+    $handle->image_y                = 50;
+    $handle->image_x                = 50;
+    $handle->image_background_color = '#FFFFFF';
+    $handle->image_convert          = 'png';
+    $handle->file_new_name_body     = 'avatar';
+    $handle->file_safe_name         = false;
+    $handle->file_force_extension   = false;
+    $handle->file_new_name_ext      = '';
+    $handle->allowed                = 'image/*';
+    $handle->file_overwrite         = true;
+
+    if ($handle->uploaded && Config::get('sys_enable_avatars', true)) {
+        $csrf->check();
+
+        $user_id     = (string)$user->getId();
         $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
-        $path =  $avatar_path .DIRECTORY_SEPARATOR. 
-            substr($user_id, -2, 1) .DIRECTORY_SEPARATOR. 
-            substr($user_id, -1, 1) .DIRECTORY_SEPARATOR.
-            $user_id .DIRECTORY_SEPARATOR.
-            'avatar';
-        $avatar_witdh = 50;
-        $avatar_height = 50;
-        $thumbnail_width  = $size[0];
-        $thumbnail_height = $size[1];
-        if ($thumbnail_width > $avatar_witdh || $thumbnail_height > $avatar_height) { 
-            if ($thumbnail_width / $avatar_witdh < $thumbnail_height / $avatar_height) {
-                //keep the height
-                $thumbnail_width  = $thumbnail_width * $avatar_height / $thumbnail_height;
-                $thumbnail_height = $avatar_height;
-            } else {
-                //keep the width
-                $thumbnail_height = $thumbnail_height * $avatar_witdh / $thumbnail_width;
-                $thumbnail_width  = $avatar_witdh;
-            }
-        }
-        $source = null;
-        switch ($size[2]) {
-            case IMAGETYPE_GIF:
-                $source      = imagecreatefromgif($filename);
-                //imagepalettecopy($destination, $source);
-                //$store       = 'imagegif';
-                break;
-            case IMAGETYPE_JPEG:
-                $source      = imagecreatefromjpeg($filename);
-                //$store       = 'imagejpeg';
-                break;
-            case IMAGETYPE_PNG:
-                $source      = imagecreatefrompng($filename);
-                //$store       = 'imagepng';
-                break;
-        }
-        if ($source) {
-            if ( ! is_file($path) ) {
-                mkdir(dirname($path), 0700, true);
-            }
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
-            imagepng($destination, $path);
-            imagedestroy($source);
-            imagedestroy($destination);
+        $path        =  "$avatar_path/". substr($user_id, -2, 1) .'/'. substr($user_id, -1, 1) ."/$user_id";
+        $handle->process($path);
+        if ($handle->processed) {
             $user->sethasAvatar();
             $user_manager->updateDb($user);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_change_avatar', 'success'));
+            $GLOBALS['Response']->redirect('/account/');
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $handle->error);
         }
     }
 }
 
-$title = $Language->getText('account_change_realname', 'title');
+$title = $Language->getText('account_change_avatar', 'title');
 $HTML->header(array('title' => $title));
 
 echo '<h2>'. $title .'</h2>';
