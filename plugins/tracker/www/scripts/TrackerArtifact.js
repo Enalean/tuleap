@@ -27,8 +27,8 @@ codendi.tracker = codendi.tracker || { };
 
 codendi.tracker.artifact = { };
 
-function invertFollowups(followup_section) {
-    var element  = followup_section.down('.tracker_artifact_followups').cleanWhitespace();
+function invertFollowups(followupSection) {
+    var element  = followupSection.down('.tracker_artifact_followups').cleanWhitespace();
     var elements = [];
     var len      = element.childNodes.length;
     for (var i = len - 1 ; i >= 0 ; --i) {
@@ -73,7 +73,14 @@ document.observe('dom:loaded', function () {
     
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
-        invertFollowups(followup_section);
+
+        new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
+            onSuccess: function (transport) {
+                if (!transport.responseText) {
+                    invertFollowups(followup_section);
+                }
+            }
+        });
         var div = new Element('div').setStyle({
                     textAlign: 'right'
                 }).insert(new Element('a', {
@@ -82,6 +89,7 @@ document.observe('dom:loaded', function () {
                 }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" />')
                 .observe('click', function (evt) {
                     invertFollowups(followup_section);
+                    new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php");
                     Event.stop(evt);
                     return false;
                 }));
