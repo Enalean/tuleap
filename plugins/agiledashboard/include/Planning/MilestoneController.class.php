@@ -144,7 +144,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     
     private function getArtifactCriteria($parameter_name) {
         $criteria = $this->getArrayFromRequest($parameter_name);
-        if(empty($criteria)) {
+        if(empty($criteria) && $this->milestone->getArtifact()) {
             $criteria = $this->getPreselectedCriteriaFromAncestors();
         }
         return $criteria;
@@ -152,12 +152,10 @@ class Planning_MilestoneController extends MVC2_Controller {
     
     private function getPreselectedCriteriaFromAncestors() {
         $preselected_criteria = array();
-        if ($this->milestone->getArtifact()) {
-            foreach($this->getMilestoneWithAncestors() as $milestone) {
-                //TODO remove condition: FIX should not be linked to itself
-                if ($this->milestone->getArtifactId() != $milestone->getArtifactId()) {
-                    $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
-                }
+        foreach($this->getMilestoneWithAncestors() as $milestone) {
+            //TODO remove condition: FIX should not be linked to itself
+            if ($this->milestone->getArtifactId() != $milestone->getArtifactId()) {
+                $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
             }
         }
         return $preselected_criteria;        
