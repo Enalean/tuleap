@@ -156,7 +156,7 @@ class cardwallPlugin extends Plugin {
     function tracker_event_process($params) {
         $tracker          = $params['tracker'];
         $tracker_id       = $tracker->getId();
-        if (! $tracker->userIsAdmin($params['user'])) {
+        if (strpos($params['func'], 'admin-cardwall') !== false && ! $tracker->userIsAdmin($params['user'])) {
             $this->denyAccess($tracker_id);
         }
         
