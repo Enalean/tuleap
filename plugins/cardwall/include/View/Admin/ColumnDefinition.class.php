@@ -52,20 +52,47 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         $html .= '<tbody>';
         $row_number = 0;
         foreach ($this->config->getMappings() as $mapping) {
-            $html .= $this->listExistingMappings($row_number, $mapping);
-            $row_number++;
+            $html .= $mapping->accept($this, $row_number++);
+            //$html .= $view->listExistingMappings($row_number, $mapping);
         }
 
-        //$column_count = count($columns);
-        //if ($column_count && $non_mapped_trackers) {
-        //    $html .= $this->addCustomMapping($column_count, $non_mapped_trackers);
-        //}
         $html .= '</tbody></table>';
 
         return $html;
     }
 
-    private function listExistingMappings($row_number, $mapping) {
+    public function visitTrackerMapping($mapping, $row_number) {
+        $mapping_tracker= $mapping->getTracker();
+        $used_sb_fields = $mapping->getAvailableFields();
+        $field          = $mapping->getField();
+        $mapping_values = $mapping->getValueMappings();
+
+        $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
+        $html .= '<td>';
+        $html .= $this->purify($mapping_tracker->getName()) .'<br />';
+        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
+        if (!$field) {
+            $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        }
+        foreach ($used_sb_fields as $sb_field) {
+            $selected = $field == $sb_field ? 'selected="selected"' : '';
+            $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $this->purify($sb_field->getLabel()) .'</option>';
+        }
+        $html .= '</select>';
+        $html .= '</td>';
+        foreach ($this->config->getColumns() as $column) {
+            $html .= '<td>';
+            $value = $mapping->getSelectedValueLabel($column);
+            $html .= '</td>';
+        }
+        $html .= '<td>';
+        $html .= '</td>';
+        $html .= '</tr>';
+        return $html;
+        return;
+    }
+
+    public function visitTrackerMappingFreestyle($mapping, $row_number) {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
         $field          = $mapping->getField();
@@ -109,22 +136,6 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
             $html .= '</td>';
         }
         $html .= '<td>';
-        $html .= '</td>';
-        $html .= '</tr>';
-        return $html;
-    }
-
-    private function addCustomMapping($column_count, $trackers) {
-        $colspan = $column_count + 2;
-        $html  = '<tr>';
-        $html .= '<td colspan="'. $colspan .'">';
-        $html .= '<p>Wanna add a custom mapping for one of your trackers? (If no custom mapping, then duck typing on value labels will be used)</p>';
-        $html .= '<select name="add_mapping_on">';
-        $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
-        foreach ($trackers as $new_tracker) {
-            $html .= '<option value="'. $new_tracker->getId() .'">'. $this->purify($new_tracker->getName()) .'</option>';
-        }
-        $html .= '</select>';
         $html .= '</td>';
         $html .= '</tr>';
         return $html;

@@ -173,7 +173,7 @@ class cardwallPlugin extends Plugin {
                 $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
                 
                 $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
-                    $column_factory, 
+                    $element_factory,
                     $this->getOnTopColumnMappingFieldValueDao()
                 );
                 

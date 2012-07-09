@@ -27,9 +27,9 @@ require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 class Cardwall_OnTop_Config_ValueMappingFactory {
 
     /**
-     * @var Cardwall_OnTop_Config_ColumnFactory
+     * @var Tracker_FormElementFactory
      */
-    private $column_factory;
+    private $element_factory;
 
     /**
      * @var Cardwall_OnTop_ColumnMappingFieldValueDao
@@ -37,10 +37,10 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
     private $dao;
 
     public function __construct(
-        Cardwall_OnTop_Config_ColumnFactory $column_factory, 
+        Tracker_FormElementFactory $element_factory,
         Cardwall_OnTop_ColumnMappingFieldValueDao $dao
     ) {
-        $this->column_factory  = $column_factory;
+        $this->element_factory = $element_factory;
         $this->dao             = $dao;
     }
 
@@ -49,12 +49,12 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
      */
     public function getStatusMappings(Tracker $mapping_tracker, array $columns) {
         $mappings = array();
-        $tracker_columns = $this->getTrackerColumnsIndexedByLabel($mapping_tracker);
+        $status_values = $this->getStatusValuesIndexedByLabel($mapping_tracker);
         foreach ($columns as $master_column) {
-            if (isset($tracker_columns[$master_column->getLabel()])) {
-                $col = $tracker_columns[$master_column->getLabel()];
+            if (isset($status_values[$master_column->getLabel()])) {
+                $col = $status_values[$master_column->getLabel()];
                 $mappings[$col->getId()] = new Cardwall_OnTop_Config_ValueMapping(
-                    $col->getId(), 
+                    $col,
                     $master_column->getId()
                 );
             }
@@ -76,21 +76,25 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
     private function getMappingFieldValuesIndexedByTracker(Tracker $tracker) {
         $mappings = array();
         foreach ($this->dao->searchMappingFieldValues($tracker->getId()) as $row) {
+            $field = $this->element_factory->getFieldById($row['field_id']);
+            $value = $field->getValue($row['value_id']);
             $mappings[$row['tracker_id']][$row['field_id']][$row['value_id']] = new Cardwall_OnTop_Config_ValueMapping(
-                $row['value_id'], 
+                $value,
                 $row['column_id']
             );
         }
         return $mappings;
     }
 
-    private function getTrackerColumnsIndexedByLabel(Tracker $mapping_tracker) {
-        $columns         = array();
-        $tracker_columns = $this->column_factory->getColumnsFromStatusField($mapping_tracker);
-        foreach ($tracker_columns as $col) {
-            $columns[$col->getLabel()] = $col;
+    private function getStatusValuesIndexedByLabel(Tracker $mapping_tracker) {
+        $values = array();
+        $field  = $mapping_tracker->getStatusField();
+        if ($field) {
+            foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
+                $values[$value->getLabel()] = $value;
+            }
         }
-        return $columns;
+        return $values;
     }
 }
 ?>

@@ -21,22 +21,26 @@
 class Cardwall_OnTop_Config_ValueMapping {
 
     /**
-     * @var int
+     * @var Tracker_FormElement_Field_List_Value
      */
-    private $value_id;
+    private $value;
 
     /**
      * @var int
      */
     private $column_id;
 
-    public function __construct($value_id, $column_id) {
-        $this->value_id  = $value_id;
+    public function __construct(Tracker_FormElement_Field_List_Value $value, $column_id) {
+        $this->value     = $value;
         $this->column_id = $column_id;
     }
 
     public function getValueId() {
-        return $this->value_id;
+        return $this->value->getId();
+    }
+
+    public function getValue() {
+        return $this->value;
     }
 
     public function getColumnId() {

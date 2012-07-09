@@ -27,13 +27,23 @@ require_once CARDWALL_BASE_DIR .'/OnTop/Config/ValueMappingFactory.class.php';
 class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
 
     public function setUp() {
+        $element_factory = mock('Tracker_FormElementFactory');
+
         $this->dao      = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
         $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
-        $this->factory  = new Cardwall_OnTop_Config_ValueMappingFactory($column_factory, $this->dao);
+        $this->factory  = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $column_factory, $this->dao);
 
         $this->field_123    = aMockField()->withId(123)->build();
         $this->field_124    = aMockField()->withId(124)->build();
         $this->status_field = aMockField()->withId(125)->build();
+
+        stub($this->field_124)->getValue(1001)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1001));
+        stub($this->field_124)->getValue(1002)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1002));
+        stub($this->status_field)->getValue(1000)->returns(stub('Tracker_FormElement_Field_List_Value')->getId()->returns(1000));
+
+        stub($element_factory)->getFieldById(123)->returns($this->field_123);
+        stub($element_factory)->getFieldById(124)->returns($this->field_124);
+        stub($element_factory)->getFieldById(125)->returns($this->status_field);
 
         $group_id           = 234;
         $this->tracker      = aMockTracker()->withId(3)->withProjectId($group_id)->build();
@@ -61,10 +71,10 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
             )
         ));
 
-        stub($column_factory)->getColumnsFromStatusField($this->tracker_10)->returns(array(
-            new Cardwall_OnTop_Config_Column(1001, 'Todo'),
-            new Cardwall_OnTop_Config_Column(1002, 'On Going'),
-            new Cardwall_OnTop_Config_Column(1003, 'Done'),
+        stub($this->status_field)->getVisibleValuesPlusNoneIfAny()->returns(array(
+            new Tracker_FormElement_Field_List_Bind_StaticValue(1001, 'Todo', '', 0, 0),
+            new Tracker_FormElement_Field_List_Bind_StaticValue(1002, 'On Going', '', 0, 0),
+            new Tracker_FormElement_Field_List_Bind_StaticValue(1003, 'Done', '', 0, 0),
         ));
     }
 
