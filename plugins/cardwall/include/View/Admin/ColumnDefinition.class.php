@@ -113,33 +113,36 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         $html .= '</select>';
         $html .= '</td>';
         foreach ($this->config->getColumns() as $column) {
-            $column_id = $column->id;
             $html .= '<td>';
-            if ($field) {
-                $field_values = $field->getVisibleValuesPlusNoneIfAny();
-                if ($field_values) {
-                    $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
-                    foreach ($field_values as $value) {
-                        $selected = '';
-                        // if ($mapping_values->isSelected($value, $column)) {
-                        //     $selected = 'selected="selected"';
-                        // }
-                        if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
-                            $selected = 'selected="selected"';
-                        }
-                        $html .= '<option value="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
-                    }
-                    $html .= '</select>';
-                } else {
-                    $html .= '<em>'. "There isn't any value" .'</em>';
-                }
-            }
+            $html .= $this->editValues($mapping_tracker, $column, $mapping_values, $field);
             $html .= '</td>';
         }
         $html .= '<td>';
         $html .= '</td>';
         $html .= '</tr>';
         return $html;
+    }
+
+    public function editValues($mapping_tracker, $column, $mapping_values, $field) {
+        $column_id = $column->id;
+        $field_values = $field->getVisibleValuesPlusNoneIfAny();
+        $html = '';
+        if ($field_values) {
+            $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
+            foreach ($field_values as $value) {
+                $selected = '';
+                if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
+                    $selected = 'selected="selected"';
+                }
+                $html .= '<option value="'. $value->getId() .'" '. $selected .'>'. $value->getLabel() .'</option>';
+            }
+            $html .= '</select>';
+        } else {
+            $html .= '<em>'. "There isn't any value" .'</em>';
+        }
+        
+        return $html;
+        
     }
 }
 ?>
