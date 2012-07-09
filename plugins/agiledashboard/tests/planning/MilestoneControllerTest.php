@@ -304,7 +304,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($milestone)->userCanView()->returns(true);
         stub($milestone)->getPlanning()->returns($this->planning);
         stub($milestone)->getProject()->returns(mock('Project'));
-
+        
         return $milestone;
     }
 
@@ -324,7 +324,9 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->withUri($this->request_uri)
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
-
+        $user = aUser()->build();
+        stub($this->milestone_factory)->getMilestoneWithAncestors($user, $milestone)->returns(array());
+        
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
 
@@ -337,7 +339,9 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->withUri($this->request_uri)
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
-
+        $user = aUser()->build();
+        stub($this->milestone_factory)->getMilestoneWithAncestors($user, $milestone)->returns(array());
+                
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
 
