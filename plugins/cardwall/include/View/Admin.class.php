@@ -23,10 +23,6 @@ require_once CARDWALL_BASE_DIR .'/View.class.php';
 require_once 'Admin/SemanticStatusColumnDefinition.class.php';
 require_once 'Admin/FreestyleColumnDefinition.class.php';
 require_once 'Admin/Form.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappingFieldValueCollectionFactory.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingsFactory.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerFieldMappingFactory.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/ColumnFactory.class.php';
 
 /**
  * Display the admin of the Cardwall

@@ -20,7 +20,6 @@
  */
 
 require_once CARDWALL_BASE_DIR .'/View.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappingFieldValueCollection.class.php';
 
 abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
 
