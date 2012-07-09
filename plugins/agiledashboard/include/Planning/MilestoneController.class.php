@@ -154,6 +154,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         $preselected_criteria = array();
         if ($this->milestone->getArtifact()) {
             foreach($this->getMilestoneWithAncestors() as $milestone) {
+                //TODO remove condition: FIX should not be linked to itself
                 if ($this->milestone->getArtifactId() != $milestone->getArtifactId()) {
                     $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
                 }
