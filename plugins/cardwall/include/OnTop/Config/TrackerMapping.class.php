@@ -67,12 +67,16 @@ class Cardwall_OnTop_Config_TrackerMapping {
         return $visitor->visitTrackerMapping($this, $row_number);
     }
 
-    public function getSelectedValueLabel($column) {
+    /**
+     * @return string
+     */
+    public function getSelectedValueLabel($column, $default = '') {
         foreach ($this->value_mappings as $mapping) {
             if ($mapping->getColumnId() == $column->getId()) {
                 return $mapping->getValue()->getLabel();
             }
         }
+        return $default;
     }
 }
 ?>

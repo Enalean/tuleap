@@ -83,7 +83,7 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         $html .= '</td>';
         foreach ($this->config->getColumns() as $column) {
             $html .= '<td>';
-            $value = $mapping->getSelectedValueLabel($column);
+            $html .= $mapping->getSelectedValueLabel($column, '<em>No matching for this column</em>');
             $html .= '</td>';
         }
         $html .= '<td>';
@@ -140,9 +140,9 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         } else {
             $html .= '<em>'. "There isn't any value" .'</em>';
         }
-        
+
         return $html;
-        
+
     }
 }
 ?>

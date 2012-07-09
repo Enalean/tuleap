@@ -57,8 +57,11 @@ class Cardwall_OnTop_Config_TrackerMappingTest extends TuleapTestCase {
             103 => $mapping_done,
         );
         $mapping = new Cardwall_OnTop_Config_TrackerMapping(mock('Tracker'), array(), $value_mappings);
-        $column = new Cardwall_OnTop_Config_Column(11, 'Ongoing');
-        $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column));
+        $column_which_match      = new Cardwall_OnTop_Config_Column(11, 'Ongoing');
+        $column_which_dont_match = new Cardwall_OnTop_Config_Column(13, 'Ship It');
+        $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column_which_match));
+        $this->assertEqual('', $mapping->getSelectedValueLabel($column_which_dont_match));
+        $this->assertEqual('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
     }
 }
 ?>
