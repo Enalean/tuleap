@@ -27,6 +27,18 @@ codendi.tracker = codendi.tracker || { };
 
 codendi.tracker.artifact = { };
 
+function invertFollowups(followup_section) {
+    var element  = followup_section.down('.tracker_artifact_followups').cleanWhitespace();
+    var elements = [];
+    var len      = element.childNodes.length;
+    for (var i = len - 1 ; i >= 0 ; --i) {
+        elements.push(Element.remove(element.childNodes[i]));
+    }
+    for (var j = 0 ; j < len ; ++j) {
+        element.appendChild(elements[j]);
+    }
+}
+
 document.observe('dom:loaded', function () {
     $$('.tracker_statistics').each(function (div) {
         codendi.Tooltips.push(
@@ -61,7 +73,7 @@ document.observe('dom:loaded', function () {
     
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
-        
+        invertFollowups(followup_section);
         var div = new Element('div').setStyle({
                     textAlign: 'right'
                 }).insert(new Element('a', {
@@ -69,15 +81,7 @@ document.observe('dom:loaded', function () {
                     title: 'invert order of follow-up comments'
                 }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" />')
                 .observe('click', function (evt) {
-                    var element = followup_section.down('.tracker_artifact_followups').cleanWhitespace();
-                    var elements = [];
-                    var len = element.childNodes.length;
-                    for (var i = len - 1 ; i >= 0 ; --i) {
-                        elements.push(Element.remove(element.childNodes[i]));
-                    }
-                    for (var j = 0 ; j < len ; ++j) {
-                        element.appendChild(elements[j]);
-                    }
+                    invertFollowups(followup_section);
                     Event.stop(evt);
                     return false;
                 }));
@@ -227,4 +231,3 @@ document.observe('dom:loaded', function () {
 });
 
 codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
-
