@@ -75,6 +75,9 @@ document.observe('dom:loaded', function () {
         //We only have one followup_section but I'm too lazy to do a if()
 
         new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
+            parameters: {
+                tracker_id: $('tracker_id').value
+            },
             onSuccess: function (transport) {
                 if (!transport.responseText) {
                     invertFollowups(followup_section);
@@ -89,7 +92,11 @@ document.observe('dom:loaded', function () {
                 }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" />')
                 .observe('click', function (evt) {
                     invertFollowups(followup_section);
-                    new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php");
+                    new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
+                        parameters: {
+                            tracker_id: $('tracker_id').value
+                        }
+                    });
                     Event.stop(evt);
                     return false;
                 }));
