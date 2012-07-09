@@ -20,7 +20,6 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
-require_once 'View/Admin.class.php';
 
 /**
  * CardwallPlugin
@@ -165,6 +164,7 @@ class cardwallPlugin extends Plugin {
         $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
+                require_once 'View/Admin.class.php';
                 require_once 'OnTop/Config.class.php';
                 require_once 'OnTop/Config/ColumnFactory.class.php';
                 require_once 'OnTop/Config/TrackerMappingFactory.class.php';
