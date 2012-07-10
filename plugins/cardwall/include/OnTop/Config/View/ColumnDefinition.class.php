@@ -92,12 +92,13 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html  = '';
         $html .= '<td>';
         $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
-        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
+        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]" disabled="disabled">';
         $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
         foreach ($used_sb_fields as $sb_field) {
             $html .= '<option value="'. (int)$sb_field->getId() .'">'. $this->purify($sb_field->getLabel()) .'</option>';
         }
         $html .= '</select>';
+        $html .= $this->fetchCustomizationSwitch($mapping_tracker);
         $html .= '</td>';
         foreach ($this->config->getColumns() as $column) {
             $html .= '<td>';
@@ -123,6 +124,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
             $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $this->purify($sb_field->getLabel()) .'</option>';
         }
         $html .= '</select>';
+        $html .= $this->fetchCustomizationSwitch($mapping_tracker);
         $html .= '</td>';
         foreach ($this->config->getColumns() as $column) {
             $html .= '<td>';
@@ -143,20 +145,29 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '<td>';
         $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
         $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
-        if (!$field) {
-            $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
-        }
+        $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
         foreach ($used_sb_fields as $sb_field) {
             $selected = $field == $sb_field ? 'selected="selected"' : '';
             $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $this->purify($sb_field->getLabel()) .'</option>';
         }
         $html .= '</select>';
+        $html .= $this->fetchCustomizationSwitch($mapping_tracker, true);
         $html .= '</td>';
         foreach ($this->config->getColumns() as $column) {
             $html .= '<td>';
             $html .= $this->editValues($mapping_tracker, $column, $mapping_values, $field);
             $html .= '</td>';
         }
+        return $html;
+    }
+
+    private function fetchCustomizationSwitch(Tracker $mapping_tracker, $customized=false) {
+        $html     = '';
+        $selected = '';
+        if ($customized) {
+            $selected = 'checked="checked"';
+        }
+        $html .= '<p><label><input type="checkbox" name="custom_mapping[]" '.$selected.' value="'.(int)$mapping_tracker->getId().'"> Custom mapping</label></p>';
         return $html;
     }
 
