@@ -85,7 +85,7 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
     }
 
     public function itLoadStatusValues() {
-        $columns = new Cardwall_OnTop_Config_ColumnCollection(
+        $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
             array(
                 new Cardwall_OnTop_Config_Column(1, 'Todo', 'white', 'black'),
                 new Cardwall_OnTop_Config_Column(2, 'In Progress', 'white', 'black'),

@@ -21,7 +21,7 @@
 /**
  * Wrapper of array of columns
  */
-class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable {
+abstract class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable {
 
     /**
      * @var array
@@ -31,6 +31,11 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     public function __construct(array $columns = array()) {
         $this->columns = $columns;
     }
+
+    /**
+     * @pattern Visitor
+     */
+    public abstract function accept($visitor, $parameter = '');
 
     /**
      * @see ArrayAccess

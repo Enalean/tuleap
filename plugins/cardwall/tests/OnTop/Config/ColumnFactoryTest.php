@@ -63,7 +63,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         ));
         $columns = $this->factory->getColumns($this->tracker);
 
-        $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnCollection');
+        $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(2, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
         $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());
@@ -77,6 +77,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
         $columns = $this->factory->getColumns($this->tracker);
 
+        $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnStatusCollection');
         $this->assertEqual(3, count($columns));
         $this->assertEqual("Verified", $columns[1]->getLabel());
     }

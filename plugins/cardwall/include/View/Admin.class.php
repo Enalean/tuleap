@@ -35,12 +35,7 @@ class Cardwall_View_Admin extends Cardwall_View {
         Cardwall_OnTop_Config $config
     ) {
 
-        if  ($config->getTracker()->hasSemanticsStatus()) {
-            //TODO, shoul be constructed with semantic status values instead of columns
-            $column_definition_view = new Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition($config);
-        } else {
-            $column_definition_view = new Cardwall_OnTop_Config_View_FreestyleColumnDefinition($config);
-        }
+        $column_definition_view = $config->getColumns()->accept($this, $config);
 
         $checked    = $config->isEnabled() ? 'checked="checked"' : '';
         $token_html = $token->fetchHTMLInput();
@@ -49,6 +44,14 @@ class Cardwall_View_Admin extends Cardwall_View {
         $config->getTracker()->displayAdminItemHeader($layout, 'plugin_cardwall');
         $formview->displayAdminForm($token_html, $checked, $config->getTracker()->getId());
         $config->getTracker()->displayFooter($layout);
+    }
+
+    public function visitColumnStatusCollection($collection, $config) {
+        return new Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition($config);
+    }
+
+    public function visitColumnFreestyleCollection($collection, $config) {
+        return new Cardwall_OnTop_Config_View_FreestyleColumnDefinition($config);
     }
 }
 ?>

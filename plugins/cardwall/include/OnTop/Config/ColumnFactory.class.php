@@ -20,7 +20,8 @@
  */
 
 require_once 'Column.class.php';
-require_once 'ColumnCollection.class.php';
+require_once 'ColumnStatusCollection.class.php';
+require_once 'ColumnFreestyleCollection.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
@@ -50,7 +51,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
      * @return array of Cardwall_OnTop_Config_Column
      */
     private function getColumnsFromDao(Tracker $tracker) {
-        $columns = new Cardwall_OnTop_Config_ColumnCollection();
+        $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
             list($bgcolor, $fgcolor) = $this->getColumnColorsFromRow($row);
             $columns[] = new Cardwall_OnTop_Config_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
@@ -62,7 +63,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
      * @return array of Cardwall_OnTop_Config_Column
      */
     public function getColumnsFromStatusField(Tracker $tracker) {
-        $columns = new Cardwall_OnTop_Config_ColumnCollection();
+        $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
         $field   = $tracker->getStatusField();
         if ($field) {
             $decorators = $field->getDecorators();

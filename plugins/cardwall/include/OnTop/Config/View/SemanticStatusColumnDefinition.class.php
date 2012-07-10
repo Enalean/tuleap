@@ -30,7 +30,6 @@ class Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition extends Cardwall
         $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
 
         $html .= '<p>'. 'TODO: Maybe you wanna choose your own set of columns?' .'</p>';
-        $html .= '<p>'. 'TODO: Or else we may have to disable the edition of the column labels' .'</p>';
 
         return $html;
     }
