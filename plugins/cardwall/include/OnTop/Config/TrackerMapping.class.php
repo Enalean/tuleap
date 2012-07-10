@@ -63,8 +63,8 @@ class Cardwall_OnTop_Config_TrackerMapping {
         return $this->available_fields;
     }
 
-    public function accept($visitor, $row_number) {
-        return $visitor->visitTrackerMapping($this, $row_number);
+    public function accept($visitor) {
+        return $visitor->visitTrackerMapping($this);
     }
 
     /**

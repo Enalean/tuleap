@@ -24,9 +24,13 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject {
     public function searchMappingFields($cardwall_tracker_id) {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $sql = "SELECT t1.id AS tracker_id, m.field_id AS field_id
-                FROM 
+                FROM
                     tracker AS t1
-                    INNER JOIN tracker AS t2 ON (t2.group_id = t1.group_id AND t2.id = $cardwall_tracker_id)
+                    INNER JOIN tracker AS t2 ON (
+                        t2.group_id = t1.group_id
+                        AND t2.id = $cardwall_tracker_id
+                        AND t1.deletion_date IS NULL
+                    )
                     LEFT JOIN plugin_cardwall_on_top_column_mapping_field AS m
                            ON (t1.id = m.tracker_id AND m.cardwall_tracker_id = $cardwall_tracker_id)";
         return $this->retrieve($sql);

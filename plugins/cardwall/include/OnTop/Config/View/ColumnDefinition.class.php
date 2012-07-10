@@ -74,22 +74,26 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '<tbody>';
         $row_number = 0;
         foreach ($this->config->getMappings() as $mapping) {
-            $html .= $mapping->accept($this, $row_number++);
+            $html .= '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
+            $html .= $mapping->accept($this);
+            $html .= '<td>';
+            $html .= '</td>';
+            $html .= '</tr>';
         }
         $html .= '</tbody></table>';
 
         return $html;
     }
 
-    public function visitTrackerMapping($mapping, $row_number) {
+    public function visitTrackerMapping($mapping) {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
         $field          = $mapping->getField();
         $mapping_values = $mapping->getValueMappings();
 
-        $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
+        $html  = '';
         $html .= '<td class="not-freestyle">';
-        $html .= $this->purify($mapping_tracker->getName()) .'<br />';
+        $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
         $disabled = $field ? 'disabled="disabled"' : '';
         $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]" '. $disabled .'>';
         if (!$field) {
@@ -106,22 +110,19 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
             $html .= $mapping->getSelectedValueLabel($column, '<em>No matching for this column</em>');
             $html .= '</td>';
         }
-        $html .= '<td>';
-        $html .= '</td>';
-        $html .= '</tr>';
         return $html;
         return;
     }
 
-    public function visitTrackerMappingFreestyle($mapping, $row_number) {
+    public function visitTrackerMappingFreestyle($mapping) {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
         $field          = $mapping->getField();
         $mapping_values = $mapping->getValueMappings();
 
-        $html  = '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
+        $html  = '';
         $html .= '<td>';
-        $html .= $this->purify($mapping_tracker->getName()) .'<br />';
+        $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
         $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
         if (!$field) {
             $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
@@ -137,9 +138,6 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
             $html .= $this->editValues($mapping_tracker, $column, $mapping_values, $field);
             $html .= '</td>';
         }
-        $html .= '<td>';
-        $html .= '</td>';
-        $html .= '</tr>';
         return $html;
     }
 

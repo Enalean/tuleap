@@ -26,8 +26,8 @@ class Cardwall_OnTop_Config_TrackerMappingFreestyle extends Cardwall_OnTop_Confi
         parent::__construct($tracker, $available_fields, $value_mappings, $field);
     }
 
-    public function accept($visitor, $row_number) {
-        return $visitor->visitTrackerMappingFreestyle($this, $row_number);
+    public function accept($visitor) {
+        return $visitor->visitTrackerMappingFreestyle($this);
     }
 }
 ?>
