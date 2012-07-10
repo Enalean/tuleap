@@ -96,9 +96,6 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
         $disabled = $field ? 'disabled="disabled"' : '';
         $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]" '. $disabled .'>';
-        if (!$field) {
-            $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
-        }
         foreach ($used_sb_fields as $sb_field) {
             $selected = $field == $sb_field ? 'selected="selected"' : '';
             $html .= '<option value="'. (int)$sb_field->getId() .'" '. $selected .'>'. $this->purify($sb_field->getLabel()) .'</option>';
