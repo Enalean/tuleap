@@ -74,7 +74,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '<tbody>';
         $row_number = 0;
         foreach ($this->config->getMappings() as $mapping) {
-            $html .= '<tr class="'. html_get_alt_row_color($row_number + 1) .'" valign="top">';
+            $html .= '<tr class="'. html_get_alt_row_color(++$row_number) .'" valign="top">';
             $html .= $mapping->accept($this);
             $html .= '<td>';
             $html .= '</td>';
