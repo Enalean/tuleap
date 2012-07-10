@@ -42,11 +42,23 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
      */
     private $tracker_factory;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao, TrackerFactory $tracker_factory) {
+    /**
+     * @var Array of Cardwall_OnTop_Config_TrackerMapping
+     */
+    private $existing_mappings;
+
+    public function __construct(
+        Tracker $tracker,
+        Cardwall_OnTop_ColumnMappingFieldDao $dao,
+        Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao,
+        TrackerFactory $tracker_factory,
+        array $existing_mappings
+    ) {
         parent::__construct($tracker);
-        $this->dao             = $dao;
-        $this->value_dao       = $value_dao;
-        $this->tracker_factory = $tracker_factory;
+        $this->dao               = $dao;
+        $this->value_dao         = $value_dao;
+        $this->tracker_factory   = $tracker_factory;
+        $this->existing_mappings = $existing_mappings;
     }
 
     /**
@@ -56,7 +68,7 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
         if (is_array($request->get('custom_mapping'))) {
             foreach ($request->get('custom_mapping') as $mapping_tracker_id => $is_custom) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
-                if (!$is_custom && $mapping_tracker && $this->dao->delete($this->tracker->getId(), $mapping_tracker_id) && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker_id)) {
+                if (!$is_custom && $mapping_tracker && isset($this->existing_mappings[$mapping_tracker_id]) && $this->existing_mappings[$mapping_tracker_id] instanceof Cardwall_OnTop_Config_TrackerMappingFreestyle && $this->dao->delete($this->tracker->getId(), $mapping_tracker_id) && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker_id)) {
                     $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' removed');
                 }
             }

@@ -158,50 +158,54 @@ class cardwallPlugin extends Plugin {
         if (strpos($params['func'], 'admin-cardwall') !== false && ! $tracker->userIsAdmin($params['user'])) {
             $this->denyAccess($tracker_id);
         }
-        
+
         $tracker_factory  = TrackerFactory::instance();
         $element_factory  = Tracker_FormElementFactory::instance();
         $token            = $this->getCSRFToken($tracker_id);
+        $config           = $this->getOnTopConfig($tracker, $tracker_factory, $element_factory);
         switch ($params['func']) {
             case 'admin-cardwall':
                 require_once 'View/Admin.class.php';
-                require_once 'OnTop/Config.class.php';
-                require_once 'OnTop/Config/ColumnFactory.class.php';
-                require_once 'OnTop/Config/TrackerMappingFactory.class.php';
-                require_once 'OnTop/Config/ValueMappingFactory.class.php';
-                
-                $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
-                
-                $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
-                    $element_factory,
-                    $this->getOnTopColumnMappingFieldValueDao()
-                );
-                
-                $tracker_mapping_factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
-                    $tracker_factory,
-                    $element_factory,
-                    $this->getOnTopColumnMappingFieldDao(),
-                    $value_mapping_factory
-                );
-                
-                $config = new Cardwall_OnTop_Config(
-                    $tracker,
-                    $this->getOnTopDao(),
-                    $column_factory,
-                    $tracker_mapping_factory
-                );
-                
+
                 $admin_view = new Cardwall_View_Admin();
                 $admin_view->displayAdminOnTop($params['layout'], $token, $config);
                 $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
                 $token->check();
-                $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory)
+                $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory, $config)
                         ->process($params['request']);
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
                 break;
         }
+    }
+
+    private function getOnTopConfig(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+        require_once 'OnTop/Config.class.php';
+        require_once 'OnTop/Config/ColumnFactory.class.php';
+        require_once 'OnTop/Config/TrackerMappingFactory.class.php';
+        require_once 'OnTop/Config/ValueMappingFactory.class.php';
+        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
+
+        $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
+            $element_factory,
+            $this->getOnTopColumnMappingFieldValueDao()
+        );
+
+        $tracker_mapping_factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
+            $tracker_factory,
+            $element_factory,
+            $this->getOnTopColumnMappingFieldDao(),
+            $value_mapping_factory
+        );
+
+        $config = new Cardwall_OnTop_Config(
+            $tracker,
+            $this->getOnTopDao(),
+            $column_factory,
+            $tracker_mapping_factory
+        );
+        return $config;
     }
 
     private function denyAccess($tracker_id) {
@@ -212,7 +216,7 @@ class cardwallPlugin extends Plugin {
     /**
      * @return Cardwall_OnTop_Config_Updater
      */
-    private function getOnTopConfigUpdater(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+    private function getOnTopConfigUpdater(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory, Cardwall_OnTop_Config $config) {
         $dao              = $this->getOnTopDao();
         $column_dao       = $this->getOnTopColumnDao();
         $mappingfield_dao = $this->getOnTopColumnMappingFieldDao();
@@ -232,7 +236,7 @@ class cardwallPlugin extends Plugin {
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateMappingField($tracker, $mappingfield_dao, $tracker_factory));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory, $element_factory));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory));
+        $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory, $config->getMappings()));
         return $updater;
     }
     /**
