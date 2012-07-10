@@ -23,16 +23,27 @@ require_once 'ColumnDefinition.class.php';
 
 class Cardwall_View_Admin_SemanticStatusColumnDefinition extends Cardwall_View_Admin_ColumnDefinition {
 
-    public function fetchColumnDefinition() {
+    protected function fetchSpeech() {
         $field    = $this->config->getTracker()->getStatusField();
 
         $html  = '';
         $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
-        
+
         $html .= '<p>'. 'TODO: Maybe you wanna choose your own set of columns?' .'</p>';
         $html .= '<p>'. 'TODO: Or else we may have to disable the edition of the column labels' .'</p>';
-        $html .= $this->fetchMappings();
-        
+
+        return $html;
+    }
+
+    protected function fetchColumnsHeader(array $columns) {
+        $html = '';
+        foreach ($columns as $column) {
+            $html .= '<th style="">';
+            $html .= $this->purify($column->label);
+            $html .= '</th>';
+        }
+        $html .= '<td>';
+        $html .= '</td>';
         return $html;
     }
 }

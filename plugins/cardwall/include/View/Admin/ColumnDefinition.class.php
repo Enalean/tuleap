@@ -33,26 +33,36 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         $this->config = $config;
     }
 
-    public abstract function fetchColumnDefinition();
+    /**
+     * @return string
+     */
+    public function fetchColumnDefinition() {
+        $html  = '';
+        $html .= $this->fetchSpeech();
+        $html .= $this->fetchMappings();
+        return $html;
+    }
 
-    protected function fetchMappings() {
+    /**
+     * @return string
+     */
+    protected abstract function fetchSpeech();
+
+    /**
+     * @return array
+     */
+    protected abstract function fetchColumnsHeader(array $columns);
+
+    private function fetchMappings() {
         $html  = '';
         $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="bottom">';
         $html .= '<td></td>';
-        foreach ($this->config->getColumns() as $column) {
-            $html .= '<td>';
-            $html .= '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
-            $html .= '</td>';
-        }
-        $html .= '<td>';
-        $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
-        $html .= '</td>';
+        $html .= $this->fetchColumnsHeader($this->config->getColumns());
         $html .= '</tr></thead>';
         $html .= '<tbody>';
         $row_number = 0;
         foreach ($this->config->getMappings() as $mapping) {
             $html .= $mapping->accept($this, $row_number++);
-            //$html .= $view->listExistingMappings($row_number, $mapping);
         }
 
         $html .= '</tbody></table>';
@@ -122,7 +132,7 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
         return $html;
     }
 
-    public function editValues($mapping_tracker, $column, $mapping_values, $field) {
+    private function editValues($mapping_tracker, $column, $mapping_values, $field) {
         $column_id = $column->id;
         $field_values = $field->getVisibleValuesPlusNoneIfAny();
         $html = '';
