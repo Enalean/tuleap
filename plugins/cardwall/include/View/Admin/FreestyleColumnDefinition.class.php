@@ -28,21 +28,15 @@ class Cardwall_View_Admin_FreestyleColumnDefinition extends Cardwall_View_Admin_
         if (! $this->config->getColumns()) {
             $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
         }
-
         return $html;
     }
 
-    protected function fetchColumnsHeader(array $columns) {
-        $html = '';
-        foreach ($columns as $column) {
-            $html .= '<td>';
-            $html .= '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
-            $html .= '</td>';
-        }
-        $html .= '<td>';
-        $html .= '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
-        $html .= '</td>';
-        return $html;
+    protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
+        return '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
+    }
+
+    protected function fetchAdditionalColumnHeader() {
+        return '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
     }
 }
 ?>

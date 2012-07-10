@@ -49,22 +49,33 @@ abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
     protected abstract function fetchSpeech();
 
     /**
-     * @return array
+     * @return string
      */
-    protected abstract function fetchColumnsHeader(array $columns);
+    protected abstract function fetchColumnHeader(Cardwall_OnTop_Config_Column $column);
+
+    /**
+     * @return string
+     */
+    protected abstract function fetchAdditionalColumnHeader();
 
     private function fetchMappings() {
         $html  = '';
         $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="bottom">';
         $html .= '<td></td>';
-        $html .= $this->fetchColumnsHeader($this->config->getColumns());
+        foreach ($this->config->getColumns() as $column) {
+            $html .= '<th style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';">';
+            $html .= $this->fetchColumnHeader($column);
+            $html .= '</th>';
+        }
+        $html .= '<td>';
+        $html .= $this->fetchAdditionalColumnHeader();
+        $html .= '</td>';
         $html .= '</tr></thead>';
         $html .= '<tbody>';
         $row_number = 0;
         foreach ($this->config->getMappings() as $mapping) {
             $html .= $mapping->accept($this, $row_number++);
         }
-
         $html .= '</tbody></table>';
 
         return $html;

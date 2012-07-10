@@ -35,16 +35,12 @@ class Cardwall_View_Admin_SemanticStatusColumnDefinition extends Cardwall_View_A
         return $html;
     }
 
-    protected function fetchColumnsHeader(array $columns) {
-        $html = '';
-        foreach ($columns as $column) {
-            $html .= '<th style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';">';
-            $html .= $this->purify($column->label);
-            $html .= '</th>';
-        }
-        $html .= '<td>';
-        $html .= '</td>';
-        return $html;
+    protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
+        return $this->purify($column->label);
+    }
+
+    protected function fetchAdditionalColumnHeader() {
+        return '';
     }
 }
 ?>
