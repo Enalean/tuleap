@@ -21,7 +21,7 @@
 
 require_once CARDWALL_BASE_DIR .'/View.class.php';
 
-abstract class Cardwall_View_Admin_ColumnDefinition extends Cardwall_View {
+abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View {
 
     /**
      * @var array of Cardwall_OnTop_Config

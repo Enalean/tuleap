@@ -21,22 +21,26 @@
 
 require_once 'ColumnDefinition.class.php';
 
-class Cardwall_View_Admin_FreestyleColumnDefinition extends Cardwall_View_Admin_ColumnDefinition {
+class Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition extends Cardwall_OnTop_Config_View_ColumnDefinition {
 
     protected function fetchSpeech() {
-        $html = '';
-        if (! $this->config->getColumns()) {
-            $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
-        }
+        $field    = $this->config->getTracker()->getStatusField();
+
+        $html  = '';
+        $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
+
+        $html .= '<p>'. 'TODO: Maybe you wanna choose your own set of columns?' .'</p>';
+        $html .= '<p>'. 'TODO: Or else we may have to disable the edition of the column labels' .'</p>';
+
         return $html;
     }
 
     protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
-        return '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
+        return $this->purify($column->label);
     }
 
     protected function fetchAdditionalColumnHeader() {
-        return '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+        return '';
     }
 }
 ?>

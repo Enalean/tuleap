@@ -26,7 +26,7 @@ class Cardwall_View_Admin_Form extends Cardwall_View {
     /** @var Cardwall_View_Admin_ColumnDefinition */
     private $subview;
     
-    public function __construct(Cardwall_View_Admin_ColumnDefinition $column_definition_view) {
+    public function __construct(Cardwall_OnTop_Config_View_ColumnDefinition $column_definition_view) {
         parent::__construct();
         $this->subview = $column_definition_view;
     }

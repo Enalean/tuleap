@@ -20,8 +20,8 @@
  */
 
 require_once CARDWALL_BASE_DIR .'/View.class.php';
-require_once 'Admin/SemanticStatusColumnDefinition.class.php';
-require_once 'Admin/FreestyleColumnDefinition.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/View/SemanticStatusColumnDefinition.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/View/FreestyleColumnDefinition.class.php';
 require_once 'Admin/Form.class.php';
 
 /**
@@ -37,9 +37,9 @@ class Cardwall_View_Admin extends Cardwall_View {
 
         if  ($config->getTracker()->hasSemanticsStatus()) {
             //TODO, shoul be constructed with semantic status values instead of columns
-            $column_definition_view = new Cardwall_View_Admin_SemanticStatusColumnDefinition($config);
+            $column_definition_view = new Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition($config);
         } else {
-            $column_definition_view = new Cardwall_View_Admin_FreestyleColumnDefinition($config);
+            $column_definition_view = new Cardwall_OnTop_Config_View_FreestyleColumnDefinition($config);
         }
 
         $checked    = $config->isEnabled() ? 'checked="checked"' : '';
