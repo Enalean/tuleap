@@ -94,7 +94,12 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
             if ($mapping_field) {
                 $mapping = $this->instantiateFreestyleMapping($tracker, $mappings, $mapping_tracker, $available_fields, $mapping_field);
             } else {
-                $mapping = $this->instantiateMapping($tracker, $mappings, $mapping_tracker, $available_fields, $columns);
+                $status_field   = $mapping_tracker->getStatusField();
+                if ($status_field) {
+                    $mapping = $this->instantiateMapping($tracker, $mappings, $mapping_tracker, $available_fields, $columns);
+                } else {
+                    $mapping = $this->instantiateFreestyleMapping($tracker, $mappings, $mapping_tracker, $available_fields, $mapping_field);
+                }
             }
             $mappings[$mapping_tracker->getId()] = $mapping;
         }

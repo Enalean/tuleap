@@ -108,6 +108,16 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         $this->assertIsA($mappings[10], 'Cardwall_OnTop_Config_TrackerMapping');
     }
 
+    public function itReturnsAFreestyleMappingIfNothingInDBAndNoStatus() {
+        stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
+            array('tracker_id' => 20, 'field_id' => null)
+        ));
+
+        $mappings = $this->factory->getMappings($this->tracker, $this->columns);
+        $this->assertEqual(1, count($mappings));
+        $this->assertIsA($mappings[20], 'Cardwall_OnTop_Config_TrackerMappingFreestyle');
+    }
+
     public function itReturnsEmptyMappingIfNoStatus() {
         stub($this->dao)->searchMappingFields($this->tracker->getId())->returns(TestHelper::arrayToDar(
             array('tracker_id' => 20, 'field_id' => null)

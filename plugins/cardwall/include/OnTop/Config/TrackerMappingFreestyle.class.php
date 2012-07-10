@@ -22,7 +22,7 @@ require_once 'TrackerMapping.class.php';
 
 class Cardwall_OnTop_Config_TrackerMappingFreestyle extends Cardwall_OnTop_Config_TrackerMapping {
 
-    public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, Tracker_FormElement_Field $field) {
+    public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, Tracker_FormElement_Field $field = null) {
         parent::__construct($tracker, $available_fields, $value_mappings, $field);
     }
 
