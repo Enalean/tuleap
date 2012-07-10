@@ -22,14 +22,14 @@ require_once dirname(__FILE__) .'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aMockTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMapping.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMappingStatus.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/ValueMapping.class.php';
 
 class Cardwall_OnTop_Config_TrackerMappingTest extends TuleapTestCase {
 
     public function itReturnsAnEmptyLabelWhenThereIsNoValueMapping() {
         $value_mappings = array();
-        $mapping = new Cardwall_OnTop_Config_TrackerMapping(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
         $column = new Cardwall_OnTop_Config_Column(0, 'whatever', 'white', 'black');
         $this->assertEqual('', $mapping->getSelectedValueLabel($column));
     }
@@ -56,7 +56,7 @@ class Cardwall_OnTop_Config_TrackerMappingTest extends TuleapTestCase {
             102 => $mapping_ongoing,
             103 => $mapping_done,
         );
-        $mapping = new Cardwall_OnTop_Config_TrackerMapping(mock('Tracker'), array(), $value_mappings);
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
         $column_which_match      = new Cardwall_OnTop_Config_Column(11, 'Ongoing', 'white', 'black');
         $column_which_dont_match = new Cardwall_OnTop_Config_Column(13, 'Ship It', 'white', 'black');
         $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column_which_match));

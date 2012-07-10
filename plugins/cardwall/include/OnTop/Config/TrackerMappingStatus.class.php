@@ -18,34 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Cardwall_OnTop_Config_TrackerMapping {
+require_once 'TrackerMappingField.class.php';
 
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var array
-     */
-    private $available_fields;
-
-    public function __construct(Tracker $tracker, array $available_fields) {
-        $this->tracker          = $tracker;
-        $this->available_fields = $available_fields;
-    }
-
-    public function getTracker() {
-        return $this->tracker;
-    }
-
-    public function getAvailableFields() {
-        return $this->available_fields;
-    }
+class Cardwall_OnTop_Config_TrackerMappingStatus extends Cardwall_OnTop_Config_TrackerMappingField {
 
     /**
      * @pattern Visitor
      */
-    public abstract function accept($visitor);
+    public function accept($visitor) {
+        return $visitor->visitTrackerMappingStatus($this);
+    }
 }
 ?>
