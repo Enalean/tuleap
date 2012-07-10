@@ -81,5 +81,14 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         $this->assertEqual(3, count($columns));
         $this->assertEqual("Verified", $columns[1]->getLabel());
     }
+
+    public function itBuildsAnEmptyFreestyleCollectionIfThereIsNothingInTheDaoAndNoStatus() {
+        stub($this->tracker)->getStatusField()->returns(null);
+        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
+        $columns = $this->factory->getColumns($this->tracker);
+
+        $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
+        $this->assertEqual(0, count($columns));
+    }
 }
 ?>
