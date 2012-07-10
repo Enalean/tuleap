@@ -63,6 +63,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         ));
         $columns = $this->factory->getColumns($this->tracker);
 
+        $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnCollection');
         $this->assertEqual(2, count($columns));
         $this->assertEqual("On Going", $columns[1]->getLabel());
         $this->assertEqual("rgb(123, 12, 10)", $columns[0]->getBgcolor());

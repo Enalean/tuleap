@@ -25,7 +25,7 @@ class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTo
 
     protected function fetchSpeech() {
         $html = '';
-        if (! $this->config->getColumns()) {
+        if (! count($this->config->getColumns())) {
             $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
         }
         return $html;

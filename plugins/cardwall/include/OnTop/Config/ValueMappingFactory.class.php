@@ -47,7 +47,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
     /**
      * @return array of Cardwall_OnTop_Config_ValueMapping
      */
-    public function getStatusMappings(Tracker $mapping_tracker, array $columns) {
+    public function getStatusMappings(Tracker $mapping_tracker, Cardwall_OnTop_Config_ColumnCollection $columns) {
         $mappings = array();
         $status_values = $this->getStatusValuesIndexedByLabel($mapping_tracker);
         foreach ($columns as $master_column) {
