@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'ColumnCollection.class.php';
 require_once 'TrackerMapping.class.php';
 require_once 'TrackerMappingFreestyle.class.php';
 require_once 'ValueMappingFactory.class.php';

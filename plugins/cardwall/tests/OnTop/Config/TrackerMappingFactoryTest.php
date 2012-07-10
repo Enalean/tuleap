@@ -61,10 +61,12 @@ class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TuleapTestCase {
         stub($this->value_mapping_factory)->getMappings()->returns(array());
         stub($this->value_mapping_factory)->getStatusMappings()->returns(array());
 
-        $this->columns = array(
-            new Cardwall_OnTop_Config_Column(1, 'Todo', 'white', 'black'),
-            new Cardwall_OnTop_Config_Column(2, 'On Going', 'white', 'black'),
-            new Cardwall_OnTop_Config_Column(3, 'Done', 'white', 'black'),
+        $this->columns = new Cardwall_OnTop_Config_ColumnCollection(
+            array(
+                new Cardwall_OnTop_Config_Column(1, 'Todo', 'white', 'black'),
+                new Cardwall_OnTop_Config_Column(2, 'On Going', 'white', 'black'),
+                new Cardwall_OnTop_Config_Column(3, 'Done', 'white', 'black'),
+            )
         );
 
         $this->factory = new Cardwall_OnTop_Config_TrackerMappingFactory($tracker_factory, $element_factory, $this->dao, $this->value_mapping_factory);

@@ -23,7 +23,14 @@
  */
 class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable {
 
-    private $columns = array();
+    /**
+     * @var array
+     */
+    private $columns;
+
+    public function __construct(array $columns = array()) {
+        $this->columns = $columns;
+    }
 
     /**
      * @see ArrayAccess
