@@ -36,7 +36,26 @@ class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTo
     }
 
     protected function fetchAdditionalColumnHeader() {
-        return '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. 'Eg: On Going' .'" /></label>';
+        $suggestion = $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_suggestion', $this->getPlaceholderSuggestion());
+        return '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
+    }
+
+    /**
+     * @return string
+     */
+    private function getPlaceholderSuggestion() {
+        $placeholders = explode('|', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholders'));
+        foreach ($this->config->getColumns() as $column) {
+            array_walk($placeholders, array($this, 'removeUsedColumns'), $column->getLabel());
+        }
+        $suggestion = array_shift(array_filter($placeholders));
+        return $suggestion ? $suggestion : $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_default');
+    }
+
+    private function removeUsedColumns(&$placeholder, $key, $column_label) {
+        if (! levenshtein(soundex($column_label), soundex($placeholder))) {
+            $placeholder = '';
+        }
     }
 }
 ?>

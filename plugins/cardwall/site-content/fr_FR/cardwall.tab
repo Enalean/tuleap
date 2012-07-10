@@ -16,3 +16,6 @@ plugin_cardwall	on_top_label	Activer un cardwall au dessus de l'outil de suivi
 plugin_cardwall	on_top_miss_status	L'outil de suivi doit avoir une semantic status définie
 plugin_cardwall	configure_cardwall_label	Congigurer
 plugin_cardwall	details	détails
+plugin_cardwall	on_top_column_placeholders	A Faire|En Cours|Fini|Terminé
+plugin_cardwall	on_top_column_placeholder_default	En Cours
+plugin_cardwall	on_top_column_placeholder_suggestion	Ex. : $1
