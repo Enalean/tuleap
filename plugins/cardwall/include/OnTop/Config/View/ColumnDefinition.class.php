@@ -85,7 +85,29 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         return $html;
     }
 
-    public function visitTrackerMapping($mapping) {
+    public function visitTrackerMappingNoField($mapping) {
+        $mapping_tracker= $mapping->getTracker();
+        $used_sb_fields = $mapping->getAvailableFields();
+
+        $html  = '';
+        $html .= '<td>';
+        $html .= '<a href="/plugins/tracker/?tracker='. $mapping_tracker->getId() .'&func=admin">'. $this->purify($mapping_tracker->getName()) .'</a><br />';
+        $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][field]">';
+        $html .= '<option value="">'. $this->translate('global', 'please_choose_dashed') .'</option>';
+        foreach ($used_sb_fields as $sb_field) {
+            $html .= '<option value="'. (int)$sb_field->getId() .'">'. $this->purify($sb_field->getLabel()) .'</option>';
+        }
+        $html .= '</select>';
+        $html .= '</td>';
+        foreach ($this->config->getColumns() as $column) {
+            $html .= '<td>';
+            $html .= '&nbsp;';
+            $html .= '</td>';
+        }
+        return $html;
+    }
+
+    public function visitTrackerMappingStatus($mapping) {
         $mapping_tracker= $mapping->getTracker();
         $used_sb_fields = $mapping->getAvailableFields();
         $field          = $mapping->getField();
