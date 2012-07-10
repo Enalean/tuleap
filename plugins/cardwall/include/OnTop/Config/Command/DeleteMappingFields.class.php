@@ -33,13 +33,19 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
     private $dao;
 
     /**
+     * @var Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private $value_dao;
+
+    /**
      * @var TrackerFactory
      */
     private $tracker_factory;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, TrackerFactory $tracker_factory) {
+    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnMappingFieldDao $dao, Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao, TrackerFactory $tracker_factory) {
         parent::__construct($tracker);
         $this->dao             = $dao;
+        $this->value_dao       = $value_dao;
         $this->tracker_factory = $tracker_factory;
     }
 
@@ -47,10 +53,10 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
      * @see Cardwall_OnTop_Config_Command::execute()
      */
     public function execute(Codendi_Request $request) {
-        if (is_array($request->get('delete_mapping'))) {
-            foreach ($request->get('delete_mapping') as $mapping_tracker_id) {
+        if (is_array($request->get('custom_mapping'))) {
+            foreach ($request->get('custom_mapping') as $mapping_tracker_id => $is_custom) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
-                if ($mapping_tracker && $this->dao->delete($this->tracker->getId(), $mapping_tracker_id)) {
+                if (!$is_custom && $mapping_tracker && $this->dao->delete($this->tracker->getId(), $mapping_tracker_id) && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker_id)) {
                     $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' removed');
                 }
             }

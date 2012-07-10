@@ -22,6 +22,7 @@ require_once dirname(__FILE__) .'/../../../../../tracker/include/constants.php';
 require_once dirname(__FILE__) .'/../../../../include/constants.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command/DeleteMappingFields.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldDao.class.php';
+require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
@@ -42,18 +43,23 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TuleapTestCa
         stub($story_tracker)->getId()->returns(69);
 
         $tracker_factory = mock('TrackerFactory');
-        stub($tracker_factory)->getTrackerById('42')->returns($task_tracker);
-        stub($tracker_factory)->getTrackerById('69')->returns($story_tracker);
+        stub($tracker_factory)->getTrackerById(13)->returns(mock('Tracker'));
+        stub($tracker_factory)->getTrackerById(42)->returns($task_tracker);
+        stub($tracker_factory)->getTrackerById(69)->returns($story_tracker);
 
-        $this->dao     = mock('Cardwall_OnTop_ColumnMappingFieldDao');
-        $this->command = new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $this->dao, $tracker_factory);
+        $this->dao       = mock('Cardwall_OnTop_ColumnMappingFieldDao');
+        $this->value_dao = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
+        $this->command   = new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $this->dao, $this->value_dao, $tracker_factory);
     }
 
     public function itDeletesMappingFields() {
-        $request = aRequest()->with('delete_mapping', array('42', '69'))->build();
-        stub($this->dao)->delete($this->tracker_id, '42')->at(0);
-        stub($this->dao)->delete($this->tracker_id, '69')->at(1);
+        $request = aRequest()->with('custom_mapping', array('13' => '1', '42' => 0, '69' => 0))->build();
+        stub($this->dao)->delete($this->tracker_id, 42)->at(0)->returns(true);
+        stub($this->dao)->delete($this->tracker_id, 69)->at(1)->returns(true);
         stub($this->dao)->delete()->count(2);
+        stub($this->value_dao)->delete($this->tracker_id, 42)->at(0);
+        stub($this->value_dao)->delete($this->tracker_id, 69)->at(1);
+        stub($this->value_dao)->delete()->count(2);
         $this->command->execute($request);
     }
 }
