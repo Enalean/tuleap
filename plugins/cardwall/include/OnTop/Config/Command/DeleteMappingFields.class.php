@@ -68,11 +68,27 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
         if (is_array($request->get('custom_mapping'))) {
             foreach ($request->get('custom_mapping') as $mapping_tracker_id => $is_custom) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
-                if (!$is_custom && $mapping_tracker && isset($this->existing_mappings[$mapping_tracker_id]) && $this->existing_mappings[$mapping_tracker_id] instanceof Cardwall_OnTop_Config_TrackerMappingFreestyle && $this->dao->delete($this->tracker->getId(), $mapping_tracker_id) && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker_id)) {
+                if ($this->canDelete($is_custom, $mapping_tracker) && $this->delete($mapping_tracker)) {
                     $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' removed');
                 }
             }
         }
+    }
+
+    private function canDelete($is_custom, Tracker $mapping_tracker = null) {
+        return !$is_custom
+            && $mapping_tracker
+            && $this->mappingExists($mapping_tracker->getId());
+    }
+
+    private function mappingExists($mapping_tracker_id) {
+        return isset($this->existing_mappings[$mapping_tracker_id])
+            && $this->existing_mappings[$mapping_tracker_id] instanceof Cardwall_OnTop_Config_TrackerMappingFreestyle;
+    }
+
+    private function delete(Tracker $mapping_tracker) {
+        return $this->dao->delete($this->tracker->getId(), $mapping_tracker->getId())
+            && $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
     }
 }
 ?>
