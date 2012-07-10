@@ -94,6 +94,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
             } else {
                 if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) return;
                 foreach ($mapping_tracker_info['values'] as $column_id => $values) {
+                    $this->value_dao->deleteAllFieldValues($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), $column_id);
                     foreach ($values as $value_id) {
                         $this->value_dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), (int)$value_id, $column_id);
                         $GLOBALS['Response']->addFeedback('info', 'Mapping values for '. $field->getLabel() .' changed.');

@@ -144,6 +144,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
                 )
             )
         );
+        stub($this->value_dao)->deleteAllFieldValues($this->tracker_id, 69, 321, 11)->once();
         stub($this->value_dao)->save($this->tracker_id, 69, 321, 9001, 11)->at(0);
         stub($this->value_dao)->save($this->tracker_id, 69, 321, 9002, 11)->at(1);
         stub($this->value_dao)->save()->count(2);
@@ -174,6 +175,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends TuleapTestCa
             )
         );
         stub($this->dao)->save()->returns(true);
+        stub($this->value_dao)->deleteAllFieldValues()->never();
         stub($this->value_dao)->save()->never();
         stub($this->value_dao)->delete($this->tracker_id, 69)->once();
         $this->command->execute($request);

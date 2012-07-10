@@ -29,6 +29,19 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function deleteAllFieldValues($cardwall_tracker_id, $tracker_id, $field_id, $column_id) {
+        $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
+        $tracker_id          = $this->da->escapeInt($tracker_id);
+        $field_id            = $this->da->escapeInt($field_id);
+        $column_id           = $this->da->escapeInt($column_id);
+        $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field_value
+                WHERE cardwall_tracker_id = $cardwall_tracker_id
+                AND tracker_id = $tracker_id
+                AND field_id   = $field_id
+                AND column_id  = $column_id";
+        return $this->update($sql);
+    }
+
     public function save($cardwall_tracker_id, $tracker_id, $field_id, $value_id, $column_id) {
         $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
         $tracker_id          = $this->da->escapeInt($tracker_id);
