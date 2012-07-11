@@ -193,8 +193,39 @@ extends Docman_View_ItemDetailsSectionApproval {
                 $html .= '</tr>';
             }
         }
+        $html .= $this->_displayNotificationOccurence();
         $html .= '</table>';
         $html .= '</div>';
+        return $html;
+    }
+
+    function _displayNotificationOccurence() {
+        $html = '<tr>';
+        $html .= '<td>';
+        $html .= '<h4>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_occurence_title').'</h4>';
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '<tr>';
+        $html .= '<td>';
+        $occurence = $this->table->getNotificationOccurence();
+        if ($occurence) {
+            $checked = 'checked="true"';
+        } else {
+            $checked = '';
+        }
+        $html .= '<span id="approval_table_reminder" ></span><input id="approval_table_reminder_checkbox" type="checkbox" name="reminder" '.$checked.' /></span>';
+        $html .= ' ';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'details_approval_send_to_approvers');
+        $html .= ' </td>';
+        $html .= ' </tr>';
+        $html .= ' <tr>';
+        $html .= '<td>';
+        $html .= '<span id="approval_table_occurence_form" > '.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_every');
+        $html .= '<input size="2" name="occurence" value="'.$occurence.'" /> ';
+        $html .= html_build_select_box_from_arrays(array(1, 7), array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_days'), $GLOBALS['Language']->getText('plugin_docman', 'details_approval_weeks')), 'period', null, false);
+        $html .= '</span>';
+        $html .= '</td>';
+        $html .= '</tr>';
         return $html;
     }
 

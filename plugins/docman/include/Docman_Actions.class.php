@@ -1703,7 +1703,7 @@ class Docman_Actions extends Actions {
     /**
      * @access private
      */
-    function _approval_update_settings(&$atf, $sStatus, $notification, $description, $owner) {
+    function _approval_update_settings(&$atf, $sStatus, $notification, $notificationOccurence, $description, $owner) {
         $table =& $atf->getTable();
         $newOwner = false;
         if(!$table->isCustomizable()) {
@@ -1734,7 +1734,7 @@ class Docman_Actions extends Actions {
         }
 
         // Update settings
-        $updated = $atf->updateTable($sStatus, $notification, $description, $newOwner);
+        $updated = $atf->updateTable($sStatus, $notification, $notificationOccurence, $description, $newOwner);
         if($updated) {
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'approval_tableupd_success'));
         }
@@ -1864,19 +1864,27 @@ class Docman_Actions extends Actions {
 
     function approval_update() {
         // Params
-        $item       = $this->_controler->_actionParams['item'];
-        $user       = $this->_controler->getUser();
-        $sStatus    = $this->_controler->_actionParams['status'];
+        $item         = $this->_controler->_actionParams['item'];
+        $user         = $this->_controler->getUser();
+        $sStatus      = $this->_controler->_actionParams['status'];
         $notification = $this->_controler->_actionParams['notification'];
-        $description =  $this->_controler->_actionParams['description'];
-        $usUserList = $this->_controler->_actionParams['user_list'];
-        $sUgroup    = $this->_controler->_actionParams['ugroup_list'];
-        $sSelUser   = $this->_controler->_actionParams['sel_user'];
-        $sSelUserAct = $this->_controler->_actionParams['sel_user_act'];
-        $resendNotif = $this->_controler->_actionParams['resend_notif'];
-        $version     = $this->_controler->_actionParams['version'];
-        $import = $this->_controler->_actionParams['import'];
-        $owner = $this->_controler->_actionParams['table_owner'];
+        $reminder     = $this->_controler->_actionParams['reminder'];
+        if ($reminder) {
+            $occurence             = $this->_controler->_actionParams['occurence'];
+            $period                = $this->_controler->_actionParams['period'];
+            $notificationOccurence = $occurence * $period;
+        } else {
+            $notificationOccurence = 0;
+        }
+        $description  = $this->_controler->_actionParams['description'];
+        $usUserList   = $this->_controler->_actionParams['user_list'];
+        $sUgroup      = $this->_controler->_actionParams['ugroup_list'];
+        $sSelUser     = $this->_controler->_actionParams['sel_user'];
+        $sSelUserAct  = $this->_controler->_actionParams['sel_user_act'];
+        $resendNotif  = $this->_controler->_actionParams['resend_notif'];
+        $version      = $this->_controler->_actionParams['version'];
+        $import       = $this->_controler->_actionParams['import'];
+        $owner        = $this->_controler->_actionParams['table_owner'];
 
         $atf =& Docman_ApprovalTableFactory::getFromItem($item, $version);
         $table = $atf->getTable();
@@ -1900,7 +1908,7 @@ class Docman_Actions extends Actions {
         }
 
         if($tableEditable) {
-            $this->_approval_update_settings($atf, $sStatus, $notification, $description, $owner);
+            $this->_approval_update_settings($atf, $sStatus, $notification, $notificationOccurence, $description, $owner);
             $table =& $atf->getTable();
             if(!$table->isClosed()) {
                 $atrf =& new Docman_ApprovalTableReviewerFactory($table, $item, $this->_controler->notificationsManager);

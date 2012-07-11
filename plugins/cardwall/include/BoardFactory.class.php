@@ -31,9 +31,11 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard($field_retriever, $field, $forests_of_artifacts) {
-        $column_factory     = new Cardwall_ColumnFactory($field);
-        $acc_field_provider = new Cardwall_StatusFieldsExtractor();
+    public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
+                             Tracker_FormElement_Field_List                       $field, 
+                             TreeNode                                             $forests_of_artifacts) {
+        $column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
+        $acc_field_provider = new Cardwall_StatusFieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         $mapping_collection = $column_factory->getMappings($status_fields);
         
@@ -42,7 +44,6 @@ class Cardwall_BoardFactory {
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
-
     }
 
     private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
