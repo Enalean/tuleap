@@ -49,10 +49,12 @@ class cardwallPlugin extends Plugin {
 
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
-            $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
-            $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id);
-            $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
-            $this->getOnTopColumnMappingFieldValueDao()->duplicate();
+            if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
+                if ($this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $params)) {
+                    $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
+                    $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping'], $params['plugin_cardwall_column_mapping']);
+                }
+            }
         }
     }
 

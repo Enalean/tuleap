@@ -92,7 +92,7 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject {
         $to_field_stmt .= " ELSE NULL ";
         $to_field_stmt .= " END ";
 
-        $to_tracker_stmt = " CASE field_id ";
+        $to_tracker_stmt = " CASE tracker_id ";
         foreach ($tracker_mapping as $from_tracker_id => $to_tracker_id) {
             $from             = $this->da->escapeInt($from_tracker_id);
             $to               = $this->da->escapeInt($to_tracker_id);
@@ -105,7 +105,6 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject {
                 SELECT $to_cardwall_tracker_id, $to_tracker_stmt, $to_field_stmt
                 FROM plugin_cardwall_on_top_column_mapping_field
                 WHERE cardwall_tracker_id = $from_cardwall_tracker_id";
-        echo "<pre>$sql</pre>";
         return $this->update($sql);
     }
 }

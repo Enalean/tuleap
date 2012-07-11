@@ -75,33 +75,59 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, $tracker_mapping, $field_mapping) {
-        throw new Exception('Todo');
-        $from_cardwall_tracker_id = $this->da->escapeInt($from_tracker_id);
-        $to_cardwall_tracker_id   = $this->da->escapeInt($to_tracker_id);
-        $to_field_id     = " CASE field_id ";
+    public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, array $tracker_mapping, array $field_mapping, array $column_mapping) {
+        //throw new Exception('Todo');
+        $from_cardwall_tracker_id = $this->da->escapeInt($from_cardwall_tracker_id);
+        $to_cardwall_tracker_id   = $this->da->escapeInt($to_cardwall_tracker_id);
+
+        $to_value_stmt     = " CASE value_id ";
+
+        $to_field_stmt     = " CASE field_id ";
         foreach ($field_mapping as $mapping) {
             $from         = $this->da->escapeInt($mapping['from']);
             $to           = $this->da->escapeInt($mapping['to']);
-            $to_field_id .= " WHEN $from THEN $to ";
-        }
-        $to_field_id .= " ELSE NULL ";
-        $to_field_id .= " END CASE ";
+            $to_field_stmt .= " WHEN $from THEN $to ";
 
-        $to_tracker_id = " CASE field_id ";
+            foreach ($mapping['values'] as $from_value_id => $to_value_id) {
+                $from_value_id  = $this->da->escapeInt($from_value_id);
+                $to_value_id    = $this->da->escapeInt($to_value_id);
+                $to_value_stmt .= " WHEN $from_value_id THEN $to_value_id ";
+            }
+        }
+        $to_value_stmt .= " ELSE NULL ";
+        $to_value_stmt .= " END ";
+
+        $to_field_stmt .= " ELSE NULL ";
+        $to_field_stmt .= " END ";
+
+        $to_tracker_stmt = " CASE tracker_id ";
         foreach ($tracker_mapping as $from_tracker_id => $to_tracker_id) {
             $from         = $this->da->escapeInt($from_tracker_id);
             $to           = $this->da->escapeInt($to_tracker_id);
-            $to_tracker_id .= " WHEN $from THEN $to ";
+            $to_tracker_stmt .= " WHEN $from THEN $to ";
         }
-        $to_tracker_id .= " ELSE NULL ";
-        $to_tracker_id .= " END CASE ";
+        $to_tracker_stmt .= " ELSE NULL ";
+        $to_tracker_stmt .= " END ";
 
-        $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field_value (cardwall_tracker_id, tracker_id, field_id)
-                SELECT $to_cardwall_tracker_id, $to_tracker_id, $to_field_id
+        $to_column_stmt = $this->associativeToSQLCase($column_mapping, 'column_id');
+
+        $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field_value (cardwall_tracker_id, tracker_id, field_id, value_id, column_id)
+                SELECT $to_cardwall_tracker_id, $to_tracker_stmt, $to_field_stmt, $to_value_stmt, $to_column_stmt
                 FROM plugin_cardwall_on_top_column_mapping_field_value
                 WHERE cardwall_tracker_id = $from_cardwall_tracker_id";
         return $this->update($sql);
+    }
+
+    private function associativeToSQLCase(array $mapping, $field_name) {
+        $stmt = " CASE $field_name ";
+        foreach ($mapping as $from => $to) {
+            $from  = $this->da->escapeInt($from);
+            $to    = $this->da->escapeInt($to);
+            $stmt .= " WHEN $from THEN $to ";
+        }
+        $stmt .= " ELSE NULL ";
+        $stmt .= " END ";
+        return $stmt;
     }
 }
 ?>
