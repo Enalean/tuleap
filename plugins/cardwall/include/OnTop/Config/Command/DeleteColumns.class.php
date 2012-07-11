@@ -58,15 +58,17 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
      */
     public function execute(Codendi_Request $request) {
         if ($request->get('column')) {
+            $deleted_columns = 0;
             foreach ($request->get('column') as $id => $column_definition) {
                 if (empty($column_definition['label'])) {
                     $this->value_dao->deleteForColumn($this->tracker->getId(), $id);
                     $this->dao->delete($this->tracker->getId(), $id);
-                    if (count($request->get('column')) === 1) {
-                        $this->field_dao->deleteCardwall($this->tracker->getId());
-                    }
                     $GLOBALS['Response']->addFeedback('info', 'Column removed');
+                    $deleted_columns++;
                 }
+            }
+            if (count($request->get('column')) === $deleted_columns) {
+                $this->field_dao->deleteCardwall($this->tracker->getId());
             }
         }
     }
