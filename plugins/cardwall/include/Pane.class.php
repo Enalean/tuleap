@@ -65,7 +65,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
-        $tracker = $this->milestone->getPlanning()->getBacklogTracker();
+        $tracker = $this->milestone->getArtifact()->getTracker();
         $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
         if (! $field) {
             return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
