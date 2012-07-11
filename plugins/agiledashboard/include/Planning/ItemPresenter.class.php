@@ -20,6 +20,7 @@
 
 require_once 'Item.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CardPresenter.class.php';
+require_once 'ItemFieldPresenter.class.php';
 
 class Planning_ItemPresenter implements Tracker_CardPresenter {
     
@@ -34,6 +35,10 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     private $css_classes;
     
     /**
+     * @var Array
+     */
+    private $displayed_fields;
+    /**
      * @param Planning_Item $planning_item The planning item to be presented.
      * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
      */
@@ -41,6 +46,9 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
         $this->planning_item = $planning_item;
         $this->css_classes   = $css_classes;
         $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->displayed_fields   = array(Tracker_CardPresenter::REMAINING_EFFORT_FIELD_NAME,
+                                          Tracker_CardPresenter::ASSIGNED_TO_FIELD_NAME,
+                                          Tracker_CardPresenter::IMPEDIMENT_FIELD_NAME);
     }
     
     public function getId() {
@@ -90,7 +98,21 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     }
     
     public function getFields() {
-        return array();
+        $diplayed_fields_presenter = array();
+        $user                      = UserManager::instance()->getCurrentUser();
+        $form_element_factory      = Tracker_FormElementFactory::instance();
+        $tracker_id                = $this->getArtifact()->getTracker()->getId();
+        
+        foreach ($this->displayed_fields as $diplayed_field_name) {
+            $field = $form_element_factory->getUsedFieldByNameForUser(
+                        $tracker_id,
+                        $diplayed_field_name,
+                        $user);
+            if ($field) {
+                $diplayed_fields_presenter[] = new Planning_ItemFieldPresenter($field, $this->getArtifact());
+            }
+        }
+        return $diplayed_fields_presenter;
     }
     
     public function hasFields() {

@@ -22,10 +22,6 @@ require_once 'CardFieldPresenter.class.php';
 
 class Cardwall_CardPresenter implements Tracker_CardPresenter{
     
-    const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
-    const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
-    const IMPEDIMENT_FIELD_NAME       = "impediment";
-    
     /**
      * @var Tracker_Artifact
      */
@@ -38,9 +34,9 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
 
     public function __construct(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
-        $this->displayed_fields   = array(self::REMAINING_EFFORT_FIELD_NAME,
-                                          self::ASSIGNED_TO_FIELD_NAME,
-                                          self::IMPEDIMENT_FIELD_NAME);
+        $this->displayed_fields   = array(Tracker_CardPresenter::REMAINING_EFFORT_FIELD_NAME,
+                                          Tracker_CardPresenter::ASSIGNED_TO_FIELD_NAME,
+                                          Tracker_CardPresenter::IMPEDIMENT_FIELD_NAME);
         $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
     }
 
