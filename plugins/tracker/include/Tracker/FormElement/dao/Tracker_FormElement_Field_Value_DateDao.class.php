@@ -78,7 +78,7 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
         $date     = $this->da->escapeInt($date);
         $halfDay  = 60 * 60 * 12;
         $minDate  = $date - $halfDay;
-        $maxDate  = $date - $halfDay;
+        $maxDate  = $date + $halfDay;
         $sql      = "SELECT t.id AS artifact_id FROM
                      tracker_changeset_value_date d
                      JOIN tracker_changeset_value v on v.id = d.changeset_value_id

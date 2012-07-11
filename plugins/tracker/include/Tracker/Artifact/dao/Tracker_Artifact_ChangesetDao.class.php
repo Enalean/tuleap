@@ -82,7 +82,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject {
         $date       = $this->da->escapeInt($date);
         $halfDay    = 60 * 60 * 12;
         $minDate    = $date - $halfDay;
-        $maxDate    = $date - $halfDay;
+        $maxDate    = $date + $halfDay;
         $sql        = "SELECT MAX(c.id) AS id, c.artifact_id FROM
                          tracker_changeset c
                          JOIN tracker_artifact a ON c.artifact_id = a.id
