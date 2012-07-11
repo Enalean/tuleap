@@ -7,7 +7,7 @@ Version 5.3 (not released yet)
 	* Git: 2.6.3
 	* LDAP: 3.16
 	* Test: 5
-	* Tracker: 5.7.39
+	* Tracker: 5.7.40
 
 	== Development ==
 	Update mustache renderer
