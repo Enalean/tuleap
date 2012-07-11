@@ -1205,7 +1205,7 @@ class User {
              $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar" />';
          } else {
              if ($this->hasAvatar()) {
-                 $html .= '<img src="/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" width="'. $width .'" />';
+                 $html .= '<img src="'. get_server_url() .'/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" width="'. $width .'" />';
              }
          }
          $html .= '</div>';
