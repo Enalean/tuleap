@@ -57,7 +57,10 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends Tul
         stub($this->element_factory)->getFieldById(321)->returns($this->assignto_field);
         stub($this->element_factory)->getFieldById(322)->returns($this->stage_field);
 
-        $existing_mappings = array();
+        $existing_mappings = array(
+            42 => new Cardwall_OnTop_Config_TrackerMappingStatus($this->task_tracker, array(), array(), $this->status_field),
+            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($this->story_tracker, array(), array(), $this->stage_field),
+        );
 
         $this->dao       = mock('Cardwall_OnTop_ColumnMappingFieldDao');
         $this->value_dao = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
@@ -71,7 +74,7 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest extends Tul
         );
     }
 }
-/*
+
 class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateFieldTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest {
 
     public function itUpdatesMappingFields() {
@@ -197,7 +200,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest extends
         $this->command->execute($request);
     }
 }
-*/
+
 class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest extends Cardwall_OnTop_Config_Command_UpdateMappingFieldsTest {
     public function setUp() {
         parent::setUp();
@@ -220,6 +223,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesNoUpdateTest
                 array(
                     9001 => new Cardwall_OnTop_Config_ValueMapping(aFieldListStaticValue()->withId(9001)->build(), 11),
                     9002 => new Cardwall_OnTop_Config_ValueMapping(aFieldListStaticValue()->withId(9002)->build(), 11),
+                    9007 => new Cardwall_OnTop_Config_ValueMapping(aFieldListStaticValue()->withId(9002)->build(), 12),
                 ),
                 $this->stage_field),
         );
