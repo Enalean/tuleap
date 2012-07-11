@@ -24,11 +24,11 @@ require_once 'ColumnDefinition.class.php';
 class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTop_Config_View_ColumnDefinition {
 
     protected function fetchSpeech() {
-        $html = '';
         if (! count($this->config->getColumns())) {
-            $html .= '<p>'. 'There is no semantic status defined for this tracker. Therefore you must configure yourself the columns used for cardwall.' .'</p>';
+            return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
+        } else {
+            return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_with_columns');
         }
-        return $html;
     }
 
     protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
@@ -37,7 +37,7 @@ class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTo
 
     protected function fetchAdditionalColumnHeader() {
         $suggestion = $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_suggestion', $this->getPlaceholderSuggestion());
-        return '<label>'. 'New column:'. '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
+        return '<label>'. $this->translate('plugin_cardwall', 'on_top_new_column') . '<br /><input type="text" name="new_column" value="" placeholder="'. $suggestion  .'" /></label>';
     }
 
     /**

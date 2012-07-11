@@ -25,13 +25,7 @@ class Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition extends Cardwall
 
     protected function fetchSpeech() {
         $field    = $this->config->getTracker()->getStatusField();
-
-        $html  = '';
-        $html .= '<p>'. 'The column used for the cardwall will be bound to the current status field ('. $this->purify($field->getLabel()) .') of this tracker.' .'</p>';
-
-        $html .= '<p>'. 'TODO: Maybe you wanna choose your own set of columns?' .'</p>';
-
-        return $html;
+        return $this->translate('plugin_cardwall', 'on_top_semantic_status_column_definition_speech', array($this->purify($field->getLabel())));
     }
 
     protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
