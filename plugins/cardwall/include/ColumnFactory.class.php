@@ -74,16 +74,7 @@ class Cardwall_ColumnFactory {
      */
     public function getMappings($fields) {
         $columns  = $this->getColumns();
-        $mappings = new Cardwall_MappingCollection();
-        foreach ($fields as $status_field) {
-            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                foreach ($columns as $column) {
-                    if ($column->label == $value->getLabel()) {
-                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
-                    }
-                }
-            }
-        }
+        $mappings = $this->ducktype($fields, $columns);
         return $mappings;
     }
 
@@ -97,6 +88,20 @@ class Cardwall_ColumnFactory {
             $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
         }
         return array($bgcolor, $fgcolor);
+    }
+
+    public function ducktype($fields, $columns) {
+        $mappings = new Cardwall_MappingCollection();
+        foreach ($fields as $status_field) {
+            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
+                foreach ($columns as $column) {
+                    if ($column->label == $value->getLabel()) {
+                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
+                    }
+                }
+            }
+        }
+        return $mappings;
     }
 }
 ?>
