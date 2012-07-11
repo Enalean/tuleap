@@ -87,19 +87,27 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     private function save(array $mapping_tracker_info, array $mapping_fields, Tracker $mapping_tracker = null, Tracker_FormElement $field = null) {
         if ($this->canSaveNewField($mapping_fields, $mapping_tracker, $field)) {
             if ($this->fieldHasChanged($mapping_fields, $mapping_tracker, $field)) {
-                if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
-                    $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
-                    $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
-                }
+                $this->saveFieldMapping($mapping_tracker, $field);
             } else {
-                if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) return;
-                foreach ($mapping_tracker_info['values'] as $column_id => $values) {
-                    $this->value_dao->deleteAllFieldValues($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), $column_id);
-                    foreach ($values as $value_id) {
-                        $this->value_dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), (int)$value_id, $column_id);
-                        $GLOBALS['Response']->addFeedback('info', 'Mapping values for '. $field->getLabel() .' changed.');
-                    }
-                }
+                $this->saveValuesMapping($mapping_tracker_info, $mapping_tracker, $field);
+            }
+        }
+    }
+
+    private function saveFieldMapping(Tracker $mapping_tracker, Tracker_FormElement $field) {
+        if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
+            $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
+            $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
+        }
+    }
+
+    private function saveValuesMapping(array $mapping_tracker_info, Tracker $mapping_tracker, Tracker_FormElement $field) {
+        if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) return;
+        foreach ($mapping_tracker_info['values'] as $column_id => $values) {
+            $this->value_dao->deleteAllFieldValues($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), $column_id);
+            foreach ($values as $value_id) {
+                $this->value_dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), (int)$value_id, $column_id);
+                $GLOBALS['Response']->addFeedback('info', 'Mapping values for '. $field->getLabel() .' changed.');
             }
         }
     }
