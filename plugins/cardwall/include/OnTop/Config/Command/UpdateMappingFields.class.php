@@ -132,28 +132,40 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     }
 
     private function mappingChanged(Tracker $mapping_tracker, $column_id, array $values) {
-        $no_update_needed = true;
         if (isset($this->existing_mappings[$mapping_tracker->getId()])) {
-            $value_mappings    = $this->existing_mappings[$mapping_tracker->getId()]->getValueMappings();
-            $already_processed = array();
-            foreach ($value_mappings as $value_id => $value_mapping) {
-                if ($value_mapping->getColumnId() == $column_id) {
-                    $already_processed[]= $value_id;
-                    if (in_array($value_id, $values)) {
-                        $no_update_needed = $no_update_needed & true;
-                    } else {
-                        $no_update_needed = $no_update_needed & false;
-                    }
+            $value_mappings = $this->existing_mappings[$mapping_tracker->getId()]->getValueMappings();
+            return $this->mappingValuesChanged($column_id, $value_mappings, $values);
+        } else {
+            return true;
+        }
+    }
+
+    private function mappingValuesChanged($column_id, array $value_mappings, array $values) {
+        $already_processed = array();
+        if ($this->mappingValuesWereRemoved($column_id, $value_mappings, $values, $already_processed)) {
+            return true;
+        } else {
+            return $this->mappingValuesWereAdded($values, $already_processed);
+        }
+    }
+
+    private function mappingValuesWereRemoved($column_id, array $value_mappings, array $values, array &$already_processed) {
+        $no_update_needed = true;
+        foreach ($value_mappings as $value_id => $value_mapping) {
+            if ($value_mapping->getColumnId() == $column_id) {
+                $already_processed[]= $value_id;
+                if (in_array($value_id, $values)) {
+                    $no_update_needed = $no_update_needed & true;
+                } else {
+                    $no_update_needed = $no_update_needed & false;
                 }
             }
-            // New values not already mapped;
-            if (count(array_diff($values, $already_processed))) {
-                $no_update_needed = false;
-            }
-        } else {
-            $no_update_needed = false;
         }
         return !$no_update_needed;
+    }
+
+    private function mappingValuesWereAdded(array $values, array $already_processed) {
+        return count(array_diff($values, $already_processed)) > 0;
     }
 
     /**
