@@ -706,13 +706,16 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function isValid($value) {
         if ($value) {
             $values = explode(',', $value);
+            $um = UserManager::instance();
             foreach ($values as $v) {
                 if (stripos($v, '!') !== false) {
                     //we check the string is an email
                     $rule = new Rule_Email();
                     if(!$rule->isValid($v)) {
-                        // @TODO: check if $v is a username
-                        return false;
+                        //we check the string correspond to a username
+                        if (!$um->getUserByIdentifier(substr($v, 1))) {
+                            return false;
+                        }
                     }
                 }
             }
