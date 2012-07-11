@@ -31,19 +31,22 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
         parent::setUp();
 
         $this->tracker_id = 666;
-        $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns($this->tracker_id);
+        $tracker = stub('Tracker')->getId()->returns($this->tracker_id);
+
+        $this->value_dao = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
 
         $this->dao     = mock('Cardwall_OnTop_ColumnDao');
-        $this->command = new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $this->dao);
+        $this->command = new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $this->dao, $this->value_dao);
     }
 
-    public function itDeletesAllColumns() {
+    public function itDeletesOneColumn() {
         $request = aRequest()->with('column', array(
             12 => array('label' => 'Todo'),
             14 => array('label' => ''))
         )->build();
+        stub($this->value_dao)->deleteForColumn($this->tracker_id, 14)->once();
         stub($this->dao)->delete($this->tracker_id, 14)->once();
+        stub($this->dao)->delete()->count(1);
         $this->command->execute($request);
     }
 }

@@ -31,9 +31,19 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
      */
     private $dao;
 
-    public function __construct(Tracker $tracker, Cardwall_OnTop_ColumnDao $dao) {
+    /**
+     * @var Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private $value_dao;
+
+    public function __construct(
+        Tracker $tracker,
+        Cardwall_OnTop_ColumnDao $dao,
+        Cardwall_OnTop_ColumnMappingFieldValueDao $value_dao
+    ) {
         parent::__construct($tracker);
-        $this->dao = $dao;
+        $this->dao       = $dao;
+        $this->value_dao = $value_dao;
     }
 
     /**
@@ -43,6 +53,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
         if ($request->get('column')) {
             foreach ($request->get('column') as $id => $column_definition) {
                 if (empty($column_definition['label'])) {
+                    $this->value_dao->deleteForColumn($this->tracker->getId(), $id);
                     $this->dao->delete($this->tracker->getId(), $id);
                     $GLOBALS['Response']->addFeedback('info', 'Column removed');
                 }
