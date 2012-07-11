@@ -19,3 +19,13 @@ plugin_cardwall	details	details
 plugin_cardwall	on_top_column_placeholders	Todo|On Going|Done|Done-Done
 plugin_cardwall	on_top_column_placeholder_default	On Going
 plugin_cardwall	on_top_column_placeholder_suggestion	E.g.: $1
+plugin_cardwall	on_top_no_matching_for_column	No matching for this column
+plugin_cardwall	on_top_custom_mapping	Custom mapping
+plugin_cardwall	on_top_no_values	There isn't any value
+plugin_cardwall	on_top_column_added	Column added
+plugin_cardwall	on_top_column_removed	Column removed
+plugin_cardwall	on_top_column_changed	Column $1 changed
+plugin_cardwall	on_top_mapping_added	Mapping on $1 added
+plugin_cardwall	on_top_mapping_removed	Mapping on $1 removed
+plugin_cardwall	on_top_mapping_changed	Mapping on $1 changed to $2
+plugin_cardwall	on_top_mapping_values_changed	Values mapping changed for "$1" field

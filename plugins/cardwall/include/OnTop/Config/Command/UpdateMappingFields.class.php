@@ -110,7 +110,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     private function saveFieldMapping(Tracker $mapping_tracker, Tracker_FormElement $field) {
         if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
             $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
-            $GLOBALS['Response']->addFeedback('info', 'Mapping on '. $mapping_tracker->getName() .' changed to '. $field->getLabel());
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_mapping_changed', array($mapping_tracker->getName(), $field->getLabel())));
         }
     }
 
@@ -128,7 +128,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
             }
         }
         if ($mapping_changed && $nb_changes > 0) {
-            $GLOBALS['Response']->addFeedback('info', 'Values mapping changed for "'. $field->getLabel().'" field');
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_mapping_values_changed', array($field->getLabel())));
         }
     }
 

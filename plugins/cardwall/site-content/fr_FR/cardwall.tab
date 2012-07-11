@@ -14,8 +14,18 @@ plugin_cardwall	on_top_enabled	Un cardwall existe maintenant au dessus de l'outi
 plugin_cardwall	on_top_disabled	Cardwall désactivé
 plugin_cardwall	on_top_label	Activer un cardwall au dessus de l'outil de suivi
 plugin_cardwall	on_top_miss_status	L'outil de suivi doit avoir une semantic status définie
-plugin_cardwall	configure_cardwall_label	Congigurer
+plugin_cardwall	configure_cardwall_label	Configurer
 plugin_cardwall	details	détails
 plugin_cardwall	on_top_column_placeholders	A Faire|En Cours|Fini|Terminé
 plugin_cardwall	on_top_column_placeholder_default	En Cours
 plugin_cardwall	on_top_column_placeholder_suggestion	Ex. : $1
+plugin_cardwall	on_top_no_matching_for_column	Aucune correspondance
+plugin_cardwall	on_top_custom_mapping	Association spécifique
+plugin_cardwall	on_top_no_values	Il n'y a aucune valeur
+plugin_cardwall	on_top_column_added	Colonne ajouté
+plugin_cardwall	on_top_column_removed	Colonne supprimée
+plugin_cardwall	on_top_column_changed	Colonne $1 modifiée
+plugin_cardwall	on_top_mapping_added	Correspondance avec le champ $1 ajouté
+plugin_cardwall	on_top_mapping_removed	Correspondance avec le champ $1 supprimée
+plugin_cardwall	on_top_mapping_changed	Correspondance avec $1 modifiée à $2
+plugin_cardwall	on_top_mapping_values_changed	Modification de la correspondance des valeurs avec le champ $1

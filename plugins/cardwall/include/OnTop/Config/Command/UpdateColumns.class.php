@@ -44,7 +44,7 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
             foreach ($request->get('column') as $id => $column_definition) {
                 $column_label = $column_definition['label'];
                 if ( !empty($column_label) && $this->dao->save($this->tracker->getId(), $id, $column_label)) {
-                    $GLOBALS['Response']->addFeedback('info', "Column $column_label changed");
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_changed', array($column_label)));
                 }
             }
         }

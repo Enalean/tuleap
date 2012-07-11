@@ -128,7 +128,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '</td>';
         foreach ($this->config->getColumns() as $column) {
             $html .= '<td>';
-            $html .= $mapping->getSelectedValueLabel($column, '<em>No matching for this column</em>');
+            $html .= $mapping->getSelectedValueLabel($column, '<em>'.$this->translate('plugin_cardwall', 'on_top_no_matching_for_column').'</em>');
             $html .= '</td>';
         }
         return $html;
@@ -170,7 +170,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $name = 'custom_mapping['.(int)$mapping_tracker->getId() .']';
         $html .= '<p>';
         $html .= '<input type="hidden" name="'. $name .'" value="0" />';
-        $html .= '<label><input type="checkbox" name="'. $name .'" '.$selected.' value="1" /> Custom mapping</label>';
+        $html .= '<label><input type="checkbox" name="'. $name .'" '.$selected.' value="1" /> '.$this->translate('plugin_cardwall', 'on_top_custom_mapping').'</label>';
         $html .= '</p>';
         return $html;
     }
@@ -190,7 +190,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
             }
             $html .= '</select>';
         } else {
-            $html .= '<em>'. "There isn't any value" .'</em>';
+            $html .= '<em>'. $this->translate('plugin_cardwall', 'on_top_no_values') .'</em>';
         }
 
         return $html;
