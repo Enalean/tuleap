@@ -711,7 +711,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 if (stripos($v, '!') !== false) {
                     //we check the string is an email
                     $rule = new Rule_Email();
-                    $is_valid = $rule->isValid($v);
+                    $is_valid = $is_valid && $rule->isValid($v);
                 }
             } 
         }
