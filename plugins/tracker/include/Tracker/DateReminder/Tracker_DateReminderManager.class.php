@@ -271,12 +271,12 @@ class Tracker_DateReminderManager {
         $format   = Codendi_Mail_Interface::FORMAT_HTML;
         $hp       = Codendi_HTMLPurifier::instance();
         $protocol = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-        $link     = '<a href='.$protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId() .'</a>';
+        $link     = $protocol.'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $artifact->getId();
 
         $output   ='<h1>'.$hp->purify($artifact->fetchMailTitle($recipient, $format, false)).'</h1>'.PHP_EOL;
         $output   .= $language->getText('plugin_tracker_date_reminder','body_header',array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
         $output   .= '<br>';
-        $output   .= $language->getText('plugin_tracker_date_reminder','body_art_link', array($link));
+        $output   .= $language->getText('plugin_tracker_date_reminder','body_art_html_link', array($link));
         $output   .= '<br>';
         return $output;
     }
