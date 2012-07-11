@@ -20,12 +20,15 @@
 require_once dirname(__FILE__) .'/../../include/Tracker/Tracker.class.php';
 
 class MockTrackerBuilder {
+    
+    private $id;
+    
     public function __construct() {
         $this->tracker = mock('Tracker');
     }
     
     public function withId($id) {
-        stub($this->tracker)->getId()->returns($id);
+        $this->id = $id;
         return $this;
     }
     
@@ -60,6 +63,8 @@ class MockTrackerBuilder {
     }
     
     public function build() {
+        stub($this->tracker)->getId()->returns($this->id);
+        stub($this->tracker)->__toString()->returns('Tracker #'.$this->id);
         return $this->tracker;
     }
 }
