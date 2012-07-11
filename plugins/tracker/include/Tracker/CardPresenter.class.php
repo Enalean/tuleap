@@ -23,10 +23,6 @@
  */
 interface Tracker_CardPresenter {
     
-    const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
-    const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
-    const IMPEDIMENT_FIELD_NAME       = "impediment";
-    
     /**
      * @return int
      */

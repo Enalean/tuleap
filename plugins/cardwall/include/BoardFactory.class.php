@@ -22,6 +22,7 @@ require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'Board.class.php';
 require_once 'StatusFieldsExtractor.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 /**
  * Builds Board given artifacts (for swimlines/cards) and a field (for columns)
@@ -47,7 +48,8 @@ class Cardwall_BoardFactory {
     }
 
     private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
-        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
+        
+        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields()));
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
 
         $column_id_mapper           = new TreeNodeMapper(new Cardwall_CardInCellPresenterCallback($field_retriever, $mapping_collection));

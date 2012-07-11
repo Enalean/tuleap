@@ -22,6 +22,7 @@ require_once 'ItemCardPresenterCallback.class.php';
 require_once 'PlanningPresenter.class.php';
 require_once 'MilestoneLinkPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 /**
  * Provides the presentation logic for a planning milestone.
@@ -149,6 +150,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                 $card_mapper = new TreeNodeMapper(
                     new Planning_ItemCardPresenterCallback(
                         $this->milestone->getPlanning(), 
+                        new Tracker_CardFields(),
                         'planning-draggable-alreadyplanned'
                     )
                 );

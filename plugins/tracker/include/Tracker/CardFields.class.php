@@ -32,28 +32,27 @@ class Tracker_CardFields {
     /**
      * @var User
      */
-    private $user;
+    private $user_manager;
     
     
-    public function __construct($artifact) {
-        $this->artifact             = $artifact;
+    public function __construct() {
         $this->displayed_fields     = array(self::REMAINING_EFFORT_FIELD_NAME,
                                             self::ASSIGNED_TO_FIELD_NAME,
                                             self::IMPEDIMENT_FIELD_NAME);
-        //$this->user                 = UserManager::instance()->getCurrentUser();
+        $this->user_manager                 = UserManager::instance();
         $this->form_element_factory = Tracker_FormElementFactory::instance();
     }
     
-    public function getFields() {
+    public function getFields(Tracker_Artifact $artifact) {
         $diplayed_fields = array();
-        $tracker_id      = $this->artifact->getTracker()->getId();
-        $user            = UserManager::instance()->getCurrentUser();
+        $tracker_id      = $artifact->getTrackerId();
+        //$user            = UserManager::instance()->getCurrentUser();
         
         foreach ($this->displayed_fields as $diplayed_field_name) {
             $field = $this->form_element_factory->getUsedFieldByNameForUser(
                         $tracker_id,
                         $diplayed_field_name,
-                        $user);
+                        $this->user_manager->getCurrentUser());
             if ($field) {
                 $diplayed_fields[] = $field;
             }
