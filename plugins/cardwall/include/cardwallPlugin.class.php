@@ -51,7 +51,7 @@ class cardwallPlugin extends Plugin {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
             $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id);
-            $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['field_mapping']);
+            $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
             $this->getOnTopColumnMappingFieldValueDao()->duplicate();
         }
     }
