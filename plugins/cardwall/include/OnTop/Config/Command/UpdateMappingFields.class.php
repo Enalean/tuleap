@@ -118,7 +118,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         $nb_changes      = 0;
         $mapping_changed = false;
         foreach ($mapping_tracker_info['values'] as $column_id => $values) {
-            if ($this->mappingChanged($mapping_tracker, $column_id, $values)) {
+            if ($this->mappingValuesChanged($mapping_tracker, $column_id, $values)) {
                 $mapping_changed = true;
                 $this->value_dao->deleteAllFieldValues($this->tracker->getId(), $mapping_tracker->getId(), $field->getId(), $column_id);
                 foreach ($values as $value_id) {
@@ -131,25 +131,25 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         }
     }
 
-    private function mappingChanged(Tracker $mapping_tracker, $column_id, array $values) {
+    private function mappingValuesChanged(Tracker $mapping_tracker, $column_id, array $values) {
         if (isset($this->existing_mappings[$mapping_tracker->getId()])) {
             $value_mappings = $this->existing_mappings[$mapping_tracker->getId()]->getValueMappings();
-            return $this->mappingValuesChanged($column_id, $value_mappings, $values);
+            return $this->mappingValuesAddedOrRemoved($column_id, $value_mappings, $values);
         } else {
             return true;
         }
     }
 
-    private function mappingValuesChanged($column_id, array $value_mappings, array $values) {
+    private function mappingValuesAddedOrRemoved($column_id, array $value_mappings, array $values) {
         $already_processed = array();
-        if ($this->mappingValuesWereRemoved($column_id, $value_mappings, $values, $already_processed)) {
+        if ($this->areMappingValuesRemoved($column_id, $value_mappings, $values, $already_processed)) {
             return true;
         } else {
-            return $this->mappingValuesWereAdded($values, $already_processed);
+            return $this->areMappingValuesAdded($values, $already_processed);
         }
     }
 
-    private function mappingValuesWereRemoved($column_id, array $value_mappings, array $values, array &$already_processed) {
+    private function areMappingValuesRemoved($column_id, array $value_mappings, array $values, array &$already_processed) {
         $no_update_needed = true;
         foreach ($value_mappings as $value_id => $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
@@ -164,7 +164,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
         return !$no_update_needed;
     }
 
-    private function mappingValuesWereAdded(array $values, array $already_processed) {
+    private function areMappingValuesAdded(array $values, array $already_processed) {
         return count(array_diff($values, $already_processed)) > 0;
     }
 
