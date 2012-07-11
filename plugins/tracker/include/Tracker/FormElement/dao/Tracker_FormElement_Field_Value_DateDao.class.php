@@ -76,11 +76,14 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
     public function getArtifactsByFieldAndValue($fieldId, $date) {
         $fieldId  = $this->da->escapeInt($fieldId);
         $date     = $this->da->escapeInt($date);
+        $halfDay  = 60 * 60 * 12;
+        $minDate  = $date - $halfDay;
+        $maxDate  = $date - $halfDay;
         $sql      = "SELECT t.id AS artifact_id FROM
                      tracker_changeset_value_date d
                      JOIN tracker_changeset_value v on v.id = d.changeset_value_id
                      JOIN tracker_artifact t on t.last_changeset_id = v.changeset_id
-                     WHERE d.value = ".$date."
+                     WHERE d.value BETWEEN ".$minDate." AND ".$maxDate."
                        AND v.field_id = ".$fieldId;
         return $this->retrieve($sql);
     }
