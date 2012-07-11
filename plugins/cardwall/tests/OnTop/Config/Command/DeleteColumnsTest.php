@@ -33,10 +33,11 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
         $this->tracker_id = 666;
         $tracker = stub('Tracker')->getId()->returns($this->tracker_id);
 
+        $this->field_dao = mock('Cardwall_OnTop_ColumnMappingFieldDao');
         $this->value_dao = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
 
         $this->dao     = mock('Cardwall_OnTop_ColumnDao');
-        $this->command = new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $this->dao, $this->value_dao);
+        $this->command = new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $this->dao, $this->field_dao, $this->value_dao);
     }
 
     public function itDeletesOneColumn() {
@@ -44,9 +45,20 @@ class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends TuleapTestCase {
             12 => array('label' => 'Todo'),
             14 => array('label' => ''))
         )->build();
+        stub($this->field_dao)->deleteCardwall()->never();
         stub($this->value_dao)->deleteForColumn($this->tracker_id, 14)->once();
         stub($this->dao)->delete($this->tracker_id, 14)->once();
         stub($this->dao)->delete()->count(1);
+        $this->command->execute($request);
+    }
+
+    public function itDeleteFieldMappingWhenRemoveTheLastColumn() {
+        $request = aRequest()->with('column', array(
+            14 => array('label' => ''))
+        )->build();
+        stub($this->field_dao)->deleteCardwall($this->tracker_id)->once();
+        stub($this->value_dao)->deleteForColumn($this->tracker_id, 14)->once();
+        stub($this->dao)->delete($this->tracker_id, 14)->once();
         $this->command->execute($request);
     }
 }

@@ -73,6 +73,13 @@ class Cardwall_OnTop_ColumnMappingFieldDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    public function deleteCardwall($cardwall_tracker_id) {
+        $cardwall_tracker_id = $this->da->escapeInt($cardwall_tracker_id);
+        $sql = "DELETE FROM plugin_cardwall_on_top_column_mapping_field
+                WHERE cardwall_tracker_id = $cardwall_tracker_id";
+        return $this->update($sql);
+    }
+
     public function duplicate($from_cardwall_tracker_id, $to_cardwall_tracker_id, $tracker_mapping, $field_mapping) {
         $from_cardwall_tracker_id = $this->da->escapeInt($from_tracker_id);
         $to_cardwall_tracker_id   = $this->da->escapeInt($to_tracker_id);
