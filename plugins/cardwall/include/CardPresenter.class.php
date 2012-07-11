@@ -19,6 +19,7 @@
  */
 require_once TRACKER_BASE_DIR .'/Tracker/CardPresenter.class.php';
 require_once 'CardFieldPresenter.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 class Cardwall_CardPresenter implements Tracker_CardPresenter{
     
@@ -28,16 +29,14 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     private $artifact;
     
     /**
-     * @var Array
+     * @var Tracker_CardFields
      */
-    private $displayed_fields;
+    private $card_fields;
 
-    public function __construct(Tracker_Artifact $artifact) {
-        $this->artifact = $artifact;
-        $this->displayed_fields   = array(Tracker_CardPresenter::REMAINING_EFFORT_FIELD_NAME,
-                                          Tracker_CardPresenter::ASSIGNED_TO_FIELD_NAME,
-                                          Tracker_CardPresenter::IMPEDIMENT_FIELD_NAME);
-        $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields) {
+        $this->artifact     = $artifact;
+        $this->details      = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->card_fields  = $card_fields;
     }
 
     /**
@@ -56,18 +55,10 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     
     public function getFields() {
         $diplayed_fields_presenter = array();
-        $user                      = UserManager::instance()->getCurrentUser();
-        $form_element_factory      = Tracker_FormElementFactory::instance();
-        $tracker_id                = $this->artifact->getTracker()->getId();
+        $displayed_fields = $this->card_fields->getFields($this->getArtifact());
         
-        foreach ($this->displayed_fields as $diplayed_field_name) {
-            $field = $form_element_factory->getUsedFieldByNameForUser(
-                        $tracker_id,
-                        $diplayed_field_name,
-                        $user);
-            if ($field) {
-                $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($field, $this->artifact);
-            }
+        foreach ($displayed_fields as $displayed_field) {
+            $diplayed_fields_presenter[] = new Cardwall_CardFieldPresenter($displayed_field, $this->artifact);
         }
         return $diplayed_fields_presenter;
     }
