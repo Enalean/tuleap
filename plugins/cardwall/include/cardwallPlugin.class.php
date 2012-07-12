@@ -161,10 +161,8 @@ class cardwallPlugin extends Plugin {
             $this->denyAccess($tracker_id);
         }
 
-        $tracker_factory  = TrackerFactory::instance();
-        $element_factory  = Tracker_FormElementFactory::instance();
         $token            = $this->getCSRFToken($tracker_id);
-        $config           = $this->getOnTopConfig($tracker, $tracker_factory, $element_factory);
+        $config           = $this->getOnTopConfig($tracker);
         switch ($params['func']) {
             case 'admin-cardwall':
                 require_once 'View/Admin.class.php';
@@ -182,11 +180,14 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    private function getOnTopConfig(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+    private function getOnTopConfig(Tracker $tracker) {
         require_once 'OnTop/Config.class.php';
         require_once 'OnTop/Config/ColumnFactory.class.php';
         require_once 'OnTop/Config/TrackerMappingFactory.class.php';
         require_once 'OnTop/Config/ValueMappingFactory.class.php';
+
+        $tracker_factory  = TrackerFactory::instance();
+        $element_factory  = Tracker_FormElementFactory::instance();
         $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
@@ -286,7 +287,8 @@ class cardwallPlugin extends Plugin {
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             require_once 'Pane.class.php';
-            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'));
+            $config = $this->getOnTopConfig($tracker);
+            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config);
         }
     }
 
