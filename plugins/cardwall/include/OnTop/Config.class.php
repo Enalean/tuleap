@@ -87,6 +87,11 @@ class Cardwall_OnTop_Config {
         return $this->tracker_mapping_factory->getTrackers($this->tracker);
     }
     
+    /**
+     * @param Tracker $mapping_tracker
+     * 
+     * @return Cardwall_OnTop_Config_TrackerMapping
+     */
     public function getMappingFor(Tracker $mapping_tracker) {
         $mappings = $this->getMappings();
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
