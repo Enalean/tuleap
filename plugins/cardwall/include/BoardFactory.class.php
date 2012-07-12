@@ -21,7 +21,7 @@
 require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'Board.class.php';
-require_once 'StatusFieldsExtractor.class.php';
+require_once 'FieldsExtractor.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 /**
@@ -37,7 +37,7 @@ class Cardwall_BoardFactory {
                              TreeNode                                             $forests_of_artifacts, 
                              Cardwall_OnTop_Config                                $config) {
         $column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
-        $acc_field_provider = new Cardwall_StatusFieldsExtractor($field_retriever);
+        $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         
         

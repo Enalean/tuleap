@@ -26,7 +26,7 @@ require_once 'FieldProviders/SemanticStatusFieldProvider.class.php';
  * Foreach artifact in a TreeNode tree, make a collection of the semantic status fields and
  * index them by their id
  */
-class Cardwall_StatusFieldsExtractor {
+class Cardwall_FieldsExtractor {
     
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
