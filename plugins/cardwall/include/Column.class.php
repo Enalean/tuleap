@@ -54,7 +54,7 @@ class Cardwall_Column {
      */
     public function __construct($id, $label, $bgcolor, $fgcolor, 
                                 Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-                                $tracker_mappings) {
+                                array $tracker_mappings) {
         $this->id      = $id;
         $this->label   = $label;
         $this->bgcolor = $bgcolor;
@@ -76,8 +76,10 @@ class Cardwall_Column {
     }
     
     private function isMappedTo($tracker_id, $artifact_status) {
-        $ismappedto = false;
+        if (!isset($this->tracker_mappings[$tracker_id])) return false;
         $tracker_field_mapping = $this->tracker_mappings[$tracker_id];
+        
+        $ismappedto = false;
         foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getValue()->getLabel() == $artifact_status) {
                 $ismappedto = $this->id == $value_mapping->getColumnId();
