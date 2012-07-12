@@ -72,11 +72,12 @@ class Cardwall_ColumnFactory {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getMappings($fields, array $tracker_mappings = array()) {
-        $columns = new Cardwall_Columns($this->getColumns($tracker_mappings));
+    public function getMappings($fields, Cardwall_OnTop_Config $config) {
+        $columns = new Cardwall_Columns($this->getColumns($config->getMappings()));
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $columns);
-        $this->fillMappingsWithOnTopMappings($mappings, $tracker_mappings, $columns);
+        $config->fillMappingsWithOnTopMappings($mappings, $columns);
+//        $this->fillMappingsWithOnTopMappings($mappings, $tracker_mappings, $columns);
         return $mappings;
     }
 
@@ -105,18 +106,6 @@ class Cardwall_ColumnFactory {
         return $mappings;
     }
 
-    private function fillMappingsWithOnTopMappings($mappings, $tracker_mappings, $columns) {
-        foreach ($tracker_mappings as $field_mapping) {
-            foreach ($field_mapping->getValueMappings() as $value_mapping) {
-                $column = $columns->getColumnById($value_mapping->getColumnId());
-                if ($column) {
-                    $value = $value_mapping->getValue();
-                    $mapped_field = $field_mapping->getField();
-                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
-                }
-            }
-        }
-    }
 }
 
 class Cardwall_Columns {

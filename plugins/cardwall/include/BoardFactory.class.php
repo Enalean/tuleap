@@ -42,7 +42,7 @@ class Cardwall_BoardFactory {
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         
         
-        $mapping_collection = $column_factory->getMappings($status_fields, $config->getMappings());
+        $mapping_collection = $column_factory->getMappings($status_fields, $config);
         
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
         $columns                          = $column_factory->getColumns($config->getMappings());

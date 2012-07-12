@@ -96,5 +96,19 @@ class Cardwall_OnTop_Config {
         $mappings = $this->getMappings();
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
+    
+    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection $mappings, $columns) {
+        foreach ($this->getMappings() as $field_mapping) {
+            foreach ($field_mapping->getValueMappings() as $value_mapping) {
+                $column = $columns->getColumnById($value_mapping->getColumnId());
+                if ($column) {
+                    $value = $value_mapping->getValue();
+                    $mapped_field = $field_mapping->getField();
+                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
+                }
+            }
+        }
+    }
+
 }
 ?>
