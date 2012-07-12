@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../../constants.php';
+
 require_once CARDWALL_BASE_DIR .'/FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 require_once CARDWALL_BASE_DIR .'/FieldProviders/SemanticStatusFieldProvider.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMapping.class.php';
@@ -28,7 +30,7 @@ require_once CARDWALL_BASE_DIR .'/OnTop/Config.class.php';
  * Provides the Cardwall_OnTop configured field for an artifact, and fallbacks on the status field if
  * there is no mapping
  */
-class Cardwall_OnTop_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
+class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
 
     /**
      * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever 
@@ -48,6 +50,7 @@ class Cardwall_OnTop_MappedFieldProvider implements Cardwall_FieldProviders_IPro
     }
 
     public function getField(Tracker_Artifact $artifact) {
+
         $mapping = $this->config->getMappingFor($artifact->getTracker());
         if ($mapping) {
             return $mapping->getField();
