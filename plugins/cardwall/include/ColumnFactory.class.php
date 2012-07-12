@@ -73,21 +73,10 @@ class Cardwall_ColumnFactory {
      * @return Cardwall_MappingCollection
      */
     public function getMappings($fields, array $field_mappings = array()) {
-        $columns  = $this->getColumns();
-        $columns2 = new Cardwall_Columns($columns);
+        $columns = new Cardwall_Columns($this->getColumns());
         $mappings = new Cardwall_MappingCollection();
-        $this->ducktype($mappings, $fields, $columns, $columns2);
-        
-        foreach ($field_mappings as $field_mapping) {
-            foreach ($field_mapping->getValueMappings() as $value_mapping) {
-                $column = $columns2->getColumnById($value_mapping->getColumnId());
-                if ($column) {
-                    $value = $value_mapping->getValue();
-                    $mapped_field = $field_mapping->getField();
-                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
-                }
-            }
-        }
+        $this->fillMappingsByDuckType($mappings, $fields, $columns);
+        $this->fillMappingsWithOnTopMappings($mappings, $field_mappings, $columns);
         return $mappings;
     }
 
@@ -103,10 +92,10 @@ class Cardwall_ColumnFactory {
         return array($bgcolor, $fgcolor);
     }
 
-    public function ducktype($mappings, $fields, $columns, $columns2) {
+    private function fillMappingsByDuckType($mappings, $fields, $columns) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                $column = $columns2->getColumnByLabel($value->getLabel());
+                $column = $columns->getColumnByLabel($value->getLabel());
                 if ($column) {
                     $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
                 }
@@ -114,6 +103,19 @@ class Cardwall_ColumnFactory {
             }
         }
         return $mappings;
+    }
+
+    private function fillMappingsWithOnTopMappings($mappings, $field_mappings, $columns) {
+        foreach ($field_mappings as $field_mapping) {
+            foreach ($field_mapping->getValueMappings() as $value_mapping) {
+                $column = $columns->getColumnById($value_mapping->getColumnId());
+                if ($column) {
+                    $value = $value_mapping->getValue();
+                    $mapped_field = $field_mapping->getField();
+                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
+                }
+            }
+        }
     }
 }
 
