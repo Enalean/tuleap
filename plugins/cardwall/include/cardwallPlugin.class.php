@@ -116,9 +116,7 @@ class cardwallPlugin extends Plugin {
             }
 
             $report           = $params['report'];
-            $tracker_factory  = TrackerFactory::instance();
-            $tracker          = $tracker_factory->getTrackerById($report->tracker_id);
-            $config           = $this->getConfigFactory()->getOnTopConfig($tracker);
+            $config           = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
 
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
@@ -328,7 +326,22 @@ class Cardwall_OnTop_ConfigFactory {
         $this->element_factory = $element_factory;
     }
 
-        public function getOnTopConfig(Tracker $tracker) {
+    /**
+     * @param Tracker $tracker
+     * 
+     * @return \Cardwall_OnTop_Config
+     */
+    public function getOnTopConfigByTrackerId($tracker_id) {
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        return $this->getOnTopConfig($tracker);
+    }
+
+    /**
+     * @param Tracker $tracker
+     * 
+     * @return \Cardwall_OnTop_Config
+     */
+    public function getOnTopConfig(Tracker $tracker) {
         require_once 'OnTop/Config.class.php';
         require_once 'OnTop/Config/ColumnFactory.class.php';
         require_once 'OnTop/Config/TrackerMappingFactory.class.php';
