@@ -42,6 +42,8 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
     public function getAvailableFields() {
         return $this->available_fields;
     }
+    
+    public abstract function getField();
 
     /**
      * @pattern Visitor
