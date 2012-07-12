@@ -22,7 +22,7 @@
 class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
     
     public function itProvidesTheStatusFieldIfNoMapping() {
-        $artifact = anArtifact()->build();
+        $artifact = aMockArtifact()->build();
         
         $status_field = mock('Tracker_FormElement_Field_OpenList');
         $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
@@ -30,6 +30,22 @@ class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
         
         $this->assertEqual($status_field, $provider->getField($artifact));
     }
+    
+    public function itProvidesTheMappedFieldIfThereIsAMapping() {
+        $tracker  = aTracker()->build();
+        $artifact = aMockArtifact()->withTracker($tracker)->build();
+        
+        $mapped_field = mock('Tracker_FormElement_Field_OpenList');
+        $status_retriever = mock('Cardwall_FieldProviders_SemanticStatusFieldRetriever');
+        $config = stub('Cardwall_OnTop_Config')->getFieldFor($tracker)->returns($mapped_field);
+        $provider = new Cardwall_OnTop_ConfigFieldProvider($config, $status_retriever);
+        
+        $this->assertEqual($mapped_field, $provider->getField($artifact));
+    }
+    
+    public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() {
+    }
+    
 }
 
 class Cardwall_OnTop_ConfigFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
@@ -39,13 +55,23 @@ class Cardwall_OnTop_ConfigFieldProvider implements Cardwall_FieldProviders_IPro
      */
     private $semantic_status_provider;
     
+    /**
+     * @var Cardwall_OnTop_Config
+     */
+    private $config;
+    
     public function __construct(Cardwall_OnTop_Config                         $config, 
                          Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider) {
         
         $this->semantic_status_provider = $semantic_status_provider;
+        $this->config                   = $config;
     }
 
     public function getField(Tracker_Artifact $artifact) {
+        $mapped_field = $this->config->getFieldFor($artifact->getTracker()) ;
+        if ($mapped_field) {
+            return $mapped_field;
+        }
         return $this->semantic_status_provider->getField($artifact);
     }
 

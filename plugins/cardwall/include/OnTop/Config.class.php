@@ -86,5 +86,9 @@ class Cardwall_OnTop_Config {
     public function getTrackers() {
         return $this->tracker_mapping_factory->getTrackers($this->tracker);
     }
+    
+    public function getFieldFor(Tracker $tracker) {
+        
+    }
 }
 ?>
