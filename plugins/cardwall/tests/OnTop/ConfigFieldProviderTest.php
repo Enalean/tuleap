@@ -76,6 +76,16 @@ class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
     }
     
     public function itReturnsNullIfThereIsACustomMappingButNoFieldChoosenYet() {
+        $tracker  = aTracker()->build();
+        $artifact = aMockArtifact()->withTracker($tracker)->build();
+        
+        $status_field = mock('Tracker_FormElement_Field_OpenList');
+        $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
+        $mapping = stub('Cardwall_OnTop_Config_TrackerMapping')->getField()->returns(null);
+        $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
+        $provider = new Cardwall_OnTop_ConfigFieldProvider($config, $status_retriever);
+        
+        $this->assertEqual(null, $provider->getField($artifact));
     }
     
 }
