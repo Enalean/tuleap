@@ -53,12 +53,14 @@ class Cardwall_Column {
      * @param string $label
      */
     public function __construct($id, $label, $bgcolor, $fgcolor, 
-                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
+                                $tracker_mappings) {
         $this->id      = $id;
         $this->label   = $label;
         $this->bgcolor = $bgcolor;
         $this->fgcolor = $fgcolor;
         $this->field_provider = $field_provider;
+        $this->tracker_mappings = $tracker_mappings;
     }
     
     public function isInColumn(Tracker_Artifact $artifact) {
@@ -67,7 +69,19 @@ class Cardwall_Column {
         if ($field) {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
-        return $this->isMatchForThisColumn($artifact_status);
+
+        $ismappedto = false;
+        
+        $tracker_field_mapping = $this->tracker_mappings[$artifact->getTrackerId()];
+
+        foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
+            if ($value_mapping->getValue()->getLabel() == $artifact_status) {
+                $ismappedto = $this->id == $value_mapping->getColumnId();
+                
+            }
+        }
+        
+        return  $ismappedto || $this->isMatchForThisColumn($artifact_status);
     }
 
     private function isMatchForThisColumn($artifact_status) {

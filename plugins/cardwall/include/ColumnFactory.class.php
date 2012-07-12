@@ -51,7 +51,7 @@ class Cardwall_ColumnFactory {
     /**
      * @return array of Cardwall_Column
      */
-    public function getColumns() {
+    public function getColumns($tracker_mappings) {
         if ($this->columns) return $this->columns;
 
         $values        = $this->field->getVisibleValuesPlusNoneIfAny();
@@ -59,7 +59,7 @@ class Cardwall_ColumnFactory {
         $this->columns = array();
         foreach ($values as $value) {
             list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider);
+            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider, $tracker_mappings);
         }
         return $this->columns;
     }
@@ -72,11 +72,11 @@ class Cardwall_ColumnFactory {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getMappings($fields, array $field_mappings = array()) {
-        $columns = new Cardwall_Columns($this->getColumns());
+    public function getMappings($fields, array $tracker_mappings = array()) {
+        $columns = new Cardwall_Columns($this->getColumns($tracker_mappings));
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $columns);
-        $this->fillMappingsWithOnTopMappings($mappings, $field_mappings, $columns);
+        $this->fillMappingsWithOnTopMappings($mappings, $tracker_mappings, $columns);
         return $mappings;
     }
 
@@ -105,8 +105,8 @@ class Cardwall_ColumnFactory {
         return $mappings;
     }
 
-    private function fillMappingsWithOnTopMappings($mappings, $field_mappings, $columns) {
-        foreach ($field_mappings as $field_mapping) {
+    private function fillMappingsWithOnTopMappings($mappings, $tracker_mappings, $columns) {
+        foreach ($tracker_mappings as $field_mapping) {
             foreach ($field_mapping->getValueMappings() as $value_mapping) {
                 $column = $columns->getColumnById($value_mapping->getColumnId());
                 if ($column) {
