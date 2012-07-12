@@ -46,7 +46,6 @@ class Tracker_CardFields {
     public function getFields(Tracker_Artifact $artifact) {
         $diplayed_fields = array();
         $tracker_id      = $artifact->getTrackerId();
-        //$user            = UserManager::instance()->getCurrentUser();
         
         foreach ($this->displayed_fields as $diplayed_field_name) {
             $field = $this->form_element_factory->getUsedFieldByNameForUser(
@@ -60,5 +59,4 @@ class Tracker_CardFields {
 
         return $diplayed_fields;
     }
-    
 }
