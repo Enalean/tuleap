@@ -34,11 +34,14 @@ class Cardwall_BoardFactory {
      */
     public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
                              Tracker_FormElement_Field_List                       $field, 
-                             TreeNode                                             $forests_of_artifacts) {
+                             TreeNode                                             $forests_of_artifacts, 
+            $config) {
         $column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
         $acc_field_provider = new Cardwall_StatusFieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
-        $mapping_collection = $column_factory->getMappings($status_fields);
+        
+        
+        $mapping_collection = $column_factory->getMappings($status_fields, $config->getMappings());
         
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
         $columns                          = $column_factory->getColumns();

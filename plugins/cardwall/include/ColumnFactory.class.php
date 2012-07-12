@@ -72,9 +72,34 @@ class Cardwall_ColumnFactory {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getMappings($fields) {
+    public function getMappings($fields, array $field_mappings = array()) {
         $columns  = $this->getColumns();
-        $mappings = $this->ducktype($fields, $columns);
+        $mappings = new Cardwall_MappingCollection();
+        $this->ducktype($mappings, $fields, $columns);
+        
+//        foreach ($columns as $column) {
+//            foreach ($field_mappings as $field_mapping) {
+//                $mapped_field = $field_mapping->getField();
+//                $value_mappings = $field_mapping->getValueMappings();
+//                if (isset($value_mappings[$column->id])) {
+//                    $value = $value_mappings[$column->id]->getValue();
+//                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
+//                }
+//            }
+//        }
+        
+        foreach ($field_mappings as $field_mapping) {
+            $mapped_field = $field_mapping->getField();
+            $value_mappings = $field_mapping->getValueMappings();
+            foreach ($value_mappings as $value_mapping) {
+                $value = $value_mapping->getValue();
+                foreach ($columns as $column) {
+                    if ($column->id == $value_mapping->getColumnId()) {
+                        $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
+                    }
+                }
+            }
+        }
         return $mappings;
     }
 
@@ -90,8 +115,7 @@ class Cardwall_ColumnFactory {
         return array($bgcolor, $fgcolor);
     }
 
-    public function ducktype($fields, $columns) {
-        $mappings = new Cardwall_MappingCollection();
+    public function ducktype($mappings, $fields, $columns) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
                 foreach ($columns as $column) {
