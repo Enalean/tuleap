@@ -60,3 +60,4 @@ class Tracker_CardFields {
         return $diplayed_fields;
     }
 }
+?>
