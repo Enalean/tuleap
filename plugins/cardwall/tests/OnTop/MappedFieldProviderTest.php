@@ -19,36 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once CARDWALL_BASE_DIR .'/FieldProviders/IProvideFieldGivenAnArtifact.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMapping.class.php';
-class Cardwall_OnTop_ConfigFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact {
-
-    /**
-     * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever 
-     */
-    private $semantic_status_provider;
-    
-    /**
-     * @var Cardwall_OnTop_Config
-     */
-    private $config;
-    
-    public function __construct(Cardwall_OnTop_Config                         $config, 
-                         Cardwall_FieldProviders_SemanticStatusFieldRetriever $semantic_status_provider) {
-        
-        $this->semantic_status_provider = $semantic_status_provider;
-        $this->config                   = $config;
-    }
-
-    public function getField(Tracker_Artifact $artifact) {
-        $mapping = $this->config->getMappingFor($artifact->getTracker());
-        if ($mapping) {
-            return $mapping->getField();
-        }
-        return $this->semantic_status_provider->getField($artifact);
-    }
-
-}
+require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappedFieldProvider.class.php';
+require_once TRACKER_BASE_DIR .'/../tests/builders/aMockArtifact.php';
 
 class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
     
@@ -57,7 +29,7 @@ class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
         
         $status_field = mock('Tracker_FormElement_Field_OpenList');
         $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
-        $provider = new Cardwall_OnTop_ConfigFieldProvider(mock('Cardwall_OnTop_Config'), $status_retriever);
+        $provider = new Cardwall_OnTop_MappedFieldProvider(mock('Cardwall_OnTop_Config'), $status_retriever);
         
         $this->assertEqual($status_field, $provider->getField($artifact));
     }
@@ -70,7 +42,7 @@ class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
         $status_retriever = mock('Cardwall_FieldProviders_SemanticStatusFieldRetriever');
         $mapping = stub('Cardwall_OnTop_Config_TrackerMapping')->getField()->returns($mapped_field);
         $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
-        $provider = new Cardwall_OnTop_ConfigFieldProvider($config, $status_retriever);
+        $provider = new Cardwall_OnTop_MappedFieldProvider($config, $status_retriever);
         
         $this->assertEqual($mapped_field, $provider->getField($artifact));
     }
@@ -83,7 +55,7 @@ class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
         $status_retriever = stub('Cardwall_FieldProviders_SemanticStatusFieldRetriever')->getField()->returns($status_field);
         $mapping = stub('Cardwall_OnTop_Config_TrackerMapping')->getField()->returns(null);
         $config = stub('Cardwall_OnTop_Config')->getMappingFor($tracker)->returns($mapping);
-        $provider = new Cardwall_OnTop_ConfigFieldProvider($config, $status_retriever);
+        $provider = new Cardwall_OnTop_MappedFieldProvider($config, $status_retriever);
         
         $this->assertEqual(null, $provider->getField($artifact));
     }
