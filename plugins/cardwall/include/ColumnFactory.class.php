@@ -74,17 +74,17 @@ class Cardwall_ColumnFactory {
      */
     public function getMappings($fields, array $field_mappings = array()) {
         $columns  = $this->getColumns();
+        $columns2 = new Cardwall_Columns($columns);
         $mappings = new Cardwall_MappingCollection();
-        $this->ducktype($mappings, $fields, $columns);
+        $this->ducktype($mappings, $fields, $columns, $columns2);
         
         foreach ($field_mappings as $field_mapping) {
             foreach ($field_mapping->getValueMappings() as $value_mapping) {
-                foreach ($columns as $column) {
-                    if ($column->id == $value_mapping->getColumnId()) {
-                        $value = $value_mapping->getValue();
-                        $mapped_field = $field_mapping->getField();
-                        $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
-                    }
+                $column = $columns2->getColumnById($value_mapping->getColumnId());
+                if ($column) {
+                    $value = $value_mapping->getValue();
+                    $mapped_field = $field_mapping->getField();
+                    $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
                 }
             }
         }
@@ -103,17 +103,46 @@ class Cardwall_ColumnFactory {
         return array($bgcolor, $fgcolor);
     }
 
-    public function ducktype($mappings, $fields, $columns) {
+    public function ducktype($mappings, $fields, $columns, $columns2) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                foreach ($columns as $column) {
-                    if ($column->label == $value->getLabel()) {
-                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
-                    }
+                $column = $columns2->getColumnByLabel($value->getLabel());
+                if ($column) {
+                    $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
                 }
+
             }
         }
         return $mappings;
+    }
+}
+
+class Cardwall_Columns {
+
+    private $columns;
+
+    public function __construct(array $columns = array()) {
+        $this->columns = $columns;
+    }
+    
+//    public function add(Cardwall_Column $column) {
+//        $this->columns[] = $column;
+//    }
+
+    public function getColumnById($id) {
+        foreach ($this->columns as $column) {
+            if ($column->id == $id) {
+                return $column;
+            }
+        }
+    }
+
+    public function getColumnByLabel($label) {
+        foreach ($this->columns as $column) {
+            if ($column->label == $label) {
+                return $column;
+            }
+        }
     }
 }
 ?>
