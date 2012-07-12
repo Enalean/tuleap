@@ -20,13 +20,29 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
+require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
 
 /**
  * CardwallPlugin
  */
 class cardwallPlugin extends Plugin {
+    
+    /** 
+     * @var Cardwall_OnTop_ConfigFactory
+     */
+    private $config_factory;
+    
+    public function getConfigFactory() {
+        if (!$this->config_factory) {
+            $tracker_factory  = TrackerFactory::instance();
+            $element_factory  = Tracker_FormElementFactory::instance();
+            $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
+        }
+        return $this->config_factory;
+    }
 
     const RENDERER_TYPE = 'plugin_cardwall';
+
 
     public function getHooksAndCallbacks() {
         if (defined('TRACKER_BASE_URL')) {
@@ -102,7 +118,7 @@ class cardwallPlugin extends Plugin {
             $report           = $params['report'];
             $tracker_factory  = TrackerFactory::instance();
             $tracker          = $tracker_factory->getTrackerById($report->tracker_id);
-            $config           = $this->getOnTopConfig($tracker);
+            $config           = $this->getConfigFactory()->getOnTopConfig($tracker);
 
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
@@ -169,42 +185,165 @@ class cardwallPlugin extends Plugin {
         }
 
         $token            = $this->getCSRFToken($tracker_id);
-        $config           = $this->getOnTopConfig($tracker);
         switch ($params['func']) {
             case 'admin-cardwall':
                 require_once 'View/Admin.class.php';
 
                 $admin_view = new Cardwall_View_Admin();
+                $config     = $this->getConfigFactory()->getOnTopConfig($tracker);
                 $admin_view->displayAdminOnTop($params['layout'], $token, $config);
                 $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
                 $token->check();
-                $this->getOnTopConfigUpdater($tracker, $tracker_factory, $element_factory, $config)
+                $this->getConfigFactory()->getOnTopConfigUpdater($tracker)
                         ->process($params['request']);
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
                 break;
         }
     }
 
-    private function getOnTopConfig(Tracker $tracker) {
+    private function denyAccess($tracker_id) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
+    }
+
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function getCSRFToken($tracker_id) {
+        require_once 'common/include/CSRFSynchronizerToken.class.php';
+        return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
+    }
+
+    public function agiledashboard_event_additional_panes_on_milestone($params) {
+        $tracker  = $params['milestone']->getArtifact()->getTracker();
+
+        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
+            require_once 'Pane.class.php';
+            $config = $this->getConfigFactory()->getOnTopConfig($tracker);
+            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config);
+        }
+    }
+
+    public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+        $cardwall = $params['request']->get('cardwall');
+        if ($cardwall && $this->requestCanLeaveTheTracker($params['request'])) {
+            list($redirect_to, $redirect_params) = each($cardwall);
+            switch ($redirect_to) {
+            case 'agile':
+                $this->redirectToAgileDashboard($redirect_params);
+                break;
+            case 'renderer':
+                $this->redirectToRenderer($redirect_params);
+                break;
+            }
+        }
+    }
+
+    private function redirectToAgileDashboard(array $redirect_params) {
+        list($planning_id, $artifact_id) = each($redirect_params);
+        require_once AGILEDASHBOARD_BASE_DIR .'/Planning/PlanningFactory.class.php';
+        $planning = PlanningFactory::build()->getPlanning($planning_id);
+        if ($planning) {
+            $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
+                'group_id'    => $planning->getGroupId(),
+                'planning_id' => $planning->getId(),
+                'action'      => 'show',
+                'aid'         => $artifact_id,
+                'pane'        => 'cardwall',
+            )));
+        }
+    }
+
+    private function redirectToRenderer(array $redirect_params) {
+        list($report_id, $renderer_id) = each($redirect_params);
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL .'/?'. http_build_query(array(
+            'report'   => $report_id,
+            'renderer' => $renderer_id,
+        )));
+    }
+
+    public function tracker_event_build_artifact_form_action($params) {
+        $cardwall = $params['request']->get('cardwall');
+        if ($cardwall) {
+            list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
+            $params['query_parameters'][$key] = $value;
+        }
+    }
+
+    private function requestCanLeaveTheTracker(Codendi_Request $request) {
+        return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
+    }
+    
+    /**
+     * @return Cardwall_OnTop_Dao
+     */
+    private function getOnTopDao() {
+        require_once 'OnTop/Dao.class.php';
+        return new Cardwall_OnTop_Dao();
+    }
+
+    /**
+     * @return Cardwall_OnTop_ColumnDao
+     */
+    private function getOnTopColumnDao() {
+        require_once 'OnTop/ColumnDao.class.php';
+        return new Cardwall_OnTop_ColumnDao();
+    }
+
+    /**
+     * @return Cardwall_OnTop_ColumnMappingFieldDao
+     */
+    private function getOnTopColumnMappingFieldDao() {
+        require_once 'OnTop/ColumnMappingFieldDao.class.php';
+        return new Cardwall_OnTop_ColumnMappingFieldDao();
+    }
+
+    /**
+     * @return Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private function getOnTopColumnMappingFieldValueDao() {
+        require_once 'OnTop/ColumnMappingFieldValueDao.class.php';
+        return new Cardwall_OnTop_ColumnMappingFieldValueDao();
+    }
+
+}
+
+class Cardwall_OnTop_ConfigFactory {
+
+    /** 
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    
+    /** 
+     * @var Tracker_FormElementFactory
+     */
+    private $element_factory;
+    
+    function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
+        $this->tracker_factory = $tracker_factory;
+        $this->element_factory = $element_factory;
+    }
+
+        public function getOnTopConfig(Tracker $tracker) {
         require_once 'OnTop/Config.class.php';
         require_once 'OnTop/Config/ColumnFactory.class.php';
         require_once 'OnTop/Config/TrackerMappingFactory.class.php';
         require_once 'OnTop/Config/ValueMappingFactory.class.php';
 
-        $tracker_factory  = TrackerFactory::instance();
-        $element_factory  = Tracker_FormElementFactory::instance();
         $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
-            $element_factory,
+            $this->element_factory,
             $this->getOnTopColumnMappingFieldValueDao()
         );
 
         $tracker_mapping_factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
-            $tracker_factory,
-            $element_factory,
+            $this->tracker_factory,
+            $this->element_factory,
             $this->getOnTopColumnMappingFieldDao(),
             $value_mapping_factory
         );
@@ -218,15 +357,13 @@ class cardwallPlugin extends Plugin {
         return $config;
     }
 
-    private function denyAccess($tracker_id) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
-    }
-
     /**
      * @return Cardwall_OnTop_Config_Updater
      */
-    private function getOnTopConfigUpdater(Tracker $tracker, TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory, Cardwall_OnTop_Config $config) {
+    public function getOnTopConfigUpdater(Tracker $tracker) {
+        $tracker_factory  = $this->tracker_factory;
+        $element_factory  = $this->element_factory;
+        $config           = $this->getOnTopConfig($tracker);
         $dao              = $this->getOnTopDao();
         $column_dao       = $this->getOnTopColumnDao();
         $mappingfield_dao = $this->getOnTopColumnMappingFieldDao();
@@ -281,72 +418,5 @@ class cardwallPlugin extends Plugin {
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 
-    /**
-     * @return CSRFSynchronizerToken
-     */
-    private function getCSRFToken($tracker_id) {
-        require_once 'common/include/CSRFSynchronizerToken.class.php';
-        return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
-    }
-
-    public function agiledashboard_event_additional_panes_on_milestone($params) {
-        $tracker  = $params['milestone']->getArtifact()->getTracker();
-
-        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
-            require_once 'Pane.class.php';
-            $config = $this->getOnTopConfig($tracker);
-            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config);
-        }
-    }
-
-    public function tracker_event_redirect_after_artifact_creation_or_update($params) {
-        $cardwall = $params['request']->get('cardwall');
-        if ($cardwall && $this->requestCanLeaveTheTracker($params['request'])) {
-            list($redirect_to, $redirect_params) = each($cardwall);
-            switch ($redirect_to) {
-            case 'agile':
-                $this->redirectToAgileDashboard($redirect_params);
-                break;
-            case 'renderer':
-                $this->redirectToRenderer($redirect_params);
-                break;
-            }
-        }
-    }
-
-    private function redirectToAgileDashboard(array $redirect_params) {
-        list($planning_id, $artifact_id) = each($redirect_params);
-        require_once AGILEDASHBOARD_BASE_DIR .'/Planning/PlanningFactory.class.php';
-        $planning = PlanningFactory::build()->getPlanning($planning_id);
-        if ($planning) {
-            $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
-                'group_id'    => $planning->getGroupId(),
-                'planning_id' => $planning->getId(),
-                'action'      => 'show',
-                'aid'         => $artifact_id,
-                'pane'        => 'cardwall',
-            )));
-        }
-    }
-
-    private function redirectToRenderer(array $redirect_params) {
-        list($report_id, $renderer_id) = each($redirect_params);
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL .'/?'. http_build_query(array(
-            'report'   => $report_id,
-            'renderer' => $renderer_id,
-        )));
-    }
-
-    public function tracker_event_build_artifact_form_action($params) {
-        $cardwall = $params['request']->get('cardwall');
-        if ($cardwall) {
-            list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
-            $params['query_parameters'][$key] = $value;
-        }
-    }
-
-    private function requestCanLeaveTheTracker(Codendi_Request $request) {
-        return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
-    }
 }
 ?>
