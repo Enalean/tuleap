@@ -51,7 +51,7 @@ class Cardwall_ColumnFactory {
     /**
      * @return array of Cardwall_Column
      */
-    public function getColumns($tracker_mappings) {
+    public function getColumns($config) {
         if ($this->columns) return $this->columns;
 
         $values        = $this->field->getVisibleValuesPlusNoneIfAny();
@@ -59,7 +59,7 @@ class Cardwall_ColumnFactory {
         $this->columns = array();
         foreach ($values as $value) {
             list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider, $tracker_mappings);
+            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider, $config);
         }
         return $this->columns;
     }
@@ -73,7 +73,7 @@ class Cardwall_ColumnFactory {
      * @return Cardwall_MappingCollection
      */
     public function getMappings($fields, Cardwall_OnTop_Config $config) {
-        $columns = new Cardwall_Columns($this->getColumns($config->getMappings()));
+        $columns = new Cardwall_Columns($this->getColumns($config));
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $columns);
         $config->fillMappingsWithOnTopMappings($mappings, $columns);

@@ -110,5 +110,21 @@ class Cardwall_OnTop_Config {
         }
     }
 
+    public function isMappedTo($tracker_id, $artifact_status, $column) {
+        $tracker_mappings = $this->getMappings();
+        
+        // TODO null object pattern, to return empty valuemappings
+        if (!isset($tracker_mappings[$tracker_id])) return false;
+        $tracker_field_mapping = $tracker_mappings[$tracker_id];
+        
+        $ismappedto = false;
+        foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
+            if ($value_mapping->getValue()->getLabel() == $artifact_status) {
+                $ismappedto = $column->id == $value_mapping->getColumnId();
+            }
+        }
+        return $ismappedto;
+    }
+
 }
 ?>
