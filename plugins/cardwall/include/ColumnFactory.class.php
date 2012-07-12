@@ -127,10 +127,6 @@ class Cardwall_Columns {
         $this->columns = $columns;
     }
     
-//    public function add(Cardwall_Column $column) {
-//        $this->columns[] = $column;
-//    }
-
     public function getColumnById($id) {
         foreach ($this->columns as $column) {
             if ($column->id == $id) {

@@ -70,18 +70,20 @@ class Cardwall_Column {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
 
-        $ismappedto = false;
         
-        $tracker_field_mapping = $this->tracker_mappings[$artifact->getTrackerId()];
-
+        return $this->isMappedTo($artifact->getTrackerId(), $artifact_status) || 
+               $this->isMatchForThisColumn($artifact_status);
+    }
+    
+    private function isMappedTo($tracker_id, $artifact_status) {
+        $ismappedto = false;
+        $tracker_field_mapping = $this->tracker_mappings[$tracker_id];
         foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getValue()->getLabel() == $artifact_status) {
                 $ismappedto = $this->id == $value_mapping->getColumnId();
-                
             }
         }
-        
-        return  $ismappedto || $this->isMatchForThisColumn($artifact_status);
+        return $ismappedto;
     }
 
     private function isMatchForThisColumn($artifact_status) {
@@ -95,6 +97,7 @@ class Cardwall_Column {
     private function matchesTheNoneColumn($artifact_status) {
         return $artifact_status === null && $this->id == 100;
     }
+
 
 }
 ?>
