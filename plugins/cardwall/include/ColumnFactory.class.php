@@ -78,12 +78,11 @@ class Cardwall_ColumnFactory {
         $this->ducktype($mappings, $fields, $columns);
         
         foreach ($field_mappings as $field_mapping) {
-            $mapped_field = $field_mapping->getField();
-            $value_mappings = $field_mapping->getValueMappings();
-            foreach ($value_mappings as $value_mapping) {
-                $value = $value_mapping->getValue();
+            foreach ($field_mapping->getValueMappings() as $value_mapping) {
                 foreach ($columns as $column) {
                     if ($column->id == $value_mapping->getColumnId()) {
+                        $value = $value_mapping->getValue();
+                        $mapped_field = $field_mapping->getField();
                         $mappings->add(new Cardwall_Mapping($column->id, $mapped_field->getId(), $value->getId()));
                     }
                 }
