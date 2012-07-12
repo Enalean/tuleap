@@ -98,9 +98,16 @@ class cardwallPlugin extends Plugin {
                     }
                 }
             }
+
+            $report           = $params['report'];
+            $tracker_factory  = TrackerFactory::instance();
+            $tracker          = $tracker_factory->getTrackerById($report->tracker_id);
+            $config           = $this->getOnTopConfig($tracker);
+
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
                 $this,
+                $config,
                 $params['row']['id'],
                 $params['report'],
                 $params['row']['name'],

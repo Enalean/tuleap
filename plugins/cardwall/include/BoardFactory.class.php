@@ -35,7 +35,7 @@ class Cardwall_BoardFactory {
     public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
                              Tracker_FormElement_Field_List                       $field, 
                              TreeNode                                             $forests_of_artifacts, 
-            $config) {
+                             Cardwall_OnTop_Config                                $config) {
         $column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
         $acc_field_provider = new Cardwall_StatusFieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
