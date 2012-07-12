@@ -1,3 +1,12 @@
+Version 0.6 - Tuleap 5.3
+    * Admin chooses which projects can index docs
+
+Version 0.5 - Tuleap 5.3
+    * Update mustache renderer
+
+Version 0.4 - Tuleap 5.2
+    * First version of search interface available through site admin
+
 Version 0.3 - Tuleap 5.2
     * On document title/description update, update the corresponding index.
 

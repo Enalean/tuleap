@@ -244,7 +244,7 @@ class GitViews extends PluginViews {
         <input type="hidden" id="action" name="action" value="edit" />
         <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
         <?php
-        if ($this->getController()->isAPermittedAction('del') && !$repository->hasChild()) {
+        if ($this->getController()->isAPermittedAction('del') && $repository->canBeDeleted()) {
             echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
         }
         if ( $this->getController()->isAPermittedAction('save') ) {
@@ -438,11 +438,34 @@ class GitViews extends PluginViews {
             //echo '<hr>';
             echo '<div id="gitphp">';
         }
-        include( dirname(__FILE__).'/../gitphp/index.php' );
+
+        include($this->getGitPhpIndexPath());
+
         if ( empty($_REQUEST['noheader']) ) {
             echo '</div>';
         }
     }
+
+    /**
+     * Return path to GitPhp index file
+     *
+     * @return String
+     */
+    private function getGitPhpIndexPath() {
+        $gitphp_path = $this->getController()->getPlugin()->getConfigurationParameter('gitphp_path');
+        if ($gitphp_path) {
+            $this->initGitPhpEnvironement();
+        } else {
+            $gitphp_path = dirname(__FILE__).'/../gitphp';
+        }
+        return $gitphp_path.'/index.php';
+    }
+
+    private function initGitPhpEnvironement() {
+        define('GITPHP_CONFIGDIR', dirname(__FILE__).'/../etc/');
+        ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
+    }
+
     /**
      * CONFIRM_DELETION
      * @todo make a generic function ?
@@ -768,7 +791,7 @@ class GitViews extends PluginViews {
         if ($backendIsGitolite) {
             //$accessType .= '"'.$this->getText('view_repo_access_custom').'">';
             $accessType .= '"custom">';
-            $accessType .= '<img src="'.$this->getController()->plugin->getThemePath().'/images/perms.png" />';
+            $accessType .= '<img src="'.$this->getController()->getPlugin()->getThemePath().'/images/perms.png" />';
         } else {
             switch ($access) {
                 case GitRepository::PRIVATE_ACCESS:

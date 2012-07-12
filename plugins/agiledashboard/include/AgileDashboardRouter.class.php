@@ -279,8 +279,10 @@ class AgileDashboardRouter {
      * @return Planning_MilestoneFactory 
      */
     protected function getMilestoneFactory() {
-        return new Planning_MilestoneFactory($this->getPlanningFactory(),
-                                             Tracker_ArtifactFactory::instance());
+        return new Planning_MilestoneFactory(
+            $this->getPlanningFactory(),
+            Tracker_ArtifactFactory::instance(),
+            Tracker_FormElementFactory::instance());
     }
 }
 

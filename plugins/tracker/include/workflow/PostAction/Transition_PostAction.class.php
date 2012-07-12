@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/include/Codendi_Request.class.php';
+
 /**
  * class Transition_PostAction
  * Post action occuring when transition is run
@@ -52,6 +54,24 @@ abstract class Transition_PostAction {
      */
     public function getId() {
         return $this->id;
+    }
+    
+    /**
+     * Return all the relevant concatenated CSS classes for this PostAction.
+     * 
+     * @return string 
+     */
+    public function getCssClasses() {
+        return 'workflow_action '.$this->getCssClass();
+    }
+    
+    /**
+     * Return the most specific CSS class for this PostAction.
+     * 
+     * @return string
+     */
+    public function getCssClass() {
+        return 'workflow_action_'.$this->getShortName();
     }
     
     /**
@@ -126,6 +146,5 @@ abstract class Transition_PostAction {
      * @return void
      */
     public abstract function process(Codendi_Request $request);
- 
 }
 ?>

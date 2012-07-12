@@ -1,25 +1,54 @@
 <div class="agiledashboard">
-    <h2>{{planningName}}</h2>
-    
-    <table cellspacing="5">
-        <tbody>
-            <tr valign="top">
-                <td width="50%">
-                    <div class="planning-backlog">
-                        <h3>{{planningBacklogTitle}}</h3>
-                        {{{backlogSearchView}}}
+    <ul class="nav nav-tabs">
+        <li class="{{#isPlannerPaneActive}}active{{/isPlannerPaneActive}}">
+            <a href="{{current_uri}}">{{planningName}}</a>
+        </li>
+        {{#hasSelectedArtifact}}
+            {{#additionalPanes}}
+                <li class="{{#isActive}}active{{/isActive}}">
+                    <a href="{{current_uri}}&pane={{getIdentifier}}">{{getTitle}}</a>
+                </li>
+            {{/additionalPanes}}
+        {{/hasSelectedArtifact}}
+    </ul>
+    <div class="tab-content">
+        {{#isPlannerPaneActive}}
+            <div id="planner" class="tab-pane active">
+                <div class="planner_feedback">
+                    <div>
+                        <ul class="feedback_warning"><li></li></ul>
                     </div>
-                </td>
-                <td>
-                    <h3>{{planningPlanTitle}}</h3>
-                    {{^hasSelectedArtifact}}
-                        {{> select-destination}}
-                    {{/hasSelectedArtifact}}
-                    {{#hasSelectedArtifact}}
-                        {{> show-destination}}
-                    {{/hasSelectedArtifact}}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+                <table cellspacing="5">
+                    <tbody>
+                        <tr valign="top">
+                            <td width="50%">
+                                <div class="planning-backlog">
+                                    <h3>{{planningBacklogTitle}}</h3>
+                                    {{{backlogSearchView}}}
+                                </div>
+                            </td>
+                            <td>
+                                <h3>{{planningPlanTitle}}</h3>
+                                {{^hasSelectedArtifact}}
+                                    {{> select-destination}}
+                                {{/hasSelectedArtifact}}
+                                {{#hasSelectedArtifact}}
+                                    {{> show-destination}}
+                                {{/hasSelectedArtifact}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {{/isPlannerPaneActive}}
+        {{#hasSelectedArtifact}}
+            {{#additionalPanes}}
+                <div id="{{getIdentifier}}" class="tab-pane {{#isActive}}active{{/isActive}}">
+                    {{{getContent}}}
+                </div>
+            {{/additionalPanes}}
+        {{/hasSelectedArtifact}}
+    </div>
 </div>
+

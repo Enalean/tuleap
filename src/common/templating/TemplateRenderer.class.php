@@ -54,16 +54,28 @@ abstract class TemplateRenderer {
     }
     
     /**
+     * Renders a template, given its name and a presenter (providing the
+     * template logic), and returns the result as a string.
+     * 
      * @param String $template_name The basename of the template file, relative
      *                              to the plugin templates directory (e.g.
      *                              'my-template' would match
      *                              'plugins/myplugin/templates/my-template.foo').
-     * 
      * @param mixed  $presenter     Any PHP object usable as a context for the
      *                              template engine (e.g. its method could be
      *                              called from the template). It can even be
      *                              an associative array.
+     * 
+     * @return String The generated output.
      */
-    public abstract function render($template_name, $presenter);
+    public abstract function renderToString($template_name, $presenter);
+    
+    /**
+     * Same as renderToString, but outputs to the page instead of returning a
+     * string.
+     */
+    public function renderToPage($template_name, $presenter) {
+        echo $this->renderToString($template_name, $presenter);
+    }
 }
 ?>

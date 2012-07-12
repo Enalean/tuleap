@@ -925,7 +925,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     protected function getTrackerChildrenFromHierarchy(Tracker $tracker) {
-        return Tracker_HierarchyFactory::build()->getChildren($tracker->getId());
+        return Tracker_HierarchyFactory::instance()->getChildren($tracker->getId());
     }
     
     /**

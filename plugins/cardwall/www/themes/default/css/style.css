@@ -1,48 +1,55 @@
-.tracker_renderer_board table {
+.cardwall_board table {
     clear:both;
     border-collapse: collapse;
 }
-#tracker_renderer_board-nifty {
+#cardwall_board-nifty {
     float: right;
     color: #999;
 }
-.tracker_renderer_board p {
+.cardwall_board p {
   font-size:100%;
   font-weight:normal;
   margin: 0;
 }
-.tracker_renderer_board ul, .tracker_renderer_board li{
+.cardwall_board ul, .cardwall_board li{
   list-style:none;
 }
-.tracker_renderer_board ul{
+.cardwall_board ul{
   padding: 0em;
 }
-.tracker_renderer_board.nifty ul{
+.cardwall_board.nifty ul{
   padding: 3em;
 }
-.tracker_renderer_board ul li {
-  overflow:hidden;
-  text-decoration:none;
-  color:#000;
-  background:#ffc;
-  display:inline-block;
-  padding:1em;
-  margin:1em;
-  cursor: move;
-  border: 1px solid #ccc;
-  width:8em;
-  vertical-align:top;
+
+.cardwall_board .toggle-collapse {
+    display: none;
 }
 
-.widget .tracker_renderer_board ul li {
+.cardwall_board .card {
+  cursor: move;
+  -moz-box-shadow:1px 1px 3px rgba(33,33,33,.3);
+  -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.3);
+  box-shadow: 1px 1px 3px rgba(33,33,33,.3);
+  background: #ffe;
+}
+.cardwall_board .nodrag .card {
+  cursor: auto;
+  background: #f9f9f9;
+  height: 100%;
+  -moz-box-shadow:none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.widget .cardwall_board .card {
     cursor: auto;
 }
 
-.tracker_renderer_board.nifty ul li {
-  float:left;
-  border:none;
-  height:10em;
-  width:10em;
+.cardwall_board.nifty ul li .card {
+    height: 8em;
+    font-size: 1.5em;
+}
+.cardwall_board.nifty ul li {
   -moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
   -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
   box-shadow: 5px 5px 7px rgba(33,33,33,.7);
@@ -50,28 +57,28 @@
   -o-transition:-o-transform .15s linear;
   -webkit-transition:-webkit-transform .15s linear;
 }
-.tracker_renderer_board ul li.error {
+.cardwall_board ul li.error {
   -moz-box-shadow:5px 5px 12px rgba(254,0,0,1);
   -webkit-box-shadow: 5px 5px 12px rgba(254,0,0,.7);
   box-shadow: 5px 5px 12px rgba(254,0,0,.7);
 }
-.tracker_renderer_board ul li p.tracker_renderer_board_title {
+.cardwall_board ul li p.cardwall_board_title {
   font-size:140%;
   font-weight:bold;
   padding-bottom:10px;
 }
-.tracker_renderer_board.nifty ul li p.tracker_renderer_board_content {
+.cardwall_board.nifty ul li div.cardwall_board_content {
   font-family:"Reenie Beanie",arial,sans-serif;
   font-size:180%;
   height: 83%;
   overflow: hidden;
 }
-.tracker_renderer_board.nifty ul li {
+.cardwall_board.nifty ul li {
   -webkit-transform: rotate(-6deg);
   -o-transform: rotate(-6deg);
   -moz-transform:rotate(-6deg);
 }
-.tracker_renderer_board.nifty ul li:nth-child(even) {
+.cardwall_board.nifty ul li:nth-child(even) {
   -o-transform:rotate(4deg);
   -webkit-transform:rotate(4deg);
   -moz-transform:rotate(4deg);
@@ -79,7 +86,7 @@
   top:5px;
 /*  background:#cfc; */
 }
-.tracker_renderer_board.nifty ul li:nth-child(3n) {
+.cardwall_board.nifty ul li:nth-child(3n) {
   -o-transform:rotate(-3deg);
   -webkit-transform:rotate(-3deg);
   -moz-transform:rotate(-3deg);
@@ -87,15 +94,23 @@
   top:-5px;
 /*  background:#ccf; */
 }
-.tracker_renderer_board.nifty ul li:nth-child(5n) {
+.cardwall_board.nifty ul li:nth-child(5n) {
   -o-transform:rotate(5deg);
   -webkit-transform:rotate(5deg);
   -moz-transform:rotate(5deg);
   position:relative;
   top:-10px;
 }
+.cardwall_board.nifty ul.nodrag li {
+  -o-transform:none;
+  -webkit-transform:none;
+  -moz-transform:none;
+  -moz-box-shadow:none;
+  -webkit-box-shadow:none;
+  box-shadow:none;
+}
 /* magnifying-glass effect. Maybe too disturbing?
-.tracker_renderer_board.nifty ul li:hover, ul li:focus{
+.cardwall_board.nifty ul li:hover, ul li:focus{
   box-shadow:10px 10px 7px rgba(0,0,0,.7);
   -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
   -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
@@ -107,7 +122,7 @@
 }
 */
 
-.tracker_renderer_board_column_hover {
+.cardwall_board_column_hover {
   background: #fcfcfc;
   -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
   -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;

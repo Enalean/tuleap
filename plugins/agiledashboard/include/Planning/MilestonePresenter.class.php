@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'ItemCardPresenterCallback.class.php';
 require_once 'PlanningPresenter.class.php';
 require_once 'MilestoneLinkPresenter.class.php';
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 /**
  * Provides the presentation logic for a planning milestone.
@@ -53,6 +54,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public $planning_redirect_parameter;
     
     /**
+     * @var array
+     */
+    private $additional_panes = array();
+    
+    /**
      * Instanciates a new presenter.
      * 
      * TODO:
@@ -79,6 +85,8 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
+        $this->current_uri                 = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
+        $this->planned_artifacts_tree      = $this->buildPlannedArtifactsTree();
     }
     
     /**
@@ -87,24 +95,73 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function hasSelectedArtifact() {
         return !is_a($this->milestone, 'Planning_NoMilestone');
     }
-    
+
+    /**
+     * @return bool
+     */
+    public function isPlannerPaneActive() {
+        $this->getAdditionalPanes();
+        return $this->is_planner_pane_active;
+    }
+
+    /**
+     * @return array
+     */
+    public function additionalPanes() {
+        return $this->getAdditionalPanes();
+    }
+
+    private function getAdditionalPanes() {
+        if (empty($this->additional_panes)) {
+            $this->additional_panes = array();
+            $a_pane_is_active       = false;
+            if ($this->milestone->getArtifact()) {
+                EventManager::instance()->processEvent(
+                    AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
+                    array(
+                        'milestone' => $this->milestone,
+                        'panes'     => &$this->additional_panes
+                    )
+                );
+
+                $requested_pane   = HTTPRequest::instance()->get('pane');
+                foreach($this->additional_panes as $pane) {
+                    $pane->setActive($requested_pane === $pane->getIdentifier());
+                    $a_pane_is_active = $pane->isActive();
+                }
+            }
+            $this->is_planner_pane_active = ! $a_pane_is_active;
+        }
+        return $this->additional_panes;
+    }
+
     /**
      * @return TreeNode
      */
-    public function plannedArtifactsTree($child_depth = 1) {
-        $root_node = null;
+    private function buildPlannedArtifactsTree($child_depth = 1) {
+        $presenter_root_node = null;
         
         if ($this->canAccessPlannedItem()) {
             $root_node = $this->milestone->getPlannedArtifacts();
             
             //TODO use null object pattern while still possible?
             if ($root_node) {
-                Planning_ArtifactTreeNodeVisitor::build('planning-draggable-alreadyplanned')->visit($root_node);
+                $card_mapper = new TreeNodeMapper(
+                    new Planning_ItemCardPresenterCallback(
+                        $this->milestone->getPlanning(), 
+                        'planning-draggable-alreadyplanned'
+                    )
+                );
+                $presenter_root_node = $card_mapper->map($root_node);
             }
         }
-        return $root_node;
+        return $presenter_root_node;
     }
-    
+
+    public function getPlannedArtifactsTree() {
+        return $this->planned_artifacts_tree;
+    }
+
     private function canAccessPlannedItem() {
         return $this->milestone && $this->milestone->userCanView($this->current_user);
     }
@@ -216,6 +273,26 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      */
     public function editLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
+    }
+
+    public function canDisplayRemainingEffort() {
+        return $this->milestone->getRemainingEffort() !== null && $this->milestone->getCapacity() !== null;
+    }
+
+    public function getRemainingEffort() {
+        $remaining_effort = $this->milestone->getRemainingEffort() != null ? $this->milestone->getRemainingEffort() : 0;
+        $capacity         = $this->milestone->getCapacity() != null ? $this->milestone->getCapacity() : 0;
+
+        $html  = '';
+        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
+        $html .= '&nbsp;<span class="planning_remaining_effort">'.$remaining_effort.'</span>';
+        $html .= '&nbsp;/&nbsp;'.$capacity;
+        return $html;
+    }
+
+    public function isOverCapacity() {
+        return $this->canDisplayRemainingEffort() &&
+               $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
     }
 }
 ?>

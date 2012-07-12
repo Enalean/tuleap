@@ -161,5 +161,25 @@ class Tracker_FormElement_Field_List_BindDecorator {
         $child->addAttribute('g', $this->g);
         $child->addAttribute('b', $this->b);
     }
+
+    /**
+     * @return string rgb(234, 254, 123) or $default if not defined
+     */
+    public function css($default = 'transparent') {
+        if ($this->r !== null && $this->g !== null && $this->b !== null ) {
+            return 'rgb('. (int)$this->r .', '. (int)$this->g .', '. (int)$this->b .');';
+        }
+        return $default;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDark() {
+        if ($this->r !== null && $this->g !== null && $this->b !== null ) {
+            return (0.3 * $this->r + 0.59 * $this->g + 0.11 * $this->b) < 128;
+        }
+        return false;
+    }
 }
 ?>

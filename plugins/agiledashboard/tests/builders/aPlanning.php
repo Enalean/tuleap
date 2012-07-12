@@ -35,7 +35,7 @@ class Test_Planning_Builder {
     private $backlog_title      = 'Release Backlog';
     private $plan_title         = 'Sprint Plan';
     private $group_id           = '102';
-    private $backlog_tracker_id = array();
+    private $backlog_tracker_id;
     private $planning_tracker_id;
     private $planning_tracker;
     
@@ -49,6 +49,11 @@ class Test_Planning_Builder {
         return $this;
     }
     
+    public function withBacklogTrackerId($backlog_tracker_id) {
+        $this->backlog_tracker_id = $backlog_tracker_id;
+        return $this;
+    }
+
     public function withGroupId($group_id) {
         $this->group_id = $group_id;
         return $this;

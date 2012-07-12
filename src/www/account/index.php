@@ -133,19 +133,17 @@ foreach($entry_label as $key => $label) {
 </fieldset>
 
 <?php
-// ############################### Shell Account
+// Shell Account
+$keys = $user->getAuthorizedKeys(true);
 
-if ($user->getUnixStatus() == 'A') {
-    $keys = $user->getAuthorizedKeys(true);
-
-    echo '<fieldset><legend>'. $Language->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount') .'</legend>';
-    echo $Language->getText('account_options', 'shell_shared_keys').': <strong>'.count($keys).'</strong><ol>';
-    foreach ($keys as $key) {
-        echo '<li>'.substr($key, 0, 20).'...'.substr($key, -20).'</li>';
-    }
-    echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
-    echo '</fieldset>';
+echo '<fieldset><legend>'. $Language->getText('account_options', 'shell_account_title').' '.help_button('OtherServices.html#ShellAccount') .'</legend>';
+echo $Language->getText('account_options', 'shell_shared_keys').': <strong>'.count($keys).'</strong><ol>';
+foreach ($keys as $key) {
+    echo '<li>'.substr($key, 0, 20).'...'.substr($key, -20).'</li>';
 }
+echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
+echo '</fieldset>';
+
 
 // Authentication attempts
 

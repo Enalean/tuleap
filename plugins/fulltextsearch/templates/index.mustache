@@ -1,0 +1,16 @@
+<h1>Admin - Full Text Search</h1>
+
+<p>This interface provide a way to access elasticsearch index, it's only for
+site admin usage for the time being.</p>
+<p><ul>
+    <li>Index size: {{index_size}}</li>
+    <li>Number of indexed documents: {{nb_docs}}</li>
+</ul></p>
+
+<form name="fts_query" method="get" action="?">
+    <input type="hidden" name="func" value="search" />
+    <p>Enter the terms you are looking for
+        <input type="text" name="terms" value="{{terms}}" />
+        <input type="submit" />
+    </p>
+</form>

@@ -167,5 +167,39 @@ class Tracker_CrossSearch_Query {
         }
         return $artifact_list;
     }
+
+    /**
+     * Return true if there are no filters selected
+     *
+     * @return Boolean
+     */
+    public function isEmpty() {
+        return ($this->areSharedFieldsEmpty()
+                && $this->isSemanticEmpty()
+                && $this->isArtifactLinkEmpty());
+    }
+
+    private function areSharedFieldsEmpty() {
+        foreach ($this->shared_fields_criteria as $values) {
+            foreach ($values['values'] as $value_id) {
+                if ($value_id != '') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private function isArtifactLinkEmpty() {
+        return (count($this->listArtifactIds()) == 0);
+    }
+
+    private function isSemanticEmpty() {
+        return (!$this->getTitle() && $this->isSemanticStatusEmpty());
+    }
+
+    private function isSemanticStatusEmpty() {
+        return ($this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any');
+    }
 }
 ?>

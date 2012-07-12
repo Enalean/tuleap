@@ -35,6 +35,7 @@ require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
@@ -436,9 +437,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
     public function displayTrackerHomeNav(Project $project) {
         $presenter = new Tracker_HomeNavPresenter($project);
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
         
-        echo $renderer->render('tracker-home-nav', $presenter);
+        $renderer->renderToPage('tracker-home-nav', $presenter);
     }
     
     /**

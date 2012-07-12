@@ -21,7 +21,6 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once('Git_Ci.class.php');
 
 /**
  * GitPlugin
@@ -85,6 +84,17 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * Returns the configuration defined for given variable name
+     *
+     * @param String $key
+     *
+     * @return Mixed
+     */
+    public function getConfigurationParameter($key) {
+        return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
     public function cssFile($params) {
@@ -375,16 +385,23 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function project_is_deleted($params) {
-        require_once('GitActions.class.php');
         if (!empty($params['group_id'])) {
-            $projectId = intval($params['group_id']);
-            // Delete all gitolite repositories of the project
-            $gitoliteBackend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-            $gitoliteBackend->deleteProjectRepositories($projectId);
-            // Delete all git repositories of the project
-            $gitBackend = Backend::instance('Git','GitBackend');
-            $gitBackend->deleteProjectRepositories($projectId);
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            if ($project) {
+                $repository_manager = $this->getRepositoryManager();
+                $repository_manager->deleteProjectRepositories($project);
+            }
         }
+    }
+
+    private function getRepositoryManager() {
+        require_once 'GitRepositoryManager.class.php';
+        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
+    }
+
+    private function getRepositoryFactory() {
+        require_once 'GitRepositoryFactory.class.php';
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
     /**
@@ -431,6 +448,7 @@ class GitPlugin extends Plugin {
                 $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                 $vRepoId->required();
                 if($params['request']->valid($vRepoId)) {
+                    require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
                     if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
@@ -486,6 +504,7 @@ class GitPlugin extends Plugin {
      */
     public function delete_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
+            require_once('Git_Ci.class.php');
             $ci = new Git_Ci();
             if (!$ci->deleteTrigger($params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));

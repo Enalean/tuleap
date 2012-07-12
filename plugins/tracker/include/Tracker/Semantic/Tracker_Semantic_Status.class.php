@@ -154,9 +154,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             // field selectbox
             $field = null;
             $select = '<select name="field_id">';
+
+            $selected = '';
             if ( ! $this->list_field) {
-                $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
+                $selected = 'selected="selected"';
             }
+            $select .= '<option value="-1" '. $selected .'>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_a_field') . '</option>';
+
             foreach ($list_fields as $list_field) {
                 $selected = '';
                 if ($list_field->getId() == $this->getFieldId()) {
@@ -216,7 +220,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      */
     public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
         if ($request->exist('update')) {
-            if ($field = Tracker_FormElementFactory::instance()->getUsedListFieldById($this->tracker, $request->get('field_id'))) {
+            if ($request->get('field_id') == '-1') {
+                if ($this->getField()) {
+                    $this->delete();
+                }
+            } else if ($field = Tracker_FormElementFactory::instance()->getUsedListFieldById($this->tracker, $request->get('field_id'))) {
                 if ($this->getFieldId() != $request->get('field_id') || $request->get('open_values')) {
                     $this->list_field = $field;
                     $open_values = $request->get('open_values');
@@ -238,6 +246,16 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             }
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
+    }
+    
+    /**
+     * Delete this semantic
+     */
+    private function delete() {
+        $this->list_field  = null;
+        $this->open_values = array();
+        $dao = new Tracker_Semantic_StatusDao();
+        $dao->delete($this->tracker->getId());
     }
     
     /**

@@ -160,11 +160,11 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         stub($hierarchy_factory)->getChildren($bug_tracker->getId())->returns(array());
         stub($hierarchy_factory)->getChildren($sprint_tracker->getId())->returns(array());
         
-        $artifact0 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset', 'getTracker'));
-        $artifact1 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset', 'getTracker'));
-        $artifact2 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset', 'getTracker'));
-        $artifact3 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset', 'getTracker'));
-        $artifact4 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset', 'getTracker'));
+        $artifact0 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset'));
+        $artifact1 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset'));
+        $artifact2 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset'));
+        $artifact3 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset'));
+        $artifact4 = TestHelper::getPartialMock('Tracker_Artifact', array('getAnArtifactLinkField', 'getLastChangeset'));
         
         $artifact0->setHierarchyFactory($hierarchy_factory);
         $artifact1->setHierarchyFactory($hierarchy_factory);
@@ -178,11 +178,11 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $artifact3->setId(3);
         $artifact4->setId(4);
         
-        stub($artifact0)->getTracker()->returns($sprint_tracker);
-        stub($artifact1)->getTracker()->returns($us_tracker);
-        stub($artifact2)->getTracker()->returns($task_tracker);
-        stub($artifact3)->getTracker()->returns($bug_tracker);
-        stub($artifact4)->getTracker()->returns($bug_tracker);
+        $artifact0->setTracker($sprint_tracker);
+        $artifact1->setTracker($us_tracker);
+        $artifact2->setTracker($task_tracker);
+        $artifact3->setTracker($bug_tracker);
+        $artifact4->setTracker($bug_tracker);
         
         $this->setArtifactChildren($artifact0, array($artifact1, $artifact3));
         $this->setArtifactChildren($artifact1, array($artifact2));

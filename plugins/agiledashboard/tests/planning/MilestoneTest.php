@@ -19,22 +19,49 @@
  */
 
 require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
+require_once dirname(__FILE__).'/../../include/Planning/NoMilestone.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
-class Planning_MilestoneTest extends TuleapTestCase {
+abstract class Planning_MilestoneTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->project   = stub('Project')->getID()->returns(123);
+        $this->planning  = aPlanning()->withId(9999)->build();
+    }
     
-    private $project;
-    private $planning;
+    public function itHasAPlanning() {
+        $this->assertEqual($this->planning, $this->milestone->getPlanning());
+        $this->assertEqual($this->planning->getId(), $this->milestone->getPlanningId());
+    }
+    
+    public function itHasAProject() {
+        $this->assertEqual($this->project, $this->milestone->getProject());
+        $this->assertEqual($this->project->getID(), $this->milestone->getGroupId());
+    }
+
+}
+
+class Planning_NoMilestoneTest extends Planning_MilestoneTest {
+    public function setUp() {
+        parent::setUp();
+        $this->milestone = new Planning_NoMilestone($this->project, $this->planning);
+    }
+}
+
+class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
+    
+    protected $project;
+    protected $planning;
     private $artifact;
     
     /**
      * @var Planning_Milestone
      */
-    private $milestone;
+    protected $milestone;
     
     public function setUp() {
         parent::setUp();
@@ -109,10 +136,10 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
         $child1_artifact   = aMockArtifact()->withId(1111)->withTitle('child artifact 1')->build();
         $child2_artifact   = aMockArtifact()->withId(2222)->withTitle('child artifact 2')->build();
-        $planned_artifacts = aNode()->withArtifact($root_artifact)
+        $planned_artifacts = aNode()->withObject($root_artifact)
                                     ->withChildren(
-                                        aNode()->withArtifact($child1_artifact),
-                                        aNode()->withArtifact($child2_artifact))
+                                        aNode()->withObject($child1_artifact),
+                                        aNode()->withObject($child2_artifact))
                                     ->build();
 
         
@@ -125,10 +152,10 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
         $depth1_artifact   = aMockArtifact()->withId(1111)->withTitle('depth 1 artifact')->build();
         $depth2_artifact   = aMockArtifact()->withId(2222)->withTitle('depth 2 artifact')->build();
-        $planned_artifacts = aNode()->withArtifact($root_artifact)
+        $planned_artifacts = aNode()->withObject($root_artifact)
                                     ->withChild(
-                                        aNode()->withArtifact($depth1_artifact)
-                                               ->withChild(aNode()->withArtifact($depth2_artifact)))
+                                        aNode()->withObject($depth1_artifact)
+                                               ->withChild(aNode()->withObject($depth2_artifact)))
                                     ->build();
 
         
@@ -144,9 +171,9 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $artifact          = aMockArtifact()->withId(1111)
                                             ->withUniqueLinkedArtifacts(array($linked_artifact_1, $linked_artifact_2))
                                             ->build();
-        $planned_artifacts = aNode()->withArtifact($root_artifact)
+        $planned_artifacts = aNode()->withObject($root_artifact)
                                     ->withChild(
-                                        aNode()->withArtifact($artifact))
+                                        aNode()->withObject($artifact))
                                     ->build();
 
         

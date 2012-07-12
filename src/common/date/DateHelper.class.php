@@ -23,6 +23,8 @@ class DateHelper {
     const INCLUDE_SECONDS = 1;
     const WITH_TITLE      = 1;
     
+    const SECONDS_IN_A_DAY = 86400;
+
     /**
      * Give the apporximate distance between a time and now
      *
@@ -125,6 +127,32 @@ class DateHelper {
             $distance = $distance * -1;
         }
         return strtotime(date("Y-m-d", $_SERVER['REQUEST_TIME'] + $distance));
+    }
+
+    /**
+     * Calculate difference between two dates in days
+     *
+     * @param Integer $start Timestamp of the start date
+     * @param Integer $end   Timestamp of the end date
+     *
+     * @return Integer
+     */
+    public static function dateDiffInDays($start, $end) {
+        return floor(($end - $start) / self::SECONDS_IN_A_DAY);
+    }
+
+    /**
+     * Decide whetehr a distance in days respects a period
+     * Example: if the period is 3 the method should return true only for distances
+     * that are multiples of 3 like: 3, 6, 9, 27, 501
+     *
+     * @param Integer $distance Distance in days
+     * @param Integer $period   Period to respect
+     *
+     * @return Boolean
+     */
+    public static function isPeriodicallyDistant($distance, $period) {
+        return ($distance % $period == 0);
     }
 
 }

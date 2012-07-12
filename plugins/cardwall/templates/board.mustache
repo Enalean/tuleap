@@ -1,0 +1,53 @@
+{{#board}}
+    <div class="cardwall_board {{nifty}}">
+        {{#mappings}}
+            <input type="hidden" id="cardwall_column_mapping_{{column_id}}_{{field_id}}" value="{{value_id}}" />
+        {{/mappings}}
+        <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
+            <colgroup>
+                {{#has_swimline_header}}
+                    <col />
+                {{/has_swimline_header}}
+                {{#columns}}
+                    <col id="cardwall_board_column-{{id}}" />
+                {{/columns}}
+            </colgroup>
+
+            <thead>
+                <tr>
+                    {{#has_swimline_header}}
+                        <th>{{swimline_title}}</th>
+                    {{/has_swimline_header}}
+                    {{#columns}}
+                        <th style="background-color: {{bgcolor}}; color: {{fgcolor}}">{{label}}</th>
+                    {{/columns}}
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#swimlines}}
+                    <tr valign="top" id="swimline-{{swimline_id}}">
+                        {{#has_swimline_header}}
+                            <td>
+                                <ul class="nodrag">
+                                    <li>{{> card}}</td>
+                                </ul>
+                            </td>
+                        {{/has_swimline_header}}
+                        {{#cells}}
+                            <td>
+                                <ul>
+                                    {{#cardincell_presenters}}
+                                        <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
+                                            {{> card}}
+                                        </li>
+                                    {{/cardincell_presenters}}
+                                </ul>
+                            </td>
+                        {{/cells}}
+                    </tr>
+                {{/swimlines}}
+            </tbody>
+        </table>
+    </div>
+{{/board}}

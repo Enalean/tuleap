@@ -1,3 +1,37 @@
+Version 0.40 - Tuleap 5.3
+    * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.39 - Tuleap 5.3
+    * Display a feedback when the user D'nD things
+
+Version 0.38 - Tuleap 5.3
+    * Display remaining effort and capacity in planning view
+
+Version 0.36 - Tuleap 5.3
+    * Allow to sort artifacts in the planning by drag 'n droping
+
+Version 0.35 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.34 - Tuleap 5.3
+    * Update mustache renderer
+
+Version 0.33 - Tuleap 5.2
+    * Fix fatal error while duplicating planning
+
+Version 0.32 - Tuleap 5.2
+     * Fix regression introduced in 0.31 on templates
+
+Version 0.31 - Tuleap 5.2
+     * Fix display of hierarchy on backlog side
+     * Add expand collapse on cards
+
+Version 0.30 - Tuleap 5.2
+     * Allow plugins to add panes in the dashboard (on a milestone)
+
+Version 0.29 - Tuleap 5.2
+     * Fix bug when attempt to create an artifact in an empty milestone.
+
 Version 0.28 - Tuleap 5.2
      * Allow edition of an existing planning
 

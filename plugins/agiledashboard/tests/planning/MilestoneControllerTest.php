@@ -21,10 +21,11 @@
 
 $current_dir = dirname(__FILE__);
 
+require_once $current_dir.'/../../include/constants.php';
 require_once $current_dir.'/../../../tracker/include/constants.php';
-require_once $current_dir.'/../../include/Planning/MilestoneController.class.php';
-require_once $current_dir.'/../../include/Planning/Planning.class.php';
-require_once $current_dir.'/../../include/Planning/NoMilestone.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/MilestoneController.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/Planning.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/NoMilestone.class.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aTracker.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aField.php';
 require_once $current_dir.'/../../../tracker/tests/builders/aCrossSearchCriteria.php';
@@ -32,7 +33,7 @@ require_once $current_dir.'/../builders/aPlanning.php';
 require_once $current_dir.'/../builders/aPlanningFactory.php';
 require_once $current_dir.'/../builders/aPlanningController.php';
 require_once $current_dir.'/../../../../tests/simpletest/common/include/builders/aRequest.php';
-require_once $current_dir.'/../../include/Planning/ViewBuilder.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/Planning/ViewBuilder.class.php';
 
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
@@ -52,6 +53,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         parent::setUp();
 
         $this->request_uri = '/plugins/agiledashboard/';
+        $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $_SERVER['REQUEST_URI'] = $this->request_uri;
+        
+        
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
@@ -59,16 +64,20 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
+        
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
+        Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
     }
 
     public function tearDown() {
         parent::tearDown();
 
+        $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
 
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
+        Tracker_HierarchyFactory::clearInstance();
     }
 
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -192,14 +201,14 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
-        $tracker_ids  = array();
+        $backlog_tracker_id  = null; // It's null because of NoMilestone in assertThatWeBuildAcontentViewWith
         $view_builder = new MockPlanning_ViewBuilder();
         $expected_arguments = array(
             '*',
             $project,
             new EqualExpectation($expected_criteria),
             $already_linked_items,
-            $tracker_ids,
+            $backlog_tracker_id,
             $this->planning,
             '*' // TODO an assert on planning_redirect_param
         );
@@ -286,9 +295,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function GivenAMilestone($artifact) {
         $milestone = mock('Planning_Milestone');
-        $root_node = new TreeNode(array('id'    => $artifact->getId(),
-                                        'title' => $artifact->getTitle()));
-        $root_node->setId($artifact->getId());
+        $root_node = new ArtifactNode($artifact);
 
         stub($milestone)->getArtifact()->returns($artifact);
         stub($milestone)->getPlannedArtifacts()->returns($root_node);

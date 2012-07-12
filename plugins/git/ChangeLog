@@ -1,3 +1,21 @@
+Version 2.6.3 - Tuleap 5.3
+    * Add the possibility to delete personal repository
+
+Version 2.6.2 - Tuleap 5.2
+    * Fix display of git push project widget for non project admin (contrib STMicroelectronics).
+
+Version 2.6.1 - Tuleap 5.2
+    * Instrument gitphp to use a temporary directory where we can write into.
+
+Version 2.6 - Tuleap 5.2
+    * Allow to use another gitphp than bundled one
+      You may want to install gitphp-tuleap rpm package as well for test.
+      If so, you need to edit the plugin configuration and set:
+      $gitphp_path = "/usr/share/gitphp-tuleap";
+
+Version 2.5.6 - Tuleap 5.2
+    * Fix fatal error while creating a new repo
+
 Version 2.5.5 - Tuleap 5.2
     * Refactoring of "external permissions"
 

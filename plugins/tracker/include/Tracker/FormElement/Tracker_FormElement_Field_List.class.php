@@ -578,7 +578,42 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getAllValues() {
         return $this->getBind()->getAllValues();
     }
-    
+
+    /**
+     * @return array of BindValues that are not hidden + none value if any
+     */
+    public function getVisibleValuesPlusNoneIfAny() {
+        $values = $this->getAllValues();
+        foreach ($values as $key => $value) {
+            if ($value->isHidden()) {
+                unset($values[$key]);
+            }
+        }
+        if ($values) {
+            if (! $this->isRequired()) {
+                $none = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+                $values = array_merge(array($none), $values);
+            }
+        }
+        return $values;
+    }
+
+    /**
+     * 
+     * @param Tracker_Artifact_Changeset $changeset
+     * @return string
+     */
+    public function getFirstValueFor(Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead()) {
+            if ($last_values = $changeset->getValue($this)->getListValues()) {
+                // let's assume there is no more that one status
+                if ($label = array_shift($last_values)->getLabel()) {
+                    return $label;
+                }
+            }
+        }
+    }
+
     protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
         $html = '';
         $multiple = ' ';

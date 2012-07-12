@@ -19,11 +19,22 @@
  */
 
 require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/HierarchyFactory.class.php';
+require_once dirname(__FILE__) .'/../../../include/Tracker/TrackerFactory.class.php';
+require_once dirname(__FILE__).'/../../builders/aMockTracker.php';
 
 Mock::generate('Tracker_Hierarchy_Dao');
 
 class Tracker_HierarchyFactoryTest extends TuleapTestCase {
-    
+
+    public function itReturnsItselfWhenThereIsNoHierarchyAssociatedToTracker() {
+        $factory = $this->GivenAHierarchyFactory();
+
+        $lonely_tracker                = array(115);
+        $lonely_tracker_hierarchy_list = $factory->getHierarchy($lonely_tracker)->flatten();
+
+        $this->assertEqual($lonely_tracker_hierarchy_list, $lonely_tracker);
+    }
+
     public function itRetrievesTheChildrenOfAGivenTracker() {
         $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
         $tracker_factory   = mock('TrackerFactory');

@@ -460,7 +460,7 @@ class BackendSystem extends Backend {
     public function dumpSSHKeys() {
         $userdao = new UserDao(CodendiDataAccess::instance());
         foreach($userdao->searchSSHKeys() as $row) {
-            $this->writeSSHKeys($row['user_name'], $row['authorized_keys']);
+            $this->writeSSHKeys($row['user_name'], $row['authorized_keys'], $row['unix_status']);
         }
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
         return true;
@@ -474,7 +474,7 @@ class BackendSystem extends Backend {
      * @return boolean if the ssh key was written
      */
     public function dumpSSHKeysForUser($user) {
-        return $this->writeSSHKeys($user->getUserName(), $user->getAuthorizedKeys());
+        return $this->writeSSHKeys($user->getUserName(), $user->getAuthorizedKeys(), $user->getUnixStatus());
     }
     
     /**
@@ -485,7 +485,10 @@ class BackendSystem extends Backend {
      * 
      * @return 
      */
-    protected function writeSSHKeys($username, $ssh_keys) {
+    protected function writeSSHKeys($username, $ssh_keys, $unix_status) {
+        if ($unix_status != 'A') {
+            return true;
+        }
         $ssh_keys = str_replace('###', "\n", $ssh_keys);
         $username = strtolower($username);
         $ssh_dir  = $GLOBALS['homedir_prefix'] ."/$username/.ssh";
@@ -499,19 +502,23 @@ class BackendSystem extends Backend {
             return false;
         }
         if (!is_dir($ssh_dir)) {
-            mkdir($ssh_dir);
-            $this->chmod($ssh_dir, 0755);
-            $this->chown($ssh_dir, $username);
-            $this->chgrp($ssh_dir, $username);
-        }        
+            if (mkdir($ssh_dir)) {
+                $this->chmod($ssh_dir, 0755);
+                $this->chown($ssh_dir, $username);
+                $this->chgrp($ssh_dir, $username);
+            } else {
+                $this->log("Unable to create user home directory for $username", Backend::LOG_ERROR);
+                return false;
+            }
+        }
         if ( file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
             posix_seteuid(0);
-            $this->log("Enable to write authorized_keys_new file for $username", Backend::LOG_ERROR);
+            $this->log("Unable to write authorized_keys_new file for $username", Backend::LOG_ERROR);
             return false;
         }
         if ( rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys") === false ) {
             posix_seteuid(0);
-            $this->log("Enable to rename authorized_keys_new file for $username", Backend::LOG_ERROR);
+            $this->log("Unable to rename authorized_keys_new file for $username", Backend::LOG_ERROR);
             return false;
         }
         #set effective id to root's
