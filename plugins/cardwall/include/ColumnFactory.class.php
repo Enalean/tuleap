@@ -73,11 +73,7 @@ class Cardwall_ColumnFactory {
      * @return Cardwall_MappingCollection
      */
     public function getMappings($fields, Cardwall_OnTop_Config $config) {
-        $columns = new Cardwall_Columns($this->getColumns($config));
-        $mappings = new Cardwall_MappingCollection();
-        $this->fillMappingsByDuckType($mappings, $fields, $columns);
-        $config->fillMappingsWithOnTopMappings($mappings, $columns);
-        return $mappings;
+        return $config->getCardwallMappings($fields, $this);
     }
 
     private function getColumnColors($value, $decorators) {
@@ -91,19 +87,7 @@ class Cardwall_ColumnFactory {
         }
         return array($bgcolor, $fgcolor);
     }
-
-    private function fillMappingsByDuckType($mappings, $fields, $columns) {
-        foreach ($fields as $status_field) {
-            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                $column = $columns->getColumnByLabel($value->getLabel());
-                if ($column) {
-                    $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
-                }
-
-            }
-        }
-        return $mappings;
-    }
+    
 
 }
 
