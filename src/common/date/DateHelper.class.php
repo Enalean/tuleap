@@ -118,11 +118,7 @@ class DateHelper {
      * @return Integer
      */
     public static function getDistantDateFromToday($distance, $before) {
-        $hours        = 24;
-        $minutes      = 60;
-        $seconds      = 60;
-        $dayInSeconds = $hours * $minutes * $seconds;
-        $distance     = $dayInSeconds * $distance;
+        $distance     = SECONDS_IN_A_DAY * $distance;
         if ($before) {
             $distance = $distance * -1;
         }
