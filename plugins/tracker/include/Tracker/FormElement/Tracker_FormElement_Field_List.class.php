@@ -47,6 +47,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->bind;
     }
     
+    /**
+     * @return array of Tracker_FormElement_Field_List_BindDecorator
+     */
+    public function getDecorators() {
+        return $this->getBind()->getDecorators();
+    }
+    
     public function setBind($bind) {
         $this->bind = $bind;
     }
@@ -599,6 +606,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
+     * @return Tracker_FormElement_Field_List_Value or null if not found
+     */
+    public function getListValueById($value_id) {
+        foreach ($this->getVisibleValuesPlusNoneIfAny() as $value) {
+            if ($value->getId() == $value_id) {
+                return $value;
+            }
+        }
+    }
+
+    /**
      * 
      * @param Tracker_Artifact_Changeset $changeset
      * @return string
@@ -770,6 +788,25 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($value) {
             $html .= $this->fetchChangesetValue($artifact->id, $artifact->getLastChangeset()->id, $value);
         }
+        return $html;
+    }
+    
+    /**
+     * @see Tracker_FormElement_Field::fetchCardValue()
+     */
+    public function fetchCardValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        $html = '';
+        //We have to fetch all values of the changeset as we are a list of value
+        //This is the case only if we are multiple but an old changeset may 
+        //contain multiple values
+        $values = array();
+        foreach($this->getBind()->getChangesetValues($artifact->getLastChangeset()->id) as $v) {
+            $val = $this->getBind()->formatCardValue($v);
+            if ($val != '') {
+                $values[] = $val;
+            }
+        }
+        $html .= implode(' ', $values);
         return $html;
     }
         

@@ -7,7 +7,7 @@ set -x
 old_name=$1
 new_name=$2
 
-if [ -n $(which gsed) ]; then
+if [ -x gsed ]; then
   sed_exec='gsed'
 else 
   sed_exec='sed'

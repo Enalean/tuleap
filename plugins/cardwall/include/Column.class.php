@@ -53,12 +53,14 @@ class Cardwall_Column {
      * @param string $label
      */
     public function __construct($id, $label, $bgcolor, $fgcolor, 
-                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
+                                $config) {
         $this->id      = $id;
         $this->label   = $label;
         $this->bgcolor = $bgcolor;
         $this->fgcolor = $fgcolor;
         $this->field_provider = $field_provider;
+        $this->config = $config;
     }
     
     public function isInColumn(Tracker_Artifact $artifact) {
@@ -67,9 +69,12 @@ class Cardwall_Column {
         if ($field) {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
-        return $this->isMatchForThisColumn($artifact_status);
-    }
 
+        
+        return $this->config->isMappedTo($artifact->getTrackerId(), $artifact_status, $this) || 
+               $this->isMatchForThisColumn($artifact_status);
+    }
+    
     private function isMatchForThisColumn($artifact_status) {
         return $this->matchesLabel($artifact_status) || $this->matchesTheNoneColumn($artifact_status);
     }
@@ -81,6 +86,7 @@ class Cardwall_Column {
     private function matchesTheNoneColumn($artifact_status) {
         return $artifact_status === null && $this->id == 100;
     }
+
 
 }
 ?>

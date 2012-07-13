@@ -1,3 +1,10 @@
+Version 5.8 - Tuleap 5.3
+    * Add API to find parents of a given artifact according to hierarchy.
+
+Version 5.7.41 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displayed on cards
+    * Configure cardwall columns
+
 Version 5.7.40 - Tuleap 5.3
     * Burndown field is now using computed remaining effort field
 

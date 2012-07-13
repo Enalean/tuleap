@@ -56,11 +56,12 @@ class Tracker_FormElementFactory {
     /**
      * Cache formElements
      */
-    protected $formElements           = array();
-    protected $formElements_by_parent = array();
-    protected $formElements_by_name   = array();
-    protected $used_formElements      = array();
-    protected $used                   = array();
+    protected $formElements              = array();
+    protected $formElements_by_parent    = array();
+    protected $formElements_by_name      = array();
+    protected $used_formElements         = array();
+    protected $used_formElements_by_name = array();
+    protected $used                      = array();
 
     /**
      * @var array of Tracker_FormElement
@@ -228,14 +229,19 @@ class Tracker_FormElementFactory {
      * Get a used field by name
      *
      * @param int    $tracker_id the id of the tracker
-     * @param string $field_name the name of the field (short name)
+     * @param string $name       the name of the field (short name)
      *
      * @return Tracker_FormElement_Field, or null if not found
      */
-    function getUsedFieldByName($tracker_id, $field_name) {
-        if ($row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $field_name)->getRow()) {
-            return $this->getCachedInstanceFromRow($row);
+    function getUsedFieldByName($tracker_id, $name) {
+        if (!isset($this->used_formElements_by_name[$tracker_id][$name])) {
+            if ($row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow()) {
+                $this->used_formElements_by_name[$tracker_id][$name] = $this->getCachedInstanceFromRow($row);
+            } else {
+                $this->used_formElements_by_name[$tracker_id][$name] = null;
+            }
         }
+        return $this->used_formElements_by_name[$tracker_id][$name];
     }
     
     /**

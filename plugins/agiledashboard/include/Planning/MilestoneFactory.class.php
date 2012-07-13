@@ -126,7 +126,7 @@ class Planning_MilestoneFactory {
             }
         }
     }
-    
+
     /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *
@@ -281,5 +281,34 @@ class Planning_MilestoneFactory {
         return $milestones;
     }
 
+    /**
+     * Create a Milestone corresponding to given artifact
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Planning_ArtifactMilestone 
+     */
+    public function getMilestoneFromArtifact(Tracker_Artifact $artifact) {
+        $tracker  = $artifact->getTracker();
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact);
+    }
+
+    /**
+     * Returns an array with all Parent milestone of given milestone
+     *
+     * @param User               $user
+     * @param Planning_Milestone $milestone
+     *
+     * @return Array of Planning_Milestone
+     */
+    public function getMilestoneWithAncestors(User $user, Planning_Milestone $milestone) {
+        $parent_milestone = array();
+        $parent_artifacts = $milestone->getArtifact()->getAllAncestors($user);
+        foreach ($parent_artifacts as $artifact) {
+            $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
+        }
+        return array_merge($parent_milestone, array($milestone));
+    }
 }
 ?>

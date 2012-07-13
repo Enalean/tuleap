@@ -7,7 +7,7 @@ set -x
 old_filename=$1.class.php
 new_filename=$2.class.php
 
-if [ -n $(which gsed) ]; then
+if [ -x gsed ]; then
   sed_exec='gsed'
 else 
   sed_exec='sed'

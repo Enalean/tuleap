@@ -51,7 +51,7 @@ class Cardwall_ColumnFactory {
     /**
      * @return array of Cardwall_Column
      */
-    public function getColumns() {
+    public function getColumns($config) {
         if ($this->columns) return $this->columns;
 
         $values        = $this->field->getVisibleValuesPlusNoneIfAny();
@@ -59,7 +59,7 @@ class Cardwall_ColumnFactory {
         $this->columns = array();
         foreach ($values as $value) {
             list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider);
+            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider, $config);
         }
         return $this->columns;
     }
@@ -72,18 +72,11 @@ class Cardwall_ColumnFactory {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getMappings($fields) {
-        $columns  = $this->getColumns();
+    public function getMappings($fields, Cardwall_OnTop_Config $config) {
+        $columns = new Cardwall_Columns($this->getColumns($config));
         $mappings = new Cardwall_MappingCollection();
-        foreach ($fields as $status_field) {
-            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
-                foreach ($columns as $column) {
-                    if ($column->label == $value->getLabel()) {
-                        $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
-                    }
-                }
-            }
-        }
+        $this->fillMappingsByDuckType($mappings, $fields, $columns);
+        $config->fillMappingsWithOnTopMappings($mappings, $columns);
         return $mappings;
     }
 
@@ -97,6 +90,45 @@ class Cardwall_ColumnFactory {
             $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
         }
         return array($bgcolor, $fgcolor);
+    }
+
+    private function fillMappingsByDuckType($mappings, $fields, $columns) {
+        foreach ($fields as $status_field) {
+            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
+                $column = $columns->getColumnByLabel($value->getLabel());
+                if ($column) {
+                    $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
+                }
+
+            }
+        }
+        return $mappings;
+    }
+
+}
+
+class Cardwall_Columns {
+
+    private $columns;
+
+    public function __construct(array $columns = array()) {
+        $this->columns = $columns;
+    }
+    
+    public function getColumnById($id) {
+        foreach ($this->columns as $column) {
+            if ($column->id == $id) {
+                return $column;
+            }
+        }
+    }
+
+    public function getColumnByLabel($label) {
+        foreach ($this->columns as $column) {
+            if ($column->label == $label) {
+                return $column;
+            }
+        }
     }
 }
 ?>
