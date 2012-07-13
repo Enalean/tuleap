@@ -25,7 +25,7 @@ require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMappingStatus.class.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/Config/ValueMapping.class.php';
 
-class Cardwall_OnTop_Config_TrackerMappingTest extends TuleapTestCase {
+class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
 
     public function itReturnsAnEmptyLabelWhenThereIsNoValueMapping() {
         $value_mappings = array();
