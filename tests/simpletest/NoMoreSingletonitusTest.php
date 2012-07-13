@@ -25,7 +25,7 @@
 class NoMoreSingletonitusTest extends TuleapTestCase {
     
     public function testThereAreNoNewSingletonLookups() {
-        $expected_singleton_lookups = 2370;
+        $expected_singleton_lookups = 2375;
         $basedir                    = dirname(__FILE__).'/../..';
         $actual_singleton_lookups   = $this->countSingletonLookupsInProject($basedir);
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
