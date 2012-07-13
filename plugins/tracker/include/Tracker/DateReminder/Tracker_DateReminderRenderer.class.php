@@ -33,7 +33,6 @@ class Tracker_DateReminderRenderer {
      * @return Void
      */
     public function __construct(Tracker $tracker) {
-        error_reporting(E_ALL);
         $this->tracker             = $tracker;
         $this->dateReminderFactory = new Tracker_DateReminderFactory($this->tracker);
     }
