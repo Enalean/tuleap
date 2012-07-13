@@ -55,7 +55,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         $this->planning_redirect_parameter = $planning_redirect_param;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) .'/../../templates');
 
-        $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, 'planning-draggable-toplan'));
+        $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, new Tracker_CardFields(), 'planning-draggable-toplan'));
         $this->tree_of_card_presenters = $card_mapper->map($this->tree_of_artifacts);
     }
     

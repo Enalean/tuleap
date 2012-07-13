@@ -40,7 +40,7 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
     
     private function countSingletonLookupsInProject($basedir) {
         $dirs                       = "$basedir/plugins $basedir/src $basedir/tools";
-        $count_command              = "grep -rc  '::instance()' $dirs| awk -F: '{n=n+$2} END { print n}'";
+        $count_command              = "grep -rc --exclude='*~' '::instance()' $dirs| awk -F: '{n=n+$2} END { print n}'";
         $output                     = $this->getSystemOutput($count_command);
         return $output[0];
     }

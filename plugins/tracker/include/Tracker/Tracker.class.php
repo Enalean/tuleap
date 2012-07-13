@@ -91,6 +91,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
     
+    public function __toString() {
+        return "Tracker #".$this->id;
+    }
+
     /**
      * @return string the url of the form to submit a new artifact
      */
@@ -2053,17 +2057,22 @@ EOS;
         return is_array($this->cache_permissions);
     }
 
+    /**
+     * @var array
+     */
+    private $cached_permission_authorized_ugroups;
+
     public function permission_db_authorized_ugroups( $permission_type ) {
-        $result = array();        
-        $res    = permission_db_authorized_ugroups($permission_type, $this->getId());        
-        if ( db_numrows($res) > 0 ) { 
-            while ( $row = db_fetch_array($res) ) {
-                $result[] = $row;
+        if ( ! isset($this->cached_permission_authorized_ugroups)) {
+            $this->cached_permission_authorized_ugroups = array();
+            $res = permission_db_authorized_ugroups($permission_type, $this->getId());
+            if ( db_numrows($res) > 0 ) { 
+                while ( $row = db_fetch_array($res) ) {
+                    $this->cached_permission_authorized_ugroups[] = $row;
+                }
             }
-            return $result;
-        } else {
-            return false;
-        }                
+        }
+        return $this->cached_permission_authorized_ugroups;
     }
     
     /**

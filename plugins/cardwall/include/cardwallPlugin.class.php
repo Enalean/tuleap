@@ -18,14 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/Plugin.class.php');
+require_once 'common/plugin/Plugin.class.php';
+require_once 'constants.php';
+require_once 'OnTop/ConfigFactory.class.php';
+require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
 
 /**
  * CardwallPlugin
  */
 class cardwallPlugin extends Plugin {
+    
+    /** 
+     * @var Cardwall_OnTop_ConfigFactory
+     */
+    private $config_factory;
+    
+    public function getConfigFactory() {
+        if (!$this->config_factory) {
+            $tracker_factory  = TrackerFactory::instance();
+            $element_factory  = Tracker_FormElementFactory::instance();
+            $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
+        }
+        return $this->config_factory;
+    }
 
     const RENDERER_TYPE = 'plugin_cardwall';
+
 
     public function getHooksAndCallbacks() {
         if (defined('TRACKER_BASE_URL')) {
@@ -38,7 +56,7 @@ class cardwallPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED,   'tracker_event_trackers_duplicated', false);
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
-            
+
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
             }
@@ -46,9 +64,16 @@ class cardwallPlugin extends Plugin {
         return parent::getHooksAndCallbacks();
     }
 
+    
+    // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
-            $this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id);
+            if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
+                if ($this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $params)) {
+                    $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
+                    $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping'], $params['plugin_cardwall_column_mapping']);
+                }
+            }
         }
     }
 
@@ -60,7 +85,7 @@ class cardwallPlugin extends Plugin {
     public function tracker_report_renderer_types($params) {
         $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_cardwall', 'title');
     }
-    
+
     /**
      * This hook asks to create a new instance of a renderer
      *
@@ -92,9 +117,14 @@ class cardwallPlugin extends Plugin {
                     }
                 }
             }
+
+            $report           = $params['report'];
+            $config           = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
+
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
                 $this,
+                $config,
                 $params['row']['id'],
                 $params['report'],
                 $params['row']['name'],
@@ -108,7 +138,7 @@ class cardwallPlugin extends Plugin {
             }
         }
     }
-    
+
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
             require_once('CardwallPluginInfo.class.php');
@@ -116,7 +146,7 @@ class cardwallPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+
     function cssFile($params) {
         // Only show the stylesheet if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
@@ -128,7 +158,7 @@ class cardwallPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
         }
     }
-    
+
     function jsFile($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
@@ -137,7 +167,7 @@ class cardwallPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
         }
     }
-    
+
     function tracker_event_admin_items($params) {
         $params['items']['plugin_cardwall'] = array(
             'url'         => TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId() .'&amp;func=admin-cardwall',
@@ -147,68 +177,39 @@ class cardwallPlugin extends Plugin {
             'img'         => $this->getThemePath() .'/images/ic/48/sticky-note.png',
         );
     }
-    
+
     function tracker_event_process($params) {
+        $tracker          = $params['tracker'];
+        $tracker_id       = $tracker->getId();
+        if (strpos($params['func'], 'admin-cardwall') !== false && ! $tracker->userIsAdmin($params['user'])) {
+            $this->denyAccess($tracker_id);
+        }
+
+        $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->displayAdminOnTop($params['tracker'], $params['layout']);
-                    $params['nothing_has_been_done'] = false;
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
-                }
+                require_once 'View/Admin.class.php';
+
+                $admin_view = new Cardwall_View_Admin();
+                $config     = $this->getConfigFactory()->getOnTopConfig($tracker);
+                $admin_view->displayAdminOnTop($params['layout'], $token, $config);
+                $params['nothing_has_been_done'] = false;
                 break;
             case 'admin-cardwall-update':
-                if ($params['tracker']->userIsAdmin($params['user'])) {
-                    $this->updateCardwallOnTop($params['tracker']->getId(), $params['request']->get('cardwall_on_top'));
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $params['tracker']->getId());
-                }
+                $token->check();
+                $this->getConfigFactory()->getOnTopConfigUpdater($tracker)
+                        ->process($params['request']);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
                 break;
         }
     }
-    
-    private function displayAdminOnTop(Tracker $tracker, Tracker_IDisplayTrackerLayout $layout) {
-        $tracker->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $checked = $this->getOnTopDao()->isEnabled($tracker->getId()) ? 'checked="checked"' : '';
-        $html  = '';
-        $html .= '<form action="'. TRACKER_BASE_URL.'/?tracker='. $tracker->getId() .'&amp;func=admin-cardwall-update' .'" METHOD="POST">';
-        $html .= $this->getCSRFToken($tracker->getId())->fetchHTMLInput();
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="cardwall_on_top" value="0" />';
-        $html .= '<label class="checkbox">';
-        $html .= '<input type="checkbox" name="cardwall_on_top" value="1" id="cardwall_on_top" '. $checked .'/> ';
-        $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_label');
-        $html .= '</label>';
-        $html .= '</p>';
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html .= '</form>';
-        echo $html;
-        $tracker->displayFooter($layout);
+
+    private function denyAccess($tracker_id) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id);
     }
-    
-    private function updateCardwallOnTop($tracker_id, $is_enabled) {
-        $this->getCSRFToken($tracker_id)->check();
-        if ($is_enabled) {
-            $this->getOnTopDao()->enable($tracker_id);
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
-        } else {
-            $this->getOnTopDao()->disable($tracker_id);
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
-        }
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&func=admin-cardwall');
-    }
-    
-    /**
-     * @return Cardwall_OnTopDao
-     */
-    private function getOnTopDao() {
-        require_once 'OnTopDao.class.php';
-        return new Cardwall_OnTopDao();
-    }
-    
+
+
     /**
      * @return CSRFSynchronizerToken
      */
@@ -216,13 +217,14 @@ class cardwallPlugin extends Plugin {
         require_once 'common/include/CSRFSynchronizerToken.class.php';
         return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
     }
-    
+
     public function agiledashboard_event_additional_panes_on_milestone($params) {
         $tracker  = $params['milestone']->getArtifact()->getTracker();
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             require_once 'Pane.class.php';
-            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'));
+            $config = $this->getConfigFactory()->getOnTopConfig($tracker);
+            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config);
         }
     }
 
@@ -275,6 +277,38 @@ class cardwallPlugin extends Plugin {
     private function requestCanLeaveTheTracker(Codendi_Request $request) {
         return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
     }
-}
+    
+    /**
+     * @return Cardwall_OnTop_Dao
+     */
+    private function getOnTopDao() {
+        require_once 'OnTop/Dao.class.php';
+        return new Cardwall_OnTop_Dao();
+    }
 
+    /**
+     * @return Cardwall_OnTop_ColumnDao
+     */
+    private function getOnTopColumnDao() {
+        require_once 'OnTop/ColumnDao.class.php';
+        return new Cardwall_OnTop_ColumnDao();
+    }
+
+    /**
+     * @return Cardwall_OnTop_ColumnMappingFieldDao
+     */
+    private function getOnTopColumnMappingFieldDao() {
+        require_once 'OnTop/ColumnMappingFieldDao.class.php';
+        return new Cardwall_OnTop_ColumnMappingFieldDao();
+    }
+
+    /**
+     * @return Cardwall_OnTop_ColumnMappingFieldValueDao
+     */
+    private function getOnTopColumnMappingFieldValueDao() {
+        require_once 'OnTop/ColumnMappingFieldValueDao.class.php';
+        return new Cardwall_OnTop_ColumnMappingFieldValueDao();
+    }
+
+}
 ?>

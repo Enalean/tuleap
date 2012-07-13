@@ -280,6 +280,11 @@
             <data type="string"/>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="target_field_name">
+            <data type="string"/>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>

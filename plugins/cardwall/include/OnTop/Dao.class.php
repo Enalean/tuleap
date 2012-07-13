@@ -19,7 +19,7 @@
  */
 
 
-class Cardwall_OnTopDao extends DataAccessObject {
+class Cardwall_OnTop_Dao extends DataAccessObject {
 
     /**
      * @return boolean
@@ -55,7 +55,10 @@ class Cardwall_OnTopDao extends DataAccessObject {
                 SELECT $to_tracker_id
                 FROM plugin_cardwall_on_top
                 WHERE tracker_id = $from_tracker_id";
-        return $this->update($sql);
+        if ($this->update($sql)) {
+            return $this->da->affectedRows();
+        }
+        return false;
     }
 }
 ?>

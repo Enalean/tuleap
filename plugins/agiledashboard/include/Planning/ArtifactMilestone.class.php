@@ -160,6 +160,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     /**
      * @return int
      */
+    public function getTrackerId() {
+        return $this->artifact->getTrackerId();
+    }
+    
+    /**
+     * @return int
+     */
     public function getArtifactId() {
         return $this->artifact->getId();
     }

@@ -58,6 +58,7 @@ class TestHelper {
         }
         $dar->setReturnValueAt($rowCount, 'valid', false);
         $dar->setReturnValue('rowCount', $rowCount);
+        $dar->setReturnValue('count', $rowCount);
         $dar->setReturnValue('isError', false);
         return $dar;
     }
@@ -67,6 +68,7 @@ class TestHelper {
         $dar->setReturnValue('valid',    false);
         $dar->setReturnValue('current',  false);
         $dar->setReturnValue('rowCount', 0);
+        $dar->setReturnValue('count', 0);
         $dar->setReturnValue('isError',  false);
         $dar->setReturnValue('getRow',   false);
         return $dar;

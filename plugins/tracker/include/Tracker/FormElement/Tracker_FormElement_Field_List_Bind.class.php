@@ -102,6 +102,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string
      */
     public abstract function formatChangesetValue($value);
+
+    /**
+     * @return string
+     */
+    public function formatCardValue($value) {
+        return $this->formatChangesetValue($value);
+    }
     
     /**
      * @return string

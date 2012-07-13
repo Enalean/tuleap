@@ -1251,8 +1251,8 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getId', 666);
         $tracker->setReturnValue('getGroupId', 222);
-        $perms_tracker_access_full = false;
-        $perms_tracker_access_assignee = false;
+        $perms_tracker_access_full      = array();
+        $perms_tracker_access_assignee  = array();
         $perms_tracker_access_submitter = array(
                     array('ugroup_id' => $ugroup_sub)
                 );
@@ -1330,11 +1330,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getId', 666);
         $tracker->setReturnValue('getGroupId', 222);
-        $perms_tracker_access_full = false;
+        $perms_tracker_access_full     = array();
         $perms_tracker_access_assignee = array(
                     array('ugroup_id' => $ugroup_ass)
                 );
-        $perms_tracker_access_submitter = false;
+        $perms_tracker_access_submitter = array();
         $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_full,      array('PLUGIN_TRACKER_ACCESS_FULL'));
         $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_assignee,  array('PLUGIN_TRACKER_ACCESS_ASSIGNEE'));
         $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_submitter, array('PLUGIN_TRACKER_ACCESS_SUBMITTER'));
@@ -1415,7 +1415,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getId', 666);
         $tracker->setReturnValue('getGroupId', 222);
-        $perms_tracker_access_full = false;
+        $perms_tracker_access_full     = array();
         $perms_tracker_access_assignee = array(
                     array('ugroup_id' => $ugroup_ass)
                 );

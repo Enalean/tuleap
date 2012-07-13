@@ -1,3 +1,6 @@
+Version 0.41 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displyed on planning cards
+    
 Version 0.40 - Tuleap 5.3
     * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
 
