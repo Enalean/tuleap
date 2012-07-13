@@ -44,7 +44,12 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
     }
     
     public abstract function getField();
-
+    
+    /**
+     * @return array of Cardwall_OnTop_Config_ValueMapping
+     */
+    public abstract function getValueMappings();
+    
     /**
      * @pattern Visitor
      */
