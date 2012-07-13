@@ -77,7 +77,6 @@ class Cardwall_ColumnFactory {
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $columns);
         $config->fillMappingsWithOnTopMappings($mappings, $columns);
-//        $this->fillMappingsWithOnTopMappings($mappings, $tracker_mappings, $columns);
         return $mappings;
     }
 
