@@ -30,7 +30,7 @@ class Cardwall_ColumnFactory {
     /**
      * @var Tracker_FormElement_Field_Selectbox
      */
-    private $field;
+    public $field;
 
     /**
      * @var array of Cardwall_Column
@@ -40,7 +40,7 @@ class Cardwall_ColumnFactory {
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
      */
-    private $field_provider;
+    public $field_provider;
     
     public function __construct(Tracker_FormElement_Field_Selectbox                  $field,
                                 Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {

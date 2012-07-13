@@ -37,14 +37,14 @@ class Cardwall_BoardFactory {
                              Tracker_FormElement_Field_List                       $field, 
                              TreeNode                                             $forests_of_artifacts, 
                              Cardwall_OnTop_Config                                $config) {
-        $old_column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         
+        $old_column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
         $mapping_collection = $config->getCardwallMappings($status_fields, $old_column_factory);
         
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
-        $columns                          = $old_column_factory->getColumns($config);
+        $columns                          = $config->getCardwallColumns($config, array(), $field, $field_retriever  );
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
