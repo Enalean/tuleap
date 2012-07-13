@@ -79,7 +79,7 @@ class Tracker_DateReminderManager {
                 } catch (Tracker_DateReminderException $e) {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
             } elseif ($request->get('action') == 'update_reminder') {
                 try {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
@@ -87,7 +87,7 @@ class Tracker_DateReminderManager {
                 } catch (Tracker_DateReminderException $e) {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
             }
         } elseif ($request->get('confirm_delete') && $request->get('action') == 'confirm_delete_reminder' ) {
             try {
@@ -97,7 +97,7 @@ class Tracker_DateReminderManager {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             }
         } elseif ($request->get('cancel_delete_reminder')) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
         }
     }
 
