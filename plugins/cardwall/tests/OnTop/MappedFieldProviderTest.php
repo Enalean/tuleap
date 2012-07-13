@@ -24,7 +24,7 @@ require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappedFieldProvider.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aMockArtifact.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 
-class Cardwall_OnTop_ConfigFieldProviderTest extends TuleapTestCase {
+class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
     
     public function itProvidesTheStatusFieldIfNoMapping() {
         $artifact = aMockArtifact()->build();
