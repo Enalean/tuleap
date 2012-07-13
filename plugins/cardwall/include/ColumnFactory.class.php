@@ -47,14 +47,6 @@ class Cardwall_ColumnFactory {
         $this->field = $field;
         $this->field_provider = $field_provider;
     }
-
-    /**
-     * @return array of Cardwall_Column
-     */
-    public function getColumns($config) {
-        return $config->getCardwallColumns($config, $this->columns, $this->field, $this->field_provider);
-    }
-    
     
 
 }

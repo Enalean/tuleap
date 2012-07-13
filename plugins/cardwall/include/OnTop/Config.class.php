@@ -135,7 +135,7 @@ class Cardwall_OnTop_Config {
      * @return Cardwall_MappingCollection
      */
     public function getCardwallMappings($fields, $old_factory) {
-        $columns = new Cardwall_Columns($this->getCardwallColumns($this, array(), $old_factory->field, $old_factory->field_provider));
+        $columns = new Cardwall_Columns($this->getCardwallColumns($old_factory->field, $old_factory->field_provider));
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $columns);
         $this->fillMappingsWithOnTopMappings($mappings, $columns);
@@ -156,8 +156,8 @@ class Cardwall_OnTop_Config {
     }
 
     
-    public function getCardwallColumns($config, $columns, $field, $field_provider) {
-        return $this->column_factory->getCardwallColumns($config, $columns, $field, $field_provider);
+    public function getCardwallColumns($field, $field_provider) {
+        return $this->column_factory->getCardwallColumns($this, array(), $field, $field_provider);
     }
 }
 ?>
