@@ -20,6 +20,7 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
+require_once 'OnTop/ConfigFactory.class.php';
 require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
 
 /**
@@ -63,6 +64,8 @@ class cardwallPlugin extends Plugin {
         return parent::getHooksAndCallbacks();
     }
 
+    
+    // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
@@ -275,130 +278,6 @@ class cardwallPlugin extends Plugin {
         return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
     }
     
-    /**
-     * @return Cardwall_OnTop_Dao
-     */
-    private function getOnTopDao() {
-        require_once 'OnTop/Dao.class.php';
-        return new Cardwall_OnTop_Dao();
-    }
-
-    /**
-     * @return Cardwall_OnTop_ColumnDao
-     */
-    private function getOnTopColumnDao() {
-        require_once 'OnTop/ColumnDao.class.php';
-        return new Cardwall_OnTop_ColumnDao();
-    }
-
-    /**
-     * @return Cardwall_OnTop_ColumnMappingFieldDao
-     */
-    private function getOnTopColumnMappingFieldDao() {
-        require_once 'OnTop/ColumnMappingFieldDao.class.php';
-        return new Cardwall_OnTop_ColumnMappingFieldDao();
-    }
-
-    /**
-     * @return Cardwall_OnTop_ColumnMappingFieldValueDao
-     */
-    private function getOnTopColumnMappingFieldValueDao() {
-        require_once 'OnTop/ColumnMappingFieldValueDao.class.php';
-        return new Cardwall_OnTop_ColumnMappingFieldValueDao();
-    }
-
-}
-
-class Cardwall_OnTop_ConfigFactory {
-
-    /** 
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    
-    /** 
-     * @var Tracker_FormElementFactory
-     */
-    private $element_factory;
-    
-    function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory) {
-        $this->tracker_factory = $tracker_factory;
-        $this->element_factory = $element_factory;
-    }
-
-    /**
-     * @param Tracker $tracker
-     * 
-     * @return \Cardwall_OnTop_Config
-     */
-    public function getOnTopConfigByTrackerId($tracker_id) {
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
-        return $this->getOnTopConfig($tracker);
-    }
-
-    /**
-     * @param Tracker $tracker
-     * 
-     * @return \Cardwall_OnTop_Config
-     */
-    public function getOnTopConfig(Tracker $tracker) {
-        require_once 'OnTop/Config.class.php';
-        require_once 'OnTop/Config/ColumnFactory.class.php';
-        require_once 'OnTop/Config/TrackerMappingFactory.class.php';
-        require_once 'OnTop/Config/ValueMappingFactory.class.php';
-
-        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
-
-        $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
-            $this->element_factory,
-            $this->getOnTopColumnMappingFieldValueDao()
-        );
-
-        $tracker_mapping_factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
-            $this->tracker_factory,
-            $this->element_factory,
-            $this->getOnTopColumnMappingFieldDao(),
-            $value_mapping_factory
-        );
-
-        $config = new Cardwall_OnTop_Config(
-            $tracker,
-            $this->getOnTopDao(),
-            $column_factory,
-            $tracker_mapping_factory
-        );
-        return $config;
-    }
-
-    /**
-     * @return Cardwall_OnTop_Config_Updater
-     */
-    public function getOnTopConfigUpdater(Tracker $tracker) {
-        $tracker_factory  = $this->tracker_factory;
-        $element_factory  = $this->element_factory;
-        $config           = $this->getOnTopConfig($tracker);
-        $dao              = $this->getOnTopDao();
-        $column_dao       = $this->getOnTopColumnDao();
-        $mappingfield_dao = $this->getOnTopColumnMappingFieldDao();
-        $mappingvalue_dao = $this->getOnTopColumnMappingFieldValueDao();
-        require_once 'OnTop/Config/Updater.class.php';
-        require_once 'OnTop/Config/Command/EnableCardwallOnTop.class.php';
-        require_once 'OnTop/Config/Command/CreateColumn.class.php';
-        require_once 'OnTop/Config/Command/UpdateColumns.class.php';
-        require_once 'OnTop/Config/Command/DeleteColumns.class.php';
-        require_once 'OnTop/Config/Command/CreateMappingField.class.php';
-        require_once 'OnTop/Config/Command/UpdateMappingFields.class.php';
-        require_once 'OnTop/Config/Command/DeleteMappingFields.class.php';
-        $updater = new Cardwall_OnTop_Config_Updater();
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $dao));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $column_dao));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $column_dao));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $column_dao, $mappingfield_dao, $mappingvalue_dao));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateMappingField($tracker, $mappingfield_dao, $tracker_factory));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory, $element_factory, $config->getMappings()));
-        $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $mappingfield_dao, $mappingvalue_dao, $tracker_factory, $config->getMappings()));
-        return $updater;
-    }
     /**
      * @return Cardwall_OnTop_Dao
      */
