@@ -157,7 +157,7 @@ class Cardwall_OnTop_Config {
 
     
     public function getCardwallColumns($field, $field_provider) {
-        return $this->column_factory->getCardwallColumns($this, array(), $field, $field_provider);
+        return $this->column_factory->getCardwallColumns($this, $field, $field_provider);
     }
 }
 ?>

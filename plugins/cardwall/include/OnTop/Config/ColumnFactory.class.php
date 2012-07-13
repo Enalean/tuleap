@@ -114,9 +114,8 @@ class Cardwall_OnTop_Config_ColumnFactory {
     /**
      * @return array of Cardwall_Column
      */
-    public function getCardwallColumns($config, $columns, $field, $field_provider) {
-        if ($columns) return $columns;
-
+    public function getCardwallColumns($config, $field, $field_provider) {
+        // TODO use cache of $columns
         $values        = $field->getVisibleValuesPlusNoneIfAny();
         $decorators    = $field->getBind()->getDecorators();
         $columns = array();
