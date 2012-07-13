@@ -64,18 +64,6 @@ class Cardwall_ColumnFactory {
         return $this->columns;
     }
 
-    /**
-     * Get the column/field/value mappings by duck typing the colums labels 
-     * with the values of the given fields
-     *
-     * @param array $fields array of Tracker_FormElement_Field_Selectbox
-     *
-     * @return Cardwall_MappingCollection
-     */
-    public function getMappings($fields, Cardwall_OnTop_Config $config) {
-        return $config->getCardwallMappings($fields, $this);
-    }
-
     private function getColumnColors($value, $decorators) {
         $id      = (int)$value->getId();
         $bgcolor = 'white';
