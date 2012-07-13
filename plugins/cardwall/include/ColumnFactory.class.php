@@ -52,29 +52,9 @@ class Cardwall_ColumnFactory {
      * @return array of Cardwall_Column
      */
     public function getColumns($config) {
-        if ($this->columns) return $this->columns;
-
-        $values        = $this->field->getVisibleValuesPlusNoneIfAny();
-        $decorators    = $this->field->getBind()->getDecorators();
-        $this->columns = array();
-        foreach ($values as $value) {
-            list($bgcolor, $fgcolor) = $this->getColumnColors($value, $decorators);
-            $this->columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $this->field_provider, $config);
-        }
-        return $this->columns;
+        return $config->getCardwallColumns($config, $this->columns, $this->field, $this->field_provider);
     }
-
-    private function getColumnColors($value, $decorators) {
-        $id      = (int)$value->getId();
-        $bgcolor = 'white';
-        $fgcolor = 'black';
-        if (isset($decorators[$id])) {
-            $bgcolor = $decorators[$id]->css($bgcolor);
-            //choose a text color to have right contrast (black on dark colors is quite useless)
-            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
-        }
-        return array($bgcolor, $fgcolor);
-    }
+    
     
 
 }

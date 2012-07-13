@@ -155,5 +155,9 @@ class Cardwall_OnTop_Config {
         return $mappings;
     }
 
+    
+    public function getCardwallColumns($config, $columns, $field, $field_provider) {
+        return $this->column_factory->getCardwallColumns($config, $columns, $field, $field_provider);
+    }
 }
 ?>

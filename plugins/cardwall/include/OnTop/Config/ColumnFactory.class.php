@@ -50,6 +50,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
         return $columns;
     }
 
+
     /**
      * @return array of Cardwall_OnTop_Config_Column
      */
@@ -109,5 +110,36 @@ class Cardwall_OnTop_Config_ColumnFactory {
     public function isDark($r, $g, $b) {
         return (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128;
     }
+
+    /**
+     * @return array of Cardwall_Column
+     */
+    public function getCardwallColumns($config, $columns, $field, $field_provider) {
+        if ($columns) return $columns;
+
+        $values        = $field->getVisibleValuesPlusNoneIfAny();
+        $decorators    = $field->getBind()->getDecorators();
+        $columns = array();
+        foreach ($values as $value) {
+            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
+            $columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $field_provider, $config);
+        }
+        return $columns;
+    }
+    
+    
+    private function getCardwallColumnColors($value, $decorators) {
+        $id      = (int)$value->getId();
+        $bgcolor = 'white';
+        $fgcolor = 'black';
+        if (isset($decorators[$id])) {
+            $bgcolor = $decorators[$id]->css($bgcolor);
+            //choose a text color to have right contrast (black on dark colors is quite useless)
+            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
+        }
+        return array($bgcolor, $fgcolor);
+    }
+
+
 }
 ?>
