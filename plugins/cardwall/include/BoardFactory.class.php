@@ -21,7 +21,9 @@
 require_once 'SwimlineFactory.class.php';
 require_once 'ColumnFactory.class.php';
 require_once 'Board.class.php';
-require_once 'StatusFieldsExtractor.class.php';
+require_once 'FieldsExtractor.class.php';
+require_once 'OnTop/Config/MappedFieldProvider.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 /**
  * Builds Board given artifacts (for swimlines/cards) and a field (for columns)
@@ -33,21 +35,25 @@ class Cardwall_BoardFactory {
      */
     public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
                              Tracker_FormElement_Field_List                       $field, 
-                             TreeNode                                             $forests_of_artifacts) {
+                             TreeNode                                             $forests_of_artifacts, 
+                             Cardwall_OnTop_Config                                $config) {
         $column_factory     = new Cardwall_ColumnFactory($field, $field_retriever);
-        $acc_field_provider = new Cardwall_StatusFieldsExtractor($field_retriever);
+        $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
-        $mapping_collection = $column_factory->getMappings($status_fields);
+        
+        
+        $mapping_collection = $column_factory->getMappings($status_fields, $config);
         
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
-        $columns                          = $column_factory->getColumns();
+        $columns                          = $column_factory->getColumns($config);
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
     }
 
     private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
-        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback());
+        
+        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields()));
         $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
 
         $column_id_mapper           = new TreeNodeMapper(new Cardwall_CardInCellPresenterCallback($field_retriever, $mapping_collection));

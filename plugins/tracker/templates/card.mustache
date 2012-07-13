@@ -1,8 +1,11 @@
 {{#getCardPresenter}}
-<div class="card">
-    {{> card-actions}}
-    <a href="#" class="toggle-collapse">+</a>
-    {{getTitle}}
-    &nbsp;
+<div class="card" style="">
+    <div class="card-container">
+        {{> card-actions}}
+        <a href="#" class="toggle-collapse">+</a>
+        {{getTitle}}
+        &nbsp;
+        {{> card-details}}
+    </div>
 </div>
 {{/getCardPresenter}}

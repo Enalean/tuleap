@@ -20,6 +20,7 @@
 
 require_once 'Item.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CardPresenter.class.php';
+require_once 'ItemFieldPresenter.class.php';
 
 class Planning_ItemPresenter implements Tracker_CardPresenter {
     
@@ -34,12 +35,19 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     private $css_classes;
     
     /**
+     * @var Tracker_CardFields
+     */
+    private $card_fields;
+    
+    /**
      * @param Planning_Item $planning_item The planning item to be presented.
      * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
      */
-    public function __construct(Planning_Item $planning_item, $css_classes = '') {
+    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, $css_classes = '') {
         $this->planning_item = $planning_item;
         $this->css_classes   = $css_classes;
+        $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->card_fields  = $card_fields;
     }
     
     public function getId() {
@@ -86,6 +94,21 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     
     public function allowedChildrenTypes() {
         return $this->planning_item->getAllowedChildrenTypes();
+    }
+    
+    public function getFields() {
+        $diplayed_fields_presenter = array();
+        $artifact = $this->getArtifact();
+        $displayed_fields = $this->card_fields->getFields($artifact);
+        
+        foreach ($displayed_fields as $displayed_field) {
+            $diplayed_fields_presenter[] = new Planning_ItemFieldPresenter($displayed_field, $this->getArtifact());
+        }
+        return $diplayed_fields_presenter;
+    }
+    
+    public function hasFields() {
+        return count($this->getFields()) > 0;
     }
 }
 ?>

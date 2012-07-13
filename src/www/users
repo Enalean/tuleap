@@ -28,11 +28,27 @@ if (db_numrows($res_user) < 1) {
 
 } else {
 
-	//set up the group_id
-	$user_id=db_result($res_user,0,'user_id');
-
-	//now show the project page
-	require_once('user_home.php');
+    //set up the user id
+    $user_id=db_result($res_user,0,'user_id');
+    
+    if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
+        if (db_result($res_user, 0, 'has_avatar')) {
+            $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
+            $path = $avatar_path .DIRECTORY_SEPARATOR.
+                    substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
+                    DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
+            if (is_file($path)) {
+                header('Content-type: image/png');
+                header("Cache-Control: no-cache, must-revalidate");
+                header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+                readfile($path);
+            }
+        }
+        exit;
+    } else {
+    	//now show the user page
+	    require_once('user_home.php');
+    }
 
 }
 

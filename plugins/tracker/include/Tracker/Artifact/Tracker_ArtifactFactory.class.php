@@ -269,13 +269,17 @@ class Tracker_ArtifactFactory {
      * @return Tracker_Artifact
      */
     public function getInstanceFromRow($row) {
-        return new Tracker_Artifact(
+        $artifact = new Tracker_Artifact(
             $row['id'], 
             $row['tracker_id'], 
             $row['submitted_by'], 
             $row['submitted_on'], 
             $row['use_artifact_permissions']
         );
+        if (isset($row['title'])) {
+            $artifact->setTitle($row['title']);
+        }
+        return $artifact;
     }
     
     protected $dao;

@@ -72,6 +72,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             return $value->fetchFormatted();
         }
     }
+
+    /**
+     * @return string
+     */
+    public function formatCardValue($value) {
+        return $value->fetchCard();
+    }
     
     /**
      * @return string

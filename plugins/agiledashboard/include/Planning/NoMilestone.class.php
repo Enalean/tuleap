@@ -60,6 +60,9 @@ class Planning_NoMilestone implements Planning_Milestone {
         return null;
     }
     
+    public function getTrackerId() {
+    }
+    
     public function getArtifactTitle() {
         return null;
     }

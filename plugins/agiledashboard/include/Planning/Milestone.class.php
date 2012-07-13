@@ -66,6 +66,11 @@ interface Planning_Milestone {
     /**
      * @return int
      */
+    public function getTrackerId();
+    
+    /**
+     * @return int
+     */
     public function getArtifactId();
     
     /**

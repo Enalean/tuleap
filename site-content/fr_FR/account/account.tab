@@ -114,6 +114,10 @@ account_change_pw	new_password2	Nouveau mot de passe (répétez)
 account_change_realname	error	Vous devez fournir un nom complet.
 account_change_realname	title	Changement de nom complet
 account_change_realname	new_name	Nouveau nom complet
+
+account_change_avatar	success	Avatar changé !
+account_change_avatar	title	Changement de l'avatar
+account_change_avatar	link	changer l'avatar
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_timezone.php
