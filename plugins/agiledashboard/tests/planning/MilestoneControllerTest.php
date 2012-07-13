@@ -425,7 +425,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
     public function itIncludesBreadcrumbsForParentMilestones() {
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
-        stub($this->milestone_factory)->getMilestoneWithAncestors($this->current_user, $this->sprint)->returns(array($this->product, $this->release, $this->sprint));
+        stub($this->milestone_factory)->getMilestoneWithAncestors($this->current_user, $this->sprint)->returns(array($this->sprint, $this->release, $this->product));
 
         $controller  = new Planning_MilestoneController($this->request, $this->milestone_factory, $this->project_manager);
 

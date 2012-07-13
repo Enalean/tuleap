@@ -149,7 +149,7 @@ class Tracker_HierarchyFactory {
             return array_merge(array($parent), $this->getAllAncestors($user, $parent));
         }
     }
-    
+
     /*
      * Duplicate a tracker hierarchy
      * 

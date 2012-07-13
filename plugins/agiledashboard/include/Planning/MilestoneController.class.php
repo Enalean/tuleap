@@ -181,7 +181,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         try {
             if ($this->milestone->getArtifact()) {
                 $breadcrumbs_merger = new BreadCrumb_Merger();
-                foreach($this->getMilestoneWithAncestors() as $milestone) {
+                foreach(array_reverse($this->getMilestoneWithAncestors()) as $milestone) {
                     $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
                 }
                 return $breadcrumbs_merger;

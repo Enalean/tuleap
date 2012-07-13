@@ -295,7 +295,10 @@ class Planning_MilestoneFactory {
     }
 
     /**
-     * Returns an array with all Parent milestone of given milestone
+     * Returns an array with all Parent milestone of given milestone.
+     *
+     * The array starts with current milestone, until the "oldest" ancestor
+     * 0 => Sprint, 1 => Release, 2=> Product
      *
      * @param User               $user
      * @param Planning_Milestone $milestone
@@ -308,7 +311,7 @@ class Planning_MilestoneFactory {
         foreach ($parent_artifacts as $artifact) {
             $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
         }
-        return array_merge($parent_milestone, array($milestone));
+        return array_merge(array($milestone), $parent_milestone);
     }
 }
 ?>
