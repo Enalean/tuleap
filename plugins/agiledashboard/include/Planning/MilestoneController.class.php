@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Artifact.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Planning.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/Milestone.class.php';
+require_once dirname(__FILE__).'/../BreadCrumbs/NoCrumb.class.php';
 require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
 require_once 'SearchContentView.class.php';
 require_once 'MilestonePresenter.class.php';
@@ -102,7 +101,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     private function getCrossSearchQuery() {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
-        $artifact_criteria     = $this->getArrayFromRequest('artifact_criteria');
+        $artifact_criteria     = $this->getArtifactCriteria();
         
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
@@ -142,7 +141,26 @@ class Planning_MilestoneController extends MVC2_Controller {
         }
         return $request_criteria;
     }
-    
+
+    private function getArtifactCriteria() {
+        $criteria = $this->getArrayFromRequest('artifact_criteria');
+        if(empty($criteria) && $this->milestone->getArtifact()) {
+            $criteria = $this->getPreselectedCriteriaFromAncestors();
+        }
+        return $criteria;
+    }
+
+    private function getPreselectedCriteriaFromAncestors() {
+        $preselected_criteria = array();
+        foreach($this->getMilestoneWithAncestors() as $milestone) {
+            //TODO remove condition: FIX should not be linked to itself
+            if ($this->milestone->getArtifactId() != $milestone->getArtifactId()) {
+                $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
+            }
+        }
+        return $preselected_criteria;
+    }
+
     /**
      * @param array of Planning_Milestone $available_milestones
      * 
@@ -160,10 +178,22 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        $base_breadcrumbs_generator      = new BreadCrumb_AgileDashboard($plugin_path, $this->milestone->getGroupId());
-        $planning_breadcrumbs_generator  = new BreadCrumb_Planning($plugin_path, $this->milestone->getPlanning());
-        $artifacts_breadcrumbs_generator = new BreadCrumb_Artifact($plugin_path, $this->milestone->getArtifact());
-        return new BreadCrumb_Merger($base_breadcrumbs_generator, $planning_breadcrumbs_generator, $artifacts_breadcrumbs_generator);
+        try {
+            if ($this->milestone->getArtifact()) {
+                $breadcrumbs_merger = new BreadCrumb_Merger();
+                foreach($this->getMilestoneWithAncestors() as $milestone) {
+                    $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
+                }
+                return $breadcrumbs_merger;
+            }
+        } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
+            $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
+        }
+        return new BreadCrumb_NoCrumb();
+    }
+
+    private function getMilestoneWithAncestors() {
+        return $this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone);
     }
 }
 

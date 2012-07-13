@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,33 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Merge two breadcrumbs into a single one, by appending the second to the first 
- */
-class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
-
-    /**
-     * @var array of BreadCrumb_BreadCrumbGenerator
-     */
-    private $generators;
-    
-    /**
-     * Takes a variable number of generators
-     */
-    function __construct() {
-        $this->generators = func_get_args();
-    }
-
-    function push(BreadCrumb_BreadCrumbGenerator $generator) {
-        $this->generators[] = $generator;
-    }
-
-    public function getCrumbs() {
-        $crumbs = array();
-        foreach ($this->generators as $crumb) {
-            $crumbs = array_merge($crumbs, $crumb->getCrumbs());
-        }
-        return $crumbs;
+class Tracker_Hierarchy_MoreThanOneParentException extends Exception {
+    public function __construct($child_id, array $parent_ids) {
+        $message = $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', array($child_id, implode(', ', $parent_ids)));
+        parent::__construct($message);
     }
 }
 

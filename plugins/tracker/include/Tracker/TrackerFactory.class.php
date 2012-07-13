@@ -594,7 +594,7 @@ class TrackerFactory {
      * @return Tracker_HierarchyFactory 
      */
     public function getHierarchyFactory() {
-        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this);
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this, Tracker_ArtifactFactory::instance());
     }
     
     /**
