@@ -376,7 +376,7 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
         $this->assertEqual($milestones, array($this->sprint_milestone));
     }
 
-    public function itBuildTheMilestoneForAllParents() {
+    public function itBuildTheMilestoneForOneParent() {
         $release_artifact = aMockArtifact()->build();
         stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array($release_artifact));
 
@@ -384,7 +384,21 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
         stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns($release_milestone);
 
         $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEqual($milestones, array($release_milestone, $this->sprint_milestone));
+        $this->assertEqual($milestones, array($this->sprint_milestone, $release_milestone));
+    }
+
+    public function itBuildTheMilestoneForSeveralParents() {
+        $release_artifact = aMockArtifact()->withId(1)->build();
+        $product_artifact = aMockArtifact()->withId(2)->build();
+        stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array($release_artifact, $product_artifact));
+
+        $product_milestone = aMilestone()->withArtifact($product_artifact)->build();
+        $release_milestone = aMilestone()->withArtifact($release_artifact)->build();
+        stub($this->milestone_factory)->getMilestoneFromArtifact($product_artifact)->returns($product_milestone);
+        stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns($release_milestone);
+
+        $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $this->sprint_milestone);
+        $this->assertEqual($milestones, array($this->sprint_milestone, $release_milestone, $product_milestone));
     }
 }
 
