@@ -399,7 +399,7 @@ class ArtifactFieldHtml extends ArtifactField {
      * @param text_none: text associated with the none value_id to display in the select box
      * @param show_any: show the Any entry in the select box if true (value_id 0)
      * @param text_any: text associated with the any value_id  tp display in the select box
-     * @param showSpan: Display the f***ing useless span (btw the one who added that span should be executed)
+     * @param showSpan: Display span used in JS only
      *
 	 *	@return	string
 	 */
