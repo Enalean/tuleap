@@ -101,7 +101,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     private function getCrossSearchQuery() {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
-        $artifact_criteria     = $this->getArtifactCriteria('artifact_criteria');
+        $artifact_criteria     = $this->getArtifactCriteria();
         
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
@@ -141,15 +141,15 @@ class Planning_MilestoneController extends MVC2_Controller {
         }
         return $request_criteria;
     }
-    
-    private function getArtifactCriteria($parameter_name) {
-        $criteria = $this->getArrayFromRequest($parameter_name);
+
+    private function getArtifactCriteria() {
+        $criteria = $this->getArrayFromRequest('artifact_criteria');
         if(empty($criteria) && $this->milestone->getArtifact()) {
             $criteria = $this->getPreselectedCriteriaFromAncestors();
         }
         return $criteria;
     }
-    
+
     private function getPreselectedCriteriaFromAncestors() {
         $preselected_criteria = array();
         foreach($this->getMilestoneWithAncestors() as $milestone) {
@@ -158,9 +158,9 @@ class Planning_MilestoneController extends MVC2_Controller {
                 $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
             }
         }
-        return $preselected_criteria;        
+        return $preselected_criteria;
     }
-    
+
     /**
      * @param array of Planning_Milestone $available_milestones
      * 
