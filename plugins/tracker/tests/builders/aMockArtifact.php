@@ -35,6 +35,7 @@ class MockArtifactBuilder {
         $this->allowedChildrenTypes   = array();
         $this->uri      = '';
         $this->xref     = '';
+        $this->value    = null;
     }
 
     /** @return \MockArtifactBuilder */
@@ -85,6 +86,15 @@ class MockArtifactBuilder {
         return $this;
     }
     
+    /**
+     * @param Tracker_Artifact_ChangesetValue $value
+     * @return \MockArtifactBuilder
+     */
+    public function withValue($value) {
+        $this->value = $value;
+        return $this;
+    }
+    
     /** @return \Tracker_Artifact */
     public function build() {
         $this->artifact->setReturnValue('getId', $this->id);
@@ -95,6 +105,7 @@ class MockArtifactBuilder {
         $this->artifact->setReturnValue('getLinkedArtifacts', $this->linkedArtifacts);
         $this->artifact->setReturnValue('getUniqueLinkedArtifacts', $this->uniqueLinkedArtifacts);
         $this->artifact->setReturnValue('getAllowedChildrenTypes', $this->allowedChildrenTypes);
+        $this->artifact->setReturnValue('getValue', $this->value);
         
         return $this->artifact;
     }

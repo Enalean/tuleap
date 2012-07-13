@@ -80,13 +80,15 @@ class Docman_VersionFactory {
     }
     /**
      * Returns the version of a given id
-     * @param Integer $id
-     * 
+     *
+     * @param Integer $id    Id of the version
+     * @param String  $table Table name
+     *
      * @return Docman_Version
      */
-    function getSpecificVersionById($id) {
+    function getSpecificVersionById($id, $table = 'plugin_docman_version_deleted') {
         $dao = $this->_getVersionDao();
-        $dar = $dao->searchById($id, 'plugin_docman_version_deleted');
+        $dar = $dao->searchById($id, $table);
         $version = null;
         if ($dar && !$dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());

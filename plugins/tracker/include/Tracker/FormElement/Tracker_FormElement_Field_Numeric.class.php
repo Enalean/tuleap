@@ -47,9 +47,37 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @param User             $user     The user who see the results
      * @param Tracker_Artifact $artifact The artifact on which the value is computed
      *
-     * @return float
+     * @return mixed
      */
-    public function getComputedValue(User $user, Tracker_Artifact $artifact) {
+    public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null) {
+        if ($this->userCanRead($user)) {
+            if ($timestamp !== null) {
+                return $this->getComputedValueAt($artifact, $timestamp);
+            } else {
+                return $this->getCurrentComputedValue($artifact);
+            }
+        }
+    }
+
+    /**
+     * @param User             $user
+     * @param Tracker_Artifact $artifact
+     * @param int              $timestamp
+     * 
+     * @return mixed
+     */
+    private function getComputedValueAt(Tracker_Artifact $artifact, $timestamp) {
+        $row = $this->getValueDao()->getValueAt($artifact->getId(), $this->getId(), $timestamp);
+        return $row['value'];
+    }
+
+    /**
+     * @param User             $user
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return mixed
+     */
+    private function getCurrentComputedValue(Tracker_Artifact $artifact) {
         $value = $artifact->getValue($this);
         if ($value) {
             return $value->getValue();
