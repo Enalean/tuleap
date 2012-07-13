@@ -1,4 +1,8 @@
 Version 0.5.8 - Tuleap 5.3
+    * Fix: can choose other field than "status" field
+    * Fix: can D'nD from "none" column
+
+Version 0.5.8 - Tuleap 5.3
     * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
 
 Version 0.5.7 - Tuleap 5.3

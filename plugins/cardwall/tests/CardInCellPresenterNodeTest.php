@@ -21,6 +21,8 @@
 
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/TreeNode/NodeDuplicatorContractTest.class.php';
 require_once dirname(__FILE__).'/../include/CardInCellPresenter.class.php';
+require_once dirname(__FILE__).'/../include/CardInCellPresenterNode.class.php';
+require_once TRACKER_BASE_DIR. '/Tracker/Artifact/Tracker_Artifact.class.php';
 
 class Cardwall_CardInCellPresenterNodeTest extends NodeDuplicatorContractTest {
 
@@ -28,6 +30,13 @@ class Cardwall_CardInCellPresenterNodeTest extends NodeDuplicatorContractTest {
         $presenter      = mock('Cardwall_CardInCellPresenter');
         $presenter_node = new Cardwall_CardInCellPresenterNode(new TreeNode(), $presenter);
         $this->assertEqual($presenter, $presenter_node->getCardInCellPresenter());
+    }
+    
+    public function itHasAnArtifact() {
+        $artifact       = mock('Tracker_Artifact');
+        $presenter      = stub('Cardwall_CardInCellPresenter')->getArtifact()->returns($artifact);
+        $presenter_node = new Cardwall_CardInCellPresenterNode(new TreeNode(), $presenter);
+        $this->assertEqual($artifact, $presenter_node->getArtifact());
     }
 
     protected function newNode(TreeNode $tree_node) {

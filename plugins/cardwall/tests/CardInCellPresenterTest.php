@@ -28,7 +28,10 @@ class CardInCellPresenterTest extends TuleapTestCase {
         $this->card_field_id     = 9999;
         $swimline_field_values   = array(100, 221);
         $swimline_id             = 3;
-        $this->card_presenter    = mock('Cardwall_CardPresenter');
+        $this->card_id           = 56789;
+        $this->artifact          = mock('Tracker_Artifact');
+        $this->card_presenter    = stub('Cardwall_CardPresenter')->getArtifact()->returns($this->artifact);
+        stub($this->card_presenter)->getId()->returns($this->card_id);
         $this->presenter         = new Cardwall_CardInCellPresenter($this->card_presenter, $this->card_field_id, $swimline_id, $swimline_field_values);
     }
     
@@ -43,6 +46,14 @@ class CardInCellPresenterTest extends TuleapTestCase {
     
     public function itHasACardPresenter() {
         $this->assertEqual($this->card_presenter, $this->presenter->getCardPresenter());
+    }
+    
+    public function itHasAnArtifact() {
+        $this->assertEqual($this->artifact, $this->presenter->getArtifact());
+    }
+    
+    public function itHasAnId() {
+        $this->assertEqual($this->card_id, $this->presenter->getId());
     }
 }
 ?>
