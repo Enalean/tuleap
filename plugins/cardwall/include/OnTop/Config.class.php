@@ -80,6 +80,10 @@ class Cardwall_OnTop_Config {
         return $this->column_factory->getColumns($this->tracker);
     }
 
+    public function getCardwallColumns($cardwall_field) {
+        return $this->column_factory->getCardwallColumns($cardwall_field);
+    }
+    
     public function getMappings() {
         return $this->tracker_mapping_factory->getMappings($this->tracker, $this->getColumns());
     }
@@ -138,8 +142,8 @@ class Cardwall_OnTop_Config {
         return $this->_getCardwallMappings($fields, $this->getCardwallColumns($cardwall_field));
     }
 
-    public function getCardwallMappings2($fields, $tracker) {
-        return $this->_getCardwallMappings($fields, $this->getColumns($tracker));
+    public function getCardwallMappings2($fields) {
+        return $this->_getCardwallMappings($fields, $this->getColumns());
     }
 
     public function _getCardwallMappings($fields, $columns) {
@@ -176,10 +180,6 @@ class Cardwall_OnTop_Config {
         }
     }
 
-    
-    public function getCardwallColumns($cardwall_field) {
-        return $this->column_factory->getCardwallColumns($cardwall_field);
-    }
     
 
 }
