@@ -24,18 +24,18 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody class="cardwall">
                 {{#swimlines}}
                     <tr valign="top" id="swimline-{{swimline_id}}">
                         {{#has_swimline_header}}
-                            <td>
+                            <td class="cardwall-cell">
                                 <ul class="nodrag">
                                     <li>{{> card}}</td>
                                 </ul>
                             </td>
                         {{/has_swimline_header}}
                         {{#cells}}
-                            <td>
+                            <td class="cardwall-cell">
                                 <ul>
                                     {{#cardincell_presenters}}
                                         <li class="cardwall_board_postit {{getDropIntoClass}} " id="cardwall_board_postit-{{getId}}" data-column-field-id="{{getCardFieldId}}">
