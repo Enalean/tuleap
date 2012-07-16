@@ -22,14 +22,18 @@ require_once('Tracker_FormElement_Field_List_Bind.class.php');
 require_once('Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
+
+    protected $userManager;
     protected $value_function;
     protected $values;
+
     public function __construct($field, $value_function, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->value_function = array();
         if ( !empty($value_function) ) {
             $this->value_function = explode(',', $value_function);
         }
+        $this->userManager = UserManager::instance();
     }
 
     /**
@@ -192,8 +196,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected function getAdditionnalValue($value_id) {
         if (!isset($this->additionnal_values[$value_id])) {
             $this->additionnal_values[$value_id] = null;
-            $um = UserManager::instance();
-            if ($user = $um->getUserById($value_id)) {
+            if ($user = $this->userManager->getUserById($value_id)) {
                 $this->additionnal_values[$value_id] = new Tracker_FormElement_Field_List_Bind_UsersValue($user->getId());
             }
         }
@@ -706,14 +709,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function isValid($value) {
         if ($value) {
             $values = explode(',', $value);
-            $um = UserManager::instance();
             foreach ($values as $v) {
                 if (stripos($v, '!') !== false) {
                     //we check the string is an email
                     $rule = new Rule_Email();
                     if(!$rule->isValid($v)) {
                         //we check the string correspond to a username
-                        if (!$um->getUserByIdentifier(substr($v, 1))) {
+                        if (!$this->userManager->getUserByIdentifier(substr($v, 1))) {
                             return false;
                         }
                     }
@@ -730,4 +732,5 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         // Nothing to do: user value ids stay the same accross projects.
     }
 }
+
 ?>
