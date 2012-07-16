@@ -28,7 +28,7 @@ class Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition extends Cardwall
         return $this->translate('plugin_cardwall', 'on_top_semantic_status_column_definition_speech', array($this->purify($field->getLabel())));
     }
 
-    protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
+    protected function fetchColumnHeader(Cardwall_Column $column) {
         return $this->purify($column->label);
     }
 

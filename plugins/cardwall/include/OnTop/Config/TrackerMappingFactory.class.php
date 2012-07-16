@@ -74,7 +74,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory {
      * Get all mappings defined for the cardwall on top of a tracker
      *
      * @param Tracker $tracker The tracker
-     * @param array   $columns array of Cardwall_OnTop_Config_Column
+     * @param array   $columns array of Cardwall_Column
      *
      * @return array of Cardwall_OnTop_Config_TrackerMapping
      */

@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Column.class.php';
+require_once dirname(__FILE__). '/../../constants.php';
+require_once CARDWALL_BASE_DIR. '/Column.class.php';
 require_once 'ColumnStatusCollection.class.php';
 require_once 'ColumnFreestyleCollection.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
@@ -41,7 +42,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array Cardwall_OnTop_Config_Column
+     * @return array Cardwall_Column
      */
     public function getColumns(Tracker $tracker) {
         $columns = $this->getColumnsFromDao($tracker);
@@ -57,7 +58,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
     /**
      * @return array of Cardwall_Column
      */
-    public function getCardwallColumns($config, $field, $field_provider) {
+    public function getCardwallColumns($field, $field_provider) {
         // TODO use cache of $columns
         $decorators    = $field->getDecorators();
         $columns = array();
@@ -69,7 +70,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
-     * @return array of Cardwall_OnTop_Config_Column
+     * @return array of Cardwall_Column
      */
     public function getColumnsFromStatusField(Tracker $tracker) {
         $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
@@ -78,7 +79,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
             $decorators = $field->getDecorators();
             foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
                 list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
-                $columns[] = new Cardwall_OnTop_Config_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+                $columns[] = new Cardwall_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
             }
         }
         return $columns;
@@ -86,13 +87,13 @@ class Cardwall_OnTop_Config_ColumnFactory {
 
 
     /**
-     * @return array of Cardwall_OnTop_Config_Column
+     * @return array of Cardwall_Column
      */
     private function getColumnsFromDao(Tracker $tracker) {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
             list($bgcolor, $fgcolor) = $this->getColumnColorsFromRow($row);
-            $columns[] = new Cardwall_OnTop_Config_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
+            $columns[] = new Cardwall_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
         }
         return $columns;
     }

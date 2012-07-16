@@ -66,6 +66,33 @@ class Cardwall_Column {
         return $artifact_status === null && $this->id == 100;
     }
 
+    /**
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel() {
+        return $this->label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBgcolor() {
+        return $this->bgcolor;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFgcolor() {
+        return $this->fgcolor;
+    }
 
 }
 ?>

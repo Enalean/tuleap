@@ -31,7 +31,7 @@ class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTo
         }
     }
 
-    protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
+    protected function fetchColumnHeader(Cardwall_Column $column) {
         return '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
     }
 

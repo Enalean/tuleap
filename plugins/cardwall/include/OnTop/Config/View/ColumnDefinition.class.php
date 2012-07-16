@@ -51,7 +51,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
     /**
      * @return string
      */
-    protected abstract function fetchColumnHeader(Cardwall_OnTop_Config_Column $column);
+    protected abstract function fetchColumnHeader(Cardwall_Column $column);
 
     /**
      * @return string
