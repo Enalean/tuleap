@@ -20,7 +20,9 @@
 
 require_once 'ValueMapping.class.php';
 require_once 'ColumnCollection.class.php';
+require_once dirname(__FILE__). '/../../constants.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
+require_once CARDWALL_BASE_DIR .'/../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 

@@ -110,7 +110,7 @@ class Cardwall_OnTop_Config {
         }
     }
 
-    public function isMappedTo($tracker_id, $artifact_status, $column) {
+    private function isMappedTo($tracker_id, $artifact_status, $column) {
         $tracker_mappings = $this->getMappings();
         
         // TODO null object pattern, to return empty valuemappings

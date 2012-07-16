@@ -63,7 +63,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $columns = array();
         foreach ($field->getVisibleValuesPlusNoneIfAny() as $value) {
             list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
-            $columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $field_provider, $config);
+            $columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
         }
         return $columns;
     }

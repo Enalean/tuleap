@@ -19,6 +19,7 @@
  */
 
 require_once 'Swimline.class.php';
+require_once 'OnTop/Config.class.php';
 require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 
 /**
