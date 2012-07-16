@@ -135,29 +135,21 @@ class Cardwall_OnTop_Config {
      * @return Cardwall_MappingCollection
      */
     public function getCardwallMappings($fields, $cardwall_field) {
-        $columns = new Cardwall_Columns($this->getCardwallColumns($cardwall_field));
-        $mappings = new Cardwall_MappingCollection();
-        $this->fillMappingsByDuckType($mappings, $fields, $columns);
-        $this->fillMappingsWithOnTopMappings($mappings, $columns);
-        return $mappings;
+        return $this->_getCardwallMappings($fields, $this->getCardwallColumns($cardwall_field));
     }
 
-    /**
-     * Get the column/field/value mappings by duck typing the colums labels 
-     * with the values of the given fields
-     *
-     * @param array $fields array of Tracker_FormElement_Field_Selectbox
-     *
-     * @return Cardwall_MappingCollection
-     */
     public function getCardwallMappings2($fields, $tracker) {
-        $columns = new Cardwall_Columns($this->getColumns($tracker));
+        return $this->_getCardwallMappings($fields, $this->getColumns($tracker));
+    }
+
+    public function _getCardwallMappings($fields, $columns) {
+        $columns = new Cardwall_Columns($columns);
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $columns);
         $this->fillMappingsWithOnTopMappings($mappings, $columns);
         return $mappings;
     }
-
+    
     private function fillMappingsByDuckType($mappings, $fields, $columns) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
