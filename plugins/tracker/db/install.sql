@@ -583,6 +583,19 @@ CREATE TABLE IF NOT EXISTS tracker_hierarchy (
   child_id int(11) NOT NULL PRIMARY KEY
 );
 
+DROP TABLE IF EXISTS tracker_reminder;
+CREATE TABLE tracker_reminder (
+    reminder_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    tracker_id INT(11) NOT NULL,
+    field_id INT(11) NOT NULL,
+    ugroups VARCHAR(255) NOT NULL,
+    notification_type TINYINT(1) DEFAULT 0,
+    distance INT( 11 ) DEFAULT 0,
+    status TINYINT(1) DEFAULT 1,
+    PRIMARY KEY (reminder_id),
+    UNIQUE KEY (tracker_id, field_id, ugroups, notification_type, distance, status)
+);
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);

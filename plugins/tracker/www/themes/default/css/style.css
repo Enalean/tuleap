@@ -1123,6 +1123,23 @@ td.first-column {
     margin-left:1px;
 }
 
+.tracker_date_reminder {
+    font-style: italic;
+    color: #ffffff;
+    background-color: #808080;
+}
+
+.date_reminder_confirm_delete_buttons {
+    text-align:center;
+}
+
+.date_reminder_confirm_delete {
+    border:medium solid red; 
+    background:#FFC; 
+    padding:4px 10px;
+
+}
+
 /* {{{ cards */
 .cards {
   list-style: none;
@@ -1169,6 +1186,7 @@ td.first-column {
     color: #005580;
     background: none;
 }
+
 .card-details {
     color: #444;
 }

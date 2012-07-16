@@ -67,6 +67,7 @@ DROP TABLE IF EXISTS tracker_semantic_status;
 DROP TABLE IF EXISTS tracker_semantic_contributor;
 DROP TABLE IF EXISTS tracker_perm;
 DROP TABLE IF EXISTS tracker_rule;
+DROP TABLE IF EXISTS tracker_reminder;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

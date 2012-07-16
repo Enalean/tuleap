@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerMapping.class.php';
+class Tracker_DateReminderException extends Exception {
 
-class Cardwall_OnTop_Config_TrackerMappingNoField extends Cardwall_OnTop_Config_TrackerMapping {
-
-    /**
-     * @pattern Visitor
-     */
-    public function accept($visitor) {
-        return $visitor->visitTrackerMappingNoField($this);
-    }
-
-    public function getField() {
-        return null;
-    }
-
-    public function getValueMappings() {
-        return array();
-    }
-    
 }
+
 ?>
