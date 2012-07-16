@@ -62,5 +62,19 @@ class Cardwall_BoardFactory {
         $swimline_factory = new Cardwall_SwimlineFactory($config, $field_provider);
         return $swimline_factory->getSwimlines($columns, $forests_of_cardincell_presenters->getChildren());
     }
+
+    public function getMultiTrackerBoard($field_retriever, $tracker, $forests_of_artifacts, $config) {
+        $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
+        $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
+        
+        $mapping_collection = $config->getCardwallMappings2($status_fields, $tracker);
+        
+        $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
+        $columns                          = $config->getColumns($tracker);
+        $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
+
+        return new Cardwall_Board($swimlines, $columns, $mapping_collection);
+        
+    }
 }
 ?>

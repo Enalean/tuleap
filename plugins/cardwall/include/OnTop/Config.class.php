@@ -142,6 +142,22 @@ class Cardwall_OnTop_Config {
         return $mappings;
     }
 
+    /**
+     * Get the column/field/value mappings by duck typing the colums labels 
+     * with the values of the given fields
+     *
+     * @param array $fields array of Tracker_FormElement_Field_Selectbox
+     *
+     * @return Cardwall_MappingCollection
+     */
+    public function getCardwallMappings2($fields, $tracker) {
+        $columns = new Cardwall_Columns($this->getColumns($tracker));
+        $mappings = new Cardwall_MappingCollection();
+        $this->fillMappingsByDuckType($mappings, $fields, $columns);
+        $this->fillMappingsWithOnTopMappings($mappings, $columns);
+        return $mappings;
+    }
+
     private function fillMappingsByDuckType($mappings, $fields, $columns) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
