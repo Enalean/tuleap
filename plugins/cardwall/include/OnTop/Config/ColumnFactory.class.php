@@ -39,12 +39,46 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $this->dao = $dao;
     }
 
+    /**
+     * @param Tracker $tracker
+     * @return array Cardwall_OnTop_Config_Column
+     */
     public function getColumns(Tracker $tracker) {
         $columns = $this->getColumnsFromDao($tracker);
         if (! count($columns)) {
             $status_columns = $this->getColumnsFromStatusField($tracker);
             if (count($status_columns)) {
                 $columns = $status_columns;
+            }
+        }
+        return $columns;
+    }
+
+    /**
+     * @return array of Cardwall_Column
+     */
+    public function getCardwallColumns($config, $field, $field_provider) {
+        // TODO use cache of $columns
+        $decorators    = $field->getDecorators();
+        $columns = array();
+        foreach ($field->getVisibleValuesPlusNoneIfAny() as $value) {
+            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
+            $columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $field_provider, $config);
+        }
+        return $columns;
+    }
+
+    /**
+     * @return array of Cardwall_OnTop_Config_Column
+     */
+    public function getColumnsFromStatusField(Tracker $tracker) {
+        $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
+        $field   = $tracker->getStatusField();
+        if ($field) {
+            $decorators = $field->getDecorators();
+            foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
+                list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
+                $columns[] = new Cardwall_OnTop_Config_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
             }
         }
         return $columns;
@@ -63,29 +97,14 @@ class Cardwall_OnTop_Config_ColumnFactory {
         return $columns;
     }
 
-    /**
-     * @return array of Cardwall_OnTop_Config_Column
-     */
-    public function getColumnsFromStatusField(Tracker $tracker) {
-        $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
-        $field   = $tracker->getStatusField();
-        if ($field) {
-            $decorators = $field->getDecorators();
-            foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
-                list($bgcolor, $fgcolor) = $this->getColumnColorsFromListValue($value, $decorators);
-                $columns[] = new Cardwall_OnTop_Config_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-            }
-        }
-        return $columns;
-    }
-
-    private function getColumnColorsFromListValue($value, $decorators) {
+    private function getCardwallColumnColors($value, $decorators) {
         $id      = (int)$value->getId();
         $bgcolor = self::DEFAULT_BGCOLOR;
         $fgcolor = self::DARK_FGCOLOR;
         if (isset($decorators[$id])) {
             $bgcolor = $decorators[$id]->css($bgcolor);
-            $fgcolor = $decorators[$id]->isDark() ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
+            //choose a text color to have right contrast (black on dark colors is quite useless)
+            $fgcolor = $decorators[$id]->isDark($fgcolor) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
         }
         return array($bgcolor, $fgcolor);
     }
@@ -111,33 +130,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
         return (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128;
     }
 
-    /**
-     * @return array of Cardwall_Column
-     */
-    public function getCardwallColumns($config, $field, $field_provider) {
-        // TODO use cache of $columns
-        $values        = $field->getVisibleValuesPlusNoneIfAny();
-        $decorators    = $field->getBind()->getDecorators();
-        $columns = array();
-        foreach ($values as $value) {
-            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
-            $columns[]         = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor, $field_provider, $config);
-        }
-        return $columns;
-    }
     
-    
-    private function getCardwallColumnColors($value, $decorators) {
-        $id      = (int)$value->getId();
-        $bgcolor = 'white';
-        $fgcolor = 'black';
-        if (isset($decorators[$id])) {
-            $bgcolor = $decorators[$id]->css($bgcolor);
-            //choose a text color to have right contrast (black on dark colors is quite useless)
-            $fgcolor = $decorators[$id]->isDark($fgcolor) ? 'white' : 'black';
-        }
-        return array($bgcolor, $fgcolor);
-    }
 
 
 }
