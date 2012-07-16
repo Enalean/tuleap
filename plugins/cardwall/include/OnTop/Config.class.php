@@ -21,6 +21,7 @@
 require_once 'Dao.class.php';
 require_once 'Config/ColumnFactory.class.php';
 require_once 'Config/TrackerMappingFactory.class.php';
+require_once CARDWALL_BASE_DIR. '/Columns.class.php';
 
 /**
  * Manage configuration of a cardwall on top of a tracker

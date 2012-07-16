@@ -22,34 +22,6 @@ require_once 'Column.class.php';
 require_once 'Mapping.class.php';
 require_once 'MappingCollection.class.php';
 
-/**
- * Build from a SB field bunch of columns to display in cardwall
- */
-class Cardwall_ColumnFactory {
-
-    /**
-     * @var Tracker_FormElement_Field_Selectbox
-     */
-    public $field;
-
-    /**
-     * @var array of Cardwall_Column
-     */
-    private $columns = array();
-
-    /**
-     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
-     */
-    public $field_provider;
-    
-    public function __construct(Tracker_FormElement_Field_Selectbox                  $field,
-                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
-        $this->field = $field;
-        $this->field_provider = $field_provider;
-    }
-    
-
-}
 
 class Cardwall_Columns {
 

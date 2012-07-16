@@ -19,7 +19,7 @@
  */
 
 require_once 'SwimlineFactory.class.php';
-require_once 'ColumnFactory.class.php';
+require_once 'OnTop/Config/ColumnFactory.class.php';
 require_once 'Board.class.php';
 require_once 'FieldsExtractor.class.php';
 require_once 'OnTop/Config/MappedFieldProvider.class.php';
