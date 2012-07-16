@@ -259,6 +259,46 @@ class Tracker_HierarchyFactoryGetAllAncestorsTest extends TuleapTestCase {
         $this->assertEqual($this->hierarchy_factory->getAllAncestors($this->user, $this->sprint), array($release));
     }
 
+    public function itReturnsNothingWhenChildReferenceItselfAsParent() {
+        stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint)->returns($this->sprint);
+
+        $this->assertEqual($this->hierarchy_factory->getAllAncestors($this->user, $this->sprint), array());
+    }
+
+    public function itReturnsParentsOnlyOnceWhenTheParentReferenceItself() {
+        $release = anArtifact()->withId(3)->build();
+
+        $this->hierarchy_factory->setReturnValueAt(0, 'getParentArtifact', $release, array($this->user, $this->sprint));
+        // simulate loop on release (release reference itself)
+        $this->hierarchy_factory->setReturnValueAt(1, 'getParentArtifact', $release, array($this->user, $release));
+        $this->hierarchy_factory->setReturnValueAt(2, 'getParentArtifact', $release, array($this->user, $release));
+        //...
+
+        $this->assertEqual($this->hierarchy_factory->getAllAncestors($this->user, $this->sprint), array($release));
+    }
+
+    public function itReturnsParentsOnlyOnceWhenThereIsACycleBetweenParents() {
+        $product = anArtifact()->withId(2)->build();
+        $release = anArtifact()->withId(3)->build();
+
+        $this->hierarchy_factory->setReturnValueAt(0, 'getParentArtifact', $release, array($this->user, $this->sprint));
+        $this->hierarchy_factory->setReturnValueAt(1, 'getParentArtifact', $product, array($this->user, $release));
+        $this->hierarchy_factory->setReturnValueAt(1, 'getParentArtifact', $release, array($this->user, $product));
+
+        $this->assertEqual($this->hierarchy_factory->getAllAncestors($this->user, $this->sprint), array($release, $product));
+    }
+
+    public function itReturnsParentsOnlyOnceWhenThereIsAFullCycle() {
+        $product = anArtifact()->withId(2)->build();
+        $release = anArtifact()->withId(3)->build();
+
+        $this->hierarchy_factory->setReturnValueAt(0, 'getParentArtifact', $release, array($this->user, $this->sprint));
+        $this->hierarchy_factory->setReturnValueAt(1, 'getParentArtifact', $product, array($this->user, $release));
+        $this->hierarchy_factory->setReturnValueAt(1, 'getParentArtifact', $this->sprint, array($this->user, $product));
+
+        $this->assertEqual($this->hierarchy_factory->getAllAncestors($this->user, $this->sprint), array($release, $product));
+    }
+
     public function itReturnsSeveralParents() {
         $product = anArtifact()->withId(2)->build();
         $release = anArtifact()->withId(3)->build();

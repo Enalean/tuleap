@@ -141,12 +141,13 @@ class Tracker_HierarchyFactory {
         return null;
     }
 
-    public function getAllAncestors(User $user, Tracker_Artifact $child) {
+    public function getAllAncestors(User $user, Tracker_Artifact $child, array &$stack = array()) {
         $parent = $this->getParentArtifact($user, $child);
-        if ($parent === null) {
+        if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
             return array();
         } else {
-            return array_merge(array($parent), $this->getAllAncestors($user, $parent));
+            $stack[$parent->getId()] = true;
+            return array_merge(array($parent), $this->getAllAncestors($user, $parent, $stack));
         }
     }
 
