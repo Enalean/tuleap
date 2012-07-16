@@ -75,7 +75,7 @@ class Cardwall_Column {
                $this->isMatchForThisColumn($artifact_status);
     }
     
-    private function isMatchForThisColumn($artifact_status) {
+    public function isMatchForThisColumn($artifact_status) {
         return $this->matchesLabel($artifact_status) || $this->matchesTheNoneColumn($artifact_status);
     }
 

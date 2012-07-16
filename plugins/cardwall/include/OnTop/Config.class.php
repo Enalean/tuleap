@@ -159,5 +159,18 @@ class Cardwall_OnTop_Config {
     public function getCardwallColumns($field, $field_provider) {
         return $this->column_factory->getCardwallColumns($this, $field, $field_provider);
     }
+    
+    public function isInColumn(Tracker_Artifact $artifact, $field_provider, $column) {
+        $field           = $field_provider->getField($artifact);
+        $artifact_status = null;
+        if ($field) {
+            $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
+        }
+
+        
+        return $this->isMappedTo($artifact->getTrackerId(), $artifact_status, $column) || 
+               $column->isMatchForThisColumn($artifact_status);
+    }
+
 }
 ?>

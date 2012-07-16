@@ -45,7 +45,7 @@ class Cardwall_BoardFactory {
         
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
         $columns                          = $config->getCardwallColumns($field, $field_retriever  );
-        $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters);
+        $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
     }
@@ -59,8 +59,8 @@ class Cardwall_BoardFactory {
         return $column_id_mapper->map($forests_of_card_presenters);
     }
 
-    private function getSwimlines(array $columns, TreeNode $forests_of_cardincell_presenters) {
-        $swimline_factory = new Cardwall_SwimlineFactory();
+    private function getSwimlines(array $columns, TreeNode $forests_of_cardincell_presenters, $config, $field_provider) {
+        $swimline_factory = new Cardwall_SwimlineFactory($config, $field_provider);
         return $swimline_factory->getSwimlines($columns, $forests_of_cardincell_presenters->getChildren());
     }
 }

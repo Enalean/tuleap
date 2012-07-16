@@ -26,6 +26,11 @@ require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
  */
 class Cardwall_SwimlineFactory {
 
+    public function __construct($config, $field_provider) {
+        $this->config = $config;
+        $this->field_provider = $field_provider;
+    }
+    
     /**
      * @return array of Cardwall_Swimline
      */
@@ -77,8 +82,9 @@ class Cardwall_SwimlineFactory {
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
         $artifact        = $presenter->getArtifact();
-        if ($column->isInColumn($artifact)) {
+        if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
             $presenters[] = $presenter;
+            
         }
     }
 
