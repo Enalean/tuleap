@@ -19,10 +19,23 @@
  */
 
 class Tracker_Hierarchy_MoreThanOneParentException extends Exception {
-    public function __construct($child_id, array $parent_ids) {
-        $message = $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', array($child_id, implode(', ', $parent_ids)));
-        parent::__construct($message);
+
+    public function __construct(Tracker_Artifact $child, array $parents) {
+        parent::__construct($this->getTranslatedMessage(array($this->getParentTitle($child), $this->getParentsList($parents))));
     }
+
+    private function getTranslatedMessage(array $arguments) {
+        return $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', $arguments);
+    }
+
+    private function getParentsList(array $parents) {
+        return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
+    }
+
+    private function getParentTitle(Tracker_Artifact $artifact) {
+        return '"'.$artifact->getTitle().' ('.$artifact->fetchXRefLink().')"';
+    }
+
 }
 
 ?>

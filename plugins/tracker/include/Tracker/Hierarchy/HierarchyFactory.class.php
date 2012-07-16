@@ -131,22 +131,23 @@ class Tracker_HierarchyFactory {
                 case 1:
                     return $this->artifact_factory->getInstanceFromRow($dar->getRow());
                 default:
-                    $parent_ids = array();
+                    $parents = array();
                     foreach ($dar as $row) {
-                        $parent_ids[] = $row['id'];
+                        $parents[] = $this->artifact_factory->getInstanceFromRow($row);
                     }
-                    throw new Tracker_Hierarchy_MoreThanOneParentException($child->getId(), $parent_ids);
+                    throw new Tracker_Hierarchy_MoreThanOneParentException($child, $parents);
             }
         }
         return null;
     }
 
-    public function getAllAncestors(User $user, Tracker_Artifact $child) {
+    public function getAllAncestors(User $user, Tracker_Artifact $child, array &$stack = array()) {
         $parent = $this->getParentArtifact($user, $child);
-        if ($parent === null) {
+        if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
             return array();
         } else {
-            return array_merge(array($parent), $this->getAllAncestors($user, $parent));
+            $stack[$parent->getId()] = true;
+            return array_merge(array($parent), $this->getAllAncestors($user, $parent, $stack));
         }
     }
 

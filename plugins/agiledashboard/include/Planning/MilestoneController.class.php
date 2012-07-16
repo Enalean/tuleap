@@ -29,17 +29,22 @@ require_once 'MilestoneFactory.class.php';
  * Handles the HTTP actions related to a planning milestone.
  */
 class Planning_MilestoneController extends MVC2_Controller {
-    
+
     /**
      * @var Planning_MilestoneFactory
      */
     private $milestone_factory;
-    
+
     /**
      * @var Planning_Milestone
      */
     private $milestone;
-    
+
+    /**
+     * @var Array of Planning_Milestone
+     */
+    private $milestone_ancestors = null;
+
     /**
      * Instanciates a new controller.
      * 
@@ -153,10 +158,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     private function getPreselectedCriteriaFromAncestors() {
         $preselected_criteria = array();
         foreach($this->getMilestoneWithAncestors() as $milestone) {
-            //TODO remove condition: FIX should not be linked to itself
-            if ($this->milestone->getArtifactId() != $milestone->getArtifactId()) {
-                $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
-            }
+            $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
         }
         return $preselected_criteria;
     }
@@ -178,22 +180,26 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        try {
-            if ($this->milestone->getArtifact()) {
-                $breadcrumbs_merger = new BreadCrumb_Merger();
-                foreach(array_reverse($this->getMilestoneWithAncestors()) as $milestone) {
-                    $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
-                }
-                return $breadcrumbs_merger;
+        if ($this->milestone->getArtifact()) {
+            $breadcrumbs_merger = new BreadCrumb_Merger();
+            foreach(array_reverse($this->getMilestoneWithAncestors()) as $milestone) {
+                $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
             }
-        } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
-            $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
+            return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
     }
 
     private function getMilestoneWithAncestors() {
-        return $this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone);
+        if (!$this->milestone_ancestors) {
+            try {
+                $this->milestone_ancestors = $this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone);
+            } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                $this->milestone_ancestors = array();
+            }
+        }
+        return $this->milestone_ancestors;
     }
 }
 
