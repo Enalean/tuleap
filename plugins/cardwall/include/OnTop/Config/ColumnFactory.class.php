@@ -60,13 +60,17 @@ class Cardwall_OnTop_Config_ColumnFactory {
      */
     public function getCardwallColumns($field) {
         // TODO use cache of $columns
-        $decorators    = $field->getDecorators();
         $columns = array();
-        foreach ($field->getVisibleValuesPlusNoneIfAny() as $value) {
-            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
-            $columns[] = new Cardwall_Column((int)$value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-        }
+        $this->_getColumnsFor($columns, $field);
         return $columns;
+    }
+    
+    private function _getColumnsFor(&$columns, $field) {
+        $decorators = $field->getDecorators();
+        foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
+            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
+            $columns[] = new Cardwall_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+        }
     }
 
     /**
@@ -76,11 +80,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
         $field   = $tracker->getStatusField();
         if ($field) {
-            $decorators = $field->getDecorators();
-            foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
-                list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
-                $columns[] = new Cardwall_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-            }
+            $this->_getColumnsFor($columns, $field);
         }
         return $columns;
     }
