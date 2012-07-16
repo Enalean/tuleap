@@ -131,11 +131,11 @@ class Tracker_HierarchyFactory {
                 case 1:
                     return $this->artifact_factory->getInstanceFromRow($dar->getRow());
                 default:
-                    $parent_ids = array();
+                    $parents = array();
                     foreach ($dar as $row) {
-                        $parent_ids[] = $row['id'];
+                        $parents[] = $this->artifact_factory->getInstanceFromRow($row);
                     }
-                    throw new Tracker_Hierarchy_MoreThanOneParentException($child->getId(), $parent_ids);
+                    throw new Tracker_Hierarchy_MoreThanOneParentException($child, $parents);
             }
         }
         return null;

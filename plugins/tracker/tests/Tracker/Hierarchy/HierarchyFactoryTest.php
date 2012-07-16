@@ -165,31 +165,29 @@ class Tracker_HierarchyFactoryGetParentTest extends TuleapTestCase {
     private $user;
     private $artifact;
     private $artifact_id;
+    private $artifact_factory;
 
     public function setUp() {
         parent::setUp();
 
         $this->artifact_id = 123;
-        $this->artifact    = anArtifact()->withId($this->artifact_id)->build();
+        $this->artifact    = aMockArtifact()->withId($this->artifact_id)->build();
 
-        $this->dao     = mock('Tracker_Hierarchy_Dao');
-        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, mock('TrackerFactory'), Tracker_ArtifactFactory::instance());
+        $this->dao               = mock('Tracker_Hierarchy_Dao');
+        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, mock('TrackerFactory'), $this->artifact_factory);
 
         $this->user    = aUser()->build();
     }
 
     public function itReturnsTheParent() {
-        $artifact_row = array(
-            'id'                       => '345',
-            'tracker_id'               => '112',
-            'submitted_by'             => '12',
-            'submitted_on'             => '2',
-            'use_artifact_permissions' => '0'
-        );
+        $artifact_id  = 345;
+        $artifact_row = array('id' => "$artifact_id");
+        stub($this->artifact_factory)->getInstanceFromRow($artifact_row)->returns(aMockArtifact()->withId($artifact_id)->build());
         stub($this->dao)->getParentsInHierarchy($this->artifact_id)->returnsDar($artifact_row);
 
         $parent = $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
-        $this->assertEqual($parent->getId(), 345);
+        $this->assertEqual($parent->getId(), $artifact_id);
     }
 
     public function itReturnsNullWhenNoParents() {
@@ -214,18 +212,13 @@ class Tracker_HierarchyFactoryGetParentTest extends TuleapTestCase {
     }
 
     public function itThrowAnExceptionWhen2Parents() {
-        $artifact_row = array(
-            'tracker_id'               => '112',
-            'submitted_by'             => '12',
-            'submitted_on'             => '2',
-            'use_artifact_permissions' => '0'
-        );
-        $artifact_345_row       = $artifact_row;
-        $artifact_345_row['id'] = '345';
-        $artifact_346_row       = $artifact_row;
-        $artifact_346_row['id'] = '346';
-
+        $artifact_345_row = array('id' => '345');
+        $artifact_346_row = array('id' => '346');
         stub($this->dao)->getParentsInHierarchy()->returnsDar($artifact_345_row, $artifact_346_row);
+
+        $this->artifact_factory->setReturnValueAt(0, 'getInstanceFromRow', aMockArtifact()->withId(345)->build());
+        $this->artifact_factory->setReturnValueAt(1, 'getInstanceFromRow', aMockArtifact()->withId(346)->build());
+
 
         $this->expectException('Tracker_Hierarchy_MoreThanOneParentException');
 

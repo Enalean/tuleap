@@ -195,7 +195,7 @@ class Planning_MilestoneController extends MVC2_Controller {
             try {
                 $this->milestone_ancestors = $this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone);
             } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $this->milestone_ancestors = array();
             }
         }
