@@ -62,19 +62,23 @@ class CodeReviewActions extends Actions {
     * @return Array
     */
     function validateRequest() {
-        $status             = true;
-        $invalid            = array();
-        $plugin             = PluginManager::instance()->getPluginByName('codereview');
-        $repository_manager = new RepositoryManager($plugin, $this->request);
-        $svnpath            = $repository_manager->svnPath;
-        $user               = UserManager::instance()->getCurrentUser();
-        $username           = $user->getUserName();
-        $project            = ProjectManager::instance()->getProject($this->request->get('group_id'));
-        $projectname        = $project->getPublicName();
-        $boolean            = svn_utils_check_write_access($username, $projectname, $svnpath);
-        if (!$boolean) {
-            $status    = false;
-            $msg = "The user '".$username."' has not the right to create a review request.";
+        $status            = true;
+        $invalid           = array();
+
+        // @TODO: put the check of the user permission outside this method
+        $plugin            = PluginManager::instance()->getPluginByName('codereview');
+        $repositoryManager = new RepositoryManager($plugin, $this->request);
+        // @TODO: obtain svnPath using a method
+        $svnpath           = $repositoryManager->svnPath;
+        $user              = UserManager::instance()->getCurrentUser();
+        $username          = $user->getUserName();
+        // @TODO: validate group_id
+        $project           = ProjectManager::instance()->getProject($this->request->get('group_id'));
+        $projectname       = $project->getPublicName();
+        if (!svn_utils_check_write_access($username, $projectname, $svnpath)) {
+            $status = false;
+            // @TODO: i18n
+            $msg    = "The user '".$username."' has not the right to create a review request.";
             $GLOBALS['Response']->addFeedBack('error', $msg);
             $this->controller->view = 'displayFrame';
         }
@@ -103,46 +107,48 @@ class CodeReviewActions extends Actions {
             $params['summary'] = $summary;
         } else {
             $status    = false;
-            $invalid[] = 'Description';
+            $invalid[] = 'description';
         }
 
-        $valid         = new Valid_String('codereview_target_people');
-        $target_people = trim($this->request->get('codereview_target_people'));
-        if ($this->request->valid($valid) && $target_people != '') {
-            $params['target_people'] = $target_people;
-            $reviewers               = explode(",", $target_people);
-            $check                   = true;
-            $nbr                     = count($reviewers);
-            for($i = 0; $i<$nbr && $check; $i++){
-                $username = $reviewers[$i];
-                $check    = $this->isProjectMember($username);
-                if ($check) {
-                    $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-                    $url=$pluginInfo->getPropertyValueForName('reviewboard_site');
-                    $rbuser=$pluginInfo->getPropertyValueForName('admin_user');
-                    $rbpass=$pluginInfo->getPropertyValueForName('admin_pwd');
-                    $rbusermanager    = new RbUserManager();
-                    $exist            = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
+        $valid        = new Valid_String('codereview_target_people');
+        $targetPeople = trim($this->request->get('codereview_target_people'));
+        $check        = true;
+        if ($this->request->valid($valid) && $targetPeople != '') {
+            $params['target_people'] = $targetPeople;
+            $reviewers               = explode(",", $targetPeople);
+            foreach ($reviewers as $username) {
+                // @TODO: Check if we realy restrict that exactly to project members
+                if ($this->isProjectMember($username)) {
+                    $pluginInfo    = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+                    $url           = $pluginInfo->getPropertyValueForName('reviewboard_site');
+                    $rbuser        = $pluginInfo->getPropertyValueForName('admin_user');
+                    $rbpass        = $pluginInfo->getPropertyValueForName('admin_pwd');
+                    $rbusermanager = new RbUserManager();
+                    $exist         = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null,$username);
+                    // @TODO: Handle errors
                     if(!$exist) {
                         $user    = UserManager::instance()->getUserByUserName($username);
                         $userpwd = $user->getUserPw();
                         $curl    = new TuleapCurl();
                         $create  = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
+                        // @TODO: handle errors
                     }
+                } else {
+                    $check = false;
+                    // @TODO: i18n
+                    $msg   = "The user '".$username."' is not a member of your project.";
+                    $GLOBALS['Response']->addFeedBack('error', $msg);
+                    $this->controller->view = 'displayFrame';
                 }
             }
-            if (!$check) {
-                $msg = "The user '".$username."' is not a member of your project.";
-                $GLOBALS['Response']->addFeedBack('error', $msg);
-                $this->controller->view = 'displayFrame';
-                $status                 = false;
-                $invalid[]              = 'target_people';
-            }
         } else {
+            $check = false;
+        }
+        if (!$check) {
             $status    = false;
             $invalid[] = 'target_people';
         }
-        
+
         $valid     = new Valid_String('codereview_submit_as');
         $submitAs = trim($this->request->get('codereview_submit_as'));
         if ($this->request->valid($valid) && $submitAs != '') {

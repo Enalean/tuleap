@@ -22,7 +22,7 @@ require_once('pre.php');
 require_once('common/plugin/PluginManager.class.php');
 
 $plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('codereview');
+$p              = $plugin_manager->getPluginByName('codereview');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
     $p->process(HTTPRequest::instance());
 } else {
