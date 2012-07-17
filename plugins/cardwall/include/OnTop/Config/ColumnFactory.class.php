@@ -42,7 +42,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
 
     /**
      * @param Tracker $tracker
-     * @return array Cardwall_Column
+     * @return Cardwall_OnTop_Config_ColumnCollection
      */
     public function getColumns(Tracker $tracker) {
         $columns = $this->getColumnsFromDao($tracker);
@@ -56,7 +56,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
-     * @return array of Cardwall_Column
+     * @return Cardwall_OnTop_Config_ColumnCollection
      */
     public function getRendererColumns($field) {
         // TODO use cache of $columns
@@ -74,9 +74,9 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
-     * @return array of Cardwall_Column
+     * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getColumnsFromStatusField(Tracker $tracker) {
+    private function getColumnsFromStatusField(Tracker $tracker) {
         $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
         $field   = $tracker->getStatusField();
         if ($field) {
@@ -87,7 +87,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
 
 
     /**
-     * @return array of Cardwall_Column
+     * @return Cardwall_OnTop_Config_ColumnCollection
      */
     private function getColumnsFromDao(Tracker $tracker) {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();

@@ -81,7 +81,7 @@ class Cardwall_OnTop_Config {
         return $this->column_factory->getColumns($this->tracker);
     }
 
-    public function getRendererColumns($cardwall_field) {
+    public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
         return $this->column_factory->getRendererColumns($cardwall_field);
     }
     
@@ -103,7 +103,7 @@ class Cardwall_OnTop_Config {
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
     
-    private function isMappedTo($tracker_id, $artifact_status, $column) {
+    private function isMappedTo($tracker_id, $artifact_status, Cardwall_Column $column) {
         $tracker_mappings = $this->getMappings();
         
         // TODO null object pattern, to return empty valuemappings
@@ -119,7 +119,9 @@ class Cardwall_OnTop_Config {
         return $ismappedto;
     }
 
-    public function isInColumn(Tracker_Artifact $artifact, $field_provider, $column) {
+    public function isInColumn(Tracker_Artifact                                     $artifact, 
+                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
+                               Cardwall_Column                                      $column) {
         $field           = $field_provider->getField($artifact);
         $artifact_status = null;
         if ($field) {
@@ -139,14 +141,16 @@ class Cardwall_OnTop_Config {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getCardwallMappings($fields, $cardwall_columns) {
+    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns) {
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $cardwall_columns);
         $this->fillMappingsWithOnTopMappings($mappings, $cardwall_columns);
         return $mappings;
     }
     
-    private function fillMappingsByDuckType($mappings, $fields, $columns) {
+    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings, 
+                                            array                                  $fields, 
+                                            Cardwall_OnTop_Config_ColumnCollection $columns) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
                 $column = $columns->getColumnByLabel($value->getLabel());
@@ -159,7 +163,8 @@ class Cardwall_OnTop_Config {
         return $mappings;
     }
 
-    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection $mappings, $columns) {
+    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings, 
+                                                  Cardwall_OnTop_Config_ColumnCollection $columns) {
         foreach ($this->getMappings() as $field_mapping) {
             foreach ($field_mapping->getValueMappings() as $value_mapping) {
                 $column = $columns->getColumnById($value_mapping->getColumnId());

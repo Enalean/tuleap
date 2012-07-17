@@ -74,14 +74,12 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????
-//            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
-        
     }
 
     /**
      * @return Cardwall_PaneContentPresenter
      */
-    private function getPresenterUsingMappedFields($columns) {
+    private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $board_factory      = new Cardwall_BoardFactory();
         $planned_artifacts  = $this->milestone->getPlannedArtifacts();
 

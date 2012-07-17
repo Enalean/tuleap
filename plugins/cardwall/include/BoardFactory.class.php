@@ -33,7 +33,10 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard($field_retriever, $columns, $forests_of_artifacts, $config) {
+    public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
+                             Cardwall_OnTop_Config_ColumnCollection               $columns, 
+                             TreeNode                                             $forests_of_artifacts, 
+                             Cardwall_OnTop_Config                                $config) {
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         
@@ -54,7 +57,7 @@ class Cardwall_BoardFactory {
         return $column_id_mapper->map($forests_of_card_presenters);
     }
 
-    private function getSwimlines(ArrayAccess $columns, TreeNode $forests_of_cardincell_presenters, $config, $field_provider) {
+    private function getSwimlines(Cardwall_OnTop_Config_ColumnCollection $columns, TreeNode $forests_of_cardincell_presenters, $config, $field_provider) {
         $swimline_factory = new Cardwall_SwimlineFactory($config, $field_provider);
         return $swimline_factory->getSwimlines($columns, $forests_of_cardincell_presenters->getChildren());
     }

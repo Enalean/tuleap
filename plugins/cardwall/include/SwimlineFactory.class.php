@@ -27,7 +27,13 @@ require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
  */
 class Cardwall_SwimlineFactory {
 
-    public function __construct($config, $field_provider) {
+    /** @var Cardwall_OnTop_Config */
+    private $config;
+    
+    /** @var Cardwall_OnTop_Config_ColumnCollection */
+    private $field_provider;
+    
+    public function __construct(Cardwall_OnTop_Config $config, Cardwall_OnTop_Config_ColumnCollection $field_provider) {
         $this->config = $config;
         $this->field_provider = $field_provider;
     }
@@ -35,7 +41,7 @@ class Cardwall_SwimlineFactory {
     /**
      * @return array of Cardwall_Swimline
      */
-    public function getSwimlines(ArrayAccess $columns, array $nodes) {
+    public function getSwimlines(Cardwall_OnTop_Config_ColumnCollection $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
             $swimlines[] = $this->getSwimline($columns, $child);
@@ -43,7 +49,7 @@ class Cardwall_SwimlineFactory {
         return $swimlines;
     }
 
-    private function getSwimline($columns, TreeNode $child) {
+    private function getSwimline(Cardwall_OnTop_Config_ColumnCollection $columns, TreeNode $child) {
         $potential_presenters = $this->extractPresentersFrom($child->getChildren());
         $cells = $this->getCells($columns, $potential_presenters);
         return new Cardwall_Swimline($child, $cells);
@@ -65,7 +71,7 @@ class Cardwall_SwimlineFactory {
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
      * @return array
      */
-    public function getCells(ArrayAccess $columns, array $potential_presenters) {
+    public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters) {
         $cells = array();
         foreach ($columns as $column) {
             $cells[] = $this->getCell($column, $potential_presenters);
