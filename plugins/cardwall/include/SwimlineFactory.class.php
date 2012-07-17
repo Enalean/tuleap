@@ -30,10 +30,10 @@ class Cardwall_SwimlineFactory {
     /** @var Cardwall_OnTop_Config */
     private $config;
     
-    /** @var Cardwall_OnTop_Config_ColumnCollection */
+    /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
     private $field_provider;
     
-    public function __construct(Cardwall_OnTop_Config $config, Cardwall_OnTop_Config_ColumnCollection $field_provider) {
+    public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->config = $config;
         $this->field_provider = $field_provider;
     }
