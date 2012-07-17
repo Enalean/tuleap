@@ -103,17 +103,15 @@ class Cardwall_OnTop_Config {
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
     
-    private function isMappedTo($tracker_id, $artifact_status, Cardwall_Column $column) {
-        $tracker_mappings = $this->getMappings();
-        
+    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column) {
         // TODO null object pattern, to return empty valuemappings
-        if (!isset($tracker_mappings[$tracker_id])) return false;
-        $tracker_field_mapping = $tracker_mappings[$tracker_id];
+        $tracker_field_mapping = $this->getMappingFor($tracker);
+        if (!$tracker_field_mapping) return false;
         
         $ismappedto = false;
         foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getValue()->getLabel() == $artifact_status) {
-                $ismappedto = $column->id == $value_mapping->getColumnId();
+                $ismappedto = $column->getId() == $value_mapping->getColumnId();
             }
         }
         return $ismappedto;
@@ -129,7 +127,7 @@ class Cardwall_OnTop_Config {
         }
 
         
-        return $this->isMappedTo($artifact->getTrackerId(), $artifact_status, $column) || 
+        return $this->isMappedTo($artifact->getTracker(), $artifact_status, $column) || 
                $column->isMatchForThisColumn($artifact_status);
     }
 
