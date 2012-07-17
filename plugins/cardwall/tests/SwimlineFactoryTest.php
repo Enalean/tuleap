@@ -31,21 +31,21 @@ class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     }
     
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsAndNoPresenters() {
-        $columns    = array();
+        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = array();
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
     public function itReturnsAnEmptyArrayIfThereAreNoColumnsButSomePresenters() {
-        $columns    = array();
+        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $presenters = array(mock('Cardwall_CardInCellPresenter'));
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $this->assertIdentical(array(), $swimlines);
     }
     
     public function itReturnsANestedArrayOfPresenterPresentersIfThereAreColumnsButNoPresenters() {
-        $columns    = array(mock('Cardwall_Column'));
+        $columns    = new Cardwall_OnTop_Config_ColumnFreestyleCollection(array(mock('Cardwall_Column')));
         $presenters = array();
         $swimlines  = $this->factory->getCells($columns, $presenters);
         $expected   = array(
