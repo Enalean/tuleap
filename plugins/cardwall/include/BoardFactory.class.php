@@ -38,7 +38,7 @@ class Cardwall_BoardFactory {
                              TreeNode                                             $forests_of_artifacts, 
                              Cardwall_OnTop_Config                                $config) {
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
-        $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
+        $status_fields      = $acc_field_provider->extractAndIndexFieldsOf($forests_of_artifacts);
         
         $mapping_collection = $config->getCardwallMappings($status_fields, $columns);
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
