@@ -44,7 +44,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
      * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getColumns(Tracker $tracker) {
+    public function getDashboardColumns(Tracker $tracker) {
         $columns = $this->getColumnsFromDao($tracker);
         if (! count($columns)) {
             $status_columns = $this->getColumnsFromStatusField($tracker);

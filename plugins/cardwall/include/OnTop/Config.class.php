@@ -78,7 +78,7 @@ class Cardwall_OnTop_Config {
     }
 
     public function getDashboardColumns() {
-        return $this->column_factory->getColumns($this->tracker);
+        return $this->column_factory->getDashboardColumns($this->tracker);
     }
 
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
