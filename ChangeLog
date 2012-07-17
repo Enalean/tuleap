@@ -1,7 +1,7 @@
 Version 5.3 (not released yet)
 	== Plugins ==
 	* Agildashboard: 0.44
-	* Cardwall: 0.5.11
+	* Cardwall: 0.5.12
 	* Docman: 2.26
 	* FullTextSearch: 0.6
 	* Git: 2.6.3
@@ -9,7 +9,7 @@ Version 5.3 (not released yet)
 	* Test: 5.1
 	* Tracker: 5.8.3
 	* GraphOnTrackerv5 5.0.2
-	
+
 	== Enhancement ==
    * Documentation update (remove references to old screenshots).
 
