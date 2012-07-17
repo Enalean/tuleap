@@ -60,7 +60,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
      */
     public function getCardwallColumns($field) {
         // TODO use cache of $columns
-        $columns = array();
+        $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         $this->_getColumnsFor($columns, $field);
         return $columns;
     }
