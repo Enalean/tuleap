@@ -93,11 +93,7 @@ class CodeReviewViews extends Views {
     function displayFirstFrame() {
         $pluginInfo  = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url         = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        $actionMenu  = "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
-        $actionMenu .=  "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
-        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
-        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=create_patch'>Create your patch file</a>";
-        print $actionMenu;
+        $this->displayActionsMenu();
         $iframe  = "<iframe name=\"rb\" style=\"display:none; visibility:hidden\"/>";
         $form    = " <form id=\"form\" target=\"rb\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form   .= "  <p>";
@@ -117,6 +113,19 @@ class CodeReviewViews extends Views {
         print $form;
         print $script;
         print $iframe;
+    }
+
+    /**
+     * Displays actions menu
+     *
+     * @return Void
+     */
+    public function displayActionsMenu() {
+        $actionMenu  = "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>".$GLOBALS['Language']->getText('plugin_codereview', 'create_review_action')."</a>";
+        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>".$GLOBALS['Language']->getText('plugin_codereview', 'publish_review_action')."</a>";
+        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>".$GLOBALS['Language']->getText('plugin_codereview', 'access_dashboard_action')."</a>";
+        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=create_patch'>".$GLOBALS['Language']->getText('plugin_codereview', 'create_patch_action')."</a>";
+        print $actionMenu;
     }
 
     /**
@@ -210,7 +219,6 @@ class CodeReviewViews extends Views {
         $form .= "   <input id=\"codereview_diff_path\" name=\"codereview_diff_path\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=\"hidden\" size=\"32\" value=\"".$username."\"/>";
-		
 
         $formOptionalInput  = "  <p>";
         $formOptionalInput .= "   <label for=\"codereview_testing_done\">Testing done</label><br>";

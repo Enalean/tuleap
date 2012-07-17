@@ -4,3 +4,9 @@ plugin_codereview	descriptor_name	Revue de code
 plugin_codereview	title	Revue de code
 plugin_codereview	service_lbl_key	Code review
 plugin_codereview	service_desc_key	Code review
+
+plugin_codereview	create_review_action	Crèer une nouvelle revue
+plugin_codereview	publish_review_action	Publier une revue
+plugin_codereview	create_patch_action	Crèer un patch
+plugin_codereview	access_dashboard_action	Votre tableau de bord
+plugin_codereview	access_rb_administration_action	Administration du site Review Board
