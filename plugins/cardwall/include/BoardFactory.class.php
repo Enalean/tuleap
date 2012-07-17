@@ -33,12 +33,7 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
-                             Tracker_FormElement_Field_List                       $field, 
-                             TreeNode                                             $forests_of_artifacts, 
-                             Cardwall_OnTop_Config                                $config) {
-        $columns                          = $config->getCardwallColumns($field);
-        
+    public function getBoard($field_retriever, $columns, $forests_of_artifacts, $config) {
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         
@@ -47,6 +42,7 @@ class Cardwall_BoardFactory {
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
 
         return new Cardwall_Board($swimlines, $columns, $mapping_collection);
+        
     }
 
     private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection) {
@@ -63,18 +59,5 @@ class Cardwall_BoardFactory {
         return $swimline_factory->getSwimlines($columns, $forests_of_cardincell_presenters->getChildren());
     }
 
-    public function getMultiTrackerBoard($field_retriever, $forests_of_artifacts, $config) {
-        $columns                          = $config->getColumns();
-        
-        $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
-        $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
-        
-        $mapping_collection = $config->_getCardwallMappings($status_fields, $columns);
-        $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
-        $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
-
-        return new Cardwall_Board($swimlines, $columns, $mapping_collection);
-        
-    }
 }
 ?>
