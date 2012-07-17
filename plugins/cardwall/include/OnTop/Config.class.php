@@ -147,10 +147,11 @@ class Cardwall_OnTop_Config {
     }
 
     public function _getCardwallMappings($fields, $columns) {
-        $columns = new Cardwall_Columns($columns);
+        var_dump($columns);
+        $cardwall_columns = new Cardwall_Columns($columns);
         $mappings = new Cardwall_MappingCollection();
-        $this->fillMappingsByDuckType($mappings, $fields, $columns);
-        $this->fillMappingsWithOnTopMappings($mappings, $columns);
+        $this->fillMappingsByDuckType($mappings, $fields, $cardwall_columns);
+        $this->fillMappingsWithOnTopMappings($mappings, $cardwall_columns);
         return $mappings;
     }
     

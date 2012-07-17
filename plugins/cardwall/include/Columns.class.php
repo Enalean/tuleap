@@ -27,7 +27,7 @@ class Cardwall_Columns {
 
     private $columns;
 
-    public function __construct(array $columns = array()) {
+    public function __construct(ArrayAccess $columns) {
         $this->columns = $columns;
     }
     

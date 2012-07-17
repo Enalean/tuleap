@@ -35,7 +35,7 @@ class Cardwall_SwimlineFactory {
     /**
      * @return array of Cardwall_Swimline
      */
-    public function getSwimlines(array $columns, array $nodes) {
+    public function getSwimlines(ArrayAccess $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
             $swimlines[] = $this->getSwimline($columns, $child);
@@ -65,7 +65,7 @@ class Cardwall_SwimlineFactory {
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
      * @return array
      */
-    public function getCells(array $columns, array $potential_presenters) {
+    public function getCells(ArrayAccess $columns, array $potential_presenters) {
         $cells = array();
         foreach ($columns as $column) {
             $cells[] = $this->getCell($column, $potential_presenters);
