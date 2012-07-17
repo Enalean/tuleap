@@ -35,7 +35,7 @@ class Cardwall_View_Admin extends Cardwall_View {
         Cardwall_OnTop_Config $config
     ) {
 
-        $column_definition_view = $config->getColumns()->accept($this, $config);
+        $column_definition_view = $config->getDashboardColumns()->accept($this, $config);
 
         $checked    = $config->isEnabled() ? 'checked="checked"' : '';
         $token_html = $token->fetchHTMLInput();

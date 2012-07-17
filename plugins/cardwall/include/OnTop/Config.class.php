@@ -21,7 +21,8 @@
 require_once 'Dao.class.php';
 require_once 'Config/ColumnFactory.class.php';
 require_once 'Config/TrackerMappingFactory.class.php';
-require_once CARDWALL_BASE_DIR. '/Columns.class.php';
+require_once 'Config/ColumnCollection.class.php';
+require_once CARDWALL_BASE_DIR. '/Mapping.class.php';
 
 /**
  * Manage configuration of a cardwall on top of a tracker
@@ -76,16 +77,16 @@ class Cardwall_OnTop_Config {
         return $this->dao->disable($this->tracker->getId());
     }
 
-    public function getColumns() {
+    public function getDashboardColumns() {
         return $this->column_factory->getColumns($this->tracker);
     }
 
-    public function getCardwallColumns($cardwall_field) {
-        return $this->column_factory->getCardwallColumns($cardwall_field);
+    public function getRendererColumns($cardwall_field) {
+        return $this->column_factory->getRendererColumns($cardwall_field);
     }
     
     public function getMappings() {
-        return $this->tracker_mapping_factory->getMappings($this->tracker, $this->getColumns());
+        return $this->tracker_mapping_factory->getMappings($this->tracker, $this->getDashboardColumns());
     }
 
     public function getTrackers() {
@@ -138,8 +139,7 @@ class Cardwall_OnTop_Config {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getCardwallMappings($fields, $columns) {
-        $cardwall_columns = new Cardwall_Columns($columns);
+    public function getCardwallMappings($fields, $cardwall_columns) {
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $cardwall_columns);
         $this->fillMappingsWithOnTopMappings($mappings, $cardwall_columns);

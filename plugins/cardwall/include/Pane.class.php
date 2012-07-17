@@ -70,12 +70,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     public function getContent() {
         $tracker = $this->milestone->getArtifact()->getTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        if ($field) {
-            $columns = $this->config->getCardwallColumns($field);
-        } else {
-            $columns = $this->config->getColumns();
-        }
+        $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????

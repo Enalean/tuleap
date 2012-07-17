@@ -148,7 +148,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         } else {
             $board_factory      = new Cardwall_BoardFactory();
             $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
-            $columns            = $this->config->getCardwallColumns($field);
+            $columns            = $this->config->getRendererColumns($field);
             $board              = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config);
         }
 

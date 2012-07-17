@@ -77,5 +77,22 @@ class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAgg
     public function count() {
         return count($this->columns);
     }
+    
+    public function getColumnById($id) {
+        foreach ($this->columns as $column) {
+            if ($column->id == $id) {
+                return $column;
+            }
+        }
+    }
+
+    public function getColumnByLabel($label) {
+        foreach ($this->columns as $column) {
+            if ($column->label == $label) {
+                return $column;
+            }
+        }
+    }
+
 }
 ?>

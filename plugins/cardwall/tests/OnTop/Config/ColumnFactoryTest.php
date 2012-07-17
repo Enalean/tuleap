@@ -61,7 +61,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
                 'bg_blue'  => null,
             )
         ));
-        $columns = $this->factory->getColumns($this->tracker);
+        $columns = $this->factory->getDashboardColumns($this->tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(2, count($columns));
@@ -75,7 +75,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
     public function itBuildColumnsFromTheStatusValuesIfNoCustomSettings() {
         stub($this->tracker)->getStatusField()->returns($this->status_field);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
-        $columns = $this->factory->getColumns($this->tracker);
+        $columns = $this->factory->getDashboardColumns($this->tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnStatusCollection');
         $this->assertEqual(3, count($columns));
@@ -85,7 +85,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
     public function itBuildsAnEmptyFreestyleCollectionIfThereIsNothingInTheDaoAndNoStatus() {
         stub($this->tracker)->getStatusField()->returns(null);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
-        $columns = $this->factory->getColumns($this->tracker);
+        $columns = $this->factory->getDashboardColumns($this->tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(0, count($columns));
