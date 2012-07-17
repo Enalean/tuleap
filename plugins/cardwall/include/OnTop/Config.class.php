@@ -138,14 +138,6 @@ class Cardwall_OnTop_Config {
      *
      * @return Cardwall_MappingCollection
      */
-    public function getCardwallMappings($fields, $cardwall_field) {
-        return $this->_getCardwallMappings($fields, $this->getCardwallColumns($cardwall_field));
-    }
-
-    public function getCardwallMappings2($fields) {
-        return $this->_getCardwallMappings($fields, $this->getColumns());
-    }
-
     public function _getCardwallMappings($fields, $columns) {
         $cardwall_columns = new Cardwall_Columns($columns);
         $mappings = new Cardwall_MappingCollection();
