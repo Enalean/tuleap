@@ -18,11 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/plugin/Plugin.class.php';
-require_once 'constants.php';
-require_once 'OnTop/ConfigFactory.class.php';
-require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
-
 /**
  * CardwallPlugin
  */
@@ -35,6 +30,8 @@ class cardwallPlugin extends Plugin {
     
     public function getConfigFactory() {
         if (!$this->config_factory) {
+            require_once 'OnTop/ConfigFactory.class.php';
+            require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
             $tracker_factory  = TrackerFactory::instance();
             $element_factory  = Tracker_FormElementFactory::instance();
             $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
