@@ -84,46 +84,45 @@ class CodeReview extends Controler {
          $create = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
         }
         if ($this->getUser()->isLoggedIn()) {
-            if($username == "admin") {
-                $this->view = 'displayFrameAdmin';
-            } else {
-                $repositoryManager = new RepositoryManager($this->plugin, $request);
-                $repositoryManager->addRepository($request);
-                $vAction = new Valid_WhiteList('action', array('add_review', 'dashboard', 'submit_review', 'login', 'publish_review', 'submit_publish', 'submit_login','create_patch','submit_patch'));
-                $vAction->required();
-                $action = $request->getValidated('action', $vAction, false);
-                switch ($action) {
+            $repositoryManager = new RepositoryManager($this->plugin, $request);
+            $repositoryManager->addRepository($request);
+            $vAction = new Valid_WhiteList('action', array('admin_dashboard', 'add_review', 'dashboard', 'submit_review', 'login', 'publish_review', 'submit_publish', 'submit_login','create_patch','submit_patch'));
+            $vAction->required();
+            $action = $request->getValidated('action', $vAction, false);
+            switch ($action) {
+                case 'admin_dashboard':
+                    $this->view = 'displayFrameAdmin';
+                break;
                 case 'add_review':
                     $this->view = 'reviewSubmission';
-                    break;
+                break;
                 case 'submit_review':
                     $this->action = 'createReviewRequest';
                     $this->view   = 'displayFrameReviewRequest';
-                    break;
+                break;
                 case 'publish_review':
                     $this->view = 'reviewPublishing';
-                    break;
+                break;
                 case 'submit_publish':
                     $this->action = 'publishReviewRequest';
                     $this->view   ='displayFramePublish';
-                    break;
+                break;
                 case 'login':
                     $this->view = 'loginSubmission';
-                    break;
+                break;
                 case 'dashboard':
                     $this->view = 'displayFrame';
-                    break;
+                break;
                 case 'create_patch':
                     $this->view = 'createPatchFile';
-                    break;
+                break;
                 case 'submit_patch':
                     //To Do add some action
                     $this->view = 'displayFirstFrame';
-                    break;
+                break;
                 default:
                     $this->view = 'displayFirstFrame';
-                    break;
-                }
+                break;
             }
         } else {
             $this->view = 'displayFrame';

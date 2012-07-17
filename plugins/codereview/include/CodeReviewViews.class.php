@@ -125,6 +125,11 @@ class CodeReviewViews extends Views {
         $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>".$GLOBALS['Language']->getText('plugin_codereview', 'publish_review_action')."</a>";
         $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>".$GLOBALS['Language']->getText('plugin_codereview', 'access_dashboard_action')."</a>";
         $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=create_patch'>".$GLOBALS['Language']->getText('plugin_codereview', 'create_patch_action')."</a>";
+        //@Todo should be revisited, crappy!
+        $userName = UserManager::instance()->getCurrentUser()->getUserName();
+        if($userName == "admin") {
+            $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=admin_dashboard'>".$GLOBALS['Language']->getText('plugin_codereview', 'access_rb_administration_action')."</a>";
+        }
         print $actionMenu;
     }
 
