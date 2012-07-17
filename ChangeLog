@@ -9,6 +9,9 @@ Version 5.3 (not released yet)
 	* Test: 5.1
 	* Tracker: 5.8.3
 	* GraphOnTrackerv5 5.0.2
+	
+	== Enhancement ==
+   * Documentation update (remove references to old screenshots).
 
 	== Development ==
 	Update mustache renderer
