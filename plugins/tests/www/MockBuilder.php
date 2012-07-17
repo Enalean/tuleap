@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/TestHelper.class.php';
+
 /**
  * Returns a DSL like mockgenerator
  * 
@@ -66,6 +68,19 @@ function mock($classname) {
     return new $mockclassname();
 }
 
+function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
+    if (is_object($classname_or_simpletest_mock)) {
+        $mock = $classname_or_simpletest_mock;
+    } else {
+        $mock = partial_mock($classname_or_simpletest_mock);
+    }
+    return new OngoingIntelligentStub($mock);
+}
+
+function partial_mock($classname, array $mocked_methods) {
+    return TestHelper::getPartialMock($classname, $mocked_methods);
+}
+
 class OngoingIntelligentStub {
 
     function __construct($mock) {
@@ -73,8 +88,32 @@ class OngoingIntelligentStub {
     }
 
     public function __call($name, $arguments) {
-        $this->method = $name;
+        $this->method    = $name;
         $this->arguments = $arguments;
+        return $this;
+    }
+
+    public function once() {
+        if (empty($this->arguments)) {
+            $this->mock->expectOnce($this->method);
+        } else {
+            $this->mock->expectOnce($this->method, $this->arguments);
+        }
+        return $this;
+    }
+
+    public function never() {
+        $this->mock->expectNever($this->method);
+        return $this;
+    }
+
+    public function at($timing) {
+        $this->mock->expectAt($timing, $this->method, $this->arguments);
+        return $this;
+    }
+
+    public function count($count) {
+        $this->mock->expectCallCount($this->method, $count);
         return $this;
     }
 
@@ -89,7 +128,40 @@ class OngoingIntelligentStub {
         }
         return $this->mock;
     }
-    
 
+    /**
+     * Ease return of DatabaseAccessResult objects:
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsDar(array('id' => '1'), array('id' => '2'));
+     *
+     * Returns 2 rows out of the database:
+     * |Id|
+     * |1 |
+     * |2 |
+     */
+    public function returnsDar() {
+        $this->returns(TestHelper::argListToDar(func_get_args()));
+    }
+
+    /**
+     * Ease returns of empty DatabaseAccessResult
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsEmptyDar()
+     */
+    public function returnsEmptyDar() {
+        $this->returns(TestHelper::emptyDar());
+    }
+    
+    /**
+     * Ease returns of DatabaseAccessResult with errors
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsDarWithErrors()
+     */
+    public function returnsDarWithErrors() {
+        $this->returns(TestHelper::errorDar());
+    }
 }
 ?>

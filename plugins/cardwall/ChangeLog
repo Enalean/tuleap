@@ -1,4 +1,11 @@
-Version 0.5.8 - Tuleap 5.3
+Version 0.5.11 - Tuleap 5.3
+    * Fix bug when no values.
+
+Version 0.5.10 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displayed on cards
+    * Configure cardwall columns
+
+Version 0.5.9 - Tuleap 5.3
     * Fix: can choose other field than "status" field
     * Fix: can D'nD from "none" column
 

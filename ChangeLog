@@ -1,13 +1,14 @@
 Version 5.3 (not released yet)
 	== Plugins ==
-	* Agildashboard: 0.40
-	* Cardwall: 0.5.9
+	* Agildashboard: 0.44
+	* Cardwall: 0.5.11
 	* Docman: 2.26
 	* FullTextSearch: 0.6
 	* Git: 2.6.3
 	* LDAP: 3.16
-	* Test: 5
-	* Tracker: 5.7.40
+	* Test: 5.1
+	* Tracker: 5.8.3
+	* GraphOnTrackerv5 5.0.2
 
 	== Development ==
 	Update mustache renderer

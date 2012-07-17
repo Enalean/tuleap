@@ -23,12 +23,15 @@
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../include/Cardwall_Renderer.class.php';
 require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
+require_once 'src/common/plugin/Plugin.class.php';
+
 
 class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {
     
     public function itIntegratesWithThe_ArtifactNodeTreeProvider() {
         $plugin = $id = $report = $name = $description = $rank = $field_id = $enable_qr_code = null;
-        $renderer = new Cardwall_Renderer($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
+        $renderer = new Cardwall_Renderer(mock('Plugin'), mock('Cardwall_OnTop_Config'), 
+                                          $id, $report, $name, $description, $rank, $field_id, $enable_qr_code);
         $artifact_factory = mock('Tracker_ArtifactFactory');
         
         $artifact4 = aMockArtifact()->withId(4)->build();

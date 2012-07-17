@@ -85,4 +85,14 @@ document.observe('dom:loaded', function () {
         });
         // }}}
     });
+
+    $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
+            input.observe('click', function (evt) {
+                    if (this.checked) {
+                        this.up('td').down('select').enable().focus().readonly = false;
+                    } else {
+                        this.up('td').down('select').disable().readonly = true;
+                    }
+            });
+    });
 });

@@ -1196,6 +1196,7 @@ plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuelle
 
 plugin_tracker_hierarchy	error_is_cyclic	La hiérarchie est cyclique
 plugin_tracker_hierarchy	tracker_not_in_hierarchy	Le tracker n'appartient pas à la hiérarchie
+plugin_tracker_hierarchy	error_more_than_one_parent	L'artefact $1 a plusieurs parents: $2
 plugin_tracker_hierarchy	controller_bad_request	La requête contient des données invalides (paramètre 'children')
 
 plugin_tracker_renderer_table	items_range_of	sur
@@ -1344,3 +1345,49 @@ plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouv�
 plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
 plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
 plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
+
+# DateReminder
+plugin_tracker_date_reminder	subject	Rappel: '$1' $2 for '$3'
+plugin_tracker_date_reminder	body_header	$1 a été chargé de vous rappeler aujourd'hui que '$2' dans l'artefact suivant est $3.
+plugin_tracker_date_reminder	body_art_link	Vous pouvez accéder à l'artefact ici: $1
+plugin_tracker_date_reminder	body_art_html_link	Vous pouvez accéder à l'artefact <a href="$1">ici</a>.
+plugin_tracker_date_reminder	tracker_date_reminder_actions	Actions
+plugin_tracker_date_reminder	tracker_date_reminder_add_title	Ajouter un rappel
+plugin_tracker_date_reminder	tracker_date_reminder_notification_distance_label	jour(s)
+plugin_tracker_date_reminder	tracker_date_reminder_notification_when	Quand
+plugin_tracker_date_reminder	tracker_date_reminder_send_to	Envoyer un email à
+plugin_tracker_date_reminder	tracker_date_reminder_field	Champs
+plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 jour(s) $2
+plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Modifier le rappel
+plugin_tracker_date_reminder	tracker_date_reminder_deleted	Rappel sur date de tracker supprimé avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_added	Rappel sur date de tracker ajouté avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_updated	Rappel sur date de tracker modififé avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_add_failure	Impossible d'ajouter un rappel sur le champ date $1 du tracker $2
+plugin_tracker_date_reminder	tracker_date_reminder_update_failure	Impossible de mettre à jour le Rappel sur date de tracker $1
+plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Impossible de supprimer le Rappel sur date de tracker $1
+plugin_tracker_date_reminder	tracker_date_reminder_status	Status
+plugin_tracker_date_reminder	tracker_date_reminder_update_action	Modifier
+plugin_tracker_date_reminder	tracker_date_reminder_delete_action	supprimer
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_txt	<h3>Confirmez la suppression du rappel sur une date du tracker</h3><p>Vous êtes sur le point de supprimer sur une date du tracker:</p><p>$1</p><p>Êtes vous sûr de vouloir continuer ?</p>
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_cancel	Non, je ne veux pas le supprimer
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_confirm	Oui, je suis sûr !
+
+project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
+project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
+project_admin_utils	tracker_date_reminder_edit	Rappel sur date de tracker mis a jour $1
+project_admin_utils	tracker_date_reminder_delete	Rappel sur date de tracker supprimé $1
+project_admin_utils	tracker_date_reminder_sent	Rappel de date sur le tracker envoyé $1
+project_admin_utils	tracker_date_reminder_before	Avant
+project_admin_utils	tracker_date_reminder_after	Après
+project_admin_utils	tracker_date_reminder_enabled	Activé
+project_admin_utils	tracker_date_reminder_disabled	Desactivé
+project_admin_utils	tracker_date_reminder_invalid_field	'$1' n'est pas un Id de champs date valide
+project_admin_utils	tracker_date_reminder_invalid_distance	'$1' n'est pas une distance valide
+project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' n'est pas un Id de tracker valide
+project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' n'est pas un type de notification valide
+project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un status valide
+project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur un champ de type date valide
+project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugroup valide
+project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez sélectionner au moins un ugroup valide
+project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champ 'SubmittedOn'
+project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker

@@ -26,7 +26,7 @@ require_once 'FieldProviders/SemanticStatusFieldProvider.class.php';
  * Foreach artifact in a TreeNode tree, make a collection of the semantic status fields and
  * index them by their id
  */
-class Cardwall_StatusFieldsExtractor {
+class Cardwall_FieldsExtractor {
     
     /**
      * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
@@ -37,14 +37,17 @@ class Cardwall_StatusFieldsExtractor {
         $this->field_provider = $field_provider;
     }
     public function extractAndIndexStatusFields(TreeNode $node) {
-        $artifacts = $this->getArtifactsOutOfTree($node);
+        $artifacts = $this->getArtifactsFromSecondLevelAndDown($node);
         return $this->getIndexedStatusFieldsOf($artifacts);
     }
     
-    private function getArtifactsOutOfTree(TreeNode $root_node) {
+    private function getArtifactsFromSecondLevelAndDown(TreeNode $root_node) {
+        $leafs = array();
+        foreach ($root_node->getChildren() as $child) {
+            $leafs = array_merge($leafs, $child->flattenChildren());
+        }
         $artifacts  = array();
-        $flat_nodes = $root_node->flatten();
-        foreach ($flat_nodes as $node) {
+        foreach ($leafs as $node) {
             $this->appendIfArtifactNode($artifacts, $node);
         }
         return $artifacts;

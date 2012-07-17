@@ -24,6 +24,7 @@ require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/anArtifact.php';
+require_once TRACKER_BASE_DIR .'/Tracker/CardFields.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
@@ -40,13 +41,12 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         stub($artifact)->getXRef()->returns('art #123');
         stub($artifact)->getTracker()->returns($tracker);
         stub($artifact)->getAllowedChildrenTypes()->returns($children_trackers);
-        
-        
+                
         $planning = mock('Planning');
         $node     = new TreeNode(array('id' => 123));
         $node->setObject($artifact);
         
-        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, 'baz'));
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), 'baz'));
         $visited_node = $card_mapper->map($node);
         $presenter    = $visited_node->getCardPresenter();
         
@@ -63,7 +63,8 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
                                    aNode()->withObject(anArtifact()->build()),
                                    aNode()->withObject(anArtifact()->build()))
                                ->build();
-        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), 'whatever-class'));
+        
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), mock('Tracker_CardFields'), 'whatever-class'));
         
         $visited_node = $card_mapper->map($root_node);
         $all_nodes    = $visited_node->flattenChildren();
@@ -90,7 +91,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         $this->artifact = mock('Tracker_Artifact');
         $this->node     = new TreeNode();
         $this->node->setObject($this->artifact);
-        $this->card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, 'whatever'));
+        $this->card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), 'whatever'));
     }
     
     public function itKnowsDraggablePlanningItems() {

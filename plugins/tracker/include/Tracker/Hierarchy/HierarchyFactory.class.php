@@ -20,17 +20,21 @@
 
 require_once 'Hierarchy.class.php';
 require_once 'Dao.class.php';
+require_once 'MoreThanOneParentException.class.php';
 
 class Tracker_HierarchyFactory {
-    
-    protected $hierarchy_dao;
-    
+
     private static $_instance;
     
     /**
      * @var array of tracker id (children of a tracker)
      */
     private $cache_children_of_tracker = array();
+
+    /**
+     * @var Tracker_Hierarchy_Dao
+     */
+    private $hierarchy_dao;
 
     /**
      * Used to instanciate some related trackers according to their hierarchy,
@@ -40,12 +44,20 @@ class Tracker_HierarchyFactory {
      * @var TrackerFactory
      */
     private $tracker_factory;
-    
-    public function __construct(Tracker_Hierarchy_Dao $hierarchy_dao, TrackerFactory $tracker_factory) {
-        $this->hierarchy_dao   = $hierarchy_dao;
-        $this->tracker_factory = $tracker_factory;
+
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
+    public function __construct(Tracker_Hierarchy_Dao   $hierarchy_dao,
+                                TrackerFactory          $tracker_factory,
+                                Tracker_ArtifactFactory $artifact_factory) {
+        $this->hierarchy_dao    = $hierarchy_dao;
+        $this->tracker_factory  = $tracker_factory;
+        $this->artifact_factory = $artifact_factory;
     }
-    
+
     /**
      * Returns an instance of Tracker_HierarchyFactory (creating it when needed).
      * 
@@ -55,7 +67,7 @@ class Tracker_HierarchyFactory {
      */
     public static function instance() {
         if (! self::$_instance) {
-            self::$_instance = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance());
+            self::$_instance = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), TrackerFactory::instance(), Tracker_ArtifactFactory::instance());
         }
         return self::$_instance;
     }
@@ -77,7 +89,7 @@ class Tracker_HierarchyFactory {
         }
         return $this->cache_children_of_tracker[$tracker_id];
     }
-
+    
     /**
      * Return the whole hierarchy (parents and descendants) that involve the given trackers
      *
@@ -108,6 +120,35 @@ class Tracker_HierarchyFactory {
             $hierarchy->addRelationship($tracker_ids[0], 0);
         }
         return $hierarchy;
+    }
+
+    public function getParentArtifact(User $user, Tracker_Artifact $child) {
+        $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
+        if ($dar && !$dar->isError()) {
+            switch ($dar->rowCount()) {
+                case 0:
+                    return null;
+                case 1:
+                    return $this->artifact_factory->getInstanceFromRow($dar->getRow());
+                default:
+                    $parents = array();
+                    foreach ($dar as $row) {
+                        $parents[] = $this->artifact_factory->getInstanceFromRow($row);
+                    }
+                    throw new Tracker_Hierarchy_MoreThanOneParentException($child, $parents);
+            }
+        }
+        return null;
+    }
+
+    public function getAllAncestors(User $user, Tracker_Artifact $child, array &$stack = array()) {
+        $parent = $this->getParentArtifact($user, $child);
+        if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
+            return array();
+        } else {
+            $stack[$parent->getId()] = true;
+            return array_merge(array($parent), $this->getAllAncestors($user, $parent, $stack));
+        }
     }
 
     /*

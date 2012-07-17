@@ -70,7 +70,7 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
 
     public function newCardwall_Column($id, $label) {
         $bgcolor = $fgcolor = 0;
-        return new Cardwall_Column($id, $label, $bgcolor, $fgcolor, $this->field_provider);
+        return new Cardwall_Column($id, $label, $bgcolor, $fgcolor, $this->field_provider, mock('Cardwall_OnTop_Config'));
     }
     
 }

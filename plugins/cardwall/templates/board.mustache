@@ -6,10 +6,10 @@
         <table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">
             <colgroup>
                 {{#has_swimline_header}}
-                    <col />
+                    <col width="{{column_width}}%" />
                 {{/has_swimline_header}}
                 {{#columns}}
-                    <col id="cardwall_board_column-{{id}}" />
+                    <col id="cardwall_board_column-{{id}}" width="{{column_width}}%" />
                 {{/columns}}
             </colgroup>
 

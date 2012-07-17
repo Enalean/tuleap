@@ -28,6 +28,11 @@ class MockFieldBuilder {
         return $this;
     }
     
+    public function withTracker(Tracker $tracker) {
+        stub($this->field)->getTracker()->returns($tracker);
+        return $this;
+    }
+    
     public function withValueForChangesetId($value_id, $changeset_id) {
         $bind = mock('Tracker_FormElement_Field_List_Bind_Static');
         

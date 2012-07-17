@@ -41,6 +41,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     
     private $enable_qr_code = true;
     
+    /** @var Cardwall_OnTop_Config */
+    private $config;
+    
     /**
      * Constructor
      *
@@ -53,11 +56,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param int    $field_id       the field id
      * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
-    public function __construct($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
+    public function __construct(Plugin $plugin, Cardwall_OnTop_Config $config,
+                                $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
         $this->field_id       = $field_id;
         $this->enable_qr_code = $enable_qr_code;
+        $this->config         = $config;
     }
     
     public function initiateSession() {
@@ -132,7 +137,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     }
     
     /**
-     * @return Cardwall_PaneContentPresenter
+     * @return Cardwall_RendererPresenter
      */
     private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
@@ -143,7 +148,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         } else {
             $board_factory      = new Cardwall_BoardFactory();
             $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
-            $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts);
+            $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts, $this->config);
         }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
@@ -259,8 +264,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXML($root, $formsMapping) {
-        parent::exportToXML(&$root, $formsMapping);
+    public function exportToXML(&$root, $formsMapping) {
+        parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
             $root->addAttribute('field_id', $mapping);
         }

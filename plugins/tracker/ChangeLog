@@ -1,3 +1,19 @@
+Version 5.8.3 - Tuleap 5.3
+    * Fix bug when there are cycles in artifact ancestors.
+
+Version 5.8.2 - Tuleap 5.3
+    * It's now possible to set email reminder based on date so Tuleap can remind you to take care of an artifact depending of a date (contrib STMicroelectronics).
+
+Version 5.8.1 - Tuleap 5.3
+    * Add tests on ancestors
+
+Version 5.8 - Tuleap 5.3
+    * Add API to find parents of a given artifact according to hierarchy.
+
+Version 5.7.41 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displayed on cards
+    * Configure cardwall columns
+
 Version 5.7.40 - Tuleap 5.3
     * Burndown field is now using computed remaining effort field
 

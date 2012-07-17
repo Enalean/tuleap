@@ -58,6 +58,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private $hierarchy_factory;
 
     /**
+     * @var string
+     */
+    private $title;
+
+    /**
      * Constructor
      *
      * @param int     $id                       The Id of the artifact
@@ -129,41 +134,36 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($can_access) {
             // Full access
             $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_FULL');
-            if ( $rows !== false ) {
-                foreach ( $rows as $row ) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        return true;
-                    }
+            foreach ( $rows as $row ) {
+                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                    return true;
                 }
             }
 
             // 'submitter' access
             $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_SUBMITTER');
-            if ( $rows !== false ) {
-                foreach ($rows as $row) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        // check that submitter is also a member
-                        $user_subby = $um->getUserById($this->getSubmittedBy());
-                        if ($user_subby->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                            return true;
-                        }
+            foreach ($rows as $row) {
+                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                    // check that submitter is also a member
+                    $user_subby = $um->getUserById($this->getSubmittedBy());
+                    if ($user_subby->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                        return true;
                     }
                 }
             }
+
             // 'assignee' access
             $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_ASSIGNEE');
-            if ( $rows !==  false ) {
-                foreach ($rows as $row) {
-                    if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        $contributor_field = $this->getTracker()->getContributorField();
-                        if ($contributor_field) {
-                            // check that one of the assignees is also a member
-                            $assignees = $this->getValue($contributor_field)->getValue();
-                            foreach ($assignees as $assignee) {
-                                $user_assignee = $um->getUserById($assignee);
-                                if ($user_assignee->isMemberOfUGroup( $row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                                    return true;
-                                }
+            foreach ($rows as $row) {
+                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                    $contributor_field = $this->getTracker()->getContributorField();
+                    if ($contributor_field) {
+                        // check that one of the assignees is also a member
+                        $assignees = $this->getValue($contributor_field)->getValue();
+                        foreach ($assignees as $assignee) {
+                            $user_assignee = $um->getUserById($assignee);
+                            if ($user_assignee->isMemberOfUGroup( $row['ugroup_id'], $this->getTracker()->getGroupId())) {
+                                return true;
                             }
                         }
                     }
@@ -432,18 +432,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string the title of the artifact, or null if no title defined in semantics
      */
     public function getTitle() {
-        if ($title_field = Tracker_Semantic_Title::load($this->getTracker())->getField()) {
-            if ($title_field->userCanRead()) {
-                if ($last_changeset = $this->getLastChangeset()) {
-                    if ($title_field_value = $last_changeset->getValue($title_field)) {
-                        if ($title = $title_field_value->getText()) {
-                            return $title;
+        if ( ! isset($this->title)) {
+            $this->title = null;
+            if ($title_field = Tracker_Semantic_Title::load($this->getTracker())->getField()) {
+                if ($title_field->userCanRead()) {
+                    if ($last_changeset = $this->getLastChangeset()) {
+                        if ($title_field_value = $last_changeset->getValue($title_field)) {
+                            $this->title = $title_field_value->getText();
                         }
                     }
                 }
             }
         }
-        return null;
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
     /**
@@ -1273,6 +1281,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Array of Tracker_Artifact
+     */
+    public function getAllAncestors(User $user) {
+        return $this->getHierarchyFactory()->getAllAncestors($user, $this);
     }
 
     /**
