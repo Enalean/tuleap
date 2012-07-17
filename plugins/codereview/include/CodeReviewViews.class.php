@@ -91,19 +91,13 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFirstFrame() {
-        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        echo '</br>';
-        echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
-        echo '</br>';
-        echo '</br>';
-        echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
-        echo '</br>';
-        echo '</br>';
-        echo "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
-        echo '</br>';
-        echo '</br>';
-        echo"<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=create_patch'>Create your patch file</a>";
+        $pluginInfo  = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $url         = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
+        $actionMenu  = "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>Create a new review request</a>";
+        $actionMenu .=  "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>Publish a  review request</a>";
+        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>Go to your Dashboard</a>";
+        $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=create_patch'>Create your patch file</a>";
+        print $actionMenu;
         $iframe  = "<iframe name=\"rb\" style=\"display:none; visibility:hidden\"/>";
         $form    = " <form id=\"form\" target=\"rb\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form   .= "  <p>";
@@ -113,13 +107,13 @@ class CodeReviewViews extends Views {
         $form   .= "   <input name=\"password\" value=".$this->user->getUserPw()." type=\"hidden\" size=\"24\" />";
         $form   .= "  </p>";
         $form   .= " </form>";
-        $script .="<script type=\"text/javascript\">";
-        $script .="function myfunc () {";
-        $script .="var frm = document.getElementById(\"form\");";
-        $script .="frm.submit();";
-        $script .="}";
-        $script .="window.onload = myfunc;";
-        $script .="</script>";
+        $script .= "<script type=\"text/javascript\">";
+        $script .= "function myfunc () {";
+        $script .= "var frm = document.getElementById(\"form\");";
+        $script .= "frm.submit();";
+        $script .= "}";
+        $script .= "window.onload = myfunc;";
+        $script .= "</script>";
         print $form;
         print $script;
         print $iframe;
@@ -185,8 +179,8 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function reviewSubmission() {
-	    $user               = UserManager::instance()->getCurrentUser();
-		$username           = $user->getUserName();
+        $user               = UserManager::instance()->getCurrentUser();
+        $username           = $user->getUserName();
         $project_manager    = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
         $project            = $project_manager->getProject($this->request->get('group_id'));
