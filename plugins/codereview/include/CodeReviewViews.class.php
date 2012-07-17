@@ -93,7 +93,7 @@ class CodeReviewViews extends Views {
     function displayFirstFrame() {
         $pluginInfo  = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url         = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        $this->displayActionsMenu();
+        $this->displayHeader();
         $iframe  = "<iframe name=\"rb\" style=\"display:none; visibility:hidden\"/>";
         $form    = " <form id=\"form\" target=\"rb\" enctype=\"multipart/form-data\" name=\"reviewAction\" method=\"POST\" action=$url>";
         $form   .= "  <p>";
@@ -116,11 +116,11 @@ class CodeReviewViews extends Views {
     }
 
     /**
-     * Displays actions menu
+     * Displays actions menus
      *
      * @return Void
      */
-    public function displayActionsMenu() {
+    public function displayHeader() {
         $actionMenu  = "<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=add_review'>".$GLOBALS['Language']->getText('plugin_codereview', 'create_review_action')."</a>";
         $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=publish_review'>".$GLOBALS['Language']->getText('plugin_codereview', 'publish_review_action')."</a>";
         $actionMenu .= "&nbsp;&nbsp; | &nbsp;<a href='/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=dashboard'>".$GLOBALS['Language']->getText('plugin_codereview', 'access_dashboard_action')."</a>";
@@ -137,6 +137,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFrame() {
+        $this->displayHeader();
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        = $pluginInfo->getPropertyValueForName('reviewboard_site');
         echo '<div id="codereview_iframe_div">';
@@ -150,6 +151,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFrameAdmin() {
+        $this->displayHeader();
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/admin/";
         echo '<div id="codereview_iframe_div">';
@@ -163,6 +165,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
      function displayFramePublish() {
+        $this->displayHeader();
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$this->request->get('review_id');
         echo '<div id="codereview_iframe_div">';
@@ -176,6 +179,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function displayFrameReviewRequest() {
+        $this->displayHeader();
         $action     = new CodeReviewActions($this->controller,null);
         $idrequest  = $action->getIdreviewrequest;
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
@@ -191,6 +195,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function reviewSubmission() {
+        $this->displayHeader();
         $user               = UserManager::instance()->getCurrentUser();
         $username           = $user->getUserName();
         $project_manager    = ProjectManager::instance();
