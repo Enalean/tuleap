@@ -93,7 +93,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config, 
                                 new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
         
-//        $board              = $board_factory->getMultiTrackerBoard($field_retriever, $planned_artifacts, $this->config);
         $board              = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();

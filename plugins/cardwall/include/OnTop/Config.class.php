@@ -138,7 +138,7 @@ class Cardwall_OnTop_Config {
      *
      * @return Cardwall_MappingCollection
      */
-    public function _getCardwallMappings($fields, $columns) {
+    public function getCardwallMappings($fields, $columns) {
         $cardwall_columns = new Cardwall_Columns($columns);
         $mappings = new Cardwall_MappingCollection();
         $this->fillMappingsByDuckType($mappings, $fields, $cardwall_columns);

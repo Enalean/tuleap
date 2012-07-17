@@ -37,7 +37,7 @@ class Cardwall_BoardFactory {
         $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
         $status_fields      = $acc_field_provider->extractAndIndexStatusFields($forests_of_artifacts);
         
-        $mapping_collection = $config->_getCardwallMappings($status_fields, $columns);
+        $mapping_collection = $config->getCardwallMappings($status_fields, $columns);
         $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection);
         $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
 
