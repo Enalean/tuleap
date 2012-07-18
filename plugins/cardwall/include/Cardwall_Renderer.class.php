@@ -143,8 +143,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
         
         $field              = $this->getField();
+        
         if (! $field) {
-            $board = new Cardwall_Board(array(), array(), new Cardwall_MappingCollection());
+            $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
             $board_factory      = new Cardwall_BoardFactory();
             $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);

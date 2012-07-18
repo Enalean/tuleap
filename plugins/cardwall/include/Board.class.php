@@ -29,7 +29,7 @@ class Cardwall_Board {
     public $swimlines;
 
     /**
-     * @var array of Cardwall_Column
+     * @var Cardwall_OnTop_Config_ColumnCollection
      */
     public $columns;
 
