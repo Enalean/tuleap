@@ -1,3 +1,10 @@
+Version 5.8.5 - Tuleap 5.3
+    * Fix bug in date reminder JS (not working on IE7)
+    * Clean-up code
+
+Version 5.8.4 - Tuleap 5.3
+    * Update after Cardwall update.
+
 Version 5.8.3 - Tuleap 5.3
     * Fix bug when there are cycles in artifact ancestors.
 
