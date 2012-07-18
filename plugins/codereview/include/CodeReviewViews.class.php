@@ -203,12 +203,11 @@ class CodeReviewViews extends Views {
         $project            = $project_manager->getProject($this->request->get('group_id'));
         $form  = " <form id=\"reviewAdd\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_review\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$repository_manager->rbPath."\" type=\"hidden\"/>";
-        //$form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->svnPath."\" type=\"hidden\"/>";
         $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" Value=\"".$repository_manager->rbUser."\" type=\"hidden\" size=\"64\"/>";
         $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" Value=\"".$repository_manager->rbPassword."\" type=\"hidden\"/>";
         $form .= "  <p>";
         $form .= "   <label for=\"codereview_repository_url\">Repository url</label><br>";
-        $form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->svnPath."\" type=\"text\" size=\"64\" />";
+        $form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->getSvnPath()."\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "  <p>";
         $form .= "   <label for=\"codereview_target\">Target people</label><br>";
@@ -257,24 +256,25 @@ class CodeReviewViews extends Views {
      * @return Void
      */
      function reviewPublishing() {
-    $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-    $form  = " <form id=\"reviewPublish\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_publish\">";
-    $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
-    $form .= "  <p>";
-    $form .= "   <label for=\"codereview_rb_user\">RB_User</label><br>";
-    $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" type=\"text\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "  <p>";
-    $form .= "   <label for=\"codereview_rb_password\">RB_PWD</label><br>";
-    $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" type=\"password\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "  <p>";
-    $form .= "   <label for=\"review_id\">Review_ID</label><br>";
-    $form .= "   <input id=\"review_id\" name=\"review_id\" type=\"text\" size=\"24\" />";
-    $form .= "  </p>";
-    $form .= "   <input type=\"submit\" value=\"Publish the review\" />";
-    $form .= " </form>";
-    print $form;
+        $this->displayHeader();
+        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $form  = " <form id=\"reviewPublish\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_publish\">";
+        $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"codereview_rb_user\">RB_User</label><br>";
+        $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" type=\"text\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"codereview_rb_password\">RB_PWD</label><br>";
+        $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" type=\"password\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "  <p>";
+        $form .= "   <label for=\"review_id\">Review_ID</label><br>";
+        $form .= "   <input id=\"review_id\" name=\"review_id\" type=\"text\" size=\"24\" />";
+        $form .= "  </p>";
+        $form .= "   <input type=\"submit\" value=\"Publish the review\" />";
+        $form .= " </form>";
+        print $form;
     }
 
     /**
@@ -303,6 +303,7 @@ class CodeReviewViews extends Views {
      * @return Void
      */
     function createPatchFile() {
+        $this->displayHeader();
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
         $form  = " <form id=\"createPatch\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_patch\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";

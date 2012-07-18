@@ -59,6 +59,15 @@ class RepositoryManager {
     }
 
     /**
+     * Retrieve svn path of a given project
+     *
+     * @return String
+     */
+    public function getSvnPath() {
+        return $this->svnPath;
+    }
+
+    /**
      * Check if the repository already exist in RB
      *
      * @return Boolean

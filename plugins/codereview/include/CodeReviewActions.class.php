@@ -68,8 +68,8 @@ class CodeReviewActions extends Actions {
         // @TODO: put the check of the user permission outside this method
         $plugin            = PluginManager::instance()->getPluginByName('codereview');
         $repositoryManager = new RepositoryManager($plugin, $this->request);
-        // @TODO: obtain svnPath using a method
-        $svnpath           = $repositoryManager->svnPath;
+
+        $svnpath           = $repositoryManager->getSvnPath();
         $user              = UserManager::instance()->getCurrentUser();
         $username          = $user->getUserName();
         // @TODO: validate group_id
