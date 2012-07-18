@@ -231,11 +231,11 @@
     </figure>
 
     <para>&SYS_PRODUCT_NAME; allows you to personalize your page to fit your needs. 
-    The content of your page is made of <emphasis>widgets</emphasis>. All widgets can be moved (1), 
-    collapsed or closed (2). Some of them can provide an rss feed (3) or 
-    preferences can be set (4).</para>
+    The content of your page is made of <emphasis>widgets</emphasis>. All widgets can be moved, 
+    collapsed or closed. Some of them can provide an rss feed or 
+    preferences can be set.</para>
     
-    <para>New widgets can be added through the link "Add widgets" (5). Here is an
+    <para>New widgets can be added through the link "Add widgets". Here is an
     incomplete list of available widgets for the personal page:</para>
     
     <itemizedlist mark="bullet">

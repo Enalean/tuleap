@@ -33,6 +33,7 @@ require_once('CrossSearch/SearchViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
 require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
+require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
@@ -780,7 +781,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     public function getCrossSearch(array $art_link_column_field_ids) {
-        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory());
+        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getArtifactFactory());
         $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                  = new Tracker_CrossSearch_SearchDao();
         $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
@@ -831,5 +832,36 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
 
     }
+
+    /**
+     * Get all trackers having at least on active date reminder
+     *
+     * @return Array
+     */
+    protected function getTrackersHavingDateReminders() {
+        $trackers = array();
+        $dao = new Tracker_DateReminderDao();
+        $dar = $dao->getTrackersHavingDateReminders();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $trackers[] = $this->getTrackerFactory()->getTrackerById($row['tracker_id']);
+            }
+        }
+        return $trackers;
+    }
+
+    /**
+     * Send Date reminder
+     *
+     * @return Void
+     */
+    public function sendDateReminder() {
+        $trackers       = $this->getTrackersHavingDateReminders();
+        foreach ($trackers as $tracker) {
+            $dateReminderManager = new Tracker_DateReminderManager($tracker);
+            $dateReminderManager->process();
+        }
+    }
 }
+
 ?>

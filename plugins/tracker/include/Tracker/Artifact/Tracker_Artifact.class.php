@@ -1284,6 +1284,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * @param User $user
+     *
+     * @return Array of Tracker_Artifact
+     */
+    public function getAllAncestors(User $user) {
+        return $this->getHierarchyFactory()->getAllAncestors($user, $this);
+    }
+
+    /**
      * Returns the previously injected factory (e.g. in tests), or a new
      * instance (e.g. in production).
      *

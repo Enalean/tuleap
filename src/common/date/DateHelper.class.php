@@ -110,6 +110,22 @@ class DateHelper {
     }
 
     /**
+     * Get the date x days before/after today
+     *
+     * @param Integer $distance Distance in number of days
+     * @param Integer $before   0 if the date is after today otherwise the date is before today
+     *
+     * @return Integer
+     */
+    public static function getDistantDateFromToday($distance, $before) {
+        $distance     = SECONDS_IN_A_DAY * $distance;
+        if ($before) {
+            $distance = $distance * -1;
+        }
+        return strtotime(date("Y-m-d", $_SERVER['REQUEST_TIME'] + $distance));
+    }
+
+    /**
      * Calculate difference between two dates in days
      *
      * @param Integer $start Timestamp of the start date

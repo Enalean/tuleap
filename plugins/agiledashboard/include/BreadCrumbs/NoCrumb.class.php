@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,33 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Merge two breadcrumbs into a single one, by appending the second to the first 
- */
-class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
+require_once 'BreadCrumbGenerator.class.php';
 
-    /**
-     * @var array of BreadCrumb_BreadCrumbGenerator
-     */
-    private $generators;
-    
-    /**
-     * Takes a variable number of generators
-     */
-    function __construct() {
-        $this->generators = func_get_args();
-    }
-
-    function push(BreadCrumb_BreadCrumbGenerator $generator) {
-        $this->generators[] = $generator;
-    }
-
+class BreadCrumb_NoCrumb implements BreadCrumb_BreadCrumbGenerator {
     public function getCrumbs() {
-        $crumbs = array();
-        foreach ($this->generators as $crumb) {
-            $crumbs = array_merge($crumbs, $crumb->getCrumbs());
-        }
-        return $crumbs;
+        return array();
     }
 }
 

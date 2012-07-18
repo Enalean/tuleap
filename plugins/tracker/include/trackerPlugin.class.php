@@ -51,6 +51,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('widgets',                             'widgets',                           false);
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
+        $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
+        $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
     }
     
     public function getPluginInfo() {
@@ -101,6 +103,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
+                '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )
         );
     }
@@ -457,6 +460,35 @@ class trackerPlugin extends Plugin {
             $trackerManager->deleteProjectTrackers($groupId);
         }
     }
+
+   /**
+     * Process the nightly job to send reminder on artifact correponding to given criteria
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function codendi_daily_start($params) {
+        include_once 'Tracker/TrackerManager.class.php';
+        $trackerManager = new TrackerManager();
+        return $trackerManager->sendDateReminder();
+    }
+
+    /**
+     * Fill the list of subEvents related to tracker in the project history interface
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function fillProjectHistorySubEvents($params) {
+        array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',
+                                                         'tracker_date_reminder_edit',
+                                                         'tracker_date_reminder_delete',
+                                                         'tracker_date_reminder_sent'
+        );
+    }
+
 }
 
 ?>

@@ -19,6 +19,7 @@
  */
 
 require_once('include/DataAccessObject.class.php');
+require_once('www/project/admin/ugroup_utils.php');
 
 /**
  *  Data Access Object for UGroup 
@@ -64,5 +65,19 @@ class UGroupUserDao extends DataAccessObject {
                     AND uu.ugroup_id IN ('.implode(",",$ugroups).')';
         return $this->retrieve($sql);
     }
+
+    /**
+     * Get uGroup members for both dynamic & sttic uGroups
+     *
+     * @param Integer $ugroupId Id of the uGroup
+     * @param Integer $groupId  Id of the project
+     *
+     * @return DataAccessResult
+     */
+    public function searchUserByDynamicUGroupId($ugroupId, $groupId) {
+        $sql = ugroup_db_get_dynamic_members($ugroupId, false, $groupId);
+        return $this->retrieve($sql);
+    }
+
 }
 ?>

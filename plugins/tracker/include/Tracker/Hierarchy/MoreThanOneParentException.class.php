@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,34 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Merge two breadcrumbs into a single one, by appending the second to the first 
- */
-class BreadCrumb_Merger implements BreadCrumb_BreadCrumbGenerator {
+class Tracker_Hierarchy_MoreThanOneParentException extends Exception {
 
-    /**
-     * @var array of BreadCrumb_BreadCrumbGenerator
-     */
-    private $generators;
-    
-    /**
-     * Takes a variable number of generators
-     */
-    function __construct() {
-        $this->generators = func_get_args();
+    public function __construct(Tracker_Artifact $child, array $parents) {
+        parent::__construct($this->getTranslatedMessage(array($this->getParentTitle($child), $this->getParentsList($parents))));
     }
 
-    function push(BreadCrumb_BreadCrumbGenerator $generator) {
-        $this->generators[] = $generator;
+    private function getTranslatedMessage(array $arguments) {
+        return $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', $arguments);
     }
 
-    public function getCrumbs() {
-        $crumbs = array();
-        foreach ($this->generators as $crumb) {
-            $crumbs = array_merge($crumbs, $crumb->getCrumbs());
-        }
-        return $crumbs;
+    private function getParentsList(array $parents) {
+        return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
     }
+
+    private function getParentTitle(Tracker_Artifact $artifact) {
+        return '"'.$artifact->getTitle().' ('.$artifact->fetchXRefLink().')"';
+    }
+
 }
 
 ?>
