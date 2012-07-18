@@ -77,10 +77,20 @@ class Cardwall_OnTop_Config {
         return $this->dao->disable($this->tracker->getId());
     }
 
+    /**
+     * Get Frestyle columns for Cardwall_OnTop, or status columns if none
+     * 
+     * @param Tracker $tracker
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
     public function getDashboardColumns() {
         return $this->column_factory->getDashboardColumns($this->tracker);
     }
 
+    /**
+     * Get Columns from the values of a $field
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
         return $this->column_factory->getRendererColumns($cardwall_field);
     }

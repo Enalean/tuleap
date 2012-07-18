@@ -41,6 +41,8 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
+     * Get Frestyle columns for Cardwall_OnTop, or status columns if none
+     * 
      * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
@@ -56,16 +58,17 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
+     * Get Columns from the values of a $field
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
-    public function getRendererColumns($field) {
+    public function getRendererColumns(Tracker_FormElement_Field_List $field) {
         // TODO use cache of $columns
         $columns = new Cardwall_OnTop_Config_ColumnCollection();
-        $this->_getColumnsFor($columns, $field);
+        $this->fillColumnsFor($columns, $field);
         return $columns;
     }
     
-    private function _getColumnsFor(&$columns, $field) {
+    private function fillColumnsFor(&$columns, $field) {
         $decorators = $field->getDecorators();
         foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
             list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
@@ -80,7 +83,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
         $field   = $tracker->getStatusField();
         if ($field) {
-            $this->_getColumnsFor($columns, $field);
+            $this->fillColumnsFor($columns, $field);
         }
         return $columns;
     }
