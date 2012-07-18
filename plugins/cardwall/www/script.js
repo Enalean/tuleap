@@ -23,14 +23,14 @@ document.observe('dom:loaded', function () {
         // {{{ Define the droppables columns
         var cols = board.select('col');;
         cols.each(function (col) {
-            col.up('table').down('tbody').select('tr').each(function (tr) {
+            col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
                 var classname = 'drop-into-' + tr.id.split('-')[1] + '-' + col.id.split('-')[1];
-                tr.down('td', col.up().childElements().indexOf(col)).select('.cardwall_board_postit').invoke('removeClassName', classname);
+                tr.childElements()[col.up().childElements().indexOf(col)].select('.cardwall_board_postit').invoke('removeClassName', classname);
             });
         });
         cols.each(function (col, col_index) {
-            col.up('table').down('tbody').select('tr').each(function (tr) {
-                var td           = tr.down('td', col_index),
+            col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
+                var td           = tr.down('td.cardwall-cell', col_index),
                     restorecolor = td.getStyle('background-color'),
                     effect       = null,
                     swimline_id  = tr.id.split('-')[1],

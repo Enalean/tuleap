@@ -19,6 +19,7 @@
  */
 
 require_once 'Swimline.class.php';
+require_once 'OnTop/Config.class.php';
 require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 
 /**
@@ -26,10 +27,21 @@ require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
  */
 class Cardwall_SwimlineFactory {
 
+    /** @var Cardwall_OnTop_Config */
+    private $config;
+    
+    /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
+    private $field_provider;
+    
+    public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+        $this->config = $config;
+        $this->field_provider = $field_provider;
+    }
+    
     /**
      * @return array of Cardwall_Swimline
      */
-    public function getSwimlines(array $columns, array $nodes) {
+    public function getSwimlines(Cardwall_OnTop_Config_ColumnCollection $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
             $swimlines[] = $this->getSwimline($columns, $child);
@@ -37,7 +49,7 @@ class Cardwall_SwimlineFactory {
         return $swimlines;
     }
 
-    private function getSwimline($columns, TreeNode $child) {
+    private function getSwimline(Cardwall_OnTop_Config_ColumnCollection $columns, TreeNode $child) {
         $potential_presenters = $this->extractPresentersFrom($child->getChildren());
         $cells = $this->getCells($columns, $potential_presenters);
         return new Cardwall_Swimline($child, $cells);
@@ -59,7 +71,7 @@ class Cardwall_SwimlineFactory {
      * @param array of Cardwall_CardInCellPresenter $potential_presenters
      * @return array
      */
-    public function getCells(array $columns, array $potential_presenters) {
+    public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters) {
         $cells = array();
         foreach ($columns as $column) {
             $cells[] = $this->getCell($column, $potential_presenters);
@@ -77,8 +89,9 @@ class Cardwall_SwimlineFactory {
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
         $artifact        = $presenter->getArtifact();
-        if ($column->isInColumn($artifact)) {
+        if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
             $presenters[] = $presenter;
+            
         }
     }
 

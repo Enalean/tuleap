@@ -33,7 +33,7 @@ class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
 
         $columns = array('of', 'columns');
-        stub($column_factory)->getColumns($tracker)->returns($columns);
+        stub($column_factory)->getDashboardColumns($tracker)->returns($columns);
         stub($tracker_mapping_factory)->getMappings($tracker, $columns)->once()->returns('whatever');
 
         $config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);

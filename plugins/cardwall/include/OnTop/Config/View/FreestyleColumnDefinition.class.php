@@ -24,14 +24,14 @@ require_once 'ColumnDefinition.class.php';
 class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTop_Config_View_ColumnDefinition {
 
     protected function fetchSpeech() {
-        if (! count($this->config->getColumns())) {
+        if (! count($this->config->getDashboardColumns())) {
             return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
         } else {
             return $this->translate('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_with_columns');
         }
     }
 
-    protected function fetchColumnHeader(Cardwall_OnTop_Config_Column $column) {
+    protected function fetchColumnHeader(Cardwall_Column $column) {
         return '<input type="text" name="column['. $column->id .'][label]" value="'. $this->purify($column->label) .'" />';
     }
 
@@ -45,7 +45,7 @@ class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTo
      */
     private function getPlaceholderSuggestion() {
         $placeholders = explode('|', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholders'));
-        foreach ($this->config->getColumns() as $column) {
+        foreach ($this->config->getDashboardColumns() as $column) {
             array_walk($placeholders, array($this, 'removeUsedColumns'), $column->getLabel());
         }
         $suggestion = array_shift(array_filter($placeholders));

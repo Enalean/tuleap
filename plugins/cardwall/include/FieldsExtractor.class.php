@@ -36,7 +36,7 @@ class Cardwall_FieldsExtractor {
     public function __construct(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
         $this->field_provider = $field_provider;
     }
-    public function extractAndIndexStatusFields(TreeNode $node) {
+    public function extractAndIndexFieldsOf(TreeNode $node) {
         $artifacts = $this->getArtifactsFromSecondLevelAndDown($node);
         return $this->getIndexedStatusFieldsOf($artifacts);
     }

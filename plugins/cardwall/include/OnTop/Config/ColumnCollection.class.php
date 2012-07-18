@@ -21,7 +21,7 @@
 /**
  * Wrapper of array of columns
  */
-abstract class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable {
+class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, IteratorAggregate, Countable {
 
     /**
      * @var array
@@ -31,11 +31,6 @@ abstract class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, It
     public function __construct(array $columns = array()) {
         $this->columns = $columns;
     }
-
-    /**
-     * @pattern Visitor
-     */
-    public abstract function accept($visitor, $parameter = '');
 
     /**
      * @see ArrayAccess
@@ -82,5 +77,22 @@ abstract class Cardwall_OnTop_Config_ColumnCollection implements ArrayAccess, It
     public function count() {
         return count($this->columns);
     }
+    
+    public function getColumnById($id) {
+        foreach ($this->columns as $column) {
+            if ($column->id == $id) {
+                return $column;
+            }
+        }
+    }
+
+    public function getColumnByLabel($label) {
+        foreach ($this->columns as $column) {
+            if ($column->label == $label) {
+                return $column;
+            }
+        }
+    }
+
 }
 ?>

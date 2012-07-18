@@ -43,7 +43,7 @@ class Cardwall_Board {
      * @param array                      $columns   Array of Cardwall_Column
      * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
      */
-    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
+    public function __construct(array $swimlines, ArrayAccess $columns, Cardwall_MappingCollection $mappings) {
         $this->swimlines = $swimlines;
         $this->columns   = $columns;
         $this->mappings  = $mappings;

@@ -21,6 +21,8 @@
 require_once 'Dao.class.php';
 require_once 'Config/ColumnFactory.class.php';
 require_once 'Config/TrackerMappingFactory.class.php';
+require_once 'Config/ColumnCollection.class.php';
+require_once CARDWALL_BASE_DIR. '/Mapping.class.php';
 
 /**
  * Manage configuration of a cardwall on top of a tracker
@@ -75,12 +77,16 @@ class Cardwall_OnTop_Config {
         return $this->dao->disable($this->tracker->getId());
     }
 
-    public function getColumns() {
-        return $this->column_factory->getColumns($this->tracker);
+    public function getDashboardColumns() {
+        return $this->column_factory->getDashboardColumns($this->tracker);
     }
 
+    public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
+        return $this->column_factory->getRendererColumns($cardwall_field);
+    }
+    
     public function getMappings() {
-        return $this->tracker_mapping_factory->getMappings($this->tracker, $this->getColumns());
+        return $this->tracker_mapping_factory->getMappings($this->tracker, $this->getDashboardColumns());
     }
 
     public function getTrackers() {
@@ -97,7 +103,66 @@ class Cardwall_OnTop_Config {
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
     
-    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection $mappings, $columns) {
+    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column) {
+        // TODO null object pattern, to return empty valuemappings
+        $tracker_field_mapping = $this->getMappingFor($tracker);
+        if (!$tracker_field_mapping) return false;
+        
+        $ismappedto = false;
+        foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
+            if ($value_mapping->getValue()->getLabel() == $artifact_status) {
+                $ismappedto = $column->getId() == $value_mapping->getColumnId();
+            }
+        }
+        return $ismappedto;
+    }
+
+    public function isInColumn(Tracker_Artifact                                     $artifact, 
+                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
+                               Cardwall_Column                                      $column) {
+        $field           = $field_provider->getField($artifact);
+        $artifact_status = null;
+        if ($field) {
+            $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
+        }
+
+        
+        return $this->isMappedTo($artifact->getTracker(), $artifact_status, $column) || 
+               $column->isMatchForThisColumn($artifact_status);
+    }
+
+    /**
+     * Get the column/field/value mappings by duck typing the colums labels 
+     * with the values of the given fields
+     *
+     * @param array $fields array of Tracker_FormElement_Field_Selectbox
+     *
+     * @return Cardwall_MappingCollection
+     */
+    public function getCardwallMappings(array $fields, Cardwall_OnTop_Config_ColumnCollection $cardwall_columns) {
+        $mappings = new Cardwall_MappingCollection();
+        $this->fillMappingsByDuckType($mappings, $fields, $cardwall_columns);
+        $this->fillMappingsWithOnTopMappings($mappings, $cardwall_columns);
+        return $mappings;
+    }
+    
+    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings, 
+                                            array                                  $fields, 
+                                            Cardwall_OnTop_Config_ColumnCollection $columns) {
+        foreach ($fields as $status_field) {
+            foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
+                $column = $columns->getColumnByLabel($value->getLabel());
+                if ($column) {
+                    $mappings->add(new Cardwall_Mapping($column->id, $status_field->getId(), $value->getId()));
+                }
+
+            }
+        }
+        return $mappings;
+    }
+
+    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings, 
+                                                  Cardwall_OnTop_Config_ColumnCollection $columns) {
         foreach ($this->getMappings() as $field_mapping) {
             foreach ($field_mapping->getValueMappings() as $value_mapping) {
                 $column = $columns->getColumnById($value_mapping->getColumnId());
@@ -110,21 +175,7 @@ class Cardwall_OnTop_Config {
         }
     }
 
-    public function isMappedTo($tracker_id, $artifact_status, $column) {
-        $tracker_mappings = $this->getMappings();
-        
-        // TODO null object pattern, to return empty valuemappings
-        if (!isset($tracker_mappings[$tracker_id])) return false;
-        $tracker_field_mapping = $tracker_mappings[$tracker_id];
-        
-        $ismappedto = false;
-        foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
-            if ($value_mapping->getValue()->getLabel() == $artifact_status) {
-                $ismappedto = $column->id == $value_mapping->getColumnId();
-            }
-        }
-        return $ismappedto;
-    }
+    
 
 }
 ?>

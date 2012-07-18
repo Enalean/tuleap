@@ -148,7 +148,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         } else {
             $board_factory      = new Cardwall_BoardFactory();
             $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
-            $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts, $this->config);
+            $columns            = $this->config->getRendererColumns($field);
+            $board              = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config);
         }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);

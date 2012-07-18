@@ -19,7 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Column.class.php';
+require_once dirname(__FILE__). '/../../constants.php';
+require_once CARDWALL_BASE_DIR. '/Column.class.php';
 require_once 'ColumnStatusCollection.class.php';
 require_once 'ColumnFreestyleCollection.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
@@ -39,7 +40,11 @@ class Cardwall_OnTop_Config_ColumnFactory {
         $this->dao = $dao;
     }
 
-    public function getColumns(Tracker $tracker) {
+    /**
+     * @param Tracker $tracker
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
+    public function getDashboardColumns(Tracker $tracker) {
         $columns = $this->getColumnsFromDao($tracker);
         if (! count($columns)) {
             $status_columns = $this->getColumnsFromStatusField($tracker);
@@ -51,40 +56,56 @@ class Cardwall_OnTop_Config_ColumnFactory {
     }
 
     /**
-     * @return array of Cardwall_OnTop_Config_Column
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
+    public function getRendererColumns($field) {
+        // TODO use cache of $columns
+        $columns = new Cardwall_OnTop_Config_ColumnCollection();
+        $this->_getColumnsFor($columns, $field);
+        return $columns;
+    }
+    
+    private function _getColumnsFor(&$columns, $field) {
+        $decorators = $field->getDecorators();
+        foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
+            list($bgcolor, $fgcolor) = $this->getCardwallColumnColors($value, $decorators);
+            $columns[] = new Cardwall_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
+        }
+    }
+
+    /**
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
+    private function getColumnsFromStatusField(Tracker $tracker) {
+        $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
+        $field   = $tracker->getStatusField();
+        if ($field) {
+            $this->_getColumnsFor($columns, $field);
+        }
+        return $columns;
+    }
+
+
+    /**
+     * @return Cardwall_OnTop_Config_ColumnCollection
      */
     private function getColumnsFromDao(Tracker $tracker) {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection();
         foreach ($this->dao->searchColumnsByTrackerId($tracker->getId()) as $row) {
             list($bgcolor, $fgcolor) = $this->getColumnColorsFromRow($row);
-            $columns[] = new Cardwall_OnTop_Config_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
+            $columns[] = new Cardwall_Column($row['id'], $row['label'], $bgcolor, $fgcolor);
         }
         return $columns;
     }
 
-    /**
-     * @return array of Cardwall_OnTop_Config_Column
-     */
-    public function getColumnsFromStatusField(Tracker $tracker) {
-        $columns = new Cardwall_OnTop_Config_ColumnStatusCollection();
-        $field   = $tracker->getStatusField();
-        if ($field) {
-            $decorators = $field->getDecorators();
-            foreach($field->getVisibleValuesPlusNoneIfAny() as $value) {
-                list($bgcolor, $fgcolor) = $this->getColumnColorsFromListValue($value, $decorators);
-                $columns[] = new Cardwall_OnTop_Config_Column($value->getId(), $value->getLabel(), $bgcolor, $fgcolor);
-            }
-        }
-        return $columns;
-    }
-
-    private function getColumnColorsFromListValue($value, $decorators) {
+    private function getCardwallColumnColors($value, $decorators) {
         $id      = (int)$value->getId();
         $bgcolor = self::DEFAULT_BGCOLOR;
         $fgcolor = self::DARK_FGCOLOR;
         if (isset($decorators[$id])) {
             $bgcolor = $decorators[$id]->css($bgcolor);
-            $fgcolor = $decorators[$id]->isDark() ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
+            //choose a text color to have right contrast (black on dark colors is quite useless)
+            $fgcolor = $decorators[$id]->isDark($fgcolor) ? self::LIGHT_FGCOLOR : self::DARK_FGCOLOR;
         }
         return array($bgcolor, $fgcolor);
     }
@@ -109,5 +130,9 @@ class Cardwall_OnTop_Config_ColumnFactory {
     public function isDark($r, $g, $b) {
         return (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128;
     }
+
+    
+
+
 }
 ?>
