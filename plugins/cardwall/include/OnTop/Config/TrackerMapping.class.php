@@ -43,6 +43,15 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
         return $this->available_fields;
     }
     
+    public function isMappedTo($column, $artifact_status) {
+        foreach ($this->getValueMappings() as $value_mapping) {
+            if ($value_mapping->getValueLabel() == $artifact_status) {
+                return $value_mapping->getColumnId() == $column->getId();
+            }
+        }
+        return false;
+    }
+    
     public abstract function getField();
     
     /**
@@ -54,5 +63,6 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
      * @pattern Visitor
      */
     public abstract function accept($visitor);
+    
 }
 ?>

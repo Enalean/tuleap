@@ -38,6 +38,10 @@ class Cardwall_OnTop_Config_ValueMapping {
     public function getValueId() {
         return $this->value->getId();
     }
+    
+    public function getValueLabel() {
+        return $this->value->getLabel();
+    }
 
     /**
      * @return Tracker_FormElement_Field_List_Value

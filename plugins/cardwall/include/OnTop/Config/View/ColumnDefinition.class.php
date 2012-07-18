@@ -183,6 +183,9 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
             $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
             foreach ($field_values as $value) {
                 $selected = '';
+                
+                //TODO rather use the TrackerMapping and ask it some question, cannot rely on the fact that this array is indexed
+                // on value->getId(), for instance in the case of status mappings it ain't!
                 if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
                     $selected = 'selected="selected"';
                 }

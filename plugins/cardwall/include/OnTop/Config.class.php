@@ -108,13 +108,7 @@ class Cardwall_OnTop_Config {
         $tracker_field_mapping = $this->getMappingFor($tracker);
         if (!$tracker_field_mapping) return false;
         
-        $ismappedto = false;
-        foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
-            if ($value_mapping->getValue()->getLabel() == $artifact_status) {
-                $ismappedto = $column->getId() == $value_mapping->getColumnId();
-            }
-        }
-        return $ismappedto;
+        return $tracker_field_mapping->isMappedTo($column, $artifact_status);
     }
 
     public function isInColumn(Tracker_Artifact                                     $artifact, 
@@ -125,7 +119,6 @@ class Cardwall_OnTop_Config {
         if ($field) {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
-
         
         return $this->isMappedTo($artifact->getTracker(), $artifact_status, $column) || 
                $column->isMatchForThisColumn($artifact_status);
