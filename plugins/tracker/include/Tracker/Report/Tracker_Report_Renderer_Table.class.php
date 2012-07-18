@@ -1753,7 +1753,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * @param Report_Renderer $renderer containing the columns 
      */
     public function afterSaveObject($renderer) {
-        $this->saveColumns($renderer->getDashboardColumns());
+        $this->saveColumns($renderer->getColumns());
         $this->saveAggregates($renderer->getAggregates());
         $this->saveSort($renderer->getSort());
     }
