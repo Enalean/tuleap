@@ -295,20 +295,20 @@ class CodeReviewActions extends Actions {
             if ($frevision > $srevision){
                 $status    = false;
                 $invalid[] = 'srevision';
-                $msg       = "le dexième numéro de revision est inferieur au premier";
+                $msg       = $GLOBALS['Language']->getText('plugin_codereview', 'request_patch_invalid_second_revision');
                 $GLOBALS['Response']->addFeedBack('error', $msg);
                 $this->controller->view = 'createPatchFile';
             }
             if (!(($frevision >= $f) && ($frevision <= $l))){
                 $status = false;
-                $msg    = "Le premier numéro de révision ".$frevision." n'existe pas.";
+                $msg    = $GLOBALS['Language']->getText('plugin_codereview', 'request_patch_first_revision_not_found', array($frevision));
                 $GLOBALS['Response']->addFeedBack('error', $msg);
                 $this->controller->view = 'createPatchFile';
             }
 
         if (!(($srevision >= $f) && ($srevision <= $l))){
             $status = false;
-            $msg    = "Le dexième numéro de révision ".$srevision." n'existe pas.";
+            $msg    = $GLOBALS['Language']->getText('plugin_codereview', 'request_patch_second_revision_not_found', array($srevision));
             $GLOBALS['Response']->addFeedBack('error', $msg);
             $this->controller->view = 'createPatchFile';
         }

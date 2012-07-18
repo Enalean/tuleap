@@ -10,3 +10,8 @@ plugin_codereview	publish_review_action	Publier une revue
 plugin_codereview	create_patch_action	Crèer un patch
 plugin_codereview	access_dashboard_action	Votre tableau de bord
 plugin_codereview	access_rb_administration_action	Administration du site Review Board
+
+# ---------- Request patch -----------------------------
+plugin_codereview	request_patch_first_revision_not_found	Le premier numéro de révision $1 n'existe pas.
+plugin_codereview	request_patch_invalid_second_revision	Le dexième numéro de révision est inferieur au premier
+plugin_codereview	request_patch_second_revision_not_found	Le dexième numéro de révision $1 n'existe pas.

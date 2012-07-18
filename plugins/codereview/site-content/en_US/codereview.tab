@@ -10,3 +10,8 @@ plugin_codereview	publish_review_action	Publish a  review request
 plugin_codereview	create_patch_action	Create your patch file
 plugin_codereview	access_dashboard_action	Go to your Dashboard
 plugin_codereview	access_rb_administration_action	Review Board site administration
+
+# ---------- Request patch -----------------------------
+plugin_codereview	request_patch_first_revision_not_found	Start revision $1 not found.
+plugin_codereview	request_patch_invalid_second_revision	End revision should be greater than start revision.
+plugin_codereview	request_patch_second_revision_not_found	End revision $1 not found.
