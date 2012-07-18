@@ -36,8 +36,14 @@ class Cardwall_OnTop_Config_ColumnFactory {
      */
     private $dao;
 
-    public function __construct(Cardwall_OnTop_ColumnDao $dao) {
-        $this->dao = $dao;
+    /**
+     * @var Cardwall_OnTop_Dao
+     */
+    private $on_top_dao;
+
+    public function __construct(Cardwall_OnTop_ColumnDao $dao, Cardwall_OnTop_Dao $on_top_dao) {
+        $this->dao        = $dao;
+        $this->on_top_dao = $on_top_dao;
     }
 
     /**
@@ -48,7 +54,7 @@ class Cardwall_OnTop_Config_ColumnFactory {
      */
     public function getDashboardColumns(Tracker $tracker) {
         $columns = $this->getColumnsFromDao($tracker);
-        if (! count($columns)) {
+        if (!$this->on_top_dao->isFreestyleEnabled($tracker->getId())) {
             $status_columns = $this->getColumnsFromStatusField($tracker);
             if (count($status_columns)) {
                 $columns = $status_columns;

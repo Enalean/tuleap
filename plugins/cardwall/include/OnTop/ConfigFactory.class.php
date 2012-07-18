@@ -57,7 +57,7 @@ class Cardwall_OnTop_ConfigFactory {
         require_once 'Config/TrackerMappingFactory.class.php';
         require_once 'Config/ValueMappingFactory.class.php';
 
-        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
+        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
             $this->element_factory,
@@ -93,6 +93,7 @@ class Cardwall_OnTop_ConfigFactory {
         $mappingvalue_dao = $this->getOnTopColumnMappingFieldValueDao();
         require_once 'Config/Updater.class.php';
         require_once 'Config/Command/EnableCardwallOnTop.class.php';
+        require_once 'Config/Command/EnableFreestyleColumns.class.php';
         require_once 'Config/Command/CreateColumn.class.php';
         require_once 'Config/Command/UpdateColumns.class.php';
         require_once 'Config/Command/DeleteColumns.class.php';
@@ -101,6 +102,7 @@ class Cardwall_OnTop_ConfigFactory {
         require_once 'Config/Command/DeleteMappingFields.class.php';
         $updater = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $dao));
+        $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $column_dao, $mappingfield_dao, $mappingvalue_dao));

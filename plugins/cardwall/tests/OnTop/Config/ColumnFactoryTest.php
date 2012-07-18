@@ -40,10 +40,12 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
 
         $this->tracker      = aMockTracker()->withId(42)->build();
         $this->dao          = mock('Cardwall_OnTop_ColumnDao');
-        $this->factory      = new Cardwall_OnTop_Config_ColumnFactory($this->dao);
+        $this->on_top_dao   = mock('Cardwall_OnTop_Dao');
+        $this->factory      = new Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
     }
 
-    public function itBuildColumnsFromTheDataStorageEvenIfStatus() {
+    public function itBuildColumnsFromTheDataStorageIfFreestyleEnabledEvenIfStatus() {
+        stub($this->on_top_dao)->isFreestyleEnabled()->returns(true);
         stub($this->tracker)->getStatusField()->returns($this->status_field);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar(
             array(
@@ -72,7 +74,8 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         $this->assertEqual("black", $columns[1]->getFgcolor());
     }
 
-    public function itBuildColumnsFromTheStatusValuesIfNoCustomSettings() {
+    public function itBuildColumnsFromTheStatusValuesIfFreestyleNotEnabled() {
+        stub($this->on_top_dao)->isFreestyleEnabled()->returns(false);
         stub($this->tracker)->getStatusField()->returns($this->status_field);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
         $columns = $this->factory->getDashboardColumns($this->tracker);
