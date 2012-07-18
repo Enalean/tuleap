@@ -29,12 +29,13 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
         $basedir                    = dirname(__FILE__).'/../..';
         $actual_singleton_lookups   = $this->countSingletonLookupsInProject($basedir);
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
-        $this->assertTrue($actual_singleton_lookups <= $expected_singleton_lookups, 
+
+        $this->assertFalse($new_singletons > 0, 
                 "$new_singletons singleton lookup(s) was(were) introduced, please check to see if you can avoid this by injecting it(them)
                  before increasing the allowed number of singleton lookups");
-        $this->assertTrue($actual_singleton_lookups >= $expected_singleton_lookups, 
+        $this->assertFalse($new_singletons < 0, 
                 "Great job! You removed one or more singleton lookups, you're a Dependency Injection champion!
-                 please decrease the expected_singleton_lookups variable in this test
+                 please decrease the current_number_of_singleton_lookups variable in this test>
                  It should be : $actual_singleton_lookups");
     }
     
