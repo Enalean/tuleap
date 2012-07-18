@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'constants.php';
+
 /**
  * CardwallPlugin
  */
@@ -185,7 +187,6 @@ class cardwallPlugin extends Plugin {
         $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                require_once 'constants.php';
                 require_once 'View/Admin.class.php';
 
                 $admin_view = new Cardwall_View_Admin();
