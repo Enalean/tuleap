@@ -77,10 +77,20 @@ class Cardwall_OnTop_Config {
         return $this->dao->disable($this->tracker->getId());
     }
 
+    /**
+     * Get Frestyle columns for Cardwall_OnTop, or status columns if none
+     * 
+     * @param Tracker $tracker
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
     public function getDashboardColumns() {
         return $this->column_factory->getDashboardColumns($this->tracker);
     }
 
+    /**
+     * Get Columns from the values of a $field
+     * @return Cardwall_OnTop_Config_ColumnCollection
+     */
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
         return $this->column_factory->getRendererColumns($cardwall_field);
     }
@@ -108,13 +118,7 @@ class Cardwall_OnTop_Config {
         $tracker_field_mapping = $this->getMappingFor($tracker);
         if (!$tracker_field_mapping) return false;
         
-        $ismappedto = false;
-        foreach ($tracker_field_mapping->getValueMappings() as $value_mapping) {
-            if ($value_mapping->getValue()->getLabel() == $artifact_status) {
-                $ismappedto = $column->getId() == $value_mapping->getColumnId();
-            }
-        }
-        return $ismappedto;
+        return $tracker_field_mapping->isMappedTo($column, $artifact_status);
     }
 
     public function isInColumn(Tracker_Artifact                                     $artifact, 
@@ -125,7 +129,6 @@ class Cardwall_OnTop_Config {
         if ($field) {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
-
         
         return $this->isMappedTo($artifact->getTracker(), $artifact_status, $column) || 
                $column->isMatchForThisColumn($artifact_status);
