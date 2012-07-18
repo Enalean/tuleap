@@ -71,33 +71,25 @@ class Tracker_DateReminderManager {
      * @return Void
      */
     public function processReminder(TrackerManager $trackerManager, HTTPRequest $request, $currentUser) {
-        if ($request->get('submit')) {
-            if ($request->get('action') == 'new_reminder') {
-                try {
+        try {
+            if ($request->get('submit')) {
+                if ($request->get('action') == 'new_reminder') {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_added'));
-                } catch (Tracker_DateReminderException $e) {
-                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
-            } elseif ($request->get('action') == 'update_reminder') {
-                try {
+                } elseif ($request->get('action') == 'update_reminder') {
                     $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_updated'));
-                } catch (Tracker_DateReminderException $e) {
-                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
-            }
-        } elseif ($request->get('confirm_delete') && $request->get('action') == 'confirm_delete_reminder' ) {
-            try {
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
+            } elseif ($request->get('confirm_delete') && $request->get('action') == 'confirm_delete_reminder' ) {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($request->get('reminder_id'));
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_deleted'));
-            } catch (Tracker_DateReminderException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+            } elseif ($request->get('cancel_delete_reminder')) {
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
             }
-        } elseif ($request->get('cancel_delete_reminder')) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
+        } catch (Tracker_DateReminderException $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
         }
     }
 
