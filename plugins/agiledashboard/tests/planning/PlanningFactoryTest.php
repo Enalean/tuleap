@@ -141,6 +141,30 @@ class PlanningFactory_duplicationTest extends PlanningFactoryTest {
  
 }
 
+class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFactoryTest {
+    public function itReturnsNothingIfThereIsNoAssociatedPlanning() {
+        $tracker   = aMockTracker()->withId(99)->build();
+        $empty_dar = TestHelper::arrayToDar();
+        $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($empty_dar);
+        $factory   = aPlanningFactory()->withDao($dao)->build();
+        $this->assertNull($factory->getPlanningByPlanningTracker($tracker));
+    }
+    
+    public function itReturnsAPlanning() {
+        $tracker   = aMockTracker()->withId(99)->build();
+        $dar       = TestHelper::arrayToDar(
+                        array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 
+                              'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan',
+                              'backlog_tracker_id'  => 104));
+        $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($dar);
+        $factory   = aPlanningFactory()->withDao($dao)->build();
+        $planning  = new Planning(1, 'Release Backlog', 102, 'Release Backlog', 'Sprint Plan',array(), 103);
+        
+//        var_dump($planning, $factory->getPlanningByPlanningTracker($tracker));
+        $this->assertEqual($planning, $factory->getPlanningByPlanningTracker($tracker));
+    }
+    
+}
 class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     
     public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
