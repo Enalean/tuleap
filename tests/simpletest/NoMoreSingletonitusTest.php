@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/SingletonCount.class.php';
+
 /**
  * Avoid contaminating new classes with singleton lookup
  */
@@ -40,7 +42,7 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
     }
 }
 
-class SingletonCountTest extends TuleapTestCase {
+class SingletonCounterTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
@@ -64,37 +66,5 @@ class SingletonCountTest extends TuleapTestCase {
 }
 
 
-define("PROJECT_BASEDIR", dirname(__FILE__).'/../..');
-define("SINGLETON_COUNT_FILE", dirname(__FILE__).'/current_singleton_count.txt');
-
-class SingletonCount {
-
-    public function countSingletonLookupsInProject() {
-        $basedir                    = PROJECT_BASEDIR;
-        $dirs                       = "$basedir/plugins $basedir/src $basedir/tools";
-        $count_command              = "grep -rc --exclude='*~' '::instance()' $dirs| awk -F: '{n=n+$2} END { print n}'";
-        $output                     = $this->getSystemOutput($count_command);
-        return $output[0];
-    }
-
-    private function getSystemOutput($cmd) {
-        $result;
-        exec($cmd, $result);
-        return $result;
-    }
-   
-    public function replaceCurrentSingletonCountWithActualCount() {
-        $this->replaceCurrentSingletonCountWith($this->countSingletonLookupsInProject(PROJECT_BASEDIR));
-    }
-
-    public function replaceCurrentSingletonCountWith($count) {
-        file_put_contents(SINGLETON_COUNT_FILE, $count);
-    }
-
-    public function contentsOfCountFile() {
-        return file_get_contents(SINGLETON_COUNT_FILE);        
-    }
-
-}
 
 ?>
