@@ -42,6 +42,11 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
     }
 }
 
+
+/**
+ * We're also testing the utility class, because it is used to update the expected singleton count as \
+ * well as report on the current amount
+ */
 class SingletonCounterTest extends TuleapTestCase {
     
     public function setUp() {
