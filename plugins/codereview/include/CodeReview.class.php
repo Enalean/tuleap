@@ -91,32 +91,17 @@ class CodeReview extends Controler {
             $vAction->required();
             $action = $request->getValidated('action', $vAction, false);
             switch ($action) {
-                case 'admin_dashboard':
-                    $this->view = 'displayFrameAdmin';
-                break;
                 case 'add_review':
                     $this->view = 'reviewSubmission';
                 break;
-                case 'submit_review':
-                    $this->action = 'createReviewRequest';
-                    $this->view   = 'displayFrameReviewRequest';
-                break;
                 case 'publish_review':
                     $this->view = 'reviewPublishing';
-                break;
-                case 'submit_publish':
-                    $this->action = 'publishReviewRequest';
-                    $this->view   ='displayFramePublish';
                 break;
                 case 'dashboard':
                     $this->view = 'displayFrame';
                 break;
                 case 'create_patch':
                     $this->view = 'createPatchFile';
-                break;
-                case 'submit_patch':
-                    //To Do add some action
-                    $this->view = 'displayFirstFrame';
                 break;
                 default:
                     $this->view = 'displayFirstFrame';

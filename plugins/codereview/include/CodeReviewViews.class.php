@@ -146,50 +146,6 @@ class CodeReviewViews extends Views {
     }
 
     /**
-     * Displays The Admin Interface of Review board
-     *
-     * @return Void
-     */
-    function displayFrameAdmin() {
-        $this->displayHeader();
-        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/admin/";
-        echo '<div id="codereview_iframe_div">';
-        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
-        echo '</div>';
-    }
-
-    /**
-     * Display published review request
-     *
-     * @return Void
-     */
-     function displayFramePublish() {
-        $this->displayHeader();
-        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$this->request->get('review_id');
-        echo '<div id="codereview_iframe_div">';
-        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
-        echo '</div>';
-    }
-
-    /**
-     * Display all review request
-     *
-     * @return Void
-     */
-    function displayFrameReviewRequest() {
-        $this->displayHeader();
-        $action     = new CodeReviewActions($this->controller,null);
-        $idrequest  = $action->getIdreviewrequest;
-        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/r/".$idrequest."/";
-        echo '<div id="codereview_iframe_div">';
-        $GLOBALS['HTML']->iframe($url, array('id' => 'codereview_iframe', 'class' => 'iframe_service'));
-        echo '</div>';
-    }
-
-    /**
      * Display review request creation form
      *
      * @return Void
