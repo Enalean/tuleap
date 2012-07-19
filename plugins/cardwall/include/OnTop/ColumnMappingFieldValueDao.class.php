@@ -79,19 +79,27 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject {
         $from_cardwall_tracker_id = $this->da->escapeInt($from_cardwall_tracker_id);
         $to_cardwall_tracker_id   = $this->da->escapeInt($to_cardwall_tracker_id);
 
-        $to_value_when_then = '';
+        $to_value_when_then = ' WHEN 100 THEN 100 ';
         $to_field_when_then = '';
+        $all_values         = array(100 => 100);
         foreach ($field_mapping as $mapping) {
             $from                = $this->da->escapeInt($mapping['from']);
             $to                  = $this->da->escapeInt($mapping['to']);
             $to_field_when_then .= " WHEN $from THEN $to ";
 
+            foreach ($mapping['values'] as $from => $to) {
+                $all_values[$from] = $to;
+            }
             $to_value_when_then .= $this->associativeToSQLWhenThen($mapping['values']);
         }
         $to_field_stmt   = $this->getSQLCase('field_id', $to_field_when_then);
         $to_value_stmt   = $this->getSQLCase('value_id', $to_value_when_then);
         $to_tracker_stmt = $this->associativeToSQLCase($tracker_mapping, 'tracker_id');
-        $to_column_stmt  = $this->associativeToSQLCase($column_mapping, 'column_id');
+        if (count($column_mapping) > 0) {
+            $to_column_stmt  = $this->associativeToSQLCase($column_mapping, 'column_id');
+        } else {
+            $to_column_stmt  = $this->associativeToSQLCase($all_values, 'column_id');
+        }
 
         $sql = "INSERT INTO plugin_cardwall_on_top_column_mapping_field_value (cardwall_tracker_id, tracker_id, field_id, value_id, column_id)
                 SELECT $to_cardwall_tracker_id, $to_tracker_stmt, $to_field_stmt, $to_value_stmt, $to_column_stmt
