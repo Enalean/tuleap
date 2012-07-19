@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../Column.class.php';
+
 abstract class Cardwall_OnTop_Config_TrackerMapping {
 
     /**
@@ -43,7 +45,7 @@ abstract class Cardwall_OnTop_Config_TrackerMapping {
         return $this->available_fields;
     }
     
-    public function isMappedTo($column, $artifact_status) {
+    public function isMappedTo(Cardwall_Column $column, $artifact_status) {
         foreach ($this->getValueMappings() as $value_mapping) {
             if ($value_mapping->getValueLabel() == $artifact_status || ($artifact_status === null && $value_mapping->getValueId() == 100)) {
                 return $value_mapping->getColumnId() == $column->getId();

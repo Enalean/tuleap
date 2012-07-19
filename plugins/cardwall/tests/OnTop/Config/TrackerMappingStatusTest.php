@@ -27,6 +27,24 @@ require_once CARDWALL_BASE_DIR .'/OnTop/Config/ValueMapping.class.php';
 
 class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+
+        $value_todo       = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'Todo', '', 0, 0);
+        $value_inprogress = new Tracker_FormElement_Field_List_Bind_StaticValue(102, 'In Progress', '', 0, 0);
+        $value_done       = new Tracker_FormElement_Field_List_Bind_StaticValue(103, 'Done', '', 0, 0);
+
+        $mapping_todo    = new Cardwall_OnTop_Config_ValueMapping($value_todo, 10);
+        $mapping_ongoing = new Cardwall_OnTop_Config_ValueMapping($value_inprogress, 11);
+        $mapping_done    = new Cardwall_OnTop_Config_ValueMapping($value_done, 12);
+
+        $this->value_mappings = array(
+            101 => $mapping_todo,
+            102 => $mapping_ongoing,
+            103 => $mapping_done,
+        );
+    }
+
     public function itReturnsAnEmptyLabelWhenThereIsNoValueMapping() {
         $value_mappings = array();
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
@@ -35,33 +53,22 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
     }
 
     public function itReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn() {
-        $value_todo       = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'Todo', '', 0, 0);
-        $value_inprogress = new Tracker_FormElement_Field_List_Bind_StaticValue(102, 'In Progress', '', 0, 0);
-        $value_done       = new Tracker_FormElement_Field_List_Bind_StaticValue(103, 'Done', '', 0, 0);
-        
-        $mapping_todo = mock('Cardwall_OnTop_Config_ValueMapping');
-        stub($mapping_todo)->getValue()->returns($value_todo);
-        stub($mapping_todo)->getColumnId()->returns(10);
-        
-        $mapping_ongoing = mock('Cardwall_OnTop_Config_ValueMapping');
-        stub($mapping_ongoing)->getValue()->returns($value_inprogress);
-        stub($mapping_ongoing)->getColumnId()->returns(11);
-        
-        $mapping_done = mock('Cardwall_OnTop_Config_ValueMapping');
-        stub($mapping_done)->getValue()->returns($value_done);
-        stub($mapping_done)->getColumnId()->returns(12);
-        
-        $value_mappings = array(
-            101 => $mapping_todo,
-            102 => $mapping_ongoing,
-            103 => $mapping_done,
-        );
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $value_mappings, aSelectBoxField()->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
         $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white', 'black');
         $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white', 'black');
         $this->assertEqual('In Progress', $mapping->getSelectedValueLabel($column_which_match));
         $this->assertEqual('', $mapping->getSelectedValueLabel($column_which_dont_match));
         $this->assertEqual('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
+    }
+
+    public function itReturnsTrueWhenTheGivenStatusIsMappedToTheGivenColumn() {
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
+
+        $column = new Cardwall_Column(11, 'Ongoing', 'white', 'black');
+
+        $this->assertTrue($mapping->isMappedTo($column, 'In Progress'));
+        $this->assertFalse($mapping->isMappedTo($column, 'Todo'));
+        $this->assertFalse($mapping->isMappedTo($column, null));
     }
 }
 ?>
