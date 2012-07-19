@@ -118,9 +118,13 @@ class cardwallPlugin extends Plugin {
                 }
             }
 
-            $report           = $params['report'];
-            $config           = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
-
+            $report = $params['report'];
+            require_once('OnTop/ConfigEmpty.class.php');
+            $config = new Cardwall_OnTop_ConfigEmpty();
+            
+            if ($report->tracker_id != 0) {
+                $config = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
+            }
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
                 $this,
