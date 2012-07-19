@@ -19,8 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/SwimlineFactory.class.php';
 require_once dirname(__FILE__).'/../../tracker/tests/builders/anArtifact.php';
+require_once dirname(__FILE__).'/../include/SwimlineFactory.class.php';
 
 class Cardwall_SwimLineFactoryTest extends TuleapTestCase {
     

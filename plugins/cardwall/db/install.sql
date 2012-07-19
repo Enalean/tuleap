@@ -6,7 +6,8 @@ CREATE TABLE plugin_cardwall_renderer(
 
 DROP TABLE IF EXISTS plugin_cardwall_on_top;
 CREATE TABLE IF NOT EXISTS plugin_cardwall_on_top(
-    tracker_id int(11) NOT NULL PRIMARY KEY
+    tracker_id int(11) NOT NULL PRIMARY KEY,
+    use_freestyle_columns tinyint(4) default 0
 );
 
 DROP TABLE IF EXISTS plugin_cardwall_on_top_column;

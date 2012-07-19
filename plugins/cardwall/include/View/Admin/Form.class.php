@@ -35,11 +35,11 @@ class Cardwall_View_Admin_Form extends Cardwall_View {
         return TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update';
     }
 
-    public function displayAdminForm($token_html, $checked, $tracker_id) {
-        echo $this->generateAdminForm($token_html, $checked, $tracker_id);
+    public function displayAdminForm($token_html, $checked, $freestyle_checked, $tracker_id) {
+        echo $this->generateAdminForm($token_html, $checked, $freestyle_checked, $tracker_id);
     }
 
-    private function generateAdminForm($token_html, $checked, $tracker_id) {
+    private function generateAdminForm($token_html, $checked, $freestyle_checked, $tracker_id) {
         $update_url = $this->urlForAdminUpdate($tracker_id);
 
         $html  = '';
@@ -53,7 +53,12 @@ class Cardwall_View_Admin_Form extends Cardwall_View {
         $html .= '</label>';
         $html .= '</p>';
         if ($checked) {
+            $html .= '<input type="hidden" name="use_freestyle_columns" value="0" />';
             $html .= '<blockquote>';
+            $html .= '<label class="checkbox">';
+            $html .= '<input type="checkbox" name="use_freestyle_columns" value="1" '.$freestyle_checked.'/> ';
+            $html .= $this->translate('plugin_cardwall', 'on_top_use_freestyle');
+            $html .= '</label>';
             $html .= $this->subview->fetchColumnDefinition();
             $html .= '</blockquote>';
         }

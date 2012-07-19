@@ -1,4 +1,8 @@
-Version 0.44 - Tuleap 5.4
+Version 0.45 - Tuleap 5.3
+    * Fix selection of backlog tracker
+    * Fix display of remaining effort
+
+Version 0.44 - Tuleap 5.3
     * Centralize management of ancestors in Planning view.
 
 Version 0.43 - Tuleap 5.3

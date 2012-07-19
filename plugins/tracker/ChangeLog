@@ -1,3 +1,6 @@
+Version 5.8.6 - Tuleap 5.3
+    * Fix notices
+
 Version 5.8.5 - Tuleap 5.3
     * Fix bug in date reminder JS (not working on IE7)
     * Clean-up code

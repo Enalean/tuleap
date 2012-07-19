@@ -154,6 +154,7 @@ class Planning {
      */
     public function setBacklogTracker(Tracker $backlog_tracker) {
         $this->backlog_tracker = $backlog_tracker;
+        $this->backlog_tracker_id = $backlog_tracker->getId();
     }
     
     /**

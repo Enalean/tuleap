@@ -48,6 +48,22 @@ class Cardwall_OnTop_ConfigFactory {
 
     /**
      * @param Tracker $tracker
+     * @return \Tracker
+     */
+    private function getSwimlineTracker(Tracker $tracker) {
+        //TODO This file should be in agile dashboard and the generic part of the cardwall in plugin/tracker
+        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
+        if (class_exists('PlanningFactory')) {
+            $planning_factory = new PlanningFactory(new PlanningDao(), $this->tracker_factory);
+            if ($planning = $planning_factory->getPlanningByPlanningTracker($tracker)) {
+                return $planning->getBacklogTracker();
+            }
+        }
+        return $tracker;
+    }
+
+    /**
+     * @param Tracker $tracker
      * 
      * @return \Cardwall_OnTop_Config
      */
@@ -57,7 +73,7 @@ class Cardwall_OnTop_ConfigFactory {
         require_once 'Config/TrackerMappingFactory.class.php';
         require_once 'Config/ValueMappingFactory.class.php';
 
-        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao());
+        $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
             $this->element_factory,
@@ -71,8 +87,11 @@ class Cardwall_OnTop_ConfigFactory {
             $value_mapping_factory
         );
 
+        $swimline_tracker = $this->getSwimlineTracker($tracker);
+
         $config = new Cardwall_OnTop_Config(
             $tracker,
+            $swimline_tracker,
             $this->getOnTopDao(),
             $column_factory,
             $tracker_mapping_factory
@@ -93,6 +112,7 @@ class Cardwall_OnTop_ConfigFactory {
         $mappingvalue_dao = $this->getOnTopColumnMappingFieldValueDao();
         require_once 'Config/Updater.class.php';
         require_once 'Config/Command/EnableCardwallOnTop.class.php';
+        require_once 'Config/Command/EnableFreestyleColumns.class.php';
         require_once 'Config/Command/CreateColumn.class.php';
         require_once 'Config/Command/UpdateColumns.class.php';
         require_once 'Config/Command/DeleteColumns.class.php';
@@ -101,6 +121,7 @@ class Cardwall_OnTop_ConfigFactory {
         require_once 'Config/Command/DeleteMappingFields.class.php';
         $updater = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $dao));
+        $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_CreateColumn($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_UpdateColumns($tracker, $column_dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_DeleteColumns($tracker, $column_dao, $mappingfield_dao, $mappingvalue_dao));

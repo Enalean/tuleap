@@ -52,6 +52,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
 
     public function __construct(
         Tracker $tracker,
+        Tracker $swimline_tracker,
         Cardwall_OnTop_Dao $dao,
         Cardwall_OnTop_Config_ColumnFactory $column_factory,
         Cardwall_OnTop_Config_TrackerMappingFactory $tracker_mapping_factory
@@ -60,6 +61,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $this->dao                     = $dao;
         $this->column_factory          = $column_factory;
         $this->tracker_mapping_factory = $tracker_mapping_factory;
+        $this->swimline_tracker        = $swimline_tracker;
     }
 
     public function getTracker() {
@@ -68,6 +70,10 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
 
     public function isEnabled() {
         return $this->dao->isEnabled($this->tracker->getId());
+    }
+
+    public function isFreestyleEnabled() {
+        return $this->dao->isFreestyleEnabled($this->tracker->getId());
     }
 
     public function enable() {
@@ -85,7 +91,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
     public function getDashboardColumns() {
-        return $this->column_factory->getDashboardColumns($this->tracker);
+        return $this->column_factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
     }
 
     /**
@@ -113,26 +119,16 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $mappings = $this->getMappings();
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
-    
-    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column) {
-        // TODO null object pattern, to return empty valuemappings
-        $tracker_field_mapping = $this->getMappingFor($tracker);
-        if (!$tracker_field_mapping) return false;
-        
-        return $tracker_field_mapping->isMappedTo($column, $artifact_status);
-    }
 
     public function isInColumn(Tracker_Artifact                                     $artifact, 
                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
                                Cardwall_Column                                      $column) {
-        $field           = $field_provider->getField($artifact);
         $artifact_status = null;
+        $field           = $field_provider->getField($artifact);
         if ($field) {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
-        
-        return $this->isMappedTo($artifact->getTracker(), $artifact_status, $column) || 
-               $column->isMatchForThisColumn($artifact_status);
+        return $column->canContainStatus($artifact_status, $this->getMappingFor($artifact->getTracker()));
     }
 
     /**

@@ -37,12 +37,13 @@ class Cardwall_View_Admin extends Cardwall_View {
 
         $column_definition_view = $config->getDashboardColumns()->accept($this, $config);
 
-        $checked    = $config->isEnabled() ? 'checked="checked"' : '';
-        $token_html = $token->fetchHTMLInput();
-        $formview   = new Cardwall_View_Admin_Form($column_definition_view);
+        $checked           = $config->isEnabled() ? 'checked="checked"' : '';
+        $freestyle_checked = $config->isFreestyleEnabled() ? 'checked="checked"' : '';
+        $token_html        = $token->fetchHTMLInput();
+        $formview          = new Cardwall_View_Admin_Form($column_definition_view);
 
         $config->getTracker()->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $formview->displayAdminForm($token_html, $checked, $config->getTracker()->getId());
+        $formview->displayAdminForm($token_html, $checked, $freestyle_checked, $config->getTracker()->getId());
         $config->getTracker()->displayFooter($layout);
     }
 

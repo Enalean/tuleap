@@ -69,7 +69,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
-        $tracker = $this->milestone->getArtifact()->getTracker();
         $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
