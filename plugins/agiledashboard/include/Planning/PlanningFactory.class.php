@@ -143,6 +143,7 @@ class PlanningFactory {
                                 $planning['backlog_tracker_id'],
                                 $planning['planning_tracker_id']);
             $p->setPlanningTracker($this->getPlanningTracker($p));
+            $p->setBacklogTracker($this->getBacklogTracker($p));
             return $p;
         }
     }
