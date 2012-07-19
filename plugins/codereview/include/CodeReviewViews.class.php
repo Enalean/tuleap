@@ -201,29 +201,29 @@ class CodeReviewViews extends Views {
         $project_manager    = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
         $project            = $project_manager->getProject($this->request->get('group_id'));
-        // @TODO: i18n
         $form  = " <form id=\"reviewAdd\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_review\">";
+        // @TODO: Remove useless hidden fields
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$repository_manager->rbPath."\" type=\"hidden\"/>";
         $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" Value=\"".$repository_manager->rbUser."\" type=\"hidden\" size=\"64\"/>";
         $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" Value=\"".$repository_manager->rbPassword."\" type=\"hidden\"/>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_repository_url\">Repository url</label><br>";
+        $form .= "   <label for=\"codereview_repository_url\">".$GLOBALS['Language']->getText('plugin_codereview', 'repository_url')."</label><br>";
         $form .= "   <input id=\"codereview_repository_url\" name=\"codereview_repository_url\" Value=\"".$repository_manager->getSvnPath()."\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_target\">Target people</label><br>";
+        $form .= "   <label for=\"codereview_target\">".$GLOBALS['Language']->getText('plugin_codereview', 'target_people')."</label><br>";
         $form .= "   <input id=\"codereview_target_people\" name=\"codereview_target_people\" type=\"text\" size=\"32\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_summary\">Summary</label><br>";
+        $form .= "   <label for=\"codereview_summary\">".$GLOBALS['Language']->getText('plugin_codereview', 'summary')."</label><br>";
         $form .= "   <input id=\"codereview_summary\" name=\"codereview_summary\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_base_dir\">The absolute path in the repository the diff was generated in</label><br>";
+        $form .= "   <label for=\"codereview_base_dir\">".$GLOBALS['Language']->getText('plugin_codereview', 'absolute_path')."</label><br>";
         $form .= "   <input id=\"codereview_base_dir\" name=\"codereview_base_dir\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_diff_path\">Path to the diff file</label><br>";
+        $form .= "   <label for=\"codereview_diff_path\">".$GLOBALS['Language']->getText('plugin_codereview', 'diff_file')."</label><br>";
         $form .= "   <input id=\"codereview_diff_path\" name=\"codereview_diff_path\" type=\"text\" size=\"64\" />";
         $form .= "  </p>";
         $form .= "   <input id=\"codereview_submit_as\" name=\"codereview_submit_as\" type=\"hidden\" size=\"32\" value=\"".$username."\"/>";
@@ -246,7 +246,7 @@ class CodeReviewViews extends Views {
         $formOptionalInput .= "   <textarea rows=\"4\" cols=\"60\" id=\"codereview_description\" name=\"codereview_description\">Write something meaningful here</textarea>";
         $formOptionalInput .= "  </p>";
 
-        $form .= "   <input type=\"submit\" value=\"Add review request\" />";
+        $form .= "   <input type=\"submit\" value=\"".$GLOBALS['Language']->getText('plugin_codereview', 'add_review_request')."\" />";
         $form .= " </form>";
         print $form;
     }

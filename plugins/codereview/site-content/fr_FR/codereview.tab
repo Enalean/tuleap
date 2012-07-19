@@ -15,3 +15,10 @@ plugin_codereview	access_rb_administration_action	Administration du site Review 
 plugin_codereview	request_patch_first_revision_not_found	Le premier numéro de révision $1 n'existe pas.
 plugin_codereview	request_patch_invalid_second_revision	Le dexième numéro de révision est inferieur au premier
 plugin_codereview	request_patch_second_revision_not_found	Le dexième numéro de révision $1 n'existe pas.
+
+plugin_codereview	repository_url	URL du dépot
+plugin_codereview	target_people	Personnes cibles
+plugin_codereview	summary	Résumé
+plugin_codereview	absolute_path	Chemin absolu du dépot
+plugin_codereview	diff_file	Path du fichier diff
+plugin_codereview	add_review_request	Ajouter une demande de revue

@@ -28,6 +28,8 @@ class RbUserManager {
     /**
      * Search RB user
      *
+     * @TODO: Rename this method to userExist or so, and remove all useless parameters
+     *
      * @param String  $url           URL of the command to execute
      * @param Boolean $includeHeader If true display the header in returned output
      * @param String  $authUser      Username if an authentication is required

@@ -15,3 +15,10 @@ plugin_codereview	access_rb_administration_action	Review Board site administrati
 plugin_codereview	request_patch_first_revision_not_found	Start revision $1 not found.
 plugin_codereview	request_patch_invalid_second_revision	End revision should be greater than start revision.
 plugin_codereview	request_patch_second_revision_not_found	End revision $1 not found.
+
+plugin_codereview	repository_url	Repository URL
+plugin_codereview	target_people	Target people
+plugin_codereview	summary	Summary
+plugin_codereview	absolute_path	The absolute path of the repository
+plugin_codereview	diff_file	Path to the diff file (will be removed later)
+plugin_codereview	add_review_request	Add review request
