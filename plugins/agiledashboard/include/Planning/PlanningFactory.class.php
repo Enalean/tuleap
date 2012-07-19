@@ -140,7 +140,7 @@ class PlanningFactory {
                                 $planning['group_id'],
                                 $planning['backlog_title'],
                                 $planning['plan_title'],
-                                array(),
+                                $planning['backlog_tracker_id'],
                                 $planning['planning_tracker_id']);
         }
     }

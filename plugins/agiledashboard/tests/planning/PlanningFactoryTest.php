@@ -153,12 +153,12 @@ class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFacto
     public function itReturnsAPlanning() {
         $tracker   = aMockTracker()->withId(99)->build();
         $dar       = TestHelper::arrayToDar(
-                        array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102, 
+                        array('id' => 1, 'name' => 'Release Planning', 'group_id' => 102, 
                               'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan',
                               'backlog_tracker_id'  => 104));
         $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($dar);
         $factory   = aPlanningFactory()->withDao($dao)->build();
-        $planning  = new Planning(1, 'Release Backlog', 102, 'Release Backlog', 'Sprint Plan',array(), 103);
+        $planning  = new Planning(1, 'Release Planning', 102, 'Release Backlog', 'Sprint Plan', 104, 103);
         
 //        var_dump($planning, $factory->getPlanningByPlanningTracker($tracker));
         $this->assertEqual($planning, $factory->getPlanningByPlanningTracker($tracker));
