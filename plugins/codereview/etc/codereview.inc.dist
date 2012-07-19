@@ -3,12 +3,6 @@
 // ReviewBoard url
 $reviewboard_site = "http://localhost";
 
-// Domain name
-$domain_name = "localhost/plugins/codereview/reviewboard/";
-
-// Site root
-$site_root = "/plugins/codereview/reviewboard/";
-
 // Login of ReviewBoard administrator
 $admin_user = "admin";
 
