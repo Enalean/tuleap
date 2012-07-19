@@ -26,13 +26,14 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $tracker = aMockTracker()->withId(33)->build();
+        $swimline_tracker = aMockTracker()->build();
         $this->artifact = stub('Tracker_Artifact')->getTracker()->returns($tracker);
         $this->field = mock('Tracker_FormElement_Field_MultiSelectbox');
         $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
         $dao = mock('Cardwall_OnTop_Dao');
         $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
         $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
-        $this->config = new Cardwall_OnTop_Config($tracker, $dao, $column_factory, $tracker_mapping_factory);
+        $this->config = new Cardwall_OnTop_Config($tracker, $swimline_tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
     
     public function itIsInTheCellIfTheLabelMatches() {

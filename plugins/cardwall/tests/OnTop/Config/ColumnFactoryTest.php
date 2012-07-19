@@ -39,6 +39,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
         stub($this->status_field)->getVisibleValuesPlusNoneIfAny()->returns($values);
 
         $this->tracker      = aMockTracker()->withId(42)->build();
+        $this->swimline_tracker = aMockTracker()->build();
         $this->dao          = mock('Cardwall_OnTop_ColumnDao');
         $this->on_top_dao   = mock('Cardwall_OnTop_Dao');
         $this->factory      = new Cardwall_OnTop_Config_ColumnFactory($this->dao, $this->on_top_dao);
@@ -63,7 +64,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
                 'bg_blue'  => null,
             )
         ));
-        $columns = $this->factory->getDashboardColumns($this->tracker);
+        $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(2, count($columns));
@@ -76,9 +77,9 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
 
     public function itBuildColumnsFromTheStatusValuesIfFreestyleNotEnabled() {
         stub($this->on_top_dao)->isFreestyleEnabled()->returns(false);
-        stub($this->tracker)->getStatusField()->returns($this->status_field);
+        stub($this->swimline_tracker)->getStatusField()->returns($this->status_field);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
-        $columns = $this->factory->getDashboardColumns($this->tracker);
+        $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnStatusCollection');
         $this->assertEqual(3, count($columns));
@@ -88,7 +89,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
     public function itBuildsAnEmptyFreestyleCollectionIfThereIsNothingInTheDaoAndNoStatus() {
         stub($this->tracker)->getStatusField()->returns(null);
         stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
-        $columns = $this->factory->getDashboardColumns($this->tracker);
+        $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');
         $this->assertEqual(0, count($columns));
