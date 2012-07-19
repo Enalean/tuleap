@@ -25,8 +25,8 @@
 class NoMoreSingletonitusTest extends TuleapTestCase {
     
     public function testThereAreNoNewSingletonLookups() {
-        $expected_singleton_lookups = file_get_contents(SINGLETON_COUNT_FILE);
         $singleton_counter          = new SingletonCount();
+        $expected_singleton_lookups = $singleton_counter->contentsOfCountFile();
         $actual_singleton_lookups   = $singleton_counter->countSingletonLookupsInProject();
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
 
@@ -41,24 +41,24 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
 }
 
 class SingletonCountTest extends TuleapTestCase {
+    
     public function setUp() {
         parent::setUp();
-        $this->current_value = file_get_contents(SINGLETON_COUNT_FILE);
+        $this->counter = new SingletonCount();
+        $this->value_b4_test = $this->counter->contentsOfCountFile();
     }
+    
     public function itCanReplaceTheCurrentAmount() {
-        $counter = new SingletonCount();
-        file_put_contents(SINGLETON_COUNT_FILE, "0");
-
+        $this->counter->replaceCurrentSingletonCountWith(0);
+        $this->assertNotEqual($this->counter->contentsOfCountFile(), $this->counter->countSingletonLookupsInProject());
         
-        $this->assertNotEqual(file_get_contents(SINGLETON_COUNT_FILE), $counter->countSingletonLookupsInProject());
-        $counter->replaceCurrentSingletonCountWithActualCount();
-        
-        $this->assertEqual(file_get_contents(SINGLETON_COUNT_FILE), $counter->countSingletonLookupsInProject());
+        $this->counter->replaceCurrentSingletonCountWithActualCount();
+        $this->assertEqual($this->counter->contentsOfCountFile(), $this->counter->countSingletonLookupsInProject());
     }
     
     public function tearDown() {
         parent::tearDown();
-        file_put_contents(SINGLETON_COUNT_FILE, $this->current_value);
+        $this->counter->replaceCurrentSingletonCountWith($this->value_b4_test);
     }
 
 }
@@ -84,7 +84,15 @@ class SingletonCount {
     }
    
     public function replaceCurrentSingletonCountWithActualCount() {
-        file_put_contents(SINGLETON_COUNT_FILE, $this->countSingletonLookupsInProject(PROJECT_BASEDIR));
+        $this->replaceCurrentSingletonCountWith($this->countSingletonLookupsInProject(PROJECT_BASEDIR));
+    }
+
+    public function replaceCurrentSingletonCountWith($count) {
+        file_put_contents(SINGLETON_COUNT_FILE, $count);
+    }
+
+    public function contentsOfCountFile() {
+        return file_get_contents(SINGLETON_COUNT_FILE);        
     }
 
 }
