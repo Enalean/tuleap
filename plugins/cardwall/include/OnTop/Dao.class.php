@@ -36,7 +36,7 @@ class Cardwall_OnTop_Dao extends DataAccessObject {
 
     public function enable($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "REPLACE INTO plugin_cardwall_on_top
+        $sql = "INSERT INTO plugin_cardwall_on_top(tracker_id)
                 VALUES ($tracker_id)";
         return $this->update($sql);
     }
@@ -82,7 +82,7 @@ class Cardwall_OnTop_Dao extends DataAccessObject {
     public function duplicate($from_tracker_id, $to_tracker_id) {
         $from_tracker_id = $this->da->escapeInt($from_tracker_id);
         $to_tracker_id   = $this->da->escapeInt($to_tracker_id);
-        $sql = "INSERT INTO plugin_cardwall_on_top
+        $sql = "INSERT INTO plugin_cardwall_on_top(tracker_id, use_freestyle_columns)
                 SELECT $to_tracker_id, use_freestyle_columns
                 FROM plugin_cardwall_on_top
                 WHERE tracker_id = $from_tracker_id";

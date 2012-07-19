@@ -67,6 +67,7 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
                 FROM plugin_cardwall_on_top_column
                 WHERE tracker_id = $from_tracker_id
                 ORDER BY id ASC";
+        $mapping['plugin_cardwall_column_mapping'] = array();
         $at_least_on_column = false;
         foreach ($this->retrieve($sql) as $row) {
             $from_column_id = $row['id'];
@@ -79,7 +80,6 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject {
                 $mapping['plugin_cardwall_column_mapping'][$from_column_id] = $to_column_id;
             }
         }
-        return $at_least_on_column;
     }
 }
 ?>
