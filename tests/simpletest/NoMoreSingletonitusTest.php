@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/SingletonCount.class.php';
+require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/SingletonCounter.class.php';
 
 /**
  * Avoid contaminating new classes with singleton lookup
