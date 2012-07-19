@@ -281,27 +281,6 @@ class CodeReviewViews extends Views {
     }
 
     /**
-     * Display  Rb login
-     *
-     * @return Void
-     */
-    function loginSubmission() {
-        $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
-        $url        = $pluginInfo->getPropertyValueForName('reviewboard_site')."/account/login/";
-        $form  = " <form id=\"loginsubmission\" target=\"codereview_iframe\" name=\"reviewAction\" method=\"POST\" action=$url>";
-        $form .= "  <p>";
-        $form .= "   <input name=\"username\" value=".$this->user->getUserName()." type=\"hidden\" size=\"24\" />";
-        $form .= "  </p>";
-        $form .= "  <p>";
-        $form .= "   <input name=\"password\" value=".$this->user->getUserPw()." type=\"hidden\" size=\"24\" />";
-        $form .= "  </p>";
-        // @TODO: i18n
-        $form .= "   <input type=\"submit\" value=\"Confirmer\" />";
-        $form .= " </form>";
-        print $form;
-    }
-
-    /**
      * Display patch file creation form
      *
      * @return Void

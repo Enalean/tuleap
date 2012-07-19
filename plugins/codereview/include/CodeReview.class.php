@@ -108,9 +108,6 @@ class CodeReview extends Controler {
                     $this->action = 'publishReviewRequest';
                     $this->view   ='displayFramePublish';
                 break;
-                case 'login':
-                    $this->view = 'loginSubmission';
-                break;
                 case 'dashboard':
                     $this->view = 'displayFrame';
                 break;
