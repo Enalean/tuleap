@@ -27,13 +27,15 @@ Mock::generate('Planning');
 Mock::generate('PlanningDao');
 Mock::generate('Tracker');
 
-class PlanningFactoryTest extends TuleapTestCase {
-    
+abstract class PlanningFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
         $this->user = aUser()->build();
     }
+}
+
+class PlanningFactoryTest_getPlanningWithTrackersTest extends PlanningFactoryTest {
     
     public function itCanRetrieveBothAPlanningAndItsTrackers() {
         $group_id            = 42;
@@ -72,7 +74,10 @@ class PlanningFactoryTest extends TuleapTestCase {
         $this->assertEqual($planning->getPlanningTracker(), $planning_tracker);
         $this->assertEqual($planning->getBacklogTracker(), $backlog_tracker);
     }
-    
+}
+
+class PlanningFactory_duplicationTest extends PlanningFactoryTest {
+        
     public function itDuplicatesPlannings() {
         $dao     = new MockPlanningDao();
         $factory = aPlanningFactory()->withDao($dao)->build();
@@ -133,6 +138,10 @@ class PlanningFactoryTest extends TuleapTestCase {
         
         $factory->duplicatePlannings($group_id, $empty_tracker_mapping);
     }
+ 
+}
+
+class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     
     public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $dao          = new MockPlanningDao();
@@ -186,6 +195,9 @@ class PlanningFactoryTest extends TuleapTestCase {
         );
         $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
+}
+
+class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFactoryTest {
     
     public function itDelegatesRetrievalOfPlanningTrackerIdsByGroupIdToDao() {
         $group_id     = 456;
@@ -198,6 +210,9 @@ class PlanningFactoryTest extends TuleapTestCase {
         $actual_ids = $factory->getPlanningTrackerIdsByGroupId($group_id);
         $this->assertEqual($actual_ids, $expected_ids);
     }
+}
+
+class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFactoryTest {
     
     public function itRetrievesAvailablePlanningTrackersIncludingTheCurrentPlanningTracker() {
         $group_id         = 789;
