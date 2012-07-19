@@ -56,7 +56,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param int    $field_id       the field id
      * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
-    public function __construct(Plugin $plugin, Cardwall_OnTop_Config $config,
+    public function __construct(Plugin $plugin, Cardwall_OnTop_Config $config = null,
                                 $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
