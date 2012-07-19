@@ -53,8 +53,24 @@ class Cardwall_Column {
         $this->bgcolor = $bgcolor;
         $this->fgcolor = $fgcolor;
     }
-    
-    public function isMatchForThisColumn($artifact_status) {
+
+    /**
+     * Return true if the given status can belong to current column
+     *
+     * @param String                               $artifact_status
+     * @param Cardwall_OnTop_Config_TrackerMapping $tracker_mapping
+     *
+     * @return Boolean
+     */
+    public function canContainStatus($artifact_status, Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null) {
+        $is_mapped = false;
+        if ($tracker_mapping) {
+            $is_mapped = $tracker_mapping->isMappedTo($this, $artifact_status);
+        }
+        return $is_mapped || $this->matchesStatus($artifact_status);
+    }
+
+    private function matchesStatus($artifact_status) {
         return $this->matchesLabel($artifact_status) || $this->matchesTheNoneColumn($artifact_status);
     }
 

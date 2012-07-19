@@ -117,26 +117,16 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $mappings = $this->getMappings();
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
-    
-    private function isMappedTo($tracker, $artifact_status, Cardwall_Column $column) {
-        // TODO null object pattern, to return empty valuemappings
-        $tracker_field_mapping = $this->getMappingFor($tracker);
-        if (!$tracker_field_mapping) return false;
-        
-        return $tracker_field_mapping->isMappedTo($column, $artifact_status);
-    }
 
     public function isInColumn(Tracker_Artifact                                     $artifact, 
                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
                                Cardwall_Column                                      $column) {
-        $field           = $field_provider->getField($artifact);
         $artifact_status = null;
+        $field           = $field_provider->getField($artifact);
         if ($field) {
             $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
         }
-        
-        return $this->isMappedTo($artifact->getTracker(), $artifact_status, $column) || 
-               $column->isMatchForThisColumn($artifact_status);
+        return $column->canContainStatus($artifact_status, $this->getMappingFor($artifact->getTracker()));
     }
 
     /**
