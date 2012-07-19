@@ -46,12 +46,10 @@ class Cardwall_OnTop_Config_Command_EnableFreestyleColumns extends Cardwall_OnTo
         if ($please_enable) {
             if ( ! $is_enabled) {
                 $this->dao->enableFreestyleColumns($tracker_id);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
             }
         } else {
             if ($is_enabled) {
                 $this->dao->disableFreestyleColumns($tracker_id);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
             }
         }
     }

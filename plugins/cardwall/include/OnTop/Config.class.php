@@ -69,6 +69,10 @@ class Cardwall_OnTop_Config {
         return $this->dao->isEnabled($this->tracker->getId());
     }
 
+    public function isFreestyleEnabled() {
+        return $this->dao->isFreestyleEnabled($this->tracker->getId());
+    }
+
     public function enable() {
         return $this->dao->enable($this->tracker->getId());
     }
