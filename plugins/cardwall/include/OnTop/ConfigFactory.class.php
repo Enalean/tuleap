@@ -70,9 +70,16 @@ class Cardwall_OnTop_ConfigFactory {
             $this->getOnTopColumnMappingFieldDao(),
             $value_mapping_factory
         );
-
+        
+        $tracker_factory = TrackerFactory::instance();
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, new Tracker_Hierarchy_Dao());
+        $hierarchy = $factory->getHierarchy($tracker);
+        $swimline_tracker_id = $hierarchy->getChild(0)->getId();
+        $swimline_tracker = $tracker_factory->getTrackerById($swimline_tracker_id);
+        
         $config = new Cardwall_OnTop_Config(
             $tracker,
+            $swimline_tracker,
             $this->getOnTopDao(),
             $column_factory,
             $tracker_mapping_factory
