@@ -30,15 +30,18 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
+        $value_none       = new Tracker_FormElement_Field_List_Bind_StaticValue(100, 'None', '', 0, 0);
         $value_todo       = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'Todo', '', 0, 0);
         $value_inprogress = new Tracker_FormElement_Field_List_Bind_StaticValue(102, 'In Progress', '', 0, 0);
         $value_done       = new Tracker_FormElement_Field_List_Bind_StaticValue(103, 'Done', '', 0, 0);
 
+        $mapping_none    = new Cardwall_OnTop_Config_ValueMapping($value_none, 10);
         $mapping_todo    = new Cardwall_OnTop_Config_ValueMapping($value_todo, 10);
         $mapping_ongoing = new Cardwall_OnTop_Config_ValueMapping($value_inprogress, 11);
         $mapping_done    = new Cardwall_OnTop_Config_ValueMapping($value_done, 12);
 
         $this->value_mappings = array(
+            100 => $mapping_none,
             101 => $mapping_todo,
             102 => $mapping_ongoing,
             103 => $mapping_done,
@@ -61,14 +64,24 @@ class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
         $this->assertEqual('Accept a default value', $mapping->getSelectedValueLabel($column_which_dont_match, 'Accept a default value'));
     }
 
-    public function itReturnsTrueWhenTheGivenStatusIsMappedToTheGivenColumn() {
+    public function itIsMappedToAColumnWhenTheStatusValueMatchColumnMapping() {
         $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
 
-        $column = new Cardwall_Column(11, 'Ongoing', 'white', 'black');
+        $column = new Cardwall_Column(11, 'Ongoing', '', '');
 
         $this->assertTrue($mapping->isMappedTo($column, 'In Progress'));
         $this->assertFalse($mapping->isMappedTo($column, 'Todo'));
         $this->assertFalse($mapping->isMappedTo($column, null));
+    }
+
+    public function itIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn() {
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(mock('Tracker'), array(), $this->value_mappings, aSelectBoxField()->build());
+
+        $column = new Cardwall_Column(10, 'Todo', '', '');
+
+        $this->assertTrue($mapping->isMappedTo($column, null));
+
+        $this->assertFalse($mapping->isMappedTo($column, 'In Progress'));
     }
 }
 ?>
