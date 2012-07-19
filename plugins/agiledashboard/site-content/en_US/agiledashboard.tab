@@ -23,4 +23,4 @@ plugin_agiledashboard	edit_item	Edit
 plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 
-plugin_agiledashboard	remaining_effort	Remaining effort:
+plugin_agiledashboard	capacity	Capacity:
