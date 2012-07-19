@@ -40,6 +40,7 @@ class RbUserManager {
     public function searchUser($url, $includeHeader = false, $authUser = null, $authPassword = null, $postfields = null, $username) {
         $curl   = new TuleapCurl();
         $result = $curl->execute($url, $authUser, $authPassword, $postfields, $includeHeader);
+        // @TODO: Handle errors
         $users  = $result['return']['users'];
         foreach ($users as $user) {
             if ($user['username'] == $username) {
@@ -65,6 +66,7 @@ class RbUserManager {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $result = curl_exec($ch);
+        // @TODO: Handle errors
         preg_match('/rbsessionid=(.*?);/', $result, $matches);
         $rbsessionid = $matches[1];
         return $rbsessionid;

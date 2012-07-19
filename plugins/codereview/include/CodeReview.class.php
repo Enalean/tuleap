@@ -65,7 +65,7 @@ class CodeReview extends Controler {
     /**
      * Compute the request
      *
-     * @return void
+     * @return Void
      */
     function request() {
         $request       = $this->getRequest();
@@ -80,8 +80,9 @@ class CodeReview extends Controler {
         $rbusermanager = new RbUserManager();
         $exist         = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null, $username);
         if (!$exist) {
-         $curl   = new TuleapCurl();
-         $create = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
+            $curl   = new TuleapCurl();
+            $create = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
+            // @TODO: Handle errors
         }
         if ($this->getUser()->isLoggedIn()) {
             $repositoryManager = new RepositoryManager($this->plugin, $request);

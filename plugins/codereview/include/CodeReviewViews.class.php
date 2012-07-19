@@ -201,6 +201,7 @@ class CodeReviewViews extends Views {
         $project_manager    = ProjectManager::instance();
         $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
         $project            = $project_manager->getProject($this->request->get('group_id'));
+        // @TODO: i18n
         $form  = " <form id=\"reviewAdd\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_review\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$repository_manager->rbPath."\" type=\"hidden\"/>";
         $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" Value=\"".$repository_manager->rbUser."\" type=\"hidden\" size=\"64\"/>";
@@ -292,6 +293,7 @@ class CodeReviewViews extends Views {
         $form .= "  <p>";
         $form .= "   <input name=\"password\" value=".$this->user->getUserPw()." type=\"hidden\" size=\"24\" />";
         $form .= "  </p>";
+        // @TODO: i18n
         $form .= "   <input type=\"submit\" value=\"Confirmer\" />";
         $form .= " </form>";
         print $form;
@@ -305,6 +307,7 @@ class CodeReviewViews extends Views {
     function createPatchFile() {
         $this->displayHeader();
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        // @TODO: i18n
         $form  = " <form id=\"createPatch\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_patch\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
         $form .= "  <p>";

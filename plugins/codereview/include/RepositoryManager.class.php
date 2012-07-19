@@ -84,8 +84,8 @@ class RepositoryManager {
                     break;
                 }
             }
-        }
-        else{
+        } else {
+            // @TODO: i18n
             $msg = "This Repo does not exist.";
             $GLOBALS['Response']->addFeedBack('error', $msg);
             $this->controller->view = 'displayFirstFrame';
@@ -112,7 +112,8 @@ class RepositoryManager {
             $curl   = new TuleapCurl();
             $result = $curl->execute($this->rbPath."/api/repositories/", $this->rbUser, $this->rbPassword, $data, true);
             //Handle error
-            if ($result['stat']=="fail"){
+            if ($result['stat']=="fail") {
+                // @TODO: i18n
                 $msg = "The repo was not created.";
                 $GLOBALS['Response']->addFeedBack('error', $msg);
                 $this->controller->view = 'displayFirstFrame';
