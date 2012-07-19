@@ -286,7 +286,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $capacity         = $this->milestone->getCapacity() != null ? $this->milestone->getCapacity() : 0;
 
         $html  = '';
-        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
+        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'capacity');
         $html .= '&nbsp;<span class="planning_remaining_effort">'.$remaining_effort.'</span>';
         $html .= '&nbsp;/&nbsp;'.$capacity;
         return $html;

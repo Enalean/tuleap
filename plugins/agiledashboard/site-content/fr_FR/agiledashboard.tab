@@ -23,4 +23,4 @@ plugin_agiledashboard	edit_item	Éditer
 plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1
 plugin_agiledashboard	backlog_add	Ajouter
 
-plugin_agiledashboard	remaining_effort	Reste à faire :
+plugin_agiledashboard	capacity	Capacité :
