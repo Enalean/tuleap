@@ -48,6 +48,22 @@ class Cardwall_OnTop_ConfigFactory {
 
     /**
      * @param Tracker $tracker
+     * @return \Tracker
+     */
+    private function getSwimlineTracker(Tracker $tracker) {
+        //TODO This file should be in agile dashboard and the generic part of the cardwall in plugin/tracker
+        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
+        if (class_exists('PlanningFactory')) {
+            $planning_factory = new PlanningFactory(new PlanningDao(), $this->tracker_factory);
+            if ($planning = $planning_factory->getPlanningByPlanningTracker($tracker)) {
+                return $planning->getBacklogTracker();
+            }
+        }
+        return $tracker;
+    }
+
+    /**
+     * @param Tracker $tracker
      * 
      * @return \Cardwall_OnTop_Config
      */
@@ -56,9 +72,6 @@ class Cardwall_OnTop_ConfigFactory {
         require_once 'Config/ColumnFactory.class.php';
         require_once 'Config/TrackerMappingFactory.class.php';
         require_once 'Config/ValueMappingFactory.class.php';
-        
-        //TODO This file should be in agile dashboard and the generic part of the cardwall in plugin/tracker
-        require_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
 
         $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
 
@@ -74,9 +87,8 @@ class Cardwall_OnTop_ConfigFactory {
             $value_mapping_factory
         );
 
-        $planning_factory = new PlanningFactory(new PlanningDao(), $this->tracker_factory);
-        $swimline_tracker = $planning_factory->getPlanningByPlanningTracker($tracker)->getBacklogTracker();
-        
+        $swimline_tracker = $this->getSwimlineTracker($tracker);
+
         $config = new Cardwall_OnTop_Config(
             $tracker,
             $swimline_tracker,
