@@ -56,6 +56,9 @@ class Cardwall_OnTop_ConfigFactory {
         require_once 'Config/ColumnFactory.class.php';
         require_once 'Config/TrackerMappingFactory.class.php';
         require_once 'Config/ValueMappingFactory.class.php';
+        
+        //TODO This file should be in agile dashboard and the generic part of the cardwall in plugin/tracker
+        require_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
 
         $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
 
@@ -70,12 +73,9 @@ class Cardwall_OnTop_ConfigFactory {
             $this->getOnTopColumnMappingFieldDao(),
             $value_mapping_factory
         );
-        
-        $tracker_factory = TrackerFactory::instance();
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, new Tracker_Hierarchy_Dao());
-        $hierarchy = $factory->getHierarchy($tracker);
-        $swimline_tracker_id = $hierarchy->getChild(0)->getId();
-        $swimline_tracker = $tracker_factory->getTrackerById($swimline_tracker_id);
+
+        $planning_factory = new PlanningFactory(new PlanningDao(), $this->tracker_factory);
+        $swimline_tracker = $planning_factory->getPlanningByPlanningTracker($tracker)->getBacklogTracker();
         
         $config = new Cardwall_OnTop_Config(
             $tracker,
