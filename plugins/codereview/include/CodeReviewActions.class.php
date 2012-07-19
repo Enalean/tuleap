@@ -57,10 +57,10 @@ class CodeReviewActions extends Actions {
     }
 
     /**
-    * Validate request values
-    *
-    * @return Array
-    */
+     * Validate request values
+     *
+     * @return Array
+     */
     function validateRequest() {
         $status            = true;
         $invalid           = array();
@@ -149,7 +149,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'target_people';
         }
 
-        $valid     = new Valid_String('codereview_submit_as');
+        $valid    = new Valid_String('codereview_submit_as');
         $submitAs = trim($this->request->get('codereview_submit_as'));
         if ($this->request->valid($valid) && $submitAs != '') {
             $params['submit_as'] = $submitAs;
@@ -186,7 +186,7 @@ class CodeReviewActions extends Actions {
             $invalid[] = 'base_dir';
         }
 
-        $valid     = new Valid_String('codereview_diff_path');
+        $valid    = new Valid_String('codereview_diff_path');
         $diffPath = trim($this->request->get('codereview_diff_path'));
         if ($this->request->valid($valid) && $diffPath != '') {
             $params['diff_path'] = $diffPath;
@@ -196,13 +196,13 @@ class CodeReviewActions extends Actions {
         }
 
         return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
-}
+    }
 
     /**
-    * Validate request pubish review values
-    *
-    * @return Array
-    */
+     * Validate request pubish review values
+     *
+     * @return Array
+     */
     function validatePublishRequest() {
             $status  = true;
             $invalid = array();
@@ -246,10 +246,10 @@ class CodeReviewActions extends Actions {
     }
 
     /**
-    * Validate request patch values
-    *
-    * @return Array
-    */
+     * Validate request patch values
+     *
+     * @return Array
+     */
     function validateRequestPatch() {
             $status  = true;
             $invalid = array();
@@ -315,10 +315,10 @@ class CodeReviewActions extends Actions {
             return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
     }
     /**
-    * Creates a patch file
-    *
-    * @return void
-    */
+     * Creates a patch file
+     *
+     * @return Void
+     */
     function creatPatchFile() {
         $reviewRessources = $this->validateRequestPatch();
         if ($reviewRessources['status']) {
@@ -332,10 +332,10 @@ class CodeReviewActions extends Actions {
 
 
     /**
-    * Creates a new review request
-    *
-    * @return void
-    */
+     * Creates a new review request
+     *
+     * @return Void
+     */
     function createReviewRequest() {
         $reviewRessources = $this->validateRequest();
         if ($reviewRessources['status']) {
@@ -364,10 +364,10 @@ class CodeReviewActions extends Actions {
     }
 
     /**
-    * Publish a  review request submitted by an other person
-    *
-    * @return void
-    */
+     * Publish a  review request submitted by an other person
+     *
+     * @return Void
+     */
     function publishReviewRequest() {
         $reviewRessources = $this->validatePublishRequest();
         if ($reviewRessources['status']) {
@@ -393,7 +393,7 @@ class CodeReviewActions extends Actions {
      * @param String  $rb_password     Reviewboard user password
      * @param String  $reviewSubmitter The submitter name
      *
-     * @return Integer
+     * @return Void
      */
     function postEmptyReview($server, $repository, $rb_user, $rb_password, $reviewSubmitter = null) {
         $data = array('repository' => $repository,
@@ -427,7 +427,7 @@ class CodeReviewActions extends Actions {
      * @param String  $target_people   The reviewers
      * @param String  $description     The descreption of review request
      *
-     * @return void
+     * @return Void
      */
     function updateEmptyReview($server, $reviewRequestId, $rb_user, $rb_password, $testing_done , $summary, $target_people, $description) {
         $data = array('testing_done'   => $testing_done,
