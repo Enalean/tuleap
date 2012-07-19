@@ -135,13 +135,15 @@ class PlanningFactory {
         $planning = $this->dao->searchByPlanningTrackerId($planning_tracker->getId())->getRow();
         
         if($planning) {
-            return new Planning($planning['id'],
+            $p = new Planning($planning['id'],
                                 $planning['name'],
                                 $planning['group_id'],
                                 $planning['backlog_title'],
                                 $planning['plan_title'],
                                 $planning['backlog_tracker_id'],
                                 $planning['planning_tracker_id']);
+            $p->setPlanningTracker($this->getPlanningTracker($p));
+            return $p;
         }
     }
     
