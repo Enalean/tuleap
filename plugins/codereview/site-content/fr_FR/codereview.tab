@@ -22,3 +22,6 @@ plugin_codereview	summary	Résumé
 plugin_codereview	absolute_path	Chemin absolu du dépot
 plugin_codereview	diff_file	Path du fichier diff
 plugin_codereview	add_review_request	Ajouter une demande de revue
+plugin_codereview	rb_user	Utilisateur ReviewBoard
+plugin_codereview	rb_password	Password ReviewBoard
+plugin_codereview	review_id	Id de la revue

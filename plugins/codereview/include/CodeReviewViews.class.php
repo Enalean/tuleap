@@ -254,6 +254,8 @@ class CodeReviewViews extends Views {
     /**
      * Display publish review request form
      *
+     * @TODO: errase this
+     *
      * @return Void
      */
      function reviewPublishing() {
@@ -262,15 +264,15 @@ class CodeReviewViews extends Views {
         $form  = " <form id=\"reviewPublish\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_publish\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_rb_user\">RB_User</label><br>";
+        $form .= "   <label for=\"codereview_rb_user\">".$GLOBALS['Language']->getText('plugin_codereview', 'rb_user')."</label><br>";
         $form .= "   <input id=\"codereview_rb_user\" name=\"codereview_rb_user\" type=\"text\" size=\"24\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"codereview_rb_password\">RB_PWD</label><br>";
+        $form .= "   <label for=\"codereview_rb_password\">".$GLOBALS['Language']->getText('plugin_codereview', 'rb_password')."</label><br>";
         $form .= "   <input id=\"codereview_rb_password\" name=\"codereview_rb_password\" type=\"password\" size=\"24\" />";
         $form .= "  </p>";
         $form .= "  <p>";
-        $form .= "   <label for=\"review_id\">Review_ID</label><br>";
+        $form .= "   <label for=\"review_id\">".$GLOBALS['Language']->getText('plugin_codereview', 'review_id')."</label><br>";
         $form .= "   <input id=\"review_id\" name=\"review_id\" type=\"text\" size=\"24\" />";
         $form .= "  </p>";
         $form .= "   <input type=\"submit\" value=\"Publish the review\" />";
@@ -279,7 +281,7 @@ class CodeReviewViews extends Views {
     }
 
     /**
-     * Display  Rb login 
+     * Display  Rb login
      *
      * @return Void
      */

@@ -22,3 +22,6 @@ plugin_codereview	summary	Summary
 plugin_codereview	absolute_path	The absolute path of the repository
 plugin_codereview	diff_file	Path to the diff file (will be removed later)
 plugin_codereview	add_review_request	Add review request
+plugin_codereview	rb_user	ReviewBoard user
+plugin_codereview	rb_password	ReviewBoard password
+plugin_codereview	review_id	Review id
