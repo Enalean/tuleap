@@ -157,7 +157,7 @@ class Planning_MilestoneController extends MVC2_Controller {
 
     private function getPreselectedCriteriaFromAncestors() {
         $preselected_criteria = array();
-        foreach($this->getMilestoneWithAncestors() as $milestone) {
+        foreach($this->getMilestoneAncestors() as $milestone) {
             $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
         }
         return $preselected_criteria;
@@ -182,7 +182,7 @@ class Planning_MilestoneController extends MVC2_Controller {
     public function getBreadcrumbs($plugin_path) {
         if ($this->milestone->getArtifact()) {
             $breadcrumbs_merger = new BreadCrumb_Merger();
-            foreach(array_reverse($this->getMilestoneWithAncestors()) as $milestone) {
+            foreach($this->getMilestoneWithAncestors() as $milestone) {
                 $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
             }
             return $breadcrumbs_merger;
@@ -190,16 +190,32 @@ class Planning_MilestoneController extends MVC2_Controller {
         return new BreadCrumb_NoCrumb();
     }
 
+    /**
+     * Return current milestone and its ancestors
+     *
+     * @return Array of Planning_Milestone
+     */
     private function getMilestoneWithAncestors() {
         if (!$this->milestone_ancestors) {
             try {
-                $this->milestone_ancestors = $this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone);
+                $this->milestone_ancestors = array_reverse($this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone));
             } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $this->milestone_ancestors = array();
             }
         }
         return $this->milestone_ancestors;
+    }
+
+    /**
+     * Return only ancestors of current milestone
+     *
+     * @return Array of Planning_Milestone
+     */
+    private function getMilestoneAncestors() {
+        $ancestors = $this->getMilestoneWithAncestors();
+        array_pop($ancestors);
+        return $ancestors;
     }
 }
 
