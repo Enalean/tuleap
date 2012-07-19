@@ -23,11 +23,12 @@ require_once 'Config/ColumnFactory.class.php';
 require_once 'Config/TrackerMappingFactory.class.php';
 require_once 'Config/ColumnCollection.class.php';
 require_once CARDWALL_BASE_DIR. '/Mapping.class.php';
+require_once 'IConfig.class.php';
 
 /**
  * Manage configuration of a cardwall on top of a tracker
  */
-class Cardwall_OnTop_Config {
+class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
 
     /**
      * @var Tracker

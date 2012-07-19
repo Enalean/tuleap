@@ -119,8 +119,8 @@ class cardwallPlugin extends Plugin {
             }
 
             $report = $params['report'];
-            
-            $config = null;
+            require_once('OnTop/ConfigEmpty.class.php');
+            $config = new Cardwall_OnTop_ConfigEmpty();
             
             if ($report->tracker_id != 0) {
                 $config = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
