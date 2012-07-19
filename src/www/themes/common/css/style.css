@@ -327,10 +327,9 @@ fieldset.package legend {
     text-align: right;
 }
 .frs_confirm_delete {
-    border:medium solid red; 
-    background:#FFC; 
+    border:medium solid red;
+    background:#FFC;
     padding:4px 10px;
-
 }
 .frs_confirm_delete_buttons {
     text-align:center;
