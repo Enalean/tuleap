@@ -103,6 +103,10 @@ class CodeReview extends Controler {
                 case 'create_patch':
                     $this->view = 'createPatchFile';
                 break;
+                case 'submit_patch':
+                    $this->action = 'creatPatchFile';
+                    $this->view   = 'displayFirstFrame';
+                break;
                 default:
                     $this->view = 'displayFirstFrame';
                 break;
