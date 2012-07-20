@@ -461,6 +461,8 @@ class BackendSystem extends Backend {
         $userdao = new UserDao(CodendiDataAccess::instance());
         foreach($userdao->searchSSHKeys() as $row) {
             $this->writeSSHKeys($row['user_name'], $row['authorized_keys'], $row['unix_status']);
+            posix_setegid(0);
+            posix_seteuid(0);
         }
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
         return true;
@@ -490,7 +492,7 @@ class BackendSystem extends Backend {
             return true;
         }
         $ssh_keys = str_replace('###', "\n", $ssh_keys);
-        $username = strtolower($username);
+        //$username = strtolower($username);
         $ssh_dir  = $GLOBALS['homedir_prefix'] ."/$username/.ssh";
 
         #execute the command as the user's key uid
