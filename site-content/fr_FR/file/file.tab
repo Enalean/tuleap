@@ -46,7 +46,7 @@ file_admin_editpackages	p_not_exists	Le paquet n'existe pas
 file_admin_editpackages	p_not_yours	Le paquet n'existe as ou ne vous appartient pas.
 file_admin_editpackages	p_del	Paquet supprimé
 file_admin_editpackages	p_not_empty	Désolé, vous ne pouvez pas supprimer un paquet qui contient encore des versions.
-file_admin_editpackages	warn	Voulez vous vraiment supprimer ce paquet ?
+file_admin_editpackages	warn	** ATTENTION!! ** Voulez vous vraiment supprimer ce paquet (il est impossible de revenir en arrière)?
 
 #
 #-----------------------------------------------
@@ -146,7 +146,7 @@ file_admin_editreleases	release_name	Nom de la version
 file_admin_editreleases	delete	Détruire ?
 file_admin_editreleases	edit_this_release	Modifier cette version
 file_admin_editreleases	edit_this_p	Modifier ce paquet
-file_admin_editreleases	warn	Voulez-vous vraiment détruire cette version, tous ses fichiers attachés et les logs d'accès correspondants ?
+file_admin_editreleases	warn	** ATTENTION !! ** Voulez-vous vraiment détruire cette version, tous ses fichiers attachés et les logs d'accès correspondants (il est impossible de revenir en arrière) ?
 file_admin_editreleases	new_release_name	Nom de la nouvelle version
 file_admin_editreleases	belongs_to_p	appartient au paquet 
 file_admin_editreleases	create_this_release	Créer cette version
@@ -183,8 +183,6 @@ file_admin_editreleases	md5sum	md5 Checksum
 file_admin_editreleases	user	Propriétaire
 file_admin_editreleases	fileforge_error	Une erreur s'est produite lors du déplacement du fichier dans le répertoire de destination (le fichier $1 était-il déjà détruit?)
 file_admin_editreleases	db_error	Une erreur s'est produite lors de l'ajout du fichier dans la base de données
-file_admin_editreleases	details_delete_cancel	Non, je ne veux pas le supprimer
-file_admin_editreleases	details_delete_confirm	Oui, je suis sûr !
 #
 #-----------------------------------------------
 # Script: SF/www/file/admin/index.php
