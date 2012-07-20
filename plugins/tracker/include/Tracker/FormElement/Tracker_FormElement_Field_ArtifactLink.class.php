@@ -1062,8 +1062,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $dao = $this->getValueDao();
         // we create the new changeset
         foreach ($artifacts_to_link as $artifact_to_link) {
-            $tracker = $artifact_to_link->getTracker();
-            if ($tracker) {
+            if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
+                $tracker = $artifact_to_link->getTracker();
                 if ($dao->create($changeset_value_id, $artifact_to_link->getId(), $tracker->getItemName(), $tracker->getGroupId())) {
                     // extract cross references
                     $this->updateCrossReferences($artifact_to_link, $value);
@@ -1074,7 +1074,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $success;
     }
-    
+
+    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link) {
+        return ($src_artifact->getId() != $artifact_to_link->getId()) && $artifact_to_link->getTracker();
+    }
+
     /**
      * Update cross references of this field
      *
