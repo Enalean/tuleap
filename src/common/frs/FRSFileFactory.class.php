@@ -758,7 +758,7 @@ class FRSFileFactory extends Error {
     function restoreFile($file, $backend) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $dao = $this->_getFRSFileDao();
-        if ($release->isActive() || $release->isHidden()) {
+        if (!$release->isDeleted()) {
             $stagingPath = $this->getStagingPath($file);
             if (file_exists($stagingPath)) {
                 if (!is_dir(dirname($file->getFileLocation()))) {
@@ -817,7 +817,7 @@ class FRSFileFactory extends Error {
      */
     public function markFileToBeRestored($file) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseID(), null, null, true);
-        if ($release->isActive() || $release->isHidden()) {
+        if (!$release->isDeleted()) {
             $dao = $this->_getFRSFileDao();
             return $dao->markFileToBeRestored($file->getFileID());
         }
