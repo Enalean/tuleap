@@ -326,14 +326,6 @@ fieldset.package legend {
     width: 10%;
     text-align: right;
 }
-.frs_confirm_delete {
-    border:medium solid red;
-    background:#FFC;
-    padding:4px 10px;
-}
-.frs_confirm_delete_buttons {
-    text-align:center;
-}
 table.release tr td img {
     vertical-align: bottom;
 }
