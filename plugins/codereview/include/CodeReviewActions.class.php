@@ -112,7 +112,10 @@ class CodeReviewActions extends Actions {
 
         $valid        = new Valid_String('codereview_target_people');
         $targetPeople = trim($this->request->get('codereview_target_people'));
-        $check        = true;
+        if ($this->request->valid($valid) && $targetPeople != '') {
+            $params['target_people'] = $targetPeople;
+        }
+        /*$check        = true;
         if ($this->request->valid($valid) && $targetPeople != '') {
             $params['target_people'] = $targetPeople;
             $reviewers               = explode(",", $targetPeople);
@@ -147,7 +150,7 @@ class CodeReviewActions extends Actions {
         if (!$check) {
             $status    = false;
             $invalid[] = 'target_people';
-        }
+        }*/
 
         $valid    = new Valid_String('codereview_submit_as');
         $submitAs = trim($this->request->get('codereview_submit_as'));
