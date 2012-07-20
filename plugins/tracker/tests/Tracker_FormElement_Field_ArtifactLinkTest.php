@@ -68,6 +68,7 @@ Mock::generate('Response');
 
 require_once dirname(__FILE__).'/builders/aField.php';
 require_once dirname(__FILE__).'/builders/anArtifact.php';
+require_once dirname(__FILE__).'/builders/aMockArtifact.php';
 
 class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     
@@ -418,6 +419,70 @@ class Tracker_FormElement_Field_ArtifactLink_CatchLinkDirectionTest extends Tule
         $artifact_id_already_linked = array(123);
         $submitted_value = $this->field->removeArtifactsFromSubmittedValue($submitted_value, $artifact_id_already_linked);
         $this->assertEqual($submitted_value, array('new_values' => '124'));
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_TestUpdateCrossRef extends Tracker_FormElement_Field_ArtifactLink {
+    public function updateCrossReferences($artifact, $values) {
+        parent::updateCrossReferences($artifact, $values);
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_UpdateCrossRefTest extends TuleapTestCase {
+    private $reference_manager;
+    private $field;
+    private $artifact_factory;
+    private $current_user_id;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->current_user_id   = 852;
+        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
+        $this->reference_manager = mock('ReferenceManager');
+
+        $this->field = partial_mock(
+            'Tracker_FormElement_Field_ArtifactLink_TestUpdateCrossRef',
+            array(
+                'getArtifactFactory',
+                'getReferenceManager',
+                'getCurrentUser'
+            )
+        );
+        stub($this->field)->getCurrentUser()->returns(aUser()->withId($this->current_user_id)->build());
+        stub($this->field)->getReferenceManager()->returns($this->reference_manager);
+        stub($this->field)->getArtifactFactory()->returns($this->artifact_factory);
+    }
+
+    public function itStuff() {
+        $target_tracker_name = 'target';
+        $target_project_id   = 963;
+        $target_tracker      = aTracker()->withItemName($target_tracker_name)->withProjectId($target_project_id)->build();
+        $changesets          = array(mock('Tracker_Artifact_Changeset'));
+        $art_567             = anArtifact()->withId(567)->withTracker($target_tracker)->withChangesets($changesets)->build();
+        stub($this->artifact_factory)->getArtifactById(567)->returns($art_567);
+
+        $source_project_id   = 789;
+        $source_tracker_name = 'source';
+        $source_tracker      = aTracker()->withItemName($source_tracker_name)->withProjectId($source_project_id)->build();
+        $source_artifact_id  = 123;
+        $source_artifact     = anArtifact()->withId($source_artifact_id)->withTracker($source_tracker)->build();
+
+        $values   = array('new_values' => '567');
+
+        $this->reference_manager->expectOnce(
+            'extractCrossRef',
+            array(
+                'target #567',
+                $source_artifact_id,
+                Tracker_Artifact::REFERENCE_NATURE,
+                $source_project_id,
+                $this->current_user_id,
+                $source_tracker_name
+            )
+        );
+
+        $this->field->updateCrossReferences($source_artifact, $values);
     }
 }
 

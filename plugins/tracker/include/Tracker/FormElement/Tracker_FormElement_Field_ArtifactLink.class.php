@@ -1062,11 +1062,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $dao = $this->getValueDao();
         // we create the new changeset
         foreach ($artifacts_to_link as $artifact_to_link) {
-            $tracker = $artifact_to_link->getTracker();
-            if ($tracker) {
+            if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
+                $tracker = $artifact_to_link->getTracker();
                 if ($dao->create($changeset_value_id, $artifact_to_link->getId(), $tracker->getItemName(), $tracker->getGroupId())) {
-                    // extract cross references
-                    $this->updateCrossReferences($artifact_to_link, $value);
+                    $this->updateCrossReferences($artifact, $value);
                 } else {
                     $success = false;
                 }
@@ -1074,14 +1073,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $success;
     }
-    
+
+    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link) {
+        return ($src_artifact->getId() != $artifact_to_link->getId()) && $artifact_to_link->getTracker();
+    }
+
     /**
      * Update cross references of this field
      *
      * @param Tracker_Artifact $artifact the artifact that is currently updated
      * @param array            $values   the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
      */
-    private function updateCrossReferences($artifact, $values) {
+    protected function updateCrossReferences(Tracker_Artifact $artifact, $values) {
         $added_artifact_ids = array();
         if (array_key_exists('new_values', $values)) {
             if (trim($values['new_values']) != '') {
@@ -1092,8 +1095,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         if (array_key_exists('removed_values', $values)) {
             $removed_artifact_ids = $values['removed_values'];
         }
-        $af = Tracker_ArtifactFactory::instance();
-        $rm = ReferenceManager::instance();
+        $af           = $this->getArtifactFactory();
+        $rm           = $this->getReferenceManager();
+        $current_user = $this->getCurrentUser();
         foreach ($added_artifact_ids as $added_artifact_id) {
             $artifact_target = $af->getArtifactById((int)trim($added_artifact_id));
             $artifactlink = new Tracker_ArtifactLinkInfo(
@@ -1103,11 +1107,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_target->getTracker()->getId(),
                 $artifact_target->getLastChangeset()->getId()
             );
-            $rm->extractCrossRef($artifactlink->getLabel(), $artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId(), UserManager::instance()->getCurrentUser()->getId(), $this->getTracker()->getItemName());
+            $source_tracker = $artifact->getTracker();
+            $rm->extractCrossRef(
+                $artifactlink->getLabel(),
+                $artifact->getId(),
+                Tracker_Artifact::REFERENCE_NATURE,
+                $source_tracker->getGroupId(),
+                $current_user->getId(),
+                $source_tracker->getItemName()
+            );
         }
         // TODO : remove the removed elements
     }
-    
+
+    protected function getReferenceManager() {
+        return ReferenceManager::instance();
+    }
+
     /**
      * Retrieve linked artifacts according to user's permissions
      * 
