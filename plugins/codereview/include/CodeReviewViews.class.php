@@ -244,6 +244,7 @@ class CodeReviewViews extends Views {
     function createPatchFile() {
         $this->displayHeader();
         $pluginInfo = PluginManager::instance()->getPluginByName('codereview')->getPluginInfo();
+        $repository_manager = new RepositoryManager($this->controller->plugin, $this->request);
         // @TODO: i18n
         $form  = " <form id=\"createPatch\" name=\"reviewAction\" method=\"POST\" action=\"/plugins/codereview/?group_id=".$this->request->get('group_id')."&action=submit_patch\">";
         $form .= "   <input id=\"codereview_server_url\" name=\"codereview_server_url\" Value=\"".$pluginInfo->getPropertyValueForName('reviewboard_site')."\" type=\"hidden\"/>";
@@ -259,8 +260,9 @@ class CodeReviewViews extends Views {
         $form .= "   <label for=\"target_directory\">Target Directory</label><br>";
         $form .= "   <input id=\"target_directory\" name=\"target_directory\" type=\"text\" size=\"24\" />";
         $form .= "  </p>";
-        $form .= "   <label for=\"patch_path\">Patch Path</label><br>";
-        $form .= "   <input id=\"patch_path\" name=\"patch_path\" type=\"text\" size=\"24\" />";
+        $form .= "  <p>";
+        $form  .= "   <label for=\"codereview_repository_url\">".$GLOBALS['Language']->getText('plugin_codereview', 'repository_url')."</label><br>";
+        $form .= "   <input id=\"patch_path\" name=\"patch_path\" type=\"text\" Value=\"".$repository_manager->getSvnPath()."\" size=\"32\" />";
         $form .= "  </p>";
         $form .= "   <input type=\"submit\" value=\"Create the patch file\" />";
         $form .= " </form>";
