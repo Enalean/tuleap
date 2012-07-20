@@ -421,11 +421,16 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function moveFiles($time, $backend) {
-        $moveToStaging  = $this->moveDeletedFilesToStagingArea($backend);
-        $purgeFiles     = $this->purgeFiles($time, $backend);
-        $cleanStaging   = $this->cleanStaging($backend);
-        $restoreDeleted = $this->restoreDeletedFiles($backend);
-        return $moveToStaging && $purgeFiles && $cleanStaging && $restoreDeleted;
+        try {
+            $moveToStaging  = $this->moveDeletedFilesToStagingArea($backend);
+            $purgeFiles     = $this->purgeFiles($time, $backend);
+            $cleanStaging   = $this->cleanStaging($backend);
+            $restoreDeleted = $this->restoreDeletedFiles($backend);
+            return $moveToStaging && $purgeFiles && $cleanStaging && $restoreDeleted;
+        } catch (Exception $e) {
+            $backend->log($e->getMessage(), Backend::LOG_ERROR);
+            return false;
+        }
     }
 
     /**
@@ -639,8 +644,8 @@ class FRSFileFactory extends Error {
                         }
                         if ($nbFiles === 0) {
                             if(!rmdir($rel->getPathname())) {
-                            $backend->log("Error while removing ".$rel->getPathname()."release folder", Backend::LOG_ERROR);
-                            return false;
+                                $backend->log("Error while removing ".$rel->getPathname()."release folder", Backend::LOG_ERROR);
+                                return false;
                             }
                         } else {
                             $nbRel++;
