@@ -79,11 +79,11 @@ class CodeReview extends Controler {
         /******check if the Tuleap User is registred in reviewboard******/
         $rbusermanager = new RbUserManager();
         $exist         = $rbusermanager->searchUser($url."/api/users/", false, $rbuser, $rbpass, null, $username);
-        if (!$exist) {
+        /*if (!$exist) {
             $curl   = new TuleapCurl();
             $create = $curl->execute($url."/api/users/", $username, $userpwd, null, false);
             // @TODO: Handle errors
-        }
+        }*/
         if ($this->getUser()->isLoggedIn()) {
             $repositoryManager = new RepositoryManager($this->plugin, $request);
             $repositoryManager->addRepository($request);
@@ -99,6 +99,10 @@ class CodeReview extends Controler {
                 break;
                 case 'dashboard':
                     $this->view = 'displayFrame';
+                break;
+                case 'submit_review':
+                    $this->action = 'createReviewRequest';
+                    $this->view   = 'displayFrame';
                 break;
                 case 'create_patch':
                     $this->view = 'createPatchFile';
