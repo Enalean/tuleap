@@ -290,7 +290,7 @@ class CodeReviewActions extends Actions {
                 $invalid[] = 'patch_path';
             }
             /**********check the order**********/
-            $f = exec ('sh /usr/share/codendi/plugins/codereview/bin/firstrev.sh '.$directory.' '.$patch_path);
+            /*$f = exec ('sh /usr/share/codendi/plugins/codereview/bin/firstrev.sh '.$directory.' '.$patch_path);
             $l = exec ('sh /usr/share/codendi/plugins/codereview/bin/lastrev.sh '.$directory.' '.$patch_path);
             if ($frevision > $srevision){
                 $status    = false;
@@ -311,7 +311,7 @@ class CodeReviewActions extends Actions {
             $msg    = $GLOBALS['Language']->getText('plugin_codereview', 'request_patch_second_revision_not_found', array($srevision));
             $GLOBALS['Response']->addFeedBack('error', $msg);
             $this->controller->view = 'createPatchFile';
-        }
+        }*/
             return array('status' => $status, 'params' => $params, 'invalid' => $invalid);
     }
     /**
@@ -320,14 +320,16 @@ class CodeReviewActions extends Actions {
      * @return Void
      */
     function creatPatchFile() {
+        //@TODO give meaningful var names
         $reviewRessources = $this->validateRequestPatch();
-        if ($reviewRessources['status']) {
+        //if ($reviewRessources['status']) {
             $frevision  = $reviewRessources['params']['frevision'];
             $srevision  = $reviewRessources['params']['srevision'];
             $directory  = $reviewRessources['params']['Directory'];
             $patch_path = $reviewRessources['params']['patch_path'];
-        }
-        exec ('sh /usr/share/codendi/plugins/codereview/bin/svndiff1.sh '.$frevision.' '.$srevision.' '.$directory.' '.$patch_path);
+        //}
+        $diff = exec('sh /usr/share/codendi/plugins/codereview/bin/svndiff.sh '.$frevision.' '.$srevision.' '.$patch_path.' '.$directory);
+        return $diff;
     }
 
 
