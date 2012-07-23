@@ -65,6 +65,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
+        //stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
         Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
@@ -89,32 +90,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
     }
 
-    public function itDisplaysTheArtifactTitleAndId() {
-        $id             = 987;
-        $title          = "screen hangs with macos and some escapable characters #<";
-        $expected_title = Codendi_HTMLPurifier::instance()->purify($title);
-
-        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
-
-        $this->assertPattern("/art-$id/", $content);
-        $this->assertPattern("/$expected_title/", $content);
-    }
-
     public function itDisplaysTheNameOfThePlanning() {
         $name    = $this->planning->getName();
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
         $this->assertPattern("/$name/", $content);
-    }
-
-    public function itDisplaysASelectorOfArtifact() {
-        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
-        $this->assertPattern('/<select class="planning-artifact-chooser" name="aid"/', $content);
-        $this->assertPattern('/<option value="">-- Please choose/', $content);
-        $this->assertPattern('/<option value="1001" >An open artifact/', $content);
-        $this->assertPattern('/<option value="1002" >Another open artifact/', $content);
-        $this->assertPattern('/<input type="hidden" name="planning_id" value="123"/', $content);
-        $this->assertPattern('/<input type="hidden" name="action" value="show"/', $content);
-        $this->assertPattern('/<input type="hidden" name="group_id" value="103"/', $content);
     }
 
     public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
@@ -127,26 +106,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
         $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
         $this->assertNoErrors();
-    }
-
-    public function itListsAllLinkedItems() {
-        $id = 987;
-        $linked_items = array(
-            $this->GivenAnArtifactWithNoLinkedItem(123, 'Tutu'),
-            $this->GivenAnArtifactWithNoLinkedItem(124, 'Tata')
-        );
-
-        $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, 'Toto', $linked_items);
-        $this->GivenASetOfArtifacts(array_merge(array($artifact), $linked_items));
-        $request  = aRequest()->with('aid', $id)
-                              ->with('planning_id', $this->planning->getId())
-                              ->withUri($this->request_uri)
-                              ->build();
-        $milestone = $this->GivenNoMilestone(mock('Project'));
-
-        $content = $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
-        $this->assertPattern('/Tutu/', $content);
-        $this->assertPattern('/Tata/', $content);
     }
 
     public function itDisplaysTheSearchContentView() {
@@ -289,7 +248,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         }
         
         $user = aUser()->build();
-        stub($this->milestone_factory)->getOpenMilestones($user, '*', $this->planning)->returns($open_milestones);
+        stub($this->milestone_factory)->getOpenMilestones($user, '*', $this->planning)->returns(array());
         
         return $factory;
     }
@@ -441,6 +400,86 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         );
         $this->assertEqual($expected_crumbs, $breadcrumbs);
     }
-    
 }
+
+class Planning_MilestoneControllerTrapPresenter extends Planning_MilestoneController {
+    public $template_name;
+    public $presenter;
+    
+    protected function render($template_name, $presenter) {
+        $this->template_name = $template_name;
+        $this->presenter      = $presenter;
+    }
+}
+
+class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
+
+    private $sprint_1;
+    private $sprint_2;
+    private $milestone_factory;
+    private $controller;
+    private $request;
+    private $project_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        //$this->sprint_1      = aMilestone()->withArtifact(aMockArtifact()->withId(1)->withTitle('Sprint 1')->build())->build();
+        $this->sprint_1 = stub('Planning_Milestone')->getPlanning()->returns(aPlanning()->build());
+        $this->sprint_2 = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Sprint 2')->build())->build();
+
+        $this->milestone_factory = mock('Planning_MilestoneFactory');
+        $this->project_manager = stub('ProjectManager')->getProject()->returns(mock('Project'));
+
+        $current_user_builder = aUser();
+        $this->current_user = $current_user_builder->build();
+        $this->request = aRequest()->withUser($current_user_builder)->build();
+
+        Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        Tracker_HierarchyFactory::clearInstance();
+    }
+
+    /* public function itDisplaysOnlySiblingsMilestones() {
+      stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
+      stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_2));
+      $this->controller  = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
+
+      $planning_view_builder = mock('Planning_ViewBuilder');
+      $this->controller->show($planning_view_builder);
+      $presenter = $this->controller->presenter();
+      $selectable_artifacts = $presenter->selectableArtifacts();
+      } */
+
+    public function itDisplaysASelectorOfArtifactWhenThereAreNoMilestoneSelected() {
+        $project = mock('Project');
+        $planning = mock('Planning');
+        $current_milstone = new Planning_NoMilestone($project, $planning);
+
+        $milstone_1001 = aMilestone()->withArtifact(aMockArtifact()->withId(1001)->withTitle('An open artifact')->build())->build();
+        $milstone_1002 = aMilestone()->withArtifact(aMockArtifact()->withId(1002)->withTitle('Another open artifact')->build())->build();
+
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
+        stub($this->milestone_factory)->getOpenMilestones($this->current_user, $project, $planning)->returns(array($milstone_1001, $milstone_1002));
+        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
+
+        $presenter = $this->getRenderedPresenter();
+        $selectable_artifacts = $presenter->selectableArtifacts();
+
+        $this->assertCount($selectable_artifacts, 2);
+        $this->assertEqual(array_shift($selectable_artifacts), array('id' => 1001, 'title' => 'An open artifact', 'selected' => ''));
+        $this->assertEqual(array_shift($selectable_artifacts), array('id' => 1002, 'title' => 'Another open artifact', 'selected' => ''));
+    }
+
+    private function getRenderedPresenter() {
+        $planning_view_builder = stub('Planning_ViewBuilder')->build()->returns(mock('Tracker_CrossSearch_SearchContentView'));
+        $this->controller->show($planning_view_builder);
+        return $this->controller->presenter;
+    }
+
+}
+
 ?>
