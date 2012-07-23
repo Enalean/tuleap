@@ -66,6 +66,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         //stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
+        stub($this->milestone_factory)->getOpenMilestones()->returns(array());
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
         Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
@@ -144,7 +145,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $a_list_of_draggable_items = 'A list of draggable items';
         $project                   = stub('Project')->getId()->returns($project_id);
         $already_linked_items      = array();
-        $this->GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items);
         $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
         $milestone                 = $this->GivenNoMilestone($project);
@@ -152,12 +152,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array($project), new MockTracker_CrossSearch_Search());
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
-
-    private function GivenAnArtifactFactoryThatReturnsAnArtifact($id, $already_linked_items) {
-        $artifact = $this->GivenAnArtifactWithArtifactLinkField($id, "screen hangs with macos and some escapable characters #<", $already_linked_items);
-        return $this->GivenASetOfArtifacts(array($artifact));
-    }
-
 
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
         $content_view = $this->GivenAContentViewThatFetch($content);
@@ -227,32 +221,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
     }
 
-    private function GivenASetOfArtifacts(array $artifacts = array()) {
-        $open_artifacts = array(
-            $this->GivenAnArtifactWithNoLinkedItem(1001, 'An open artifact'),
-            $this->GivenAnArtifactWithNoLinkedItem(1002, 'Another open artifact'),
-        );
-
-        // integrated tests part
-        $factory  = new MockTracker_ArtifactFactory();
-        Tracker_ArtifactFactory::setInstance($factory);
-        foreach ($artifacts as $artifact) {
-            $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
-            $open_artifacts[] = $artifact;
-        }
-        
-        // unit part (mocking the collaborator milestone_factory
-        $open_milestones = array();
-        foreach ($open_artifacts as $artifact) {
-            $open_milestones[] = new Planning_ArtifactMilestone(mock('Project'), mock('Planning'), $artifact);
-        }
-        
-        $user = aUser()->build();
-        stub($this->milestone_factory)->getOpenMilestones($user, '*', $this->planning)->returns(array());
-        
-        return $factory;
-    }
-
     private function GivenAMilestone($artifact) {
         $milestone = mock('Planning_Milestone');
         $root_node = new ArtifactNode($artifact);
@@ -275,7 +243,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $title = 'Coin';
 
         $artifact = $this->GivenAnArtifact($id, $title, array());
-        $this->GivenASetOfArtifacts(array($artifact));
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())
                               ->with('planning_id', $this->planning->getId())
@@ -290,7 +257,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
-        $this->GivenASetOfArtifacts(array($artifact));
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())
                               ->with('planning_id', $this->planning->getId())
@@ -305,7 +271,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $milestone = $this->GivenNoMilestone(mock('Project'));
-        $this->GivenASetOfArtifacts();
         $request = aRequest()->withUri($this->request_uri)
                              ->with('group_id', $this->planning->getGroupId())
                              ->with('planning_id', $this->planning->getId())
