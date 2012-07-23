@@ -128,7 +128,24 @@ class DateHelperTest extends UnitTestCase {
         $firstOfDecember2011_12_01 = 1322752769;
         return DateHelper::formatForLanguage($lang, $firstOfDecember2011_12_01, $dayOnly);
     }
+}
 
-    
+class DateHelper_DistanceTest extends TuleapTestCase {
+    private $today_at_midnight;
+
+    public function setUp() {
+        parent::setUp();
+        $this->today_at_midnight = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+    }
+
+    public function itComputesTheTimestamp2DaysAgoAtMidnight() {
+        $expected_time = strtotime('-2 days', $this->today_at_midnight);
+        $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("-2 days"));
+    }
+
+    public function itComputesTheTimestamp3DaysInTheFutureAtMidnight() {
+        $expected_time = strtotime('+3 days', $this->today_at_midnight);
+        $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("+3 days"));
+    }
 }
 ?>

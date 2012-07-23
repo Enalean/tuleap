@@ -110,19 +110,17 @@ class DateHelper {
     }
 
     /**
-     * Get the date x days before/after today
+     * Returns a timestamp of the given date modifier at midnight
      *
-     * @param Integer $distance Distance in number of days
-     * @param Integer $before   0 if the date is after today otherwise the date is before today
+     * @see strtotime
+     *
+     * @param String $date Date modifier as for 'strtotime'
      *
      * @return Integer
      */
-    public static function getDistantDateFromToday($distance, $before) {
-        $distance     = SECONDS_IN_A_DAY * $distance;
-        if ($before) {
-            $distance = $distance * -1;
-        }
-        return strtotime(date("Y-m-d", $_SERVER['REQUEST_TIME'] + $distance));
+    public static function getTimestampAtMidnight($date) {
+        $time = strtotime($date);
+        return mktime(0, 0, 0, date('n', $time), date('j', $time), date('Y', $time));
     }
 
     /**
