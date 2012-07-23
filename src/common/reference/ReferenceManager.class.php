@@ -813,7 +813,7 @@ class ReferenceManager {
     }
     
     function getArtifactDao() {
-        return new ArtifactDao(CodendiDataAccess::instance());
+        return new ArtifactDao();
     }
 }
 ?>
