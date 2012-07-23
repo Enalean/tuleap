@@ -65,8 +65,9 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
-        //stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
+        stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
         stub($this->milestone_factory)->getOpenMilestones()->returns(array());
+
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
         Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
@@ -389,8 +390,11 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        //$this->sprint_1      = aMilestone()->withArtifact(aMockArtifact()->withId(1)->withTitle('Sprint 1')->build())->build();
-        $this->sprint_1 = stub('Planning_Milestone')->getPlanning()->returns(aPlanning()->build());
+        $this->sprint_1 = mock('Planning_Milestone');
+        stub($this->sprint_1)->getArtifactId()->returns(1);
+        stub($this->sprint_1)->getArtifactTitle()->returns('Sprint 1');
+        stub($this->sprint_1)->getPlanning()->returns(aPlanning()->build());
+        stub($this->sprint_1)->getLinkedArtifacts()->returns(array());
         $this->sprint_2 = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Sprint 2')->build())->build();
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
@@ -408,16 +412,16 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         Tracker_HierarchyFactory::clearInstance();
     }
 
-    /* public function itDisplaysOnlySiblingsMilestones() {
-      stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
-      stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_2));
-      $this->controller  = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
+    public function itDisplaysOnlySiblingsMilestones() {
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
+        stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
+        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
 
-      $planning_view_builder = mock('Planning_ViewBuilder');
-      $this->controller->show($planning_view_builder);
-      $presenter = $this->controller->presenter();
-      $selectable_artifacts = $presenter->selectableArtifacts();
-      } */
+        $selectable_artifacts = $this->getSelectableArtifacts();
+        $this->assertCount($selectable_artifacts, 2);
+        $this->assertEqual(array_shift($selectable_artifacts), array('id' => 1, 'title' => 'Sprint 1', 'selected' => 'selected="selected"'));
+        $this->assertEqual(array_shift($selectable_artifacts), array('id' => 2, 'title' => 'Sprint 2', 'selected' => ''));
+    }
 
     public function itDisplaysASelectorOfArtifactWhenThereAreNoMilestoneSelected() {
         $project = mock('Project');
@@ -431,18 +435,16 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         stub($this->milestone_factory)->getOpenMilestones($this->current_user, $project, $planning)->returns(array($milstone_1001, $milstone_1002));
         $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
 
-        $presenter = $this->getRenderedPresenter();
-        $selectable_artifacts = $presenter->selectableArtifacts();
-
+        $selectable_artifacts = $this->getSelectableArtifacts();
         $this->assertCount($selectable_artifacts, 2);
         $this->assertEqual(array_shift($selectable_artifacts), array('id' => 1001, 'title' => 'An open artifact', 'selected' => ''));
         $this->assertEqual(array_shift($selectable_artifacts), array('id' => 1002, 'title' => 'Another open artifact', 'selected' => ''));
     }
 
-    private function getRenderedPresenter() {
+    private function getSelectableArtifacts() {
         $planning_view_builder = stub('Planning_ViewBuilder')->build()->returns(mock('Tracker_CrossSearch_SearchContentView'));
         $this->controller->show($planning_view_builder);
-        return $this->controller->presenter;
+        return $this->controller->presenter->selectableArtifacts();
     }
 
 }
