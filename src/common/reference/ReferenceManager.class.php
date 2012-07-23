@@ -404,7 +404,6 @@ class ReferenceManager {
      */
     function insertReferences(&$html,$group_id) {
         $this->tmpGroupIdForCallbackFunction = $group_id;
-        
         $locale = setlocale(LC_CTYPE, null);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
         if (!preg_match('/[^\s]{5000,}/', $html)) {             
@@ -628,13 +627,25 @@ class ReferenceManager {
             return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
     }
-
+    
+    function _getGroupIdForCallbackFunction($artifact_id) {
+        $dao    = $this->getArtifactDao();
+        $result = $dao->searchArtifactId($artifact_id);
+        $group_id = $result->getRow();
+        return $group_id['group_id'];
+    }
 
     // Get a Reference object from a matching pattern
     // if it is not a reference (e.g. wrong keyword) return null;
     function _getReferenceInstanceFromMatch($match) {
         // Analyse match
-        $key=strtolower($match[1]);
+        $key     = strtolower($match[1]);
+        $natures = $this->getAvailableNatures();
+        
+        if ($key == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword']) {
+            $this->tmpGroupIdForCallbackFunction = $this->_getGroupIdForCallbackFunction($match[3]);
+        }
+        
         if ($match[2]) {
             // A target project name or ID was specified
             // remove trailing colon
@@ -678,6 +689,7 @@ class ReferenceManager {
         return $refInstance;
     }
 
+        
 
     function _getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
         $this->_initProjectReferences($group_id);
@@ -798,7 +810,9 @@ class ReferenceManager {
     function _getCrossReferenceDao() {
         return new CrossReferenceDao();
     }
-
-
+    
+    function getArtifactDao() {
+        return new ArtifactDao(CodendiDataAccess::instance());
+    }
 }
 ?>
