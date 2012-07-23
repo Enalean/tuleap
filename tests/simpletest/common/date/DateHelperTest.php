@@ -140,12 +140,12 @@ class DateHelper_DistanceTest extends TuleapTestCase {
 
     public function itComputesTheTimestamp2DaysAgoAtMidnight() {
         $expected_time = strtotime('-2 days', $this->today_at_midnight);
-        $this->assertEqual($expected_time, DateHelper::getDistantDateFromToday(2, 1));
+        $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("-2 days"));
     }
 
     public function itComputesTheTimestamp3DaysInTheFutureAtMidnight() {
         $expected_time = strtotime('+3 days', $this->today_at_midnight);
-        $this->assertEqual($expected_time, DateHelper::getDistantDateFromToday(3, 0));
+        $this->assertEqual($expected_time, DateHelper::getTimestampAtMidnight("+3 days"));
     }
 }
 ?>
