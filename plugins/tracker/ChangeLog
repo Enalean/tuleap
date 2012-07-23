@@ -1,3 +1,7 @@
+Version 5.8.7 - Tuleap 5.3.1
+    * Artifacts can no longer reference themselves.
+    * Artifact link no longer create a link on itself.
+
 Version 5.8.6 - Tuleap 5.3
     * Fix notices
 
