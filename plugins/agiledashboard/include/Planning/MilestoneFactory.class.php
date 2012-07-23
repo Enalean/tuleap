@@ -313,5 +313,20 @@ class Planning_MilestoneFactory {
         }
         return array_merge(array($milestone), $parent_milestone);
     }
+
+    public function getSiblingMilestones(User $user, Planning_Milestone $milestone) {
+        $sibling_milestones = array();
+        $milestone_artifact = $milestone->getArtifact();
+        if ($milestone_artifact) {
+            foreach($milestone_artifact->getSiblings($user) as $sibling) {
+                if ($sibling->getId() == $milestone_artifact->getId()) {
+                    $sibling_milestones[] = $milestone;
+                } else {
+                    $sibling_milestones[] = $this->getMilestoneFromArtifact($sibling);
+                }
+            }
+        }
+        return $sibling_milestones;
+    }
 }
 ?>

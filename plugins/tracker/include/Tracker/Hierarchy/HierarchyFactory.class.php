@@ -151,7 +151,18 @@ class Tracker_HierarchyFactory {
         }
     }
 
-    /*
+    public function getSiblings(User $user, Tracker_Artifact $artifact) {
+        $siblings = array();
+        $parent   = $this->getParentArtifact($user, $artifact);
+        if ($parent) {
+            foreach ($parent->getHierarchyLinkedArtifacts($user) as $child) {
+                $siblings[] = $child;
+            }
+        }
+        return $siblings;
+    }
+
+    /**
      * Duplicate a tracker hierarchy
      * 
      * @param Array   $tracker_mapping the trackers mapping during project creation based on a template
