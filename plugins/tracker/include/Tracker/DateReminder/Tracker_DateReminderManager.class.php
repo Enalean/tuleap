@@ -282,7 +282,7 @@ class Tracker_DateReminderManager {
      */
     public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
         $time_string = '-';
-        if ($reminder->getNotificationType() === 0) {
+        if ($reminder->getNotificationType() == 0) {
             $time_string = '+';
         }
         $time_string .= $reminder->getDistance().' days';

@@ -37,8 +37,8 @@ class Tracker_DateReminderManagerTest extends TuleapTestCase {
     }
 
     public function itFetchArtifactsTwoDaysAgo() {
-        stub($this->reminder)->getDistance()->returns(2);
-        stub($this->reminder)->getNotificationType()->returns(1);
+        stub($this->reminder)->getDistance()->returns('2');
+        stub($this->reminder)->getNotificationType()->returns('1');
 
         $expected_time = strtotime('-2 days', $this->today_at_midnight);
         $this->field->expectOnce('getArtifactsByCriterias', array($expected_time, $this->tracker_id));
@@ -47,8 +47,8 @@ class Tracker_DateReminderManagerTest extends TuleapTestCase {
     }
 
     public function itFetchArtifactsFourDaysInTheFuture() {
-        stub($this->reminder)->getDistance()->returns(4);
-        stub($this->reminder)->getNotificationType()->returns(0);
+        stub($this->reminder)->getDistance()->returns('4');
+        stub($this->reminder)->getNotificationType()->returns('0');
 
         $expected_time = strtotime('4 days', $this->today_at_midnight);
         $this->field->expectOnce('getArtifactsByCriterias', array($expected_time, $this->tracker_id));
