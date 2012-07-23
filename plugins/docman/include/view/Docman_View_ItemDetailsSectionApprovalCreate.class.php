@@ -334,7 +334,7 @@ extends Docman_View_ItemDetailsSectionApproval {
             $html .= '<table>';
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_reviewers_hand').'</td>';
-            $html .= '<td><input type="text" name="user_list" value="" class="text_field"/></td>';
+            $html .= '<td><input type="text" name="user_list" value="" id="user_list" class="text_field"/></td>';
             $html .= '</tr>';
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_reviewers_ugroup').'</td>';
@@ -342,6 +342,8 @@ extends Docman_View_ItemDetailsSectionApproval {
             $html .= '</tr>';
             $html .= '</table>';
             $html .= '</div>';
+            $js   = "new UserAutoCompleter('user_list', '".util_get_dir_image_theme()."', true);";
+            $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         } else {
             return $GLOBALS['Language']->getText('plugin_docman', 'details_approval_create_reviewers_oldver');
         }
