@@ -458,9 +458,10 @@ class BackendSystem extends Backend {
      * @return boolean always true
      */
     public function dumpSSHKeys() {
-        $userdao = new UserDao();
-        foreach($userdao->searchSSHKeys() as $row) {
-            $this->writeSSHKeys($row['user_name'], $row['authorized_keys'], $row['unix_status']);
+        $user_dao     = new UserDao();
+        $user_manager = $this->getUserManager();
+        foreach($user_dao->searchSSHKeys() as $row) {
+            $this->writeSSHKeys($user_manager->getUserInstanceFromRow($row));
         }
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
         return true;
@@ -474,47 +475,46 @@ class BackendSystem extends Backend {
      * @return boolean if the ssh key was written
      */
     public function dumpSSHKeysForUser(User $user) {
-        return $this->writeSSHKeys($user->getUserName(), $user->getAuthorizedKeys(), $user->getUnixStatus());
+        if ($user->getUnixStatus() == 'A') {
+            return $this->writeSSHKeys($user);
+        }
+        return true;
     }
 
     /**
      * Write SSH authorized_keys into a user homedir
-     * 
+     *
      * /!\ Be careful, this method change current process UID/GID to write keys
-     * 
-     * @param string $username    the user name
-     * @param string $ssh_keys    from the db
-     * @param string $unix_status user status
+     *
+     * @param User $user
      *
      * @return Boolean
      */
-    protected function writeSSHKeys($username, $ssh_keys, $unix_status) {
-        if ($unix_status != 'A') {
-            return true;
-        }
-
+    protected function writeSSHKeys(User $user) {
         try {
-            $ssh_dir = $GLOBALS['homedir_prefix'] . "/$username/.ssh";
-            $this->changeProcessUidGidToUser($username);
-            $this->createSSHDirForUser($ssh_dir, $username);
-            $this->writeSSHFile($ssh_dir, $username, $ssh_keys);
+            $ssh_dir  = $user->getUnixHomeDir().'/.ssh';
+
+            $this->changeProcessUidGidToUser($user);
+            $this->createSSHDirForUser($user, $ssh_dir);
+            $this->writeSSHFile($user, $ssh_dir);
             $this->restoreRootUidGid();
-            $this->log("Authorized_keys for $username written.", Backend::LOG_INFO);
+
+            $this->log("Authorized_keys for ".$user->getUserName()." written.", Backend::LOG_INFO);
             return true;
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->restoreRootUidGid();
-            $this->log($e->getMessage(), Backend::LOG_ERROR);
+            $this->log($exception->getMessage(), Backend::LOG_ERROR);
             return false;
         }
     }
 
-    private function changeProcessUidGidToUser($username) {
-        $user = posix_getpwnam($username);
-        if (empty($user['uid']) || empty($user['gid'])) {
-            throw new RuntimeException("User $username has no uid/gid");
+    private function changeProcessUidGidToUser(User $user) {
+        $user_unix_info = posix_getpwnam($user->getUserName());
+        if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
+            throw new RuntimeException("User ".$user->getUserName()." has no uid/gid");
         }
-        if (!(posix_setegid($user['gid']) && posix_seteuid($user['uid']))) {
-            throw new RuntimeException("Cannot change current process uid/gid for $username");
+        if (!(posix_setegid($user_unix_info['gid']) && posix_seteuid($user_unix_info['uid']))) {
+            throw new RuntimeException("Cannot change current process uid/gid for ".$user->getUserName());
         }
     }
 
@@ -523,30 +523,30 @@ class BackendSystem extends Backend {
         posix_seteuid(0);
     }
 
-    private function createSSHDirForUser($ssh_dir, $username) {
+    private function createSSHDirForUser(User $user, $ssh_dir) {
         if (!is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {
                 $this->chmod($ssh_dir, 0700);
-                $this->chown($ssh_dir, $username);
-                $this->chgrp($ssh_dir, $username);
+                $this->chown($ssh_dir, $user->getUserName());
+                $this->chgrp($ssh_dir, $user->getUserName());
             } else {
-                throw new RuntimeException("Unable to create user home ssh directory for $username");
+                throw new RuntimeException("Unable to create user home ssh directory for ".$user->getUserName());
             }
         }
     }
 
-    private function writeSSHFile($ssh_dir, $username, $ssh_keys) {
-        $ssh_keys = str_replace('###', "\n", $ssh_keys);
+    private function writeSSHFile(User $user, $ssh_dir) {
+        $ssh_keys = implode("\n", $user->getAuthorizedKeysArray());
         if (file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
-            throw new RuntimeException("Unable to write authorized_keys_new file for $username");
+            throw new RuntimeException("Unable to write authorized_keys_new file for ".$user->getUserName());
         }
         if (rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys") === false) {
-            throw new RuntimeException("Unable to rename authorized_keys_new file for $username");
+            throw new RuntimeException("Unable to rename authorized_keys_new file for ".$user->getUserName());
         }
 
         $this->chmod("$ssh_dir/authorized_keys", 0600);
-        $this->chown("$ssh_dir/authorized_keys", $username);
-        $this->chgrp("$ssh_dir/authorized_keys", $username);
+        $this->chown("$ssh_dir/authorized_keys", $user->getUserName());
+        $this->chgrp("$ssh_dir/authorized_keys", $user->getUserName());
     }
 
     /**

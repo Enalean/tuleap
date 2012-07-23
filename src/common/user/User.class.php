@@ -631,7 +631,21 @@ class User {
         $unix_id = $this->unix_uid + $GLOBALS['unix_uid_add'];
         return $unix_id;
     }
+
+    public function getAuthorizedKeysRaw() {
+        return $this->getAuthorizedKeys();
+    }
+
+    public function getAuthorizedKeysArray() {
+        return $this->getAuthorizedKeys(true);
+    }
+
     /**
+     *
+     * @deprecated Flag methods are evil
+     * @see User::getAuthorizedKeysRaw
+     * @see User::getAuthorizedKeysArray
+     *
      * @return string authorized keys of the user
      */
     function getAuthorizedKeys($split=false) {
@@ -641,7 +655,7 @@ class User {
             return $this->authorized_keys;
         }
     }
-    
+
     /**
      * @return string resume of the user
      */
