@@ -27,6 +27,7 @@ require_once('common/include/GroupFactory.class.php');
 require_once('common/reference/CrossReference.class.php');
 require_once('common/dao/CrossReferenceDao.class.php');
 require_once('common/event/EventManager.class.php');
+require_once('common/dao/ArtifactDao.class.php');
 
 /**
  * Reference Manager
