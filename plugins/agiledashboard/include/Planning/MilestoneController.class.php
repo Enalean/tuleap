@@ -74,7 +74,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         $project              = $this->milestone->getProject();
         $planning             = $this->milestone->getPlanning();
         if ($this->milestone instanceof Planning_NoMilestone) {
-            $available_milestones = $this->milestone_factory->getOpenMilestones($this->getCurrentUser(), $project, $planning);
+            $available_milestones = $this->milestone_factory->getAllMilestones($this->getCurrentUser(), $planning);
         } else {
             $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
         }
@@ -120,18 +120,20 @@ class Planning_MilestoneController extends MVC2_Controller {
                                       array                $available_milestones,
                                       Planning             $planning) {
         
-        $tracker_linked_items  = $this->getTrackerLinkedItems($available_milestones);
+        $tracker_linked_items  = $this->getAlreadyPlannedArtifacts($available_milestones);
         $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
         $cross_search_query    = $this->getCrossSearchQuery();
         $view_builder->setHierarchyFactory(Tracker_HierarchyFactory::instance());
         
-        $view = $view_builder->build($this->getCurrentUser(), 
-                                                 $project, 
-                                                 $cross_search_query, 
-                                                 $excluded_artifact_ids, 
-                                                 $backlog_tracker_id,
-                                                 $planning,
-                                                 $this->getPlanningRedirectParameter($planning));
+        $view = $view_builder->build(
+            $this->getCurrentUser(), 
+            $project, 
+            $cross_search_query, 
+            $excluded_artifact_ids, 
+            $backlog_tracker_id,
+            $planning,
+            $this->getPlanningRedirectParameter($planning)
+        );
         
         return $view;
     }
@@ -171,7 +173,7 @@ class Planning_MilestoneController extends MVC2_Controller {
      * 
      * @return array of Tracker_Artifact
      */
-    private function getTrackerLinkedItems(array $available_milestones) {
+    private function getAlreadyPlannedArtifacts(array $available_milestones) {
         $linked_items = array();
         foreach ($available_milestones as $milestone) {
             $linked_items = array_merge($linked_items, $milestone->getLinkedArtifacts($this->getCurrentUser()));

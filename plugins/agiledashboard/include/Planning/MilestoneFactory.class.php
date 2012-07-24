@@ -271,9 +271,10 @@ class Planning_MilestoneFactory {
      * 
      * @return Array of \Planning_Milestone 
      */
-    public function getOpenMilestones(User $user, Project $project, Planning $planning) {
+    public function getAllMilestones(User $user, Planning $planning) {
+        $project = $planning->getPlanningTracker()->getProject();
         $milestones = array();
-        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
             $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
@@ -314,6 +315,14 @@ class Planning_MilestoneFactory {
         return array_merge(array($milestone), $parent_milestone);
     }
 
+    /**
+     * Get all milestones that share the same parent than given milestone.
+     *
+     * @param User $user
+     * @param Planning_Milestone $milestone
+     *
+     * @return Array of Planning_Milestone
+     */
     public function getSiblingMilestones(User $user, Planning_Milestone $milestone) {
         $sibling_milestones = array();
         $milestone_artifact = $milestone->getArtifact();

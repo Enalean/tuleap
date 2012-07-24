@@ -254,39 +254,49 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
     }
 }
 
-class MileStoneFactory_getOpenMilestonesTest extends TuleapTestCase {
+class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     private $project;
-  
+      
+    public function setUp() {
+        parent::setUp();
+        $this->user             = mock('User');
+        $this->project          = stub('Project')->getID()->returns(99);
+        $this->planning_tracker = stub('Tracker')->getProject()->returns($this->project);
+        $this->planning_id      = 3333;
+        $this->planning         = stub('Planning')->getPlanningTracker()->returns($this->planning_tracker);
+    }
+
     public function itReturnsAnEmptyArrayWhenAllItemsAreClosed() {
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getOpenArtifactsByTrackerIdUserCanView()->returns(array());
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array());
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
-        $this->assertIdentical(array(), $factory->getOpenMilestones($this->user, $this->project, $this->planning));
+        $this->assertIdentical(array(), $factory->getAllMilestones($this->user, $this->planning));
     }
     
-    public function itReturnsAsManyMileStonesAsThereAreArtifacts() {
+    public function itReturnsAsManyMilestonesAsThereAreArtifacts() {
         $artifacts        = array(anArtifact()->build(),
                                   anArtifact()->build());
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getOpenArtifactsByTrackerIdUserCanView()->returns($artifacts);
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns($artifacts);
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
-        $this->assertEqual(2, count($factory->getOpenMilestones($this->user, $this->project, $this->planning)));
+        $this->assertEqual(2, count($factory->getAllMilestones($this->user, $this->planning)));
     }
     
-    public function itReturnsMileStones() {
+    public function itReturnsMilestones() {
         $artifact         = anArtifact()->build();
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getOpenArtifactsByTrackerIdUserCanView()->returns(array($artifact));
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
         $mile_stone       = new Planning_ArtifactMilestone($this->project, $this->planning, $artifact);
-        $this->assertIdentical(array($mile_stone), $factory->getOpenMilestones($this->user, $this->project, $this->planning));
+        $this->assertIdentical(array($mile_stone), $factory->getAllMilestones($this->user, $this->planning));
     }
     
-    public function itReturnsMileStonesWithPlannedArtifacts() {
+    public function itReturnsMilestonesWithPlannedArtifacts() {
         $artifact         = anArtifact()->build();
         $tracker_id       = 7777777;
-        $planning         = aPlanning()->withPlanningTrackerId($tracker_id)->build();
-        $artifact_factory = stub('Tracker_ArtifactFactory')->getOpenArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
+        stub($this->planning_tracker)->getId()->returns($tracker_id);
+        $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
+        $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         
         $planned_artifacts= new TreeNode('sdfkjasf');   
@@ -294,16 +304,8 @@ class MileStoneFactory_getOpenMilestonesTest extends TuleapTestCase {
         stub($factory)->getPlannedArtifacts()->returns($planned_artifacts);
         
         $mile_stone       = new Planning_ArtifactMilestone($this->project, $planning, $artifact, $planned_artifacts);
-        $milestones       = $factory->getOpenMilestones($this->user, $this->project, $planning);
+        $milestones       = $factory->getAllMilestones($this->user, $planning);
         $this->assertEqual($mile_stone, $milestones[0]);
-    }
-    
-    public function setUp() {
-        parent::setUp();
-        $this->user             = mock('User');
-        $this->project          = stub('Project')->getID()->returns(99);
-        $this->planning_id      = 3333;
-        $this->planning         = mock('Planning');
     }
 
     public function newMileStoneFactory($planning_factory, $artifact_factory) {

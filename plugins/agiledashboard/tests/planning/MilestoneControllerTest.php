@@ -66,7 +66,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
-        stub($this->milestone_factory)->getOpenMilestones()->returns(array());
+        stub($this->milestone_factory)->getAllMilestones()->returns(array());
 
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
@@ -432,7 +432,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $milstone_1002 = aMilestone()->withArtifact(aMockArtifact()->withId(1002)->withTitle('Another open artifact')->build())->build();
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
-        stub($this->milestone_factory)->getOpenMilestones($this->current_user, $project, $planning)->returns(array($milstone_1001, $milstone_1002));
+        stub($this->milestone_factory)->getAllMilestones($this->current_user, $planning)->returns(array($milstone_1001, $milstone_1002));
         $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
 
         $selectable_artifacts = $this->getSelectableArtifacts();
@@ -449,4 +449,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
 }
 
+class MilestoneController_ExcludeAlreadyPlannedItemsTest extends TuleapTestCase {
+    
+}
 ?>
