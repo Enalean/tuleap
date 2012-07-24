@@ -63,23 +63,24 @@ class Planning_MilestoneController extends MVC2_Controller {
         $this->milestone_factory = $milestone_factory;
         $project                 = $project_manager->getProject($request->get('group_id'));
         $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
-                                       $this->getCurrentUser(),
-                                       $project,
-                                       $request->get('planning_id'),
-                                       $request->get('aid')
-                                   );
+            $this->getCurrentUser(),
+            $project,
+            $request->get('planning_id'),
+            $request->get('aid')
+        );
+        $this->all_milestones    =  $this->milestone_factory->getAllMilestones($this->getCurrentUser(), $this->milestone->getPlanning());
     }
 
     public function show(Planning_ViewBuilder $view_builder) {
         $project              = $this->milestone->getProject();
         $planning             = $this->milestone->getPlanning();
         if ($this->milestone instanceof Planning_NoMilestone) {
-            $available_milestones = $this->milestone_factory->getAllMilestones($this->getCurrentUser(), $planning);
+            $available_milestones = $this->all_milestones;
         } else {
             $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
         }
         $backlog_tracker_id   = $planning->getBacklogTrackerId();
-        $content_view         = $this->buildContentView($view_builder, $project, $backlog_tracker_id, $available_milestones, $planning);
+        $content_view         = $this->buildContentView($view_builder, $project, $backlog_tracker_id, $planning);
         $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
         
         $this->render('show', $presenter);
@@ -117,19 +118,17 @@ class Planning_MilestoneController extends MVC2_Controller {
     private function buildContentView(Planning_ViewBuilder $view_builder,
                                       Project              $project = null,
                                                            $backlog_tracker_id,
-                                      array                $available_milestones,
                                       Planning             $planning) {
         
-        $tracker_linked_items  = $this->getAlreadyPlannedArtifacts($available_milestones);
-        $excluded_artifact_ids = array_map(array($this, 'getArtifactId'), $tracker_linked_items);
-        $cross_search_query    = $this->getCrossSearchQuery();
+        $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds();
+        $cross_search_query           = $this->getCrossSearchQuery();
         $view_builder->setHierarchyFactory(Tracker_HierarchyFactory::instance());
         
         $view = $view_builder->build(
-            $this->getCurrentUser(), 
-            $project, 
-            $cross_search_query, 
-            $excluded_artifact_ids, 
+            $this->getCurrentUser(),
+            $project,
+            $cross_search_query,
+            $already_planned_artifact_ids,
             $backlog_tracker_id,
             $planning,
             $this->getPlanningRedirectParameter($planning)
@@ -138,10 +137,6 @@ class Planning_MilestoneController extends MVC2_Controller {
         return $view;
     }
 
-    private function getArtifactId(Tracker_Artifact $artifact) {
-        return $artifact->getId();
-    }
-    
     private function getArrayFromRequest($parameter_name) {
         $request_criteria = array();
         $valid_criteria   = new Valid_Array($parameter_name);
@@ -168,14 +163,22 @@ class Planning_MilestoneController extends MVC2_Controller {
         return $preselected_criteria;
     }
 
+    private function getAlreadyPlannedArtifactsIds() {
+        return array_map(array($this, 'getArtifactId'), $this->getAlreadyPlannedArtifacts());
+    }
+
+    private function getArtifactId(Tracker_Artifact $artifact) {
+        return $artifact->getId();
+    }
+
     /**
      * @param array of Planning_Milestone $available_milestones
      * 
      * @return array of Tracker_Artifact
      */
-    private function getAlreadyPlannedArtifacts(array $available_milestones) {
+    private function getAlreadyPlannedArtifacts() {
         $linked_items = array();
-        foreach ($available_milestones as $milestone) {
+        foreach ($this->all_milestones as $milestone) {
             $linked_items = array_merge($linked_items, $milestone->getLinkedArtifacts($this->getCurrentUser()));
         }
         return $linked_items;

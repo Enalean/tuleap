@@ -398,7 +398,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $this->sprint_2 = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Sprint 2')->build())->build();
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');
-        $this->project_manager = stub('ProjectManager')->getProject()->returns(mock('Project'));
+        $this->project_manager   = stub('ProjectManager')->getProject()->returns(mock('Project'));
 
         $current_user_builder = aUser();
         $this->current_user = $current_user_builder->build();
@@ -414,6 +414,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
     public function itDisplaysOnlySiblingsMilestones() {
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
+        stub($this->milestone_factory)->getAllMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
         $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
 
@@ -449,7 +450,4 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
 }
 
-class MilestoneController_ExcludeAlreadyPlannedItemsTest extends TuleapTestCase {
-    
-}
 ?>
