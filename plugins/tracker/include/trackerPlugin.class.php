@@ -32,6 +32,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('cssfile',                             'cssFile',                           false);
         $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
+        $this->_addHook('get_artifact_reference_group_id',     'get_artifact_reference_group_id',   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
         $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
@@ -343,6 +344,15 @@ class trackerPlugin extends Plugin {
         $natures = array(Tracker_Artifact::REFERENCE_NATURE => array('keyword' => 'artifact',
                                                                      'label'   => 'Artifact Tracker v5'));
         $params['natures'] = array_merge($params['natures'], $natures);
+    }
+    
+    public function get_artifact_reference_group_id($params) {        
+        require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
+        if ($artifact) {
+            $tracker = $artifact->getTracker();
+            $params['group_id'] = $tracker->getGroupId();
+        }
     }
     
     public function ajax_reference_tooltip($params) {

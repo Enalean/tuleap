@@ -263,12 +263,12 @@ class ReferenceManager {
         } else return false;
     }
 
-    function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1) {
+    function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1, $val = null) {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupID($keyword,$group_id);
         $ref=null;
         while($row = $dar->getRow()) {
-            $ref = $this->_buildReference($row);
+            $ref = $this->_buildReference($row, $val);
             if ($ref->getNumParam()==$num_args) return $ref;
         }
         return null;
@@ -377,11 +377,17 @@ class ReferenceManager {
                                                  $group_id);
     }
 
-    function _buildReference($row) {
+    function _buildReference($row, $val = null) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
+
+        if ($row['keyword'] == 'art' && !$this->_getGroupId($val)) {
+            //TODO: hook tracker v5
+            $ref = new Reference($refid,$row['keyword'],$row['description'],'/plugins'.$row['link'],
+                                    $row['scope'],'plugin_tracker','plugin_tracker_artifact',$row['is_active'],$row['group_id']);
+        }
         return $ref;
     }
     
@@ -627,12 +633,22 @@ class ReferenceManager {
 
             return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
+    }    
+    
+    function _getGroupId($artifact_id) {
+        $dao    = $this->getArtifactDao();
+        $result = $dao->searchArtifactId($artifact_id);
+        return $result->getRow();
     }
     
     function _getGroupIdForCallbackFunction($artifact_id) {
-        $dao    = $this->getArtifactDao();
-        $result = $dao->searchArtifactId($artifact_id);
-        $group_id = $result->getRow();
+        $group_id = $this->_getGroupId($artifact_id);
+        if (!$group_id) {
+            $plugins_tracker_group_id = array();
+            $em = EventManager::instance();
+            $em->processEvent('get_artifact_reference_group_id', array('artifact_id' => $artifact_id, 'group_id' => &$plugins_tracker_group_id));
+            return $plugins_tracker_group_id;
+        }
         return $group_id['group_id'];
     }
 
