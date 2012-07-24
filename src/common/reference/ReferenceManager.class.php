@@ -382,11 +382,10 @@ class ReferenceManager {
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
-
+        
         if ($row['keyword'] == 'art' && !$this->_getGroupId($val)) {
-            //TODO: hook tracker v5
-            $ref = new Reference($refid,$row['keyword'],$row['description'],'/plugins'.$row['link'],
-                                    $row['scope'],'plugin_tracker','plugin_tracker_artifact',$row['is_active'],$row['group_id']);
+            $em = EventManager::instance();
+            $em->processEvent('build_reference', array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
         return $ref;
     }

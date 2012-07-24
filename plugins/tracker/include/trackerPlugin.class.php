@@ -33,6 +33,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
         $this->_addHook('get_artifact_reference_group_id',     'get_artifact_reference_group_id',   false);
+        $this->_addHook('build_reference',                     'build_reference',                   false);        
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
         $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
@@ -353,6 +354,13 @@ class trackerPlugin extends Plugin {
             $tracker = $artifact->getTracker();
             $params['group_id'] = $tracker->getGroupId();
         }
+    }
+    
+    public function build_reference($params) {
+        require_once('Tracker/Artifact/Tracker_Artifact.class.php');
+        $row = $params['row'];
+        $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'],'/plugins'.$row['link'],
+                                    $row['scope'],'plugin_tracker', Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
     }
     
     public function ajax_reference_tooltip($params) {
