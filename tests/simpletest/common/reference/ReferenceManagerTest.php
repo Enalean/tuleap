@@ -10,7 +10,8 @@ Mock::generatePartial(
         '_getReferenceDao', 
         '_getCrossReferenceDao',
         'loadReservedKeywords',
-        '_getGroupIdForCallbackFunction'
+        '_getGroupIdForCallbackFunction',
+        '_getGroupId'
     )
 );
 require_once('common/dao/ReferenceDao.class.php');
