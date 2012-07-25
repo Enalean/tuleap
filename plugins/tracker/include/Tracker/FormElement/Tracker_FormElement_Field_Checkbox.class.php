@@ -19,12 +19,12 @@
  */
 
 require_once('Tracker_FormElement_Field_Alphanum.class.php');
-require_once('Tracker_Artifact_ChangesetValue_Text.class.php');
-require_once('dao/Tracker_Report_Criteria_Text_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_TextDao.class.php');
-require_once('dao/Tracker_FormElement_Field_TextDao.class.php');
+require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
+require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Text_ValueDao.class.php');
+require_once(dirname(__FILE__).'/dao/Tracker_FormElement_Field_Value_TextDao.class.php');
+require_once(dirname(__FILE__).'/dao/Tracker_FormElement_Field_TextDao.class.php');
 require_once('common/include/Codendi_Diff.class.php');
-require_once('Tracker_Artifact_ChangesetValue_Text.class.php');
+require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alphanum {
     
@@ -334,14 +334,14 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'checkbox');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox');
 	}
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','checkbox_desc');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','checkbox_desc');
     }
     
     /**
