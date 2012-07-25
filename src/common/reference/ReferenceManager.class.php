@@ -376,14 +376,19 @@ class ReferenceManager {
                                                  ($proj_ref==null?false:$proj_ref->isActive()),
                                                  $group_id);
     }
-
+    
+    function isAKeywordArtifact($keyword) {
+        $natures = $this->getAvailableNatures();
+        return $keyword == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword'];
+    }
+    
     function _buildReference($row, $val = null) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         
-        if ($row['keyword'] == 'art' && !$this->_getGroupId($val)) {
+        if ($this->isAKeywordArtifact($row['keyword']) && !$this->_getGroupId($val)) {
             $em = EventManager::instance();
             $em->processEvent('build_reference', array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
@@ -656,9 +661,8 @@ class ReferenceManager {
     function _getReferenceInstanceFromMatch($match) {
         // Analyse match
         $key     = strtolower($match[1]);
-        $natures = $this->getAvailableNatures();
         
-        if ($key == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword']) {
+        if ($this->isAKeywordArtifact($key)) {
             $this->tmpGroupIdForCallbackFunction = $this->_getGroupIdForCallbackFunction($match[3]);
         }
         
@@ -719,7 +723,7 @@ class ReferenceManager {
 
     /**
      */
-    function _initProjectReferences($group_id) {        
+    function _initProjectReferences($group_id) {   
         if (!isset($this->activeReferencesByProject[$group_id])) {
             $p = array();
             $reference_dao = $this->_getReferenceDao();
