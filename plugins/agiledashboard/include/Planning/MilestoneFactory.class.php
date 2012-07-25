@@ -337,12 +337,21 @@ class Planning_MilestoneFactory {
         }
         return $sibling_milestones;
     }
-    
+
     /**
+     * Get the top most recent milestone (last created artifact in planning tracker)
+     *
+     * @param User    $user
+     * @param Integer $planning_id
+     *
      * @return Planning_Milestone
      */
     public function getCurrentMilestone(User $user, $planning_id) {
-        $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $planning  = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        if (count($artifacts) > 0) {
+            return $this->getMilestoneFromArtifact(array_shift($artifacts));
+        }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
 }

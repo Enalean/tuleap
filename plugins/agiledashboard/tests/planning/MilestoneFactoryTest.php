@@ -454,28 +454,46 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
     private $milestone_factory;
     private $sprint_1_artifact;
     private $sprint_1_milestone;
+    private $planning_factory;
+    private $artifact_factory;
     
     public function setUp() {
         parent::setUp();
         $this->current_user      = aUser()->build();
         $this->planning_factory  = mock('PlanningFactory');
+        $this->artifact_factory  = mock('Tracker_ArtifactFactory');
         $this->milestone_factory = partial_mock(
             'Planning_MilestoneFactory',
             array('getMilestoneFromArtifact'),
-            array($this->planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'))
+            array($this->planning_factory, $this->artifact_factory, mock('Tracker_FormElementFactory'))
         );
 
         $this->sprint_1_artifact   = aMockArtifact()->withId(1)->build();
         $this->sprint_1_milestone  = aMilestone()->withArtifact($this->sprint_1_artifact)->build();
+
+        $this->planning_id = 12;
+        $this->planning_tracker_id = 123;
+        $this->planning_tracker = aTracker()->withId($this->planning_tracker_id)->withProject(mock('Project'))->build();
+        $this->planning    = aPlanning()->withId($this->planning_id)->withPlanningTracker($this->planning_tracker)->build();
+        stub($this->planning_factory)->getPlanningWithTrackers($this->planning_id)->returns($this->planning);
     }
     
     public function itReturnsEmptyMilestoneWhenNothingMatches() {
-        $planning_id = 12;
-        $planning = aPlanning()->withId($planning_id)->withPlanningTracker(aTracker()->withProject(mock('Project'))->build())->build();
-        stub($this->planning_factory)->getPlanningWithTrackers($planning_id)->returns($planning);
-        
-        $milestone = $this->milestone_factory->getCurrentMilestone($this->current_user, $planning_id);
+        stub($this->artifact_factory)->getOpenArtifactsByTrackerIdUserCanView()->returns(array());
+        $milestone = $this->milestone_factory->getCurrentMilestone($this->current_user, $this->planning_id);
         $this->assertIsA($milestone, 'Planning_NoMilestone');
+    }
+    
+    public function itReturnsTheLastOpenArtifactOfPlanningTracker() {
+        stub($this->artifact_factory)->getOpenArtifactsByTrackerIdUserCanView(
+            $this->current_user,
+            $this->planning_tracker_id
+        )->returns(array('115' => $this->sprint_1_artifact, '104' => aMockArtifact()));
+        
+        stub($this->milestone_factory)->getMilestoneFromArtifact($this->sprint_1_artifact)->returns($this->sprint_1_milestone);
+        
+        $milestone = $this->milestone_factory->getCurrentMilestone($this->current_user, $this->planning_id);
+        $this->assertEqual($milestone, $this->sprint_1_milestone);
     }
 }
 ?>
