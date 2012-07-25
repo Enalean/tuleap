@@ -48,6 +48,7 @@ require_once('Tracker_FormElement_Container_Column.class.php');
 require_once('Tracker_FormElement_StaticField_LineBreak.class.php');
 require_once('Tracker_FormElement_StaticField_Separator.class.php');
 require_once('Tracker_FormElement_StaticField_RichText.class.php');
+require_once('Tracker_FormElement_Field_Checkbox.class.php');
 
 require_once('common/widget/Widget_Static.class.php');
 
@@ -82,6 +83,7 @@ class Tracker_FormElementFactory {
         'art_link' => 'Tracker_FormElement_Field_ArtifactLink',
         'perm'     => 'Tracker_FormElement_Field_PermissionsOnArtifact',
         'shared'   => 'Tracker_FormElement_Shared',
+        'checkbox' => 'Tracker_FormElement_Field_Checkbox',
     );
     
     protected $special_classnames     = array(
@@ -476,11 +478,11 @@ class Tracker_FormElementFactory {
      * @return array All text formElements used by the tracker
      */
     public function getUsedTextFields($tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref'));
+        return $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref', 'checkbox'));
     }
     
     public function getUsedTextFieldById($tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('text', 'string', 'ref'));
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('text', 'string', 'ref', 'checkbox'));
     }
     
     /**
