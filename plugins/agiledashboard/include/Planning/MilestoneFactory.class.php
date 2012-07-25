@@ -337,5 +337,13 @@ class Planning_MilestoneFactory {
         }
         return $sibling_milestones;
     }
+    
+    /**
+     * @return Planning_Milestone
+     */
+    public function getCurrentMilestone(User $user, $planning_id) {
+        $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
+    }
 }
 ?>

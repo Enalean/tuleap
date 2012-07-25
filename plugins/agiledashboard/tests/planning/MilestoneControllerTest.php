@@ -275,7 +275,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $request = aRequest()->withUri($this->request_uri)
                              ->with('group_id', $this->planning->getGroupId())
                              ->with('planning_id', $this->planning->getId())
-                             ->withUser(aUser())
+                             ->withUser(aUser()->build())
                              ->build();
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
@@ -334,10 +334,9 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         $this->project_manager   = mock('ProjectManager');
-        
-        $current_user_builder = aUser();
-        $this->current_user   = $current_user_builder->build();
-        $this->request        = aRequest()->withUser($current_user_builder)->build();
+
+        $this->current_user   = aUser()->build();
+        $this->request        = aRequest()->withUser($this->current_user)->build();
     }
 
     public function itHasNoBreadCrumbWhenThereIsNoMilestone() {
@@ -400,9 +399,8 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         $this->project_manager   = stub('ProjectManager')->getProject()->returns(mock('Project'));
 
-        $current_user_builder = aUser();
-        $this->current_user = $current_user_builder->build();
-        $this->request = aRequest()->withUser($current_user_builder)->build();
+        $this->current_user = aUser()->build();
+        $this->request = aRequest()->withUser($this->current_user)->build();
 
         Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
     }

@@ -18,12 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../../include/Planning/MilestoneFactory.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 require_once dirname(__FILE__).'/../builders/aMilestone.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
 
 abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
 
@@ -445,5 +447,35 @@ class MilestoneFactory_GetSiblingsMilestonesTest extends TuleapTestCase {
         
         $this->assertEqual($milestones, array($this->sprint_1_milestone, $sprint_2_milestone));
     }    
+}
+
+class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
+    private $current_user;
+    private $milestone_factory;
+    private $sprint_1_artifact;
+    private $sprint_1_milestone;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->current_user      = aUser()->build();
+        $this->planning_factory  = mock('PlanningFactory');
+        $this->milestone_factory = partial_mock(
+            'Planning_MilestoneFactory',
+            array('getMilestoneFromArtifact'),
+            array($this->planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'))
+        );
+
+        $this->sprint_1_artifact   = aMockArtifact()->withId(1)->build();
+        $this->sprint_1_milestone  = aMilestone()->withArtifact($this->sprint_1_artifact)->build();
+    }
+    
+    public function itReturnsEmptyMilestoneWhenNothingMatches() {
+        $planning_id = 12;
+        $planning = aPlanning()->withId($planning_id)->withPlanningTracker(aTracker()->withProject(mock('Project'))->build())->build();
+        stub($this->planning_factory)->getPlanningWithTrackers($planning_id)->returns($planning);
+        
+        $milestone = $this->milestone_factory->getCurrentMilestone($this->current_user, $planning_id);
+        $this->assertIsA($milestone, 'Planning_NoMilestone');
+    }
 }
 ?>

@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
 require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
+require_once 'aPlanning.php';
 
 function aMilestone() {
     return new Test_Planning_MilestoneBuilder();
