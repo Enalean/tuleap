@@ -142,7 +142,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
         return CodendiDataAccess::instance()->quoteSmart($value);
     }
     protected function getCriteriaDao() {
-	//A changer
+    //A changer
         return new Tracker_Report_Criteria_Text_ValueDao();
     }
     
@@ -191,7 +191,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
         }
         $html .= '<input type="hidden"   value="0"  name="artifact['. $this->id .']"/>';
         $html .= '<input type="checkbox"   value="1"  name="artifact['. $this->id .']"'. ($value=="1" ? 'checked="checked"' : '') .' />';
-       return $html;
+        return $html;
     }
 
      /**
@@ -275,7 +275,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
         $html= '<input type="hidden"  value="0" name="artifact['. $this->id .']" />';
         $html.= '<input type="checkbox"  value="1" name="artifact['. $this->id .']"'. ($value=="1" ? 'onclick="return false" checked="checked"' : '') .' />';
        return $html;
-     }
+    }
     
     /**
      * Fetch the changes that has been made to this field in a followup
@@ -302,14 +302,14 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
         $to_value = $this->getValue($to['value_id']);
         $to_value = isset($to_value['value']) ? $to_value['value'] : '';
         
-        $callback = array($this, '_filter_html_callback');
+        $callback = array($this, 'filter_html_callback');
         $d = new Codendi_Diff(array_map($callback, explode("\n", $from_value)), 
                               array_map($callback, explode("\n", $to_value)));
         $f = new Codendi_HtmlUnifiedDiffFormatter();
         $diff = $f->format($d);
         return $diff ? $diff : '<em>No changes</em>';
     }
-    protected function _filter_html_callback($s) {
+    protected function filter_html_callback($s) {
         $hp = Codendi_HTMLPurifier::instance();
         return  $hp->purify($s, CODENDI_PURIFIER_CONVERT_HTML);
     }
@@ -335,7 +335,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox');
-	}
+    }
 
     /**
      * @return the description of the field (mainly used in admin part)
