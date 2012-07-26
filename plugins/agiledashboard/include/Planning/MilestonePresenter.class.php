@@ -284,7 +284,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * @return string
      */
     public function createNewItemToPlan() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($this->milestone->getPlanning()->getPlanningTracker()->getItemName()));
     }
     
     /**
