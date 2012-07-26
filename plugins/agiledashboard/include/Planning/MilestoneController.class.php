@@ -193,7 +193,7 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        if ($this->milestone->hasAncestors()) {
+        if ($this->milestone->getArtifact()) {
             $breadcrumbs_merger = new BreadCrumb_Merger();
             foreach(array_reverse($this->milestone->getAncestors()) as $milestone) {
                 $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
