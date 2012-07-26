@@ -930,7 +930,7 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
  * @param int    $artifact_id the ID of the artifact to update
  * @param array{SOAPArtifactFieldValue} $value the fields value to update
  * @param string  $comment     the comment associated with the modification, or null if no follow-up comment.
- * @param string  $commentFormat     The comment (follow-up) type (text/html)
+ * @param string  $comment_format     The comment (follow-up) type (text/html)
  *
  * @return int The artifact id if update was fine,
  *              or a soap fault if :
@@ -940,7 +940,7 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment, $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
     if (session_continue($sessionKey)) {
         $user = UserManager::instance()->getCurrentUser();
         $pm = ProjectManager::instance();
@@ -1002,7 +1002,7 @@ function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $valu
                 }
             }
 
-            if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $commentFormat)) {
+            if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
                 return $artifact_id;
             } else {
                 $response = new Response();

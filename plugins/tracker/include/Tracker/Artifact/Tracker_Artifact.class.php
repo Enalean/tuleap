@@ -607,11 +607,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
                         if ($request->get('comment_format') == 'true') {
-                            $commentFormat = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
+                            $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
                         } else {
-                            $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+                            $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
                         }
-                        $changeset->updateComment($request->get('content'), $current_user, $commentFormat);
+                        $changeset->updateComment($request->get('content'), $current_user, $comment_format);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
                             echo $changeset->getComment()->fetchFollowUp();
@@ -645,10 +645,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
-                $commentFormat = $request->get('comment_formatnew');
+                $comment_format = $request->get('comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
-                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $commentFormat)) {
+                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format)) {
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
@@ -850,11 +850,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param User    $submitter         The user who is doing the update
      * @param string  $email             The email of the person who updates the artifact if modification is done in anonymous mode
      * @param boolean $send_notification true if a notification must be sent, false otherwise
-     * @param string  $commentFormat     The comment (follow-up) type (text/html)
+     * @param string  $comment_format     The comment (follow-up) type (text/html)
      *
      * @return boolean True if update is done without error, false otherwise
      */
-    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $commentFormat = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         $is_valid = true;
         $is_submission = false;
 
@@ -871,7 +871,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment
-                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $commentFormat);
+                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
 
                         //extract references from the comment
                         $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
