@@ -22,5 +22,6 @@ plugin_agiledashboard	create_new_item_to_plan	Create new $1
 plugin_agiledashboard	edit_item	Edit
 plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
+plugin_agiledashboard	planning_pane_title	Backlog/Planning
 
 plugin_agiledashboard	capacity	Capacity:

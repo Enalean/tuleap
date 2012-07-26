@@ -313,5 +313,9 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         return $this->canDisplayRemainingEffort() &&
                $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
     }
+
+    public function planningPaneTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
+    }
 }
 ?>
