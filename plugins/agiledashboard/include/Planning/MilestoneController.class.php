@@ -41,11 +41,6 @@ class Planning_MilestoneController extends MVC2_Controller {
     private $milestone;
 
     /**
-     * @var Array of Planning_Milestone
-     */
-    private $milestone_ancestors = null;
-
-    /**
      * Store all milestones of the current planning
      *
      * @var Array of Planning_Milestone
@@ -67,15 +62,18 @@ class Planning_MilestoneController extends MVC2_Controller {
                                 ProjectManager            $project_manager) {
         
         parent::__construct('agiledashboard', $request);
-        $this->milestone_factory = $milestone_factory;
-        $project                 = $project_manager->getProject($request->get('group_id'));
-        $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
-            $this->getCurrentUser(),
-            $project,
-            $request->get('planning_id'),
-            $request->get('aid')
-        );
-        
+        try {
+            $this->milestone_factory = $milestone_factory;
+            $project                 = $project_manager->getProject($request->get('group_id'));
+            $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+                $this->getCurrentUser(),
+                $project,
+                $request->get('planning_id'),
+                $request->get('aid')
+            );
+        } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+        }
     }
 
     public function show(Planning_ViewBuilder $view_builder) {
@@ -204,34 +202,6 @@ class Planning_MilestoneController extends MVC2_Controller {
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
-    }
-
-    /**
-     * Return current milestone and its ancestors
-     *
-     * @return Array of Planning_Milestone
-     */
-    private function getMilestoneWithAncestors() {
-        if (!$this->milestone_ancestors) {
-            try {
-                $this->milestone_ancestors = array_reverse($this->milestone_factory->getMilestoneWithAncestors($this->getCurrentUser(), $this->milestone));
-            } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                $this->milestone_ancestors = array();
-            }
-        }
-        return $this->milestone_ancestors;
-    }
-
-    /**
-     * Return only ancestors of current milestone
-     *
-     * @return Array of Planning_Milestone
-     */
-    private function getMilestoneAncestors() {
-        $ancestors = $this->getMilestoneWithAncestors();
-        array_pop($ancestors);
-        return $ancestors;
     }
 
     private function getAllMilestonesOfCurrentPlanning() {
