@@ -28,7 +28,18 @@ define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
  * 'milestone' => The current Planning_Milestone
  *
  * Expected results
- * 'panes'     => Input/Output paameter, array of type AgileDashboard_Pane
+ * 'panes'     => Input/Output parameter, array of type AgileDashboard_Pane
  */
 define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
+
+/**
+ * Modify the redirect parameters when attempt to display a planning without specific Milestone selected
+ *
+ * Parameters:
+ * 'milestone' => The most recent Planning_Milestone on which we are about to be redirected
+ *
+ * Expected results
+ * 'redirect_parameters' => Input/Output parameter, array of 'key' => 'value'
+ */
+define('AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT', 'agiledashboard_event_milestone_selector_redirect');
 ?>

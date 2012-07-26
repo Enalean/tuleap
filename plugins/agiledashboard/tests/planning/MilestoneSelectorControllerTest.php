@@ -31,27 +31,49 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
         parent::setUp();
         $this->planning_id       = '321';
         $this->user              = aUser()->withId(12)->build();
-        $request                 = aRequest()->with('planning_id', $this->planning_id)->withUser($this->user)->build();
+        $this->request                 = aRequest()->with('planning_id', $this->planning_id)->withUser($this->user)->build();
         $this->milestone_factory = mock('Planning_MilestoneFactory');
-        $this->controller        = new Planning_MilestoneSelectorController($request, $this->milestone_factory);
-    }
-    
-    function itDoesntRedirectIfNoMilestone() {
-        stub($this->milestone_factory)->getCurrentMilestone()->returns(mock('Planning_NoMilestone'));
-        
-        $GLOBALS['Response']->expectNever('redirect');
-        $this->controller->show();
-    }
-    
-    function itRedirectToTheCurrentMilestone() {
-        $current_milestone_artifact_id = 444;
 
-        $milestone = aMilestone()->withArtifact(anArtifact()->withId($current_milestone_artifact_id)->build())->build();
+        $this->current_milestone_artifact_id = 444;
+
+        $milestone = aMilestone()->withArtifact(anArtifact()->withId($this->current_milestone_artifact_id)->build())->build();
         stub($this->milestone_factory)->getCurrentMilestone($this->user, $this->planning_id)->returns($milestone);
-
-        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("/aid=$current_milestone_artifact_id/")));
-        $this->controller->show();
     }
+
+    public function tearDown() {
+        parent::tearDown();
+        EventManager::clearInstance();
+    }
+
+    function itRedirectToTheCurrentMilestone() {
+        $GLOBALS['Response']->expectOnce('redirect', array(new PatternExpectation("/aid=$this->current_milestone_artifact_id/")));
+        $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
+        $controller->show();
+    }
+
+    function itRedirectToTheCurrentMilestoneCardwallIfAny() {
+        $event_manager = mock('EventManager');
+        EventManager::setInstance($event_manager);
+
+        $event_manager->expectOnce(
+            'processEvent',
+            array(
+                AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
+                '*'
+        ));
+        $controller = new Planning_MilestoneSelectorController($this->request, $this->milestone_factory);
+        $controller->show();
+    }
+
+    function itDoesntRedirectIfNoMilestone() {
+        $milestone_factory = mock('Planning_MilestoneFactory');
+        stub($milestone_factory)->getCurrentMilestone()->returns(mock('Planning_NoMilestone'));
+
+        $GLOBALS['Response']->expectNever('redirect');
+        $controller = new Planning_MilestoneSelectorController($this->request, $milestone_factory);
+        $controller->show();
+    }
+
 }
 
 ?>
