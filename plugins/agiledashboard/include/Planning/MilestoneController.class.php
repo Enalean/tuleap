@@ -94,7 +94,8 @@ class Planning_MilestoneController extends MVC2_Controller {
                                            Tracker_CrossSearch_SearchContentView $content_view,
                                            array                                 $available_milestones) {
         
-        $planning_redirect_parameter = $this->getPlanningRedirectParameter();
+        $planning_redirect_parameter = $this->getPlanningRedirectToSelf();
+        $planning_redirect_to_new    = $this->getPlanningRedirectToNew();
         
         return new Planning_MilestonePresenter(
             $planning,
@@ -102,18 +103,26 @@ class Planning_MilestoneController extends MVC2_Controller {
             $available_milestones,
             $this->milestone,
             $this->getCurrentUser(),
+            $this->request,
             $planning_redirect_parameter,
-            $this->request
+            $planning_redirect_to_new
         );
     }
     
-    private function getPlanningRedirectParameter() {
+    private function getPlanningRedirectToSelf() {
         $planning_id = (int) $this->milestone->getPlanningId();
         $artifact_id = $this->milestone->getArtifactId();
         
         return "planning[$planning_id]=$artifact_id";
     }
-    
+
+    private function getPlanningRedirectToNew() {
+        $planning_id = (int) $this->milestone->getPlanningId();
+        $artifact_id = $this->milestone->getArtifactId();
+
+        return "planning[$planning_id]=-1";
+    }
+
     private function getCrossSearchQuery() {
         $request_criteria      = $this->getArrayFromRequest('criteria');
         $semantic_criteria     = $this->getArrayFromRequest('semantic_criteria');
@@ -139,7 +148,7 @@ class Planning_MilestoneController extends MVC2_Controller {
             $already_planned_artifact_ids,
             $planning->getBacklogTrackerId(),
             $planning,
-            $this->getPlanningRedirectParameter($planning)
+            $this->getPlanningRedirectToSelf()
         );
         
         return $view;
