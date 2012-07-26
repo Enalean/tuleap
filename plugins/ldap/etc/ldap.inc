@@ -52,6 +52,11 @@ $sys_ldap_people_dn     = 'ou=people,dc=tuleap,dc=net';
 // login, etc).
 $sys_ldap_search_user='(|(uid=%words%)(cn=%words%)(mail=%words%))';
 
+// A more sophisticated exemple 
+// $sys_ldap_search_user='(&(|(sn=%words%*)(givenName=%words%*)(uid=%words%*))(!(givenName=BoiteVocale))(uid=*))';
+// You can make so the search will retrieve some extra attribute
+//$sys_ldap_search_user_extra_attrs='sn;givenName';
+
 // On account creation, what it the default user status (A, R, ...)
 $sys_ldap_default_user_status = 'A';
 

@@ -384,7 +384,7 @@ class LDAP {
     function searchUserAsYouType($name, $sizeLimit, $validEmail=false) {
         $apIt  = new AppendIterator();
         if($name && $this->_connectAndBind()) {
-            $filter = '('.$this->ldapParams['cn'].'='.$name.'*)';
+            $filter = str_replace("%words%", $name, $this->ldapParams['search_user']);
             if($validEmail) {
                 // Only search people with a non empty mail field
                 $filter = '(&'.$filter.'('.$this->ldapParams['mail'].'=*))';
@@ -392,6 +392,8 @@ class LDAP {
             // We only care about Common name and Login (lower the amount of data
             // to fetch speed up the request.
             $attrs  = array($this->ldapParams['cn'], $this->ldapParams['uid']);
+            $attrsextra = split(';', $this->ldapParams['search_user_extra_attrs']);
+            $attrs = array_merge($attrs, $attrsextra);
             // We want types and values
             $attrsOnly = 0;
             // Catch errors to detect if there are more results available than
@@ -403,7 +405,7 @@ class LDAP {
             foreach ($peopleDn as $count) {
                 $ds[] = $this->ds;
             }
-            $asr = ldap_list($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
+            $asr = ldap_search($ds, $peopleDn, $filter, $attrs, $attrsOnly, $sizeLimit, 0, LDAP_DEREF_NEVER);
             if ($asr !== false) {
                 foreach ($asr as $sr) {
                     $entries = ldap_get_entries($this->ds, $sr);
