@@ -6,6 +6,8 @@
                 {{#selectableArtifacts}}
                 <li><a href="?group_id={{groupId}}&planning_id={{planningId}}&action=show&aid={{id}}{{currentPaneUrlParam}}">{{{title}}}</a></li>
                 {{/selectableArtifacts}}
+                <li class="divider"></li>
+                <li><a href="?group_id={{groupId}}&planning_id={{planningId}}&action=show&aid=-1">{{createNewItemToPlan}}</a></li>
             </ul>
         </li>
         <li class="{{#isPlannerPaneActive}}active{{/isPlannerPaneActive}}">
@@ -38,9 +40,6 @@
                             </td>
                             <td>
                                 <h3>{{planningPlanTitle}}</h3>
-                                {{^hasSelectedArtifact}}
-                                    {{> select-destination}}
-                                {{/hasSelectedArtifact}}
                                 {{#hasSelectedArtifact}}
                                     {{> show-destination}}
                                 {{/hasSelectedArtifact}}

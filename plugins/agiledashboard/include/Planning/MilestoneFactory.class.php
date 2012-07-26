@@ -308,10 +308,13 @@ class Planning_MilestoneFactory {
      * @return Array of Planning_Milestone
      */
     public function getMilestoneAncestors(User $user, Planning_Milestone $milestone) {
-        $parent_milestone = array();
-        $parent_artifacts = $milestone->getArtifact()->getAllAncestors($user);
-        foreach ($parent_artifacts as $artifact) {
-            $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
+        $parent_milestone   = array();
+        $milestone_artifact = $milestone->getArtifact();
+        if ($milestone_artifact) {
+            $parent_artifacts = $milestone_artifact->getAllAncestors($user);
+            foreach ($parent_artifacts as $artifact) {
+                $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
+            }
         }
         return $parent_milestone;
     }

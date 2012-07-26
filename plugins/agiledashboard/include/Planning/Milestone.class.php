@@ -136,6 +136,13 @@ interface Planning_Milestone {
      * @return Array of Planning_Milestone
      */
     public function getAncestors();
+
+    /**
+     * Set parents of current milestone
+     *
+     * @param Array of Planning_Milestone
+     */
+    public function setAncestors(array $ancestors);
 }
 
 ?>

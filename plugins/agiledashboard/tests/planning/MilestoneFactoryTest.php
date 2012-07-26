@@ -383,6 +383,13 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
         $this->sprint_milestone = aMilestone()->withArtifact($this->sprint_artifact)->build();
     }
 
+    public function itReturnsEmptyArrayIfThereIsNoArtifactInMilestone() {
+        $empty_milestone = new Planning_NoMilestone(mock('Project'), mock('Planning'));
+
+        $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $empty_milestone);
+        $this->assertEqual($milestones, array());
+    }
+
     public function itBuildTheMilestonesWhenNoParents() {
         stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array());
 
