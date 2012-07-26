@@ -206,7 +206,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
         
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {
-            $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
+            $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
         } else {
             $html .= '<input type="hidden"  value="0"  name="artifact['. $this->id .']"  />';
             $html .= '<input type="checkbox"  value="1"  name="artifact['. $this->id .']" '. ($value=="1" ? 'checked="checked"' : '') .' />';
@@ -404,7 +404,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
     protected function validate(Tracker_Artifact $artifact, $value) {
         $r = $this->getRuleString();
         if (!($is_valid = $r->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'error_text_value', array($this->getLabel())));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
         }
         return $is_valid;
     }
