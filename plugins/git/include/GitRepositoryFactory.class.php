@@ -150,7 +150,7 @@ class GitRepositoryFactory {
         return $repository;
     }
     
-    public function isRepositoryPathAnExistingRepository(Project $project, $name) {
+    public function isInRepositoryNameAnExistingRepository(Project $project, $name) {
         $dirs = explode('/', $name);
         if (count($dirs) > 1) {
             foreach($dirs as $dir) {
