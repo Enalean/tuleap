@@ -1,5 +1,13 @@
 <div class="agiledashboard">
     <ul class="nav nav-tabs">
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{milestoneTitle}}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                {{#selectableArtifacts}}
+                <li><a href="?group_id={{groupId}}&planning_id={{planningId}}&action=show&aid={{id}}{{currentPaneUrlParam}}">{{{title}}}</a></li>
+                {{/selectableArtifacts}}
+            </ul>
+        </li>
         <li class="{{#isPlannerPaneActive}}active{{/isPlannerPaneActive}}">
             <a href="{{current_uri}}">{{planningName}}</a>
         </li>

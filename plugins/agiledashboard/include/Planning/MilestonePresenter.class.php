@@ -58,7 +58,12 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * @var array
      */
     private $additional_panes = array();
-    
+
+    /**
+     * @var Codendi_Request
+     */
+    private $request;
+
     /**
      * Instanciates a new presenter.
      * 
@@ -78,7 +83,8 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                                 array                                 $available_milestones,
                                 Planning_Milestone                    $milestone, 
                                 User                                  $current_user,
-                                                                      $planning_redirect_parameter) {
+                                                                      $planning_redirect_parameter,
+                                Codendi_Request                       $request) {
         parent::__construct($planning);
         
         $this->milestone                   = $milestone;
@@ -88,8 +94,19 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $this->planning_redirect_parameter = $planning_redirect_parameter;
         $this->current_uri                 = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
         $this->planned_artifacts_tree      = $this->buildPlannedArtifactsTree();
+        $this->request                     = $request;
     }
-    
+
+    public function milestoneTitle() {
+        return $this->milestone->getArtifactTitle();
+    }
+
+    public function currentPaneUrlParam() {
+        if (!$this->isPlannerPaneActive()) {
+            return '&pane='.$this->request->get('pane');
+        }
+    }
+
     /**
      * @return bool
      */
@@ -125,7 +142,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                     )
                 );
 
-                $requested_pane   = HTTPRequest::instance()->get('pane');
+                $requested_pane   = $this->request->get('pane');
                 foreach($this->additional_panes as $pane) {
                     $pane->setActive($requested_pane === $pane->getIdentifier());
                     $a_pane_is_active = $pane->isActive();

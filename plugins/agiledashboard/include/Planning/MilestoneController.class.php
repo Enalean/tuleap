@@ -96,12 +96,15 @@ class Planning_MilestoneController extends MVC2_Controller {
         
         $planning_redirect_parameter = $this->getPlanningRedirectParameter();
         
-        return new Planning_MilestonePresenter($planning,
-                                               $content_view,
-                                               $available_milestones,
-                                               $this->milestone,
-                                               $this->getCurrentUser(),
-                                               $planning_redirect_parameter);
+        return new Planning_MilestonePresenter(
+            $planning,
+            $content_view,
+            $available_milestones,
+            $this->milestone,
+            $this->getCurrentUser(),
+            $planning_redirect_parameter,
+            $this->request
+        );
     }
     
     private function getPlanningRedirectParameter() {
