@@ -92,12 +92,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
     }
 
-    public function itDisplaysTheNameOfThePlanning() {
-        $name    = $this->planning->getName();
-        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
-        $this->assertPattern("/$name/", $content);
-    }
-
     public function itDoesNotAllowDragNDropIfArtifactDestinationHasNoArtifactLink() {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnArtifactWithoutArtifactLinkField();
 
