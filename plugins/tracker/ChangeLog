@@ -1,3 +1,6 @@
+Version 5.8.8 - Tuleap 5.4
+    * Allow to use both login names, email or any valid login format (like ldap). (contrib STMicroelectronics).
+
 Version 5.8.7 - Tuleap 5.3.1
     * Artifacts can no longer reference themselves.
     * Artifact link no longer create a link on itself.
