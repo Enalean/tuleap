@@ -150,6 +150,18 @@ class GitRepositoryFactory {
         return $repository;
     }
     
+    public function isRepositoryPathAnExistingRepository(Project $project, $name) {
+        $dirs = explode('/', $name);
+        if (count($dirs) > 1) {
+            foreach($dirs as $dir) {
+                if ($this->dao->isDirAnExistingRepository($project->getID(), $dir)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
     public function isRepositoryExistingByName(Project $project, $name) {
         $path = GitRepository::getPathFromProjectAndName($project, $name);
         return $this->dao->isRepositoryExisting($project->getID(), $path);

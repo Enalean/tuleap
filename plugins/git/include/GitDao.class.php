@@ -492,6 +492,18 @@ class GitDao extends DataAccessObject {
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }
+    
+    public function isDirAnExistingRepository($project_id, $dir) {
+        $project_id = $this->da->escapeInt($project_id);
+        $dir       = $this->da->quoteSmart($dir);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE repository_name = $dir
+                  AND project_id = $project_id
+                  AND ".self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
 
 }
 

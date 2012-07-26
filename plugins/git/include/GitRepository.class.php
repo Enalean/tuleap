@@ -156,7 +156,7 @@ class GitRepository implements DVCSRepository {
             $this->loaded = $this->getDao()->getProjectRepository($this);
         } else {            
             $this->loaded = $this->getDao()->getProjectRepositoryById($this);
-        }       
+        }
         //loading failed
         return $this->loaded;
     }
