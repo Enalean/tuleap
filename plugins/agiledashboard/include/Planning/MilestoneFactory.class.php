@@ -259,6 +259,7 @@ class Planning_MilestoneFactory {
     public function getMilestoneWithPlannedArtifactsAndSubMilestones(User $user, $group_id, $planning_id, $artifact_id) {
         $milestone = $this->getMilestoneWithPlannedArtifacts($user, $group_id, $planning_id, $artifact_id);
         $milestone->addSubMilestones($this->getSubMilestones($user, $milestone));
+        $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
         return $milestone;
     }
 
@@ -306,13 +307,13 @@ class Planning_MilestoneFactory {
      *
      * @return Array of Planning_Milestone
      */
-    public function getMilestoneWithAncestors(User $user, Planning_Milestone $milestone) {
+    public function getMilestoneAncestors(User $user, Planning_Milestone $milestone) {
         $parent_milestone = array();
         $parent_artifacts = $milestone->getArtifact()->getAllAncestors($user);
         foreach ($parent_artifacts as $artifact) {
             $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
         }
-        return array_merge(array($milestone), $parent_milestone);
+        return $parent_milestone;
     }
 
     /**

@@ -231,6 +231,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($milestone)->userCanView()->returns(true);
         stub($milestone)->getPlanning()->returns($this->planning);
         stub($milestone)->getProject()->returns(mock('Project'));
+        stub($milestone)->getAncestors()->returns(array());
         
         return $milestone;
     }
@@ -251,7 +252,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         $user = aUser()->build();
-        stub($this->milestone_factory)->getMilestoneWithAncestors($user, $milestone)->returns(array());
         
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
@@ -265,7 +265,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         $user = aUser()->build();
-        stub($this->milestone_factory)->getMilestoneWithAncestors($user, $milestone)->returns(array());
                 
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
@@ -348,8 +347,8 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     }
 
     public function itIncludesBreadcrumbsForParentMilestones() {
+        $this->sprint->setAncestors(array($this->release, $this->product));
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
-        stub($this->milestone_factory)->getMilestoneWithAncestors($this->current_user, $this->sprint)->returns(array($this->sprint, $this->release, $this->product));
 
         $controller  = new Planning_MilestoneController($this->request, $this->milestone_factory, $this->project_manager);
 
@@ -394,6 +393,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         stub($this->sprint_1)->getArtifactTitle()->returns('Sprint 1');
         stub($this->sprint_1)->getPlanning()->returns(aPlanning()->build());
         stub($this->sprint_1)->getLinkedArtifacts()->returns(array());
+        stub($this->sprint_1)->hasAncestors()->returns(true);
         $this->sprint_2 = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Sprint 2')->build())->build();
 
         $this->milestone_factory = mock('Planning_MilestoneFactory');

@@ -82,9 +82,11 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
 class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
 
     public function itCanRetrieveMilestoneWithItsPlanningItsArtifactItsPlannedItemsAndItsSubMilestones() {
-        $milestone_factory = TestHelper::getPartialMock('Planning_MilestoneFactory', array('getMilestoneWithPlannedArtifacts',
-                                                                                           'getSubMilestones'));
-        $milestone_factory->__construct($this->planning_factory, $this->artifact_factory, $this->formelement_factory);
+        $milestone_factory = partial_mock(
+            'Planning_MilestoneFactory',
+             array('getMilestoneWithPlannedArtifacts', 'getSubMilestones', 'getMilestoneAncestors'),
+             array($this->planning_factory, $this->artifact_factory, $this->formelement_factory)
+        );
         
         $milestone_with_planned_artifacts = aMilestone()->build();
         stub($milestone_factory)->getMilestoneWithPlannedArtifacts($this->user,
@@ -92,12 +94,18 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
                                                                    $this->planning_id,
                                                                    $this->artifact_id)
                                 ->returns($milestone_with_planned_artifacts);
-        
+
         $sub_milestones = array(aMilestone()->build(),
                                 aMilestone()->build());
-        stub($milestone_factory)->getSubMilestones($this->user, $milestone_with_planned_artifacts)
-                                ->returns($sub_milestones);
-        
+        stub($milestone_factory)
+            ->getSubMilestones($this->user, $milestone_with_planned_artifacts)
+            ->returns($sub_milestones);
+
+        $parent_milestones = array(aMilestone()->build());
+        stub($milestone_factory)
+            ->getMilestoneAncestors($this->user, $milestone_with_planned_artifacts)
+            ->returns($parent_milestones);
+
         $milestone = $milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones($this->user,
                                                                                           $this->project,
                                                                                           $this->planning_id,
@@ -105,6 +113,8 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $this->assertIsA($milestone, 'Planning_ArtifactMilestone');
         $this->assertEqual($milestone->getPlannedArtifacts(), $milestone_with_planned_artifacts->getPlannedArtifacts());
         $this->assertEqual($milestone->getSubMilestones(), $sub_milestones);
+        $this->assertTrue($milestone->hasAncestors());
+        $this->assertEqual($milestone->getAncestors(), $parent_milestones);
     }
     
     public function itCanRetrieveSubMilestonesOfAGivenMilestone() {
@@ -376,8 +386,8 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
     public function itBuildTheMilestonesWhenNoParents() {
         stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array());
 
-        $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEqual($milestones, array($this->sprint_milestone));
+        $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
+        $this->assertEqual($milestones, array());
     }
 
     public function itBuildTheMilestoneForOneParent() {
@@ -387,8 +397,8 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
         $release_milestone = mock('Planning_ArtifactMilestone');
         stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns($release_milestone);
 
-        $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEqual($milestones, array($this->sprint_milestone, $release_milestone));
+        $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
+        $this->assertEqual($milestones, array($release_milestone));
     }
 
     public function itBuildTheMilestoneForSeveralParents() {
@@ -401,8 +411,8 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
         stub($this->milestone_factory)->getMilestoneFromArtifact($product_artifact)->returns($product_milestone);
         stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns($release_milestone);
 
-        $milestones = $this->milestone_factory->getMilestoneWithAncestors($this->current_user, $this->sprint_milestone);
-        $this->assertEqual($milestones, array($this->sprint_milestone, $release_milestone, $product_milestone));
+        $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
+        $this->assertEqual($milestones, array($release_milestone, $product_milestone));
     }
 }
 

@@ -81,10 +81,10 @@ class Planning_MilestoneController extends MVC2_Controller {
     public function show(Planning_ViewBuilder $view_builder) {
         $project              = $this->milestone->getProject();
         $planning             = $this->milestone->getPlanning();
-        if ($this->milestone instanceof Planning_NoMilestone) {
-            $available_milestones = $this->getAllMilestonesOfCurrentPlanning();
-        } else {
+        if ($this->milestone->hasAncestors()) {
             $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
+        } else {
+            $available_milestones = $this->getAllMilestonesOfCurrentPlanning();
         }
         $content_view         = $this->buildContentView($view_builder, $planning, $project);
         $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
@@ -164,7 +164,7 @@ class Planning_MilestoneController extends MVC2_Controller {
 
     private function getPreselectedCriteriaFromAncestors() {
         $preselected_criteria = array();
-        foreach($this->getMilestoneAncestors() as $milestone) {
+        foreach($this->milestone->getAncestors() as $milestone) {
             $preselected_criteria[$milestone->getArtifact()->getTrackerId()] = array($milestone->getArtifactId());
         }
         return $preselected_criteria;
@@ -195,11 +195,12 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @return BreadCrumb_BreadCrumbGenerator
      */
     public function getBreadcrumbs($plugin_path) {
-        if ($this->milestone->getArtifact()) {
+        if ($this->milestone->hasAncestors()) {
             $breadcrumbs_merger = new BreadCrumb_Merger();
-            foreach($this->getMilestoneWithAncestors() as $milestone) {
+            foreach(array_reverse($this->milestone->getAncestors()) as $milestone) {
                 $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $milestone));
             }
+            $breadcrumbs_merger->push(new BreadCrumb_Milestone($plugin_path, $this->milestone));
             return $breadcrumbs_merger;
         }
         return new BreadCrumb_NoCrumb();
