@@ -54,6 +54,12 @@ if($request->exist('preserve_members') && $request->get('preserve_members') == '
     $bindOption = 'preserve_members';
 }
 
+// Check if user has checked the Synchronization option.
+$synchro = false;
+if($request->exist('synchronize') && $request->get('synchronize') == 'on') {
+    $synchro = true;
+}
+
 // Get LDAP group name
 $vLdapGroup = new Valid_String('ldap_group');
 $vLdapGroup->required();
@@ -73,7 +79,7 @@ if($request->isPost() && $request->valid($vLdapGroup)) {
         //
         // Perform Project Members <-> LDAP Group synchro
         //
-        $ldapGroupManager->bindWithLdap($bindOption);
+        $ldapGroupManager->bindWithLdap($bindOption, $synchro);
         $GLOBALS['Response']->redirect('/project/admin/index.php?group_id='.$groupId);
 
     } elseif($request->exist('cancel')) {

@@ -83,6 +83,7 @@ extends LDAP_GroupManager
     {
         return $this->getDao()->getMembersId($ugroupId);
     }
+    
 
     /**
      * Return dao

@@ -115,10 +115,11 @@ abstract class LDAP_GroupManager
     /**
      * Link and synchronize a Codendi Group and an LDAP group
      *
-     * @param string $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
+     * @param String  $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
+     * @param Boolean $synchro 
      * @return void
      */
-    public function bindWithLdap($option='bind') 
+    public function bindWithLdap($option='bind', $synchro = false) 
     {
         if ($this->getGroupDn()) {
              $this->bindWithLdapGroup();
@@ -311,16 +312,18 @@ abstract class LDAP_GroupManager
     /**
      * Save link between Codendi Group and LDAP group
      *
+     * @param  Boolean $synchro 
+     * 
      * @return Boolean
      */
-    protected function bindWithLdapGroup()
+    protected function bindWithLdapGroup($synchro = false)
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
         if ($row !== false) {
             $dao->unlinkGroupLdap($this->id);
         }
-        return $dao->linkGroupLdap($this->id, $this->groupDn);
+        return $dao->linkGroupLdap($this->id, $this->groupDn, $synchro);
     }
     
     /**

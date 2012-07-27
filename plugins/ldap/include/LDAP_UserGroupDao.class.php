@@ -67,13 +67,14 @@ extends DataAccessObject
      *
      * @param Integer $ugroupId    Codendi user group id 
      * @param String  $ldapGroupDn LDAP group distinguish name
+     * @param Boolean $synchro     synchronisation option
      * 
      * @return Boolean
      */
-    function linkGroupLdap($ugroupId, $ldapGroupDn) 
+    function linkGroupLdap($ugroupId, $ldapGroupDn, $synchro) 
     {
-        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn)'.
-            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'")';
+        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro)'.
+            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.db_ei($ugroupId).')';
         return $this->update($sql);
     }
     
