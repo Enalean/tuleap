@@ -92,7 +92,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
         $value = $GLOBALS['Language']->getText('global','unchanged');
 
         if ($this->isSemanticTitle()) {
-            $html .= '<input type="text" readonly="readonly" value="'.$value.'" title="'.$GLOBALS['Language']->getText('tracker_artifact_masschange', 'cannot_masschange_title').'" />';
+            $html .= '<input type="text" readonly="readonly" value="'.$value.'" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'" />';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $html .= '<input type="text"
@@ -159,14 +159,14 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return "Web Link";
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'weblink');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return "Field which create web link";
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'weblink_desc');
     }
     
     /**
@@ -220,9 +220,9 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
         $r1 = $this->getRuleString();
         $r2 = $this->getRuleNoCr();
         if (!($is_valid = $r1->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'error_string_value', array($this->getLabel())));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_string_value', array($this->getLabel())));
         } else if (!($is_valid = $r2->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'error_string_value_characters', array($this->getLabel())));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_string_value_characters', array($this->getLabel())));
         }
         return $is_valid;
     }
