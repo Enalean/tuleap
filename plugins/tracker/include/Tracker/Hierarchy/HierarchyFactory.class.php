@@ -64,6 +64,8 @@ class Tracker_HierarchyFactory {
      * We should usually prefer dependency injection over static methods, but
      * there are some cases in Tuleap legacy code where injection would require
      * a lot of refactoring (e.g. Tracker/FormElement).
+     * 
+     * @return Tracker_HierarchyFactory
      */
     public static function instance() {
         if (! self::$_instance) {
