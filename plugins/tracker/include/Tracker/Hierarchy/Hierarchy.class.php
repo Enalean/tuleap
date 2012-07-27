@@ -65,7 +65,17 @@ class Tracker_Hierarchy {
             return false;
         }
     }
-    
+
+    /**
+     * Return True if given tracker is at the root of the Hierarchy
+     *
+     * @param type $tracker_id
+     * @return type
+     */
+    public function isRoot($tracker_id) {
+        return $this->getLevel($tracker_id) == 0;
+    }
+
     /**
      * @throws Tracker_Hierarchy_NotInHierarchyException
      * @throws Tracker_Hierarchy_CyclicHierarchyException
