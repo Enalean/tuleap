@@ -50,6 +50,7 @@ Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Planning_ViewBuilder');
 
 class Planning_MilestoneControllerTest extends TuleapTestCase {
+    private $planning;
 
     public function setUp() {
         parent::setUp();
@@ -205,6 +206,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
         $artifact->setReturnValue('getUniqueLinkedArtifacts', $already_linked_items);
         $artifact->setReturnValue('userCanView', true);
+        $artifact->setReturnValue('getAllowedChildrenTypes', array());
 
         $tracker = stub('Tracker')->userCanView()->returns(true);
         stub($artifact)->getTracker()->returns($tracker);
