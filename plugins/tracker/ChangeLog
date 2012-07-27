@@ -1,3 +1,6 @@
+Version 5.8.10 - Tuleap 5.4
+    * Remember user preference on artifact follow-up comment order display (contrib STMicroelectronics).
+
 Version 5.8.9 - Tuleap 5.4
     * Internal API update for hierarchy management.
 
