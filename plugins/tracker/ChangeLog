@@ -1,3 +1,6 @@
+Version 5.8.9 - Tuleap 5.4
+    * Internal API update for hierarchy management.
+
 Version 5.8.8 - Tuleap 5.4
     * Allow to use both login names, email or any valid login format (like ldap). (contrib STMicroelectronics).
 

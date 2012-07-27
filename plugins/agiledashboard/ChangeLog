@@ -1,3 +1,9 @@
+Version 0.46 - Tuleap 5.4
+    * Reduce number of click to get on agile dashboard.
+    * Allow to switch from one sprint to another from cardwall
+    * Display only sibling sprints in selector
+    * Allow to create epics directly into release plan
+
 Version 0.45 - Tuleap 5.3
     * Fix selection of backlog tracker
     * Fix display of remaining effort

@@ -59,6 +59,7 @@ class cardwallPlugin extends Plugin {
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
+                $this->_addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT, 'agiledashboard_event_milestone_selector_redirect', false);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -228,6 +229,15 @@ class cardwallPlugin extends Plugin {
             require_once 'Pane.class.php';
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
             $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config);
+        }
+    }
+
+    public function agiledashboard_event_milestone_selector_redirect($params) {
+        if ($params['milestone']->getArtifact()) {
+            $tracker  = $params['milestone']->getArtifact()->getTracker();
+            if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
+                $params['redirect_parameters']['pane'] = 'cardwall';
+            }
         }
     }
 

@@ -1,7 +1,17 @@
 <div class="agiledashboard">
     <ul class="nav nav-tabs">
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">{{milestoneTitle}}<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+                {{#selectableArtifacts}}
+                <li><a href="?group_id={{groupId}}&planning_id={{planningId}}&action=show&aid={{id}}{{currentPaneUrlParam}}">{{{title}}}</a></li>
+                {{/selectableArtifacts}}
+                <li class="divider"></li>
+                <li><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id={{parentArtifactId}}&immediate=1&{{planningRedirectToNew}}">{{createNewItemToPlan}}</a></li>
+            </ul>
+        </li>
         <li class="{{#isPlannerPaneActive}}active{{/isPlannerPaneActive}}">
-            <a href="{{current_uri}}">{{planningName}}</a>
+            <a href="{{current_uri}}">{{planningPaneTitle}}</a>
         </li>
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}
@@ -30,9 +40,6 @@
                             </td>
                             <td>
                                 <h3>{{planningPlanTitle}}</h3>
-                                {{^hasSelectedArtifact}}
-                                    {{> select-destination}}
-                                {{/hasSelectedArtifact}}
                                 {{#hasSelectedArtifact}}
                                     {{> show-destination}}
                                 {{/hasSelectedArtifact}}

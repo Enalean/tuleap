@@ -81,7 +81,23 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $level = $hierarchy->getLevel(1002);
         $this->assertEqual(0, $level);
     }
-    
+
+    public function itIsRootWhenItIsTheOnlyParent() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 111);
+        $this->assertTrue($hierarchy->isRoot(112));
+        $this->assertFalse($hierarchy->isRoot(111));
+    }
+
+    public function itIsRootWhenThereAreSeveralParents() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 111);
+        $hierarchy->addRelationship(111, 110);
+        $this->assertTrue($hierarchy->isRoot(112));
+        $this->assertFalse($hierarchy->isRoot(111));
+        $this->assertFalse($hierarchy->isRoot(110));
+    }
+
     public function ItShouldBeChild() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);
