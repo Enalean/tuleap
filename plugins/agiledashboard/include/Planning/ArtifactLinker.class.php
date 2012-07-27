@@ -18,6 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Ensure consistency of backlogs.
+ *
+ * When an element is added to a Plannification item, it must be add to Parents
+ * plannification item as well
+ *
+ * Given I have following plannings
+ * Epic -> Product
+ * Epic -> Release
+ *
+ * And following hierarchy
+ * Product -> Release (let say "Product Toto" and "Release 1.0")
+ *
+ * When I add a new Epic into "Release 1.0" backlog, it must be added into
+ * "Product Toto" backlog as well
+ */
 class Planning_ArtifactLinker {
     private $artifact_factory;
 
