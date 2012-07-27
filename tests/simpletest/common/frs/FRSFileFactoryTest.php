@@ -146,6 +146,19 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
+    function testMoveFilesCatchesExceptionAndLogThem() {
+        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
+        $ff->throwOn('purgeFiles', new RuntimeException("Error while doing things"));
+        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
+        $ff->setReturnValue('cleanStaging', true);
+        $ff->setReturnValue('restoreDeletedFiles', true);
+
+        $backend = new MockBackendSystem();
+        $backend->expectOnce('log', array("Error while doing things", Backend::LOG_ERROR));
+
+        $this->assertFalse($ff->moveFiles(1287504083, $backend));
+    }
+
     function testMoveDeletedFilesToStagingAreaWithNoFiles() {
         $ff = new FRSFileFactoryTestMoveToStaging($this);
 

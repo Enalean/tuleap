@@ -1,3 +1,16 @@
+Version 5.4 (Not released yet)
+	== Plugins ==
+	* Tracker: 5.8.8
+
+Version 5.3.1 (Monday, July 23rd 2012)
+	== Plugins ==
+	* Docman 2.26.2
+	* Tracker: 5.8.7
+
+	== Bug fix ==
+	* Fix bug on user SSH key dump on filesystem (didn't take case into account and process context was not restored).
+	* Fix warning on Subversion conf serialization.
+
 Version 5.3 (Thursday, July 19th 2012)
 	== Plugins ==
 	* Agildashboard: 0.45
