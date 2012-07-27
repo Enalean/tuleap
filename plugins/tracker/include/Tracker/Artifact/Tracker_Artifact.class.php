@@ -606,7 +606,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
-                        if ($request->get('comment_format') == 'true') {
+                        if ((bool)$request->get('comment_format') == true) {
                             $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
                         } else {
                             $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
