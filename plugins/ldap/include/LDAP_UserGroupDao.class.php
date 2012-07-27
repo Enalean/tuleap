@@ -74,7 +74,7 @@ extends DataAccessObject
     function linkGroupLdap($ugroupId, $ldapGroupDn, $synchro) 
     {
         $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro)'.
-            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.db_ei($ugroupId).')';
+            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.db_ei($synchro).')';
         return $this->update($sql);
     }
     

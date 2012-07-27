@@ -109,7 +109,6 @@ if($request->isPost() && $request->valid($vSubmit)) {
                 // Perform Ugroup <-> LDAP Group synchro
                 //
                 $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
-                $ldapUserGroupManager->storeSynchronizationOption($synchro);
 
             } elseif($request->exist('cancel')) {
                 // Display the screen below!
