@@ -399,7 +399,7 @@ class ArtifactFieldHtml extends ArtifactField {
      * @param text_none: text associated with the none value_id to display in the select box
      * @param show_any: show the Any entry in the select box if true (value_id 0)
      * @param text_any: text associated with the any value_id  tp display in the select box
-     * @param showSpan: Display span used in JS only
+     * @param htmlEmail: Specific display for HTML email
      *
 	 *	@return	string
 	 */
@@ -408,7 +408,7 @@ class ArtifactFieldHtml extends ArtifactField {
 				   $show_none=false, $text_none=0,
 				   $show_any=false, $text_any=0,
 				   $show_unchanged=false,$text_unchanged=0,
-                   $showSpan = true) {
+                   $htmlEmail = true) {
 	    global $Language;
         $hp = Codendi_HTMLPurifier::instance();
         //Use url parameters to populate fields
@@ -452,7 +452,7 @@ class ArtifactFieldHtml extends ArtifactField {
                 $output .= join(', ', $arr);
             } else {
                 $output .= join('<br>', $arr);
-                if ($showSpan) {
+                if ($htmlEmail) {
                     //The span is used to pass values that would be processed in JS as dependency sources' values  
                     $output .= '<span id="'.$this->field_name.'" style="display: none;">'.$value.'</span>';
                 }
@@ -501,7 +501,7 @@ class ArtifactFieldHtml extends ArtifactField {
 		    }
 		    $output .= join(",", $arr);
             if (!$ascii) {
-                if ($showSpan) {
+                if ($htmlEmail) {
                     //The span is used to pass values id that would be processed in JS as dependency sources' values  
                     $output .= '<span id="'.$this->field_name.'" style="display: none;">'.implode(',', $valueArray).'</span>';
                 }
