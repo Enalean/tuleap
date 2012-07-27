@@ -7,7 +7,6 @@
                 <li><a href="?group_id={{groupId}}&planning_id={{planningId}}&action=show&aid={{id}}{{currentPaneUrlParam}}">{{{title}}}</a></li>
                 {{/selectableArtifacts}}
                 <li class="divider"></li>
-                <!--http://shunt.cro.enalean.com/plugins/tracker/?tracker=276&func=new-artifact-link&id=231&immediate=1&cardwall[agile][86]=380-->
                 <li><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id={{parentArtifactId}}&immediate=1&{{planningRedirectToNew}}">{{createNewItemToPlan}}</a></li>
             </ul>
         </li>
