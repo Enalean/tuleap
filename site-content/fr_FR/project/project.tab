@@ -204,7 +204,7 @@ project_admin_index	member_request_delegation_ugroups_all_invalid	Les groupes d'
 project_admin_index	member_request_delegation_ugroups_some_invalid	Ces groupes d'utilisateurs ($1) ne peuvent pas etre ajoutés, ils ne contiennent aucun admin du projet ou sont vides
 project_admin_index	member_request_delegation_ugroups_non_admins	Certains groupes d'utilisateurs contiennent des utilisateurs non admins du projet ($1 non admin du projet en total, ils ne vont pas reçevoir les demandes de permission).
 project_admin_index	member_request_delegation_ugroups_msg	Le(s) groupe(s) d'utilisateur à  notifier pour la délégation d'opération d'admin ($1) ont été modifiés.
-project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message significatif afin d'aider l'administateur. 
+project_admin_index	member_request_delegation_msg_to_requester	Veuillez soumettre un message pertinent afin d'aider l'administateur. 
 project_admin_index	member_request_delegation_msg_desc	Ci-dessous le message par défaut qui va être affiché aux utilisateurs qui requièrent l'accès à votre projet. Vous pouvez le personnaliser.
 project_admin_index	member_request_delegation_msg_info	Le message destiné aux utilisateurs a été modifié .
 project_admin_index	member_request_delegation_msg_error	Impossible de modifier le message destiné aux utilisateurs.
@@ -358,17 +358,17 @@ project_admin_utils	edit_public_info	Editions infos publiques
 project_admin_utils	user_perms	Permissions utilisateurs
 project_admin_utils	references	Configuration des références
 project_admin_utils	ug_admin	Administration des groupes utilisateurs
-project_admin_utils	project_data_export	Exportation des données
-project_admin_utils	tracker_import	Importation outils de suivi
+project_admin_utils	project_data_export	Export des données
+project_admin_utils	tracker_import	Import outils de suivi
 project_admin_utils	access_logs	Journal des accès
 project_admin_utils	g_change_history	Historique du projet
 project_admin_utils	event	Evènement
 project_admin_utils	val	Valeur
 project_admin_utils	date	Date
-project_admin_utils	no_g_change	Aucun changement, correspondant au filtre, n'a été effectué sur ce projet
+project_admin_utils	no_g_change	Aucun changement correspondant au filtre, n'a été effectué sur ce projet
 project_admin_utils	previous	Précédent
 project_admin_utils	next	Suivant
-project_admin_utils	permission_request	Mettre a jour les groupes et le message
+project_admin_utils	permission_request	Mettre à jour les groupes et le message
 project_admin_utils	selected_ugroups_title	Le(s) groupe(s) d'utilisateurs notifié(s) lors de la délégation des demandes d'accès:
 project_admin_utils	notif_message_title	Message de notification par défaut:
 # ... message for the group_history field_name
