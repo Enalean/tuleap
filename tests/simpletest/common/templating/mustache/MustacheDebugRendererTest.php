@@ -33,7 +33,7 @@ class MustacheDebugRenderer_TestCase extends TuleapTestCase {
     }
     
     protected function whatever() {
-        return new stdClass();
+        return print_r(new stdClass(), true);
     }
 }
 
