@@ -232,7 +232,6 @@ extends WikiPlugin
                 //$col = new _PageList_Column_ratingvalue('ratingvalue', $u->getId(), 'right', $dimension, $u);
                 $col = array('_PageList_Column_ratingvalue','custom:ratingvalue', $u->getId(), 'right',' ' ,$u);
                 $pagelist->addColumnObject($col);
-                //unset($col)
                 unset($u);
             }
         }
