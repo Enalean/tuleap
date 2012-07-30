@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) STMicroelectronics 2012. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +16,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('pre.php');
 
-?><h3>Besoin d'aide?</h3>
-<ul class="unstyled">
-    <li>Consulter la <a href="/site/">documentation</a>
-    </li>
-    <li><a href="/contact.php">Contactez-nous</a></li>
-</ul>
-<?php
+$valid = new Valid_UInt('tracker_id');
+$valid->required();
+if($request->valid($valid)) {
+    echo user_get_preference('tracker_comment_invertorder_'.$request->get('tracker_id'));
+}
+
 ?>

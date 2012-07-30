@@ -1,3 +1,13 @@
+Version 5.4 (Not released yet)
+	== Bug fix ==
+	* Fix typo in french translation.
+
+	== Plugins ==
+	* Agiledashboard: 0.46
+	* Tracker: 5.8.10
+	* Cardwall: 0.9.2
+	* Test: 5.2
+
 Version 5.3.1 (Monday, July 23rd 2012)
 	== Plugins ==
 	* Docman 2.26.2

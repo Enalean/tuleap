@@ -137,11 +137,12 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
      */
     public function getParentsInHierarchy($artifact_id) {
         $artifact_id = $this->da->escapeInt($artifact_id);
-        $sql = "SELECT artifact.*
+        $sql = "SELECT parent_art.*
                 FROM           tracker_changeset_value_artifactlink artlink
-                    INNER JOIN tracker_changeset_value              cv        ON (cv.id = artlink.changeset_value_id)
-                    INNER JOIN tracker_artifact                     artifact  ON (artifact.last_changeset_id = cv.changeset_id)
-                    INNER JOIN tracker_hierarchy                    hierarchy ON (hierarchy.parent_id = artifact.tracker_id)
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.id = artlink.changeset_value_id)
+                    INNER JOIN tracker_artifact                     parent_art ON (parent_art.last_changeset_id = cv.changeset_id)
+                    INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.parent_id = parent_art.tracker_id AND hierarchy.child_id = child_art.tracker_id)
                 WHERE artlink.artifact_id = $artifact_id";
         return $this->retrieve($sql);
     }

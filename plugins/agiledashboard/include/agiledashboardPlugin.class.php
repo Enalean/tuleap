@@ -63,6 +63,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+        $this->updateBacklogs($params);
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
             require_once 'Planning/PlanningFactory.class.php';
@@ -72,7 +73,20 @@ class AgileDashboardPlugin extends Plugin {
             }
         }
     }
-    
+
+    /**
+     * On create, the artifact was linked to it's immediate parent.
+     * In agiledashoard, to remain consistent, it means that we need to link to all
+     * parents
+     *
+     * @param array $params
+     */
+    private function updateBacklogs(array $params) {
+        require_once 'Planning/ArtifactLinker.class.php';
+        $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance());
+        $artifact_linker->linkWithParents($params['request'], $params['artifact']);
+    }
+
     private function redirectToPlanning($params, $requested_planning, Planning $planning) {
         $redirect_to_artifact = $requested_planning['artifact_id'];
         if ($redirect_to_artifact == -1) {
