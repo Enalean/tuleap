@@ -660,7 +660,7 @@ class ArtifactTypeFactory extends Error {
                     
                     //Copy Rules
                     require_once('ArtifactRulesManager.class.php');
-                    $arm =& new ArtifactRulesManager();
+                    $arm = new ArtifactRulesManager();
                     $arm->copyRules($atid_template, $id);
                 }
             }

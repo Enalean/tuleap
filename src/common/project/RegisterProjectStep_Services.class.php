@@ -36,7 +36,7 @@ class RegisterProjectStep_Services extends RegisterProjectStep {
     function display($data) {
         echo '<p>'. $GLOBALS['Language']->getText('register_services', 'desc') .'</p>';
         
-        $sf =& new ServerFactory();
+        $sf = new ServerFactory();
         $servers = $sf->getAllServers();
         $can_display_servers = count($servers) > 1;
         

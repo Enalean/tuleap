@@ -329,7 +329,7 @@ class FRSFile extends Error {
     
     function &_getFRSFileDao() {
         if (!$this->dao) {
-            $this->dao =& new FRSFileDao(CodendiDataAccess::instance());
+            $this->dao = new FRSFileDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }

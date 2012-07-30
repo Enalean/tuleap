@@ -229,9 +229,10 @@ extends WikiPlugin
             foreach($allowed_users_toshow as $idx => $user) {
                 // For proper caching behavior, get a ref, don't user $user
                 $u = & $allowed_users_toshow[$idx];
-                //$col = & new _PageList_Column_ratingvalue('ratingvalue', $u->getId(), 'right', $dimension, $u);
+                //$col = new _PageList_Column_ratingvalue('ratingvalue', $u->getId(), 'right', $dimension, $u);
                 $col = array('_PageList_Column_ratingvalue','custom:ratingvalue', $u->getId(), 'right',' ' ,$u);
                 $pagelist->addColumnObject($col);
+                //unset($col)
                 unset($u);
             }
         }
