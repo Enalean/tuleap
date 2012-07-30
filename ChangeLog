@@ -1,6 +1,7 @@
 Version 5.4 (Not released yet)
 	== Bug fix ==
 	* Fix typo in french translation.
+	* Avatar was not sent in tracker v3 notifications
 
 	== Plugins ==
 	* Agiledashboard: 0.46
