@@ -151,42 +151,22 @@ class GitRepositoryFactory {
     }
 
     public function isInRepositoryNameAnExistingRepository(Project $project, $name) {
-        if ($this->parentExists($project, $name)) {
-            return true;
-        } else {
-            $path = GitRepository::getPathFromProjectAndName($project, $name);
-            $path_without_dot_git = substr($path, 0, strrpos($path, '.git'));
-            
-            $dar = $this->dao->getProjectRepositoryList($project->getID(), false, false);
-            foreach ($dar as $row) {
-                if (strpos($row['repository_path'], "$path_without_dot_git/") === 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    private function parentExists(Project $project, $name) {
-        if (strpos($name, '/') === false) {
-            return false;
-        }
-
         $path = GitRepository::getPathFromProjectAndName($project, $name);
-        $name2 = explode('/', $path);
-        array_pop($name2);
+        $path_without_dot_git = substr($path, 0, strrpos($path, '.git'));
+        $dirname = dirname($path);
 
-        $path = implode('/', $name2);
         $dar = $this->dao->getProjectRepositoryList($project->getID(), false, false);
         foreach ($dar as $row) {
-            if (preg_match("%^$path\.git%", $row['repository_path'])) {
+            if ($dirname && strpos($row['repository_path'], "$dirname.git") === 0) {
+                return true;
+            }
+            if (strpos($row['repository_path'], "$path_without_dot_git/") === 0) {
                 return true;
             }
         }
-
         return false;
     }
-    
+
     public function isRepositoryExistingByName(Project $project, $name) {
         $path = GitRepository::getPathFromProjectAndName($project, $name);
         return $this->dao->isRepositoryExisting($project->getID(), $path);
