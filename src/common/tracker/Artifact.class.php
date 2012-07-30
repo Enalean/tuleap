@@ -3048,7 +3048,7 @@ class Artifact extends Error {
                 <div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>
             </div>
             <div class="tracker_artifact_followup_avatar">
-                <div class="avatar"></div>
+                '. $user->fetchHtmlAvatar() .'
             </div>
             <div class="tracker_artifact_followup_content">
                 <div class="tracker_artifact_followup_comment">';
