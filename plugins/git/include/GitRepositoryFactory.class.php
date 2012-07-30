@@ -179,7 +179,7 @@ class GitRepositoryFactory {
         $path = implode('/', $name2);
         $dar = $this->dao->getProjectRepositoryList($project->getID(), false, false);
         foreach ($dar as $row) {
-            if (preg_match("%^$path/%", $row['repository_path'])) {
+            if (preg_match("%^$path\.git%", $row['repository_path'])) {
                 return true;
             }
         }
