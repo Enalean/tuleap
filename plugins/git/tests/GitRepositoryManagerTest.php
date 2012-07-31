@@ -225,22 +225,21 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     function testForkIndividualRepositories() {
         $path  = 'toto';
         
-        $backend = mock('Git_Backend_Gitolite');
-        $backend->expectOnce('fork');
+        $this->backend->expectOnce('fork');
         
         $repo = new MockGitRepository();
         $repo->setReturnValue('userCanRead', true, array($this->user));
         $repo->setReturnValue('isNameValid', true, array($path));
-        stub($repo)->getBackend()->returns($backend);
+        stub($repo)->getBackend()->returns($this->backend);
                 
         $this->manager->forkRepositories(array($repo), $this->project, $path, null, $this->user);
     }
 
     function testClonesManyInternalRepositories() {
         $path  = 'toto';
-        $group_id = 101;
+        
 
-        $backend = mock('Git_Backend_Gitolite');
+
         
         $repo_ids = array('1', '2', '3');
         
@@ -250,96 +249,79 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($this->user));
             $repo->setReturnValue('isNameValid', true, array($path));
-            stub($repo)->getBackend()->returns($backend);
+            stub($repo)->getBackend()->returns($this->backend);
             $repos[] = $repo;
         }
         
-        $backend->expectCallCount('fork', 3);
+        $this->backend->expectCallCount('fork', 3);
         
         $this->manager->forkRepositories($repos, $this->project, $path, null, $this->user);
     }
+
     function testCloneManyCrossProjectRepositories() {
         
         $path  = '';
          
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $user->setReturnValue('isMember', true);
 
-        $project_id = 2;
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', $project_id);
+        $this->user->setReturnValue('isMember', true);
 
-        $backend = mock('Git_Backend_Gitolite');
+        $to_project = stub('Project')->getId()->returns(2);
+
+
         
         $repo_ids = array('1', '2', '3');
         $repos = array();
         foreach ($repo_ids as $id) {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
-            $repo->setReturnValue('userCanRead', true, array($user));
-            stub($repo)->getBackend()->returns($backend);
+            $repo->setReturnValue('userCanRead', true, array($this->user));
+            stub($repo)->getBackend()->returns($this->backend);
             $repos[] = $repo;
         }
         
-        $backend->expectCallCount('fork', 3);
+        $this->backend->expectCallCount('fork', 3);
         
-        $this->manager->forkRepositories($repos, $to_project, '', null, $user);
+        $this->manager->forkRepositories($repos, $to_project, '', null, $this->user);
     }
     
     function testWhenNoRepositorySelectedItAddsWarning() {
-        $group_id = 101;
+        $this->expectException();
 
-        $repos = array();
-        $user = new MockUser();
-        
-        $project = new MockProject();
-        $project->setReturnValue('getId', $group_id);
-                
-        
-        
-        //$action->getController()->expectOnce('addError', array('actions_no_repository_forked'));
-        
-        $this->manager->forkRepositories($repos, $project, '', null, $user);
+        $this->manager->forkRepositories(array(), $this->project, '', null, $this->user);
     }
     
     function testClonesOneRepository() {
         $id = '1';
-        $group_id = 101;
+
         
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
         
-        $project = new MockProject();
-        $project->setReturnValue('getId', $group_id);
-        $project->setReturnValue('getUnixName', '');
+
+        stub($this->project)->getUnixName()->returns('');
         
-        $backend = mock('Git_Backend_Gitolite');
-        $backend->expectOnce('fork');
+
+        $this->backend->expectOnce('fork');
         
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
-        $repo->setReturnValue('userCanRead', true, array($user));
-        stub($repo)->getBackend()->returns($backend);
+        $repo->setReturnValue('userCanRead', true, array($this->user));
+        stub($repo)->getBackend()->returns($this->backend);
         $repos = array($repo);
         
         
-        $this->manager->forkRepositories($repos, $project, '', null, $user);
+        $this->manager->forkRepositories($repos, $this->project, '', null, $this->user);
     }
     
 
     function testDoesntCloneUnreadableRepos() {
         $repositories = array('1', '2', '3');
         
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $repos = $this->getRepoCollectionUnreadableFor($repositories, $user);
+
+        $repos = $this->getRepoCollectionUnreadableFor($repositories, $this->user);
         
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', 2);
+        $to_project = stub('Project')->getId()->returns(2);
         
         
-        $this->manager->forkRepositories($repos, $to_project, '', null, $user);
+        $this->manager->forkRepositories($repos, $to_project, '', null, $this->user);
     }
     
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
@@ -348,7 +330,6 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', false, array($user));
-            $repo->expectNever('fork');
             $return[] = $repo;
         }
         return $return;
@@ -359,89 +340,81 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo_id = '1';
         $project_id = 2;
         
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $user->setReturnValue('isMember', true, array($project_id, 'A'));
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', $project_id);
+
+        stub($this->user)->isMember($project_id, 'A')->returns(true);
+        $to_project = stub('Project')->getId()->returns($project_id);
         
-        $backend = mock('Git_Backend_Gitolite');
-        $backend->expectOnce('fork');
+        $this->backend->expectOnce('fork');
         
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $repo_id);
-        $repo->setReturnValue('userCanRead', true, array($user));
-        stub($repo)->getBackend()->returns($backend);
+        $repo->setReturnValue('userCanRead', true, array($this->user));
+        stub($repo)->getBackend()->returns($this->backend);
         $repos = array($repo);
         
-        
-        
-        
-        //$action->getController()->expectOnce('addInfo', array('successfully_forked'));
-                
-        $this->manager->forkRepositories($repos, $to_project, '', null, $user);
+        $this->manager->forkRepositories($repos, $to_project, '', null, $this->user);
     }
 
     function testForkShouldNotCloneAnyNonExistentRepositories() {
         $backend = mock('Git_Backend_Gitolite');
         $backend->expectOnce('fork');
 
-        $project = new MockProject();
+
         $repo    = $this->GivenARepository(123);
         stub($repo)->getBackend()->returns($backend);
         
-        $user   = new MockUser();
+
         
-        $this->manager->forkRepositories(array($repo, null), $project, null, null, $user);
+        $this->manager->forkRepositories(array($repo, null), $this->project, null, null, $this->user);
     }
     
     function testForkShouldIgnoreAlreadyExistingRepository() {
-        $backend = mock('Git_Backend_Gitolite');
-        $backend->expectCallCount('fork', 2); //should still call fork on the second repo
-        $backend->throwAt(0, 'fork', new GitRepositoryAlreadyExistsException(''));
+
+        $this->backend->expectCallCount('fork', 2); //should still call fork on the second repo
+        $this->backend->throwAt(0, 'fork', new GitRepositoryAlreadyExistsException(''));
         
         $errorMessage = 'Repository Xxx already exists';
         $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
         $repo1 = $this->GivenARepository(123);
-        stub($repo1)->getBackend()->returns($backend);
+        stub($repo1)->getBackend()->returns($this->backend);
         
         $repo2 = $this->GivenARepository(456);
-        stub($repo2)->getBackend()->returns($backend);
+        stub($repo2)->getBackend()->returns($this->backend);
 
         $this->forkRepositories(array($repo1, $repo2));
     }
     
     function testForkShouldTellTheUserIfTheRepositoryAlreadyExists() {
-        $backend = mock('Git_Backend_Gitolite');
+
         
         $errorMessage = 'Repository Xxx already exists';
         $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
         $repo2 = $this->GivenARepository(456);
-        stub($repo2)->getBackend()->returns($backend);
+        stub($repo2)->getBackend()->returns($this->backend);
         
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
-        $backend->throwAt(1, 'fork', new GitRepositoryAlreadyExistsException($repo2->getName()));
+        $this->backend->throwAt(1, 'fork', new GitRepositoryAlreadyExistsException($repo2->getName()));
 
         $repo1 = $this->GivenARepository(123);
-        stub($repo1)->getBackend()->returns($backend);
+        stub($repo1)->getBackend()->returns($this->backend);
         
         $this->forkRepositories(array($repo1, $repo2));
     }
     
     function testForkGiveInformationAboutUnexpectedErrors() {
-        $backend = mock('Git_Backend_Gitolite');
+
         
         $errorMessage = 'user gitolite doesnt exist';
         $repo2 = $this->GivenARepository(456);
         $repo2->setName('megaRepoGit');
-        stub($repo2)->getBackend()->returns($backend);
+        stub($repo2)->getBackend()->returns($this->backend);
         
         $GLOBALS['Response']->expectOnce('addFeedback', array('warning', "Got an unexpected error while forking ".$repo2->getName().": ".$errorMessage));
-        $backend->throwAt(1, 'fork', new Exception($errorMessage));
+        $this->backend->throwAt(1, 'fork', new Exception($errorMessage));
         
         $repo1 = $this->GivenARepository(123);
-        stub($repo1)->getBackend()->returns($backend);
+        stub($repo1)->getBackend()->returns($this->backend);
         
         $this->forkRepositories(array($repo1, $repo2));
     }
@@ -453,7 +426,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         
         $repo->setReturnValue('isNameValid', false);
         
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
+        $this->expectException();
         
         $this->forkRepositories(array($repo), '^toto/pouet');
     }
@@ -466,11 +439,8 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         return $repo;
     }
 
-    public function forkRepositories($repositories, $namespace=null) {
-        $user    = new MockUser();
-        $project = new MockProject();
-        
-        $this->manager->forkRepositories($repositories, $project, $namespace, null, $user);
+    private function forkRepositories($repositories, $namespace=null) {
+        $this->manager->forkRepositories($repositories, $this->project, $namespace, null, $this->user);
         
     }
 }

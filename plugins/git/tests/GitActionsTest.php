@@ -47,13 +47,6 @@ class GitActionsTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
 
-    private function GivenAGitActions() {
-        $controller         = new MockGit($this);
-        $systemEventManager = new MockSystemEventManager();
-        $factory            = new MockGitRepositoryFactory();
-        return new GitActions($controller, $systemEventManager, $factory);
-    }
-    
     function testRepoManagement() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));

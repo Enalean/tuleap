@@ -84,7 +84,7 @@ class GitRepositoryManager {
         if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
             return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project);
         }
-        return false;
+        throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
     }
 
     private function isNamespaceValid(GitRepository $repository, $namespace) {
@@ -92,8 +92,9 @@ class GitRepositoryManager {
             $ns_chunk = explode('/', $namespace);
             foreach ($ns_chunk as $chunk) {
                 if (!$repository->isNameValid($chunk)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
-                    return false;
+                    throw new Exception($GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
+                    //$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
+                    //return false;
                 }
             }
         }
