@@ -21,7 +21,7 @@
 /**
  *
  */
-class b201207271519_add_ldap_ugroup_is_synchro_and_is_members_preserved_columns extends ForgeUpgrade_Bucket {
+class b201207271519_add_ldap_ugroup_is_synchro_and_bind_option_columns extends ForgeUpgrade_Bucket {
 
     /**
      * Description of the bucket
@@ -30,7 +30,7 @@ class b201207271519_add_ldap_ugroup_is_synchro_and_is_members_preserved_columns 
      */
     public function description() {
         return <<<EOT
-Add is_synchronized & is_member_preserved columns to plugin_ldap_ugroup table
+Add is_synchronized & bind_option columns to plugin_ldap_ugroup table
 EOT;
     }
 
@@ -55,10 +55,10 @@ EOT;
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column is_synchronized to the table plugin_ldap_ugroup');
         }
         
-        $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN is_members_preserved TINYINT(4) NOT NULL DEFAULT 1 AFTER is_synchronized";
+        $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN bind_option ENUM('bind', 'preserve_members') NOT NULL default 'bind' AFTER is_synchronized";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column is_members_preserved  to the table plugin_ldap_ugroup');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column bind_option  to the table plugin_ldap_ugroup');
         }
     }
 
@@ -71,8 +71,8 @@ EOT;
         if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'is_synchronized')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column is_synchronized in table plugin_ldap_ugroup still not created');
         }
-        if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'is_members_preserved')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column is_members_preserved in table plugin_ldap_ugroup still not created');
+        if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'bind_option')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column bind_option in table plugin_ldap_ugroup still not created');
         }
     }
 

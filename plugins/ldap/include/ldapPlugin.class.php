@@ -851,11 +851,19 @@ class LdapPlugin extends Plugin {
             $ldapQuery->syncAll();
 
             //Synchronize the ugroups with the ldap ones
-            $ldapUgroupManager = new LDAP_UserGroupManager();
-            $ldapUgroupManager->synchronizeDaily();
+            $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+            $ugroups = $ldapUserGroupManager->getSynchronizedUgroups();
+            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                foreach($ugroups as $row) {
+                    $ldapUserGroupManager->setId($row['ugroup_id']);
+                    $ldapUserGroupManager->setGroupName($row['ldap_group_dn']);
+                    $ldapUserGroupManager->bindWithLdap($row['bind_option'], true);
+                }
+            }
+            return true;
         }
     }
-    
+
     /**
      * The daily synchro is enabled if the variable is not defined or if the variable is defined to 1
      * 

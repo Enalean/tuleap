@@ -152,10 +152,12 @@ extends DataAccessObject
     /**
      * Retieve Tuleap ugroup having the synchronize option enabled
      * 
-     * @return Array
+     * @return DataAccessResult
      */
     function getSynchronizedUgroups() {
-        return array();
+        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
+            ' WHERE is_synchronized = 1';
+        return $this->retrieve($sql);
     }
 }
 
