@@ -108,7 +108,7 @@ class Tracker_Hierarchy {
     }
 
     public function sortTrackerIds(array $tracker_ids) {
-        usort($tracker_ids, array($this, 'sortByLevel'));
+        @usort($tracker_ids, array($this, 'sortByLevel'));
         return $tracker_ids;
     }
     
