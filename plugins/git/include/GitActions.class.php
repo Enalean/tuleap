@@ -49,18 +49,30 @@ class GitActions extends PluginActions {
      * @var GitRepositoryFactory 
      */
     private $factory;
-    
+
+    /**
+     * @var GitRepositoryManager
+     */
+    private $manager;
+
     /**
      * Constructor
      *
-     * @param PluginController     $controller         The controller
-     * @param GitRepositoryFactory $factory            The factory to manage repositories
+     * @param Git                  $controller         The controller
      * @param SystemEventManager   $systemEventManager The system manager
+     * @param GitRepositoryFactory $factory            The factory to manage repositories
+     * @param GitRepositoryManager $manager            The manager to create/delete repositories
      */
-    public function __construct(Git $controller, SystemEventManager $systemEventManager, GitRepositoryFactory $factory) {
+    public function __construct(
+        Git                $controller,
+        SystemEventManager $systemEventManager,
+        GitRepositoryFactory $factory,
+        GitRepositoryManager $manager
+    ) {
         parent::__construct($controller);
         $this->systemEventManager = $systemEventManager;
         $this->factory            = $factory;
+        $this->manager            = $manager;
 
     }
 
@@ -132,8 +144,7 @@ class GitActions extends PluginActions {
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $manager = new GitRepositoryManager($this->factory, $this->systemEventManager);
-            $manager->create($repository);
+            $this->manager->create($repository);
         } catch (Exception $exception) {
             $c->addError($exception->getMessage());
         }
@@ -506,78 +517,14 @@ class GitActions extends PluginActions {
      * @param Layout $response  The response object
      */
     public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
-        if ($this->forkRepositories($repos, $user, $namespace, $scope, $to_project)) {
-            $this->addInfo('successfully_forked');
-            $response->redirect($redirect_url);
-        } else {
-            $this->addError('actions_no_repository_forked');
-        }
-    }
-    
-    /**
-     * Tell the controller to show the error $error
-     * 
-     * @param string $error error message to show
-     */
-    protected function addError($key_message) {
-        $controler = $this->getController();
-        $controler->addError($this->getText($key_message));
-    }
-    /**
-     * Tell the controller to show an info referenced by first parameter
-     * 
-     * @param string $key_message message to display
-     */
-    protected function addInfo($key_message) {
-        $controler = $this->getController();
-        $controler->addInfo($this->getText($key_message));
-    }
-    
-    /**
-     * Fork a list of repositories for the given user
-     *
-     * @param array $repos a list of GitRepository
-     * @param User $user
-     *
-     * @return bool whether dofork was called once or not
-     */
-    public function forkRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
-        $repos = array_filter($repos);
-        if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
-            return $this->forkAllRepositories($repos, $user, $namespace, $scope, $project);
-        }
-        return false;
-    }
-    
-    private function isNamespaceValid(GitRepository $repository, $namespace) {
-        if ($namespace) {
-            $ns_chunk = explode('/', $namespace);
-            foreach ($ns_chunk as $chunk) {
-                if (!$repository->isNameValid($chunk)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
-                    return false;
-                }
+        try {
+            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope)) {
+                $GLOBALS['Response']->addFeedback('info', $this->getText('successfully_forked'));
+                $response->redirect($redirect_url);
             }
+        } catch(Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
-        return true;
-    }
-
-    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
-        $forked = false;
-        $manager = new GitRepositoryManager($this->factory, $this->systemEventManager);
-        foreach ($repos as $repo) {
-            try {
-                if ($repo->userCanRead($user)) {
-                    $manager->fork($repo, $user, $namespace, $scope, $project);
-                    $forked = true;
-                }
-            } catch (GitRepositoryAlreadyExistsException $e) {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
-            } catch (Exception $e) {
-                $GLOBALS['Response']->addFeedback('warning', 'Got an unexpected error while forking ' . $repo->getName() . ': ' . $e->getMessage());
-            }
-        }
-        return $forked;
     }
 }
 

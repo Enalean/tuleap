@@ -79,7 +79,50 @@ class GitRepositoryManager {
         $repository->getBackend()->createReference($repository);
     }
 
-    public function forkRepositories(array $repositories, Project $to_project, $namespace, $scope, User $user) {
+    /**
+     * Fork a repository
+     *
+     * @param GitRepository $repository The repo to fork
+     * @param Project       $to_project The project to create the repo in
+     * @param User          $user       The user who does the fork (she will own the clone)
+     * @param String        $namespace  The namespace to put the repo in (might be emtpy)
+     * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     */
+    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope) {
+        $clone = clone $repository;
+        $clone->setProject($to_project);
+        $clone->setCreator($user);
+        $clone->setParent($repository);
+        $clone->setNamespace($namespace);
+        $clone->setId(null);
+        $path = unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())).'.git';
+        $clone->setPath($path);
+        $clone->setScope($scope);
+
+        $this->assertRepositoryNameNotAlreadyUsed($clone);
+        $repository->getBackend()->fork($repository, $clone);
+    }
+
+    private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
+        if ($this->isRepositoryNameAlreadyUsed($repository)) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
+        }
+    }
+
+    /**
+     * For several repositories at once
+     *
+     * @param array         $repositories Array of GitRepositories to fork
+     * @param Project       $to_project   The project to create the repo in
+     * @param User          $user         The user who does the fork (she will own the clone)
+     * @param String        $namespace    The namespace to put the repo in (might be emtpy)
+     * @param String        $scope        Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     *
+     * @return Boolean
+     *
+     * @throws Exception
+     */
+    public function forkRepositories(array $repositories, Project $to_project, User $user, $namespace, $scope) {
         $repos = array_filter($repositories);
         if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
             return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project);
@@ -93,20 +136,18 @@ class GitRepositoryManager {
             foreach ($ns_chunk as $chunk) {
                 if (!$repository->isNameValid($chunk)) {
                     throw new Exception($GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
-                    //$GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
-                    //return false;
                 }
             }
         }
         return true;
     }
-    
+
     private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
         $forked = false;
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-                    $this->fork($repo, $user, $namespace, $scope, $project);
+                    $this->fork($repo, $project, $user, $namespace, $scope);
                     $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {
@@ -116,36 +157,6 @@ class GitRepositoryManager {
             }
         }
         return $forked;
-    }
-    
-    /**
-     * Fork a repository
-     *
-     * @param GitRepository $repository The repo to fork
-     * @param User          $user       The user who does the fork (she will own the clone)
-     * @param String        $namespace  The namespace to put the repo in (might be emtpy)
-     * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
-     * @param Project       $project    The project to create the repo in
-     */
-    public function fork(GitRepository $repository, User $user, $namespace, $scope, Project $project) {
-        $clone = clone $repository;
-        $clone->setProject($project);
-        $clone->setCreator($user);
-        $clone->setParent($repository);
-        $clone->setNamespace($namespace);
-        $clone->setId(null);
-        $path = unixPathJoin(array($project->getUnixName(), $namespace, $repository->getName())).'.git';
-        $clone->setPath($path);
-        $clone->setScope($scope);
-
-        $this->assertRepositoryNameNotAlreadyUsed($clone);
-        $repository->getBackend()->fork($repository, $clone);
-    }
-
-    private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
-        if ($this->isRepositoryNameAlreadyUsed($repository)) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
-        }
     }
 
     /**

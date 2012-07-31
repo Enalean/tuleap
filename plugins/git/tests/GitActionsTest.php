@@ -39,6 +39,8 @@ require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
 
 Mock::generate('Git_Backend_Gitolite');
 
+require_once 'builders/aGitRepository.php';
+
 class GitActionsTest extends TuleapTestCase {
 
     function setUp() {
@@ -458,7 +460,7 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
-        $this->git_actions = new GitActions($controler, $this->system_event_manager, $git_repository_factory);
+        $this->git_actions = new GitActions($controler, $this->system_event_manager, $git_repository_factory, mock('GitRepositoryManager'));
     }
 
     public function itMarksRepositoryAsDeleted() {
@@ -493,4 +495,27 @@ class GitActions_Delete_Tests extends TuleapTestCase {
     }
 }
 
+class GitActions_ForkTests extends TuleapTestCase {
+    private $actions;
+
+    public function setUp() {
+        parent::setUp();
+        $this->manager = mock('GitRepositoryManager');
+        $this->actions = new GitActions(mock('Git'), mock('SystemEventManager'), mock('GitRepositoryFactory'), $this->manager);
+    }
+
+    public function itDelegatesForkToGitManager() {
+        $repositories = array(aGitRepository()->build(), aGitRepository()->build());
+        $to_project   = mock('Project');
+        $namespace    = 'namespace';
+        $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
+        $user         = mock('User');
+        $response     = mock('Layout');
+        $redirect_url = '/stuff';
+
+        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
+
+        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+    }
+}
 ?>
