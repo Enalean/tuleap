@@ -18,7 +18,8 @@ DROP TABLE IF EXISTS plugin_ldap_ugroup;
 CREATE TABLE plugin_ldap_ugroup (
     ugroup_id int(11) NOT NULL default 0,
     ldap_group_dn VARCHAR(255) NOT NULL default 0,
-    synchro tinyint(4) NOT NULL default 0,
+    is_synchronized tinyint(4) NOT NULL default 0,
+    is_members_preserved tinyint(4) NOT NULL default 1,
     PRIMARY KEY  (ugroup_id),
     UNIQUE (ugroup_id, ldap_group_dn)
 );
