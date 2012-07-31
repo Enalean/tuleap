@@ -30,6 +30,7 @@ require_once('GitDao.class.php');
 require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
+require_once('GitRepositoryManager.class.php');
 require_once('common/layout/Layout.class.php');
 
 /**
@@ -122,28 +123,19 @@ class GitActions extends PluginActions {
         //$this->createGitshellReference($projectId, $repositoryName);
         $c         = $this->getController();
         $projectId = intval( $projectId );
-        
-        $repository = new GitRepository();
-        $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
 
-        if ( $repository->isNameValid($repositoryName) === false ) {
-            $c->addError( $this->getText('actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
+        try {
+            $repository = new GitRepository();
+            $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
+            $repository->setDescription('-- Default description --');
+            $repository->setCreator(UserManager::instance()->getCurrentUser());
+            $repository->setProject(ProjectManager::instance()->getProject($projectId));
+            $repository->setName($repositoryName);
 
-        $project = ProjectManager::instance()->getProject($projectId);
-
-        $repository->setDescription('-- Default description --');
-        $repository->setCreator(UserManager::instance()->getCurrentUser());
-        $repository->setProject($project);
-        $repository->setName($repositoryName);
-
-        if (!$this->factory->isRepositoryExistingByName($project, $repositoryName) && 
-            !$this->factory->nameExistsAsRepositoryPath($project, $repositoryName)) {
-            $repository->create();
-        } else {
-            $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));
+            $manager = new GitRepositoryManager($this->factory, $this->systemEventManager);
+            $manager->create($repository);
+        } catch (Exception $exception) {
+            $c->addError($exception->getMessage());
         }
 
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);

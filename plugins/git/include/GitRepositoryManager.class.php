@@ -66,8 +66,11 @@ class GitRepositoryManager {
     }
 
     public function create(GitRepository $repository) {
+        if (!$repository->isNameValid($repository->getName())) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+        }
         if ($this->isRepositoryNameAlreadyUsed($repository)) {
-            throw new Exception($GLOBALS['Language']->getText('actions_create_repo_exists', array($repository->getName())));
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
         }
         $repository->getBackend()->createReference($repository);
     }
