@@ -149,54 +149,6 @@ class GitRepositoryFactory {
         }
         return $repository;
     }
-
-    /**
-     * Return true if proposed name already exists as a repository path
-     *
-     * @param Project $project
-     * @param String  $name
-     *
-     * @return Boolean
-     */
-    public function nameExistsAsRepositoryPath(Project $project, $name) {
-        $new_path = GitRepository::getPathFromProjectAndName($project, $name);
-
-        $dar = $this->dao->getProjectRepositoryList($project->getID(), false, false);
-        foreach ($dar as $row) {
-            if ($this->nameIsSubPathOfExistingRepository($row['repository_path'], $new_path)) {
-                return true;
-            }
-            if ($this->nameAlreadyExistsAsPath($row['repository_path'], $new_path)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function nameIsSubPathOfExistingRepository($repository_path, $new_path) {
-        $repo_path_without_dot_git = $this->stripFinalDotGit($repository_path);
-        if (strpos($new_path, "$repo_path_without_dot_git/") === 0) {
-            return true;
-        }
-        return false;
-    }
-
-    private function nameAlreadyExistsAsPath($repository_path, $new_path) {
-        $new_path = $this->stripFinalDotGit($new_path);
-        if (strpos($repository_path, "$new_path/") === 0) {
-            return true;
-        }
-        return false;
-    }
-
-    private function stripFinalDotGit($path) {
-        return substr($path, 0, strrpos($path, '.git'));
-    }
-
-    public function isRepositoryExistingByName(Project $project, $name) {
-        $path = GitRepository::getPathFromProjectAndName($project, $name);
-        return $this->dao->isRepositoryExisting($project->getID(), $path);
-    }
 }
 
 ?>
