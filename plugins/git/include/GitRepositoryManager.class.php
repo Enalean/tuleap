@@ -75,13 +75,20 @@ class GitRepositoryManager {
         if (!$repository->isNameValid($repository->getName())) {
             throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
         }
-        if ($this->isRepositoryNameAlreadyUsed($repository)) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
-        }
+        $this->assertRepositoryNameNotAlreadyUsed($repository);
         $repository->getBackend()->createReference($repository);
     }
 
-    public function fork(GitRepository $repository, User $user, $namespace, $scope, $project) {
+    /**
+     * Fork a repository
+     *
+     * @param GitRepository $repository The repo to fork
+     * @param User          $user       The user who does the fork (she will own the clone)
+     * @param String        $namespace  The namespace to put the repo in (might be emtpy)
+     * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     * @param Project       $project    The project to create the repo in
+     */
+    public function fork(GitRepository $repository, User $user, $namespace, $scope, Project $project) {
         $clone = clone $repository;
         $clone->setProject($project);
         $clone->setCreator($user);
@@ -92,7 +99,14 @@ class GitRepositoryManager {
         $clone->setPath($path);
         $clone->setScope($scope);
 
+        $this->assertRepositoryNameNotAlreadyUsed($clone);
         $repository->getBackend()->fork($repository, $clone);
+    }
+
+    private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
+        if ($this->isRepositoryNameAlreadyUsed($repository)) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
+        }
     }
 
     /**

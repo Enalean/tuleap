@@ -187,4 +187,31 @@ class GitRepositoryManager_CreateTest extends TuleapTestCase {
         $this->manager->create($this->repository);
     }
 }
+
+class GitRepositoryManager_ForkTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->backend    = mock('Git_Backend_Gitolite');
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getBackend()->returns($this->backend);
+
+        $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+    }
+
+    public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
+
+        $this->expectException();
+        $this->manager->fork($this->repository, mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, mock('Project'));
+    }
+
+    public function itForkInRepositoryBackendIfEverythingIsClean() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+
+        $this->backend->expectOnce('fork');
+        $this->manager->fork($this->repository, mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, mock('Project'));
+    }
+}
+
 ?>
