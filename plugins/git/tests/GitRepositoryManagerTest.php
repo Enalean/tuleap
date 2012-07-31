@@ -154,43 +154,37 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
 
 class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
-    public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
-        $repository = mock('GitRepository');
-        stub($repository)->isNameValid()->returns(true);
+    public function setUp() {
+        parent::setUp();
+        $this->backend    = mock('Git_Backend_Interface');
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getBackend()->returns($this->backend);
 
-        $manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
-        stub($manager)->isRepositoryNameAlreadyUsed($repository)->returns(true);
+        $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+    }
+
+    public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
+        stub($this->repository)->isNameValid()->returns(true);
 
         $this->expectException();
-        $manager->create($repository);
+        $this->manager->create($this->repository);
     }
 
     public function itThrowsAnExceptionIfNameIsNotCompliantToBackendStandards() {
-        $backend    = mock('Git_Backend_Interface');
-        $repository = mock('GitRepository');
-        stub($repository)->getBackend()->returns($backend);
-
-        $manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
-        stub($manager)->isRepositoryNameAlreadyUsed($repository)->returns(false);
-
-        stub($repository)->isNameValid()->returns(false);
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+        stub($this->repository)->isNameValid()->returns(false);
 
         $this->expectException();
-        $manager->create($repository);
+        $this->manager->create($this->repository);
     }
 
     public function itCreatesOnRepositoryBackendIfEverythingIsClean() {
-        $backend    = mock('Git_Backend_Interface');
-        $repository = mock('GitRepository');
-        stub($repository)->getBackend()->returns($backend);
+        stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
+        stub($this->repository)->isNameValid()->returns(true);
 
-        $manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
-        stub($manager)->isRepositoryNameAlreadyUsed($repository)->returns(false);
-
-        stub($repository)->isNameValid()->returns(true);
-
-        $backend->expectOnce('createReference');
-        $manager->create($repository);
+        $this->backend->expectOnce('createReference');
+        $this->manager->create($this->repository);
     }
 }
 ?>
