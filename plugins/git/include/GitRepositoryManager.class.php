@@ -65,6 +65,13 @@ class GitRepositoryManager {
         }
     }
 
+    public function create(GitRepository $repository) {
+        if ($this->isRepositoryNameAlreadyUsed($repository)) {
+            throw new Exception($GLOBALS['Language']->getText('actions_create_repo_exists', array($repository->getName())));
+        }
+        $repository->getBackend()->createReference($repository);
+    }
+
     /**
      * Return true if proposed name already exists as a repository path
      *

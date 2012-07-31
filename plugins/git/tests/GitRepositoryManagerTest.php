@@ -152,4 +152,27 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
     }
 }
 
+class GitRepositoryManager_CreateTest extends TuleapTestCase {
+
+    public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
+        $repository = aGitRepository()->build();
+
+        $manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+        stub($manager)->isRepositoryNameAlreadyUsed($repository)->returns(true);
+
+        $this->expectException();
+        $manager->create($repository);
+    }
+
+    public function itCreatesOnRepositoryBackendIfEverythingIsClean() {
+        $backend    = mock('Git_Backend_Interface');
+        $repository = aGitRepository()->withBackend($backend)->build();
+
+        $manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+        stub($manager)->isRepositoryNameAlreadyUsed($repository)->returns(false);
+
+        $backend->expectOnce('createReference');
+        $manager->create($repository);
+    }
+}
 ?>

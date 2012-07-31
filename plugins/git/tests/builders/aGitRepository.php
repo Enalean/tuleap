@@ -41,6 +41,11 @@ class Test_Git_RepositoryBuilder {
         return $this;
     }
 
+    public function withBackend(Git_Backend_Interface $backend) {
+        $this->repository->setBackend($backend);
+        return $this;
+    }
+
     public function build() {
         return $this->repository;
     }
