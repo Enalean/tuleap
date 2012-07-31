@@ -316,14 +316,14 @@ abstract class LDAP_GroupManager
      * 
      * @return Boolean
      */
-    protected function bindWithLdapGroup($synchro = false)
+    protected function bindWithLdapGroup($isSynchronized = false, $bindOption ='bind')
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
         if ($row !== false) {
             $dao->unlinkGroupLdap($this->id);
         }
-        return $dao->linkGroupLdap($this->id, $this->groupDn, $synchro);
+        return $dao->linkGroupLdap($this->id, $this->groupDn, $isSynchronized, $bindOption);
     }
     
     /**
