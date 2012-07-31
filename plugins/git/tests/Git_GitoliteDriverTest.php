@@ -370,8 +370,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $name = 'tulip';
         $new_ns = 'repos/new/repo/';
         $old_ns = 'repos/';
-        $old_root_dir = $this->_tmpDir .'/repositories/'. $old_ns . $name .'.git';
-        $new_root_dir = $this->_tmpDir .'/repositories/'. $new_ns . $name .'.git';
+        $old_root_dir = $this->_glAdmDir .'/repositories/'. $old_ns . $name .'.git';
+        $new_root_dir = $this->_glAdmDir .'/repositories/'. $new_ns . $name .'.git';
         
         mkdir($old_root_dir, 0770, true);
         exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
