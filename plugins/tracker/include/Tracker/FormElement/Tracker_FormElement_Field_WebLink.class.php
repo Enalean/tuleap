@@ -40,7 +40,12 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
             'size'  => 40,
         ),
     );
-
+    
+    /**
+     * Return the DAO of the field
+     *
+     * @return Tracker_FormElement_Field_StringDao
+     */
     protected function getDao() {
         return new Tracker_FormElement_Field_StringDao();
     }
@@ -50,6 +55,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
      * This hooks is here to delete specific properties, 
      * or specific values of the field.
      * (The field itself will be deleted later)
+     *
      * @return boolean true if success
      */
     public function delete() {
@@ -58,6 +64,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     
     /**
      * Fetch the html code to display the field value in new artifact submission form
+     *
      * @param array $submitted_values the values already submitted
      *
      * @return string html
@@ -67,7 +74,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
         $value = '';
         if (!empty($submitted_values)) {            
             $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
+        } else if ($this->hasDefaultValue()) {
             $value = $this->getDefaultValue();
         }
         $hp = Codendi_HTMLPurifier::instance();
@@ -77,19 +84,18 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-	
+    
         return $html;
     }
 
     /**
      * Fetch the html code to display the field value in masschange submission form
-     * @param array $submitted_values the values already submitted
      *
      * @return string html
      */
     protected function fetchSubmitValueMasschange() {
         $html = '';
-        $value = $GLOBALS['Language']->getText('global','unchanged');
+        $value = $GLOBALS['Language']->getText('global', 'unchanged');
 
         if ($this->isSemanticTitle()) {
             $html .= '<input type="text" readonly="readonly" value="'.$value.'" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'" />';
@@ -119,7 +125,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
         if (is_array($submitted_values[0])) {
             $value=$submitted_values[0][$this->getId()];
         } else {
-            if($value != null) {
+            if ($value != null) {
                 $value = $value->getText();
             }
         }
@@ -130,15 +136,16 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
                          value="'.  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-		
-	$html .= '<br />';
-	$html .= '<a href="'.$value.'">'.$value.'</a>';
-	
+        
+        $html .= '<br />';
+        $html .= '<a href="'.$value.'">'.$value.'</a>';
+    
         return $html;
     }    
     
     /**
      * Display the html field in the admin ui
+     *
      * @return string html
      */
     protected function fetchAdminFormElement() {
@@ -156,6 +163,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     }
     
     /**
+     *
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
@@ -163,6 +171,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     }
     
     /**
+     *
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
@@ -170,6 +179,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     }
     
     /**
+     *
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
@@ -177,6 +187,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     }
     
     /**
+     *
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
@@ -186,8 +197,9 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     /**
      * Fetch the html code to display the field value in tooltip
      *
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_String $value The ChangesetValue_String
+     * @param Tracker_Artifact                       $artifact The artifact displayed
+     * @param Tracker_Artifact_ChangesetValue_String $value    The ChangesetValue_String
+     *
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
@@ -202,6 +214,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     /**
      * Tells if the field takes two columns
      * Ugly legacy hack to display fields in columns
+     *
      * @return boolean
      */
     public function takesTwoColumns() {
@@ -227,6 +240,12 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
         return $is_valid;
     }
     
+    
+    /**
+     * Get the NoCr rule for this field
+     *
+     * @return Rule_NoCr
+     */
     protected function getRuleNoCr() {
         return new Rule_NoCr();
     }
