@@ -51,7 +51,17 @@ class ReferenceManager {
     var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
     var $groupIdByNameLower;
-    
+
+    /**
+     * @var EventManager
+     */
+    private $eventManager;
+
+    /**
+     * Hold an instance of the class
+     */
+    protected static $instance;
+
     const REFERENCE_NATURE_ARTIFACT = 'artifact';
     const REFERENCE_NATURE_DOCUMENT = 'document';
     const REFERENCE_NATURE_CVSCOMMIT = 'cvs_commit';
@@ -72,16 +82,16 @@ class ReferenceManager {
     var $tmpGroupIdForCallbackFunction = null;
 
    
-    function ReferenceManager() {
+    public function __construct() {
         $this->activeReferencesByProject = array();
+        $this->eventManager = EventManager::instance();
         $this->loadReservedKeywords();
     }
     
     protected function loadReservedKeywords() {
         //retrieve additional reserved keywords from other part of the plateform
         $additional_reserved_keywords = array();
-        $em = EventManager::instance();
-        $em->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
+        $this->eventManager->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
         $this->reservedKeywords = array_merge($this->reservedKeywords, $additional_reserved_keywords);
     }
 
@@ -89,11 +99,11 @@ class ReferenceManager {
      * @return ReferenceManager
      */
     public static function instance() {
-        static $_referencemanager_instance;
-        if (!$_referencemanager_instance) {
-            $_referencemanager_instance = new ReferenceManager();
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
         }
-        return $_referencemanager_instance;
+        return self::$instance;
     }
 
     /**
@@ -117,8 +127,7 @@ class ReferenceManager {
         );
     
         $plugins_natures = array();
-        $em = EventManager::instance();
-        $em->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
+        $this->eventManager->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
         
         $natures = array_merge($core_natures, $plugins_natures);
         $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_OTHER.'_nature_key'));
@@ -396,8 +405,7 @@ class ReferenceManager {
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         
         if ($this->isAnArtifactKeyword($row['keyword']) && !$this->getGroupId($val)) {
-            $em = EventManager::instance();
-            $em->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
+            $this->eventManager->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
         return $ref;
     }
@@ -673,8 +681,7 @@ class ReferenceManager {
     private function getGroupIdFromArtifactIdForCallbackFunction($artifact_id) {
         $group_id = $this->getGroupId($artifact_id);
         if ($group_id === false) {
-            $em = EventManager::instance();
-            $em->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$group_id));
+            $this->eventManager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$group_id));
         }
         return $group_id;
     }
