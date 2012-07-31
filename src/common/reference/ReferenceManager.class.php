@@ -376,19 +376,19 @@ class ReferenceManager {
                                                  ($proj_ref==null?false:$proj_ref->isActive()),
                                                  $group_id);
     }
-    
-    function isAKeywordArtifact($keyword) {
+
+    private function isAKeywordArtifact($keyword) {
         $natures = $this->getAvailableNatures();
         return $keyword == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword'];
     }
-    
-    function _buildReference($row, $val = null) {
+
+    private function _buildReference($row, $val = null) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         
-        if ($this->isAKeywordArtifact($row['keyword']) && !$this->_getGroupId($val)) {
+        if ($this->isAKeywordArtifact($row['keyword']) && !$this->getGroupId($val)) {
             $em = EventManager::instance();
             $em->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
@@ -638,22 +638,31 @@ class ReferenceManager {
             return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
     }    
-    
-    function _getGroupId($artifact_id) {
+
+    /**
+     * Returns the group id of an artifact id
+     *
+     * @param Integer $artifact_id
+     *
+     * @return mixed False if no match, the group id otherwise
+     */
+    private function getGroupId($artifact_id) {
         $dao    = $this->getArtifactDao();
         $result = $dao->searchArtifactId($artifact_id);
-        return $result->getRow();
+        if ($result && count($result)) {
+            $row = $result->getRow();
+            return $row['group_id'];
+        }
+        return false;
     }
     
-    function _getGroupIdForCallbackFunction($artifact_id) {
-        $group_id = $this->_getGroupId($artifact_id);
-        if (!$group_id) {
-            $plugins_tracker_group_id = array();
+    private function getGroupIdForCallbackFunction($artifact_id) {
+        $group_id = $this->getGroupId($artifact_id);
+        if ($group_id === false) {
             $em = EventManager::instance();
-            $em->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$plugins_tracker_group_id));
-            return $plugins_tracker_group_id;
+            $em->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$group_id));
         }
-        return $group_id['group_id'];
+        return $group_id;
     }
 
     // Get a Reference object from a matching pattern
@@ -663,7 +672,7 @@ class ReferenceManager {
         $key     = strtolower($match[1]);
         
         if ($this->isAKeywordArtifact($key)) {
-            $this->tmpGroupIdForCallbackFunction = $this->_getGroupIdForCallbackFunction($match[3]);
+            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdForCallbackFunction($match[3]);
         }
         
         if ($match[2]) {
@@ -831,7 +840,7 @@ class ReferenceManager {
         return new CrossReferenceDao();
     }
     
-    function getArtifactDao() {
+    private function getArtifactDao() {
         return new ArtifactDao();
     }
 }
