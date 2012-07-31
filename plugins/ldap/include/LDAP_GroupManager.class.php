@@ -116,16 +116,18 @@ abstract class LDAP_GroupManager
      * Link and synchronize a Codendi Group and an LDAP group
      *
      * @param String  $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
-     * @param Boolean $synchro 
+     * @param Boolean $isSynchronized The option to synchrorize the ugroup nightly 
+     * @param Boolean $displayFeedback While set to true, it allows the feedback display 
      * @return void
      */
-    public function bindWithLdap($option='bind', $synchro = false) 
-    {
+    public function bindWithLdap($option='bind', $isSynchronized = false, $displayFeedback = true) {
         if ($this->getGroupDn()) {
-             $this->bindWithLdapGroup($synchro);
+             $this->bindWithLdapGroup($option, $isSynchronized);
              $this->syncMembersWithLdap($option);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $groupName));
+            if ($displayFeedback) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $groupName));
+            }
         }
     }
 
@@ -312,18 +314,19 @@ abstract class LDAP_GroupManager
     /**
      * Save link between Codendi Group and LDAP group
      *
-     * @param  Boolean $synchro 
+     * @param  String  $bindOption
+     * @param  Boolean $isSynchronized 
      * 
      * @return Boolean
      */
-    protected function bindWithLdapGroup($isSynchronized = false, $bindOption ='bind')
+    protected function bindWithLdapGroup($bindOption ='bind', $isSynchronized = false)
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
         if ($row !== false) {
             $dao->unlinkGroupLdap($this->id);
         }
-        return $dao->linkGroupLdap($this->id, $this->groupDn, $isSynchronized, $bindOption);
+        return $dao->linkGroupLdap($this->id, $this->groupDn, $bindOption, $isSynchronized);
     }
     
     /**
