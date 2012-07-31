@@ -60,6 +60,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     
     public function itRoutesToTheArtifactPlannificationByDefault() {
         $request = aRequest()->withUri('someurl')->build();
+        $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_MilestoneSelectorController'), 'show'));
         $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*'));
         $this->router->routeShowPlanning($request);
     }

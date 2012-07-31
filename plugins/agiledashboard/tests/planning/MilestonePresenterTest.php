@@ -97,7 +97,9 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
             $this->artifacts_to_select,
             $milestone,
             $this->user,
-            'planning['. (int)$this->planning->getId() .']='
+            mock('Codendi_Request'),
+            'planning['. (int)$this->planning->getId() .']=',
+            'planning['. (int)$this->planning->getId() .']=-1'
         );
     }
     
@@ -202,6 +204,8 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
                         $this->artifacts_to_select,
                         new Planning_NoMilestone(mock('Project'), $this->planning),
                         $this->user,
+                        mock('Codendi_Request'),
+                        '',
                         ''
         );
     }
@@ -233,6 +237,8 @@ class Planning_MilestonePresenter_OverCapacityTest extends Planning_MilestonePre
             $this->artifacts_to_select,
             $this->sprint_milestone,
             $this->user,
+            mock('Codendi_Request'),
+            '',
             ''
         );
     }

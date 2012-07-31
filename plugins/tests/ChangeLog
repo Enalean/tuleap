@@ -1,3 +1,6 @@
+Version 5.2 - Tuleap 5.4
+    * partial_mock can take constructor parameters.
+
 Version 5.1 - Tuleap 5.3
     * Add new helpers: returnsDar, returnsEmptyDar, partial_mock & partial_stub
 

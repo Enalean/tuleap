@@ -24,63 +24,63 @@ require_once 'Milestone.class.php';
  * Null-object pattern for planning milestones.
  */
 class Planning_NoMilestone implements Planning_Milestone {
-    
+
     /**
      * The project where the milestone is defined
-     * 
+     *
      * @var Project
      */
     private $project;
-    
+
     /**
      * The association between the tracker that define the "Content" (aka Backlog) (ie. Epic)
      * and the tracker that define the plan (ie. Release)
-     * 
+     *
      * @var Planning
      */
     private $planning;
-    
+
     public function __construct(Project $project, Planning $planning) {
         $this->project  = $project;
         $this->planning = $planning;
     }
-    
+
     /**
      * @return string
      */
     public function getXRef() {
         return '';
     }
-    
+
     public function getArtifact() {
-        
+
     }
 
     public function getArtifactId() {
         return null;
     }
-    
+
     public function getTrackerId() {
     }
-    
+
     public function getArtifactTitle() {
         return null;
     }
-    
+
     /**
      * @param User $user
-     * @return boolean 
+     * @return boolean
      */
     public function userCanView(User $user) {
         return true; // User can view milestone content, since it's empty.
     }
 
     public function getLinkedArtifacts(User $user) {
-        
+
     }
 
     public function getPlannedArtifacts() {
-        
+
     }
 
     public function getPlanning() {
@@ -100,23 +100,34 @@ class Planning_NoMilestone implements Planning_Milestone {
     }
 
     public function getSubMilestones() {
-        
+
     }
 
     public function hasSubMilestones() {
-        
+
     }
 
     public function addSubMilestones(array $new_sub_milestones) {
-        
+
     }
 
     public function getRemainingEffort() {
         return null;
     }
-    
+
     public function getCapacity() {
         return null;
+    }
+
+    public function hasAncestors() {
+        return false;
+    }
+
+    public function getAncestors() {
+        return array();
+    }
+
+    public function setAncestors(array $ancestors) {
     }
 }
 ?>
