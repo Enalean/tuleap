@@ -88,12 +88,12 @@ class GitRepositoryFactory_IsInRepositoryNameTest extends TuleapTestCase {
             array('repository_path' => $this->project_name.'/bla.git')
         );
 
-        $this->assertTrue($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'bla/zoum'));
-        $this->assertTrue($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'bla/zoum/zaz'));
+        $this->assertTrue($this->factory->nameExistsAsRepositoryPath($this->project, 'bla/zoum'));
+        $this->assertTrue($this->factory->nameExistsAsRepositoryPath($this->project, 'bla/zoum/zaz'));
 
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'zoum/bla'));
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'zoum/bla/top'));
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'blafoo'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'zoum/bla'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'zoum/bla/top'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'blafoo'));
     }
 
     public function itForbidCreationOfRepositoriesWhenPathAlreadyExistsAndHasParents() {
@@ -101,12 +101,12 @@ class GitRepositoryFactory_IsInRepositoryNameTest extends TuleapTestCase {
             array('repository_path' => $this->project_name.'/foo/bla.git')
         );
 
-        $this->assertTrue($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo/bla/stuff'));
-        $this->assertTrue($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo/bla/stuff/zaz'));
+        $this->assertTrue($this->factory->nameExistsAsRepositoryPath($this->project, 'foo/bla/stuff'));
+        $this->assertTrue($this->factory->nameExistsAsRepositoryPath($this->project, 'foo/bla/stuff/zaz'));
 
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo/bar'));
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'bla/foo'));
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'bla'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'foo/bar'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'bla/foo'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'bla'));
     }
 
     public function itForbidCreationWhenNewRepoIsInsideExistingPath() {
@@ -114,12 +114,12 @@ class GitRepositoryFactory_IsInRepositoryNameTest extends TuleapTestCase {
             array('repository_path' => $this->project_name.'/foo/bar/bla.git')
         );
         
-        $this->assertTrue($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo'));
-        $this->assertTrue($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo/bar'));
+        $this->assertTrue($this->factory->nameExistsAsRepositoryPath($this->project, 'foo'));
+        $this->assertTrue($this->factory->nameExistsAsRepositoryPath($this->project, 'foo/bar'));
 
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo/bar/zorg'));
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foo/zorg'));
-        $this->assertFalse($this->factory->isInRepositoryNameAnExistingRepository($this->project, 'foobar/zorg'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'foo/bar/zorg'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'foo/zorg'));
+        $this->assertFalse($this->factory->nameExistsAsRepositoryPath($this->project, 'foobar/zorg'));
     }
 }
 ?>

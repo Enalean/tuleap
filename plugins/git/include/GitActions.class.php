@@ -140,7 +140,7 @@ class GitActions extends PluginActions {
         $repository->setName($repositoryName);
 
         if (!$this->factory->isRepositoryExistingByName($project, $repositoryName) && 
-            !$this->factory->isInRepositoryNameAnExistingRepository($project, $repositoryName)) {
+            !$this->factory->nameExistsAsRepositoryPath($project, $repositoryName)) {
             $repository->create();
         } else {
             $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));

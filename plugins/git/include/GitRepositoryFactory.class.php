@@ -150,7 +150,15 @@ class GitRepositoryFactory {
         return $repository;
     }
 
-    public function isInRepositoryNameAnExistingRepository(Project $project, $name) {
+    /**
+     * Return true if proposed name already exists as a repository path
+     *
+     * @param Project $project
+     * @param String  $name
+     *
+     * @return Boolean
+     */
+    public function nameExistsAsRepositoryPath(Project $project, $name) {
         $new_path = GitRepository::getPathFromProjectAndName($project, $name);
 
         $dar = $this->dao->getProjectRepositoryList($project->getID(), false, false);

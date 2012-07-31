@@ -76,7 +76,7 @@ plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifi�
 plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
 plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans le repertoire
 plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
-plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà
+plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin est en conflit avec un dépôt existant
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 
