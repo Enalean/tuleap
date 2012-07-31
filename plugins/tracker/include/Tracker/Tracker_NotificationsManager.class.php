@@ -26,13 +26,13 @@ require_once('dao/Tracker_NotificationDao.class.php');
 
 class Tracker_NotificationsManager {
 
-    protected $tracker;    
+    protected $tracker;
     
     public function __construct($tracker) {
         $this->tracker = $tracker;
     }
     
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {        
+    public function process(TrackerManager $tracker_manager, $request, $current_user) {
         if ($request->get('submit')) {
             if ($request->exist('stop_notification')) {
                 if ($this->tracker->stop_notification != $request->get('stop_notification')) {
@@ -48,17 +48,21 @@ class Tracker_NotificationsManager {
                     $this->processGlobalNotificationData($global_notification_data);
                 }
             }
-        } else if (  $request->get('action') == 'remove_global' ) {
+        } else if ($request->get('action') == 'remove_global' ) {
             $this->removeGlobalNotification( $request->get('global_notification_id') );
         }
-
         $this->displayAdminNotifications($tracker_manager, $request, $current_user);
+        $reminderRenderer = new Tracker_DateReminderRenderer($this->tracker);
+        if ($this->tracker->userIsAdmin($current_user)) {
+            $reminderRenderer->displayDateReminders($request);
+        }
+        $reminderRenderer->displayFooter($tracker_manager);
     }
     
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');        
-        echo '<form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
+        echo '<fieldset><form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
         
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotifications_Global($request);
@@ -68,9 +72,7 @@ class Tracker_NotificationsManager {
         echo'
         <HR>
         <P align="center"><INPUT type="submit" name="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','submit').'">
-        </FORM>';
-        
-        $this->tracker->displayFooter($tracker_manager);
+        </FORM></fieldset>';
     }
     
     protected function displayAdminNotifications_Toggle() {

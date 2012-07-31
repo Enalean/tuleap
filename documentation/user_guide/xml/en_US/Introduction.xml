@@ -27,7 +27,8 @@
 		<listitem><para>favour collaboration between project members.</para></listitem>
 	</itemizedlist>
 	
-    <para>&SYS_PRODUCT_NAME; 's high customization capability enables you to tailor each tool to your processes and business requirements. More info on &SYS_PRODUCT_NAME; features</para>
+    <para>&SYS_PRODUCT_NAME; 's high customization capability enables you to tailor each tool to your processes and business requirements.
+    <ulink url="http://www.tuleap.com/"> More info on &SYS_PRODUCT_NAME; features.</ulink></para>
 	
 	<para>We want you to experience the full power of &SYS_PRODUCT_NAME; technology. So we do not distinguish between a Enterprise version and 
 	a Community version. In the same idea, we provide you in this guide all useful information and good practices to get the most of Tuleap Suite.</para>

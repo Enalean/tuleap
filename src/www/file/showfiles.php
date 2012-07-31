@@ -141,7 +141,7 @@ $group_unix_name = $pm->getProject($group_id)->getUnixName();
 
 $proj_stats['packages'] = $num_packages;
 $pm = & PermissionsManager :: instance();
-$fmmf =& new FileModuleMonitorFactory();
+$fmmf = new FileModuleMonitorFactory();
  
 $javascript_packages_array = array();
  

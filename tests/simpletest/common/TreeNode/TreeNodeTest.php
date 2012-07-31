@@ -88,4 +88,25 @@ class TreeNode_AddChildrenTest extends TuleapTestCase {
     }
 }
 
+class TreeNode_SetChildrenTest extends TuleapTestCase {
+    
+    public function itAddsTheGivenChildren() {
+        $root       = new TreeNode();
+        $children   = array(new TreeNode(), new TreeNode());
+        $root->setChildren($children);
+        $this->assertEqual($children, $root->getChildren());
+    }
+    
+    public function itSetsTheParentNodeOfTheChildren() {
+        $root       = new TreeNode();
+        $node_1     = new TreeNode();
+        $node_2     = new TreeNode();
+        $children   = array($node_1, $node_2);
+        $root->setChildren($children);
+        $this->assertEqual($root, $node_2->getParentNode());
+        $this->assertEqual($root, $node_1->getParentNode());
+    }
+}
+
+
 ?>

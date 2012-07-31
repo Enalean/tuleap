@@ -28,14 +28,17 @@ function aNode() {
 
 class Test_TreeNode_Builder {
 
-    private $children;
+    protected $children;
     private $data;
+    private $object;
+    private $id;
     
     public function __construct() {
         $this->children = array();
     }
     
     /**
+     * @param vararg of Test_TreeNode_Builder
      * @return \Test_TreeNode_Builder 
      */
     public function withChildren() {
@@ -63,14 +66,29 @@ class Test_TreeNode_Builder {
     }
     
     /**
+     * @return \Test_TreeNode_Builder 
+     */
+    public function withObject($object) {
+        $this->object = $object;
+        return $this;
+    }
+
+    /** @return \Test_TreeNode_Builder */
+    public function withId($id) {
+        $this->id = $id;
+        return $this;
+    }
+    
+    /**
      * @return \TreeNode 
      */
     public function build() {
-        $node = new TreeNode();
+        $node = new TreeNode($this->data, $this->id);
         $node->setChildren($this->children);
-        $node->setData($this->data);
+        $node->setObject($this->object);
         return $node;
     }
+
 
 
 }

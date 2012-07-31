@@ -178,7 +178,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
     
     private function GivenASharedFactory($criteria) {
-        $shared_factory = new MockTracker_FormElementFactory();
+        $shared_factory = mock('Tracker_FormElementFactory');
         foreach ($criteria as $criterion) {
             $shared_factory->setReturnValue('getFieldFromTrackerAndSharedField', $criterion->field, array('*', $criterion->field));
         }

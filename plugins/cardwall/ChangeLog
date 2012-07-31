@@ -1,4 +1,46 @@
-Version 0.5.4 - Tuleap 5.3
+Version 0.9.2 - Tuleap 5.4
+    * Update after agiledashboard v0.46.
+
+Version 0.9.1 - Tuleap 5.3
+    * Fix bug on cardwall definition duplication on project creation.
+
+Version 0.9 - Tuleap 5.3
+    * No longer bind freestyle usage (or not) to status semantic
+    * By default, the status semantic of the backlog tracker is used
+
+Version 0.8 - Tuleap 5.3
+    * Fix issue during xml import when no config on columns is defined
+
+Version 0.7 - Tuleap 5.3
+    * Fix issue when no field defined in cardwall renderer
+
+Version 0.6 - Tuleap 5.3
+    * Cardwall can now use custom columns
+
+Version 0.5.12 - Tuleap 5.3
+    * Fix include bug
+
+Version 0.5.11 - Tuleap 5.3
+    * Fix bug when no values.
+
+Version 0.5.10 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displayed on cards
+    * Configure cardwall columns
+
+Version 0.5.9 - Tuleap 5.3
+    * Fix: can choose other field than "status" field
+    * Fix: can D'nD from "none" column
+
+Version 0.5.8 - Tuleap 5.3
+    * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.5.7 - Tuleap 5.3
+    * Add missing sql statement for cardwalls on top of tracker (see cardwall 0.5.2)
+
+Version 0.5.6 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.5.5 - Tuleap 5.3
     * Update mustache renderer
 
 Version 0.5.4 - Tuleap 5.2

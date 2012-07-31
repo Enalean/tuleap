@@ -38,7 +38,7 @@ class userlogPlugin extends Plugin {
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'UserLogPluginInfo')) {
             require_once('UserLogPluginInfo.class.php');
-            $this->pluginInfo =& new UserLogPluginInfo($this);
+            $this->pluginInfo = new UserLogPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -82,7 +82,7 @@ class userlogPlugin extends Plugin {
 
             $request = HTTPRequest::instance();
 
-            $cookie_manager =& new CookieManager();
+            $cookie_manager = new CookieManager();
 
             $userLogManager = new UserLogManager();
             $userLogManager->logAccess($params['time'],

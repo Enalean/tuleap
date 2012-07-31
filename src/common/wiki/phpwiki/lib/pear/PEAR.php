@@ -64,7 +64,7 @@ $GLOBALS['_PEAR_error_handler_stack']    = array();
  * destructor, use error_log(), syslog() or something similar.
  *
  * IMPORTANT! To use the emulated destructors you need to create the
- * objects by reference, ej: $obj =& new PEAR_child;
+ * objects by reference, ej: $obj = new PEAR_child;
  *
  * @since PHP 4.0.2
  * @author Stig Bakken <ssb@php.net>

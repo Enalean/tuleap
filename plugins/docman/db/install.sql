@@ -269,6 +269,7 @@ CREATE TABLE plugin_docman_approval (
   description TEXT NULL,
   status TINYINT(4) DEFAULT 0 NOT NULL,
   notification TINYINT(4) DEFAULT 0 NOT NULL,
+  notification_occurence INT(11) DEFAULT 0,
   auto_status TINYINT(4) DEFAULT 0 NOT NULL,
   PRIMARY KEY(table_id),
   UNIQUE KEY version_id (version_id),

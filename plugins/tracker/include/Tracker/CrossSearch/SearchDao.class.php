@@ -150,6 +150,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                    $artifact_link_columns_select
                    
             FROM       tracker_artifact  AS artifact
+            INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = artifact.id)
             INNER JOIN ( $union ) AS R ON (R.id = artifact.id)
             INNER JOIN tracker_changeset AS c ON (R.last_changeset_id = c.id)
 
@@ -181,7 +182,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             }
             $sql .= "
                 GROUP BY artifact.id
-                ORDER BY title
+                ORDER BY tracker_artifact_priority.rank
             ";
             $results = $this->retrieve($sql);
         }

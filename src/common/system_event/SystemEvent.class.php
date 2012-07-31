@@ -185,6 +185,10 @@ abstract class SystemEvent {
         $this->log=$log;
     }
 
+    function setParameters($params) {
+        $this->parameters = $params;
+    }
+
     function getCreateDate() {
         return $this->create_date;
     }

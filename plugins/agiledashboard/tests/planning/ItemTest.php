@@ -40,6 +40,7 @@ class Planning_ArtifactTest extends TuleapTestCase {
         
         $epics_tracker_id   = 123;
         $stories_tracker_id = 456;
+        $this->allowed_children_types = array(aTracker()->withId($stories_tracker_id)->build());
         
         $this->epics_tracker   = aTracker()->withId($epics_tracker_id)->build();
         $this->stories_tracker = aTracker()->withId($stories_tracker_id)->build();
@@ -51,6 +52,7 @@ class Planning_ArtifactTest extends TuleapTestCase {
                                       ->withXRef($this->xref)
                                       ->withTitle($this->title)
                                       ->withTracker($this->epics_tracker)
+                                      ->withAllowedChildrenTypes($this->allowed_children_types)
                                       ->withId($this->id)
                                       ->build();
         $this->story = aMockArtifact()->withTracker($this->stories_tracker)
@@ -73,6 +75,10 @@ class Planning_ArtifactTest extends TuleapTestCase {
     
     public function itHasAnId() {
         $this->assertEqual($this->id, $this->item->getId());
+    }
+    
+    public function itHasAllowedChildrenTypes() {
+        $this->assertEqual($this->allowed_children_types, $this->item->getAllowedChildrenTypes());  
     }
     
     public function itIsPlannifiableIfItsTrackerMatchesThePlanningOne() {
