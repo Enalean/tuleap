@@ -302,7 +302,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     }
     
     public function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
-        $driver = new Git_GitoliteDriver();
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $unix_name = 'project1';
         
         $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', 'toto');
