@@ -163,32 +163,36 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_Text {
     }
     
     /**
+     * Return the label of the field (mainly used in admin part)
      *
-     * @return the label of the field (mainly used in admin part)
+     * @return string
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'weblink');
     }
     
     /**
+     * Return the description of the field (mainly used in admin part)
      *
-     * @return the description of the field (mainly used in admin part)
+     * @return string
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'weblink_desc');
     }
     
     /**
+     * Return the path to the icon
      *
-     * @return the path to the icon
+     * @return string
      */
     public static function getFactoryIconUseIt() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-weblink-field.png');
     }
     
     /**
+     * Return the path to the icon
      *
-     * @return the path to the icon
+     * @return string
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-weblink-field--plus.png');
