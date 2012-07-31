@@ -32,8 +32,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('cssfile',                             'cssFile',                           false);
         $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
-        $this->_addHook('get_artifact_reference_group_id',     'get_artifact_reference_group_id',   false);
-        $this->_addHook('build_reference',                     'build_reference',                   false);        
+        $this->_addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
+        $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
         $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);

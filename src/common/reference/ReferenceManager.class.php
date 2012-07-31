@@ -390,7 +390,7 @@ class ReferenceManager {
         
         if ($this->isAKeywordArtifact($row['keyword']) && !$this->_getGroupId($val)) {
             $em = EventManager::instance();
-            $em->processEvent('build_reference', array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
+            $em->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
         return $ref;
     }
@@ -650,7 +650,7 @@ class ReferenceManager {
         if (!$group_id) {
             $plugins_tracker_group_id = array();
             $em = EventManager::instance();
-            $em->processEvent('get_artifact_reference_group_id', array('artifact_id' => $artifact_id, 'group_id' => &$plugins_tracker_group_id));
+            $em->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$plugins_tracker_group_id));
             return $plugins_tracker_group_id;
         }
         return $group_id['group_id'];
