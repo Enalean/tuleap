@@ -564,10 +564,11 @@ class GitActions extends PluginActions {
 
     private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
         $forked = false;
+        $manager = new GitRepositoryManager($this->factory, $this->systemEventManager);
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-                    $repo->fork($user, $namespace, $scope, $project);
+                    $manager->fork($repo, $user, $namespace, $scope, $project);
                     $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {

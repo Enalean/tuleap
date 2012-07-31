@@ -672,6 +672,8 @@ class GitRepository implements DVCSRepository {
     
     /**
      * Create a reference repository
+     * @deprecated
+     * @see GitRepositoryManager::create
      */
     public function create() {        
         $this->getBackend()->createReference($this);

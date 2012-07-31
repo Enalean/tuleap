@@ -65,6 +65,12 @@ class GitRepositoryManager {
         }
     }
 
+    /**
+     * Create a new GitRepository through its backend
+     *
+     * @param  GitRepository $repository
+     * @throws Exception
+     */
     public function create(GitRepository $repository) {
         if (!$repository->isNameValid($repository->getName())) {
             throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
@@ -73,6 +79,20 @@ class GitRepositoryManager {
             throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
         }
         $repository->getBackend()->createReference($repository);
+    }
+
+    public function fork(GitRepository $repository, User $user, $namespace, $scope, $project) {
+        $clone = clone $repository;
+        $clone->setProject($project);
+        $clone->setCreator($user);
+        $clone->setParent($repository);
+        $clone->setNamespace($namespace);
+        $clone->setId(null);
+        $path = unixPathJoin(array($project->getUnixName(), $namespace, $repository->getName())).'.git';
+        $clone->setPath($path);
+        $clone->setScope($scope);
+
+        $repository->getBackend()->fork($repository, $clone);
     }
 
     /**
