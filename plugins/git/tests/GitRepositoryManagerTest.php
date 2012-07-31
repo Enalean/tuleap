@@ -98,6 +98,20 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
         return aGitRepository()->withPath($this->project_name.'/'.$path.'.git')->withProject($this->project)->build();
     }
 
+    public function itCannotCreateARepositoryWithSamePath() {
+        stub($this->factory)->getAllRepositories($this->project)->returns(
+            array($this->aRepoWithPath('bla'))
+        );
+        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla')));
+    }
+
+    public function itCannotCreateARepositoryWithSamePathThatIsNotAtRoot() {
+        stub($this->factory)->getAllRepositories($this->project)->returns(
+            array($this->aRepoWithPath('foo/bla'))
+        );
+        $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla')));
+    }
+
     public function itForbidCreationOfRepositoriesWhenPathAlreadyExists() {
         stub($this->factory)->getAllRepositories($this->project)->returns(
             array($this->aRepoWithPath('bla'))

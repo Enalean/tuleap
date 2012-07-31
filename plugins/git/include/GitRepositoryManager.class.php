@@ -78,6 +78,9 @@ class GitRepositoryManager {
         foreach ($repositories as $existing_repo) {
             $new_repo_path      = $new_repository->getPathWithoutLazyLoading();
             $existing_repo_path = $existing_repo->getPathWithoutLazyLoading();
+            if ($new_repo_path == $existing_repo_path) {
+                return true;
+            }
             if ($this->nameIsSubPathOfExistingRepository($existing_repo_path, $new_repo_path)) {
                 return true;
             }
