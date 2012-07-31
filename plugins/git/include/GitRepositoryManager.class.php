@@ -64,6 +64,48 @@ class GitRepositoryManager {
             );
         }
     }
+
+    /**
+     * Return true if proposed name already exists as a repository path
+     *
+     * @param Project $project
+     * @param String  $name
+     *
+     * @return Boolean
+     */
+    public function isRepositoryNameAlreadyUsed(GitRepository $new_repository) {
+        $repositories = $this->repository_factory->getAllRepositories($new_repository->getProject());
+        foreach ($repositories as $existing_repo) {
+            $new_repo_path      = $new_repository->getPathWithoutLazyLoading();
+            $existing_repo_path = $existing_repo->getPathWithoutLazyLoading();
+            if ($this->nameIsSubPathOfExistingRepository($existing_repo_path, $new_repo_path)) {
+                return true;
+            }
+            if ($this->nameAlreadyExistsAsPath($existing_repo_path, $new_repo_path)) {
+                return true;
+            }
+        }
+    }
+
+    private function nameIsSubPathOfExistingRepository($repository_path, $new_path) {
+        $repo_path_without_dot_git = $this->stripFinalDotGit($repository_path);
+        if (strpos($new_path, "$repo_path_without_dot_git/") === 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private function nameAlreadyExistsAsPath($repository_path, $new_path) {
+        $new_path = $this->stripFinalDotGit($new_path);
+        if (strpos($repository_path, "$new_path/") === 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private function stripFinalDotGit($path) {
+        return substr($path, 0, strrpos($path, '.git'));
+    }
 }
 
 ?>
