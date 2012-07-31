@@ -152,12 +152,13 @@ class GitRepositoryFactory {
 
     public function isInRepositoryNameAnExistingRepository(Project $project, $name) {
         $path = GitRepository::getPathFromProjectAndName($project, $name);
-        $path_without_dot_git = substr($path, 0, strrpos($path, '.git'));
+        $path_without_dot_git = $this->stripFinalDotGit($path);
         $dirname = dirname($path);
 
         $dar = $this->dao->getProjectRepositoryList($project->getID(), false, false);
         foreach ($dar as $row) {
-            if ($dirname && strpos($row['repository_path'], "$dirname.git") === 0) {
+            $repo_path_without_dot_git = $this->stripFinalDotGit($row['repository_path']);
+            if (strpos($path, "$repo_path_without_dot_git/") === 0) {
                 return true;
             }
             if (strpos($row['repository_path'], "$path_without_dot_git/") === 0) {
@@ -165,6 +166,10 @@ class GitRepositoryFactory {
             }
         }
         return false;
+    }
+
+    private function stripFinalDotGit($path) {
+        return substr($path, 0, strrpos($path, '.git'));
     }
 
     public function isRepositoryExistingByName(Project $project, $name) {
