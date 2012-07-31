@@ -68,7 +68,7 @@ class GraphOnTrackersPlugin extends Plugin {
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'GraphOnTrackersPluginInfo')) {
             require_once('GraphOnTrackersPluginInfo.class.php');
-            $this->pluginInfo =& new GraphOnTrackersPluginInfo($this);
+            $this->pluginInfo = new GraphOnTrackersPluginInfo($this);
         }
         return $this->pluginInfo;
     }

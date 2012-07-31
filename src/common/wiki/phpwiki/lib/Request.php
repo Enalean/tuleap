@@ -985,7 +985,7 @@ class Request_AccessLogEntry
      * original (rather than a copy) object.
      *
      * <pre>
-     *    $log_entry = & new Request_AccessLogEntry("/tmp/wiki_access_log");
+     *    $log_entry = new Request_AccessLogEntry("/tmp/wiki_access_log");
      *    $log_entry->setStatus(401);
      *    $log_entry->push($request);
      * </pre>

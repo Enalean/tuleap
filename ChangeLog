@@ -8,6 +8,17 @@ Version 5.4 (Not released yet)
 	* Tracker: 5.8.10
 	* Cardwall: 0.9.2
 	* Test: 5.2
+	* forumml: 2.6.2
+	* graphontrackers: 1.5
+	* hudson: 1.9
+	* pluginsadministration: 1.2
+	* template: 1.2
+	* userlog: 1.2
+
+	== Development ==
+	* Add script to prepare plugins changelog (to be used by 
+	Tuleap integrators when merging into stable)
+	* Continue PHP 5.3 compat (Contrib Philippe Goetz)
 
 Version 5.3.1 (Monday, July 23rd 2012)
 	== Plugins ==

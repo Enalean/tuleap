@@ -46,7 +46,7 @@ if (user_isloggedin()) {
 	    $link_members = get_server_url()."/project/memberlist.php?group_id=$group_id";
 	    $subject = $Language->getText('bookmark_rmproject', 'mail_subject', array($GLOBALS['sys_name'],user_getname($user_id),$project_name));
 	    $body = stripcslashes($Language->getText('bookmark_rmproject', 'mail_body', array($project_name, user_getname($user_id),$link_members)));
-	    $mail =& new Mail();
+	    $mail = new Mail();
         $mail->setTo($to);
         $mail->setSubject($subject);
         $mail->setFrom($GLOBALS['sys_noreply']);

@@ -42,7 +42,7 @@ if ($row_grp['svn_preamble'] != '') {
 } else {
     $host = $GLOBALS['sys_default_domain'];
     if ($p && $p->usesService('svn')) {
-       $sf =& new ServerFactory();
+       $sf = new ServerFactory();
        if ($server =& $sf->getServerById($p->services['svn']->getServerId())) {
            $host = URL::getHost($server->getUrl(session_issecure()));
        }

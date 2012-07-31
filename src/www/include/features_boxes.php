@@ -88,8 +88,8 @@ function show_newest_releases() {
     // print each one but only show one release per project
     $count = 0;
     $DONE  = array();
-    $frspf =& new FRSPackageFactory();
-    $frsrf =& new FRSReleaseFactory();
+    $frspf = new FRSPackageFactory();
+    $frsrf = new FRSReleaseFactory();
     while ( ($row_newrel = db_fetch_array($res_newrel)) && ($count < 10)) {
         
         if ( !isset($DONE[$row_newrel['group_id']])) { 

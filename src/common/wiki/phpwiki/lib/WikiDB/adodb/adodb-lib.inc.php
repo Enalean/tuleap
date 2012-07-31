@@ -477,7 +477,7 @@ function _adodb_getinsertsql(&$zthis,&$rs,$arrFields,$magicq=false)
 		//because we have to call MetaType.
 		//php can't do a $rsclass::MetaType()
 		$rsclass = $zthis->rsPrefix.$zthis->databaseType;
-		$recordSet =& new $rsclass(-1,$zthis->fetchMode);
+		$recordSet = new $rsclass(-1,$zthis->fetchMode);
 		$recordSet->connection = &$zthis;
 	
 		$columns = $zthis->MetaColumns( $tableName );
