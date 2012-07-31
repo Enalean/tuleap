@@ -45,7 +45,11 @@ class EventManager {
     public static function clearInstance() {
         self::$instance = null;
     }
-    
+
+    public static function setInstance(EventManager $event_manager) {
+        self::$instance = $event_manager;
+    }
+
     /**
      * The singleton method
      * 

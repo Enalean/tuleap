@@ -166,7 +166,7 @@ class ReferenceManager {
             if ($this->_isReservedKeyword($ref->getKeyword())) return false;
             // Check list of existing keywords 
             $num_args=Reference::computeNumParam($ref->getLink());
-            if ($this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId())) return false;
+            if ($this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupIdFromArtifactId())) return false;
         }
         // Create new reference
         $id = $reference_dao->create($ref->getKeyword(),
@@ -179,7 +179,7 @@ class ReferenceManager {
         $ref->setId($id);
         $rgid = $reference_dao->create_ref_group($id,
                                                $ref->isActive(),
-                                               $ref->getGroupId());
+                                               $ref->getGroupIdFromArtifactId());
         return $rgid;
     }
 
@@ -193,7 +193,7 @@ class ReferenceManager {
         if (!$this->_isValidKeyword($ref->getKeyword())) return false;
         // Check that it is a system reference
         if (!$ref->isSystemReference()) return false;
-        if ($ref->getGroupId() != 100) return false;
+        if ($ref->getGroupIdFromArtifactId() != 100) return false;
 
         // Create reference
         $rgid=$this->createReference($ref,$force);
@@ -219,7 +219,7 @@ class ReferenceManager {
 
         // Check list of existing keywords 
         $num_args=Reference::computeNumParam($ref->getLink());
-        $refid=$this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId());
+        $refid=$this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupIdFromArtifactId());
         if (!$force) {
             if ($refid) {
                 if ($refid != $ref->getId()) {
@@ -230,7 +230,7 @@ class ReferenceManager {
             } else {
                 // Check that there is no system reference with the same keyword
                 if ($this->_isSystemKeyword($ref->getKeyword())) {
-                    if ($ref->getGroupId()!= 100) return false;
+                    if ($ref->getGroupIdFromArtifactId()!= 100) return false;
                 } else {
                     // Check list of reserved keywords 
                     if ($this->_isReservedKeyword($ref->getKeyword())) return false;
@@ -248,7 +248,7 @@ class ReferenceManager {
                                    $ref->getNature());
         $rgid = $reference_dao->update_ref_group($ref->getId(),
                                                  $ref->isActive(),
-                                                 $ref->getGroupId());
+                                                 $ref->getGroupIdFromArtifactId());
         
         return $rgid;
     }
@@ -256,7 +256,7 @@ class ReferenceManager {
     function deleteReference($ref) {
         $reference_dao = $this->_getReferenceDao();
         // delete reference for this group_id
-        $status=$reference_dao->removeRefGroup($ref->getId(),$ref->getGroupId());
+        $status=$reference_dao->removeRefGroup($ref->getId(),$ref->getGroupIdFromArtifactId());
         // delete reference itself if it is not used
         if ($this->_referenceNotUsed($ref->getId())){
             $status = $status & $reference_dao->removeById($ref->getId());
@@ -295,7 +295,7 @@ class ReferenceManager {
 
     function updateIsActive($ref,$is_active) {
         $reference_dao = $this->_getReferenceDao();
-        $dar = $reference_dao->update_ref_group($ref->getId(),$is_active,$ref->getGroupId());
+        $dar = $reference_dao->update_ref_group($ref->getId(),$is_active,$ref->getGroupIdFromArtifactId());
     }
 
     /**
@@ -398,13 +398,13 @@ class ReferenceManager {
         return $keyword == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword'];
     }
 
-    private function _buildReference($row, $val = null) {
+    protected function _buildReference($row, $val = null) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         
-        if ($this->isAnArtifactKeyword($row['keyword']) && !$this->getGroupId($val)) {
+        if ($this->isAnArtifactKeyword($row['keyword']) && !$this->getGroupIdFromArtifactId($val)) {
             $this->eventManager->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
         return $ref;
@@ -661,7 +661,7 @@ class ReferenceManager {
      *
      * @return mixed False if no match, the group id otherwise
      */
-    private function getGroupId($artifact_id) {
+    protected function getGroupIdFromArtifactId($artifact_id) {
         $dao    = $this->getArtifactDao();
         $result = $dao->searchArtifactId($artifact_id);
         if ($result && count($result)) {
@@ -678,8 +678,8 @@ class ReferenceManager {
      *
      * @return Integer
      */
-    private function getGroupIdFromArtifactIdForCallbackFunction($artifact_id) {
-        $group_id = $this->getGroupId($artifact_id);
+    protected function getGroupIdFromArtifactIdForCallbackFunction($artifact_id) {
+        $group_id = $this->getGroupIdFromArtifactId($artifact_id);
         if ($group_id === false) {
             $this->eventManager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$group_id));
         }
