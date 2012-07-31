@@ -377,7 +377,14 @@ class ReferenceManager {
                                                  $group_id);
     }
 
-    private function isAKeywordArtifact($keyword) {
+    /**
+     * Return true if keyword is valid to reference artifacts
+     *
+     * @param String $keyword
+     *
+     * @return Boolean
+     */
+    private function isAnArtifactKeyword($keyword) {
         $natures = $this->getAvailableNatures();
         return $keyword == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword'];
     }
@@ -388,7 +395,7 @@ class ReferenceManager {
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
         
-        if ($this->isAKeywordArtifact($row['keyword']) && !$this->getGroupId($val)) {
+        if ($this->isAnArtifactKeyword($row['keyword']) && !$this->getGroupId($val)) {
             $em = EventManager::instance();
             $em->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
         }
@@ -678,7 +685,7 @@ class ReferenceManager {
         // Analyse match
         $key     = strtolower($match[1]);
         
-        if ($this->isAKeywordArtifact($key)) {
+        if ($this->isAnArtifactKeyword($key)) {
             $this->tmpGroupIdForCallbackFunction = $this->getGroupIdFromArtifactIdForCallbackFunction($match[3]);
         }
         
@@ -846,7 +853,12 @@ class ReferenceManager {
     function _getCrossReferenceDao() {
         return new CrossReferenceDao();
     }
-    
+
+    /**
+     * Wrapper
+     *
+     * @return ArtifactDao
+     */
     private function getArtifactDao() {
         return new ArtifactDao();
     }
