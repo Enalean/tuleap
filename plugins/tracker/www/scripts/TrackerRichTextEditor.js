@@ -30,7 +30,7 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
         // The value is defined in Artifact class.
         var text_button = Builder.node('input', {'name'     : 'comment_format'+this.options.id,
                                                  'type'     : 'radio',
-                                                 'value'    : '0',
+                                                 'value'    : 'text',
                                                  'checked'  : 'checked',
                                                  'id'       : 'comment_format_text'+this.options.id});
         div.appendChild(text_button);
@@ -40,7 +40,7 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
         // The value is defined in Artifact class.
         var html_button = Builder.node('input', {'name' : 'comment_format'+this.options.id,
                                                  'type' : 'radio',
-                                                 'value': '1',
+                                                 'value': 'html',
                                                  'id'   : 'comment_format_html'+this.options.id});
         div.appendChild(html_button);
         div.appendChild(document.createTextNode('HTML'));

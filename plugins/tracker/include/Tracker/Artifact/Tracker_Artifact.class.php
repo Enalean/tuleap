@@ -606,10 +606,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
-                        if ((bool)$request->get('comment_format') == true) {
-                            $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
-                        } else {
-                            $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+                        $formats = array('text', 'html');
+                        $vFormat = new Valid_WhiteList('comment_format', $formats);
+                        if ($request->valid($vFormat)) {
+                            if ($request->get('comment_format') == 'html') {
+                                $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
+                            } else {
+                                $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+                            }
                         }
                         $changeset->updateComment($request->get('content'), $current_user, $comment_format);
                         if ($request->isAjax()) {
