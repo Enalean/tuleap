@@ -655,8 +655,15 @@ class ReferenceManager {
         }
         return false;
     }
-    
-    private function getGroupIdForCallbackFunction($artifact_id) {
+
+    /**
+     * Return the group_id of an artifact_id
+     * 
+     * @param Integer $artifact_id
+     *
+     * @return Integer
+     */
+    private function getGroupIdFromArtifactIdForCallbackFunction($artifact_id) {
         $group_id = $this->getGroupId($artifact_id);
         if ($group_id === false) {
             $em = EventManager::instance();
@@ -672,7 +679,7 @@ class ReferenceManager {
         $key     = strtolower($match[1]);
         
         if ($this->isAKeywordArtifact($key)) {
-            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdForCallbackFunction($match[3]);
+            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdFromArtifactIdForCallbackFunction($match[3]);
         }
         
         if ($match[2]) {
