@@ -79,6 +79,44 @@ class GitRepositoryManager {
         $repository->getBackend()->createReference($repository);
     }
 
+    public function forkRepositories(array $repositories, Project $to_project, $namespace, $scope, User $user) {
+        $repos = array_filter($repositories);
+        if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
+            return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project);
+        }
+        return false;
+    }
+
+    private function isNamespaceValid(GitRepository $repository, $namespace) {
+        if ($namespace) {
+            $ns_chunk = explode('/', $namespace);
+            foreach ($ns_chunk as $chunk) {
+                if (!$repository->isNameValid($chunk)) {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
+    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
+        $forked = false;
+        foreach ($repos as $repo) {
+            try {
+                if ($repo->userCanRead($user)) {
+                    $this->fork($repo, $user, $namespace, $scope, $project);
+                    $forked = true;
+                }
+            } catch (GitRepositoryAlreadyExistsException $e) {
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
+            } catch (Exception $e) {
+                $GLOBALS['Response']->addFeedback('warning', 'Got an unexpected error while forking ' . $repo->getName() . ': ' . $e->getMessage());
+            }
+        }
+        return $forked;
+    }
+    
     /**
      * Fork a repository
      *
