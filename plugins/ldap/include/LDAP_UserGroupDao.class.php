@@ -148,6 +148,15 @@ extends DataAccessObject
         }
         return $ret;
     }
+    
+    /**
+     * Retieve Tuleap ugroup having the synchronize option enabled
+     * 
+     * @return Array
+     */
+    function getSynchronizedUgroups() {
+        return array();
+    }
 }
 
 ?>

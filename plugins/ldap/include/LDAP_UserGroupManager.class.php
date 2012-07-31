@@ -83,7 +83,30 @@ extends LDAP_GroupManager
     {
         return $this->getDao()->getMembersId($ugroupId);
     }
-    
+
+    /**
+     * Synchronize nightly each usergroup with each corresponding ldap one
+     *
+     * @return Boolean
+     */
+    public function synchronizeDaily() {
+        $ugroups = $this->getSynchronizedUgroups();
+        foreach($ugroups as $ugroup) {
+            /*if ($ugroups->isSynchronized()) {
+                $ugroup->synchronizeIt();
+            }*/
+        }
+        return true;
+    }
+
+    /**
+     * Retieve Tuleap ugroup having the synchronize option enabled
+     * 
+     * @return Array
+     */
+    public function getSynchronizedUgroups() {
+        return $this->getDao()->getSynchronizedUgroups();
+    }
 
     /**
      * Return dao

@@ -849,6 +849,10 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isDailySyncEnabled()) {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
+
+            //Synchronize the ugroups with the ldap ones
+            $ldapUgroupManager = new LDAP_UserGroupManager();
+            $ldapUgroupManager->synchronizeDaily();
         }
     }
     
