@@ -40,13 +40,15 @@ class ReferenceManager {
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.
      * @var array
      */
-    var $activeReferencesByProject; 
+    var $activeReferencesByProject;
+
     /**
      * array of Reference objects arrays indexed by group_id
      * Example: $activeReferencesByProject[101][1] return the first reference object for project 101
      * @var array
      */
-    var $referencesByProject;
+    var $referencesByProject = array();
+
     var $referenceDao;
     var $groupIdByName;
     var $groupIdByNameLower;
@@ -54,7 +56,7 @@ class ReferenceManager {
     /**
      * @var array
      */
-    private $reservedKeywords = array(
+    var $reservedKeywords = array(
         "art", "artifact", "doc", "file", "wiki", "cvs", "svn", "news", "forum", "msg", "cc", "tracker", "release",
         "tag", "thread", "im", "project", "folder", "plugin", "img", "commit", "rev", "revision", "patch", "bug",
         "sr", "task", "proj", "dossier"); //should be elsewhere?
@@ -90,7 +92,6 @@ class ReferenceManager {
 
    
     public function __construct() {
-        $this->activeReferencesByProject = array();
         $this->eventManager = EventManager::instance();
         $this->loadReservedKeywords();
     }
