@@ -194,7 +194,7 @@ class Git_GitoliteDriver {
         $i    = 0;
         foreach ($user->getAuthorizedKeys(true) as $key) {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            file_put_contents($filePath, $key) == strlen($key);
+            file_put_contents($filePath, $key);
             $i++;
         }
     }
@@ -211,7 +211,6 @@ class Git_GitoliteDriver {
             foreach ($dir as $file) {
                 $userbase = $user->getUserName().'@';
                 if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                    //unlink($file->getPathname());
                     $this->gitRm($file->getPathname());
                 }
             }
