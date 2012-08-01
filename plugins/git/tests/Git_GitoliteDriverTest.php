@@ -181,9 +181,23 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
 
         $this->assertEmptyGitStatus();
     }
+
+    public function itDoesntCommitAnythingIfNothingChanged() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // User another git exec transport to trap commit
+        $gitExec = partial_mock('Git_Exec', array('push', 'commit'), array($this->_glAdmDir));
+        $gitExec->expectNever('commit');
+        $gitExec->expectOnce('push');
+        $driver = new Git_GitoliteDriver($this->_glAdmDir, $gitExec);
+
+        $driver->dumpSSHKeys($user);
+    }
 }
 
 class Git_GitoliteDriverTest extends GitoliteTestCase {
+
     public function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
         file_put_contents($this->_glAdmDir.'/conf/gitolite.conf', '@test = coin'.PHP_EOL);

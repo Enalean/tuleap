@@ -229,17 +229,11 @@ class Git_GitoliteDriver {
         return $this->gitExec->rm($file);
     }
 
-    /**
-     * Commit stuff to repository
-     * 
-     * Always force commit, even when there no changes it's mandatory with
-     * dump ssh keys event, otherwise the commit is empty and it raises errors.
-     * TODO: find a better way to manage that!
-     *
-     * @param String $message
-     */
     protected function gitCommit($message) {
-        return $this->gitExec->commit($message);
+        if ($this->gitExec->isThereAnythingToCommit()) {
+            return $this->gitExec->commit($message);
+        }
+        return true;
     }
     
     protected function gitPush() {

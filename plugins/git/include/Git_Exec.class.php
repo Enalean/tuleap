@@ -25,46 +25,96 @@ require_once 'exceptions/Git_Command_Exception.class.php';
  */
 class Git_Exec {
     private $path;
-    
+
+    /**
+     * @param String $path The git repository path where we should operate
+     */
     public function __construct($path) {
         $this->path = $path;
     }
-    
+
+    /**
+     * git help mv
+     *
+     * @param string $from
+     * @param string $to
+     *
+     * @return boolean
+     * @throw Git_Command_Exception
+     */
     public function mv($from, $to) {
         $cmd = 'git mv '.escapeshellarg($from) .' '. escapeshellarg($to);
         return $this->gitCmd($cmd);
     }
 
+    /**
+     * git help add
+     *
+     * @param string $file
+     *
+     * @return boolean
+     * @throw Git_Command_Exception
+     */
     public function add($file) {
         $cmd = 'git add '.escapeshellarg($file);
         return $this->gitCmd($cmd);
     }
 
+    /**
+     * git help rm
+     *
+     * @param string $file
+     *
+     * @return boolean
+     * @throw Git_Command_Exception
+     */
     public function rm($file) {
         $cmd = 'git rm '.escapeshellarg($file);
         return $this->gitCmd($cmd);
     }
 
     /**
-     * Commit stuff to repository
-     * 
-     * Always force commit, even when there no changes it's mandatory with
-     * dump ssh keys event, otherwise the commit is empty and it raises errors.
-     * TODO: find a better way to manage that!
+     * git help commit
      *
-     * @param String $message
+     * @param string $message
+     *
+     * @return boolean
+     * @throw Git_Command_Exception
      */
     public function commit($message) {
-        $cmd = 'git commit --allow-empty -m '.escapeshellarg($message);
+        $cmd = 'git commit -m '.escapeshellarg($message);
         return $this->gitCmd($cmd);
     }
-    
+
+    /**
+     * git help push
+     *
+     * @return boolean
+     * @throw Git_Command_Exception
+     */
     public function push() {
         $cmd = 'git push origin master';
         return $this->gitCmd($cmd);
     }
-    
+
+    /**
+     * Return true if working directory is clean (nothing to commit)
+     *
+     * @return boolean
+     * @throw Git_Command_Exception
+     */
+    public function isThereAnythingToCommit() {
+        $output = array();
+        $this->execInPath('git status --porcelain', $output);
+        return count($output) !== 0;
+    }
+
     private function gitCmd($cmd) {
+        $output = array();
+        return $this->execInPath($cmd, $output);
+    }
+
+    private function execInPath($cmd, &$output) {
         $cwd = getcwd();
         chdir($this->path);
         exec("$cmd 2>&1", $output, $retVal);
