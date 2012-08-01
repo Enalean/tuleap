@@ -5,11 +5,11 @@ Version 5.4 (Not released yet)
 
 	== Plugins ==
 	* Agiledashboard: 0.46
-	* Tracker: 5.8.10
+	* Tracker: 5.8.11
 	* Cardwall: 0.9.2
-	* Test: 5.3
+	* Test: 5.4
 	* forumml: 2.6.2
-	* git: 2.6.4
+	* git: 2.6.5
 	* graphontrackers: 1.5
 	* hudson: 1.9
 	* pluginsadministration: 1.2
@@ -20,6 +20,7 @@ Version 5.4 (Not released yet)
 	* Add script to prepare plugins changelog (to be used by 
 	Tuleap integrators when merging into stable)
 	* Continue PHP 5.3 compat (Contrib Philippe Goetz)
+	* All unit tests pass with PHP 5.3
 
 Version 5.3.1 (Monday, July 23rd 2012)
 	== Plugins ==

@@ -1,3 +1,6 @@
+Version 2.6.5
+    * Make unit tests pass with PHP 5.3
+
 Version 2.6.4
     * Creation of git repo containing existing-repo leads to a bug
 
