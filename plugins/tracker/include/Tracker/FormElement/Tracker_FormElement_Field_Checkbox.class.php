@@ -117,27 +117,47 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return false;
     }
     
-    /**
-     * Augment data from request
-     * With multi select boxes, when nothing is selected, 
-     * $fields_data does not contains any entry for the field.
-     * => augment $fields_data with None value (100)
-     *
-     * @param array &$fields_data The user submitted value
-     *
-     * @return void
-     */
-    public function augmentDataFromRequest(&$fields_data) {
-        if ((!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) && !$this->isRequired() && $this->userCanUpdate()) {
-            $fields_data[$this->getId()] = array('100');
+    ///////////////////////////////////////////////
+    //////////////TODO/////////////////////////////
+    ///////////////////////////////////////////////
+    protected function _fetchFieldMasschange($id, $name, $selected_values) { 
+        $html = '';
+        $multiple = ' ';
+        $size     = ' ';
+        if ($this->isMultiple()) {
+            $multiple = ' multiple="multiple" ';
+            $size     = ' size="'. min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) .'" ';
+            if ($name) {
+                $name .= '[]';
+            }
         }
+        $html .= '<select ';
+        if ($id) {
+            $html .= 'id="'. $id .'" ';
+        }
+        if ($name) {
+            $html .= 'name="'. $name .'" ';
+        }
+        $html .= $size . $multiple .'>';      
+
+        //if ( $this->fieldHasEnableWorkflow() ) {
+        $html .= '<option value="'.$GLOBALS['Language']->getText('global','unchanged').'" selected="selected">'. $GLOBALS['Language']->getText('global','unchanged') .'</option>';
+        $html .= '<option value="100">'. $GLOBALS['Language']->getText('global','none') .'</option>';
+        //}
+
+        foreach($this->getBind()->getAllValues() as $id => $value) {
+                    if (!$value->isHidden()) {
+                        $style = $this->getBind()->getSelectOptionInlineStyle($id);
+                        $html .= '<option value="'. $id .'" style="'. $style .'">';
+                        $html .= $this->getBind()->formatArtifactValue($id);
+                        $html .= '</option>';
+                    }
+        }
+
+        $html .= '</select>';
+        return $html;
     }
     
-    /**
-     * @return boolean true if the value corresponds to what we defined as "none"
-     */
-    public function isNone($value) {
-        return $value === null || $value === '' || (is_array($value) && count($value) ==1 && $value[0] == '100');
-    }
+    
 }
 ?>
