@@ -63,8 +63,8 @@ print "  <webMaster>webmaster@".$host."</webMaster>\n";
 print "  <language>en-us</language>\n";
 // ## item outputs
 $outputtotal = 0;
-$frspf =& new FRSPackageFactory();
-$frsrf =& new FRSReleaseFactory();
+$frspf = new FRSPackageFactory();
+$frsrf = new FRSReleaseFactory();
 
 while ($row = db_fetch_array($res)) {
   if (!$G_RELEASE["$row[group_id]"]) {

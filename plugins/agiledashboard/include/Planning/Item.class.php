@@ -130,7 +130,35 @@ class Planning_Item {
      * @see Tracker_Artifact::getAllowedChildrenTypes()
      */
     public function getAllowedChildrenTypes() {
-        return $this->artifact->getAllowedChildrenTypes();
+        return $this->appendBacklogTrackerIfRoot($this->artifact->getAllowedChildrenTypes());
+    }
+
+    /**
+     * Allow to create artifacts when the item comes from the planning tracker and if
+     * the backlog tracker is at the root of the hierarchy.
+     *
+     * Example:
+     * Given I have a planning Epic -> Release
+     * And Epic has not parent (root of hierarchy)
+     * Then I can create an Epic right in the release
+     *
+     * Counter example:
+     * Given I have a planning Story -> Sprint
+     * And I have a hierarchy Epic -> Story
+     * Then I cannot create Story directly below Sprint
+     *
+     * @param array $allowed_trackers
+     * @return type
+     */
+    private function appendBacklogTrackerIfRoot(array $allowed_trackers) {
+        $backlog_tracker = array();
+        if ($this->getTracker() == $this->planning->getPlanningTracker()) {
+            $backlog_hierarchy = $this->planning->getBacklogTracker()->getHierarchy();
+            if ($backlog_hierarchy->isRoot($this->planning->getBacklogTrackerId())) {
+                $backlog_tracker = array($this->planning->getBacklogTracker());
+            }
+        }
+        return array_merge($allowed_trackers, $backlog_tracker);
     }
 }
 

@@ -259,6 +259,7 @@ class Planning_MilestoneFactory {
     public function getMilestoneWithPlannedArtifactsAndSubMilestones(User $user, $group_id, $planning_id, $artifact_id) {
         $milestone = $this->getMilestoneWithPlannedArtifacts($user, $group_id, $planning_id, $artifact_id);
         $milestone->addSubMilestones($this->getSubMilestones($user, $milestone));
+        $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
         return $milestone;
     }
 
@@ -271,9 +272,10 @@ class Planning_MilestoneFactory {
      * 
      * @return Array of \Planning_Milestone 
      */
-    public function getOpenMilestones(User $user, Project $project, Planning $planning) {
+    public function getAllMilestones(User $user, Planning $planning) {
+        $project = $planning->getPlanningTracker()->getProject();
         $milestones = array();
-        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
             $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
@@ -305,13 +307,56 @@ class Planning_MilestoneFactory {
      *
      * @return Array of Planning_Milestone
      */
-    public function getMilestoneWithAncestors(User $user, Planning_Milestone $milestone) {
-        $parent_milestone = array();
-        $parent_artifacts = $milestone->getArtifact()->getAllAncestors($user);
-        foreach ($parent_artifacts as $artifact) {
-            $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
+    public function getMilestoneAncestors(User $user, Planning_Milestone $milestone) {
+        $parent_milestone   = array();
+        $milestone_artifact = $milestone->getArtifact();
+        if ($milestone_artifact) {
+            $parent_artifacts = $milestone_artifact->getAllAncestors($user);
+            foreach ($parent_artifacts as $artifact) {
+                $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
+            }
         }
-        return array_merge(array($milestone), $parent_milestone);
+        return $parent_milestone;
+    }
+
+    /**
+     * Get all milestones that share the same parent than given milestone.
+     *
+     * @param User $user
+     * @param Planning_Milestone $milestone
+     *
+     * @return Array of Planning_Milestone
+     */
+    public function getSiblingMilestones(User $user, Planning_Milestone $milestone) {
+        $sibling_milestones = array();
+        $milestone_artifact = $milestone->getArtifact();
+        if ($milestone_artifact) {
+            foreach($milestone_artifact->getSiblings($user) as $sibling) {
+                if ($sibling->getId() == $milestone_artifact->getId()) {
+                    $sibling_milestones[] = $milestone;
+                } else {
+                    $sibling_milestones[] = $this->getMilestoneFromArtifact($sibling);
+                }
+            }
+        }
+        return $sibling_milestones;
+    }
+
+    /**
+     * Get the top most recent milestone (last created artifact in planning tracker)
+     *
+     * @param User    $user
+     * @param Integer $planning_id
+     *
+     * @return Planning_Milestone
+     */
+    public function getCurrentMilestone(User $user, $planning_id) {
+        $planning  = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        if (count($artifacts) > 0) {
+            return $this->getMilestoneFromArtifact(array_shift($artifacts));
+        }
+        return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
     }
 }
 ?>

@@ -35,6 +35,7 @@ class Test_Tracker_Builder {
     private $project;
     private $project_id;
     private $name;
+    private $item_name;
     
     public function withId($id) {
         $this->id = $id;
@@ -56,12 +57,17 @@ class Test_Tracker_Builder {
         $this->name = $name;
         return $this;
     }
-        
+
+    public function withItemName($item_name) {
+        $this->item_name = $item_name;
+        return $this;
+    }
+
     /**
      * @return \Tracker 
      */
     public function build() {
-        $tracker = new Tracker($this->id, $this->project_id, $this->name, null, null, null, null, null, null, null, null, null);
+        $tracker = new Tracker($this->id, $this->project_id, $this->name, null, $this->item_name, null, null, null, null, null, null, null);
         if ($this->project) {
             $tracker->setProject($this->project);
         }

@@ -37,7 +37,7 @@ class ReferenceAdministrationActions extends Actions {
         if ($request->get('service_short_name') == 100) { // none
             $service_short_name="";
         } else $service_short_name=$request->get('service_short_name');
-        $ref=& new Reference(0,
+        $ref = new Reference(0,
                              $request->get('keyword'),
                              $request->get('description'),
                              $request->get('link'),
@@ -105,7 +105,7 @@ class ReferenceAdministrationActions extends Actions {
             
             $old_keyword = $ref->getKeyword();
             //Update table 'reference'
-            $new_ref=& new Reference($request->get('reference_id'),
+            $new_ref = new Reference($request->get('reference_id'),
                                      $request->get('keyword'),
                                      $request->get('description'),
                                      $request->get('link'),

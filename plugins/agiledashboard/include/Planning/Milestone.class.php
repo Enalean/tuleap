@@ -29,7 +29,7 @@ interface Planning_Milestone {
      * @return int The project identifier.
      */
     public function getGroupId();
-    
+
     /**
      * @return Project
      */
@@ -39,40 +39,40 @@ interface Planning_Milestone {
      * @return Tracker_Artifact
      */
     public function getArtifact();
-    
+
     /**
      * @return array of Planning_Milestone
      */
     public function getSubMilestones();
-    
+
     /**
      * @return Boolean True if milestone has at least 1 sub-milestone.
      */
     public function hasSubMilestones();
-    
+
     /**
      * Adds some sub-milestones. Ignores milestones which are already a
      * sub-milestone of the current one.
-     * 
-     * @param array $new_sub_milestones 
+     *
+     * @param array $new_sub_milestones
      */
     public function addSubMilestones(array $new_sub_milestones);
-    
+
     /**
      * @return Boolean
      */
     public function userCanView(User $user);
-    
+
     /**
      * @return int
      */
     public function getTrackerId();
-    
+
     /**
      * @return int
      */
     public function getArtifactId();
-    
+
     /**
      * @return string
      */
@@ -82,25 +82,25 @@ interface Planning_Milestone {
      * @return string
      */
     public function getXRef();
-    
+
 
     /**
      * @return Planning
      */
     public function getPlanning();
-    
+
     /**
      * @return int
      */
     public function getPlanningId();
-    
+
     /**
      * @return TreeNode
      */
     public function getPlannedArtifacts();
-    
+
     /**
-     * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts() 
+     * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
      * @param User $user
      * @return Array of Tracker_Artifact
      */
@@ -108,17 +108,41 @@ interface Planning_Milestone {
 
     /**
      * Return numerical value of remaining effort
-     * 
+     *
      * @return float
      */
     public function getRemainingEffort();
 
     /**
      * Return numerical value of capacity
-     * 
+     *
      * @return float
      */
     public function getCapacity();
+
+    /**
+     * Return true of the milestone is inside hierarchy.
+     *
+     * Example: a root node (a product) is not IN hierarchy
+     *          a lonely milestone is not either.
+     *
+     * @return boolean
+     */
+    public function hasAncestors();
+
+    /**
+     * Return all parents of current milestone
+     *
+     * @return Array of Planning_Milestone
+     */
+    public function getAncestors();
+
+    /**
+     * Set parents of current milestone
+     *
+     * @param Array of Planning_Milestone
+     */
+    public function setAncestors(array $ancestors);
 }
 
 ?>

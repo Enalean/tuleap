@@ -40,7 +40,7 @@ class EventManager {
     private static $instance;
     
     /**
-     * Allows clear instance for test. DO NOT USE IT IN PRODUCTION!
+     * Allows clear instance for test. DO NOT USE IT IN PRODUCTION CODE!
      */
     public static function clearInstance() {
         self::$instance = null;
@@ -48,6 +48,14 @@ class EventManager {
 
     public static function setInstance(EventManager $event_manager) {
         self::$instance = $event_manager;
+    }
+
+    /**
+     * Set current instance of singleton.  DO NOT USE IT IN PRODUCTION CODE!
+     * @param EventManager $instance
+     */
+    public static function setInstance(EventManager $instance) {
+        self::$instance = $instance;
     }
 
     /**

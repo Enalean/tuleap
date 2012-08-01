@@ -30,7 +30,7 @@ require_once('../include/ArtifactReportHtml.class.php');
 require_once('../include/ArtifactHtml.class.php');
 
 require_once('common/include/SimpleSanitizer.class.php');
-$sanitizer =& new SimpleSanitizer();
+$sanitizer = new SimpleSanitizer();
 
 
 $request =& HTTPRequest::instance();
@@ -124,7 +124,7 @@ if ($group_id && !$atid) {
 			$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','tracker_created'));
                         // Create corresponding reference
                         $reference_manager =& ReferenceManager::instance();
-                        $ref=& new Reference(0, // no ID yet
+                        $ref = new Reference(0, // no ID yet
                                              strtolower($itemname),
                                              $Language->getText('project_reference','reference_art_desc_key'), // description
                                              '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
@@ -380,7 +380,7 @@ if ($group_id && !$atid) {
               $ok = false;
               $global_notification_id = $request->getValidated('global_notification_id', 'uint');
               if ($global_notification_id) {
-                  $agnf =& new ArtifactGlobalNotificationFactory();
+                  $agnf = new ArtifactGlobalNotificationFactory();
                   if ($agnf->removeGlobalNotificationForTracker($global_notification_id, $atid)) {
                       $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_include_type', 'info_gn_deleted'));
                       $ok = true;
@@ -400,7 +400,7 @@ if ($group_id && !$atid) {
               }
               break;
           case 'add_global':
-              $agnf =& new ArtifactGlobalNotificationFactory();
+              $agnf = new ArtifactGlobalNotificationFactory();
               if (!($ok = $agnf->addGlobalNotificationForTracker($atid))) {
                   $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'error_gn_not_added'));
               }
@@ -431,7 +431,7 @@ if ($group_id && !$atid) {
               */
               
               if ($submitted_notifications) {
-                  $agnf =& new ArtifactGlobalNotificationFactory();
+                  $agnf = new ArtifactGlobalNotificationFactory();
                   $notifs = $agnf->getGlobalNotificationsForTracker($atid);
                   foreach($notifs as $id => $nop) {
                       if (isset($submitted_notifications[$id]) && (
@@ -547,7 +547,7 @@ if ($group_id && !$atid) {
 				exit_error($Language->getText('global','error'),$art_field_fact->getErrorMessage());
 			} else {
                 require_once('common/tracker/ArtifactRulesManager.class.php');
-                $arm =& new ArtifactRulesManager();
+                $arm = new ArtifactRulesManager();
                 $arm->deleteRulesByFieldId($atid, $field_id);
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','values_updated'));
 			}
@@ -685,7 +685,7 @@ if ($group_id && !$atid) {
 			} else {
                 if ($status == $ath->FIELD_VALUE_STATUS_HIDDEN) {
                     require_once('common/tracker/ArtifactRulesManager.class.php');
-                    $arm =& new ArtifactRulesManager();
+                    $arm = new ArtifactRulesManager();
                     $arm->deleteRulesByValueId($atid, $field_id, $value_id);
                 }
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','value_updated'));
@@ -713,7 +713,7 @@ if ($group_id && !$atid) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 require_once('common/tracker/ArtifactRulesManager.class.php');
-                $arm =& new ArtifactRulesManager();
+                $arm = new ArtifactRulesManager();
                 $arm->deleteRulesByValueId($atid, $field_id, $value_id);
 				$GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','value_deleted'));
 			}
@@ -804,7 +804,7 @@ if ($group_id && !$atid) {
 			} else {
                 if (!(isset($use_it) && $use_it)) {
                     require_once('common/tracker/ArtifactRulesManager.class.php');
-                    $arm =& new ArtifactRulesManager();
+                    $arm = new ArtifactRulesManager();
                     $arm->deleteRulesByFieldId($atid, $field_id);
                 }
 				// Reload the field factory
@@ -843,7 +843,7 @@ if ($group_id && !$atid) {
 				exit_error($Language->getText('global','error'),$field->getErrorMessage());
 			} else {
                 require_once('common/tracker/ArtifactRulesManager.class.php');
-                $arm =& new ArtifactRulesManager();
+                $arm = new ArtifactRulesManager();
                 $arm->deleteRulesByFieldId($atid, $field_id);
                 
 				// Reload the field factory
@@ -905,7 +905,7 @@ if ($group_id && !$atid) {
             $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index','delete_success', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML) ));
             echo $Language->getText('tracker_admin_index','tracker_deleted',array( $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML), $GLOBALS['sys_email_admin']));
                 require_once('common/tracker/ArtifactRulesManager.class.php');
-                $arm =& new ArtifactRulesManager();
+                $arm = new ArtifactRulesManager();
                 $arm->deleteRulesByArtifactType($atid);
                   // Delete related reference if it exists
                   // NOTE: there is no way to know if the reference is actually related to this tracker.
@@ -934,7 +934,7 @@ if ($group_id && !$atid) {
 		}
 	
 	    require_once('../include/ArtifactRulesManagerHtml.class.php');
-        $armh =& new ArtifactRulesManagerHtml($ath, '?group_id='. (int)($ath->getGroupID()) .'&atid='. (int)($ath->getID()) .'&func=field_dependencies');
+        $armh = new ArtifactRulesManagerHtml($ath, '?group_id='. (int)($ath->getGroupID()) .'&atid='. (int)($ath->getID()) .'&func=field_dependencies');
         if ($request->getValidated('save') === 'save') {
             if ($request->valid(new Valid_UInt('source_field')) && $request->valid(new Valid_UInt('target_field'))) {
                 $armh->saveFromRequest($request);

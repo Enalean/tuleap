@@ -1,3 +1,6 @@
+Version 1.5
+    * Continue PHP 5.3 compat (Contrib Philippe Goetz)
+
 1.4 - Tuleap 4.0.26
 	* Fix Security issue (Contrib STMicroelectronics)
 

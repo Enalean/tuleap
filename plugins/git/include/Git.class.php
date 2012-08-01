@@ -487,7 +487,9 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        return new $action($this, SystemEventManager::instance(), $this->factory);
+        $system_event_manager   = SystemEventManager::instance();
+        $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {
