@@ -60,7 +60,7 @@ codendi.RTE = Class.create(
             } else if (this.options.toolbar == 'minimal') {
                 var toolbar = [
                                   ['Bold', 'Italic', 'Underline'],
-                                  ['NumberedList', 'BulletedList', '-', 'Blockquote'],
+                                  ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
                                   ['Link', 'Unlink', 'Anchor', 'Image']
                               ];
             } else {
