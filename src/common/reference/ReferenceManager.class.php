@@ -48,9 +48,16 @@ class ReferenceManager {
      */
     var $referencesByProject;
     var $referenceDao;
-    var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
     var $groupIdByNameLower;
+
+    /**
+     * @var array
+     */
+    private $reservedKeywords = array(
+        "art", "artifact", "doc", "file", "wiki", "cvs", "svn", "news", "forum", "msg", "cc", "tracker", "release",
+        "tag", "thread", "im", "project", "folder", "plugin", "img", "commit", "rev", "revision", "patch", "bug",
+        "sr", "task", "proj", "dossier"); //should be elsewhere?
 
     /**
      * @var EventManager
