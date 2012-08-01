@@ -105,12 +105,6 @@ class GitoliteTestCase extends TuleapTestCase {
         $this->assertTrue(file_exists($new_root_dir . '/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
     }
 
-    public function getPartialMock($className, $methods) {
-        $partialName = $className.'Partial'.uniqid();
-        Mock::generatePartial($className, $partialName, $methods);
-        return new $partialName();
-    }
-
     public function arrayToDar() {
         $argList = func_get_args();
         $dar = new MockDataAccessResult();
@@ -258,8 +252,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     // 4 has defaults
     // 5 has pimped perms
     public function testDumpProjectRepoPermissions() {
-        $driver = $this->getPartialMock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'));
-        $driver->setAdminPath($this->_glAdmDir);
+        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
+        //$driver->setAdminPath($this->_glAdmDir);
 
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
@@ -319,10 +313,9 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     }    
 
     public function itCanRenameProject() {
-        $driver = $this->getPartialMock('Git_GitoliteDriver', array('gitPush'));
+        $driver = partial_mock('Git_GitoliteDriver', array('gitPush'), array($this->_glAdmDir));
         $driver->expectOnce('gitPush');
         $driver->setReturnValue('gitPush', true);
-        $driver->setAdminPath($this->_glAdmDir);
         
         
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));

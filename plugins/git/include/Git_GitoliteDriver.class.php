@@ -25,8 +25,8 @@ require_once 'common/project/UGroupManager.class.php';
 require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
-require_once 'exceptions/Git_Command_Exception.class.php';
 require_once 'PathJoinUtil.php';
+require_once 'Git_Exec.class.php';
 
 
 /**
@@ -44,6 +44,11 @@ require_once 'PathJoinUtil.php';
  *
  */
 class Git_GitoliteDriver {
+    /**
+     * @var Git_Exec
+     */
+    private $gitExec;
+
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
@@ -53,23 +58,24 @@ class Git_GitoliteDriver {
         Git::PERM_WPLUS => ' RW+'
     );
 
-    public function repoFullName(GitRepository $repo, $unix_name) {
-        return unixPathJoin(array($unix_name, $repo->getFullName()));
-    }
-
     /**
      * Constructor
      *
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
+        $this->gitExec = ($gitExec !== null) ? $gitExec : new Git_Exec($adminPath);
     }
-    
+
+    public function repoFullName(GitRepository $repo, $unix_name) {
+        return unixPathJoin(array($unix_name, $repo->getFullName()));
+    }
+
     /**
      * Getter for $adminPath
      *
@@ -213,18 +219,15 @@ class Git_GitoliteDriver {
     }
 
     protected function gitMv($from, $to) {
-        $cmd = 'git mv '.escapeshellarg($from) .' '. escapeshellarg($to);
-        return $this->gitCmd($cmd);
+        return $this->gitExec->mv($from, $to);
     }
 
     protected function gitAdd($file) {
-        $cmd = 'git add '.escapeshellarg($file);
-        return $this->gitCmd($cmd);
+        return $this->gitExec->add($file);
     }
 
     protected function gitRm($file) {
-        $cmd = 'git rm '.escapeshellarg($file);
-        return $this->gitCmd($cmd);
+        return $this->gitExec->rm($file);
     }
 
     /**
@@ -237,23 +240,11 @@ class Git_GitoliteDriver {
      * @param String $message
      */
     protected function gitCommit($message) {
-        $cmd = 'git commit --allow-empty -m '.escapeshellarg($message);
-        return $this->gitCmd($cmd);
+        return $this->gitExec->commit($message);
     }
     
     protected function gitPush() {
-        $cmd = 'git push origin master';
-        return true;//$this->gitCmd($cmd);
-    }
-    
-    protected function gitCmd($cmd) {
-        $cmd = $cmd.' 2>&1';
-        exec($cmd, $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            throw new Git_Command_Exception($cmd, $output, $retVal);
-        }
+        return $this->gitExec->push();
     }
 
     /**
@@ -455,6 +446,16 @@ class Git_GitoliteDriver {
             return $clone_result;
         }
         return false;
+    }
+    
+    protected function gitCmd($cmd) {
+        $cmd = $cmd.' 2>&1';
+        exec($cmd, $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Git_Command_Exception($cmd, $output, $retVal);
+        }
     }
 
     /**
