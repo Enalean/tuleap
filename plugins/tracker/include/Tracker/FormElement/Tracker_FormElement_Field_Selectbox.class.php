@@ -134,7 +134,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public function changeType($type) {
         // only "msb" available at the moment.
-        if ($type === 'msb') {
+        if ($type === 'msb' || $type === 'cb') {
             //do not change from SB to MSB if the field is used to define the workflow
             $wf = WorkflowFactory::instance();
             return !$wf->isWorkflowField($this);

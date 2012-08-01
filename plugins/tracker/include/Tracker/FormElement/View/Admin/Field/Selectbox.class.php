@@ -35,7 +35,15 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                     'formElement'        => $this->formElement->id,
                     'change-type'        => 'msb'
                 )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-                   .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>)';
+                   .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>,
+                   <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+                    'tracker'            => $this->formElement->tracker_id,
+                    'func'               => 'admin-formElement-update',
+                    'formElement'        => $this->formElement->id,
+                    'change-type'        => 'cb'
+                )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
+                   .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_cb').'</a>
+                   )';
         }
 
         $html .= '</p>';

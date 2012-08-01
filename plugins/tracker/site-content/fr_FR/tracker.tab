@@ -1076,6 +1076,7 @@ plugin_tracker_formelement_admin	select_default_value	Sélectionner la valeur pa
 plugin_tracker_formelement_admin	static_values	Valeurs statiques
 plugin_tracker_formelement_admin	switch_msb	Transformer en boîte de sélections multiples
 plugin_tracker_formelement_admin	switch_sb	Transformer en boîte de sélection simple
+plugin_tracker_formelement_admin	switch_cb	Transformer en ensemble de boite a cocher
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible de supprimer ce champ (utilisé en sémantique, pour le workflow ou sur une dépendance entre champs)
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs

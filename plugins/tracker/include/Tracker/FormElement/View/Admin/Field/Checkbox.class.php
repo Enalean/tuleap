@@ -19,7 +19,7 @@
 
 require_once 'Selectbox.class.php';
 
-class Tracker_FormElement_View_Admin_Field_MultiSelectbox extends Tracker_FormElement_View_Admin_Field_Selectbox {
+class Tracker_FormElement_View_Admin_Field_Checkbox extends Tracker_FormElement_View_Admin_Field_Selectbox {
 
      public function fetchTypeForUpdate() {
         $html = '';
@@ -32,14 +32,14 @@ class Tracker_FormElement_View_Admin_Field_MultiSelectbox extends Tracker_FormEl
                         'formElement'        => $this->formElement->id,
                         'change-type'        => 'sb'
                     )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_sb').'</a>,
+               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_sb').'</a>, 
                <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                         'tracker'            => $this->formElement->tracker_id,
                         'func'               => 'admin-formElement-update',
                         'formElement'        => $this->formElement->id,
-                        'change-type'        => 'cb'
+                        'change-type'        => 'msb'
                     )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_cb').'</a>
+               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>
                )';
 
         $html .= '</p>';

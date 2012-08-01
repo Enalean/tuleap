@@ -83,7 +83,7 @@ class Tracker_FormElementFactory {
         'art_link' => 'Tracker_FormElement_Field_ArtifactLink',
         'perm'     => 'Tracker_FormElement_Field_PermissionsOnArtifact',
         'shared'   => 'Tracker_FormElement_Shared',
-        'checkbox' => 'Tracker_FormElement_Field_Checkbox',
+        'cb' => 'Tracker_FormElement_Field_Checkbox',
     );
     
     protected $special_classnames     = array(
@@ -409,7 +409,7 @@ class Tracker_FormElementFactory {
      * @return array All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedListFields($tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl'));
+        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl', 'cb'));
     }
     
     /**
@@ -466,7 +466,7 @@ class Tracker_FormElementFactory {
     }
     
     public function getUsedListFieldById($tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl'));
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl', 'cb'));
     }
     
     public function getUsedSbFields($tracker) {
@@ -478,11 +478,11 @@ class Tracker_FormElementFactory {
      * @return array All text formElements used by the tracker
      */
     public function getUsedTextFields($tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref', 'checkbox'));
+        return $this->getUsedFormElementsByType($tracker, array('text', 'string', 'ref'));
     }
     
     public function getUsedTextFieldById($tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('text', 'string', 'ref', 'checkbox'));
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('text', 'string', 'ref'));
     }
     
     /**

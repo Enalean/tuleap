@@ -73,24 +73,6 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return $html;
     }//*/
     
-    protected function getDao() {
-        return new Tracker_FormElement_Field_MultiSelectboxDao();
-    }
-    
-    /**
-     * The field is permanently deleted from the db
-     * This hooks is here to delete specific properties, 
-     * or specific values of the field.
-     * (The field itself will be deleted later)
-     * @return boolean true if success
-     */
-    public function delete() {
-        return $this->getDao()->delete($this->id);
-    }
-    
-    protected function getMaxSize() {
-        return $this->getproperty('size') ? $this->getproperty('size') : parent::getMaxSize();
-    }
     
     /**
      * @return the label of the field (mainly used in admin part)
@@ -127,8 +109,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
      * @return boolean true if the change is allowed and successful
      */
     public function changeType($type) {
-        // only "sb" available at the moment.
-        if ($type === 'sb') {
+        if ($type === 'sb' || $type === 'msb') {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
             return true;
