@@ -40,7 +40,7 @@ class ReferenceManager {
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.
      * @var array
      */
-    var $activeReferencesByProject;
+    var $activeReferencesByProject = array();
 
     /**
      * array of Reference objects arrays indexed by group_id
