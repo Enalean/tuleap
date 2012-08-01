@@ -1078,6 +1078,7 @@ plugin_tracker_formelement_admin	select_default_value	Select default value
 plugin_tracker_formelement_admin	static_values	Static values
 plugin_tracker_formelement_admin	switch_msb	Switch to Multi Select Box
 plugin_tracker_formelement_admin	switch_sb	Switch to Select Box
+plugin_tracker_formelement_admin	switch_cb	Switch to CheckBox
 plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of thie field?
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible to delete this field (used in semantics, workflow or field dependency)
 plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
