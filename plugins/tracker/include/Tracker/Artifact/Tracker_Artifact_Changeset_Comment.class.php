@@ -137,7 +137,7 @@ class Tracker_Artifact_Changeset_Comment {
                             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                         } else {
                             if ($this->bodyFormat == self::HTML_COMMENT) {
-                                $level = CODENDI_PURIFIER_LIGHT;
+                                $level = CODENDI_PURIFIER_FULL;
                             } else {
                                 $level = CODENDI_PURIFIER_BASIC;
                             }
