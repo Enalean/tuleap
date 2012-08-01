@@ -18,29 +18,65 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Alphanum.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Text_ValueDao.class.php');
-require_once(dirname(__FILE__).'/dao/Tracker_FormElement_Field_Value_TextDao.class.php');
-require_once(dirname(__FILE__).'/dao/Tracker_FormElement_Field_TextDao.class.php');
-require_once('common/include/Codendi_Diff.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
+require_once('Tracker_FormElement_Field_MultiSelectbox.class.php');
 
-class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alphanum {
+class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
     
-    // public $default_properties = array( 
-    //     'default_value' => array(
-     //        'value' => false,
-    //         'type'  => 'bool',
-     //    ),
-    //  public $default_properties = array(
-    //      'default_value' => array(
-     //         'value' => '0',
-     //         'type'  => 'string',
-     //       'size'  => 1 ,
-      //   ),
-    //);
+    /**
+     * @return boolean
+     */
+    public function isMultiple() {
+        return false;
+    }
+    
+    
+    protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
+        $html = '';
 
+
+        $html .= '<ul style="list-style-type:none;padding-left:5px; margin-top: 2px;"';
+        if ($id) {
+            $html .= 'id="'. $id .'" ';
+        }
+        if ($name) {
+            $html .= 'name="'. $name .'" ';
+        }
+        $html .= '>';
+ 
+        if (($submitted_values) && !is_array($submitted_values)) {
+            $submitted_values_array[] = $submitted_values;
+            $submitted_values = $submitted_values_array;
+        }
+        
+        foreach($this->getBind()->getAllValues() as $id => $value) {
+            $transition_id = null;
+            if ($this->isTransitionValid($from, $value)) {
+                $transition_id = $this->getTransitionId($from, $value->getId());
+                if (!empty($submitted_values)) {
+                    $checked = in_array($id, array_values($submitted_values)) ? 'checked="checked"' : '';
+                    
+                } else {
+                    $checked = isset($selected_values[$id]) ? 'checked="checked"' : '';
+                }
+                if ($this->userCanMakeTransition($transition_id)) {
+                    if (!$value->isHidden()) {
+                        $style = $this->getBind()->getSelectOptionInlineStyle($id);
+                        $html .= '<li><input type="checkbox" name="'. $id .'" id=cb_'. $id .' '. $checked .'/>';
+                        $html .= '<label for="cb_'. $id .'" >'.$this->getBind()->formatArtifactValue($id) .'</label>';
+                        $html .= '</li>';
+                    }
+                }
+            }
+        }
+        
+        $html .= '</ul>';
+        return $html;
+    }//*/
+    
+    protected function getDao() {
+        return new Tracker_FormElement_Field_MultiSelectboxDao();
+    }
+    
     /**
      * The field is permanently deleted from the db
      * This hooks is here to delete specific properties, 
@@ -52,282 +88,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
         return $this->getDao()->delete($this->id);
     }
     
-    public function fetchCriteriaValue($criteria) {      
-        $html = '<input type="hidden"  value="0" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .' />';
-        $html .= '<input type="checkbox"  value="1" name="criteria['. $this->id .']" id="tracker_report_criteria_'. $this->id .'" ' . ($value=="1" ? 'checked="checked"' : '').' />';
-        return $html;
-    }
-    public function getCriteriaFrom($criteria) {
-        //Only filter query if field is used
-        if($this->isUsed()) {
-            //Only filter query if criteria is valuated
-            if ($criteria_value = $this->getCriteriaValue($criteria)) {
-                $a = 'A_'. $this->id;
-                $b = 'B_'. $this->id;
-                return " INNER JOIN tracker_changeset_value AS $a 
-                         ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
-                         INNER JOIN tracker_changeset_value_text AS $b
-                         ON ($b.changeset_value_id = $a.id
-                             AND ". $this->buildMatchExpression("$b.value", $criteria_value) ."
-                         ) ";
-            }
-        }
-        return '';
-    }
-
-    /**
-     * Fetch the value
-     * @param mixed $value the value of the field
-     * @return string
-     */
-    public function fetchRawValue($value) {
-        return $value;
-    }
-    
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    public function fetchRawValueFromChangeset($changeset) {
-        $value = '';
-        if ($v = $changeset->getValue($this)) {
-            if ($row = $this->getValueDao()->searchById($v->getId(), $this->id)->getRow()) {
-                $value = $row['value'];
-            }
-        }
-        return $value;
-    }
-    
-    public function getCriteriaWhere($criteria) {
-        return '';
-    }
-    
-    public function getQuerySelect() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-        return "$R2.value AS `". $this->name ."`";
-    }
-    
-    public function getQueryFrom() {
-        $R1 = 'R1_'. $this->id;
-        $R2 = 'R2_'. $this->id;
-        
-        return "LEFT JOIN ( tracker_changeset_value AS $R1 
-                    INNER JOIN tracker_changeset_value_text AS $R2 ON ($R2.changeset_value_id = $R1.id)
-                ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->id ." )";
-    }
-    
-    protected function buildMatchExpression($field_name, $criteria_value) {
-        $matches = array();
-        $expr = parent::buildMatchExpression($field_name, $criteria_value);
-        if (!$expr) {
-            
-            // else transform into a series of LIKE %word%
-            if (is_array($criteria_value)) {
-                $split = preg_split('/\s+/', $criteria_value['value']);
-            } else {
-                $split = preg_split('/\s+/', $criteria_value);
-            }
-            $words = array();
-            foreach($split as $w) {
-                $words[] = $field_name." LIKE ". $this->quote('%'.$w.'%');
-            }
-            $expr = join(' AND ', $words);
-        }
-        return $expr;
-    }
-    
-    protected function quote($value) {
-        return CodendiDataAccess::instance()->quoteSmart($value);
-    }
-    protected function getCriteriaDao() {
-    //A changer
-        return new Tracker_Report_Criteria_Text_ValueDao();
-    }
-    
-    //public function fetchChangesetValue($artifact_id, $changeset_id, $value) {
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value , $from_aid = null) {
-
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify($value, CODENDI_PURIFIER_BASIC, $this->getTracker()->getGroupId());
-    }
-    
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-        return $value;
-    }
-    
-    protected function getValueDao() {
-        return new Tracker_FormElement_Field_Value_TextDao();
-    }
-    protected function getDao() {
-        return new Tracker_FormElement_Field_TextDao();
-    }
-    
-    /**
-     * Return true if this field is the semantic title field of the tracker, 
-     * false otherwise if not or if there is no title field defined.
-     *
-     * @return boolean true if the field is the 'title' of the tracker
-     */
-    protected function isSemanticTitle() {
-        
-        return (false);
-    }
-    
-    /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValue($submitted_values = array()) {
-        $html = '';
-        $value = '';
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $html .= '<input type="hidden"   value="0"  name="artifact['. $this->id .']"/>';
-        $html .= '<input type="checkbox"   value="1"  name="artifact['. $this->id .']"'. ($value=="1" ? 'checked="checked"' : '') .' />';
-        return $html;
-    }
-
-     /**
-     * Fetch the html code to display the field value in new artifact submission form
-     * @param array $submitted_values the values already submitted
-     *
-     * @return string html
-     */
-    protected function fetchSubmitValueMasschange() {
-        $html = '';
-        $value = $GLOBALS['Language']->getText('global','unchanged');
-        
-        //check if this field is the title we do not allow to change it
-        if ($this->isSemanticTitle()) {
-            $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
-        } else {
-            $html .= '<input type="hidden"  value="0"  name="artifact['. $this->id .']"  />';
-            $html .= '<input type="checkbox"  value="1"  name="artifact['. $this->id .']" '. ($value=="1" ? 'checked="checked"' : '') .' />';
-        }
-        return $html;
-    }
-   
-    /**
-     * Fetch the html code to display the field value in artifact
-     *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
-     *
-     * @return string
-     */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';        
-        if (is_array($submitted_values[0])) {
-            $value=$submitted_values[0][$this->getId()];
-        } else {
-            if ($value != null) {
-                $value = $value->getText();
-            }
-        }
-        $html .= '<input type="hidden"  value="0" name="artifact['. $this->id .']"  />';
-        $html .= '<input type="checkbox"  value="1" name="artifact['. $this->id .']" '. ($value=="1" ? 'checked="checked"' : '') .' />';
-        return $html;
-    }
-
-     /**
-     * Fetch data to display the field value in mail
-     *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param string                          $format           output format
-     *
-     * @return string
-     */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
-        }
-        $output = '';
-        switch ($format) {
-            case 'html':
-                break;
-            default:
-                $output = $value->getText();
-                break;
-        }
-        return $output;
-    }
-
-    /**
-     * Fetch the html code to display the field value in artifact in read only mode
-     *
-     * @param Tracker_Artifact                $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     *
-     * @return string
-     */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $value = $value ? $value->getText() : '';
-        $hp = Codendi_HTMLPurifier::instance(); 
-        $html= '<input type="hidden"  value="0" name="artifact['. $this->id .']" />';
-        $html.= '<input type="checkbox"  value="1" name="artifact['. $this->id .']"'. ($value=="1" ? 'onclick="return false" checked="checked"' : '') .' />';
-       return $html;
-    }
-    
-    /**
-     * Fetch the changes that has been made to this field in a followup
-     * @param Tracker_ $artifact
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     */
-    public function fetchFollowUp($artifact, $from, $to) {
-        $html = '';
-        $html .= 'changed <a href="#show-diff" class="tracker_artifact_showdiff">[diff]</a>';
-        $html .= $this->fetchHistory($artifact, $from, $to);
-        return $html;
-    }
-    
-    /**
-     * Fetch the value to display changes in artifact history
-     * @param array $from the value(s) *before*
-     * @param array $to   the value(s) *after*
-     * @return string
-     */
-    public function fetchHistory($artifact, $from, $to) {
-        $from_value = $this->getValue($from['value_id']);
-        $from_value = isset($from_value['value']) ? $from_value['value'] : '';
-        $to_value = $this->getValue($to['value_id']);
-        $to_value = isset($to_value['value']) ? $to_value['value'] : '';
-        
-        $callback = array($this, 'filter_html_callback');
-        $d = new Codendi_Diff(array_map($callback, explode("\n", $from_value)), 
-                              array_map($callback, explode("\n", $to_value)));
-        $f = new Codendi_HtmlUnifiedDiffFormatter();
-        $diff = $f->format($d);
-        return $diff ? $diff : '<em>No changes</em>';
-    }
-    protected function filter_html_callback($s) {
-        $hp = Codendi_HTMLPurifier::instance();
-        return  $hp->purify($s, CODENDI_PURIFIER_CONVERT_HTML);
-    }
-    
-    /**
-     * Display the html field in the admin ui
-     * @return string html
-     */
-    protected function fetchAdminFormElement() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $value = '';
-        if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $html .= '<input type="hidden"  value="0" name="artifact['. $this->id .']" />';
-        $html .= '<input type="checkbox"  value="1" name="artifact['. $this->id .']"'. ($value=="1" ? 'checked="checked"' : '') .' />';
-        return $html;
+    protected function getMaxSize() {
+        return $this->getproperty('size') ? $this->getproperty('size') : parent::getMaxSize();
     }
     
     /**
@@ -348,124 +110,53 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Alpha
      * @return the path to the icon
      */
     public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/checkbox_plus.jpg');
+        return $GLOBALS['HTML']->getImagePath('ic/ui-check-box.png');
     }
     
     /**
      * @return the path to the icon
      */
     public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/checkbox_plus.jpg');
+        return $GLOBALS['HTML']->getImagePath('ic/ui-check--plus.png');
     }
-    
+
     /**
-     * Fetch the html code to display the field value in tooltip
-     * 
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Text $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
+     * Change the type of the multi select box
+     * @param string $type the new type
+     *
+     * @return boolean true if the change is allowed and successful
      */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        if ($value) {
-            $html .= nl2br($hp->purify($value->getText(), CODENDI_PURIFIER_CONVERT_HTML));
+    public function changeType($type) {
+        // only "sb" available at the moment.
+        if ($type === 'sb') {
+            // We should remove the entry in msb table
+            // However we keep it for the case where admin changes its mind.
+            return true;
         }
-        return $html;
-    }
-    
-    /**
-     * Tells if the field takes two columns
-     * Ugly legacy hack to display fields in columns
-     * @return boolean
-     */
-    public function takesTwoColumns() {
         return false;
     }
     
     /**
-     * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracker is ok 
-     */
-    public function testImport() {
-       
-        return true;
-    }
-    
-    /**
-     * Validate a value
+     * Augment data from request
+     * With multi select boxes, when nothing is selected, 
+     * $fields_data does not contains any entry for the field.
+     * => augment $fields_data with None value (100)
      *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param mixed            $value    data coming from the request. May be string or array. 
+     * @param array &$fields_data The user submitted value
      *
-     * @return bool true if the value is considered ok
+     * @return void
      */
-    protected function validate(Tracker_Artifact $artifact, $value) {
-        $r = $this->getRuleString();
-        if (!($is_valid = $r->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
+    public function augmentDataFromRequest(&$fields_data) {
+        if ((!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) && !$this->isRequired() && $this->userCanUpdate()) {
+            $fields_data[$this->getId()] = array('100');
         }
-        return $is_valid;
-    }
-    
-    protected function getRuleString() {
-        return new Rule_String();
     }
     
     /**
-     * Get the value of this field
-     *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
-     * @param boolean                    $has_changed If the changeset value has changed from the rpevious one
-     *
-     * @return Tracker_Artifact_ChangesetValue or null if not found
+     * @return boolean true if the value corresponds to what we defined as "none"
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
-        
-        $changeset_value = null;
-        if ($row = $this->getValueDao()->searchById($value_id, $this->id)->getRow()) {
-            $changeset_value = new Tracker_Artifact_ChangesetValue_Text($value_id, $this, $has_changed, $row['value']);
-        }
-        return $changeset_value;
+    public function isNone($value) {
+        return $value === null || $value === '' || (is_array($value) && count($value) ==1 && $value[0] == '100');
     }
-    
-    /**
-     * Check if there are changes between old and new value for this field
-     *
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data stored in the db
-     * @param mixed                           $new_value               May be string or array
-     *
-     * @return bool true if there are differences
-     */
-    public function hasChanges($previous_changesetvalue, $new_value) {
-        return $previous_changesetvalue->getText() != $new_value;
-    }
-    
-    /**
-     * Save the value and return the id
-     * 
-     * @param Tracker_Artifact                $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value 
-     * @param mixed                           $value                   The value submitted by the user
-     * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
-     *
-     * @return int or array of int
-     */
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-        parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
-        ReferenceManager::instance()->extractCrossRef($value, $artifact->getId(), 'artifact', $this->getTracker()->getGroupID(), UserManager::instance()->getCurrentUser()->getId());
-    }
-
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-     public function getSoapAvailableValues() {
-         return null;
-     }
 }
 ?>
