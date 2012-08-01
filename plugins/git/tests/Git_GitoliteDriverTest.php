@@ -67,7 +67,9 @@ class GitoliteTestCase extends TuleapTestCase {
     }
     
     public function assertEmptyGitStatus() {
+        chdir($this->_glAdmDir);
         exec('git status --porcelain', $output, $ret_val);
+        chdir($this->cwd);
         $this->assertEqual($output, array());
         $this->assertEqual($ret_val, 0);
     }
@@ -158,7 +160,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $user->setReturnValue('getAuthorizedKeys', array($key));
 
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $driver->initUserKeys($user);
+        $driver->dumpSSHKeys($user);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $key);
@@ -175,7 +177,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $user->setReturnValue('getAuthorizedKeys', array($key1, $key2));
 
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $driver->initUserKeys($user);
+        $driver->dumpSSHKeys($user);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $key1);

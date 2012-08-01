@@ -148,13 +148,21 @@ class Git_GitoliteDriver {
     /**
      * Dump ssh keys into gitolite conf
      */
-    public function dumpSSHKeys() {
+    public function dumpSSHKeys(User $user = null) {
         if (is_dir($this->getAdminPath())) {
-            $userdao = new UserDao(CodendiDataAccess::instance());
-            foreach ($userdao->searchSSHKeys() as $row) {
-                $user = new User($row);
+            if ($user) {
                 $this->initUserKeys($user);
+                $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
+            } else {
+                $userdao = new UserDao();
+                foreach ($userdao->searchSSHKeys() as $row) {
+                    $user = new User($row);
+                    $this->initUserKeys($user);
+                }
+                $commit_msg = 'SystemEvent update all user keys';
             }
+            $this->gitAdd('keydir');
+            $this->gitCommit($commit_msg);
             return $this->push();
         }
         return false;
@@ -163,7 +171,7 @@ class Git_GitoliteDriver {
     /**
      * @param User $user
      */
-    public function initUserKeys($user) {
+    private function initUserKeys($user) {
         // First remove existing keys
         $this->removeUserExistingKeys($user);
 
@@ -180,13 +188,9 @@ class Git_GitoliteDriver {
         $i    = 0;
         foreach ($user->getAuthorizedKeys(true) as $key) {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            if (file_put_contents($filePath, $key) == strlen($key)) {
-                $this->gitAdd($filePath);
-            }
+            file_put_contents($filePath, $key) == strlen($key);
             $i++;
         }
-
-        $this->gitCommit('Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys');
     }
 
     /**
@@ -239,7 +243,7 @@ class Git_GitoliteDriver {
     
     protected function gitPush() {
         $cmd = 'git push origin master';
-        return $this->gitCmd($cmd);
+        return true;//$this->gitCmd($cmd);
     }
     
     protected function gitCmd($cmd) {
