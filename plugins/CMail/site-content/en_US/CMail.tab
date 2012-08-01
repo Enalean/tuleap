@@ -1,0 +1,5 @@
+plugin_CMail	descriptor_description	Allows Tuleap to send Zendmail via custom mail server
+plugin_CMail	descriptor_name	CMail
+
+plugin_CMail	title	CMail
+

@@ -1,0 +1,5 @@
+plugin_CMail	descriptor_description	Permet a Tuleap d'envoyer des Zendmails via un serveur mail distant
+plugin_CMail	descriptor_name	CMail
+
+plugin_CMail	title	CMail
+
