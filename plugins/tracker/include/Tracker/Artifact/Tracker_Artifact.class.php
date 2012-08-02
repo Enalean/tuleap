@@ -649,7 +649,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
-                $comment_format = $request->get('comment_formatnew');
+                if ($request->get('comment_formatnew') == 'html') {
+                    $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
+                } else {
+                    $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+                }
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format)) {
