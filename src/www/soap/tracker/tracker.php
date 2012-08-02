@@ -3328,7 +3328,7 @@ function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact
         } else {
             // Send notification
             $agnf = new ArtifactGlobalNotificationFactory();
-            $addresses = $agnf->getAllAddresses($at->getID(), true);
+            $addresses = $agnf->getAllAddresses($ath->getID(), true);
             $a->mailFollowupWithPermissions($addresses, $changes);
             return true;
         }
