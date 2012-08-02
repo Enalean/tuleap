@@ -67,7 +67,7 @@ function __autoload($className) {
 }
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
-if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
+if (array_key_exists('HTTP_HOST', $_SERVER) == true && !isset($_SERVER['GITOLITE_HTTP_HOME'])) {
     define('IS_SCRIPT', false); ;
 } else {
     define('IS_SCRIPT', true); 
