@@ -31,7 +31,7 @@ Mock::generate('Rule_NoCr');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-class Tracker_FormElement_Field_StringTest extends UnitTestCase {
+class Tracker_FormElement_Field_WebLinkTest extends UnitTestCase {
     
     function setUp() {
         $GLOBALS['Response'] = new MockResponse();
