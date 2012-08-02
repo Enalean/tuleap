@@ -23,7 +23,7 @@ var RTE_Tracker_FollowUp = Class.create(codendi.RTE, {
         // This div contains comment format selection buttons
         var div = Builder.node('div', {'class' : 'rte_format'});
         var bold = document.createElement("b");
-        bold.appendChild(document.createTextNode("Comment format : "));
+        bold.appendChild(document.createTextNode("Format : "));
         div.appendChild(bold);
 
         // Add a radio button that tells that the content format is text
