@@ -51,19 +51,7 @@ class TestHelper {
     }
 
     public static function argListToDar($argList) {
-        $dar      = new MockDataAccessResult();
-        $rowCount = 0;
-        foreach ($argList as $row) {
-            $dar->setReturnValueAt($rowCount, 'valid', true);
-            $dar->setReturnValueAt($rowCount, 'current', $row);
-            $dar->setReturnValueAt($rowCount, 'getRow', $row);
-            $rowCount++;
-        }
-        $dar->setReturnValueAt($rowCount, 'valid', false);
-        $dar->setReturnValue('rowCount', $rowCount);
-        $dar->setReturnValue('count', $rowCount);
-        $dar->setReturnValue('isError', false);
-        return $dar;
+        return new FakeDataAccessResult($argList);
     }
 
     public static function emptyDar() {
@@ -85,6 +73,54 @@ class TestHelper {
         $dar->setReturnValue('isError',  true);
         $dar->setReturnValue('getRow',   false);
         return $dar;
+    }
+}
+
+class FakeDataAccessResult implements IProvideDataAccessResult {
+    private $index = 0;
+    private $data;
+
+    public function __construct(array $data) {
+        $this->data = $data;
+    }
+
+    public function count() {
+        return count($this->data);
+    }
+
+    public function current() {
+        return $this->data[$this->index];
+    }
+
+    public function getRow() {
+        if (isset($this->data[$this->index])) {
+            return $this->data[$this->index++];
+        }
+        return false;
+    }
+
+    public function isError() {
+        return false;
+    }
+
+    public function key() {
+        return $this->index;
+    }
+
+    public function next() {
+        $this->index++;
+    }
+
+    public function rewind() {
+        $this->index = 0;
+    }
+
+    public function rowCount() {
+        return $this->count();
+    }
+
+    public function valid() {
+        return $this->index < $this->count();
     }
 }
 

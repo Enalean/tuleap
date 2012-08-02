@@ -35,18 +35,21 @@ class GitoliteTestCase extends TuleapTestCase {
         parent::setUp();
         $this->cwd           = getcwd();
         $this->_fixDir       = dirname(__FILE__).'/_fixtures';
-        $this->_tmpDir       = '/tmp';
-        $this->_glAdmDirRef  = $this->_tmpDir.'/gitolite-admin-ref';
-        $this->_glAdmDir     = $this->_tmpDir.'/gitolite-admin';
-    
+        $tmpDir              = '/tmp';
+        $this->_glAdmDirRef  = $tmpDir.'/gitolite-admin-ref';
+        $this->_glAdmDir     = $tmpDir.'/gitolite-admin';
+        $this->repoDir       = $tmpDir.'/repositories';
+
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
-        system('tar -xf '. $this->_fixDir.'/gitolite-admin-ref' .'.tar --directory '.$this->_tmpDir);
+        system('tar -xf '. $this->_fixDir.'/gitolite-admin-ref' .'.tar --directory '.$tmpDir);
         symlink($this->_glAdmDirRef, $this->_glAdmDir);
-    
+
+        mkdir($this->repoDir);
+
         $this->httpsHost = $GLOBALS['sys_https_host'];
-    
+
         $GLOBALS['sys_https_host'] = 'localhost';
         PermissionsManager::setInstance(new MockPermissionsManager());
     }
@@ -57,6 +60,7 @@ class GitoliteTestCase extends TuleapTestCase {
     
         system('rm -rf '. $this->_glAdmDirRef);
         system('rm -rf '. $this->_glAdmDir .'/repositories/*');
+        system('rm -rf '. $this->repoDir);
         unlink($this->_glAdmDir);
         $GLOBALS['sys_https_host'] = $this->httpsHost;
         PermissionsManager::clearInstance();
@@ -132,15 +136,15 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     
     public function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
-        file_put_contents($this->_tmpDir.'/gitolite-admin/conf/gitolite.conf', '@test = coin'.PHP_EOL);
-        touch($this->_tmpDir.'/gitolite-admin/conf/projects/project1.conf');
+        file_put_contents($this->_glAdmDir.'/conf/gitolite.conf', '@test = coin'.PHP_EOL);
+        touch($this->_glAdmDir.'/conf/projects/project1.conf');
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
 
-        $driver = new Git_GitoliteDriver($this->_tmpDir.'/gitolite-admin');
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $driver->updateMainConfIncludes($prj);
 
-        $gitoliteConf = file_get_contents($this->_tmpDir.'/gitolite-admin/conf/gitolite.conf');
+        $gitoliteConf = file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
         // Original content still here
         $this->assertWantedPattern('#^@test = coin$#m', $gitoliteConf);
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
@@ -296,13 +300,13 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $this->assertIdentical($expected, $result);
 
         // Check that corresponding project conf exists in main file conf
-        $this->assertTrue(is_file($this->_tmpDir.'/gitolite-admin/conf/gitolite.conf'));
-        $gitoliteConf = file_get_contents($this->_tmpDir.'/gitolite-admin/conf/gitolite.conf');
+        $this->assertTrue(is_file($this->_glAdmDir.'/conf/gitolite.conf'));
+        $gitoliteConf = file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
     
     public function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
-        $driver = new Git_GitoliteDriver();
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $unix_name = 'project1';
         
         $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', 'toto');
@@ -341,14 +345,11 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         if (posix_getgrnam('gitolite') == false) {
             echo "testFork_CloneEmptyToSpecifiedPath: Cannot test 'cause there is no 'gitolite' user on server (CI)";
         } else {
-            $repositoriesDir = $this->_tmpDir.'/repositories/';
-            exec('rm -rf '  .$repositoriesDir);
-            
             $name = 'tulip';
             $new_ns = 'repos/new/repo/';
             $old_ns = 'repos/';
-            $old_root_dir = $repositoriesDir. $old_ns . $name .'.git';
-            $new_root_dir = $repositoriesDir. $new_ns . $name .'.git';
+            $old_root_dir = $this->repoDir .'/'. $old_ns . $name .'.git';
+            $new_root_dir = $this->repoDir .'/'. $new_ns . $name .'.git';
 
             mkdir($old_root_dir, 0770, true);
             exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
@@ -361,7 +362,6 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
 
             $this->assertWritableByGroup($new_root_dir, 'gitolite');
             $this->assertNameSpaceFileHasBeenInitialized($new_root_dir, $new_ns, 'gitolite');
-            exec('rm -rf '.$repositoriesDir);
         }
 
     }
@@ -370,8 +370,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $name = 'tulip';
         $new_ns = 'repos/new/repo/';
         $old_ns = 'repos/';
-        $old_root_dir = $this->_tmpDir .'/repositories/'. $old_ns . $name .'.git';
-        $new_root_dir = $this->_tmpDir .'/repositories/'. $new_ns . $name .'.git';
+        $old_root_dir = $this->repoDir .'/'. $old_ns . $name .'.git';
+        $new_root_dir = $this->repoDir .'/'. $new_ns . $name .'.git';
         
         mkdir($old_root_dir, 0770, true);
         exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');

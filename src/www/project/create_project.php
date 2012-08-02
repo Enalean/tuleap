@@ -334,7 +334,7 @@ function create_project($data, $do_not_exit = false) {
                 //}
                         
                 // Create corresponding reference
-                $ref=& new Reference(0, // no ID yet
+                $ref = new Reference(0, // no ID yet
                                      strtolower($ath_temp->getItemName()),
                                      $GLOBALS['Language']->getText('project_reference','reference_art_desc_key'), // description
                                      '/tracker/?func=detail&aid=$1&group_id=$group_id', // link

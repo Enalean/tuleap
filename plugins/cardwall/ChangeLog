@@ -1,3 +1,6 @@
+Version 0.9.2 - Tuleap 5.4
+    * Update after agiledashboard v0.46.
+
 Version 0.9.1 - Tuleap 5.3
     * Fix bug on cardwall definition duplication on project creation.
 
