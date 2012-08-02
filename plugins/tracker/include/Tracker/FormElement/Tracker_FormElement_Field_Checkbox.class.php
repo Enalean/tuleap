@@ -22,12 +22,6 @@ require_once('Tracker_FormElement_Field_MultiSelectbox.class.php');
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
     
-    /**
-     * @return boolean
-     */
-    public function isMultiple() {
-        return false;
-    }
     
     
     protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
@@ -117,49 +111,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         return false;
     }
     
-    ///////////////////////////////////////////////
-    //////////////TODO/////////////////////////////
-    ///////////////////////////////////////////////
-    protected function _fetchFieldMasschange($id, $name, $selected_values) { 
-        $html = '';
-        $multiple = ' ';
-        $size     = ' ';
-        if ($this->isMultiple()) {
-            $multiple = ' multiple="multiple" ';
-            $size     = ' size="'. min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) .'" ';
-            if ($name) {
-                $name .= '[]';
-            }
-        }
-        $html .= '<select ';
-        if ($id) {
-            $html .= 'id="'. $id .'" ';
-        }
-        if ($name) {
-            $html .= 'name="'. $name .'" ';
-        }
-        $html .= $size . $multiple .'>';      
 
-        //if ( $this->fieldHasEnableWorkflow() ) {
-        $html .= '<option value="'.$GLOBALS['Language']->getText('global','unchanged').'" selected="selected">'. $GLOBALS['Language']->getText('global','unchanged') .'</option>';
-        $html .= '<option value="100">'. $GLOBALS['Language']->getText('global','none') .'</option>';
-        //}
-
-        foreach($this->getBind()->getAllValues() as $id => $value) {
-                    if (!$value->isHidden()) {
-                        $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                        $html .= '<option value="'. $id .'" style="'. $style .'">';
-                        $html .= $this->getBind()->formatArtifactValue($id);
-                        $html .= '</option>';
-                    }
-        }
-
-        $html .= '</select>';
-        return $html;
-    }
-    
-
-    
     
 }
 ?>
