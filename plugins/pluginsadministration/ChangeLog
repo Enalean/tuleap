@@ -1,2 +1,5 @@
+Version 1.2
+    * Continue PHP 5.3 compat (Contrib Philippe Goetz)
+
 1.1 - Tuleap 4.0.22
 	* Always display Readme.txt to site admin in plugin interface.

@@ -21,7 +21,7 @@ class PluginsAdministrationPlugin extends Plugin {
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
             require_once('PluginsAdministrationPluginInfo.class.php');
-            $this->pluginInfo =& new PluginsAdministrationPluginInfo($this);
+            $this->pluginInfo = new PluginsAdministrationPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -52,7 +52,7 @@ class PluginsAdministrationPlugin extends Plugin {
     
     function process() {
         require_once('PluginsAdministration.class.php');
-        $controler =& new PluginsAdministration();
+        $controler = new PluginsAdministration();
         $controler->process();
     }
 }

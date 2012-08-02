@@ -74,7 +74,7 @@ if ($request->valid(new Valid_UInt('package_id'))) {
                 $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
                 break;
             case 'add':
-                $release =& new FRSRelease();
+                $release = new FRSRelease();
                 $release->setPackageId($package_id);
                 $release->setStatusId($frsrf->STATUS_ACTIVE);
                 $release->setReleaseDate(time());

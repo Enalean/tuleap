@@ -100,7 +100,7 @@ class GitDriver implements DVCSDriver {
         $cwd = getcwd();
         chdir($path);
 
-        $cmd = 'git-update-server-info';
+        $cmd = 'git update-server-info';
         $out = array();
         $ret = -1;
         exec($cmd, $out, $ret);

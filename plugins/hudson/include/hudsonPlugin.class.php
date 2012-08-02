@@ -34,7 +34,7 @@ class hudsonPlugin extends Plugin {
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'hudsonPluginInfo')) {
             require_once('hudsonPluginInfo.class.php');
-            $this->pluginInfo =& new hudsonPluginInfo($this);
+            $this->pluginInfo = new hudsonPluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -293,7 +293,7 @@ class hudsonPlugin extends Plugin {
     
     function process() {
         require_once('hudson.class.php');
-        $controler =& new hudson();
+        $controler = new hudson();
         $controler->process();
     }
 

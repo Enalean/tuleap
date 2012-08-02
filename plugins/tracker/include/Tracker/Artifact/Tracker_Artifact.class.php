@@ -418,6 +418,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchTitle($prefix = '') {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
+        $html .= '<input type="hidden" id="tracker_id" name="tracker_id" value="'.$this->getTrackerId().'"/>';
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
         $html .= $hp->purify($this->getTracker()->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
@@ -1281,6 +1282,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
+    }
+    
+    public function __toString() {
+        return __CLASS__." #$this->id";
     }
 
     /**

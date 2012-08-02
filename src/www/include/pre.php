@@ -122,7 +122,7 @@ if (!IS_SCRIPT) {
     // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
     session_cache_limiter(false);
     session_start();
-    $cookie_manager =& new CookieManager();
+    $cookie_manager = new CookieManager();
     $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
 }
 //}}}
@@ -261,7 +261,7 @@ if (license_already_declined()) {
 print "<p>DBG: SERVER_NAME = ".$_SERVER['SERVER_NAME'];
 print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
 print "<p>DBG: user_isloggedin= ".user_isloggedin();
-print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
+print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME'];
 */
 
 // Check URL for valid hostname and valid protocol

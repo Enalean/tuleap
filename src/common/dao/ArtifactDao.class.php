@@ -21,7 +21,7 @@
 require_once('include/DataAccessObject.class.php');
 
 class ArtifactDao extends DataAccessObject {
-    public function __construct($da) {
+    public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'artifact';
     }

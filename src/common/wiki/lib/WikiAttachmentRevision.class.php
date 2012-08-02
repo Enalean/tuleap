@@ -74,7 +74,7 @@ class WikiAttachmentRevision {
         static $_codendi_wikiattachmentrevisiondao_instance;
         
         if(!$_codendi_wikiattachmentrevisiondao_instance) {
-            $_codendi_wikiattachmentrevisiondao_instance =& new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
+            $_codendi_wikiattachmentrevisiondao_instance = new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
         }
 
         return $_codendi_wikiattachmentrevisiondao_instance;
@@ -333,13 +333,13 @@ class WikiAttachmentRevision {
         $dao =& WikiAttachmentRevision::getDao();
         $dar = $dao->getAllRevisions($id);        
         while($row =& $dar->getRow()) {
-            $war =& new WikiAttachmentRevision($gid);
+            $war = new WikiAttachmentRevision($gid);
             $war->setFromRow($row);
             $warArray[] =& $war;
             unset($war);
         }
 
-        $ai =& new ArrayIterator($warArray);
+        $ai = new ArrayIterator($warArray);
         return $ai;
     }
 

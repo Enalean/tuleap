@@ -267,7 +267,7 @@ class Mail implements Codendi_Mail_Interface {
     var $userDao;
     function &_getUserDao() {
         if (!is_a($this->userDao, 'UserDao')) {
-            $this->userDao =& new UserDao(CodendiDataAccess::instance());
+            $this->userDao = new UserDao(CodendiDataAccess::instance());
         }
         return $this->userDao;
     }

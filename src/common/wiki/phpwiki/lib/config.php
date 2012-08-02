@@ -42,7 +42,12 @@ if (isCGI()) {
 */
 
 // essential internal stuff
-set_magic_quotes_runtime(0);
+if (check_php_version(5,3)) {
+    ini_set('magic_quotes_runtime', 0);
+}
+else {
+    set_magic_quotes_runtime(0);
+}
 
 /** 
  * Browser Detection Functions
