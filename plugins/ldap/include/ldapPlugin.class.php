@@ -852,9 +852,9 @@ class LdapPlugin extends Plugin {
 
             //Synchronize the ugroups with the ldap ones
             $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
-            $ugroups = $ldapUserGroupManager->getSynchronizedUgroups();
+            $dar = $ldapUserGroupManager->getSynchronizedUgroups();
             if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-                foreach($ugroups as $row) {
+                foreach($dar as $row) {
                     $ldapUserGroupManager->setId($row['ugroup_id']);
                     $ldapUserGroupManager->setGroupName($row['ldap_group_dn']);
                     $ldapUserGroupManager->bindWithLdap($row['bind_option'], true, false);

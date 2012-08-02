@@ -122,8 +122,8 @@ abstract class LDAP_GroupManager
      */
     public function bindWithLdap($option='bind', $isSynchronized = false, $displayFeedback = true) {
         if ($this->getGroupDn()) {
-             $this->bindWithLdapGroup($option, $isSynchronized);
-             $this->syncMembersWithLdap($option);
+            $this->bindWithLdapGroup($option, $isSynchronized);
+            $this->syncMembersWithLdap($option);
         } else {
             if ($displayFeedback) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $groupName));
