@@ -856,7 +856,7 @@ class LdapPlugin extends Plugin {
             if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
                 foreach($dar as $row) {
                     $ldapUserGroupManager->setId($row['ugroup_id']);
-                    $ldapUserGroupManager->setGroupName($row['ldap_group_dn']);
+                    $ldapUserGroupManager->setGroupDn($row['ldap_group_dn']);
                     $ldapUserGroupManager->bindWithLdap($row['bind_option'], true, false);
                 }
             }

@@ -96,6 +96,15 @@ abstract class LDAP_GroupManager
     }
 
     /**
+     * Set LDAP group distinguish name to be used for further processing
+     *
+     * @param String $groupDn LDAP group identifier
+     */
+    public function setGroupDn($groupDn) {
+        $this->groupDn = $groupDn;
+    }
+
+    /**
      * Return the GroupDn for the current group name 
      * 
      * @return String
