@@ -124,12 +124,13 @@ document.observe('dom:loaded', function () {
                         } else {
                             var content = $('tracker_followup_comment_edit_'+id).getValue();
                         }
+                        var format= document.getElementsByName('comment_format'+id)[0].checked? 'text' : 'html';
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',
                                 changeset_id:   id,
                                 content:        content,
-                                comment_format: $('comment_format_html'+id).checked
+                                comment_format: format
                             },
                             onSuccess: function (transport) {
                                 if (transport.responseText) {
