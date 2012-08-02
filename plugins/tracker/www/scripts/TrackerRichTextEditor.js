@@ -78,7 +78,7 @@ document.observe('dom:loaded', function () {
     if (newFollowup) {
         new RTE_Tracker_FollowUp(newFollowup, {toggle: true, default_in_html: false, id : 'new'});
     }
-    var massChangeFollowup = $('tracker_followup_comment_mass_change');
+    var massChangeFollowup = $('artifact_masschange_followup_comment');
     if (massChangeFollowup) {
         new RTE_Tracker_FollowUp(massChangeFollowup, {toggle: true, default_in_html: false, id: 'mass_change'});
     }
