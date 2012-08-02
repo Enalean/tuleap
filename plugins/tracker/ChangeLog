@@ -1,3 +1,9 @@
+Version 5.8.12
+    * art #... does not work cross projects
+
+Version 5.8.11
+    * Make unit tests pass with PHP 5.3
+
 Version 5.8.10 - Tuleap 5.4
     * Remember user preference on artifact follow-up comment order display (contrib STMicroelectronics).
 

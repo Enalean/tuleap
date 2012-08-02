@@ -1283,6 +1283,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
+    
+    public function __toString() {
+        return __CLASS__." #$this->id";
+    }
 
     /**
      * @param User $user

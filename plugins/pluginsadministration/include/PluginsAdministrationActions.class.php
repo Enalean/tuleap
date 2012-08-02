@@ -66,7 +66,7 @@ class PluginsAdministrationActions extends Actions {
         $request        =& HTTPRequest::instance();
         if ($request->exist('priorities')) {
             $plugin_manager               =& PluginManager::instance();
-            $plugin_hook_priority_manager =& new PluginHookPriorityManager();
+            $plugin_hook_priority_manager = new PluginHookPriorityManager();
             $updated = false;
             foreach($request->get('priorities') as $hook => $plugins) {
                 if (is_array($plugins)) {

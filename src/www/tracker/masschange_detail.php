@@ -65,7 +65,7 @@ if (strstr($submit,$Language->getText('tracker_masschange_detail','selected_item
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
 echo '<script type="text/javascript">'. "\n";
-$armh =& new ArtifactRulesManagerHtml($ath);
+$armh = new ArtifactRulesManagerHtml($ath);
 $armh->displayRulesAsJavascript();
 
 echo "new UserAutoCompleter('tracker_cc',

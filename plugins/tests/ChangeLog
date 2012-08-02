@@ -1,3 +1,9 @@
+Version 5.4
+    * Make unit tests pass with PHP 5.3
+
+Version 5.3
+    * Add FakeDAR to ease mocking
+
 Version 5.2 - Tuleap 5.4
     * partial_mock can take constructor parameters.
 

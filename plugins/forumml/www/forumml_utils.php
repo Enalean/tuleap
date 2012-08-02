@@ -684,7 +684,7 @@ function plugin_forumml_process_mail($plug,$reply=false) {
 	$hp =& ForumML_HTMLPurifier::instance();
 	
 	// Instantiate a new Mail class
-	$mail =& new Mail();
+	$mail = new Mail();
 	
 	// Build mail headers
 	$to = mail_get_listname_from_list_id($request->get('list'))."@".$GLOBALS['sys_lists_host'];

@@ -118,7 +118,14 @@ class Tracker_Hierarchy {
     }
 
     public function sortTrackerIds(array $tracker_ids) {
+        // God will kill plenty of kittens every day that this bug is not fixed:
+        // https://bugs.php.net/bug.php?id=50688
+        // Ignore all E_WARNING errors during the usort.
+        // Or use @usort()?
+        $old_level = error_reporting();
+        error_reporting($old_level ^ E_WARNING);
         usort($tracker_ids, array($this, 'sortByLevel'));
+        error_reporting($old_level);
         return $tracker_ids;
     }
     

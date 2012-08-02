@@ -102,7 +102,7 @@ class DB
 	{
 		include_once(ADODB_DIR."/drivers/adodb-$type.inc.php");
 		$obj = &NewADOConnection($type);
-		if (!is_object($obj)) $obj =& new PEAR_Error('Unknown Database Driver: '.$dsninfo['phptype'],-1);
+		if (!is_object($obj)) $obj = new PEAR_Error('Unknown Database Driver: '.$dsninfo['phptype'],-1);
 		return $obj;
 	}
 
@@ -148,7 +148,7 @@ class DB
 
 		@$obj =& NewADOConnection($type);
 		if (!is_object($obj)) {
-			$obj =& new PEAR_Error('Unknown Database Driver: '.$dsninfo['phptype'],-1);
+			$obj = new PEAR_Error('Unknown Database Driver: '.$dsninfo['phptype'],-1);
 			return $obj;
 		}
 		if (is_array($options)) {

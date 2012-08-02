@@ -64,6 +64,145 @@ class GitRepositoryManager {
             );
         }
     }
+
+    /**
+     * Create a new GitRepository through its backend
+     *
+     * @param  GitRepository $repository
+     * @throws Exception
+     */
+    public function create(GitRepository $repository) {
+        if (!$repository->isNameValid($repository->getName())) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+        }
+        $this->assertRepositoryNameNotAlreadyUsed($repository);
+        $repository->getBackend()->createReference($repository);
+    }
+
+    /**
+     * Fork a repository
+     *
+     * @param GitRepository $repository The repo to fork
+     * @param Project       $to_project The project to create the repo in
+     * @param User          $user       The user who does the fork (she will own the clone)
+     * @param String        $namespace  The namespace to put the repo in (might be emtpy)
+     * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     */
+    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope) {
+        $clone = clone $repository;
+        $clone->setProject($to_project);
+        $clone->setCreator($user);
+        $clone->setParent($repository);
+        $clone->setNamespace($namespace);
+        $clone->setId(null);
+        $path = unixPathJoin(array($to_project->getUnixName(), $namespace, $repository->getName())).'.git';
+        $clone->setPath($path);
+        $clone->setScope($scope);
+
+        $this->assertRepositoryNameNotAlreadyUsed($clone);
+        $repository->getBackend()->fork($repository, $clone);
+    }
+
+    private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
+        if ($this->isRepositoryNameAlreadyUsed($repository)) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_create_repo_exists', array($repository->getName())));
+        }
+    }
+
+    /**
+     * For several repositories at once
+     *
+     * @param array         $repositories Array of GitRepositories to fork
+     * @param Project       $to_project   The project to create the repo in
+     * @param User          $user         The user who does the fork (she will own the clone)
+     * @param String        $namespace    The namespace to put the repo in (might be emtpy)
+     * @param String        $scope        Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     *
+     * @return Boolean
+     *
+     * @throws Exception
+     */
+    public function forkRepositories(array $repositories, Project $to_project, User $user, $namespace, $scope) {
+        $repos = array_filter($repositories);
+        if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
+            return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project);
+        }
+        throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
+    }
+
+    private function isNamespaceValid(GitRepository $repository, $namespace) {
+        if ($namespace) {
+            $ns_chunk = explode('/', $namespace);
+            foreach ($ns_chunk as $chunk) {
+                if (!$repository->isNameValid($chunk)) {
+                    throw new Exception($GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
+                }
+            }
+        }
+        return true;
+    }
+
+    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
+        $forked = false;
+        foreach ($repos as $repo) {
+            try {
+                if ($repo->userCanRead($user)) {
+                    $this->fork($repo, $project, $user, $namespace, $scope);
+                    $forked = true;
+                }
+            } catch (GitRepositoryAlreadyExistsException $e) {
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
+            } catch (Exception $e) {
+                $GLOBALS['Response']->addFeedback('warning', 'Got an unexpected error while forking ' . $repo->getName() . ': ' . $e->getMessage());
+            }
+        }
+        return $forked;
+    }
+
+    /**
+     * Return true if proposed name already exists as a repository path
+     *
+     * @param Project $project
+     * @param String  $name
+     *
+     * @return Boolean
+     */
+    public function isRepositoryNameAlreadyUsed(GitRepository $new_repository) {
+        $repositories = $this->repository_factory->getAllRepositories($new_repository->getProject());
+        foreach ($repositories as $existing_repo) {
+            $new_repo_path      = $new_repository->getPathWithoutLazyLoading();
+            $existing_repo_path = $existing_repo->getPathWithoutLazyLoading();
+            if ($new_repo_path == $existing_repo_path) {
+                return true;
+            }
+            if ($this->nameIsSubPathOfExistingRepository($existing_repo_path, $new_repo_path)) {
+                return true;
+            }
+            if ($this->nameAlreadyExistsAsPath($existing_repo_path, $new_repo_path)) {
+                return true;
+            }
+        }
+    }
+
+    private function nameIsSubPathOfExistingRepository($repository_path, $new_path) {
+        $repo_path_without_dot_git = $this->stripFinalDotGit($repository_path);
+        if (strpos($new_path, "$repo_path_without_dot_git/") === 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private function nameAlreadyExistsAsPath($repository_path, $new_path) {
+        $new_path = $this->stripFinalDotGit($new_path);
+        if (strpos($repository_path, "$new_path/") === 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private function stripFinalDotGit($path) {
+        return substr($path, 0, strrpos($path, '.git'));
+    }
 }
 
 ?>
