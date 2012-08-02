@@ -276,7 +276,7 @@ class BackendCVSTest extends UnitTestCase {
         // Test Lock dir
         $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/foobar"),"CVS lock dir should be renamed");
         $file = file_get_contents($repoPath."/CVSROOT/config");
-        $this->assertTrue(preg_match('#^LockDir='.$GLOBALS['cvslock_prefix']."/foobar$#m", $file), "CVS lock dir should be renamed");
+        $this->assertTrue(preg_match('#^LockDir='. preg_quote($GLOBALS['cvslock_prefix']) ."/foobar$#m", $file), "CVS lock dir should be renamed");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
 
         // Test loginfo file
@@ -314,17 +314,17 @@ class BackendCVSTest extends UnitTestCase {
         // Test Lock dir
         $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/foobar"),"CVS lock dir should be renamed");
         $file = file_get_contents($repoPath."/CVSROOT/config");
-        $this->assertTrue(preg_match('#^LockDir='.$GLOBALS['cvslock_prefix']."/foobar$#m", $file), "CVS lock dir should be renamed");
+        $this->assertTrue(preg_match('#^LockDir='. preg_quote($GLOBALS['cvslock_prefix']) ."/foobar$#m", $file), "CVS lock dir should be renamed");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
 
         // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/loginfo");
-        $this->assertTrue(preg_match('#^ALL \('.$GLOBALS['codendi_bin_prefix']."/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), "CVS loginfo log_accum should use new project name");
+        $this->assertTrue(preg_match('#^ALL \('. preg_quote($GLOBALS['codendi_bin_prefix']) ."/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), "CVS loginfo log_accum should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
         
         // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
-        $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix']."/commit_prep -T foobar -r$#m", $file), "CVS commitinfo should use new project name");
+        $this->assertTrue(preg_match('#^ALL '. preg_quote($GLOBALS['codendi_bin_prefix']) ."/commit_prep -T foobar -r$#m", $file), "CVS commitinfo should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/commitinfo");
 
         // Cleanup
@@ -354,8 +354,8 @@ class BackendCVSTest extends UnitTestCase {
         
         // Test loginfo file
         $file = file_get_contents($cvsdir."/CVSROOT/loginfo");
-        $this->assertTrue(preg_match('#^DEFAULT chgrp -f -R\s*foobar '.$cvsdir.'$#m', $file), "CVS loginfo should use new project name");
-        $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix'].'/log_accum -T foobar -C foobar -s %{sVv}$#m', $file), "CVS loginfo should use new project name");
+        $this->assertTrue(preg_match('#^DEFAULT chgrp -f -R\s*foobar '. preg_quote($cvsdir) .'$#m', $file), "CVS loginfo should use new project name");
+        $this->assertTrue(preg_match('#^ALL '. preg_quote($GLOBALS['codendi_bin_prefix']) .'/log_accum -T foobar -C foobar -s %{sVv}$#m', $file), "CVS loginfo should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
         
         $backend->recurseDeleteInDir($cvsdir);
