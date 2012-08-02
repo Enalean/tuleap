@@ -254,7 +254,7 @@ class PluginManagerTest extends UnitTestCase {
         $lineFound  = false;
         $conf       = file($GLOBALS['forgeupgrade_file'], FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($conf as $line) {
-            if (preg_match('%path\[\]\s*=\s*"'.$wantedLine.'"%', $line)) {
+            if (preg_match('%path\[\]\s*=\s*"'. preg_quote($wantedLine) .'"%', $line)) {
                 $lineFound = true;
             }
         }
