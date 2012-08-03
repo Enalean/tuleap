@@ -3,6 +3,9 @@ Version 5.4 (Not released yet)
 	* Fix typo in french translation.
 	* Avatar was not sent in tracker v3 notifications
 	* art #... does not work cross project
+	* Fix fatal error raised when creating a followup comment using SOAP (contrib STMicroelectronics).
+	* Make possible the restore into a hidden release in FRS (contrib STMicroelectronics).
+	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
 
 	== Plugins ==
 	* Agiledashboard: 0.46
@@ -16,10 +19,10 @@ Version 5.4 (Not released yet)
 	* pluginsadministration: 1.2
 	* template: 1.2
 	* userlog: 1.2
+	* statistics: 0.19
 
 	== Development ==
-	* Add script to prepare plugins changelog (to be used by 
-	Tuleap integrators when merging into stable)
+	* Add script to prepare plugins changelog (to be used by Tuleap integrators when merging into stable)
 	* Continue PHP 5.3 compat (Contrib Philippe Goetz)
 	* All unit tests pass with PHP 5.3
 
