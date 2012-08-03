@@ -42,21 +42,21 @@ Packager: Manuel VACELET <manuel.vacelet@st.com>
 #Requires: %{PKG_NAME}-customization
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
-Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
+Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd
 Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
 # = 2.3.4-0.codendi
 Provides: codendi
 %else
-Requires: jpgraph-%{PKG_NAME}
+Requires: %{php_base}-jpgraph-%{PKG_NAME}
 Provides: tuleap
 %endif
-Requires: php-pecl-apc
-Requires: htmlpurifier
+Requires: %{php_base}-pecl-apc
+Requires: %{php_base}-htmlpurifier
 Requires: curl
-Requires: php-zendframework = 1.8.1
-Requires: php-pecl-json
+Requires: %{php_base}-zendframework = 1.8.1
+#Requires: %{php_base}-pecl-json
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
 # Apache
@@ -161,7 +161,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+Requires: %{PKG_NAME}, %{php_base}-pear-Mail-mimeDecode %{php_base}-pear-Mail-Mime %{php_base}-pear-Mail-Mbox %{php_base}-pear-Mail
 %if %{PKG_NAME} == codendi_st
 Requires: codendi-core-mailman
 Provides: codendi-plugin-forumml = %{version}
@@ -178,7 +178,7 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git > 1.6, geshi, php-Smarty, gitolite
+Requires: %{name} >= %{version}, git > 1.6, %{php_base}-geshi, %{php_base}-Smarty, gitolite
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-git = %{version}
 %else
@@ -208,7 +208,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-ldap, perl-LDAP, python-ldap
+Requires: %{PKG_NAME}, %{php_base}-ldap, perl-LDAP, python-ldap
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-ldap = %{version}
 %else
@@ -265,7 +265,7 @@ Summary: Insert Remedy tickets using Codex
 Group: Development/Tools
 Version: @@PLUGIN_REQUESTHELP_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-pecl-oci8 = 1.4.5
+Requires: %{PKG_NAME}, %{php_base}-pecl-oci8 = 1.4.5
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-requesthelp = %{version}
 %else
