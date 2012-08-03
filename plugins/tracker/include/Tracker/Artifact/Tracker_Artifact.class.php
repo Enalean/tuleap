@@ -566,7 +566,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $html .= '</p>';
         }
         $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea id ="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+        $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
         $html .= '</div>';
 
         if ($current_user->isAnonymous()) {
@@ -598,6 +598,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Returns HTML code to display the artifact history
+     *
+     * @param Codendi_Request $request The data from the user
+     *
+     * @return String The valid followup comment format
+     */
+    private function validateCommentFormat($request, $comment_format_field_name) {
+        $formats = array('text', 'html');
+        $vFormat = new Valid_WhiteList($comment_format_field_name, $formats);
+        if ($request->valid($vFormat)) {
+            if ($request->get($comment_format_field_name) == 'html') {
+                $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
+            } else {
+                $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+            }
+        }
+        return $comment_format;
+    }
+
+    /**
      * Process the artifact functions
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
@@ -611,15 +631,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
-                        $formats = array('text', 'html');
-                        $vFormat = new Valid_WhiteList('comment_format', $formats);
-                        if ($request->valid($vFormat)) {
-                            if ($request->get('comment_format') == 'html') {
-                                $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
-                            } else {
-                                $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-                            }
-                        }
+                        $comment_format = $this->validateCommentFormat($request, 'comment_format');
                         $changeset->updateComment($request->get('content'), $current_user, $comment_format);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
@@ -654,11 +666,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
-                if ($request->get('comment_formatnew') == 'html') {
-                    $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
-                } else {
-                    $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-                }
+                $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format)) {
