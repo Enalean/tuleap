@@ -5,6 +5,9 @@ document.observe('dom:loaded', function () {
             select.form.submit();
         });
     });
-    Planning.loadDraggables(document.body);
-    Planning.loadDroppables(document.body);
+    Ajax.Responders.register({
+        onCreate: Planning.toggleFeedback,
+        onComplete: Planning.toggleFeedback
+    });
+    Planning.loadSortables(document.body);
 });

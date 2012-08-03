@@ -685,7 +685,7 @@ plugin_tracker_common_artifact	followup_upd_fail	Follow-up Comment Update Failed
 plugin_tracker_common_artifact	err_required	The field $1 is required.
 plugin_tracker_common_artifact	transition_not_valid	The transition to the value "$1" is not valid.
 plugin_tracker_common_artifact	transition_to_none	The transition to the value "None" is not valid.
-plugin_tracker_common_artifact	error_openlist_value	contains a value which is not an email.
+plugin_tracker_common_artifact	error_openlist_value	contains a value which is not a login or an email.
 plugin_tracker_common_artifact	error_integer_value	is not an integer.
 plugin_tracker_common_artifact	error_float_value	is not a float.
 plugin_tracker_common_artifact	error_string_value	$1 is not a string.
@@ -1002,6 +1002,8 @@ plugin_tracker_artifact_changeset	header_artifact	ARTIFACT
 plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
+plugin_tracker_formelement_admin	aggregate_label	Computed value
+plugin_tracker_formelement_admin	aggregate_description	Compute value (sum of numerical field) from linked artifacts.
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact
 plugin_tracker_formelement_admin	burndown_label	Burndown Chart
@@ -1090,6 +1092,7 @@ plugin_tracker_formelement_property	rows	Rows
 plugin_tracker_formelement_property	cols	Columns
 plugin_tracker_formelement_property	static_value	Static value
 plugin_tracker_formelement_property	default_value_today	Today
+plugin_tracker_formelement_property	target_field_name	Target field
 
 plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permission Denied
@@ -1195,6 +1198,7 @@ plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarc
 
 plugin_tracker_hierarchy	error_is_cyclic	Tracker hierarchy is Cyclic
 plugin_tracker_hierarchy	tracker_not_in_hierarchy	Tracker not in hierarchy
+plugin_tracker_hierarchy	error_more_than_one_parent	Artifact $1 has more than one parent: $2
 plugin_tracker_hierarchy	controller_bad_request	Your request contains invalid data, cowardly doing nothing (children parameter)
 
 plugin_tracker_renderer_table	items_range_of	of
@@ -1295,7 +1299,11 @@ workflow_admin	permissions_updated	Permissions on transition have been updated.
 workflow_admin	permissions_transition	Can make the transition
 workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
+workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
+workflow_admin	change_value_float_field_to	The float field $1 is set to $2
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
+workflow_admin	post_action_change_value_int_field	Change the value of an int field
+workflow_admin	post_action_change_value_float_field	Change the value of a float field
 workflow_admin	under_the_following_condition	Under the following condition:
 workflow_admin	following_action_performed	The following action will be automatically performed:
 workflow_admin	add_new_action	Add a new action: 
@@ -1306,9 +1314,8 @@ workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	the current time
 workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 
-workflow_postaction	field_date_current_time	The field '$1' has been automatically set to $2
-workflow_postaction	field_date_clear	The field '$1' has been automatically cleared
-workflow_postaction	field_date_no_perms	Cannot automatically update the field '$1': permissions error
+workflow_postaction	field_value_set	The field '$1' has been automatically set to $2
+workflow_postaction	field_clear	The field '$1' has been automatically cleared
 
 plugin_tracker_permissions	plugin_tracker_artifact_access	Access to an artifact
 plugin_tracker_permissions	plugin_tracker_full_access	Access to all tracker artifacts
@@ -1340,3 +1347,49 @@ plugin_tracker	burndown_no_linked_artifacts	There are no artifacts linked or tho
 plugin_tracker	burndown_email_as_of_today	Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.
 plugin_tracker	unable_to_render_the_chart	Unable to render the chart
 plugin_tracker	burndown_permission_denied	You are not allowed to access this field.
+
+# DateReminder
+plugin_tracker_date_reminder	subject	Reminder: '$1' $2 for '$3'
+plugin_tracker_date_reminder	body_header	$1 was asked to remind you today that the '$2' in the artifact below is $3.
+plugin_tracker_date_reminder	body_art_link	You can access the artifact here: $1
+plugin_tracker_date_reminder	body_art_html_link	You can access the artifact <a href="$1">here</a>.
+plugin_tracker_date_reminder	tracker_date_reminder_actions	Actions
+plugin_tracker_date_reminder	tracker_date_reminder_add_title	Add reminder
+plugin_tracker_date_reminder	tracker_date_reminder_notification_distance_label	day(s)
+plugin_tracker_date_reminder	tracker_date_reminder_notification_when	When
+plugin_tracker_date_reminder	tracker_date_reminder_send_to	Send an email to
+plugin_tracker_date_reminder	tracker_date_reminder_field	Field
+plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 day(s) $2
+plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Update reminder
+plugin_tracker_date_reminder	tracker_date_reminder_deleted	Date Reminder successfully deleted
+plugin_tracker_date_reminder	tracker_date_reminder_added	Date Reminder successfully added
+plugin_tracker_date_reminder	tracker_date_reminder_updated	Date Reminder successfully updated
+plugin_tracker_date_reminder	tracker_date_reminder_add_failure	Cannot add new date reminder on the field $1 for the tracker $2
+plugin_tracker_date_reminder	tracker_date_reminder_update_failure	Cannot update the date reminder $1
+plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Cannot delete the date reminder $1
+plugin_tracker_date_reminder	tracker_date_reminder_status	Status
+plugin_tracker_date_reminder	tracker_date_reminder_update_action	Update
+plugin_tracker_date_reminder	tracker_date_reminder_delete_action	Delete
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_txt	<h3>Confirm deletion of date reminder</h3><p>You are going to delete this date reminder:</p><p>$1</p><p>Are you sure that you want to continue?</p>
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_cancel	No, I do not want to delete it
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_confirm	Yes, I am sure!
+
+project_admin_utils	tracker_date_reminder_title	Date Reminder Settings
+project_admin_utils	tracker_date_reminder_add	Added tracker date reminder $1
+project_admin_utils	tracker_date_reminder_edit	Updated tracker date reminder $1
+project_admin_utils	tracker_date_reminder_delete	deleted tracker date reminder $1
+project_admin_utils	tracker_date_reminder_sent	Sent tracker date reminder $1
+project_admin_utils	tracker_date_reminder_before	Before
+project_admin_utils	tracker_date_reminder_after	After
+project_admin_utils	tracker_date_reminder_enabled	Enabled
+project_admin_utils	tracker_date_reminder_disabled	Disabled
+project_admin_utils	tracker_date_reminder_invalid_field	'$1' is not a valid Field Id
+project_admin_utils	tracker_date_reminder_invalid_distance	'$1' is not a valid Distance
+project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' is not a valid Tracker Id
+project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' is not a valid Notification type
+project_admin_utils	tracker_date_reminder_invalid_status	'$1' is not a valid Reminder Status
+project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' is not a valid Date Reminder
+project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugroup
+project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup
+project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field
+project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder

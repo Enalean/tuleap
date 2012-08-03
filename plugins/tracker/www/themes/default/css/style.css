@@ -781,11 +781,16 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
-.workflow_actions_field_date {
+.workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #ccc;
-    background: #F6F6F6 url(../images/ic/ui-text-field-change.png) 1em 1em no-repeat;
     border-radius: 1em;
+    background-color: #F6F6F6;
+    background-position: 1em 1em;
+    background-repeat: no-repeat;
+}
+.workflow_action_field {
+    background-image: url(../images/ic/ui-text-field-change.png);
 }
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
@@ -1118,6 +1123,23 @@ td.first-column {
     margin-left:1px;
 }
 
+.tracker_date_reminder {
+    font-style: italic;
+    color: #ffffff;
+    background-color: #808080;
+}
+
+.date_reminder_confirm_delete_buttons {
+    text-align:center;
+}
+
+.date_reminder_confirm_delete {
+    border:medium solid red; 
+    background:#FFC; 
+    padding:4px 10px;
+
+}
+
 /* {{{ cards */
 .cards {
   list-style: none;
@@ -1128,13 +1150,23 @@ td.first-column {
   margin-left: 2em;
 }
 .card {
-    padding: 0.25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
     margin-bottom: 1em;
     border:1px solid #B2B39D;
     background: #ffe;
     min-width: 200px;
+    padding: 0px;
+    padding-left: 5px;
+    color: #333;
+}
+.card-container {
+    background: #ffe;
+    padding: 0.25em;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+.card.placeholder {
+    border:1px dashed #3A87AD;
+    background: url(/themes/common/images/backstripes.gif);
 }
 .card-actions {
     float:right;
@@ -1153,5 +1185,29 @@ td.first-column {
 .card-actions .dropdown.open .dropdown-toggle {
     color: #005580;
     background: none;
+}
+
+.card-details {
+    color: #444;
+}
+.card-details > .toggler,
+.card-details > .toggler-hide,
+.card-details > .toggler-hide-noajax,
+.card-details > .toggler-noajax {
+    color: gray;
+    background-image: none;
+    font-size: 0.8em;
+    padding-left: 0px;
+}
+.card-details > .toggler-hide > .icon-caret-down,
+.card-details > .toggler-hide-noajax > .icon-caret-down {
+    display: none;
+}
+.card-details > .toggler > .icon-caret-right,
+.card-details > .toggler-noajax > .icon-caret-right {
+    display: none;
+}
+.card-details tr td:last-child {
+    font-weight: bold;
 }
 /* }}} */

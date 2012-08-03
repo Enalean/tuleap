@@ -1,18 +1,24 @@
 {{#getPlannedArtifactsTree}}
     <div id="art-{{getId}}" class="release_planner card {{planningDroppableClass}}">
-        {{#getData}}
+        {{#getCardPresenter}}
             {{> card-actions}}
-        {{/getData}}
-        {{> select-destination}}
-        <hr />
+        {{/getCardPresenter}}
+        {{#canDisplayRemainingEffort}}
+        <div>
+            <span class="{{#isOverCapacity}}planning_overcapacity{{/isOverCapacity}}">
+            {{{getRemainingEffort}}}
+            </span>
+        </div>
+        {{/canDisplayRemainingEffort}}
         <p class="help">{{plannedArtifactsHelp}}</p>
         {{^canDrop}}
             {{{errorCantDrop}}}
         {{/canDrop}}
         {{#canDrop}}
-            <div>
+            <div class="milestone-content">
+                <div class="milestone-noitems" {{#hasChildren}}style="display:none;"{{/hasChildren}}>No items yet</div>
                 {{^hasChildren}}
-                    No items yet
+                    <ul class="cards" style="height:1.5em;"></ul>
                 {{/hasChildren}}
                 {{#hasChildren}}
                     {{> cards}}

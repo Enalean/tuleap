@@ -18,30 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/Planning/ArtifactTreeNodeVisitor.class.php';
+require_once dirname(__FILE__) .'/../../include/Planning/ItemCardPresenterCallback.class.php';
 require_once dirname(__FILE__) .'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Hierarchy/HierarchyFactory.class.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/anArtifact.php';
+require_once TRACKER_BASE_DIR .'/Tracker/CardFields.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
-    public function setUp() {
-        parent::setUp();
-        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
-        Tracker_HierarchyFactory::setInstance($this->hierarchy_factory);
-    }
-    
-    public function tearDown() {
-        Tracker_HierarchyFactory::clearInstance();
-    }
-    
+
     public function itWrapsAnArtifactInATreeNode() {
         $tracker           = aMockTracker()->withId(23452345)->build();
         $children_trackers = array(mock('Tracker'), mock('Tracker'));
-        
-        stub($this->hierarchy_factory)->getChildren($tracker->getId())->returns($children_trackers);
         
         $artifact = mock('Tracker_Artifact');
         stub($artifact)->getId()->returns(123);
@@ -49,26 +40,39 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         stub($artifact)->getUri()->returns('/bar');
         stub($artifact)->getXRef()->returns('art #123');
         stub($artifact)->getTracker()->returns($tracker);
-        
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        stub($artifact_factory)->getArtifactById(123)->returns($artifact);
-        
+        stub($artifact)->getAllowedChildrenTypes()->returns($children_trackers);
+                
         $planning = mock('Planning');
+        $node     = new TreeNode(array('id' => 123));
+        $node->setObject($artifact);
         
-        $node    = new TreeNode(array('id' => 123));
-        $visitor = new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, 'baz');
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), 'baz'));
+        $visited_node = $card_mapper->map($node);
+        $presenter    = $visited_node->getCardPresenter();
         
-        $visitor->visit($node);
-        
-        $presenter = $node->getObject();
         $this->assertEqual(123, $presenter->getId());
         $this->assertEqual('Foo', $presenter->getTitle());
         $this->assertEqual('/bar', $presenter->getUrl());
         $this->assertEqual('art #123', $presenter->getXRef());
         $this->assertEqual('baz', $presenter->getCssClasses());
         $this->assertEqual($children_trackers, $presenter->allowedChildrenTypes());
+    }
+    
+    public function itCopiesAllTreeNodesIntoCardPresenterNodes() {
+        $root_node    = aNode()->withChildren(
+                                   aNode()->withObject(anArtifact()->build()),
+                                   aNode()->withObject(anArtifact()->build()))
+                               ->build();
         
-        Tracker_HierarchyFactory::clearInstance();
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), mock('Tracker_CardFields'), 'whatever-class'));
+        
+        $visited_node = $card_mapper->map($root_node);
+        $all_nodes    = $visited_node->flattenChildren();
+
+        $this->assertEqual(count($all_nodes), count($root_node->flattenChildren()));
+        foreach ($all_nodes as $node) {
+            $this->assertIsA($node, 'Tracker_TreeNode_CardPresenterNode');
+        }
     }
 }
 
@@ -77,7 +81,6 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
     public function setUp() {
         parent::setUp();
         
-        $artifact_id         = 123;
         $planning_tracker_id = 456;
         $other_tracker_id    = 789;
         
@@ -86,36 +89,25 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         
         $planning       = stub('Planning')->getBacklogTrackerId()->returns($planning_tracker_id);
         $this->artifact = mock('Tracker_Artifact');
-        
-        $artifact_factory  = mock('Tracker_ArtifactFactory');
-        $hierarchy_factory = mock('Tracker_HierarchyFactory');
-        
-        Tracker_HierarchyFactory::setInstance($hierarchy_factory);
-        stub($artifact_factory)->getArtifactById($artifact_id)->returns($this->artifact);
-        
-        $this->node    = new TreeNode(array('id' => $artifact_id));
-        $this->visitor = new Planning_ArtifactTreeNodeVisitor($planning, $artifact_factory, 'whatever');
-    }
-    
-    public function tearDown() {
-        parent::tearDown();
-        Tracker_HierarchyFactory::clearInstance();
+        $this->node     = new TreeNode();
+        $this->node->setObject($this->artifact);
+        $this->card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), 'whatever'));
     }
     
     public function itKnowsDraggablePlanningItems() {
         stub($this->artifact)->getTracker()->returns($this->planning_tracker);
         
-        $this->visitor->visit($this->node);
+        $node = $this->card_mapper->map($this->node);
         
-        $this->assertEqual('whatever planning-draggable', $this->node->getObject()->getCssClasses());
+        $this->assertEqual('whatever planning-draggable', $node->getCardPresenter()->getCssClasses());
     }
     
     public function itKnowsNonDraggablePlanningItems() {
         stub($this->artifact)->getTracker()->returns($this->other_tracker);
         
-        $this->visitor->visit($this->node);
+        $node = $this->card_mapper->map($this->node);
         
-        $this->assertEqual('whatever', $this->node->getObject()->getCssClasses());
+        $this->assertEqual('whatever', $node->getCardPresenter()->getCssClasses());
     }
 }
 

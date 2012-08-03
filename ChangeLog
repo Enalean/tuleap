@@ -1,9 +1,68 @@
-Version 5.2 (Not Released Yet)
+Version 5.4 (Not released yet)
+	== Bug fix ==
+	* Fix typo in french translation.
+	* Avatar was not sent in tracker v3 notifications
+	* art #... does not work cross project
+	* Fix fatal error raised when creating a followup comment using SOAP (contrib STMicroelectronics).
+	* Make possible the restore into a hidden release in FRS (contrib STMicroelectronics).
+	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
+
+	== Plugins ==
+	* Agiledashboard: 0.46
+	* Tracker: 5.8.12
+	* Cardwall: 0.9.2
+	* Test: 5.4
+	* forumml: 2.6.2
+	* git: 2.6.5
+	* graphontrackers: 1.5
+	* hudson: 1.9
+	* pluginsadministration: 1.2
+	* template: 1.2
+	* userlog: 1.2
+	* statistics: 0.19
+
+	== Development ==
+	* Add script to prepare plugins changelog (to be used by Tuleap integrators when merging into stable)
+	* Continue PHP 5.3 compat (Contrib Philippe Goetz)
+	* All unit tests pass with PHP 5.3
+
+Version 5.3.1 (Monday, July 23rd 2012)
+	== Plugins ==
+	* Docman 2.26.2
+	* Tracker: 5.8.7
+
+	== Bug fix ==
+	* Fix bug on user SSH key dump on filesystem (didn't take case into account and process context was not restored).
+	* Fix warning on Subversion conf serialization.
+
+Version 5.3 (Thursday, July 19th 2012)
+	== Plugins ==
+	* Agildashboard: 0.45
+	* Cardwall: 0.9.1
+	* Docman: 2.26.1
+	* FullTextSearch: 0.6
+	* Git: 2.6.3
+	* LDAP: 3.16
+	* Test: 5.1
+	* Tracker: 5.8.6
+	* GraphOnTrackerv5 5.0.2
+
+	== Enhancement ==
+   * Documentation update (remove references to old screenshots).
+
+	== Development ==
+	Update mustache renderer
+	Start PHP 5.3 cleaning (For Tuleap 5.3 \o/)
+	Introduce transactions methods in DataAccess
+	Display queries sorted by time taken in debug mode
+	Automate synchro with github tuleap repo
+
+Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==
 	* Fix chart legend display (Contrib STMicroelectronics)
 	* Fix ssh keys when no unix account: With Gitolite, it's possible to have
-	a ssh key without having a unix account. However, the interface doesn't
-	allow it.
+	  a ssh key without having a unix account. However, the interface doesn't
+	  allow it.
 
 	== Enhancement ==
 	* SOAP: 5.2

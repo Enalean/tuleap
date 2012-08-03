@@ -1,3 +1,6 @@
+Version 3.16 - Tuleap 5.3
+    * Fix notice
+
 Version 3.15 - Tuleap 5.2
     * Fix the fix made for version 3.14 (typo in method name).
     * Makes non anonymous bind work with Python connector (used in viewvc).

@@ -3,7 +3,7 @@ require_once('pre.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 require_once('common/widget/Widget.class.php');
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 $lm = new WidgetLayoutManager();
 $good = false;
@@ -89,7 +89,7 @@ if ($owner) {
                     $lm->updateLayout($owner_id, $owner_type, $request->get('layout_id'), $request->get('new_layout'));
                     break;
                 default:
-                    $lm->reorderLayout($owner_id, $owner_type, $layout_id, &$request);
+                    $lm->reorderLayout($owner_id, $owner_type, $layout_id, $request);
                     break;
             }
         }

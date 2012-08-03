@@ -32,6 +32,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('cssfile',                             'cssFile',                           false);
         $this->_addHook('javascript_file',                     'javascript_file',                   false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
+        $this->_addHook(Event::GET_ARTIFACT_REFERENCE_GROUP_ID,'get_artifact_reference_group_id',   false);
+        $this->_addHook(Event::BUILD_REFERENCE,                'build_reference',                   false);
         $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
         $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
         $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
@@ -51,6 +53,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('widgets',                             'widgets',                           false);
         $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
+        $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
+        $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
     }
     
     public function getPluginInfo() {
@@ -102,6 +106,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
+                '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )
         );
     }
@@ -343,6 +348,22 @@ class trackerPlugin extends Plugin {
         $params['natures'] = array_merge($params['natures'], $natures);
     }
     
+    public function get_artifact_reference_group_id($params) {        
+        require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
+        $artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($params['artifact_id']);
+        if ($artifact) {
+            $tracker = $artifact->getTracker();
+            $params['group_id'] = $tracker->getGroupId();
+        }
+    }
+    
+    public function build_reference($params) {
+        require_once('Tracker/Artifact/Tracker_Artifact.class.php');
+        $row = $params['row'];
+        $params['ref'] = new Reference($params['ref_id'],$row['keyword'],$row['description'],'/plugins'.$row['link'],
+                                    $row['scope'],'plugin_tracker', Tracker_Artifact::REFERENCE_NATURE, $row['is_active'],$row['group_id']);
+    }
+    
     public function ajax_reference_tooltip($params) {
         require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
@@ -458,6 +479,35 @@ class trackerPlugin extends Plugin {
             $trackerManager->deleteProjectTrackers($groupId);
         }
     }
+
+   /**
+     * Process the nightly job to send reminder on artifact correponding to given criteria
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function codendi_daily_start($params) {
+        include_once 'Tracker/TrackerManager.class.php';
+        $trackerManager = new TrackerManager();
+        return $trackerManager->sendDateReminder();
+    }
+
+    /**
+     * Fill the list of subEvents related to tracker in the project history interface
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function fillProjectHistorySubEvents($params) {
+        array_push($params['subEvents']['event_others'], 'tracker_date_reminder_add',
+                                                         'tracker_date_reminder_edit',
+                                                         'tracker_date_reminder_delete',
+                                                         'tracker_date_reminder_sent'
+        );
+    }
+
 }
 
 ?>

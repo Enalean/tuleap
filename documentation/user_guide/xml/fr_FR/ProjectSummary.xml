@@ -136,13 +136,13 @@ http://&SYS_DEFAULT_DOMAIN;/projects/nom_court_du_projet
 
       <para>&SYS_PRODUCT_NAME; permet aux administrateurs du projet de personnaliser le Tableau de bord du projet. 
       Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
-      Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
-      peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
+      Tous les widgets peuvent être déplacés, fermés ou supprimés. Certains d'entre eux 
+      peuvent fournir un flux rss ou des préférences peuvent être choisies.</para>
       
       <para>Les utilisateurs autres qu'administrateurs du projet verront une page statique. 
       Les widgets seront les mêmes, organisés de la même façon, mais les utilisateurs ne pourrront pas modifier la page.</para>
       
-      <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets" (5). 
+      <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets".
       Voici une liste non-exhaustive de widgets disponible pour les projets :</para>
       
       <itemizedlist mark="bullet">

@@ -33,7 +33,7 @@ plugin_docman	approval_notif_mail_subject	[$1] Merci d'approuver '$2'
 plugin_docman	approval_notif_mail_body	Vous êtes convié à approuver le document suivant :\n\nTitre : $1\nProjet : $2\nDemandeur : $3 <$8>\nLien direct : <$4>\n\n$5Type de notification : $6\n\nCliquez sur le lien suivant pour approuver ou réprouver le document :\n<$7>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notif_mail_notif_seq	Sequence.\n$1 notifie les approbateurs l'un après l'autre.\nPersonne *ne sera notifié* tant que vous n'approuvez/réprouvez pas le document.\n
 plugin_docman	approval_notif_mail_notif_all	Tous d'un coup\n
-plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n$1\n\n
+plugin_docman	approval_notif_mail_notif_owner_comment	Message du demandeur :\n------------\n$1\n------------\n\n\n
 plugin_docman	approval_notif_reject_mail_body	Votre document '$1' a été réprouvé par $3 <$4>.\nAccès direct à la table d'approbation :\n<$2>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
 plugin_docman	approval_notif_reject_mail_subject	[$1] '$2' a été réprouvé par un approbateur
 plugin_docman	approval_notif_approve_mail_body	Votre document '$1' a été approuvé par tous les approbateurs.\nAccès direct à la table d'approbation :\n<$2>\n\nMerci de noter que le statut du document n'a pas été modifié. Vous pouvez\nmodifier les propriétés du document :\n<$3>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.
@@ -48,6 +48,16 @@ plugin_docman	approval_notif_declined_mail_subject	[$1] un approbateur ne donner
 plugin_docman	approval_notif_declined_mail_body	Votre document '$1' ne sera pas approuvé par $3 <$4>.\n\nVous pouvez accéder à la table d'approbation avec le lien suivant:\n<$4>\n\n--\nCeci est un message généré automatiquement. Merci de ne pas répondre à cet email.\n
 plugin_docman	approval_notification_failure	Pas d'email envoyé aux approbateurs.
 plugin_docman	approval_notification_success	Email envoyé aux approbateurs.
+plugin_docman	approval_reminder_mail_notif_owner_comment	Message du demandeur :
+plugin_docman	approval_reminder_mail_subject	[$1] [Rappel] Merci d'approuver '$2'
+plugin_docman	approval_reminder_html_mail_body_header	Vous êtes convié à approuver le document suivant :
+plugin_docman	approval_reminder_html_mail_body_title	Titre :
+plugin_docman	approval_reminder_html_mail_body_group_name	Projet :
+plugin_docman	approval_reminder_html_mail_body_owner_name	Demandeur : 
+plugin_docman	approval_reminder_html_mail_body_direct_link	Lien direct
+plugin_docman	approval_reminder_html_mail_body_notif_type	Type de notification :
+plugin_docman	approval_reminder_html_mail_body_review_url	Cliquez sur le lien suivant pour approuver ou réprouver le document
+plugin_docman	approval_reminder_html_mail_body_footer	Ceci est un message généré automatiquement. Merci de ne pas répondre à cet email.
 plugin_docman	approval_review_success	Votre approbation a été enregistrée.
 plugin_docman	approval_review_failure	Une erreur est survenue lors de l'enregistrement de votre approbation.
 plugin_docman	approval_useradd_success	L'utilisateur a été ajouté à la table.
@@ -317,6 +327,11 @@ plugin_docman	details_approval_table_help	La table suivante a pour but d'organis
 plugin_docman	details_approval_table_version	Associée à la version :
 plugin_docman	details_approval_version	Version
 plugin_docman	details_approval_version_link	version
+plugin_docman	details_approval_occurence_title	Occurence de la notification par mail
+plugin_docman	details_approval_send_to_approvers	Envoyer un mail au(x) approbateur(s)
+plugin_docman	details_approval_every	Chaque
+plugin_docman	details_approval_days	Jours
+plugin_docman	details_approval_weeks	Semaines
 plugin_docman	details_delete	Suppression
 plugin_docman	details_delete_cancel	Non, je ne veux pas le supprimer
 plugin_docman	details_delete_confirm	Oui, je suis sûr !

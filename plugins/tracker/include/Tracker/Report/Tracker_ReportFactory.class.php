@@ -38,6 +38,8 @@ class Tracker_ReportFactory extends Error {
     
     /**
      * The singleton method
+     * 
+     * @return Tracker_ReportFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {

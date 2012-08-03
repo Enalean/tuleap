@@ -23,23 +23,24 @@ document.observe('dom:loaded', function () {
         // {{{ Define the droppables columns
         var cols = board.select('col');;
         cols.each(function (col) {
-            col.up('table').down('tbody').select('tr').each(function (tr, row_index) {
-                var classname = 'drop-into-' + row_index + '-' + col.id.split('-')[1];
-                tr.down('td', col.up().childElements().indexOf(col)).select('.cardwall_board_postit').invoke('removeClassName', classname);
+            col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
+                var classname = 'drop-into-' + tr.id.split('-')[1] + '-' + col.id.split('-')[1];
+                tr.childElements()[col.up().childElements().indexOf(col)].select('.cardwall_board_postit').invoke('removeClassName', classname);
             });
         });
         cols.each(function (col, col_index) {
-            col.up('table').down('tbody').select('tr').each(function (tr, row_index) {
-                var td           = tr.down('td', col_index),
+            col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
+                var td           = tr.down('td.cardwall-cell', col_index),
                     restorecolor = td.getStyle('background-color'),
                     effect       = null,
-                    accept       = 'drop-into-' + row_index + '-' + col.id.split('-')[1];
+                    swimline_id  = tr.id.split('-')[1],
+                    accept       = 'drop-into-' + swimline_id + '-' + col.id.split('-')[1];
                 Droppables.add(td, {
                     hoverclass: 'cardwall_board_column_hover',
                     accept: accept,
                     onDrop: function (dragged, dropped, event) {
                         //change the classname of the post it to be accepted by the formers columns
-                        dragged.addClassName('drop-into-' + row_index + '-' + cols[dragged.up('tr').childElements().indexOf(dragged.up('td'))].id.split('-')[1]);
+                        dragged.addClassName('drop-into-' + swimline_id + '-' + cols[dragged.up('tr').childElements().indexOf(dragged.up('td'))].id.split('-')[1]);
                         dragged.removeClassName(accept);
                         
                         //switch to the new column
@@ -83,5 +84,15 @@ document.observe('dom:loaded', function () {
             });
         });
         // }}}
+    });
+
+    $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
+            input.observe('click', function (evt) {
+                    if (this.checked) {
+                        this.up('td').down('select').enable().focus().readonly = false;
+                    } else {
+                        this.up('td').down('select').disable().readonly = true;
+                    }
+            });
     });
 });

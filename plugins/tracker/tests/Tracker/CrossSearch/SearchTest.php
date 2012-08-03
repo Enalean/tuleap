@@ -106,63 +106,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $this->search->getMatchingArtifacts($this->user, $this->project, array(), $tracker_hierarchy, $query);
     }
     
-    function testGetMatchingArtifactsShouldReturnArtifactFromTrackersOutsidesHierarchy() {
-        $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $sharedFields      = array(new Tracker_CrossSearch_SharedField());
-        
-        $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
-        
-        $this->searchDao->setReturnValue('searchMatchingArtifacts', $this->getResultsForTrackerOutsideHierarchy());
-        $trackerIds = array(111, 112, 113, 666);
-        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao, $this->hierarchy_factory, $this->artifact_link_field_ids);
-        
-        $criteria  = aCrossSearchCriteria()->build();
-        
-        $artifacts = $this->search->getMatchingArtifacts($this->user, $this->project, $trackerIds, $tracker_hierarchy, $criteria);
-        $expected  = $this->getExpectedForTrackerOutsideHierarchy();
-        $this->assertEqual($artifacts->__toString(), $expected->__toString());
-    }
-    
-    private function getResultsForTrackerOutsideHierarchy() {
-        return TestHelper::arrayToDar(
-            array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => '',),
-            array('id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34',),
-            array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => '',),
-            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
-            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
-            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
-            array('id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',),
-            array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66',)
-        );
-    }
-    
-    private function getExpectedForTrackerOutsideHierarchy() {
-        $root    = new TreeNode(null, 0);
-        $node_7  = new TreeNode(array('id' => 7,  'tracker_id' => 112, 'artifactlinks' => '5'), 7);
-        $node_5  = new TreeNode(array('id' => 5,  'tracker_id' => 111, 'artifactlinks' => ''), 5);
-        $node_6  = new TreeNode(array('id' => 6,  'tracker_id' => 112, 'artifactlinks' => '8'), 6);
-        $node_8  = new TreeNode(array('id' => 8,  'tracker_id' => 111, 'artifactlinks' => '11,9,34'), 8);
-        $node_11 = new TreeNode(array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => ''), 11);
-        $node_9  = new TreeNode(array('id' => 9,  'tracker_id' => 93,  'artifactlinks' => ''), 9);
-        $node_10 = new TreeNode(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66'), 10);
-        $node_66 = new TreeNode(array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => ''), 66);
 
-        $root->addChildren(
-            $node_7->addChildren(
-                $node_5
-            ),
-            $node_6->addChildren(
-                $node_8->addChildren(
-                    $node_11,
-                    $node_9
-                )
-            ),
-            $node_10,
-            $node_66
-        );
-        return $root;
-    }
-    
     private function GivenATrackerHierarchy() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);

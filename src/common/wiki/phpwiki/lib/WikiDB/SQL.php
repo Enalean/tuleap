@@ -22,7 +22,7 @@ class WikiDB_SQL extends WikiDB
 	}
         include_once ("lib/WikiDB/backend/PearDB_".$backend.".php");
         $backend_class = "WikiDB_backend_PearDB_".$backend;
-        $backend = & new $backend_class($dbparams);
+        $backend = new $backend_class($dbparams);
         $this->WikiDB($backend, $dbparams);
     }
     

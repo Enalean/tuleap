@@ -58,12 +58,12 @@ class Codendi_Request {
     }
     
     public function getCookie($name) {
-        $cookie_manager =& new CookieManager();
+        $cookie_manager = new CookieManager();
         return $cookie_manager->getCookie($name);
     }
     
     public function isCookie($name) {
-        $cookie_manager =& new CookieManager();
+        $cookie_manager = new CookieManager();
         return $cookie_manager->isCookie($name);
     }
     

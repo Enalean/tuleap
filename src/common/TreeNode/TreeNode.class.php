@@ -103,11 +103,11 @@ class TreeNode /*implements Visitable*/ {
      * @return mixed (reference)
      */
     function _setParentNode(&$node) {
-        if(is_object($node) && is_a($node, get_class($this))) {
+        if(is_object($node) && is_a($node, 'TreeNode') ) {
             $this->parentNode =& $node;
         }
         else {
-            trigger_error(get_class($this).'::setParentNode => require: "'.get_class($this).'" given: "'.gettype($c).'"', E_USER_ERROR);
+            trigger_error(get_class($this).'::setParentNode => require: TreeNode given: "'.  get_class($node).'"', E_USER_ERROR);
         }
     }
 
@@ -128,7 +128,7 @@ class TreeNode /*implements Visitable*/ {
      * @param TreeNode &$c A TreeNode (reference call)
      */
     function addChild($c) {
-        if(is_object($c) && is_a($c, get_class($this))) {
+        if(is_object($c) && is_a($c, 'TreeNode')) {
             if($this->children === null) {
                 $this->children = array();
             }
@@ -136,7 +136,7 @@ class TreeNode /*implements Visitable*/ {
             $this->children[] = $c;
         }
         else {
-            trigger_error(get_class($this).'::addChild => require: "'.get_class($this).'" given: "'.gettype($c).'"', E_USER_ERROR);
+            trigger_error(get_class($this).'::addChild => require: TreeNode given: "'.get_class($c).'"', E_USER_ERROR);
         }
     }
 
@@ -201,17 +201,26 @@ class TreeNode /*implements Visitable*/ {
     /**
      * Set children. 
      *
-     * @param &$children array of TreeNode
+     * @param $children array of TreeNode
      */
-    function setChildren(&$children) {
+    function setChildren($children) {
         if(is_array($this->children)) {
-            $this->children =& $children;
+            $this->clearChildren();
+            foreach ($children as $child) {
+                $this->addChild($child);
+            }
         }
         else {
             trigger_error(get_class($this).'::setChildren => require: "array" given: "'.gettype($children).'"', E_USER_ERROR);
         }
     }
 
+    /**
+     * Remove existing children
+     */
+    public function clearChildren() {
+        $this->children = array();
+    }
 
     /**
      * Return true if Node has children. 
@@ -256,7 +265,7 @@ class TreeNode /*implements Visitable*/ {
     /**
      * @return array A flat list of this node and all its descendants (usefull for tests).
      */
-    private function flatten() {
+    public function flatten() {
         return array_merge(array($this), $this->flattenChildren());
     }
     

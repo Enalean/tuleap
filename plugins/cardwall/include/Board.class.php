@@ -29,7 +29,7 @@ class Cardwall_Board {
     public $swimlines;
 
     /**
-     * @var array of Cardwall_Column
+     * @var Cardwall_OnTop_Config_ColumnCollection
      */
     public $columns;
 
@@ -39,11 +39,11 @@ class Cardwall_Board {
     public $mappings;
 
     /**
-     * @param array                      $swimlines Array of TreeNode
-     * @param array                      $columns   Array of Cardwall_Column
-     * @param Cardwall_MappingCollection $mappings  Collection of Cardwall_Mapping
+     * @param array of Cardwall_Swimline             $swimlines 
+     * @param Cardwall_OnTop_Config_ColumnCollection $columns   
+     * @param Cardwall_MappingCollection             $mappings  
      */
-    public function __construct(array $swimlines, array $columns, Cardwall_MappingCollection $mappings) {
+    public function __construct(array $swimlines, Cardwall_OnTop_Config_ColumnCollection $columns, Cardwall_MappingCollection $mappings) {
         $this->swimlines = $swimlines;
         $this->columns   = $columns;
         $this->mappings  = $mappings;

@@ -119,6 +119,33 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
             return $this->update($sql);
         }
     }
+
+    /**
+     * Return all artifacts parents of given artifact_id
+     *
+     * Given artifact 112 linked artifact 345 (112 -> 345)
+     * And artifact 112 tracker is parent of artifact 345 tracker
+     * When I getParentsInHierarchy(345)
+     * Then I get artifact 112
+     *
+     * Note: this method might return serveral rows but it should be considered
+     * as a defect (one shall have only one parent)
+     *
+     * @param type $artifact_id
+     *
+     * @return DataAccessResult
+     */
+    public function getParentsInHierarchy($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "SELECT parent_art.*
+                FROM           tracker_changeset_value_artifactlink artlink
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.id = artlink.changeset_value_id)
+                    INNER JOIN tracker_artifact                     parent_art ON (parent_art.last_changeset_id = cv.changeset_id)
+                    INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.parent_id = parent_art.tracker_id AND hierarchy.child_id = child_art.tracker_id)
+                WHERE artlink.artifact_id = $artifact_id";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

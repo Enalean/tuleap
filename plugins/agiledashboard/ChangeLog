@@ -1,5 +1,46 @@
+Version 0.46 - Tuleap 5.4
+    * Reduce number of click to get on agile dashboard.
+    * Allow to switch from one sprint to another from cardwall
+    * Display only sibling sprints in selector
+    * Allow to create epics directly into release plan
+
+Version 0.45 - Tuleap 5.3
+    * Fix selection of backlog tracker
+    * Fix display of remaining effort
+
+Version 0.44 - Tuleap 5.3
+    * Centralize management of ancestors in Planning view.
+
+Version 0.43 - Tuleap 5.3
+    * Fix bug on breadcrumbs display (wrong order of planning parents).
+
+Version 0.42 - Tuleap 5.3
+    * Breadcrumbs display context (A sprint in a release)
+    * When a sprint belong to a release, the release backlog is displayed by default.
+
+Version 0.41 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displyed on planning cards
+
+Version 0.40 - Tuleap 5.3
+    * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.39 - Tuleap 5.3
+    * Display a feedback when the user D'nD things
+
+Version 0.38 - Tuleap 5.3
+    * Display remaining effort and capacity in planning view
+
+Version 0.36 - Tuleap 5.3
+    * Allow to sort artifacts in the planning by drag 'n droping
+
+Version 0.35 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.34 - Tuleap 5.3
+    * Update mustache renderer
+
 Version 0.33 - Tuleap 5.2
-	* Fix fatal error while duplicating planning
+    * Fix fatal error while duplicating planning
 
 Version 0.32 - Tuleap 5.2
      * Fix regression introduced in 0.31 on templates

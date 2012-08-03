@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -21,27 +20,33 @@
 require_once dirname(__FILE__).'/../../../include/BreadCrumbs/BreadCrumbGenerator.class.php';
 require_once dirname(__FILE__).'/../../../include/BreadCrumbs/Merger.class.php';
 
-Mock::generate("BreadCrumb_BreadCrumbGenerator");
 class BreadCrumb_PipeTest extends TuleapTestCase {
-    
-    public function itAppendsTheResultOfTheFirstToTheSecond() {
-        $bc1 = new MockBreadCrumb_BreadCrumbGenerator();
-        $bc1->setReturnValue('getCrumbs', array('lvl1' => "Toto", 'lvl2' => "Tata"));
-        $bc2 = new MockBreadCrumb_BreadCrumbGenerator();
-        $bc2->setReturnValue('getCrumbs', array('lvl3' => "Tutu"));
-        $breadcrumb_merger = new BreadCrumb_Merger($bc1, $bc2);
-        $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu"), $breadcrumb_merger->getCrumbs());
+    private $bc1;
+    private $bc2;
+    private $bc3;
+
+    public function setUp() {
+        parent::setUp();
+        $this->bc1 = stub('BreadCrumb_BreadCrumbGenerator')->getCrumbs()->returns(array('lvl1' => "Toto", 'lvl2' => "Tata"));
+        $this->bc2 = stub('BreadCrumb_BreadCrumbGenerator')->getCrumbs()->returns(array('lvl3' => "Tutu"));
+        $this->bc3 = stub('BreadCrumb_BreadCrumbGenerator')->getCrumbs()->returns(array('lvl4' => "Tralala"));
     }
     
+    public function itAppendsTheResultOfTheFirstToTheSecond() {
+        $breadcrumb_merger = new BreadCrumb_Merger($this->bc1, $this->bc2);
+        $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu"), $breadcrumb_merger->getCrumbs());
+    }
+
     public function itAppendsAllTheBreadCrumbsInTheGivenOrder() {
-        $bc1 = new MockBreadCrumb_BreadCrumbGenerator();
-        $bc1->setReturnValue('getCrumbs', array('lvl1' => "Toto", 'lvl2' => "Tata"));
-        $bc2 = new MockBreadCrumb_BreadCrumbGenerator();
-        $bc2->setReturnValue('getCrumbs', array('lvl3' => "Tutu"));
-        $bc3 = new MockBreadCrumb_BreadCrumbGenerator();
-        $bc3->setReturnValue('getCrumbs', array('lvl4' => "Tralala"));
-        $breadcrumb_merger = new BreadCrumb_Merger($bc1, $bc2, $bc3);
+        $breadcrumb_merger = new BreadCrumb_Merger($this->bc1, $this->bc2, $this->bc3);
         $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu", "lvl4" => "Tralala"), $breadcrumb_merger->getCrumbs());
+    }
+
+    public function itAppendsBreadCrumbsWithPushMethod() {
+        $breadcrumb_merger = new BreadCrumb_Merger();
+        $breadcrumb_merger->push($this->bc1);
+        $breadcrumb_merger->push($this->bc2);
+        $this->assertEqual(array('lvl1' => "Toto", 'lvl2' => "Tata", 'lvl3' => "Tutu"), $breadcrumb_merger->getCrumbs());
     }
 }
 ?>

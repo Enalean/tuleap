@@ -146,6 +146,19 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertFalse($ff->moveFiles(1287504083, $backend));
     }
 
+    function testMoveFilesCatchesExceptionAndLogThem() {
+        $ff = new FRSFileFactoryTestPurgeDeletedFiles($this);
+        $ff->throwOn('purgeFiles', new RuntimeException("Error while doing things"));
+        $ff->setReturnValue('moveDeletedFilesToStagingArea', true);
+        $ff->setReturnValue('cleanStaging', true);
+        $ff->setReturnValue('restoreDeletedFiles', true);
+
+        $backend = new MockBackendSystem();
+        $backend->expectOnce('log', array("Error while doing things", Backend::LOG_ERROR));
+
+        $this->assertFalse($ff->moveFiles(1287504083, $backend));
+    }
+
     function testMoveDeletedFilesToStagingAreaWithNoFiles() {
         $ff = new FRSFileFactoryTestMoveToStaging($this);
 
@@ -493,7 +506,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
         $release = new MockFRSRelease($this);
-        $release->setReturnValue('isActive', true);
+        $release->setReturnValue('isDeleted', false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -530,7 +543,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend->setReturnValue('chgrp', true);
 
         $release = new MockFRSRelease($this);
-        $release->setReturnValue('isActive', true);
+        $release->setReturnValue('isDeleted', false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -573,7 +586,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
         $release = new MockFRSRelease($this);
-        $release->setReturnValue('isActive', true);
+        $release->setReturnValue('isDeleted', false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -618,7 +631,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $em = new MockEventManager($this);
         $fileFactory->setReturnValue('_getEventManager', $em);
         $release = new MockFRSRelease($this);
-        $release->setReturnValue('isActive', true);
+        $release->setReturnValue('isDeleted', false);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
@@ -642,7 +655,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $this->assertTrue(is_dir(dirname($filepath)));
 
         $release = new MockFRSRelease($this);
-        $release->setReturnValue('isActive', false);
+        $release->setReturnValue('isDeleted', true);
         $releaseFactory = new MockFRSReleaseFactory($this);
         $releaseFactory->setReturnValue('getFRSReleaseFromDb', $release);
         $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);

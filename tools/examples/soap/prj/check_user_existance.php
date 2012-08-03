@@ -8,6 +8,6 @@ $session = $client->login('disciplus_1', 'Welcome0')->session_hash;
 // Disciplus 2 is not member of a project disciplus_1 is member of
 var_dump($client->checkUsersExistence($session, array('disciplus_2')));
 
-$client->logout();
+$client->logout($session);
 
 ?>

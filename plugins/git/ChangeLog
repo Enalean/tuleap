@@ -1,3 +1,12 @@
+Version 2.6.5
+    * Make unit tests pass with PHP 5.3
+
+Version 2.6.4
+    * Creation of git repo containing existing-repo leads to a bug
+
+Version 2.6.3 - Tuleap 5.3
+    * Add the possibility to delete personal repository
+
 Version 2.6.2 - Tuleap 5.2
     * Fix display of git push project widget for non project admin (contrib STMicroelectronics).
 

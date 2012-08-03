@@ -20,7 +20,7 @@
 
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/templating/TemplateRenderer.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 /**
  * Base class for controllers (differs from 'src/common/mvc/Controller.class.php').
@@ -91,7 +91,7 @@ abstract class MVC2_Controller {
     public function __construct($plugin_name, Codendi_Request $request) {
         $this->request     = $request;
         $this->plugin_name = $plugin_name;
-        $this->renderer    = new MustacheRenderer($this->getTemplatesDir());
+        $this->renderer    = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
     }
     
     private function getTemplatesDir() {
@@ -99,7 +99,7 @@ abstract class MVC2_Controller {
     }
     
     protected function render($template_name, $presenter) {
-        $this->renderer->render($template_name, $presenter);
+        $this->renderer->renderToPage($template_name, $presenter);
     }
     
     protected function addFeedback($type, $message) {

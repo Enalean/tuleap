@@ -24,6 +24,7 @@ require_once('Semantic/Tracker_SemanticManager.class.php');
 require_once('Tooltip/Tracker_Tooltip.class.php');
 require_once('Tracker_NotificationsManager.class.php');
 require_once('CannedResponse/Tracker_CannedResponseManager.class.php');
+require_once('DateReminder/Tracker_DateReminderManager.class.php');
 require_once('Rule/Tracker_RulesManager.class.php');
 require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
@@ -32,6 +33,7 @@ require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
 require_once('Hierarchy/Controller.class.php');
+require_once('Hierarchy/HierarchyFactory.class.php');
 require_once 'IFetchTrackerSwitcher.class.php';
 
 require_once('json.php');
@@ -91,6 +93,10 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
     
+    public function __toString() {
+        return "Tracker #".$this->id;
+    }
+
     /**
      * @return string the url of the form to submit a new artifact
      */
@@ -385,7 +391,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-perms-fields':
-            	    if ($this->userIsAdmin($current_user)) {
+                if ($this->userIsAdmin($current_user)) {
                     if ($request->exist('update')) {
                         if ($request->exist('permissions') && is_array($request->get('permissions'))) {
                             plugin_tracker_permission_process_update_fields_permissions(
@@ -462,6 +468,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-notifications':
                 if ($this->userIsAdmin($current_user)) {
+                    $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
                     $this->getNotificationsManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -471,12 +478,16 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'notifications':
             // you just need to be registered to have access to this part
                 if ($current_user->isLoggedIn()) {
+                    $this->getDateReminderManager()->processReminder($layout, $request, $current_user);
                     $this->getNotificationsManager()->process($layout, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+            case 'display_reminder_form':
+                print $this->getDateReminderManager()->getDateReminderRenderer()->getNewDateReminderForm();
+            break;
             case 'admin-canned':
             // TODO : project members can access this part ?
                 if ($this->userIsAdmin($current_user)) {
@@ -1948,6 +1959,13 @@ EOS;
     }
 
     /**
+     * @return Tracker_DateReminderManager
+     */
+    public function getDateReminderManager() {
+        return new Tracker_DateReminderManager($this);
+    }
+
+    /**
      * @return Tracker_CannedResponseManager
      */
     public function getCannedResponseManager() {
@@ -2053,17 +2071,22 @@ EOS;
         return is_array($this->cache_permissions);
     }
 
+    /**
+     * @var array
+     */
+    private $cached_permission_authorized_ugroups;
+
     public function permission_db_authorized_ugroups( $permission_type ) {
-        $result = array();        
-        $res    = permission_db_authorized_ugroups($permission_type, $this->getId());        
-        if ( db_numrows($res) > 0 ) { 
-            while ( $row = db_fetch_array($res) ) {
-                $result[] = $row;
+        if ( ! isset($this->cached_permission_authorized_ugroups)) {
+            $this->cached_permission_authorized_ugroups = array();
+            $res = permission_db_authorized_ugroups($permission_type, $this->getId());
+            if ( db_numrows($res) > 0 ) { 
+                while ( $row = db_fetch_array($res) ) {
+                    $this->cached_permission_authorized_ugroups[] = $row;
+                }
             }
-            return $result;
-        } else {
-            return false;
-        }                
+        }
+        return $this->cached_permission_authorized_ugroups;
     }
     
     /**
@@ -3071,6 +3094,15 @@ EOS;
         return array_filter($redirect_params);
     }
 
+    /**
+     * Return the hierarchy the tracker belongs to
+     *
+     * @return Tracker_Hierarchy
+     */
+    public function getHierarchy() {
+        $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
+        return $hierarchy_factory->getHierarchy(array($this->getId()));
+    }
 }
 
 ?>

@@ -39,6 +39,8 @@ require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
 
 Mock::generate('Git_Backend_Gitolite');
 
+require_once 'builders/aGitRepository.php';
+
 class GitActionsTest extends TuleapTestCase {
 
     function setUp() {
@@ -47,13 +49,6 @@ class GitActionsTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
 
-    private function GivenAGitActions() {
-        $controller         = new MockGit($this);
-        $systemEventManager = new MockSystemEventManager();
-        $factory            = new MockGitRepositoryFactory();
-        return new GitActions($controller, $systemEventManager, $factory);
-    }
-    
     function testRepoManagement() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
@@ -439,261 +434,88 @@ class GitActionsTest extends TuleapTestCase {
         $action->getProjectRepositoryList($projectId);
         $action->getProjectRepositoryList($projectId, $userId);
     }
- 
-    function testForkIndividualRepositories() {
-        $path  = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        
-        $project = new MockProject();
-        $project->setReturnValue('getId', $group_id);
-        
-        $repo = new MockGitRepository();
-        $repo->setReturnValue('userCanRead', true, array($user));
-        $repo->setReturnValue('isNameValid', true, array($path));
-        $repo->expectOnce('fork');
-        
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-                
-        $action = $this->GivenAGitActions();
-        $action->fork(array($repo), $project, $path, null, $user, $layout, null);
+
+}
+
+class GitActions_Delete_Tests extends TuleapTestCase {
+    protected $git_actions;
+    protected $project_id;
+    protected $repository_id;
+    protected $repository;
+    protected $system_event_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->project_id    = 101;
+        $this->repository_id = 69;
+
+        $this->repository = mock('GitRepository');
+        stub($this->repository)->getId()->returns($this->repository_id);
+        stub($this->repository)->getProjectId()->returns($this->project_id);
+
+        $this->system_event_manager = mock('SystemEventManager');
+        $controler                  = stub('Git')->getPlugin()->returns(mock('gitPlugin'));
+        $git_repository_factory     = mock('GitRepositoryFactory');
+
+        stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
+
+        $this->git_actions = new GitActions($controler, $this->system_event_manager, $git_repository_factory, mock('GitRepositoryManager'));
     }
 
-    function testClonesManyInternalRepositories() {
-        $path  = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        
-        $project = new MockProject();
-        $project->setReturnValue('getId', $group_id);
-        
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-        
-        $repo_ids = array('1', '2', '3');
-        
-        $repos = array();
-        foreach ($repo_ids as $id) {
-            $repo = new MockGitRepository();
-            $repo->setReturnValue('getId', $id);
-            $repo->setReturnValue('userCanRead', true, array($user));
-            $repo->setReturnValue('isNameValid', true, array($path));
-            $repo->expectOnce('fork');
-            $repos[] = $repo;
-        }
-        
-        $action = $this->GivenAGitActions();
-        $action->fork($repos, $project, $path, null, $user, $layout, null);
-    }
-    function testCloneManyCrossProjectRepositories() {
-        
-        $path  = '';
-         
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $user->setReturnValue('isMember', true);
+    public function itMarksRepositoryAsDeleted() {
+        stub($this->repository)->canBeDeleted()->returns(true);
 
-        $project_id = 2;
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', $project_id);
-         
-        $repo_ids = array('1', '2', '3');
-        $repos = array();
-        foreach ($repo_ids as $id) {
-            $repo = new MockGitRepository();
-            $repo->setReturnValue('getId', $id);
-            $repo->setReturnValue('userCanRead', true, array($user));
-            $repo->expectOnce('fork');
-            $repos[] = $repo;
-        }
-        
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-        
-        $action = $this->GivenAGitActions();
-        $action->fork($repos, $to_project, '', null, $user, $layout, null);
-    }
-    
-    function testWhenNoRepositorySelectedItAddsWarning() {
-        $group_id = 101;
+        $this->repository->expectOnce('markAsDeleted');
 
-        $repos = array();
-        $user = new MockUser();
-        
-        $project = new MockProject();
-        $project->setReturnValue('getId', $group_id);
-                
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-
-        $action = $this->GivenAGitActions();
-        
-        $action->getController()->expectOnce('addError', array('actions_no_repository_forked'));
-        
-        $action->fork($repos, $project, '', null, $user, $layout, null);
-    }
-    
-    function testClonesOneRepository() {
-        $id = '1';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        
-        $project = new MockProject();
-        $project->setReturnValue('getId', $group_id);
-        $project->setReturnValue('getUnixName', '');
-        
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-        
-        $repo = new MockGitRepository();
-        $repo->setReturnValue('getId', $id);
-        $repo->setReturnValue('userCanRead', true, array($user));
-        $repo->expectOnce('fork');
-        $repos = array($repo);
-        
-        $action = $this->GivenAGitActions();
-        $action->fork($repos, $project, '', null, $user, $layout, null);
-    }
-    
-
-    function testDoesntCloneUnreadableRepos() {
-        $repositories = array('1', '2', '3');
-        
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $repos = $this->getRepoCollectionUnreadableFor($repositories, $user);
-        
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', 2);
-        
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-        $action = $this->GivenAGitActions();
-        $action->fork($repos, $to_project, '', null, $user, $layout, null);
-    }
-    
-    protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
-        $return = array();
-        foreach ($repo_ids as $id) {
-            $repo = new MockGitRepository();
-            $repo->setReturnValue('getId', $id);
-            $repo->setReturnValue('userCanRead', false, array($user));
-            $repo->expectNever('fork');
-            $return[] = $repo;
-        }
-        return $return;
-    }
-    
-    public function testForkCrossProjectsRedirectToCrossProjectGitRepositories() {
-        $repo_id = '1';
-        $project_id = 2;
-        
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $user->setReturnValue('isMember', true, array($project_id, 'A'));
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', $project_id);
-        
-        $repo = new MockGitRepository();
-        $repo->setReturnValue('getId', $repo_id);
-        $repo->setReturnValue('userCanRead', true, array($user));
-        $repo->expectOnce('fork');
-        $repos = array($repo);
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-        
-        $action = $this->GivenAGitActions();
-        
-        $action->getController()->expectOnce('addInfo', array('successfully_forked'));
-                
-        $action->fork($repos, $to_project, '', null, $user, $layout, null);
+        $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 
-    function testForkShouldNotCloneAnyNonExistentRepositories() {
-        $project = new MockProject();
-        $repo    = $this->GivenARepository(123);
-        
-        $user   = new MockUser();
-        $action = $this->GivenAGitActions();
-        $action->forkRepositories(array($repo, null), $user, null, null, $project);
-    }
-    
-    function testForkShouldIgnoreAlreadyExistingRepository() {
-        $errorMessage = 'Repository Xxx already exists';
-        $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
-        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
-        $repo1 = $this->GivenARepository(123);
-        $repo1->expectOnce('fork');
-        $repo1->throwOn('fork', new GitRepositoryAlreadyExistsException(''));
-        $repo2 = $this->GivenARepository(456);
-        $repo2->expectOnce('fork'); //should still call fork on the second repo
+    public function itTriggersASystemEventForPhysicalRemove() {
+        stub($this->repository)->canBeDeleted()->returns(true);
 
-        $this->forkRepositories(array($repo1, $repo2));
-    }
-    
-    function testForkShouldTellTheUserIfTheRepositoryAlreadyExists() {
-        $errorMessage = 'Repository Xxx already exists';
-        $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
-        $repo2 = $this->GivenARepository(456);
-        
-        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
-        $repo2->throwOn('fork', new GitRepositoryAlreadyExistsException($repo2->getName()));
+        $this->system_event_manager->expectOnce(
+            'createEvent',
+            array(
+                'GIT_REPO_DELETE',
+                $this->project_id.SystemEvent::PARAMETER_SEPARATOR.$this->repository_id,
+                '*'
+            )
+        );
 
-        $repo1 = $this->GivenARepository(123);
-        
-        $this->forkRepositories(array($repo1, $repo2));
-    }
-    
-    function testForkGiveInformationAboutUnexpectedErrors() {
-        $errorMessage = 'user gitolite doesnt exist';
-        $repo2 = $this->GivenARepository(456);
-        $repo2->setName('megaRepoGit');
-        
-        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', "Got an unexpected error while forking ".$repo2->getName().": ".$errorMessage));
-        $repo2->throwOn('fork', new Exception($errorMessage));
-        $repo1 = $this->GivenARepository(123);
-        
-        $this->forkRepositories(array($repo1, $repo2));
-    }
-    
-    function testForkAssertNamespaceIsValid() {
-        $repo = new MockGitRepository();
-        $repo->setReturnValue('isNameValid', false);
-        $repo->expectNever('fork');
-        
-        $repo->setReturnValue('isNameValid', false);
-        
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
-        
-        $this->forkRepositories(array($repo), '^toto/pouet');
-    }
-    
-    private function GivenARepository($id) {
-        $repo = new MockGitRepository();
-        $repo->setReturnValue('getId', $id);
-        $repo->setReturnValue('userCanRead', true);
-        $repo->setReturnValue('isNameValid', true);
-        return $repo;
+        $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 
-    public function forkRepositories($repositories, $namespace=null) {
-        $user    = new MockUser();
-        $project = new MockProject();
-        $action  = $this->GivenAGitActions();
-        $action->forkRepositories($repositories, $user, $namespace, null, $project);
-        
+    public function itDoesntDeleteWhenRepositoryCannotBeDeleted() {
+        stub($this->repository)->canBeDeleted()->returns(false);
+
+        $this->repository->expectNever('markAsDeleted');
+        $this->system_event_manager->expectNever('createEvent');
+        $this->git_actions->deleteRepository($this->project_id, $this->repository_id);
     }
 }
 
+class GitActions_ForkTests extends TuleapTestCase {
+    private $actions;
+
+    public function setUp() {
+        parent::setUp();
+        $this->manager = mock('GitRepositoryManager');
+        $this->actions = new GitActions(mock('Git'), mock('SystemEventManager'), mock('GitRepositoryFactory'), $this->manager);
+    }
+
+    public function itDelegatesForkToGitManager() {
+        $repositories = array(aGitRepository()->build(), aGitRepository()->build());
+        $to_project   = mock('Project');
+        $namespace    = 'namespace';
+        $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
+        $user         = mock('User');
+        $response     = mock('Layout');
+        $redirect_url = '/stuff';
+
+        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
+
+        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+    }
+}
 ?>

@@ -955,7 +955,7 @@ class DB_common extends PEAR
         if (DB::isError($result) || $result === DB_OK) {
             return $result;
         } else {
-            $tmp =& new DB_result($this, $result);
+            $tmp = new DB_result($this, $result);
             return $tmp;
         }
     }
@@ -1145,7 +1145,7 @@ class DB_common extends PEAR
             if (DB::isError($result) || $result === DB_OK) {
                 return $result;
             } else {
-                $tmp =& new DB_result($this, $result);
+                $tmp = new DB_result($this, $result);
                 return $tmp;
             }
         }

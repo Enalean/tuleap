@@ -35,6 +35,30 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_date (
   INDEX idx_wf_transition_id( transition_id )
 );
 
+--  
+--  Table structure for workflow_transition_postactions_field_int
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_int (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  field_id int(11) UNSIGNED default NULL,
+  value int(11) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+);
+
+--  
+--  Table structure for workflow_transition_postactions_field_float
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  field_id int(11) UNSIGNED default NULL,
+  value FLOAT(10,4) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+);
+
 DROP TABLE IF EXISTS tracker_widget_renderer;
 CREATE TABLE tracker_widget_renderer (
    id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
@@ -133,6 +157,12 @@ DROP TABLE IF EXISTS tracker_field_openlist;
 CREATE TABLE tracker_field_openlist(
     field_id INT(11) NOT NULL PRIMARY KEY,
     hint VARCHAR(255) NOT NULL
+);
+
+DROP TABLE IF EXISTS tracker_field_computed;
+CREATE TABLE tracker_field_computed (
+    field_id INT(11) NOT NULL PRIMARY KEY,
+    target_field_name VARCHAR(255) NULL
 );
 
 DROP TABLE IF EXISTS tracker_field_openlist_value;
@@ -412,6 +442,15 @@ CREATE TABLE tracker_artifact(
   INDEX idx_tracker_id (tracker_id),
   INDEX idx_my (submitted_by, tracker_id, last_changeset_id)
 );
+
+DROP TABLE IF EXISTS tracker_artifact_priority;
+CREATE TABLE tracker_artifact_priority(
+    curr_id int(11) NULL,
+    succ_id int(11) NULL,
+    rank    int(11) NOT NULL,
+    UNIQUE idx(curr_id, succ_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS  tracker_tooltip;
 CREATE TABLE tracker_tooltip(
     tracker_id INT(11) NOT NULL ,
@@ -543,6 +582,19 @@ DROP TABLE IF EXISTS tracker_hierarchy;
 CREATE TABLE IF NOT EXISTS tracker_hierarchy (
   parent_id int(11) NOT NULL,
   child_id int(11) NOT NULL PRIMARY KEY
+);
+
+DROP TABLE IF EXISTS tracker_reminder;
+CREATE TABLE tracker_reminder (
+    reminder_id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    tracker_id INT(11) NOT NULL,
+    field_id INT(11) NOT NULL,
+    ugroups VARCHAR(255) NOT NULL,
+    notification_type TINYINT(1) DEFAULT 0,
+    distance INT( 11 ) DEFAULT 0,
+    status TINYINT(1) DEFAULT 1,
+    PRIMARY KEY (reminder_id),
+    UNIQUE KEY (tracker_id, field_id, ugroups, notification_type, distance, status)
 );
 
 -- Enable service for project 100

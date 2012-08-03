@@ -275,7 +275,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     
     protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified) {
         $hp = Codendi_HTMLPurifier::instance();
-        
         $link_artifact_id = (int)$request->get('link-artifact-id');
         $title            = '';
         $breadcrumbs      = array();
@@ -283,7 +282,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $this->getTracker()->displayHeader($layout, $title, $breadcrumbs);
         }
         
-        if ($request->existAndNonEmpty('pv')) {
+        if ($request->get('pv')) {
             return;
         }
         

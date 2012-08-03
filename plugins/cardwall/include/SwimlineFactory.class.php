@@ -19,52 +19,81 @@
  */
 
 require_once 'Swimline.class.php';
+require_once 'OnTop/Config.class.php';
+require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 
 /**
  * Build swimlines for the dashboard
  */
 class Cardwall_SwimlineFactory {
 
+    /** @var Cardwall_OnTop_Config */
+    private $config;
+    
+    /** @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact */
+    private $field_provider;
+    
+    public function __construct(Cardwall_OnTop_Config $config, Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider) {
+        $this->config = $config;
+        $this->field_provider = $field_provider;
+    }
+    
     /**
      * @return array of Cardwall_Swimline
      */
-    public function getSwimlines(array $columns, array $nodes) {
+    public function getSwimlines(Cardwall_OnTop_Config_ColumnCollection $columns, array $nodes) {
         $swimlines = array();
         foreach ($nodes as $child) {
-            $cells = $this->getCells($columns, $child->getChildren());
-            $swimlines[] = new Cardwall_Swimline($child, $cells);
+            $swimlines[] = $this->getSwimline($columns, $child);
         }
         return $swimlines;
     }
 
-    private function getCells(array $columns, array $nodes) {
+    private function getSwimline(Cardwall_OnTop_Config_ColumnCollection $columns, TreeNode $child) {
+        $potential_presenters = $this->extractPresentersFrom($child->getChildren());
+        $cells = $this->getCells($columns, $potential_presenters);
+        return new Cardwall_Swimline($child, $cells);
+    }
+
+    private function extractPresentersFrom(array $nodes) {
+        $presenters = array();
+        foreach ($nodes as $node) {
+            $presenters[] = $node->getCardInCellPresenter();
+        }
+        return $presenters;
+    }
+
+
+    /**
+     * public for testing
+     * 
+     * @param array of Cardwall_Column $columns
+     * @param array of Cardwall_CardInCellPresenter $potential_presenters
+     * @return array
+     */
+    public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters) {
         $cells = array();
         foreach ($columns as $column) {
-            $cells[] = $this->getCell($column, $nodes);
+            $cells[] = $this->getCell($column, $potential_presenters);
         }
         return $cells;
     }
 
-    private function getCell(Cardwall_Column $column, array $nodes) {
-        $artifacts = array();
-        foreach ($nodes as $node) {
-            $this->addNodeToCell($node, $column, $artifacts);
+    private function getCell(Cardwall_Column $column, array $potential_presenters) {
+        $retained_presenters = array();
+        foreach ($potential_presenters as $p) {
+            $this->addNodeToCell($p, $column, $retained_presenters);
         }
-        return array('artifacts' => $artifacts);;
+        return array('cardincell_presenters' => $retained_presenters);;
     }
 
-    private function addNodeToCell(TreeNode $node, Cardwall_Column $column, array &$artifacts) {
-        $presenter       = $node->getObject();
+    private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters) {
         $artifact        = $presenter->getArtifact();
-        $artifact_status = $artifact->getStatus();
-        if ($this->isArtifactInCell($artifact, $column)) {
-            $artifacts[] = $node;
+        if ($this->config->isInColumn($artifact, $this->field_provider, $column)) {
+            $presenters[] = $presenter;
+            
         }
     }
 
-    private function isArtifactInCell(Tracker_Artifact $artifact, Cardwall_Column $column) {
-        $artifact_status = $artifact->getStatus();
-        return $artifact_status === $column->label || $artifact_status === null && $column->id == 100;
-    }
 }
 ?>
