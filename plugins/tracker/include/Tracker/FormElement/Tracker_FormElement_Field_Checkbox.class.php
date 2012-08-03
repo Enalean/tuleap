@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
                 if ($this->userCanMakeTransition($transition_id)) {
                     if (!$value->isHidden()) {
                         $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                        $html .= '<li><input type="checkbox" '. $group_name .' value="'. $id .'" id=cb_'. $id .' '. $checked .'/>';
+                        $html .= '<li style="'. $style .'"><input type="checkbox" '. $group_name .' value="'. $id .'" id=cb_'. $id .' '. $checked .'/>';
                         $html .= '<label for="cb_'. $id .'" >'.$this->getBind()->formatArtifactValue($id) .'</label>';
                         $html .= '</li>';
                     }
