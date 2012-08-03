@@ -253,6 +253,7 @@ class Git extends PluginController {
     }
     
     public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+        $repository = $this->factory->getRepositoryById($repoId);
         switch ($action) {
             #CREATE REF
             case 'create':
@@ -287,7 +288,7 @@ class Git extends PluginController {
                     $this->addView('view');
                 }
                 else if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $this->addAction('confirmDeletion', array($this->groupId, $repoId) );
+                    $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
@@ -375,7 +376,7 @@ class Git extends PluginController {
             #confirm_private
             case 'confirm_private':
                 if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $this->addAction('confirmDeletion', array($this->groupId, $repoId) );
+                    $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
@@ -451,19 +452,19 @@ class Git extends PluginController {
         $sem = SystemEventManager::instance();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
+            $p = explode('::', $row['parameters']);
+            $repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
-                $p = explode('::', $row['parameters']);
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
                 break;
 
             case 'GIT_REPO_CLONE':
-                $p = explode('::', $row['parameters']);
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
                 break;
 
             case 'GIT_REPO_DELETE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete'));
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete', array($repository->getFullName())));
                 break;
             }
             
