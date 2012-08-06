@@ -511,24 +511,21 @@ class Tracker_FormElementFactory {
             }
             //First duplicate formElement info
             if ($id = $this->getDao()->duplicate($from_row['id'], $to_tracker_id)) {
-                if (!$has_workflow) {
-                    //Then duplicate formElement
-                    $mapping[] = array('from' => $from_row['id'], 
-                                    'to' => $id,
-                                    'values' => $this->getFormElementById($id)->duplicate($from_row['id'], $id),
-                                    'workflow'=> false);
-                } else {
-                    $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
-                    $values = $this->getFormElementById($id)->duplicate($from_row['id'], $id);
-                    $mapping[] = array('from' => $from_row['id'],
-                                    'to' => $id,
-                                    'values' => $values, 
-                                    'workflow'=> true);
+                $created_form_element = $this->getFormElementById($id);
+                if ($created_form_element) {
+                    $created_values = $created_form_element->duplicate($from_row['id'], $id);
+                    if ($has_workflow) {
+                        $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
+                    }
+                    $mapping[] = array(
+                        'from'    => $from_row['id'],
+                        'to'      => $id,
+                        'values'  => $created_values,
+                        'workflow'=> $has_workflow
+                    );
+                    $type = $this->getType($created_form_element);
                 }
-               
-                $type = $this->getType($this->getFormElementById($id));
-                $tracker = TrackerFactory::instance()->getTrackerByid($to_tracker_id);                
-
+                $tracker = TrackerFactory::instance()->getTrackerByid($to_tracker_id);
             }
         }
         $this->getDao()->mapNewParentsAfterDuplication($to_tracker_id, $mapping);
