@@ -186,6 +186,7 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
         $this->driver->dumpSSHKeys($user);
 
+        // After push directory change, so we need to re-changedir
         $this->driver->setAdminPath($this->_glAdmDir);
         $this->driver->dumpSSHKeys($user);
     }
