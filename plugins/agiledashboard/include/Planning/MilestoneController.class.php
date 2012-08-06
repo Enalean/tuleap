@@ -62,17 +62,20 @@ class Planning_MilestoneController extends MVC2_Controller {
                                 ProjectManager            $project_manager) {
         
         parent::__construct('agiledashboard', $request);
+        $this->milestone_factory = $milestone_factory;
+        $project                 = $project_manager->getProject($request->get('group_id'));
         try {
-            $this->milestone_factory = $milestone_factory;
-            $project                 = $project_manager->getProject($request->get('group_id'));
-            $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+            $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
                 $this->getCurrentUser(),
                 $project,
                 $request->get('planning_id'),
                 $request->get('aid')
             );
         } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+        }
+        if (!$this->milestone) {
+            $this->milestone = $this->milestone_factory->getNoMilestone($project, $request->get('planning_id'));
         }
     }
 
