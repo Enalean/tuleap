@@ -71,6 +71,10 @@ class Planning_GroupByParentsVisitorTest extends TuleapTestCase {
         stub($this->othertask)->getId()->returns(101);
         stub($this->othertask)->getAllAncestors($user)->returns(array($this->otheruserstory, $this->epic));
 
+        $this->anothertask = mock('Tracker_Artifact');
+        stub($this->anothertask)->getId()->returns(102);
+        stub($this->anothertask)->getAllAncestors($user)->returns(array($this->otheruserstory, $this->epic));
+
         $this->visitor = new Planning_GroupByParentsVisitor($user);
     }
 
@@ -96,6 +100,12 @@ class Planning_GroupByParentsVisitorTest extends TuleapTestCase {
         $root = $this->buildTreeNode($this->epic);
         $root->accept($this->visitor);
         $this->assertEqual('0 (123)', $root->accept($this));
+    }
+
+    public function itDoesntAddManyTimesTheSameItem() {
+        $root = $this->buildTreeNode($this->othertask, $this->anothertask);
+        $root->accept($this->visitor);
+        $this->assertEqual('0 (123 (457 (101, 102)))', $root->accept($this));
     }
 }
 ?>
