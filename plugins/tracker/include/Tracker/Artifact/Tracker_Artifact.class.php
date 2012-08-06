@@ -605,15 +605,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return String The valid followup comment format
      */
     private function validateCommentFormat($request, $comment_format_field_name) {
-        $formats = array('text', 'html');
-        $vFormat = new Valid_WhiteList($comment_format_field_name, $formats);
-        if ($request->valid($vFormat)) {
-            if ($request->get($comment_format_field_name) == 'html') {
-                $comment_format = Tracker_Artifact_Changeset_Comment::HTML_COMMENT;
-            } else {
-                $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-            }
-        }
+        $default_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        $formats = array(
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            Tracker_Artifact_Changeset_Comment::HTML_COMMENT
+        );
+        $comment_format = $request->getValidated(
+            $comment_format_field_name, 
+            new Valid_WhiteList($comment_format_field_name, $formats), 
+            $default_format
+        );
         return $comment_format;
     }
 
