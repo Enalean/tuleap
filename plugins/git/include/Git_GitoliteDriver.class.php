@@ -403,22 +403,22 @@ class Git_GitoliteDriver {
         if (!is_dir($target)) {
             $asGroupGitolite = 'sg - gitolite -c ';
             $cmd = 'umask 0007; '.$asGroupGitolite.' "git clone --bare '. $source .' '. $target.'"';
-            $clone_result = $this->gitCmd($cmd);
+            $clone_result = $this->executeShellCommand($cmd);
             
             $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
             $copyHooks .= $asGroupGitolite.' "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
-            $this->gitCmd($copyHooks);
+            $this->executeShellCommand($copyHooks);
             
             $saveNamespace = 'cd '.$this->getRepositoriesPath().'; ';
             $saveNamespace .= $asGroupGitolite.' "echo -n '.$new_ns.' > '.$target.'/tuleap_namespace"';
-            $this->gitCmd($saveNamespace);
+            $this->executeShellCommand($saveNamespace);
             
             return $clone_result;
         }
         return false;
     }
-    
-    protected function gitCmd($cmd) {
+
+    protected function executeShellCommand($cmd) {
         $cmd = $cmd.' 2>&1';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {
