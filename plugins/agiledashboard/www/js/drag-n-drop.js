@@ -113,7 +113,7 @@ var Planning = {
                     sort(current_item);
                 }}
             };
-            $j('.backlog-content > ul.cards ul.cards, .milestone-content > ul.cards ul.cards').sortable(options);
+            $j('.backlog-content ul.cards, .milestone-content ul.cards').filter(Planning.doesntHaveDirectChildrenDraggable).sortable(options);
 
             options.stop = options.stop.wrap(function (wrapped_stop, event, ui) { with (Planning) {
                 wrapped_stop(event, ui);
@@ -133,11 +133,19 @@ var Planning = {
             }});
 
             options.connectWith = '.milestone-content > ul.cards',
-            $j('.backlog-content > ul.cards').sortable(options);
+            $j('.backlog-content ul.cards').filter(Planning.hasDirectChildrenDraggable).sortable(options);
 
             options.connectWith = '.backlog-content > ul.cards';
-            $j('.milestone-content > ul.cards').sortable(options);
+            $j('.milestone-content ul.cards').filter(Planning.hasDirectChildrenDraggable).sortable(options);
         })(window.jQuery);
+    },
+
+    hasDirectChildrenDraggable: function () {
+        return window.jQuery(this).children().filter('.planning-draggable').length > 0;
+    },
+
+    doesntHaveDirectChildrenDraggable: function () {
+        return !Planning.hasDirectChildrenDraggable();
     },
 
     getArtifactId: function (card) {
