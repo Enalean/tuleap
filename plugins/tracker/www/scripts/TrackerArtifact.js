@@ -117,7 +117,7 @@ document.observe('dom:loaded', function () {
                 if (comment_panel.visible()) {
                     
                     var textarea = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
-                    if ($('tracker_artifact_followup_comment_body_format_'+id).value == 1) {
+                    if ($('tracker_artifact_followup_comment_body_format_'+id).value == 'html') {
                         textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML;
                         var htmlFormat = true;
                     } else {
