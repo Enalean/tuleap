@@ -426,6 +426,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tests
 
 # Data dir
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}
 %{__install} -m 700 -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/user
 
 # Install script
@@ -767,6 +768,7 @@ fi
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
 # Data dir
+%dir %{APP_DATA_DIR}
 %dir %{APP_DATA_DIR}/user
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIB_DIR}
 %attr(755,%{APP_USER},%{APP_USER}) %dir %{APP_LIBBIN_DIR}
