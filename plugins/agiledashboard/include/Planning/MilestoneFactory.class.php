@@ -60,6 +60,19 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Return an empty milestone for given planning/project.
+     *
+     * @param Project $project
+     * @param Integer $planning_id
+     *
+     * @return Planning_NoMilestone
+     */
+    public function getNoMilestone(Project $project, $planning_id) {
+        $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
+        return new Planning_NoMilestone($project, $planning);
+    }
+
+    /**
      * Loads the milestone matching the given planning and artifact ids.
      *
      * Also loads:

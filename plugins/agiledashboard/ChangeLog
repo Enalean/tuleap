@@ -1,3 +1,6 @@
+Version 0.47 - Tuleap 5.4
+    * Fix fatal error when an artifact has several parents.
+
 Version 0.46 - Tuleap 5.4
     * Reduce number of click to get on agile dashboard.
     * Allow to switch from one sprint to another from cardwall
