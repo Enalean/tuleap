@@ -182,17 +182,12 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
         $this->assertEmptyGitStatus();
     }
 
-    public function itDoesntCommitAnythingIfNothingChanged() {
+    public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
         $this->driver->dumpSSHKeys($user);
 
-        // User another git exec transport to trap commit
-        $gitExec = partial_mock('Git_Exec', array('push', 'commit'), array($this->_glAdmDir));
-        $gitExec->expectNever('commit');
-        $gitExec->expectOnce('push');
-        $driver = new Git_GitoliteDriver($this->_glAdmDir, $gitExec);
-
-        $driver->dumpSSHKeys($user);
+        $this->driver->setAdminPath($this->_glAdmDir);
+        $this->driver->dumpSSHKeys($user);
     }
 }
 

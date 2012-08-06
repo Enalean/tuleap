@@ -168,7 +168,7 @@ class Git_GitoliteDriver {
                 $commit_msg = 'SystemEvent update all user keys';
             }
             $this->gitExec->add('keydir');
-            $this->gitCommit($commit_msg);
+            $this->gitExec->commit($commit_msg);
             return $this->push();
         }
         return false;
@@ -215,13 +215,6 @@ class Git_GitoliteDriver {
                 }
             }
         }
-    }
-
-    private function gitCommit($message) {
-        if ($this->gitExec->isThereAnythingToCommit()) {
-            return $this->gitExec->commit($message);
-        }
-        return true;
     }
 
     /**
@@ -330,7 +323,7 @@ class Git_GitoliteDriver {
     
     protected function commitConfigFor($project) {
         if ($this->updateMainConfIncludes($project)) {
-            return $this->gitCommit('Update: '.$project->getUnixName());
+            return $this->gitExec->commit('Update: '.$project->getUnixName());
         }
     }
 
@@ -386,7 +379,7 @@ class Git_GitoliteDriver {
                 $this->gitExec->add($this->confFilePath);
                 
                 //commit
-                $ok = $this->gitCommit('Rename project '. $oldName .' to '. $newName) && $this->gitExec->push();
+                $ok = $this->gitExec->commit('Rename project '. $oldName .' to '. $newName) && $this->gitExec->push();
             }
         }
         return $ok;
