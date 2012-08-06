@@ -69,7 +69,7 @@ class Git_GitoliteDriver {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
-        $this->gitExec = ($gitExec !== null) ? $gitExec : new Git_Exec($adminPath);
+        $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
