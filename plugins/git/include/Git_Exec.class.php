@@ -111,15 +111,8 @@ class Git_Exec {
     public function isThereAnythingToCommit() {
         $output = array();
         $this->execInPath('git status --porcelain', $output);
-        $staged_status = array(
-            'A' => true,
-            'D' => true,
-            'M' => true,
-            'R' => true
-        );
         foreach ($output as $status_line) {
-            $status_char = $status_line{0};
-            if (isset($staged_status[$status_char])) {
+            if (preg_match('/^[ADMR]/', $status_line)) {
                 return true;
             }
         }
