@@ -22,6 +22,7 @@
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
 require_once 'ItemCardPresenterCallback.class.php';
+require_once 'GroupByParentsVisitor.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
@@ -50,10 +51,13 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
                                 Planning                   $planning,
                                                            $planning_redirect_param) {
         parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory, $user);
-        
+
         $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_param;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) .'/../../templates');
+
+        $visitor = new Planning_GroupByParentsVisitor($user);
+        $this->tree_of_artifacts->accept($visitor);
 
         $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, new Tracker_CardFields(), 'planning-draggable-toplan'));
         $this->tree_of_card_presenters = $card_mapper->map($this->tree_of_artifacts);
