@@ -76,14 +76,19 @@ class Git_Exec {
     /**
      * git help commit
      *
+     * Commit only if there is something to commit
+     *
      * @param string $message
      *
      * @return boolean
      * @throw Git_Command_Exception
      */
     public function commit($message) {
-        $cmd = 'git commit -m '.escapeshellarg($message);
-        return $this->gitCmd($cmd);
+        if ($this->isThereAnythingToCommit()) {
+            $cmd = 'git commit -m '.escapeshellarg($message);
+            return $this->gitCmd($cmd);
+        }
+        return true;
     }
 
     /**
@@ -106,7 +111,19 @@ class Git_Exec {
     public function isThereAnythingToCommit() {
         $output = array();
         $this->execInPath('git status --porcelain', $output);
-        return count($output) !== 0;
+        $staged_status = array(
+            'A' => true,
+            'D' => true,
+            'M' => true,
+            'R' => true
+        );
+        foreach ($output as $status_line) {
+            $status_char = $status_line{0};
+            if (isset($staged_status[$status_char])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private function gitCmd($cmd) {
