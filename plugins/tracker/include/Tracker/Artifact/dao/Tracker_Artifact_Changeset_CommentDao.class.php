@@ -33,13 +33,14 @@ class Tracker_Artifact_Changeset_CommentDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function createNewVersion($changeset_id, $body, $submitted_by, $parent_id, $body_format = 0) {
+    public function createNewVersion($changeset_id, $body, $submitted_by, $parent_id, $body_format) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $body         = $this->da->quoteSmart($body);
         $submitted_by = $this->da->escapeInt($submitted_by);
-        $body_format   = $this->da->escapeInt($body_format);
+        $body_format  = $this->da->quoteSmart($body_format);
         $submitted_on = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
         $parent_id    = $this->da->escapeInt($parent_id);
+
         $sql = "INSERT INTO $this->table_name (changeset_id, body, body_format, submitted_by, submitted_on, parent_id)
                 VALUES ($changeset_id, $body, $body_format, $submitted_by, $submitted_on, $parent_id)";
         return $this->updateAndGetLastId($sql);

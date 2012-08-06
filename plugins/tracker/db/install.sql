@@ -224,7 +224,7 @@ CREATE TABLE tracker_changeset_comment(
     submitted_by INT(11) NULL,
     submitted_on INT(11) NOT NULL,
     body TEXT NOT NULL,
-    body_format TINYINT(1) NOT NULL DEFAULT '0',
+    body_format ENUM('text', 'html') NOT NULL default 'text',
     old_artifact_history_id INT(11) NULL,
     INDEX changeset_idx(changeset_id)
 );
