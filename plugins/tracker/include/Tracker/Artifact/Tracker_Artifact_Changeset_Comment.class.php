@@ -57,7 +57,7 @@ class Tracker_Artifact_Changeset_Comment {
      * @param int                        $submitted_by       The Id of the user that made the comment
      * @param int                        $submitted_on       The date the comment has been done
      * @param string                     $body               The comment (aka follow-up comment)
-     * @param int                        $bodyFormat         The comment type (text or html follow-up comment)
+     * @param string                     $bodyFormat         The comment type (text or html follow-up comment)
      * @param int                        $parent_id          The id of the parent (if comment has been modified)
      */
     public function __construct($id, 
