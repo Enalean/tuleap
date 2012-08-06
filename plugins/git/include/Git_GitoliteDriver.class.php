@@ -120,7 +120,7 @@ class Git_GitoliteDriver {
     }
 
     public function push() {
-        $res = $this->gitPush();
+        $res = $this->gitExec->push();
         chdir($this->oldCwd);
         return $res;
     }
@@ -144,7 +144,7 @@ class Git_GitoliteDriver {
                 }
             }
             if ($backend->addBlock($this->confFilePath, $newConf)) {
-                return $this->gitAdd($this->confFilePath);
+                return $this->gitExec->add($this->confFilePath);
             }
             return false;
         }
@@ -167,7 +167,7 @@ class Git_GitoliteDriver {
                 }
                 $commit_msg = 'SystemEvent update all user keys';
             }
-            $this->gitAdd('keydir');
+            $this->gitExec->add('keydir');
             $this->gitCommit($commit_msg);
             return $this->push();
         }
@@ -211,33 +211,17 @@ class Git_GitoliteDriver {
             foreach ($dir as $file) {
                 $userbase = $user->getUserName().'@';
                 if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                    $this->gitRm($file->getPathname());
+                     $this->gitExec->rm($file->getPathname());
                 }
             }
         }
     }
 
-    protected function gitMv($from, $to) {
-        return $this->gitExec->mv($from, $to);
-    }
-
-    protected function gitAdd($file) {
-        return $this->gitExec->add($file);
-    }
-
-    protected function gitRm($file) {
-        return $this->gitExec->rm($file);
-    }
-
-    protected function gitCommit($message) {
+    private function gitCommit($message) {
         if ($this->gitExec->isThereAnythingToCommit()) {
             return $this->gitExec->commit($message);
         }
         return true;
-    }
-    
-    protected function gitPush() {
-        return $this->gitExec->push();
     }
 
     /**
@@ -341,7 +325,7 @@ class Git_GitoliteDriver {
         if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
             return false;
         }
-        return $this->gitAdd($config_file);
+        return $this->gitExec->add($config_file);
     }
     
     protected function commitConfigFor($project) {
@@ -383,7 +367,7 @@ class Git_GitoliteDriver {
     public function renameProject($oldName, $newName) {
         $ok = true;
         if (is_file('conf/projects/'. $oldName .'.conf')) {
-            $ok = $this->gitMv(
+            $ok = $this->gitExec->mv(
                 'conf/projects/'. $oldName .'.conf',
                 'conf/projects/'. $newName .'.conf'
             );
@@ -393,16 +377,16 @@ class Git_GitoliteDriver {
                 $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
                 $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
                 file_put_contents('conf/projects/'. $newName .'.conf', $dest);
-                $this->gitAdd('conf/projects/'. $newName .'.conf');
+                $this->gitExec->add('conf/projects/'. $newName .'.conf');
                 
                 //conf/gitolite.conf
                 $orig = file_get_contents($this->confFilePath);
                 $dest = str_replace('include "projects/'. $oldName .'.conf"', 'include "projects/'. $newName .'.conf"', $orig);
                 file_put_contents($this->confFilePath, $dest);
-                $this->gitAdd($this->confFilePath);
+                $this->gitExec->add($this->confFilePath);
                 
                 //commit
-                $ok = $this->gitCommit('Rename project '. $oldName .' to '. $newName) && $this->gitPush();
+                $ok = $this->gitCommit('Rename project '. $oldName .' to '. $newName) && $this->gitExec->push();
             }
         }
         return $ok;
