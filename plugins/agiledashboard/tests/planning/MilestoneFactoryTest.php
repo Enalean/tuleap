@@ -32,6 +32,7 @@ abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
     public function anArtifactWithId($id) {
         $artifact = aMockArtifact()->withId($id)->build();
         stub($artifact)->getHierarchyLinkedArtifacts()->returns(array());
+        stub($artifact)->getAllAncestors()->returns(array());
         return $artifact;
     }
 
@@ -40,6 +41,7 @@ abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
                               ->withUniqueLinkedArtifacts($linked_artifacts)
                               ->build();
         stub($artifact)->getHierarchyLinkedArtifacts()->returns(array());
+        stub($artifact)->getAllAncestors()->returns(array());
         return $artifact;
         
     }    
