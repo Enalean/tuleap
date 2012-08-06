@@ -31,21 +31,21 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
      * @var TemplateRenderer
      */
     private $renderer;
-    
+
     /**
      * @var Tracker_TreeNode_CardPresenterNode
      */
     private $tree_of_card_presenters;
-    
+
     // Presenter properties
     public $planning;
     public $planning_redirect_parameter = '';
 
-    
+
     public function __construct(Tracker_Report             $report,
                                 array                      $criteria,
-                                TreeNode                   $tree_of_artifacts, 
-                                Tracker_ArtifactFactory    $artifact_factory, 
+                                TreeNode                   $tree_of_artifacts,
+                                Tracker_ArtifactFactory    $artifact_factory,
                                 Tracker_FormElementFactory $factory,
                                 User                       $user,
                                 Planning                   $planning,
@@ -62,11 +62,11 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, new Tracker_CardFields(), 'planning-draggable-toplan'));
         $this->tree_of_card_presenters = $card_mapper->map($this->tree_of_artifacts);
     }
-    
+
     public function fetchResultActions() {
         return $this->renderer->renderToString('backlog-actions', $this);
     }
-    
+
     protected function fetchTable() {
         return $this->renderer->renderToString('backlog', $this);
     }
@@ -74,11 +74,11 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     public function getChildren() {
         return $this->tree_of_card_presenters->getChildren();
     }
-    
+
     public function allowedChildrenTypes() {
         return $this->planning->getBacklogTracker();
     }
-    
+
     public function addLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
     }

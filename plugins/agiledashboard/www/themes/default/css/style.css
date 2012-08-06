@@ -42,10 +42,6 @@
     padding: 0 0.5em;
 }
 
-.planning-draggable > .card {
-    cursor: move;
-}
-
 .release_planner > .tracker_artifact_title {
     margin-bottom:0;
     margin-top: 0.5em;
@@ -55,18 +51,25 @@
     margin-top: 0;
 }
 
-.cards {
+.agiledashboard .cards {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.cards .cards {
+.agiledashboard .cards .cards {
   margin-left: 2em;
 }
 
-.planning-draggable > .card {
+.planning-item > .card,
+.planning-item > .card > .card-container {
+    background: #f8f8f8;
+}
+
+.planning-item.planning-draggable > .card,
+.planning-item.planning-draggable > .card > .card-container {
     background: #ffe;
     font-style: normal;
+    cursor: move;
 }
 
 .milestone-content > ul.cards,

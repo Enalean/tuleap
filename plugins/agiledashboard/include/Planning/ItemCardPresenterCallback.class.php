@@ -35,13 +35,16 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
      * @var string the css class name
      */
     private $classname;
-    
+
+    /**
+     * @var Tracker_CardFields
+     */
     private $card_fields;
-    
+
     public function __construct(Planning $planning, Tracker_CardFields $card_fields, $classname) {
         $this->planning    = $planning;
-        $this->classname   = $classname;
         $this->card_fields = $card_fields;
+        $this->classname   = $classname;
     }
 
     /**
@@ -60,6 +63,10 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         $artifact = $node->getObject();
 
         if ($artifact) {
+            $classname = $this->classname;
+            if ($artifact->getTracker() == $this->planning->getBacklogTracker()) {
+                $classname .= ' planning-draggable ';
+            }
             $planning_item  = new Planning_Item($artifact, $this->planning);
             $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
