@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php';
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_WebLink.class.php');
 Mock::generatePartial('Tracker_FormElement_Field_WebLink', 'Tracker_FormElement_Field_WebLinkTestVersion', array('getRuleString', 'getRuleNoCr', 'getProperty'));
 
