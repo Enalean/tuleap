@@ -475,10 +475,12 @@ class BackendSystem extends Backend {
      * @return boolean if the ssh key was written
      */
     public function dumpSSHKeysForUser(User $user) {
+        $write_status = true;
         if ($user->getUnixStatus() == 'A') {
-            return $this->writeSSHKeys($user);
+            $write_status = $this->writeSSHKeys($user);
         }
-        return true;
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array('user' => $user));
+        return $write_status;
     }
 
     /**

@@ -52,6 +52,10 @@ class GitoliteTestCase extends TuleapTestCase {
 
         $GLOBALS['sys_https_host'] = 'localhost';
         PermissionsManager::setInstance(new MockPermissionsManager());
+        
+        $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
+        stub($this->gitExec)->push()->returns(true);
+        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec);
     }
     
     public function tearDown() {
@@ -67,7 +71,10 @@ class GitoliteTestCase extends TuleapTestCase {
     }
     
     public function assertEmptyGitStatus() {
+        $cwd = getcwd();
+        chdir($this->_glAdmDir);
         exec('git status --porcelain', $output, $ret_val);
+        chdir($cwd);
         $this->assertEqual($output, array());
         $this->assertEqual($ret_val, 0);
     }
@@ -103,12 +110,6 @@ class GitoliteTestCase extends TuleapTestCase {
         $this->assertTrue(file_exists($new_root_dir . '/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
     }
 
-    public function getPartialMock($className, $methods) {
-        $partialName = $className.'Partial'.uniqid();
-        Mock::generatePartial($className, $partialName, $methods);
-        return new $partialName();
-    }
-
     public function arrayToDar() {
         $argList = func_get_args();
         $dar = new MockDataAccessResult();
@@ -132,8 +133,67 @@ class GitoliteTestCase extends TuleapTestCase {
     }
 }
 
+class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
+        $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
+    }
+    public function testAddUserKey() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
+
+        $this->driver->dumpSSHKeys($user);
+
+        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
+        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
+
+        $this->assertEmptyGitStatus();
+    }
+
+    public function testAddUserWithSeveralKeys() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+
+        $this->driver->dumpSSHKeys($user);
+
+        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
+        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
+        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'));
+        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $this->key2);
+
+        $this->assertEmptyGitStatus();
+    }
+
+    public function testRemoveUserKey() {
+        // User has 2 keys
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // internal push reset the pwd
+        $this->driver->setAdminPath($this->_glAdmDir);
+        
+        // Now back with only one
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // Ensure second key was deleted
+        $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
+
+        $this->assertEmptyGitStatus();
+    }
+
+    public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // After push directory change, so we need to re-changedir
+        $this->driver->setAdminPath($this->_glAdmDir);
+        $this->driver->dumpSSHKeys($user);
+    }
+}
+
 class Git_GitoliteDriverTest extends GitoliteTestCase {
-    
+
     public function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
         file_put_contents($this->_glAdmDir.'/conf/gitolite.conf', '@test = coin'.PHP_EOL);
@@ -141,8 +201,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
 
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $driver->updateMainConfIncludes($prj);
+        $this->driver->updateMainConfIncludes($prj);
 
         $gitoliteConf = file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
         // Original content still here
@@ -150,57 +209,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
-    public function testAddUserKey() {
-        $key = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9HtaylfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVrqH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9ZyT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHnQQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YLRp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== codendiadm@dev';
-        $user = new MockUser($this);
-        $user->setReturnValue('getUserName', 'john_do');
-        $user->expectOnce('getAuthorizedKeys', array(true));
-        $user->setReturnValue('getAuthorizedKeys', array($key));
-
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $driver->initUserKeys($user);
-
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $key);
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function testaddUserWithSeveralKeys() {
-        $key1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9HtaylfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVrqH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9ZyT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHnQQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YLRp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
-        $key2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA00qxJHrLEbrVTEtvC9c7xaeNIV81vxns7T89tGmyocFlPeD2N+uUQ8J90bcv7+aQDo229EWWI7oV6uGqsFXAuWSHHSvl7Am+2/lzVwSkvrVYAKl26Kz505a+W9xMbMKn8B+LFuOg3sjUKeVuz0WiUuKnHhhJUEBW+mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBXiz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6CjlqHs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
-        $user = new MockUser($this);
-        $user->setReturnValue('getUserName', 'john_do');
-        $user->expectOnce('getAuthorizedKeys', array(true));
-        $user->setReturnValue('getAuthorizedKeys', array($key1, $key2));
-
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $driver->initUserKeys($user);
-
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $key1);
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $key2);
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function testRemoveUserKey() {
-        // run previous test to have several keys
-        $this->testaddUserWithSeveralKeys();
-
-        // Now back with only one
-        $this->testAddUserKey();
-
-        // Ensure second key was deleted
-        $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
-
-        $this->assertEmptyGitStatus();
-    }
-    
-    public function testGetMailHookConfig() {
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        
+    public function testGetMailHookConfig() {        
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
         $prj->setReturnValue('getId', 101);
@@ -212,7 +221,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $repo->setName('test_default');
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev.txt'),
-            $driver->fetchMailHookConfig($prj, $repo)
+            $this->driver->fetchMailHookConfig($prj, $repo)
         );
 
         // ShowRev + Mail
@@ -223,7 +232,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail.txt'),
-            $driver->fetchMailHookConfig($prj, $repo)
+            $this->driver->fetchMailHookConfig($prj, $repo)
         );
 
         // ShowRev + Mailprefix
@@ -235,7 +244,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $repo->setMailPrefix('[KOIN] ');
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
-            $driver->fetchMailHookConfig($prj, $repo)
+            $this->driver->fetchMailHookConfig($prj, $repo)
         );
 
         // ShowRev + Mailprefix
@@ -247,7 +256,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $repo->setMailPrefix('["\_o<"] \t');
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
-            $driver->fetchMailHookConfig($prj, $repo)
+            $this->driver->fetchMailHookConfig($prj, $repo)
         );
     }
 
@@ -256,8 +265,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     // 4 has defaults
     // 5 has pimped perms
     public function testDumpProjectRepoPermissions() {
-        $driver = $this->getPartialMock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'));
-        $driver->setAdminPath($this->_glAdmDir);
+        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
+        //$driver->setAdminPath($this->_glAdmDir);
 
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
@@ -306,27 +315,22 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
     }
     
     public function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $unix_name = 'project1';
         
         $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', 'toto');
-        $this->assertEqual('project1/toto/repo', $driver->repoFullName($repo, $unix_name));
+        $this->assertEqual('project1/toto/repo', $this->driver->repoFullName($repo, $unix_name));
         
         $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', '');
-        $this->assertEqual('project1/repo', $driver->repoFullName($repo, $unix_name));
+        $this->assertEqual('project1/repo', $this->driver->repoFullName($repo, $unix_name));
     }    
 
     public function itCanRenameProject() {
-        $driver = $this->getPartialMock('Git_GitoliteDriver', array('gitPush'));
-        $driver->expectOnce('gitPush');
-        $driver->setReturnValue('gitPush', true);
-        $driver->setAdminPath($this->_glAdmDir);
-        
+        $this->gitExec->expectOnce('push');
         
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
         $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/newone.conf'));
         
-        $this->assertTrue($driver->renameProject('legacy', 'newone'));
+        $this->assertTrue($this->driver->renameProject('legacy', 'newone'));
         
         clearstatcache(true, $this->_glAdmDir.'/conf/projects/legacy.conf');
         $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
@@ -355,9 +359,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
             exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
             exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
 
-            $driver = new Git_GitoliteDriver($this->_glAdmDir);
-
-            $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
+            $this->assertTrue($this->driver->fork($name, $old_ns, $new_ns));
             $this->assertRepoIsClonedWithHooks($new_root_dir);
 
             $this->assertWritableByGroup($new_root_dir, 'gitolite');
@@ -379,18 +381,15 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         mkdir($new_root_dir, 0770, true);
         exec('GIT_DIR='. $new_root_dir .' git --bare init --shared=group');
         
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $this->assertFalse($driver->fork($name, $old_ns, $new_ns));
+        $this->assertFalse($this->driver->fork($name, $old_ns, $new_ns));
     }
     
     public function itIsInitializedEvenIfThereIsNoMaster() {
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $this->assertTrue($driver->isInitialized($this->_fixDir.'/headless.git'));
+        $this->assertTrue($this->driver->isInitialized($this->_fixDir.'/headless.git'));
     }
     
     public function itIsNotInitializedldIfThereIsNoValidDirectory() {
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $this->assertFalse($driver->isInitialized($this->_fixDir));
+        $this->assertFalse($this->driver->isInitialized($this->_fixDir));
     }
 }
 
