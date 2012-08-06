@@ -24,12 +24,12 @@ class Tracker_Artifact_Changeset_Comment {
     /**
      * @const Changeset comment format is text.
      */
-    const TEXT_COMMENT = 0;
+    const TEXT_COMMENT = 'text';
     
     /**
      * @const Changeset comment format is HTML
      */
-    const HTML_COMMENT = 1;
+    const HTML_COMMENT = 'html';
 
     public $id;
     /**
