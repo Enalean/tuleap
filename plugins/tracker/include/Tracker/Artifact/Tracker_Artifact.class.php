@@ -883,7 +883,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param User    $submitter         The user who is doing the update
      * @param string  $email             The email of the person who updates the artifact if modification is done in anonymous mode
      * @param boolean $send_notification true if a notification must be sent, false otherwise
-     * @param string  $comment_format     The comment (follow-up) type (text/html)
+     * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
      *
      * @return boolean True if update is done without error, false otherwise
      */

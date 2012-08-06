@@ -930,7 +930,7 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
  * @param int    $artifact_id the ID of the artifact to update
  * @param array{SOAPArtifactFieldValue} $value the fields value to update
  * @param string  $comment     the comment associated with the modification, or null if no follow-up comment.
- * @param string  $comment_format     The comment (follow-up) type (text/html)
+ * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
  *
  * @return int The artifact id if update was fine,
  *              or a soap fault if :
