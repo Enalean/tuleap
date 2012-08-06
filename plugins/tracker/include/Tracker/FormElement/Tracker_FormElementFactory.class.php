@@ -43,12 +43,12 @@ require_once('Tracker_FormElement_Field_PermissionsOnArtifact.class.php');
 require_once('Tracker_FormElement_Field_Burndown.class.php');
 require_once('Tracker_FormElement_Field_Computed.class.php');
 require_once('Tracker_FormElement_Field_CrossReferences.class.php');
+require_once('Tracker_FormElement_Field_WebLink.class.php');
 require_once('Tracker_FormElement_Container_Fieldset.class.php');
 require_once('Tracker_FormElement_Container_Column.class.php');
 require_once('Tracker_FormElement_StaticField_LineBreak.class.php');
 require_once('Tracker_FormElement_StaticField_Separator.class.php');
 require_once('Tracker_FormElement_StaticField_RichText.class.php');
-require_once('Tracker_FormElement_Field_WebLink.class.php');
 
 require_once('common/widget/Widget_Static.class.php');
 
