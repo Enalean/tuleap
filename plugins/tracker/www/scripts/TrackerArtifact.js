@@ -143,7 +143,7 @@ document.observe('dom:loaded', function () {
                         } else {
                             var content = $('tracker_followup_comment_edit_'+id).getValue();
                         }
-                        var format= document.getElementsByName('comment_format'+id)[0].checked? 'text' : 'html';
+                        var format = document.getElementsByName('comment_format'+id)[0].checked? 'text' : 'html';
                         var req = new Ajax.Request(location.href, {
                             parameters: {
                                 func:           'update-comment',
@@ -233,7 +233,6 @@ document.observe('dom:loaded', function () {
             artifact_followup_comment_has_changed = $('tracker_followup_comment_new').value !== '';
         });
         $('tracker_artifact_canned_response_sb').observe('change', function (evt) {
-            $('tracker_followup_comment_new').style.getPropertyValue('display');
             var sb = Event.element(evt);
             var value = '';
             if (artifact_followup_comment_has_changed) {
