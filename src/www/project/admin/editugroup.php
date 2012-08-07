@@ -124,35 +124,39 @@ if (($func=='edit')||($func=='do_create')) {
 
     $allowed = true;
     $em->processEvent('ugroup_update_users_allowed', array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
-    if ($allowed) {
-        echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';
-        echo '<div style="padding-left:10px">';
-        
-        // Get existing members from group
-        $uGroupMgr = new UGroupManager();
-        $uGroup    = $uGroupMgr->getById($request->get('ugroup_id'));
-        $members   = $uGroup->getMembers();
-        if (count($members) > 0) {
-            echo '<form action="ugroup_remove_user.php" method="POST">';
-            echo '<input type="hidden" name="group_id" value="'.$group_id.'">';
-            echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
-            echo '<table>';
-            $i = 0;
-            $hp = Codendi_HTMLPurifier::instance();
-            $userHelper = UserHelper::instance();
-            foreach ($members as $user) {
-                echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
+
+    echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';
+    echo '<div style="padding-left:10px">';
+
+    // Get existing members from group
+    $uGroupMgr = new UGroupManager();
+    $uGroup    = $uGroupMgr->getById($request->get('ugroup_id'));
+    $members   = $uGroup->getMembers();
+    if (count($members) > 0) {
+        echo '<form action="ugroup_remove_user.php" method="POST">';
+        echo '<input type="hidden" name="group_id" value="'.$group_id.'">';
+        echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
+        echo '<table>';
+        $i = 0;
+        $hp = Codendi_HTMLPurifier::instance();
+        $userHelper = UserHelper::instance();
+        foreach ($members as $user) {
+            echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
+            echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
+            if ($allowed) {
                 echo '<td>';
                 project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
                 echo '</td>';
-                echo '</tr>';
             }
-            echo '</table>';
-            echo '</form>';
-        } else {
-            echo $Language->getText('project_admin_editugroup','nobody_yet');
+            echo '</tr>';
         }
+        echo '</table>';
+        echo '</form>';
+    } else {
+        echo $Language->getText('project_admin_editugroup','nobody_yet');
+    }
+
+    if ($allowed) {
         echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup','add_user').'</a></p>';
         echo '</div>';
     }
