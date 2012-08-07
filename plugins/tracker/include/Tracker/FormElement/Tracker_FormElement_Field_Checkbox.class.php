@@ -20,7 +20,8 @@
 
 require_once('Tracker_FormElement_Field_MultiSelectbox.class.php');
 
-class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
+class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox 
+{
     
     
     
@@ -42,7 +43,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
             $submitted_values = $submitted_values_array;
         }
         
-        foreach($this->getBind()->getAllValues() as $id => $value) {
+        foreach ($this->getBind()->getAllValues() as $id => $value) {
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
                 $transition_id = $this->getTransitionId($from, $value->getId());
@@ -97,7 +98,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
     }
 
     /**
-     * Change the type of the multi select box
+     * Change the type of the checkbox
      * @param string $type the new type
      *
      * @return boolean true if the change is allowed and successful
