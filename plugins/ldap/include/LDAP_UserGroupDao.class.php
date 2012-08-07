@@ -159,6 +159,24 @@ extends DataAccessObject
             ' WHERE is_synchronized = 1';
         return $this->retrieve($sql);
     }
+
+    /**
+     * Check if a given ugroup is synchronized with an ldap group
+     *
+     * @param Integer $ugroup_id User group id to check
+     * 
+     * @return Boolean
+     */
+    function isSynchronizedUgroup($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
+            ' WHERE ugroup_id = '.$ugroup_id.' and is_synchronized = 1';
+        $rs  = $this->retrieve($sql);
+        if( !empty($rs) && $rs->rowCount() == 1 ) {            
+            return true;
+        }
+        return false;
+    }
 }
 
 ?>

@@ -93,6 +93,17 @@ extends LDAP_GroupManager
         return $this->getDao()->getSynchronizedUgroups();
     }
 
+	/**
+     * Check if a given ugroup is synchronized with an ldap group
+     *
+     * @param Integer $ugroup_id User group id to check
+     * 
+     * @return Boolean
+     */
+    public function isSynchronizedUgroup($ugroup_id) {
+        return $this->getDao()->isSynchronizedUgroup($ugroup_id);
+    }
+
     /**
      * Return dao
      *
