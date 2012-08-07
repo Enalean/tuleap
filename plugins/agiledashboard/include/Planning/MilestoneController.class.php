@@ -143,7 +143,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds();
         $cross_search_query           = $this->getCrossSearchQuery();
         $view_builder->setHierarchyFactory(Tracker_HierarchyFactory::instance());
-        
+
         $view = $view_builder->build(
             $this->getCurrentUser(),
             $project,

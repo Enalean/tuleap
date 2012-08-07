@@ -38,7 +38,8 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     private $tree_of_card_presenters;
 
     // Presenter properties
-    public $planning;
+    private $planning;
+    private $backlog_actions_presenter;
     public $planning_redirect_parameter = '';
 
 
@@ -48,12 +49,14 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
                                 Tracker_ArtifactFactory    $artifact_factory,
                                 Tracker_FormElementFactory $factory,
                                 User                       $user,
-                                Planning                   $planning,
-                                                           $planning_redirect_param) {
+                                Planning_BacklogActionsPresenter $backlog_actions_presenter,
+                                Planning $planning,
+                                $planning_redirect_parameter) {
         parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory, $user);
 
-        $this->planning                    = $planning;
-        $this->planning_redirect_parameter = $planning_redirect_param;
+        $this->backlog_actions_presenter                    = $backlog_actions_presenter;
+        $this->planning = $planning;
+        $this->planning_redirect_parameter = $planning_redirect_parameter;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) .'/../../templates');
 
         $visitor = new Planning_GroupByParentsVisitor($user);
@@ -64,7 +67,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
 
     public function fetchResultActions() {
-        return $this->renderer->renderToString('backlog-actions', new Planning_BacklogActionsPresenter($this->planning, $this->planning_redirect_parameter));
+        return $this->renderer->renderToString('backlog-actions', $this->backlog_actions_presenter);
     }
 
     protected function fetchTable() {

@@ -20,27 +20,27 @@
 
 class Planning_BacklogActionsPresenter {
     /**
-     * @var Planning
+     * @var Tracker
      */
-    private $planning;
+    private $tracker;
     
-    public $planning_redirect_parameter;
+    private $planning_redirect_parameter;
 
-    public function __construct(Planning $planning, $planning_redirect_parameter) {
-        $this->planning                = $planning;
+    public function __construct(Tracker $tracker = null, $planning_redirect_parameter = null) {
+        $this->tracker                     = $tracker;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
     
     public function getBacklogTracker() {
-        $tracker = $this->planning->getBacklogTracker();
-        if ($tracker && $tracker->userCanView()) {
-            return $tracker;
-        }
-        return null;
+        return $this->tracker;
     }
     
     public function addLabel() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
+    }
+
+    public function planning_redirect_parameter() {
+        return $this->planning_redirect_parameter;
     }
 }
 

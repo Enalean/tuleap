@@ -39,19 +39,29 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
                           Planning $planning,
                           $planning_redirect_parameter) {
     
+        $backlog_hierarchy = $this->hierarchy_factory->getHierarchy(array($backlog_tracker_id));
+
         $report      = $this->getReport($user);
         $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $tracker_ids = $this->hierarchy_factory->getHierarchy(array($backlog_tracker_id))->flatten();
+        $tracker_ids = $backlog_hierarchy->flatten();
         $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $already_planned_artifact_ids);
         $visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
         $artifacts   = $artifacts->accept($visitor);
-        
+
+        $sorted_backlog_tracker_ids = $backlog_hierarchy->sortTrackerIds($tracker_ids);
+        $root_tracker = TrackerFactory::instance()->getTrackerById(array_shift($sorted_backlog_tracker_ids));
+        if (!$root_tracker->userCanView($user)) {
+            $root_tracker = null;
+        }
+        $backlog_actions_presenter = new Planning_BacklogActionsPresenter($root_tracker, $planning_redirect_parameter);
+
         return new Planning_SearchContentView($report, 
                                               $criteria, 
                                               $artifacts, 
                                               Tracker_ArtifactFactory::instance(), 
                                               $this->form_element_factory,
                                               $user,
+                                              $backlog_actions_presenter,
                                               $planning,
                                               $planning_redirect_parameter);        
     }
