@@ -276,8 +276,7 @@ if ($ugroup_id) {
             $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
         }
     } else {
-        // @TODO: i18n
-        $GLOBALS['Response']->addFeedback('error', 'Opration not permitted');
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
         $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit');
     }
 } else {

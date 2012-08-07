@@ -113,8 +113,7 @@ if ($allowed) {
 
     project_admin_footer(array());
 } else {
-    // @TODO: i18n
-    $GLOBALS['Response']->addFeedback('error', 'Opration not permitted');
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
 }
 
