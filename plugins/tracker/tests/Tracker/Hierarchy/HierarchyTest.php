@@ -131,13 +131,13 @@ class Tracker_Hierarchy_SortTest extends TuleapTestCase {
     public function itReturnsEmptyArrayWhenNoHierarchy() {
         $hierarchy = new Tracker_Hierarchy();
 
-        $this->assertEqual(array(), $hierarchy->sortTrackerIds());
+        $this->assertEqual(array(), $hierarchy->sortTrackerIds(array()));
     }
 
     public function itReturnsTheTwoTrackersWhenJustOneRelationShip() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 113);
-        $this->assertEqual(array(112, 113), $hierarchy->sortTrackerIds());
+        $this->assertEqual(array(112, 113), $hierarchy->sortTrackerIds(array(113, 112)));
     }
 
     public function itReturnsTrackersFromTopToBottom() {
@@ -145,7 +145,15 @@ class Tracker_Hierarchy_SortTest extends TuleapTestCase {
         $hierarchy->addRelationship(112, 113);
         $hierarchy->addRelationship(111, 112);
 
-        $this->assertEqual(array(111, 112, 113), $hierarchy->sortTrackerIds());
+        $this->assertEqual(array(111, 112, 113), $hierarchy->sortTrackerIds(array(112, 113, 111)));
+    }
+
+    public function itReturnsTrackersFromTopToBottomAndTrackerNotInHierarchyAtTheEnd() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 113);
+        $hierarchy->addRelationship(111, 112);
+
+        $this->assertEqual(array(111, 112, 113, 667, 668, 666), $hierarchy->sortTrackerIds(array(667, 111, 666, 112, 668, 113)));
     }
 }
 

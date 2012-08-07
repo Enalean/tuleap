@@ -119,11 +119,12 @@ class Tracker_Hierarchy {
 
     /**
      * Returns all trackers defined in hierarchy from the top (older) to bottom
+     * if there are trackers outside hierarchy in the given list, happend to
+     * the end
      *
      * @return Array
      */
-    public function sortTrackerIds() {
-        $tracker_ids = $this->flatten();
+    public function sortTrackerIds(array $tracker_ids) {
         // God will kill plenty of kittens every day that this bug is not fixed:
         // https://bugs.php.net/bug.php?id=50688
         // Ignore all E_WARNING errors during the usort.
