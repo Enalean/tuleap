@@ -70,7 +70,7 @@ class Tracker_FormElement_Field_WebLinkTest extends UnitTestCase {
         $this->assertTrue($string->isValid($artifact, "Du texte"));
     }
     
-    function testIsValid_cr() {
+    function testIsValidCr() {
         $artifact = new MockTracker_Artifact();
         
         $rule_string = new MockRule_String();

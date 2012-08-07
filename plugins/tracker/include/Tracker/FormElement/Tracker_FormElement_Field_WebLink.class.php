@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_WebLink extends Tracker_FormElement_Field_String
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html = '';
-        $html .= parent::fetchArtifactValue($artifact,  $value , $submitted_values);
+        $html .= parent::fetchArtifactValue($artifact, $value, $submitted_values);
         $html .= '<br /><a href="'.$value->getText().'">'.$value->getText().'</a>';
     
         return $html;
