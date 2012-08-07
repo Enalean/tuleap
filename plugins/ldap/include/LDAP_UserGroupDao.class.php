@@ -178,6 +178,24 @@ extends DataAccessObject
         }
         return false;
     }
+
+    /**
+     * Check if a given ugroup is preserving members
+     *
+     * @param Integer $ugroup_id User group id to check
+     *
+     * @return Boolean
+     */
+    function isMembersPreserving($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
+            ' WHERE ugroup_id = '.$ugroup_id.' and bind_option = "preserve_members"';
+        $rs  = $this->retrieve($sql);
+        if( !empty($rs) && $rs->rowCount() == 1 ) {            
+            return true;
+        }
+        return false;
+    }
 }
 
 ?>
