@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -24,6 +23,7 @@ require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php'
 require_once 'ItemCardPresenterCallback.class.php';
 require_once 'GroupByParentsVisitor.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
+require_once 'BacklogActionsPresenter.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
@@ -64,7 +64,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     }
 
     public function fetchResultActions() {
-        return $this->renderer->renderToString('backlog-actions', $this);
+        return $this->renderer->renderToString('backlog-actions', new Planning_BacklogActionsPresenter($this->planning, $this->planning_redirect_parameter));
     }
 
     protected function fetchTable() {
@@ -77,10 +77,6 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
     public function allowedChildrenTypes() {
         return $this->planning->getBacklogTracker();
-    }
-
-    public function addLabel() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
     }
 
     public function setRenderer(TemplateRenderer $renderer) {
