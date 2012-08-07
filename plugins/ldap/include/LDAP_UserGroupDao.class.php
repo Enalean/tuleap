@@ -164,7 +164,7 @@ extends DataAccessObject
      * Check if a given ugroup is synchronized with an ldap group
      *
      * @param Integer $ugroup_id User group id to check
-     * 
+     *
      * @return Boolean
      */
     function isSynchronizedUgroup($ugroup_id) {
