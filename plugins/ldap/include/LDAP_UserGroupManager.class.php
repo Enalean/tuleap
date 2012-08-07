@@ -86,7 +86,7 @@ extends LDAP_GroupManager
 
     /**
      * Retrieve usergrousp having is_synchronized option enabled
-     * 
+     *
      * @return DataAccessResult
      */
     public function getSynchronizedUgroups() {

@@ -99,6 +99,8 @@ abstract class LDAP_GroupManager
      * Set LDAP group distinguish name to be used for further processing
      *
      * @param String $groupDn LDAP group identifier
+     *
+     * @return Void
      */
     public function setGroupDn($groupDn) {
         $this->groupDn = $groupDn;
@@ -125,8 +127,9 @@ abstract class LDAP_GroupManager
      * Link and synchronize a Codendi Group and an LDAP group
      *
      * @param String  $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
-     * @param Boolean $isSynchronized The option to synchrorize the ugroup nightly 
-     * @param Boolean $displayFeedback While set to true, it allows the feedback display 
+     * @param Boolean $isSynchronized The option to synchrorize the ugroup nightly
+     * @param Boolean $displayFeedback While set to true, it allows the feedback display
+     *
      * @return void
      */
     public function bindWithLdap($option='bind', $isSynchronized = false, $displayFeedback = true) {
@@ -324,8 +327,8 @@ abstract class LDAP_GroupManager
      * Save link between Codendi Group and LDAP group
      *
      * @param  String  $bindOption
-     * @param  Boolean $isSynchronized 
-     * 
+     * @param  Boolean $isSynchronized
+     *
      * @return Boolean
      */
     protected function bindWithLdapGroup($bindOption ='bind', $isSynchronized = false)

@@ -54,7 +54,7 @@ EOT;
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column is_synchronized to the table plugin_ldap_ugroup');
         }
-        
+
         $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN bind_option ENUM('bind', 'preserve_members') NOT NULL default 'bind' AFTER is_synchronized";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
@@ -65,7 +65,7 @@ EOT;
     /**
      * Verify the column is added
      *
-     * @return void
+     * @return Void
      */
     public function postUp() {
         if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'is_synchronized')) {
@@ -77,4 +77,5 @@ EOT;
     }
 
 }
+
 ?>
