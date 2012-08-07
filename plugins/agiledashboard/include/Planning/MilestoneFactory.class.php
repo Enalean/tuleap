@@ -20,7 +20,6 @@
 
 require_once 'ArtifactMilestone.class.php';
 require_once 'NoMilestone.class.php';
-require_once 'GroupByParentsVisitor.class.php';
 require_once 'Item.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ArtifactNode.class.php';
 
@@ -97,9 +96,6 @@ class Planning_MilestoneFactory {
         if ($artifact) {
             $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
             $this->removeSubMilestones($user, $artifact, $planned_artifacts);
-
-            $visitor = new Planning_GroupByParentsVisitor($user);
-            $planned_artifacts->accept($visitor);
 
             $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
             return $this->updateMilestoneContextualInfo($user, $milestone);
