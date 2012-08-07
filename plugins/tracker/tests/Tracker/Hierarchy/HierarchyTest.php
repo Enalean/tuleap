@@ -20,34 +20,34 @@
 require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/Hierarchy.class.php';
 
 class Tracker_HierarchyTest extends TuleapTestCase {
-    
+
     public function testWithEmptyHierarchGetLevelyShouldThrowExceptionForAnyTracker() {
         $hierarchy = new Tracker_Hierarchy();
         $this->expectException('Tracker_Hierarchy_NotInHierarchyException');
         $hierarchy->getLevel(1);
     }
-    
+
     public function testGetLevelShouldReturn0ForTheTrackerWithId112() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);
         $level = $hierarchy->getLevel(112);
         $this->assertEqual(0, $level);
     }
-    
+
     public function testGetLevelShouldReturn1ForTheTrackerWithId111() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);
         $level = $hierarchy->getLevel(111);
         $this->assertEqual(1, $level);
     }
-    
+
     public function testWhenConstructedWithArrayOfArrayReverseSouldReturn0() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(111, 112);
         $level = $hierarchy->getLevel(111);
         $this->assertEqual(0, $level);
     }
-    
+
     public function testWithMultilevelHierarchyGetLevelShouldReturn2() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(111, 112);
@@ -55,7 +55,7 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $level = $hierarchy->getLevel(112);
         $this->assertEqual(2, $level);
     }
-    
+
     public function testGetLevelShouldRaiseAnExceptionIfTheHierarchyIsCyclic() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);
@@ -64,14 +64,14 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $this->expectException('Tracker_Hierarchy_CyclicHierarchyException');
         $hierarchy->getLevel(111);
     }
-    
+
     public function testChildCannotBeItsParent() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(111, 111);
         $this->expectException('Tracker_Hierarchy_CyclicHierarchyException');
         $hierarchy->getLevel(111);
     }
-    
+
     public function testGetLevelShouldReturnOForEachRoots() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);
@@ -103,7 +103,7 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $hierarchy->addRelationship(112, 111);
         $this->assertTrue($hierarchy->isChild(112, 111));
     }
-    
+
     public function ItShouldNotBeChild() {
         $hierarchy = new Tracker_Hierarchy();
         $hierarchy->addRelationship(112, 111);
@@ -125,4 +125,28 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $this->assertEqual($hierarchy->flatten(), array(111));
     }
 }
+
+class Tracker_Hierarchy_SortTest extends TuleapTestCase {
+
+    public function itReturnsEmptyArrayWhenNoHierarchy() {
+        $hierarchy = new Tracker_Hierarchy();
+
+        $this->assertEqual(array(), $hierarchy->sortTrackerIds());
+    }
+
+    public function itReturnsTheTwoTrackersWhenJustOneRelationShip() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 113);
+        $this->assertEqual(array(112, 113), $hierarchy->sortTrackerIds());
+    }
+
+    public function itReturnsTrackersFromTopToBottom() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 113);
+        $hierarchy->addRelationship(111, 112);
+
+        $this->assertEqual(array(111, 112, 113), $hierarchy->sortTrackerIds());
+    }
+}
+
 ?>

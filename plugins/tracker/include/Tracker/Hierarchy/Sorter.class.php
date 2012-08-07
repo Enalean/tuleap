@@ -52,7 +52,7 @@ class Tracker_Hierarchy_Sorter {
         $root->setId(0);
         if ($artifacts) {
             list($artifacts_by_id, $artifacts_by_tracker) = $this->indexArtifactsByIdAndTracker($artifacts);
-            $tracker_ids = $hierarchy->sortTrackerIds($tracker_ids);
+            $tracker_ids = $hierarchy->sortTrackerIds();
             $this->organizeArtifactsInTrackerHierarchy($root, $hierarchy, $artifacts_by_id, $artifacts_by_tracker, $tracker_ids);
         }
         return $root;
