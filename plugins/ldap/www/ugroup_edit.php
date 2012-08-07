@@ -88,7 +88,6 @@ if($request->exist('synchronize') && $request->get('synchronize') == 'on') {
 }
 
 
-
 $hp = Codendi_HTMLPurifier::instance();
 
 $btn_update = $Language->getText('plugin_ldap', 'ugroup_edit_btn_update');
@@ -167,7 +166,7 @@ if($request->isPost() && $request->valid($vSubmit)) {
                         echo '<input type="hidden" name="preserve_members" value="on" />';
                     }
                     if($synchro == true) {
-                        echo '<input type="hidden" name="sychronize" value="on" />';
+                        echo '<input type="hidden" name="synchronize" value="on" />';
                     }
                     echo '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
                     echo '<input type="submit" name="submit" value="'.$btn_update.'" />';
