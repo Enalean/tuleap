@@ -105,6 +105,17 @@ extends LDAP_GroupManager
     }
 
     /**
+     * Check if a given ugroup is preserving members
+     *
+     * @param Integer $ugroup_id User group id to check
+     *
+     * @return Boolean
+     */
+    public function isMembersPreserving($ugroup_id)  {
+        return $this->getDao()->isMembersPreserving($ugroup_id) ;
+    }
+
+    /**
      * Return dao
      *
      * @return LDAP_UserGroupDao

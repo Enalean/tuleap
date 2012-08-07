@@ -236,7 +236,12 @@ echo '<input type="hidden" name="func" value="'.$func.'" />';
 
 
 echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_bind_with_group').' <input type="text" name="bind_with_group" id="group_add" value="'.$clean_ldapGroupName.'"  size="60" /></p>';
+
+if ($ldapUserGroupManager->isMembersPreserving($ugroupId)) {
+echo '<p><input type="checkbox" id="preserve_members" name="preserve_members" checked/>';
+} else {
 echo '<p><input type="checkbox" id="preserve_members" name="preserve_members" />';
+}
 echo '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label></p>';
 
 if ($ldapUserGroupManager->isSynchronizedUgroup($ugroupId)) {
