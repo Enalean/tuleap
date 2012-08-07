@@ -740,8 +740,8 @@ class LdapPlugin extends Plugin {
                 $baseUrl = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'];
 
                 $linkAdd = '';
-                // @TODO: check if the ugroup is binded
-                if (true) {
+                // @TODO: check if it's binded too
+                if (!$ldapUserGroupManager->isSynchronizedUgroup($params['row']['ugroup_id'])) {
                     $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
                     $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a><br/>';
                 }
@@ -813,8 +813,13 @@ class LdapPlugin extends Plugin {
      * @return Void
      */
     function ugroup_update_users_allowed(array $params) {
-        // @TODO: check if the ugroup is binded
-        $params['allowed'] = true;
+        if ($params['ugroup_id']) {
+            $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+            // @TODO: check if it's binded too
+            if ($ldapUserGroupManager->isSynchronizedUgroup($params['ugroup_id'])) {
+                $params['allowed'] = false;
+            }
+        }
     }
 
     /**
