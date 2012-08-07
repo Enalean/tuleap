@@ -23,18 +23,26 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
 
 if ($ugroup_id) {
-    $res = ugroup_db_get_ugroup($ugroup_id);
-    if ($res) {
-        $user_id = $request->getValidated('user_id', 'uint', 0);
-        if ($user_id) {
-            ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
+    $allowed = true;
+    $em->processEvent('ugroup_update_users_allowed', array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
+    if ($allowed) {
+        $res = ugroup_db_get_ugroup($ugroup_id);
+        if ($res) {
+            $user_id = $request->getValidated('user_id', 'uint', 0);
+            if ($user_id) {
+                ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
+            }
+            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit');
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));
+            $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
         }
-        $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit');
     } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));
-        $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
+        // @TODO: i18n
+        $GLOBALS['Response']->addFeedback('error', 'Opration not permitted');
+        $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit');
     }
 } else {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));

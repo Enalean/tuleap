@@ -90,10 +90,11 @@ class LdapPlugin extends Plugin {
         $this->_addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->_addHook('ugroup_table_title', 'ugroup_table_title', false);
-        $this->_addHook('ugroup_table_row', 'ugroup_table_row', false);
-        $this->_addHook('project_admin_add_user_form', 'project_admin_add_user_form', false);
-        
+        $this->_addHook('ugroup_table_title',            'ugroup_table_title',          false);
+        $this->_addHook('ugroup_table_row',              'ugroup_table_row',            false);
+        $this->_addHook('project_admin_add_user_form',   'project_admin_add_user_form', false);
+        $this->_addHook('ugroup_update_users_allowed',   'ugroup_update_users_allowed', false);
+
         // Svn intro
         $this->_addHook('svn_intro', 'svn_intro', false);
         $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
@@ -737,10 +738,14 @@ class LdapPlugin extends Plugin {
                 $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
                 
                 $baseUrl = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'];
-                
-                $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
-                $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a>';
-                
+
+                $linkAdd = '';
+                // @TODO: check if the ugroup is binded
+                if (true) {
+                    $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
+                    $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a><br/>';
+                }
+
                 $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($params['row']['ugroup_id']);
                 if($ldapGroup !== null) {
                     $grpName = $hp->purify($ldapGroup->getCommonName());
@@ -752,7 +757,7 @@ class LdapPlugin extends Plugin {
                 $urlBind = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'].'&func=bind_with_group';
                 $linkBind = '<a href="'.$urlBind.'">- '.$title.'</a>';
                 
-                $link = $linkAdd.'<br/>'.$linkBind;
+                $link = $linkAdd.$linkBind;
                 
                 $params['html_array'][150] = array('value' => $link, 'html_attrs' => 'align="center"');
             }
@@ -798,6 +803,18 @@ class LdapPlugin extends Plugin {
 
             echo $html;
         }
+    }
+
+    /**
+     * Check if adding or deleting users from the ugroup is allowed
+     *
+     * @param Array $params
+     *
+     * @return Void
+     */
+    function ugroup_update_users_allowed(array $params) {
+        // @TODO: check if the ugroup is binded
+        $params['allowed'] = true;
     }
 
     /**

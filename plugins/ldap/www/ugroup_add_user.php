@@ -61,53 +61,61 @@ if($res && !db_error($res) && db_numrows($res) == 1) {
 }
 $group_id = $row['group_id'];
 
-$ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
-$ldapUserGroupManager->setId($ugroupId);
+$allowed = true;
+$em->processEvent('ugroup_update_users_allowed', array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
+if ($allowed) {
+    $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+    $ldapUserGroupManager->setId($ugroupId);
 
 
-$hp = Codendi_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
 
-$btn_update = $Language->getText('plugin_ldap', 'ugroup_edit_btn_update');
-$vSubmit = new Valid_WhiteList('submit', array($btn_update));
-$vSubmit->required();
-if($request->isPost() && $request->valid($vSubmit)) {
-    if($request->get('submit') == $btn_update) {
-            $vUserAdd = new Valid_String('user_add');
-            $vUserAdd->required();
-            if($request->valid($vUserAdd)) {
-                $ldapUserGroupManager->addListOfUsersToGroup($request->get('user_add'));
-            }
+    $btn_update = $Language->getText('plugin_ldap', 'ugroup_edit_btn_update');
+    $vSubmit = new Valid_WhiteList('submit', array($btn_update));
+    $vSubmit->required();
+    if($request->isPost() && $request->valid($vSubmit)) {
+        if($request->get('submit') == $btn_update) {
+                $vUserAdd = new Valid_String('user_add');
+                $vUserAdd->required();
+                if($request->valid($vUserAdd)) {
+                    $ldapUserGroupManager->addListOfUsersToGroup($request->get('user_add'));
+                }
+        }
     }
+
+    //
+    // Display
+    //
+
+    $ugroupRow  = ugroup_db_get_ugroup($ugroupId) ;
+    $ugroupName = util_translate_name_ugroup($row['name']);
+    $clean_ugroupName = $hp->purify($ugroupName);
+
+    project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id));
+
+    echo '<h2>'.$Language->getText('project_admin_editugroup','ug_admin', $clean_ugroupName).'</h2>';
+
+    echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_add_users_help').'</p>';
+
+    echo '<form name="plugin_ldap_edit_ugroup" method="post" action="">';
+    echo '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'" />';
+    echo '<input type="hidden" name="func" value="add_user" />';
+
+    echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_add_users').' <textarea name="user_add" id="user_add" rows="2" cols="60" wrap="soft"/></textarea></p>';
+    echo '<input type="submit" name="submit" value="'.$btn_update.'" />';
+
+    // JS code for autocompletion on "add_user" field defined on top.
+    $js = "new UserAutoCompleter('user_add',
+                            '".util_get_dir_image_theme()."',
+                            true);";
+    $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+    echo '</form>';
+
+    project_admin_footer(array());
+} else {
+    // @TODO: i18n
+    $GLOBALS['Response']->addFeedback('error', 'Opration not permitted');
+    $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
 }
-
-//
-// Display
-//
-
-$ugroupRow  = ugroup_db_get_ugroup($ugroupId) ;
-$ugroupName = util_translate_name_ugroup($row['name']);
-$clean_ugroupName = $hp->purify($ugroupName);
-
-project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','edit_ug'),'group'=>$group_id));
-
-echo '<h2>'.$Language->getText('project_admin_editugroup','ug_admin', $clean_ugroupName).'</h2>';
-
-echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_add_users_help').'</p>';
-
-echo '<form name="plugin_ldap_edit_ugroup" method="post" action="">';
-echo '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'" />';
-echo '<input type="hidden" name="func" value="add_user" />';
-
-echo '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_add_users').' <textarea name="user_add" id="user_add" rows="2" cols="60" wrap="soft"/></textarea></p>';
-echo '<input type="submit" name="submit" value="'.$btn_update.'" />';
-
-// JS code for autocompletion on "add_user" field defined on top.
-$js = "new UserAutoCompleter('user_add',
-                        '".util_get_dir_image_theme()."',
-                        true);";
-$GLOBALS['Response']->includeFooterJavascriptSnippet($js);
-echo '</form>';
-
-project_admin_footer(array());
 
 ?>
