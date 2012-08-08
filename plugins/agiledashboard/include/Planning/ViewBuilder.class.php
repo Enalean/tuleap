@@ -48,7 +48,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
         $visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
         $artifacts   = $artifacts->accept($visitor);
 
-        $backlog_actions_presenter = $this->getBacklogActionsPresenter($user, $backlog_hierarchy, $tracker_ids, $planning_redirect_parameter);
+        $backlog_actions_presenter = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $planning_redirect_parameter);
 
         return new Planning_SearchContentView($report, 
                                               $criteria, 
@@ -64,16 +64,6 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
     public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
     }
-    
-    private function getBacklogActionsPresenter(User $user, Tracker_Hierarchy $backlog_hierarchy, array $backlog_tracker_ids, $planning_redirect_parameter) {
-        $sorted_backlog_tracker_ids = $backlog_hierarchy->sortTrackerIds($backlog_tracker_ids);
-        $root_tracker = TrackerFactory::instance()->getTrackerById(array_shift($sorted_backlog_tracker_ids));
-        if (!$root_tracker->userCanView($user)) {
-            $root_tracker = null;
-        }
-        return new Planning_BacklogActionsPresenter($root_tracker, $planning_redirect_parameter);
-    }
-
 }
 
 ?>
