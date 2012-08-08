@@ -15,9 +15,9 @@ document.observe('dom:loaded', function () {
         });
     });
 
-    Ajax.Responders.register({
-        onCreate: Planning.toggleFeedback,
-        onComplete: Planning.toggleFeedback
-    });
-    Planning.loadSortables(document.body);
+    //Ajax.Responders.register({
+    //    onCreate: Planning.toggleFeedback,
+    //    onComplete: Planning.toggleFeedback
+    //});
+    //Planning.loadSortables(document.body);
 });

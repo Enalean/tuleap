@@ -69,7 +69,6 @@
 .planning-item.planning-draggable > .card > .card-container {
     background: #ffe;
     font-style: normal;
-    cursor: move;
 }
 
 .milestone-content > ul.cards,
@@ -141,4 +140,32 @@
 
 .planning_overcapacity .planning_remaining_effort {
     color: red;
+}
+
+.card-planning-controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity:0.1;
+}
+.card:hover > .card-planning-controls {
+    opacity:0.5;
+}
+.card > .card-planning-controls:hover {
+    opacity:1;
+}
+
+.card-planning-controls > div {
+    padding: 0.5em 0.5em 0em;
+    background: rgba(128, 128, 128, 0.1);
+    -webkit-border-top-left-radius: 1em;
+    -moz-border-radius-topleft: 1em;
+    border-top-left-radius: 1em;
+}
+.card-planning-controls > div > i {
+    cursor: pointer;
+    opacity:0.5;
+}
+.card-planning-controls > div > i:hover {
+    opacity:1;
 }
