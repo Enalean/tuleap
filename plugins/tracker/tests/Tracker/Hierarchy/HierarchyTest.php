@@ -126,6 +126,25 @@ class Tracker_HierarchyTest extends TuleapTestCase {
     }
 }
 
+class Tracker_Hierarchy_GetParentTest extends TuleapTestCase {
+
+    public function itReturnsParent() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(111, 112);
+        $hierarchy->addRelationship(112, 113);
+
+        $this->assertEqual(null, $hierarchy->getParent(111));
+        $this->assertEqual(111, $hierarchy->getParent(112));
+        $this->assertEqual(112, $hierarchy->getParent(113));
+    }
+
+    public function itReturnsNullWhenNoHierarchy() {
+        $hierarchy = new Tracker_Hierarchy();
+
+        $this->assertEqual(null, $hierarchy->getParent(111));
+    }
+}
+
 class Tracker_Hierarchy_SortTest extends TuleapTestCase {
 
     public function itReturnsEmptyArrayWhenNoHierarchy() {
