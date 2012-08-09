@@ -103,6 +103,18 @@ var Planning = {
         }
     }},
 
+    move_to_plan: function (current_item, milestone) {
+        Planning.dropItem(current_item, milestone);
+        $(milestone).down('.milestone-noitems').map(Element.hide);
+    },
+
+    move_to_backlog: function (current_item, milestone) {
+        Planning.removeItem(current_item, milestone);
+        if (! $(milestone).down('.milestone-content > ul.cards > li')) {
+            $(milestone).down('.milestone-noitems').map(Element.show);
+        }
+    },
+
     loadSortables: function (container) {
         (function ($j) {
             var options = {
@@ -115,22 +127,18 @@ var Planning = {
             };
             $j('.backlog-content ul.cards, .milestone-content ul.cards').filter(Planning.doesntHaveDirectChildrenDraggable).sortable(options);
 
-            options.stop = options.stop.wrap(function (wrapped_stop, event, ui) { with (Planning) {
-                wrapped_stop(event, ui);
+            options.stop = options.stop.wrap(function (wrapped_stop, event, ui) {
+                Planning.wrapped_stop(event, ui);
                 var current_item    = ui.item.get(0);
                 var drop_zone       = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
                 var move_to_plan    = $j(drop_zone).hasClass('planning-droppable') && $j(this).parents('.planning-backlog').get(0);
                 var move_to_backlog = $j(drop_zone).hasClass('planning-backlog')   && $j(this).parents('.planning-droppable').get(0);
                 if (move_to_backlog) {
-                    removeItem(current_item, $j(this).parents('.planning-droppable').get(0));
-                    if ($j(this).children().length == 0) {
-                        $j('.milestone-noitems').show();
-                    }
+                    Planning.move_to_backlog(current_item, $j(this).parents('.planning-droppable').get(0));
                 } else if (move_to_plan) {
-                    dropItem(current_item, drop_zone);
-                    $j('.milestone-noitems').hide();
+                    Planning.move_to_plan(current_item, drop_zone);
                 }
-            }});
+            });
 
             options.connectWith = '.milestone-content > ul.cards',
             $j('.backlog-content ul.cards').filter(Planning.hasDirectChildrenDraggable).sortable(options);

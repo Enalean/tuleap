@@ -103,11 +103,12 @@ document.observe('dom:loaded', function (evt) {
         var prev = li.previous();
         var next = li.next();
         var milestone = $$('.milestone-content')[0].down('ul.cards');
-        //todo: ajax
         li.remove();
         milestone.insert(li);
         [li.previous(), li, li.next(), prev, next].map(resetArrows);
         highlightCard(li.down('.card'));
+        Planning.move_to_plan(li, milestone.up('.planning-droppable'));
+        Planning.sort(li);
 
         Event.stop(evt);
     }
