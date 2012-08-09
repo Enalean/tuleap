@@ -552,6 +552,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     if ($artifact = $this->createArtifact($layout, $request, $current_user)) {
                         $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
                         
+                        $this->redirectToParentCreationIfNeeded($artifact, $current_user);
+
                         $artifact->summonArtifactRedirectors($request);
                         
                         if ($request->isAjax()) {
@@ -561,8 +563,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact('. (int)$artifact->getId() .');</script>';
                             exit;
                         } else {
-                            $art_link = '<a href="'.TRACKER_BASE_URL.'/?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($artifact->fetchXRefLink())), CODENDI_PURIFIER_LIGHT);
                             
                             $url_redirection = $this->redirectUrlAfterArtifactSubmission($request, $this->getId(), $artifact->getId());
                             $GLOBALS['Response']->redirect($url_redirection);
@@ -626,7 +627,28 @@ class Tracker implements Tracker_Dispatchable_Interface {
             }
         }
     }
-    
+
+    protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user) {
+        $parent_tracker_id = $this->getHierarchy()->getParent($this->getId());
+        if ($parent_tracker_id) {
+            $parent_tracker = $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
+            if ($parent_tracker) {
+                if (count($artifact->getAllAncestors($current_user)) == 0) {
+                    $art_link = $this->getFormElementFactory()->getAnArtifactLinkField($current_user, $parent_tracker);
+                    if ($art_link) {
+                        $art_link_key = 'artifact['.$art_link->getId().'][new_values]';
+                        $redirect_params = array(
+                            'tracker'     => $parent_tracker_id, 
+                            'func'        => 'new-artifact',
+                            $art_link_key => $artifact->getId()
+                        );
+                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params));
+                    }
+                }
+            }
+        }
+    }
+
     private function getHierarchyController($request) {
         $dao                  = new Tracker_Hierarchy_Dao();
         $tracker_factory      = $this->getTrackerFactory();

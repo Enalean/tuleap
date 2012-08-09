@@ -156,6 +156,8 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFo
 Mock::generate('Tracker_SharedFormElementFactory');
 
 require_once dirname(__FILE__).'/builders/aTracker.php';
+require_once dirname(__FILE__).'/builders/anArtifact.php';
+require_once dirname(__FILE__).'/builders/aMockArtifact.php';
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
     public function exportToXML($root, &$xmlMapping, &$index) {
@@ -1715,6 +1717,72 @@ class Tracker_ArtifactSubmit_RedirectUrlTest extends TuleapTestCase {
         return $tracker->redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
         
     }
+
+}
+
+class Tracker_Test_RedirectToParentCreation extends Tracker {
+    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user) {
+        parent::redirectToParentCreationIfNeeded($artifact, $current_user);
+    }
+}
+
+class Tracker_RedirectToParentCreationTest extends TuleapTestCase {
+    private $tracker_id;
+    private $current_user;
+    private $new_artifact;
+    private $tracker;
+    private $hierarchy;
+    private $tracker_factory;
+    private $formelement_factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id   = 999;
+        $this->current_user = aUser()->build();
+        $this->new_artifact = aMockArtifact()->withId(123)->build();
+        
+        $this->hierarchy           = mock('Tracker_Hierarchy');
+        $this->tracker_factory     = mock('TrackerFactory');
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+                
+        $this->tracker = partial_mock(
+            'Tracker_Test_RedirectToParentCreation', 
+            array('getHierarchy', 'getTrackerFactory', 'getFormElementFactory'));
+        $this->tracker->setId($this->tracker_id);
+        stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
+        stub($this->tracker)->getTrackerFactory()->returns($this->tracker_factory);
+        stub($this->tracker)->getFormElementFactory()->returns($this->formelement_factory);
+        
+        $this->parent_tracker_id = 666;
+        $this->parent_tracker = aTracker()->withId($this->parent_tracker_id)->build();
+        $this->art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
+    }
+
+    public function itDoesRedirectWhenPackageIsComplete() {
+        stub($this->hierarchy)->getParent($this->tracker_id)->returns($this->parent_tracker_id);
+        stub($this->tracker_factory)->getTrackerById($this->parent_tracker_id)->returns($this->parent_tracker);
+        stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->parent_tracker)->returns($this->art_link_field);
+
+        $GLOBALS['Response']->expectOnce('redirect');
+        $this->tracker->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user);
+    }
+
+    public function itDoesntRedirectWhenNewArtifactAlreadyHasAParent() {
+        stub($this->new_artifact)->getAllAncestors()->returns(array(aMockArtifact()->build()));
+        
+        stub($this->hierarchy)->getParent()->returns($this->parent_tracker_id);
+        stub($this->tracker_factory)->getTrackerById()->returns($this->parent_tracker);
+        stub($this->formelement_factory)->getAnArtifactLinkField()->returns($this->art_link_field);
+
+        $GLOBALS['Response']->expectNever('redirect');
+        $this->tracker->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user);
+    }
+
+    public function itDoesntRedirectIfThereAreNoHierarchy() {
+        $GLOBALS['Response']->expectNever('redirect');
+        $this->tracker->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user);
+    }
+    
 
 }
 
