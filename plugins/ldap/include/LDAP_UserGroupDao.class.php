@@ -156,8 +156,8 @@ extends DataAccessObject
      * @return DataAccessResult
      */
     function getSynchronizedUgroups() {
-        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
-            ' WHERE is_synchronized = 1';
+        $sql = 'SELECT * FROM plugin_ldap_ugroup
+                WHERE is_synchronized = 1';
         return $this->retrieve($sql);
     }
 
@@ -170,10 +170,10 @@ extends DataAccessObject
      */
     function isSynchronizedUgroup($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
-            ' WHERE ugroup_id = '.$ugroup_id.' and is_synchronized = 1';
+        $sql = 'SELECT * FROM plugin_ldap_ugroup
+                WHERE ugroup_id = '.$ugroup_id.' and is_synchronized = 1';
         $rs  = $this->retrieve($sql);
-        if( !empty($rs) && $rs->rowCount() == 1 ) {            
+        if(!empty($rs) && $rs->rowCount() == 1) {
             return true;
         }
         return false;
@@ -188,14 +188,15 @@ extends DataAccessObject
      */
     function isMembersPreserving($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql = 'SELECT * FROM plugin_ldap_ugroup'.
-            ' WHERE ugroup_id = '.$ugroup_id.' and bind_option = "preserve_members"';
+        $sql = 'SELECT * FROM plugin_ldap_ugroup
+                WHERE ugroup_id = '.$ugroup_id.' and bind_option = "preserve_members"';
         $rs  = $this->retrieve($sql);
-        if( !empty($rs) && $rs->rowCount() == 1 ) {            
+        if(!empty($rs) && $rs->rowCount() == 1) {
             return true;
         }
         return false;
     }
+
 }
 
 ?>
