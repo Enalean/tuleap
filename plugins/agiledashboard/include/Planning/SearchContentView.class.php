@@ -70,6 +70,11 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         return $this->renderer->renderToString('backlog-actions', $this->backlog_actions_presenter);
     }
 
+    protected function fetchNoMatchingArtifacts() {
+        //we need the empty structure to be able to remove item from the plan
+        return parent::fetchNoMatchingArtifacts() . $this->fetchTable();
+    }
+
     protected function fetchTable() {
         return $this->renderer->renderToString('backlog', $this);
     }

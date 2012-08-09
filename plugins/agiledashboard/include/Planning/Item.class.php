@@ -117,6 +117,13 @@ class Planning_Item {
         return $this->artifact;
     }
     
+    /**
+     * @return int
+     */
+    public function getAncestorId() {
+        return $this->artifact->getAncestorId();
+    }
+    
     /** 
      * Checks whether or not this item can be assigned to a milestone.
      * 

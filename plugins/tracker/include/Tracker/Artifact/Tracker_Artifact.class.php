@@ -1297,6 +1297,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->getHierarchyFactory()->getAllAncestors($user, $this);
     }
 
+    /**
+     * @return int
+     */
+    public function getAncestorId() {
+        $user     = UserManager::instance()->getCurrentUser();
+        $ancestor = array_shift($this->getAllAncestors($user));
+        if ($ancestor) {
+            return $ancestor->getId();
+        }
+        return 0;
+    }
+
     public function getSiblings(User $user) {
         return $this->getHierarchyFactory()->getSiblings($user, $this);
     }

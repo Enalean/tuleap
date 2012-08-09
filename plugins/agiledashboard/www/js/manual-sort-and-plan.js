@@ -36,23 +36,28 @@ document.observe('dom:loaded', function (evt) {
         //window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
     }
 
+    /**
+     * resetArrows(elem1, elem2, elem3);
+     */
     function resetArrows(li) {
-        if (li) {
-            var controls = li.down('.card').down('.card-planning-controls');
-            controls.select('i').each(function (i) { i.setStyle({visibility: 'hidden'}); });
-            if (li.nextSiblings().size()) {
-                controls.down('i.icon-arrow-down').setStyle({visibility: 'visible'});
+        $A(arguments).each(function (li) {
+            if (li) {
+                var controls = li.down('.card').down('.card-planning-controls');
+                controls.select('i').each(function (i) { i.setStyle({visibility: 'hidden'}); });
+                if (li.nextSiblings().size()) {
+                    controls.down('i.icon-arrow-down').setStyle({visibility: 'visible'});
+                }
+                if (li.previousSiblings().size()) {
+                    controls.down('i.icon-arrow-up').setStyle({visibility: 'visible'});
+                }
+                if (li.hasClassName('planning-draggable') && li.up('.backlog-content')) {
+                    controls.down('i.icon-arrow-right').setStyle({visibility: 'visible'});
+                }
+                if (li.hasClassName('planning-draggable') && li.up('.milestone-content')) {
+                    controls.down('i.icon-arrow-left').setStyle({visibility: 'visible'});
+                }
             }
-            if (li.previousSiblings().size()) {
-                controls.down('i.icon-arrow-up').setStyle({visibility: 'visible'});
-            }
-            if (li.hasClassName('planning-draggable') && li.up('.backlog-content')) {
-                controls.down('i.icon-arrow-right').setStyle({visibility: 'visible'});
-            }
-            if (li.hasClassName('planning-draggable') && li.up('.milestone-content')) {
-                controls.down('i.icon-arrow-left').setStyle({visibility: 'visible'});
-            }
-        }
+        });
     }
 
     function moveUp(evt) {
@@ -62,7 +67,7 @@ document.observe('dom:loaded', function (evt) {
         if (prev) {
             li.remove();
             prev.insert({ before: li });
-            [li.previous(), li, li.next()].map(resetArrows);
+            resetArrows(li.previous(), li, li.next());
 
             scrollViewport(li, offset);
             highlightCard(li.down('.card'));
@@ -78,7 +83,7 @@ document.observe('dom:loaded', function (evt) {
         if (next) {
             li.remove();
             next.insert({ after: li });
-            [li.previous(), li, li.next()].map(resetArrows);
+            resetArrows(li.previous(), li, li.next());
 
             scrollViewport(li, offset);
             highlightCard(li.down('.card'));
@@ -88,13 +93,17 @@ document.observe('dom:loaded', function (evt) {
     }
 
     function moveToBacklog(evt) {
-        var li   = Event.element(evt).up('.card').up('li');
-        var prev = li.previous();
-        var next = li.next();
-        var backlog = $$('.backlog-content')[0].down('ul.cards');
-        //todo: ajax
-        // how do we know where to put the card?
-
+        var li       = Event.element(evt).up('.card').up('li'),
+            prev     = li.previous(),
+            next     = li.next(),
+            milestone = li.up('.planning-droppable'),
+            ancestor = $('art-' + li.readAttribute('data-ancestor-id')) || $$('.backlog-content')[0];
+        if (ancestor) {
+            li.remove();
+            ancestor.down('ul.cards').insert({ top: li });
+            resetArrows(li.previous(), li, li.next(), prev, next);
+            Planning.move_to_backlog(li, milestone);
+        }
         Event.stop(evt);
     }
 
@@ -102,10 +111,10 @@ document.observe('dom:loaded', function (evt) {
         var li   = Event.element(evt).up('.card').up('li');
         var prev = li.previous();
         var next = li.next();
-        var milestone = $$('.milestone-content')[0].down('ul.cards');
+        var milestone = $$('.milestone-content > ul.cards')[0];
         li.remove();
         milestone.insert(li);
-        [li.previous(), li, li.next(), prev, next].map(resetArrows);
+        resetArrows(li.previous(), li, li.next(), prev, next);
         highlightCard(li.down('.card'));
         Planning.move_to_plan(li, milestone.up('.planning-droppable'));
         Planning.sort(li);

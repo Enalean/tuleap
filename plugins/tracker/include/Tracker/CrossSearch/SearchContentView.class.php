@@ -88,13 +88,17 @@ class Tracker_CrossSearch_SearchContentView {
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
-            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
+            $html .= $this->fetchNoMatchingArtifacts();
         }
         $html .= '</div>';
         
         return $html;
     }
-    
+
+    protected function fetchNoMatchingArtifacts() {
+        return '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
+    }
+
     protected function fetchTable() {
         $html  = '';
         $html .= '<table id="treeTable" class="tree-view">';

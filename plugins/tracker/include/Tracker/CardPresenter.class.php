@@ -59,6 +59,11 @@ interface Tracker_CardPresenter {
     public function getArtifactId();
 
     /**
+     * @var int
+     */
+    public function getAncestorId();
+
+    /**
      * @return Tracker_Artifact
      */
     public function getArtifact();

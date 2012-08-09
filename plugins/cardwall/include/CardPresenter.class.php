@@ -101,6 +101,10 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     public function getArtifact() {
         return $this->artifact;
     }
+    
+    public function getAncestorId() {
+        return $this->artifact->getAncestorId();
+    }
 
     /**
      * @see Tracker_CardPresenter
