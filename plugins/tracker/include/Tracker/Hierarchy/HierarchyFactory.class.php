@@ -168,16 +168,16 @@ class Tracker_HierarchyFactory {
      * @return Array of Tracker_Artifact
      */
     public function getAllAncestors(User $user, Tracker_Artifact $child, array &$stack = array()) {
-        if (!isset($this->cahce_ancestors[$user->getId()][$child->getId()])) {
+        if (!isset($this->cache_ancestors[$user->getId()][$child->getId()])) {
             $parent = $this->getParentArtifact($user, $child);
             if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
-                $this->cahce_ancestors[$user->getId()][$child->getId()] = array();
+                $this->cache_ancestors[$user->getId()][$child->getId()] = array();
             } else {
                 $stack[$parent->getId()] = true;
-                $this->cahce_ancestors[$user->getId()][$child->getId()] = array_merge(array($parent), $this->getAllAncestors($user, $parent, $stack));
+                $this->cache_ancestors[$user->getId()][$child->getId()] = array_merge(array($parent), $this->getAllAncestors($user, $parent, $stack));
             }
         }
-        return $this->cahce_ancestors[$user->getId()][$child->getId()];
+        return $this->cache_ancestors[$user->getId()][$child->getId()];
     }
 
     /**
