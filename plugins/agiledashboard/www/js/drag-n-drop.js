@@ -105,13 +105,13 @@ var Planning = {
 
     move_to_plan: function (current_item, milestone) {
         Planning.dropItem(current_item, milestone);
-        $(milestone).down('.milestone-noitems').map(Element.hide);
+        $(milestone).down('.milestone-noitems').hide();
     },
 
     move_to_backlog: function (current_item, milestone) {
         Planning.removeItem(current_item, milestone);
         if (! $(milestone).down('.milestone-content > ul.cards > li')) {
-            $(milestone).down('.milestone-noitems').map(Element.show);
+            $(milestone).down('.milestone-noitems').show();
         }
     },
 
