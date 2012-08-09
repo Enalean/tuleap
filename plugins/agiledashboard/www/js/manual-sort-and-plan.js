@@ -19,6 +19,23 @@
 
 
 document.observe('dom:loaded', function (evt) {
+    function highlightCard(element) {
+        new Effect.OuterGlow(element, {
+            duration: 1,
+            startcolor: "#D9EDF7",
+            queue: {
+                position: 'end',
+                scope: 'sort',
+                limit: 1
+            }
+        });
+    }
+
+    function scrollViewport(element, previous_offset) {
+        var delta = element.viewportOffset().top - previous_offset.top;
+        //window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
+    }
+
     function resetArrows(li) {
         if (li) {
             var controls = li.down('.card').down('.card-planning-controls');
@@ -50,8 +67,8 @@ document.observe('dom:loaded', function (evt) {
             resetArrows(li);
             resetArrows(li.next());
 
-            var delta = li.viewportOffset().top - offset.top;
-            window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
+            scrollViewport(li, offset);
+            highlightCard(li.down('.card'));
         }
         Event.stop(evt);
     }
@@ -68,8 +85,8 @@ document.observe('dom:loaded', function (evt) {
             resetArrows(li);
             resetArrows(li.next());
 
-            var delta = li.viewportOffset().top - offset.top;
-            window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
+            scrollViewport(li, offset);
+            highlightCard(li.down('.card'));
         }
         Event.stop(evt);
     }
@@ -98,6 +115,7 @@ document.observe('dom:loaded', function (evt) {
         resetArrows(li.next());
         resetArrows(prev);
         resetArrows(next);
+        highlightCard(li.down('.card'));
 
         Event.stop(evt);
     }
@@ -122,4 +140,19 @@ document.observe('dom:loaded', function (evt) {
             if (element.hasClassName('icon-arrow-right')) moveToMilestone(evt);
         });
     });
+});
+
+
+Effect.OuterGlow = Class.create(Effect.Highlight, {
+  setup: function() {
+    // Prevent executing on elements not in the layout flow
+    if (this.element.getStyle('display')=='none') { this.cancel(); return; }
+    this.oldStyle = { boxShadow: this.element.getStyle('box-shadow') };
+  },
+  update: function(position) {
+    this.element.setStyle({ boxShadow: '0px 0px ' + Math.round(30 - 30 * position) + 'px ' + this.options.startcolor });
+  },
+  finish: function() {
+    this.element.setStyle(this.oldStyle);
+  }
 });
