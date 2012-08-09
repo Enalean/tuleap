@@ -1289,6 +1289,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Returns all ancestors of current artifact (from direct parent to oldest ancestor)
+     *
      * @param User $user
      *
      * @return Array of Tracker_Artifact
@@ -1309,6 +1311,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return 0;
     }
 
+    /**
+     * Return the parent artifact of current artifact if any
+     *
+     * @param User $user
+     * 
+     * @return Tracker_Artifact
+     */
+    public function getParent(User $user) {
+        return array_shift($this->getAllAncestors($user));
+    }
+
+    /**
+     * Get artifacts
+     * 
+     * @param User $user
+     *
+     * @return Array of Tracker_Artifact
+     */
     public function getSiblings(User $user) {
         return $this->getHierarchyFactory()->getSiblings($user, $this);
     }
