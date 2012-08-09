@@ -120,6 +120,8 @@ document.observe('dom:loaded', function (evt) {
         Event.stop(evt);
     }
 
+    var milestone_content = $$('.milestone-content')[0]
+        , milestone_title = milestone_content ? milestone_content.up('td').down('h3').innerHTML : '';
     $$('.backlog-content .card', '.milestone-content .card').each(function (card) {
         var controls = new Element('div')
             .addClassName('card-planning-controls')
@@ -127,7 +129,7 @@ document.observe('dom:loaded', function (evt) {
                 '<i class="icon-arrow-left" title="move to backlog"></i>' +
                 '<i class="icon-arrow-down" title="move down"></i>' +
                 '<i class="icon-arrow-up" title="move up"></i>' +
-                '<i class="icon-arrow-right" title="move to milestone"></i>' +
+                '<i class="icon-arrow-right" title="move to ' + milestone_title + '"></i>' +
                 '</div>'
             );
         card.insert(controls);
