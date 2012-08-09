@@ -159,7 +159,12 @@ class Tracker_HierarchyFactory {
     }
 
     /**
-     * Return all hierarchy of parents of an artifact
+     * Return all hierarchy of parents of an artifact (from direct parent to oldest ancestor)
+     *
+     * Epic
+     * `-- Story
+     *     `-- Task
+     * getAllAncestors(User, Task) -> ['Story', 'Epic']
      *
      * @param User $user
      * @param Tracker_Artifact $child

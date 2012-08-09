@@ -1445,4 +1445,31 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->assertFalse($artifact_subass->userCanView($u));
     }
 }
+
+class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
+
+        $this->sprint = anArtifact()->build();
+        $this->sprint->setHierarchyFactory($this->hierarchy_factory);
+    }
+
+    public function itReturnsTheParentArtifactFromAncestors() {
+        $release = anArtifact()->withId(1)->build();
+        $product = anArtifact()->withId(2)->build();
+
+        stub($this->hierarchy_factory)->getAllAncestors()->returns(array($release, $product));
+
+        $this->assertEqual($release, $this->sprint->getParent(aUser()->build()));
+    }
+
+    public function itReturnsNullWhenNoAncestors() {
+        stub($this->hierarchy_factory)->getAllAncestors()->returns(array());
+
+        $this->assertEqual(null, $this->sprint->getParent(aUser()->build()));
+    }
+}
 ?>
