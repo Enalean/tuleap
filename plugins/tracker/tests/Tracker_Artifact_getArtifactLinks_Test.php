@@ -77,14 +77,6 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $this->assertEqual($expected_list, $this->artifact->getLinkedArtifacts($this->user));
     }
 
-    public function _________________itReturnsEmptyArrayIfUserCannotSeeArtifactLinkField() {
-        $field = new MockTracker_FormElement_Field_ArtifactLink();
-        stub($field)->userCanRead($this->user)->returns(false);
-        stub($this->factory)->getAnArtifactLinkField($this->user, $this->tracker)->returns($field);
-
-        $this->assertEqual($this->artifact->getAnArtifactLinkField($this->user), null);
-    }
-
     /**
      * Artifact Links
      * - art 1
