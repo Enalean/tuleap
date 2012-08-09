@@ -60,15 +60,13 @@ document.observe('dom:loaded', function (evt) {
         var offset = li.viewportOffset();
         var prev   = li.previous();
         if (prev) {
-            //todo: ajax
             li.remove();
             prev.insert({ before: li });
-            resetArrows(li.previous());
-            resetArrows(li);
-            resetArrows(li.next());
+            [li.previous(), li, li.next()].map(resetArrows);
 
             scrollViewport(li, offset);
             highlightCard(li.down('.card'));
+            Planning.sort(li);
         }
         Event.stop(evt);
     }
@@ -78,15 +76,13 @@ document.observe('dom:loaded', function (evt) {
         var offset = li.viewportOffset();
         var next = li.next();
         if (next) {
-            //todo: ajax
             li.remove();
             next.insert({ after: li });
-            resetArrows(li.previous());
-            resetArrows(li);
-            resetArrows(li.next());
+            [li.previous(), li, li.next()].map(resetArrows);
 
             scrollViewport(li, offset);
             highlightCard(li.down('.card'));
+            Planning.sort(li);
         }
         Event.stop(evt);
     }
@@ -110,18 +106,14 @@ document.observe('dom:loaded', function (evt) {
         //todo: ajax
         li.remove();
         milestone.insert(li);
-        resetArrows(li.previous());
-        resetArrows(li);
-        resetArrows(li.next());
-        resetArrows(prev);
-        resetArrows(next);
+        [li.previous(), li, li.next(), prev, next].map(resetArrows);
         highlightCard(li.down('.card'));
 
         Event.stop(evt);
     }
 
-    var milestone_content = $$('.milestone-content')[0]
-        , milestone_title = milestone_content ? milestone_content.up('td').down('h3').innerHTML : '';
+    var milestone_content = $$('.milestone-content')[0],
+        milestone_title   = milestone_content ? milestone_content.up('td').down('h3').innerHTML : '';
     $$('.backlog-content .card', '.milestone-content .card').each(function (card) {
         var controls = new Element('div')
             .addClassName('card-planning-controls')
