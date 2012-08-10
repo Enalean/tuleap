@@ -66,13 +66,7 @@ class AgileDashboardPlugin extends Plugin {
         $this->updateBacklogs($params);
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
-            require_once 'Planning/PlanningFactory.class.php';
-            $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
-            if ($planning && $params['redirection']['can_redirect']) {
-                $this->redirectToPlanning($params, $requested_planning, $planning);
-            } else {
-                 $this->setQueryParametersFromRequest($params, $params['redirecton']['query_parameters']);
-            }
+            $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning);
         }
     }
 
@@ -89,13 +83,23 @@ class AgileDashboardPlugin extends Plugin {
         $artifact_linker->linkWithParents($params['request'], $params['artifact']);
     }
 
-    private function redirectToPlanning($params, $requested_planning, Planning $planning) {
+    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning) {
+        require_once 'Planning/PlanningFactory.class.php';
+        $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
+        if ($planning && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_SUBMIT) {
+            $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
+        } else {
+             $this->setQueryParametersFromRequest($request, $redirect->query_parameters);
+        }
+    }
+
+    private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Action_CreateArtifactRedirect $redirect) {
         $redirect_to_artifact = $requested_planning['artifact_id'];
         if ($redirect_to_artifact == -1) {
-            $redirect_to_artifact = $params['artifact']->getId();
+            $redirect_to_artifact = $artifact->getId();
         }
-        $params['redirection']['base_url'] = '/plugins/agiledashboard/';
-        $params['redirection']['query_parameters'] = array(
+        $redirect->base_url = '/plugins/agiledashboard/';
+        $redirect->query_parameters = array(
             'group_id'    => $planning->getGroupId(),
             'planning_id' => $planning->getId(),
             'action'      => 'show',
@@ -104,11 +108,11 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_build_artifact_form_action($params) {
-        $this->setQueryParametersFromRequest($params, $params['query_parameters']);
+        $this->setQueryParametersFromRequest($params['request'], $params['query_parameters']);
     }
 
-    private function setQueryParametersFromRequest($params, &$query_parameters) {
-        $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
+    private function setQueryParametersFromRequest(Codendi_Request $request, &$query_parameters) {
+        $requested_planning = $this->extractPlanningAndArtifactFromRequest($request);
         if ($requested_planning) {
             $key   = 'planning['. $requested_planning['planning_id'] .']';
             $value = $requested_planning['artifact_id'];
@@ -126,11 +130,7 @@ class AgileDashboardPlugin extends Plugin {
             );
         }
     }
-    
-    private function requestCanLeaveTheTracker(Codendi_Request $request) {
-        return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
-    }
-    
+
     /**
      * @return AgileDashboardPluginInfo
      */
