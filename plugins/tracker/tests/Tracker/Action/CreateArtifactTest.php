@@ -22,6 +22,18 @@ require_once dirname(__FILE__).'/../../../include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Action/CreateArtifact.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
+
+class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
+
+    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user) {
+        parent::redirectToParentCreationIfNeeded($artifact, $current_user);
+    }
+
+    public function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
+        return parent::redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
+    }
+}
+
 abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
     protected $tracker;
     protected $artifact_factory;
@@ -32,12 +44,17 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->tracker = mock('Tracker');
-        $this->artifact_factory = mock('Tracker_ArtifactFactory');
-        $this->tracker_factory = mock('TrackerFactory');
+        $this->tracker             = mock('Tracker');
+        $this->artifact_factory    = mock('Tracker_ArtifactFactory');
+        $this->tracker_factory     = mock('TrackerFactory');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
 
-        $this->action = new Tracker_Action_CreateArtifact($this->tracker, $this->artifact_factory, $this->tracker_factory, $this->formelement_factory);
+        $this->action = new Tracker_Action_CreateArtifact_ProtectedToPublic(
+            $this->tracker,
+            $this->artifact_factory,
+            $this->tracker_factory,
+            $this->formelement_factory
+        );
     }
 }
 
@@ -76,17 +93,8 @@ class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_Creat
 
     private function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
         $request = new Codendi_Request($request_data);
-
-
         return $this->action->redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
 
-    }
-
-}
-
-class Tracker_Action_CreateArtifact_Test_RedirectToParentCreation extends Tracker_Action_CreateArtifact {
-    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user) {
-        parent::redirectToParentCreationIfNeeded($artifact, $current_user);
     }
 }
 
@@ -103,8 +111,6 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         $this->new_artifact = aMockArtifact()->withId(123)->build();
 
         $this->hierarchy = mock('Tracker_Hierarchy');
-
-        $this->action    = new Tracker_Action_CreateArtifact_Test_RedirectToParentCreation($this->tracker, $this->artifact_factory, $this->tracker_factory, $this->formelement_factory);
 
         stub($this->tracker)->getId()->returns($this->tracker_id);
         stub($this->tracker)->getHierarchy()->returns($this->hierarchy);

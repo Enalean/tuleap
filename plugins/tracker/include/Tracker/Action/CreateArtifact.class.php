@@ -118,7 +118,7 @@ class Tracker_Action_CreateArtifact {
         }
     }
 
-    public function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
+    protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
         $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
 
