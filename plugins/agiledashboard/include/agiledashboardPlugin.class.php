@@ -68,8 +68,10 @@ class AgileDashboardPlugin extends Plugin {
         if ($requested_planning) {
             require_once 'Planning/PlanningFactory.class.php';
             $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
-            if ($planning && $this->requestCanLeaveTheTracker($params['request'])) {
+            if ($planning && $params['redirection']['can_redirect']) {
                 $this->redirectToPlanning($params, $requested_planning, $planning);
+            } else {
+                 $this->setQueryParametersFromRequest($params, $params['redirecton']['query_parameters']);
             }
         }
     }
@@ -92,20 +94,25 @@ class AgileDashboardPlugin extends Plugin {
         if ($redirect_to_artifact == -1) {
             $redirect_to_artifact = $params['artifact']->getId();
         }
-        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'. http_build_query(array(
+        $params['redirection']['base_url'] = '/plugins/agiledashboard/';
+        $params['redirection']['query_parameters'] = array(
             'group_id'    => $planning->getGroupId(),
             'planning_id' => $planning->getId(),
             'action'      => 'show',
             'aid'         => $redirect_to_artifact,
-        )));
+        );
     }
     
     public function tracker_event_build_artifact_form_action($params) {
+        $this->setQueryParametersFromRequest($params, $params['query_parameters']);
+    }
+
+    private function setQueryParametersFromRequest($params, &$query_parameters) {
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
             $key   = 'planning['. $requested_planning['planning_id'] .']';
             $value = $requested_planning['artifact_id'];
-            $params['query_parameters'][$key] = $value;
+            $query_parameters[$key] = $value;
         }
     }
     

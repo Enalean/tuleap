@@ -40,10 +40,14 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
     protected $tracker_factory;
     protected $formelement_factory;
     protected $action;
+    protected $event_manager;
 
     public function setUp() {
         parent::setUp();
 
+        $this->event_manager = mock('EventManager');
+        EventManager::setInstance($this->event_manager);
+        
         $this->tracker             = mock('Tracker');
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->tracker_factory     = mock('TrackerFactory');
@@ -55,6 +59,11 @@ abstract class Tracker_Action_CreateArtifactTest extends TuleapTestCase {
             $this->tracker_factory,
             $this->formelement_factory
         );
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        EventManager::clearInstance();
     }
 }
 

@@ -19,6 +19,10 @@
  */
 
 class Tracker_Action_CreateArtifact {
+    const STATE_NULL                = 'null';
+    const STATE_CREATE_FROM_OVERLAY = 'from_overlay';
+    const STATE_WILL_CREATE_PARENT  = 'to_parent';
+
     private $tracker;
     private $artifact_factory;
     private $tracker_factory;
@@ -38,26 +42,31 @@ class Tracker_Action_CreateArtifact {
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
         if ($this->tracker->userCanSubmitArtifact($current_user)) {
+            $state    = self::STATE_NULL;
+            if ($request->existAndNonEmpty('link-artifact-id') && ! $request->exist('immediate')) {
+                $state = self::STATE_CREATE_FROM_OVERLAY;
+            }
             $link     = (int) $request->get('link-artifact-id');
             $artifact = $this->createArtifact($layout, $request, $current_user);
             if ($artifact) {
                 $this->associateImmediatelyIfNeeded($artifact, $link, $request->get('immediate'), $current_user);
 
-                $this->redirectToParentCreationIfNeeded($artifact, $current_user);
+                $redirection = $this->redirectToParentCreationIfNeeded($artifact, $current_user);
+                if ($redirection['can_redirect']) {
+                    $redirection = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
+                }
 
-                $artifact->summonArtifactRedirectors($request);
+                $redirection = $artifact->summonArtifactRedirectors($request, $redirection);
 
                 if ($request->isAjax()) {
                     header(json_header(array('aid' => $artifact->getId())));
                     exit;
-                } else if ($link) {
+                } else if ($state == self::STATE_CREATE_FROM_OVERLAY) {
                     echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact(' . (int) $artifact->getId() . ');</script>';
                     exit;
                 } else {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($artifact->fetchXRefLink())), CODENDI_PURIFIER_LIGHT);
-
-                    $url_redirection = $this->redirectUrlAfterArtifactSubmission($request, $this->tracker->getId(), $artifact->getId());
-                    $GLOBALS['Response']->redirect($url_redirection);
+                    $GLOBALS['Response']->redirect($this->getUrlFromRedirection($redirection));
                 }
             }
             $this->tracker->displaySubmit($layout, $request, $current_user, $link);
@@ -65,6 +74,10 @@ class Tracker_Action_CreateArtifact {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         }
+    }
+
+    private function getUrlFromRedirection($redirection) {
+        return $redirection['base_url'].'/?'.  http_build_query($redirection['query_parameters']);
     }
 
     /**
@@ -111,26 +124,31 @@ class Tracker_Action_CreateArtifact {
                             'func'        => 'new-artifact',
                             $art_link_key => $artifact->getId()
                         );
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params));
+                        $redirection['can_redirect'] = false;
+                        $redirection['base_url'] = TRACKER_BASE_URL;
+                        $redirection['query_parameters'] = $redirect_params;
+                        return $redirection;
                     }
                 }
             }
         }
+        $redirection['can_redirect'] = true;
+        $redirection['base_url'] = '';
+        return $redirection;
     }
 
     protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
+        $redirection['base_url'] = TRACKER_BASE_URL;
         $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
+        if ($stay || $continue) {
+            $redirection['can_redirect'] = false;
+        } else {
+            $redirection['can_redirect'] = true;
+        }
+        $redirection['query_parameters'] = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
 
-        $redirect_params = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'          => $request,
-                'query_parameters' => &$redirect_params,
-            )
-        );
-        return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
+        return $redirection;
     }
 
     private function calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue) {

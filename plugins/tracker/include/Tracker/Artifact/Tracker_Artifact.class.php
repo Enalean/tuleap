@@ -1409,14 +1409,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param Codendi_Request $request The request
      */
-    public function summonArtifactRedirectors(Codendi_Request $request) {
+    public function summonArtifactRedirectors(Codendi_Request $request, $redirection) {
         EventManager::instance()->processEvent(
             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
             array(
-                'request'  => $request,
-                'artifact' => $this,
+                'request'     => $request,
+                'artifact'    => $this,
+                'redirection' => &$redirection
             )
         );
+        return $redirection;
     }
 
     private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
