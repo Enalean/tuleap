@@ -32,7 +32,7 @@ document.observe('dom:loaded', function (evt) {
     }
 
     function scrollViewport(element, previous_offset) {
-        var delta = element.viewportOffset().top - previous_offset.top;
+        //var delta = element.viewportOffset().top - previous_offset.top;
         //window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
     }
 
@@ -128,10 +128,10 @@ document.observe('dom:loaded', function (evt) {
         var controls = new Element('div')
             .addClassName('card-planning-controls')
             .update('<div>'+
-                '<i class="icon-arrow-left" title="move to backlog"></i>' +
-                '<i class="icon-arrow-down" title="move down"></i>' +
-                '<i class="icon-arrow-up" title="move up"></i>' +
-                '<i class="icon-arrow-right" title="move to ' + milestone_title + '"></i>' +
+                '<i class="icon-arrow-left" title="'+ codendi.getText('agiledashboard', 'move_backlog') +'"></i>' +
+                '<i class="icon-arrow-down" title="'+ codendi.getText('agiledashboard', 'move_down') +'"></i>' +
+                '<i class="icon-arrow-up" title="'+ codendi.getText('agiledashboard', 'move_up') +'"></i>' +
+                '<i class="icon-arrow-right" title="'+ codendi.getText('agiledashboard', 'move_plan', milestone_title) + '"></i>' +
                 '</div>'
             );
         card.insert(controls);
