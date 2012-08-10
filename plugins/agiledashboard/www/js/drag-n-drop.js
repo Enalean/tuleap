@@ -33,6 +33,30 @@ var Planning = {
         }
     },
 
+    /**
+     * resetArrows(elem1, elem2, elem3);
+     */
+    resetArrows: function (li) {
+        $A(arguments).each(function (li) {
+            if (li) {
+                var controls = li.down('.card').down('.card-planning-controls');
+                controls.select('i').each(function (i) { i.setStyle({visibility: 'hidden'}); });
+                if (li.nextSiblings().size()) {
+                    controls.down('i.icon-arrow-down').setStyle({visibility: 'visible'});
+                }
+                if (li.previousSiblings().size()) {
+                    controls.down('i.icon-arrow-up').setStyle({visibility: 'visible'});
+                }
+                if (li.hasClassName('planning-draggable') && li.up('.backlog-content')) {
+                    controls.down('i.icon-arrow-right').setStyle({visibility: 'visible'});
+                }
+                if (li.hasClassName('planning-draggable') && li.up('.milestone-content')) {
+                    controls.down('i.icon-arrow-left').setStyle({visibility: 'visible'});
+                }
+            }
+        });
+    },
+
     unAssociateArtifactTo: function (sourceId, targetId) {
         Planning.executePlanRequest('unassociate-artifact-to', sourceId, targetId);
     },
@@ -101,6 +125,7 @@ var Planning = {
         } else if (prev) {
             executeSortRequest('lesser-priority-than', getArtifactId(item), getArtifactId(prev));
         }
+        Planning.resetArrows.apply(this, $(item).up().childElements());
     }},
 
     move_to_plan: function (current_item, milestone) {
@@ -120,40 +145,13 @@ var Planning = {
             var options = {
                 placeholder: 'card placeholder',
                 scroll: true,
-                stop: function (event, ui) { with (Planning) {
+                stop: function (event, ui) {
                     var current_item = ui.item.get(0);
-                    sort(current_item);
-                }}
+                    Planning.sort(current_item);
+                }
             };
-            $j('.backlog-content ul.cards, .milestone-content ul.cards').filter(Planning.doesntHaveDirectChildrenDraggable).sortable(options);
-
-            //options.stop = options.stop.wrap(function (wrapped_stop, event, ui) {
-            //    Planning.wrapped_stop(event, ui);
-            //    var current_item    = ui.item.get(0);
-            //    var drop_zone       = ui.item.parents('.planning-droppable').get(0) || ui.item.parents('.planning-backlog').get(0);
-            //    var move_to_plan    = $j(drop_zone).hasClass('planning-droppable') && $j(this).parents('.planning-backlog').get(0);
-            //    var move_to_backlog = $j(drop_zone).hasClass('planning-backlog')   && $j(this).parents('.planning-droppable').get(0);
-            //    if (move_to_backlog) {
-            //        Planning.move_to_backlog(current_item, $j(this).parents('.planning-droppable').get(0));
-            //    } else if (move_to_plan) {
-            //        Planning.move_to_plan(current_item, drop_zone);
-            //    }
-            //});
-            //
-            //options.connectWith = '.milestone-content > ul.cards',
-            //$j('.backlog-content ul.cards').filter(Planning.hasDirectChildrenDraggable).sortable(options);
-            //
-            //options.connectWith = '.backlog-content > ul.cards';
-            //$j('.milestone-content ul.cards').filter(Planning.hasDirectChildrenDraggable).sortable(options);
+            $j('.backlog-content ul.cards, .milestone-content ul.cards').sortable(options);
         })(window.jQuery);
-    },
-
-    hasDirectChildrenDraggable: function () {
-        return window.jQuery(this).children().filter('.planning-draggable').length > 0;
-    },
-
-    doesntHaveDirectChildrenDraggable: function () {
-        return !Planning.hasDirectChildrenDraggable();
     },
 
     getArtifactId: function (card) {

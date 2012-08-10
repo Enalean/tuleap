@@ -19,5 +19,5 @@ document.observe('dom:loaded', function () {
         onCreate: Planning.toggleFeedback,
         onComplete: Planning.toggleFeedback
     });
-    //Planning.loadSortables(document.body);
+    Planning.loadSortables(document.body);
 });
