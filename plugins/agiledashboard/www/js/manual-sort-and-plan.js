@@ -19,6 +19,9 @@
 
 
 document.observe('dom:loaded', function (evt) {
+
+    var enable_highest_lowest_priority = false;
+
     function highlightCard(element) {
         new Effect.OuterGlow(element, {
             duration: 1,
@@ -46,9 +49,11 @@ document.observe('dom:loaded', function (evt) {
                 controls.select('i').each(function (i) { i.setStyle({visibility: 'hidden'}); });
                 if (li.nextSiblings().size()) {
                     controls.down('i.icon-arrow-down').setStyle({visibility: 'visible'});
+                    if (enable_highest_lowest_priority) controls.down('i.icon-circle-arrow-down').setStyle({visibility: 'visible'});
                 }
                 if (li.previousSiblings().size()) {
                     controls.down('i.icon-arrow-up').setStyle({visibility: 'visible'});
+                    if (enable_highest_lowest_priority) controls.down('i.icon-circle-arrow-up').setStyle({visibility: 'visible'});
                 }
                 if (li.hasClassName('planning-draggable') && li.up('.backlog-content')) {
                     controls.down('i.icon-arrow-right').setStyle({visibility: 'visible'});
@@ -129,8 +134,10 @@ document.observe('dom:loaded', function (evt) {
             .addClassName('card-planning-controls')
             .update('<div>'+
                 '<i class="icon-arrow-left" title="'+ codendi.getText('agiledashboard', 'move_backlog') +'"></i>' +
+                (enable_highest_lowest_priority ? ('<i class="icon-circle-arrow-down" title="'+ codendi.getText('agiledashboard', 'move_bottom') +'"></i>') : '') +
                 '<i class="icon-arrow-down" title="'+ codendi.getText('agiledashboard', 'move_down') +'"></i>' +
                 '<i class="icon-arrow-up" title="'+ codendi.getText('agiledashboard', 'move_up') +'"></i>' +
+                (enable_highest_lowest_priority ? ('<i class="icon-circle-arrow-up" title="'+ codendi.getText('agiledashboard', 'move_top') +'"></i>') : '') +
                 '<i class="icon-arrow-right" title="'+ codendi.getText('agiledashboard', 'move_plan', milestone_title) + '"></i>' +
                 '</div>'
             );
@@ -138,10 +145,12 @@ document.observe('dom:loaded', function (evt) {
         resetArrows(card.up('li'));
         controls.observe('click', function (evt) {
             var element = Event.element(evt);
-            if (element.hasClassName('icon-arrow-down'))  moveDown(evt);
-            if (element.hasClassName('icon-arrow-up'))    moveUp(evt);
-            if (element.hasClassName('icon-arrow-left'))  moveToBacklog(evt);
-            if (element.hasClassName('icon-arrow-right')) moveToMilestone(evt);
+            if (element.hasClassName('icon-arrow-down'))        moveDown(evt);
+            if (element.hasClassName('icon-arrow-up'))          moveUp(evt);
+            if (element.hasClassName('icon-circle-arrow-down')) moveBottom(evt);
+            if (element.hasClassName('icon-circle-arrow-up'))   moveTop(evt);
+            if (element.hasClassName('icon-arrow-left'))        moveToBacklog(evt);
+            if (element.hasClassName('icon-arrow-right'))       moveToMilestone(evt);
         });
     });
 });
