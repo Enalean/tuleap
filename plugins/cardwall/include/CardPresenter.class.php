@@ -29,12 +29,18 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     private $artifact;
     
     /**
+     * @var Tracker_Artifact
+     */
+    private $parent;
+    
+    /**
      * @var Tracker_CardFields
      */
     private $card_fields;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields) {
+    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, Tracker_Artifact $parent = null) {
         $this->artifact     = $artifact;
+        $this->parent       = $parent;
         $this->details      = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
         $this->card_fields  = $card_fields;
     }
@@ -103,7 +109,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
     }
     
     public function getAncestorId() {
-        return $this->artifact->getAncestorId();
+        return $this->parent ? $this->parent->getId() : 0;
     }
 
     /**

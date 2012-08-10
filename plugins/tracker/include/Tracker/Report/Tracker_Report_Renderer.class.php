@@ -72,11 +72,15 @@ abstract class Tracker_Report_Renderer {
     
     /**
      * Fetch content of the renderer
-     * @param array $matching_ids
+     *
+     * @param array   $matching_ids
      * @param Request $request
+     * @param bool    $report_can_be_modified
+     * @param User    $user
+     *
      * @return string
      */
-    public abstract function fetch($matching_ids, $request, $report_can_be_modified);
+    public abstract function fetch($matching_ids, $request, $report_can_be_modified, User $user);
     
     /**
      * Process the request

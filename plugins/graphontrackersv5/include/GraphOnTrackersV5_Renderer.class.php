@@ -65,10 +65,10 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * @param Request $request
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
         $html = '';
         $this->initiateSession();
-        $readonly = !$report_can_be_modified || UserManager::instance()->getCurrentUser()->isAnonymous();
+        $readonly = !$report_can_be_modified || $user->isAnonymous();
 
         if (!$readonly && $this->chart_to_edit) {
             $html .= '<script type="text/javascript" src="/plugins/graphontrackersv5/dependencies.js"></script>';

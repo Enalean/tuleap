@@ -62,7 +62,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         $visitor = new Planning_GroupByParentsVisitor($user);
         $this->tree_of_artifacts->accept($visitor);
 
-        $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, new Tracker_CardFields(), 'planning-draggable-toplan'));
+        $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, new Tracker_CardFields(), $user, 'planning-draggable-toplan'));
         $this->tree_of_card_presenters = $card_mapper->map($this->tree_of_artifacts);
     }
 
