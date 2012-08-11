@@ -45,7 +45,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * @var array of Tracker_Artifact
      */
-    protected $ancestors;
+    private $ancestors;
 
     /**
      * @var Tracker
