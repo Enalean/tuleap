@@ -147,8 +147,8 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
-                $this->getPluginPath().'/js/drag-n-drop.js',
-                $this->getPluginPath().'/js/manual-sort-and-plan.js',
+                $this->getPluginPath().'/js/planning.js',
+                $this->getPluginPath().'/js/OuterGlow.js',
                 $this->getPluginPath().'/js/expand-collapse.js',
                 $this->getPluginPath().'/js/planning-view.js',
             )

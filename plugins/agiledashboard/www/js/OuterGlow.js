@@ -17,9 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-    var planner = $('planner');
-    if (planner) {
-        new tuleap.agiledashboard.Planning(planner);
-    }
+Effect.OuterGlow = Class.create(Effect.Highlight, {
+  setup: function() {
+    // Prevent executing on elements not in the layout flow
+    if (this.element.getStyle('display')=='none') { this.cancel(); return; }
+    this.oldStyle = { boxShadow: this.element.getStyle('box-shadow') };
+  },
+  update: function(position) {
+    this.element.setStyle({ boxShadow: '0px 0px ' + Math.round(30 - 30 * position) + 'px ' + this.options.startcolor });
+  },
+  finish: function() {
+    this.element.setStyle(this.oldStyle);
+  }
 });
