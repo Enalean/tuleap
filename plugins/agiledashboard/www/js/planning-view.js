@@ -1,13 +1,16 @@
 
 document.observe('dom:loaded', function () {
 
-    $$('.milestone-content .dropdown').each(function (dropdown) {
-        dropdown.id += '-backlog';
-        var a = dropdown.down('a.dropdown-toggle');
-        if (a) {
-            a.writeAttribute('data-target', a.readAttribute('data-target') + '-backlog');
-        }
-    });
+    function ensureThatIdsAreUniqOnBothPanelsOfThePlanningWithAHack() {
+        $$('.milestone-content .dropdown').each(function (dropdown) {
+            dropdown.id += '-backlog';
+            var a = dropdown.down('a.dropdown-toggle');
+            if (a) {
+                a.writeAttribute('data-target', a.readAttribute('data-target') + '-backlog');
+            }
+        });
+    }
+    ensureThatIdsAreUniqOnBothPanelsOfThePlanningWithAHack();
 
     $$('.planning-artifact-chooser').each(function (select) {
         select.observe('change', function(evt) {
