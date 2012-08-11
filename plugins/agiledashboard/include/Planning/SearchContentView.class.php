@@ -43,19 +43,21 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
     public $planning_redirect_parameter = '';
 
 
-    public function __construct(Tracker_Report             $report,
-                                array                      $criteria,
-                                TreeNode                   $tree_of_artifacts,
-                                Tracker_ArtifactFactory    $artifact_factory,
-                                Tracker_FormElementFactory $factory,
-                                User                       $user,
-                                Planning_BacklogActionsPresenter $backlog_actions_presenter,
-                                Planning $planning,
-                                $planning_redirect_parameter) {
+    public function __construct(
+        Tracker_Report $report,
+        array $criteria,
+        TreeNode $tree_of_artifacts,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $factory,
+        User $user,
+        Planning_BacklogActionsPresenter $backlog_actions_presenter,
+        Planning $planning,
+        $planning_redirect_parameter
+    ) {
         parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory, $user);
 
-        $this->backlog_actions_presenter                    = $backlog_actions_presenter;
-        $this->planning = $planning;
+        $this->backlog_actions_presenter   = $backlog_actions_presenter;
+        $this->planning                    = $planning;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
         $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) .'/../../templates');
 
