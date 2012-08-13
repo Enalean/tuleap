@@ -7,10 +7,11 @@ Version 5.4 (Not released yet)
 	* Make possible the restore into a hidden release in FRS (contrib STMicroelectronics).
 	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
 	* Create 'user' dir (in /var/lib/.../) to store avatars during install
+	* Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
 
 	== Plugins ==
 	* Agiledashboard: 0.47
-	* Tracker: 5.8.12
+	* Tracker: 5.8.13
 	* Cardwall: 0.9.3
 	* Test: 5.4
 	* forumml: 2.6.2
