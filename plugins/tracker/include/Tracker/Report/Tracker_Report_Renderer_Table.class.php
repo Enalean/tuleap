@@ -453,7 +453,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget() {
+    public function fetchWidget(User $user) {
         $html = '';
         $use_data_from_db = true;
         $store_in_session = false;

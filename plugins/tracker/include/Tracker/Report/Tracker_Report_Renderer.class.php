@@ -91,7 +91,7 @@ abstract class Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public abstract function fetchWidget();
+    public abstract function fetchWidget(User $user);
     
     /**
      * Returns the type of this renderer

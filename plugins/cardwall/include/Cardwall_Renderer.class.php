@@ -202,10 +202,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget() {
+    public function fetchWidget(User $user) {
         $this->enable_qr_code = false;
         $html  = '';
-        $html .= $this->fetchCards($this->report->getMatchingIds());
+        $html .= $this->fetchCards($this->report->getMatchingIds(), $user);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
     }
