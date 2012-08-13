@@ -66,7 +66,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         
         $html .= '</ul>';
         return $html;
-    }//*/
+    }
     
     
     /**

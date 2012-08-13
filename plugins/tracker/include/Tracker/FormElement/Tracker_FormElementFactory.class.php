@@ -75,6 +75,7 @@ class Tracker_FormElementFactory {
         'text'     => 'Tracker_FormElement_Field_Text',
         'sb'       => 'Tracker_FormElement_Field_Selectbox',
         'msb'      => 'Tracker_FormElement_Field_MultiSelectbox',
+        'cb'       => 'Tracker_FormElement_Field_Checkbox',
         'date'     => 'Tracker_FormElement_Field_Date',
         'file'     => 'Tracker_FormElement_Field_File',
         'int'      => 'Tracker_FormElement_Field_Integer',
@@ -83,7 +84,6 @@ class Tracker_FormElementFactory {
         'art_link' => 'Tracker_FormElement_Field_ArtifactLink',
         'perm'     => 'Tracker_FormElement_Field_PermissionsOnArtifact',
         'shared'   => 'Tracker_FormElement_Shared',
-        'cb' => 'Tracker_FormElement_Field_Checkbox',
     );
     
     protected $special_classnames     = array(
