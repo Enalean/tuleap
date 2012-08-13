@@ -78,15 +78,19 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
         //window.scrollTo(window.scrollX, Math.max(0, window.scrollY + delta));
     },
 
+    getCardLi: function (evt) {
+        return Event.element(evt).up('.card').up('li')
+    },
+
     moveUp: function(evt) {
-        var li      = Event.element(evt).up('.card').up('li');
+        var li      = this.getCardLi(evt);
         var sibling = li.previous();
         this.moveVertically(li, sibling, 'before');
         Event.stop(evt);
     },
 
     moveDown: function(evt) {
-        var li   = Event.element(evt).up('.card').up('li');
+        var li      = this.getCardLi(evt);
         var sibling = li.next();
         this.moveVertically(li, sibling, 'after');
         Event.stop(evt);
@@ -100,24 +104,20 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
             options[way] = li;
             sibling.insert(options);
 
-            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next());
-
-            var offset = li.viewportOffset();
-            this.scrollViewport(li, offset);
-            this.highlightCard(li.down('.card'));
+            this.resetArrowsAndHighlight(li, li.previous(), li.next());
             this.planning.sort(li);
         }
     },
 
     moveToBacklog: function(evt) {
-        var li       = Event.element(evt).up('.card').up('li'),
+        var li       = this.getCardLi(evt),
             prev     = li.previous(),
             next     = li.next(),
             ancestor = $('art-' + li.readAttribute('data-ancestor-id')) || this.backlog_content;
         if (ancestor) {
             li.remove();
             ancestor.down('ul.cards').insert({ top: li });
-            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next(), prev, next);
+            this.resetArrowsAndHighlight(li, li.previous(), li.next(), prev, next);
             this.planning.moveToBacklog(li);
         }
         Event.stop(evt);
@@ -125,18 +125,22 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
 
     moveToMilestone: function(evt) {
         if (this.milestone) {
-            var li   = Event.element(evt).up('.card').up('li');
+            var li   = this.getCardLi(evt);
             var prev = li.previous();
             var next = li.next();
             li.remove();
             this.milestone_cards.insert(li);
-            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next(), prev, next);
-            this.highlightCard(li.down('.card'));
+            this.resetArrowsAndHighlight(li, li.previous(), li.next(), prev, next);
             this.planning.moveToMilestone(li);
             this.planning.sort(li);
         }
 
         Event.stop(evt);
+    },
+
+    resetArrowsAndHighlight: function (li) {
+        this.resetArrowsAccordingToCardsPositions.apply(this, arguments);
+        this.highlightCard(li.down('.card'));
     },
 
     /**
