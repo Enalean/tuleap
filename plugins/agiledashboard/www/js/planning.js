@@ -41,6 +41,11 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
     },
 
     addControlPanelToCard: function (card) {
+        this.appendArrowsContainer(card);
+        this.resetArrowsAccordingToCardsPositions(card.up('li'));
+    },
+
+    appendArrowsContainer: function (card) {
         var controls = new Element('div')
             .addClassName('card-planning-controls')
             .update('<div>' +
@@ -51,14 +56,15 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
                 '</div>'
             );
         card.insert(controls);
-        this.resetArrowsAccordingToCardsPositions(card.up('li'));
-        controls.observe('click', function (evt) {
-            var element = Event.element(evt);
-            if (element.hasClassName('icon-arrow-down'))  this.moveDown(evt);
-            if (element.hasClassName('icon-arrow-up'))    this.moveUp(evt);
-            if (element.hasClassName('icon-arrow-left'))  this.moveToBacklog(evt);
-            if (element.hasClassName('icon-arrow-right')) this.moveToMilestone(evt);
-        }.bind(this));
+        controls.observe('click', this.clickOnArrows.bind(this));
+    },
+
+    clickOnArrows: function (evt) {
+        var element = Event.element(evt);
+        if (element.hasClassName('icon-arrow-down'))  this.moveDown(evt);
+        if (element.hasClassName('icon-arrow-up'))    this.moveUp(evt);
+        if (element.hasClassName('icon-arrow-left'))  this.moveToBacklog(evt);
+        if (element.hasClassName('icon-arrow-right')) this.moveToMilestone(evt);
     },
 
     highlightCard: function(element) {
