@@ -6,6 +6,7 @@ Version 5.4 (Not released yet)
 	* Fix fatal error raised when creating a followup comment using SOAP (contrib STMicroelectronics).
 	* Make possible the restore into a hidden release in FRS (contrib STMicroelectronics).
 	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
+	* Create 'user' dir (in /var/lib/.../) to store avatars during install
 
 	== Plugins ==
 	* Agiledashboard: 0.46
