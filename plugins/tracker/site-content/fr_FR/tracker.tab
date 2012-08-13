@@ -1081,7 +1081,7 @@ plugin_tracker_formelement_admin	delete_field_impossible	Impossible de supprimer
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
 plugin_tracker_formelement_admin	weblink	Lien web
-plugin_tracker_formelement_admin	weblink_desc	Champs permettant de creer un lien web
+plugin_tracker_formelement_admin	weblink_desc	Champs permettant de créer un lien web
 
 plugin_tracker_formelement_property	hint	Indication
 plugin_tracker_formelement_property	default_value_type	Valeur par défaut
