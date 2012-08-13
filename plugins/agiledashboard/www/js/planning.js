@@ -79,35 +79,34 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
     },
 
     moveUp: function(evt) {
-        var li     = Event.element(evt).up('.card').up('li');
-        var offset = li.viewportOffset();
-        var prev   = li.previous();
-        if (prev) {
-            li.remove();
-            prev.insert({ before: li });
-            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next());
-
-            this.scrollViewport(li, offset);
-            this.highlightCard(li.down('.card'));
-            this.planning.sort(li);
-        }
+        var li      = Event.element(evt).up('.card').up('li');
+        var sibling = li.previous();
+        this.moveVertically(li, sibling, 'before');
         Event.stop(evt);
     },
 
     moveDown: function(evt) {
         var li   = Event.element(evt).up('.card').up('li');
-        var offset = li.viewportOffset();
-        var next = li.next();
-        if (next) {
+        var sibling = li.next();
+        this.moveVertically(li, sibling, 'after');
+        Event.stop(evt);
+    },
+
+    moveVertically: function(li, sibling, way) {
+        if (sibling) {
             li.remove();
-            next.insert({ after: li });
+
+            var options  = { };
+            options[way] = li;
+            sibling.insert(options);
+
             this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next());
 
+            var offset = li.viewportOffset();
             this.scrollViewport(li, offset);
-            this.hghlightCard(li.down('.card'));
+            this.highlightCard(li.down('.card'));
             this.planning.sort(li);
         }
-        Event.stop(evt);
     },
 
     moveToBacklog: function(evt) {
@@ -231,7 +230,7 @@ tuleap.agiledashboard.PlanningRequest = Class.create({
                     .addClassName('feedback_info')
                     .down('li')
                         .update(codendi.locales.agiledashboard.saving_done);
-            window.setTimeout(this.hideFeedback, 5000);
+            window.setTimeout(this.hideFeedback.bind(this), 5000);
         }
     },
 
@@ -295,7 +294,7 @@ tuleap.agiledashboard.PlanningRequest = Class.create({
     errorOccured: function (transport) {
         --this.activeRequestCount;
         codendi.feedback.log('error', transport.responseText);
-    },
+    }
 
 });
 
