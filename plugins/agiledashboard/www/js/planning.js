@@ -20,6 +20,10 @@
 var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
 
+/**
+ * Add the ControlPanel (div that contains the action arrows) on each card.
+ * Manage click on arrows
+ */
 tuleap.agiledashboard.PlanningManualControls = Class.create({
     initialize: function (planning, planner, milestone, milestone_content, milestone_cards) {
         this.planning          = planning;
@@ -47,7 +51,7 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
                 '</div>'
             );
         card.insert(controls);
-        this.resetArrows(card.up('li'));
+        this.resetArrowsAccordingToCardsPositions(card.up('li'));
         controls.observe('click', function (evt) {
             var element = Event.element(evt);
             if (element.hasClassName('icon-arrow-down'))  this.moveDown(evt);
@@ -81,7 +85,7 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
         if (prev) {
             li.remove();
             prev.insert({ before: li });
-            this.resetArrows(li.previous(), li, li.next());
+            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next());
 
             this.scrollViewport(li, offset);
             this.highlightCard(li.down('.card'));
@@ -97,7 +101,7 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
         if (next) {
             li.remove();
             next.insert({ after: li });
-            this.resetArrows(li.previous(), li, li.next());
+            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next());
 
             this.scrollViewport(li, offset);
             this.hghlightCard(li.down('.card'));
@@ -114,7 +118,7 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
         if (ancestor) {
             li.remove();
             ancestor.down('ul.cards').insert({ top: li });
-            this.resetArrows(li.previous(), li, li.next(), prev, next);
+            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next(), prev, next);
             this.planning.moveToBacklog(li);
         }
         Event.stop(evt);
@@ -127,7 +131,7 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
             var next = li.next();
             li.remove();
             this.milestone_cards.insert(li);
-            this.resetArrows(li.previous(), li, li.next(), prev, next);
+            this.resetArrowsAccordingToCardsPositions(li.previous(), li, li.next(), prev, next);
             this.highlightCard(li.down('.card'));
             this.planning.moveToMilestone(li);
             this.planning.sort(li);
@@ -137,27 +141,37 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
     },
 
     /**
-     * resetArrows(elem1, elem2, elem3);
+     * By default all arrows are hidden, display only the relevant ones
+     * resetArrowsAccordingToCardsPositions(elem1, elem2, elem3);
      */
-    resetArrows: function (li) {
+    resetArrowsAccordingToCardsPositions: function (li) {
         $A(arguments).each(function (li) {
             if (li) {
                 var controls = li.down('.card').down('.card-planning-controls');
-                controls.select('i').each(function (i) { i.setStyle({visibility: 'hidden'}); });
-                if (li.nextSiblings().size()) {
-                    controls.down('i.icon-arrow-down').setStyle({visibility: 'visible'});
-                }
-                if (li.previousSiblings().size()) {
-                    controls.down('i.icon-arrow-up').setStyle({visibility: 'visible'});
-                }
-                if (li.hasClassName('planning-draggable') && li.up('.backlog-content')) {
-                    controls.down('i.icon-arrow-right').setStyle({visibility: 'visible'});
-                }
-                if (li.hasClassName('planning-draggable') && li.up('.milestone-content')) {
-                    controls.down('i.icon-arrow-left').setStyle({visibility: 'visible'});
-                }
+                controls.select('i').map(this.hideArrow);
+                this.showArrowsAccordingToPosition(controls, li);
             }
         }.bind(this));
+    },
+    showArrowsAccordingToPosition: function (controls, li) {
+        if (li.nextSiblings().size()) {
+            this.showArrow(controls.down('i.icon-arrow-down'));
+        }
+        if (li.previousSiblings().size()) {
+            this.showArrow(controls.down('i.icon-arrow-up'));
+        }
+        if (li.hasClassName('planning-draggable') && li.up('.backlog-content')) {
+            this.showArrow(controls.down('i.icon-arrow-right'));
+        }
+        if (li.hasClassName('planning-draggable') && li.up('.milestone-content')) {
+            this.showArrow(controls.down('i.icon-arrow-left'));
+        }
+    },
+    hideArrow: function (arrow) {
+        arrow.setStyle({visibility: 'hidden'});
+    },
+    showArrow: function (arrow) {
+        arrow.setStyle({visibility: 'visible'});
     }
 });
 
@@ -178,7 +192,7 @@ tuleap.agiledashboard.PlanningDragNDrop = Class.create({
                 stop: function (event, ui) {
                     var current_item = ui.item.get(0);
                     planning.sort(current_item);
-                    controls.resetArrows.apply(this, $(current_item).up().childElements());
+                    controls.resetArrowsAccordingToCardsPositions.apply(this, $(current_item).up().childElements());
                 }
             };
             $j('.backlog-content ul.cards, .milestone-content ul.cards').sortable(options);
