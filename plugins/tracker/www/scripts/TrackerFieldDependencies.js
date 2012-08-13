@@ -53,6 +53,11 @@ codendi.tracker.rule_forest = {
     },
     isTree: function(field) {
         return this.trees[field] ? true : false;
+    },
+    removeNodeFromTrees: function (field) {
+        if (this.trees[field]) {
+            delete this.trees[field];
+        }
     }
 };
 
@@ -70,16 +75,21 @@ codendi.tracker.RuleNode = Class.create({
         f.element().observe('change', this.onchangeEvent);
     },
     addRule: function(source_value, target_field, target_value) {
+        this.chainSourceAndTargetNodes(target_field);
+        if (!this.targets[target_field].values[source_value]) {
+            this.targets[target_field].values[source_value] = [];
+        }
+        this.targets[target_field].values[source_value].push(target_value);
+    },
+    chainSourceAndTargetNodes: function(target_field) {
         if (!this.targets[target_field]) {
             this.targets[target_field] = {
                 field: codendi.tracker.rule_forest.getNode(target_field, true),
                 values: {}
             }
         }
-        if (!this.targets[target_field].values[source_value]) {
-            this.targets[target_field].values[source_value] = [];
-        }
-        this.targets[target_field].values[source_value].push(target_value);
+        // Once target is connected to source, it's no longer a tree root
+        codendi.tracker.rule_forest.removeNodeFromTrees(target_field);
     },
     process: function() {
         //retrieve selected source values
