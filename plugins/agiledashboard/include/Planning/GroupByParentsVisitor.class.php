@@ -61,7 +61,7 @@ class Planning_GroupByParentsVisitor {
         foreach ($ancestors as $parent) {
             $previous    = $parent_node;
             $parent_node = $this->getParentNode($parent, $cache_alreaydy_built_parents);
-            $parent_node->addChildIfNeeded($previous);
+            $parent_node->addSingularChild($previous);
         }
         return $parent_node;
     }
