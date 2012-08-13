@@ -110,13 +110,14 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
     },
 
     moveToBacklog: function(evt) {
-        var li       = this.getCardLi(evt),
-            prev     = li.previous(),
-            next     = li.next(),
-            ancestor = $('art-' + li.readAttribute('data-ancestor-id')) || this.backlog_content;
+        var li       = this.getCardLi(evt);
+        var prev     = li.previous();
+        var next     = li.next();
+        var ancestor = $('art-' + li.readAttribute('data-ancestor-id')) || this.backlog_content;
         if (ancestor) {
             li.remove();
             ancestor.down('ul.cards').insert({ top: li });
+
             this.resetArrowsAndHighlight(li, li.previous(), li.next(), prev, next);
             this.planning.moveToBacklog(li);
         }
@@ -128,16 +129,22 @@ tuleap.agiledashboard.PlanningManualControls = Class.create({
             var li   = this.getCardLi(evt);
             var prev = li.previous();
             var next = li.next();
+
             li.remove();
             this.milestone_cards.insert(li);
+
             this.resetArrowsAndHighlight(li, li.previous(), li.next(), prev, next);
-            this.planning.moveToMilestone(li);
-            this.planning.sort(li);
+            this.planThenSort(li);
         }
 
         Event.stop(evt);
     },
 
+    planThenSort: function (li) {
+        this.planning.moveToMilestone(li);
+        this.planning.sort(li);
+    },
+    
     resetArrowsAndHighlight: function (li) {
         this.resetArrowsAccordingToCardsPositions.apply(this, arguments);
         this.highlightCard(li.down('.card'));
