@@ -76,10 +76,7 @@ codendi.tracker.RuleNode = Class.create({
     },
     addRule: function(source_value, target_field, target_value) {
         this.chainSourceAndTargetNodes(target_field);
-        if (!this.targets[target_field].values[source_value]) {
-            this.targets[target_field].values[source_value] = [];
-        }
-        this.targets[target_field].values[source_value].push(target_value);
+        this.appendTargetValue(source_value, target_field, target_value);
     },
     chainSourceAndTargetNodes: function(target_field) {
         if (!this.targets[target_field]) {
@@ -90,6 +87,12 @@ codendi.tracker.RuleNode = Class.create({
         }
         // Once target is connected to source, it's no longer a tree root
         codendi.tracker.rule_forest.removeNodeFromTrees(target_field);
+    },
+    appendTargetValue: function (source_value, target_field, target_value) {
+        if (!this.targets[target_field].values[source_value]) {
+            this.targets[target_field].values[source_value] = [];
+        }
+        this.targets[target_field].values[source_value].push(target_value);
     },
     process: function() {
         //retrieve selected source values
