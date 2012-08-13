@@ -19,6 +19,7 @@
  */
 
 require_once 'common/widget/Widget.class.php';
+require_once 'common/widget/WidgetLayoutManager.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report_RendererFactory.class.php';
 
 /**
@@ -45,6 +46,10 @@ abstract class Tracker_Widget_Renderer extends Widget {
         $arrf = Tracker_Report_RendererFactory::instance();
         $store_in_session = false;
         if ($renderer = $arrf->getReportRendererById($this->renderer_id, null, $store_in_session)) {
+            $tracker = $renderer->report->getTracker();
+            $project = $tracker->getProject();
+        }
+        if ($renderer && $tracker->isActive() && $project->isActive()) {
             echo $renderer->fetchWidget();
         } else {
             echo '<em>Renderer does not exist</em>';
