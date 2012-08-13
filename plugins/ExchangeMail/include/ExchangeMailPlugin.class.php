@@ -38,29 +38,33 @@ class ExchangeMailPlugin extends Plugin {
      * @return void
      */
     function sendmail($params) {
+        if (isset($params['header']['To'])) {
+            if ($params['mail'] instanceof Codendi_Mail) {//HTML mail
+                $theMail=$params['mail'];
+            } elseif($params['mail'] instanceof Mail){//Text mail
+                        
+                $theMail = new Codendi_Mail();
+                
+                $theMail->setFrom($params['mail']->getFrom());
+                $theMail->setSubject($params['mail']->getSubject());
+                $theMail->setTo($params['mail']->getTo());
+                if(trim($params['mail']->getBcc())!= "") {
+                    $theMail->setBcc($params['mail']->getBcc());
+                }
+                if(trim($params['mail']->getCc())!= "") {
+                    $theMail->setCc($params['mail']->getCc());
+                }
+                $Mailbody="<pre>".$params['mail']->getBody()."</pre>";
+                $params['mail']->setBody($Mailbody);
+                $theMail->setBody($params['mail']->getBody());        
+            }   
+            $config = $this->getParam();
+            $ZendMail= new ExchangeMail($theMail,$config);
+            $ZendMail->send();
+        } else {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'missing_parameters');
         
-        if($params['mail'] instanceof Codendi_Mail) {//HTML mail
-            $theMail=$params['mail'];
-        } elseif($params['mail'] instanceof Mail){//Text mail
-                    
-            $theMail = new Codendi_Mail();
-            
-            $theMail->setFrom($params['mail']->getFrom());
-            $theMail->setSubject($params['mail']->getSubject());
-            $theMail->setTo($params['mail']->getTo());
-            if(trim($params['mail']->getBcc())!= "") {
-                $theMail->setBcc($params['mail']->getBcc());
-            }
-            if(trim($params['mail']->getCc())!= "") {
-                $theMail->setCc($params['mail']->getCc());
-            }
-            $Mailbody="<pre>".$params['mail']->getBody()."</pre>";
-            $params['mail']->setBody($Mailbody);
-            $theMail->setBody($params['mail']->getBody());        
-        }   
-        $config = $this->getParam();
-        $ZendMail= new ExchangeMail($theMail,$config);
-        $ZendMail->send();
+        }
     }
     
     /**
