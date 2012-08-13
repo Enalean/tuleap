@@ -1,0 +1,5 @@
+plugin_ExchangeMail	descriptor_description	Permet a Tuleap d'envoyer des Zendmails via un serveur mail distant
+plugin_ExchangeMail	descriptor_name	ExchangeMail
+
+plugin_ExchangeMail	title	ExchangeMail
+

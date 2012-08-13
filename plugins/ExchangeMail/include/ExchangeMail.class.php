@@ -15,7 +15,7 @@ require_once("Zend/Mail/Transport/Smtp.php");
  * It allows to send mails in html format
  * 
  */
-class CMail extends Codendi_Mail {
+class ExchangeMail extends Codendi_Mail {
 
     protected $config;
     protected $mail;

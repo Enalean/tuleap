@@ -8,12 +8,12 @@
 require_once 'common/plugin/PluginDescriptor.class.php';
 
 /**
- * CMailPluginDescriptor
+ * ExchangeMailPluginDescriptor
  */
-class CMailPluginDescriptor extends PluginDescriptor {
+class ExchangeMailPluginDescriptor extends PluginDescriptor {
 
     function __construct() {
-        parent::__construct($GLOBALS['Language']->getText('plugin_CMail', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_CMail', 'descriptor_description'));
+        parent::__construct($GLOBALS['Language']->getText('plugin_ExchangeMail', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_ExchangeMail', 'descriptor_description'));
         $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
 }

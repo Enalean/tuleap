@@ -1,0 +1,5 @@
+plugin_ExchangeMail	descriptor_description	Allows Tuleap to send Zendmail via custom mail server
+plugin_ExchangeMail	descriptor_name	ExchangeMail
+
+plugin_ExchangeMail	title	ExchangeMail
+

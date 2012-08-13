@@ -6,14 +6,14 @@
  *
  */
 require_once 'common/plugin/Plugin.class.php';
-require_once 'CMailPluginInfo.class.php';
-require_once 'CMail.class.php';
+require_once 'ExchangeMailPluginInfo.class.php';
+require_once 'ExchangeMail.class.php';
 
 
 /**
- * CMailPlugin
+ * ExchangeMailPlugin
  */
-class CMailPlugin extends Plugin {
+class ExchangeMailPlugin extends Plugin {
 
 
     private  $mail_param;
@@ -59,7 +59,7 @@ class CMailPlugin extends Plugin {
             $theMail->setBody($params['mail']->getBody());        
         }   
         $config = $this->getParam();
-        $ZendMail= new CMail($theMail,$config);
+        $ZendMail= new ExchangeMail($theMail,$config);
         $ZendMail->send();
     }
     
@@ -73,7 +73,7 @@ class CMailPlugin extends Plugin {
             $this->mail_param = array();
             $keys = $this->getPluginInfo()->propertyDescriptors->getKeys()->iterator();
             foreach ($keys as $k) {
-                $nk = str_replace('sys_Cmail_', '', $k);
+                $nk = str_replace('sys_ExchangeMail_', '', $k);
                 $this->mail_param[$nk] = $this->getPluginInfo()->getPropertyValueForName($k);
             }
          }
@@ -82,12 +82,12 @@ class CMailPlugin extends Plugin {
     }
 
     /**
-     * @return CMailPluginInfo
+     * @return ExchangeMailPluginInfo
      */
     function getPluginInfo() {
         if (!$this->pluginInfo) {
  
-            $this->pluginInfo = new CMailPluginInfo($this);
+            $this->pluginInfo = new ExchangeMailPluginInfo($this);
         }
         return $this->pluginInfo;
     }
