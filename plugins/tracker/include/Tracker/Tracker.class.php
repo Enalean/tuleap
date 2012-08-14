@@ -3030,6 +3030,19 @@ EOS;
         $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
         return $hierarchy_factory->getHierarchy(array($this->getId()));
     }
+
+    /**
+     * Return parent tracker of current tracker (if any)
+     *
+     * @return Tracker
+     */
+    public function getParent() {
+        $parent_tracker_id = $this->getHierarchy()->getParent($this->getId());
+        if ($parent_tracker_id) {
+            return $this->getTrackerFactory()->getTrackerById($parent_tracker_id);
+        }
+        return null;
+    }
 }
 
 ?>

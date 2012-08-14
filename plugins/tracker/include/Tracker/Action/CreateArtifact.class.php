@@ -136,22 +136,19 @@ class Tracker_Action_CreateArtifact {
     }
 
     protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Action_CreateArtifactRedirect $redirect) {
-        $parent_tracker_id = $this->tracker->getHierarchy()->getParent($this->tracker->getId());
-        if ($parent_tracker_id) {
-            $parent_tracker = $this->tracker_factory->getTrackerById($parent_tracker_id);
-            if ($parent_tracker) {
-                if (count($artifact->getAllAncestors($current_user)) == 0) {
-                    $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
-                    if ($art_link) {
-                        $art_link_key = 'artifact['.$art_link->getId().'][new_values]';
-                        $redirect_params = array(
-                            'tracker'     => $parent_tracker_id,
-                            'func'        => 'new-artifact',
-                            $art_link_key => $artifact->getId()
-                        );
-                        $redirect->mode             = Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT;
-                        $redirect->query_parameters = $redirect_params;
-                    }
+        $parent_tracker = $this->tracker->getParent();
+        if ($parent_tracker) {
+            if (count($artifact->getAllAncestors($current_user)) == 0) {
+                $art_link = $this->formelement_factory->getAnArtifactLinkField($current_user, $parent_tracker);
+                if ($art_link) {
+                    $art_link_key = 'artifact['.$art_link->getId().'][new_values]';
+                    $redirect_params = array(
+                        'tracker'     => $parent_tracker->getId(),
+                        'func'        => 'new-artifact',
+                        $art_link_key => $artifact->getId()
+                    );
+                    $redirect->mode             = Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT;
+                    $redirect->query_parameters = $redirect_params;
                 }
             }
         }
