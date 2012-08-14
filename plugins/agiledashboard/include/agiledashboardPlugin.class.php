@@ -19,6 +19,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'autoload.php';
 
 /**
  * AgileDashboardPlugin
@@ -52,9 +53,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_trackers_duplicated($params) {
-        require_once 'Planning/PlanningDao.class.php';
         require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
-        require_once 'Planning/PlanningFactory.class.php';
         
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
@@ -66,7 +65,6 @@ class AgileDashboardPlugin extends Plugin {
         $this->updateBacklogs($params);
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
-            require_once 'Planning/PlanningFactory.class.php';
             $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
             if ($planning && $this->requestCanLeaveTheTracker($params['request'])) {
                 $this->redirectToPlanning($params, $requested_planning, $planning);
@@ -82,7 +80,6 @@ class AgileDashboardPlugin extends Plugin {
      * @param array $params
      */
     private function updateBacklogs(array $params) {
-        require_once 'Planning/ArtifactLinker.class.php';
         $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance());
         $artifact_linker->linkWithParents($params['request'], $params['artifact']);
     }
@@ -161,14 +158,12 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        require_once 'AgileDashboardRouter.class.php';
         $router = new AgileDashboardRouter($this);
         $router->route($request);
     }
 
     public function tracker_event_artifact_association_edited($params) {
         if ($params['request']->isAjax()) {
-            require_once AGILEDASHBOARD_BASE_DIR .'/Planning/Milestone.class.php';
             $capacity         = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::CAPACITY_FIELD_NAME);
             $remaining_effort = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::REMAINING_EFFORT_FIELD_NAME);
 

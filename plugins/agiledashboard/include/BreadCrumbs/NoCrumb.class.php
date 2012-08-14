@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BreadCrumbGenerator.class.php';
 
 class BreadCrumb_NoCrumb implements BreadCrumb_BreadCrumbGenerator {
     public function getCrumbs() {

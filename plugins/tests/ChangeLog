@@ -1,3 +1,6 @@
+Version 5.5
+    * First step toward autoloading in order to increase performances
+
 Version 5.4
     * Make unit tests pass with PHP 5.3
 

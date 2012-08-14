@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'PlanningPresenter.class.php';
-require_once 'TrackerPresenter.class.php';
 
 class Planning_FormPresenter extends PlanningPresenter {
     // Manage translation
