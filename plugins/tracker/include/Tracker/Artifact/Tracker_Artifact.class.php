@@ -645,9 +645,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
-                    $this->summonArtifactRedirectors($request);
-
-                    $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
+                    $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
+                    $this->summonArtifactRedirectors($request, $redirect);
+                    $GLOBALS['Response']->redirect($redirect->toUrl());
                 } else {
                     $this->display($layout, $request, $current_user);
                 }
@@ -1376,15 +1376,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $stay     = $request->get('submit_and_stay') ;
         $from_aid = $request->get('from_aid');
 
-        $redirect_params = $this->calculateRedirectParams($stay, $from_aid);
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'          => $request,
-                'query_parameters' => &$redirect_params,
-            )
-        );
-        return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
+        $redirect = new Tracker_Action_CreateArtifactRedirect();
+        $redirect->mode             = Tracker_Action_CreateArtifactRedirect::STATE_SUBMIT;
+        $redirect->base_url         = TRACKER_BASE_URL;
+        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
+        if ($stay) {
+            $redirect->mode = Tracker_Action_CreateArtifactRedirect::STATE_STAY_OR_CONTINUE;
+        }
+        return $redirect;
     }
 
     private function calculateRedirectParams($stay, $from_aid) {

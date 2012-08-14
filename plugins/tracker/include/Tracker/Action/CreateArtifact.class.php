@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class  Tracker_Action_CreateArtifactRedirect {
+class Tracker_Action_CreateArtifactRedirect {
     const STATE_CREATE_PARENT    = 'to_parent';
     const STATE_STAY_OR_CONTINUE = 'stay_continue';
     const STATE_SUBMIT           = 'submit';
