@@ -25,8 +25,8 @@ require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
 
-    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user) {
-        parent::redirectToParentCreationIfNeeded($artifact, $current_user);
+    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Action_CreateArtifactRedirect $redirect) {
+        parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect);
     }
 
     public function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
@@ -72,14 +72,14 @@ class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_Creat
         $request_data = array();
         $tracker_id   = 20;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, null);
-        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $redirect_uri);
+        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $redirect_uri->toUrl());
     }
 
     public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified() {
         $request_data = array('submit_and_stay' => true);
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri);
+        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri->toUrl());
     }
 
     public function itRedirectsToNewArtifactCreationWhen_submitAndContinue_isSpecified() {
@@ -87,9 +87,9 @@ class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_Creat
         $tracker_id  = 73;
         $artifact_id = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertStringBeginsWith($redirect_uri, TRACKER_BASE_URL);
-        $this->assertUriHasArgument($redirect_uri, 'func', 'new-artifact');
-        $this->assertUriHasArgument($redirect_uri, 'tracker', $tracker_id);
+        $this->assertStringBeginsWith($redirect_uri->toUrl(), TRACKER_BASE_URL);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'func', 'new-artifact');
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'tracker', $tracker_id);
     }
 
     public function testSubmitAndContinue() {
@@ -97,13 +97,12 @@ class Tracker_Action_CreateArtifact_RedirectUrlTest extends Tracker_Action_Creat
         $tracker_id   = 73;
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertUriHasArgument($redirect_uri, "func", 'new-artifact');
+        $this->assertUriHasArgument($redirect_uri->toUrl(), "func", 'new-artifact');
     }
 
     private function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
         $request = new Codendi_Request($request_data);
         return $this->action->redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
-
     }
 }
 
@@ -127,6 +126,8 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         $this->parent_tracker_id = 666;
         $this->parent_tracker = aTracker()->withId($this->parent_tracker_id)->build();
         $this->art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
+
+        $this->redirect = new Tracker_Action_CreateArtifactRedirect();
     }
 
     public function itDoesRedirectWhenPackageIsComplete() {
@@ -134,8 +135,8 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         stub($this->tracker_factory)->getTrackerById($this->parent_tracker_id)->returns($this->parent_tracker);
         stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->parent_tracker)->returns($this->art_link_field);
 
-        $GLOBALS['Response']->expectOnce('redirect');
-        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user);
+        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
+        $this->assertNotNull($this->redirect->query_parameters);
     }
 
     public function itDoesntRedirectWhenNewArtifactAlreadyHasAParent() {
@@ -145,13 +146,13 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         stub($this->tracker_factory)->getTrackerById()->returns($this->parent_tracker);
         stub($this->formelement_factory)->getAnArtifactLinkField()->returns($this->art_link_field);
 
-        $GLOBALS['Response']->expectNever('redirect');
-        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user);
+        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
+        $this->assertNull($this->redirect->query_parameters);
     }
 
     public function itDoesntRedirectIfThereAreNoHierarchy() {
-        $GLOBALS['Response']->expectNever('redirect');
-        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user);
+        $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
+        $this->assertNull($this->redirect->query_parameters);
     }
 }
 
