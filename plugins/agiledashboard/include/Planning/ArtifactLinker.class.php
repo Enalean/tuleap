@@ -36,9 +36,11 @@
  */
 class Planning_ArtifactLinker {
     private $artifact_factory;
+    private $planning_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         $this->artifact_factory = $artifact_factory;
+        $this->planning_factory = $planning_factory;
     }
 
     public function linkWithParents(Codendi_Request $request, Tracker_Artifact $artifact) {
@@ -51,6 +53,16 @@ class Planning_ArtifactLinker {
                 foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
                     $ancestor->linkArtifact($artifact->getId(), $user);
                 }
+            }
+        }
+    }
+    
+    public function linkWithPlanning(User $user, Tracker_Artifact $new_artifact, Tracker_Artifact $descendant_milestone_artifact) {
+        $milestone_artifact_ancestors = $descendant_milestone_artifact->getAllAncestors($user);
+        foreach ($milestone_artifact_ancestors as $milestone_artifact_ancestor) {
+            $planning = $this->planning_factory->getPlanningByPlanningTracker($milestone_artifact_ancestor->getTracker());
+            if ($planning->getBacklogTracker() == $new_artifact->getTracker()) {
+                $milestone_artifact_ancestor->linkArtifact($new_artifact->getId(), $user);
             }
         }
     }

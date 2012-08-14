@@ -63,11 +63,6 @@ class AgileDashboardPlugin extends Plugin {
     
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
         $this->updateBacklogs($params);
-        /*
-        $child_planning_id = $params['request']->getValidated('child_planning', 'uint', 0);
-        $child_planning    = PlanningFactory::build()->getPlanningWithTrackers($child_planning_id);
-        $child_planning_tracker = $child_planning->getPlanningTracker()->getParent();
-        */
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
             $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning);
@@ -84,6 +79,8 @@ class AgileDashboardPlugin extends Plugin {
     private function updateBacklogs(array $params) {
         $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance());
         $artifact_linker->linkWithParents($params['request'], $params['artifact']);
+        // On parent creation link with the right milestone
+        //$artifact_linker->linkWithPlanning(...);
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning) {
@@ -93,6 +90,7 @@ class AgileDashboardPlugin extends Plugin {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
              $this->setQueryParametersFromRequest($request, $redirect->query_parameters);
+             // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
              /*if ($planning && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT) {
                  $redirect->query_parameters['child_planning'] = $planning->getId();
              }*/
