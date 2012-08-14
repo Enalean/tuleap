@@ -244,15 +244,19 @@ class cardwallPlugin extends Plugin {
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
         $cardwall = $params['request']->get('cardwall');
         $redirect = $params['redirect'];
-        if ($cardwall && !$redirect->stayInTracker()) {
-            list($redirect_to, $redirect_params) = each($cardwall);
-            switch ($redirect_to) {
-            case 'agile':
-                $this->redirectToAgileDashboard($redirect, $redirect_params);
-                break;
-            case 'renderer':
-                $this->redirectToRenderer($redirect, $redirect_params);
-                break;
+        if ($cardwall) {
+            if (!$redirect->stayInTracker()) {
+                list($redirect_to, $redirect_params) = each($cardwall);
+                switch ($redirect_to) {
+                case 'agile':
+                    $this->redirectToAgileDashboard($redirect, $redirect_params);
+                    break;
+                case 'renderer':
+                    $this->redirectToRenderer($redirect, $redirect_params);
+                    break;
+                }
+            } else {
+                $this->appendCardwallParameter($cardwall, $redirect->query_parameters);
             }
         }
     }
@@ -285,9 +289,13 @@ class cardwallPlugin extends Plugin {
     public function tracker_event_build_artifact_form_action($params) {
         $cardwall = $params['request']->get('cardwall');
         if ($cardwall) {
-            list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
-            $params['query_parameters'][$key] = $value;
+            $this->appendCardwallParameter($cardwall, $params['query_parameters']);
         }
+    }
+
+    private function appendCardwallParameter($cardwall, &$query_parameters) {
+        list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
+        $query_parameters[$key] = $value;
     }
 
     /**
