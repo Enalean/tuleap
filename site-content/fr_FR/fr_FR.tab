@@ -77,4 +77,4 @@ global	pick_date	Choisir une date
 global	show_frame	Montrer seulement ce cadre
 global	null	NULL
 global	error_synchronizertoken	Votre requête ne semble pas être valide. Merci de recommencer.
-global	operation_not_allowed	Operation non permise
+global	operation_not_allowed	Opération non permise
