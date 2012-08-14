@@ -110,7 +110,6 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
     private $tracker_id;
     private $current_user;
     private $new_artifact;
-    private $hierarchy;
 
     public function setUp() {
         parent::setUp();
@@ -121,18 +120,15 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         $this->hierarchy = mock('Tracker_Hierarchy');
 
         stub($this->tracker)->getId()->returns($this->tracker_id);
-        stub($this->tracker)->getHierarchy()->returns($this->hierarchy);
 
-        $this->parent_tracker_id = 666;
-        $this->parent_tracker = aTracker()->withId($this->parent_tracker_id)->build();
+        $this->parent_tracker = aTracker()->withId(666)->build();
         $this->art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
 
         $this->redirect = new Tracker_Action_CreateArtifactRedirect();
     }
 
     public function itDoesRedirectWhenPackageIsComplete() {
-        stub($this->hierarchy)->getParent($this->tracker_id)->returns($this->parent_tracker_id);
-        stub($this->tracker_factory)->getTrackerById($this->parent_tracker_id)->returns($this->parent_tracker);
+        stub($this->tracker)->getParent()->returns($this->parent_tracker);
         stub($this->formelement_factory)->getAnArtifactLinkField($this->current_user, $this->parent_tracker)->returns($this->art_link_field);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
@@ -142,8 +138,7 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
     public function itDoesntRedirectWhenNewArtifactAlreadyHasAParent() {
         stub($this->new_artifact)->getAllAncestors()->returns(array(aMockArtifact()->build()));
 
-        stub($this->hierarchy)->getParent()->returns($this->parent_tracker_id);
-        stub($this->tracker_factory)->getTrackerById()->returns($this->parent_tracker);
+        stub($this->tracker)->getParent()->returns($this->parent_tracker);
         stub($this->formelement_factory)->getAnArtifactLinkField()->returns($this->art_link_field);
 
         $this->action->redirectToParentCreationIfNeeded($this->new_artifact, $this->current_user, $this->redirect);
