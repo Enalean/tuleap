@@ -90,10 +90,10 @@ class LdapPlugin extends Plugin {
         $this->_addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->_addHook('ugroup_table_title',            'ugroup_table_title',          false);
-        $this->_addHook('ugroup_table_row',              'ugroup_table_row',            false);
-        $this->_addHook('project_admin_add_user_form',   'project_admin_add_user_form', false);
-        $this->_addHook('ugroup_update_users_allowed',   'ugroup_update_users_allowed', false);
+        $this->_addHook('ugroup_table_title',               'ugroup_table_title',          false);
+        $this->_addHook('ugroup_table_row',                 'ugroup_table_row',            false);
+        $this->_addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
+        $this->_addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
 
         // Svn intro
         $this->_addHook('svn_intro', 'svn_intro', false);

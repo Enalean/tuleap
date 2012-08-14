@@ -123,7 +123,7 @@ if (($func=='edit')||($func=='do_create')) {
     echo '</form>';
 
     $allowed = true;
-    $em->processEvent('ugroup_update_users_allowed', array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
+    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
 
     echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';
     echo '<div style="padding-left:10px">';
