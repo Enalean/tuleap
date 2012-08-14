@@ -244,11 +244,11 @@ echo '<p><input type="checkbox" id="preserve_members" name="preserve_members" />
 }
 echo '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label></p>';
 
+$checked = '';
 if ($ldapUserGroupManager->isSynchronizedUgroup($ugroupId)) {
-echo '<p><input type="checkbox" id="synchronize" name="synchronize" checked/>';
-} else {
-echo '<p><input type="checkbox" id="synchronize" name="synchronize" />';
+    $checked = 'checked';
 }
+echo '<p><input type="checkbox" id="synchronize" name="synchronize" '.$checked.'/>';
 echo '<label for="synchronize">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_synchronize_info').')</label></p>';
 
 echo '<input type="submit" name="submit" value="'.$btn_update.'" />';
