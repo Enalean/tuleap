@@ -43,6 +43,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected $changesets;
 
     /**
+     * @var array of Tracker_Artifact
+     */
+    private $ancestors;
+
+    /**
      * @var Tracker
      */
     private $tracker;
@@ -1296,7 +1301,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Array of Tracker_Artifact
      */
     public function getAllAncestors(User $user) {
-        return $this->getHierarchyFactory()->getAllAncestors($user, $this);
+        if (!isset($this->ancestors)) {
+            $this->ancestors = $this->getHierarchyFactory()->getAllAncestors($user, $this);
+        }
+        return $this->ancestors;
+    }
+    
+    public function setAllAncestors(array $ancestors) {
+        $this->ancestors = $ancestors;
     }
 
     /**

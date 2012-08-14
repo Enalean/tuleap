@@ -18,16 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once 'PlanningFormPresenter.class.php';
-require_once 'PlanningListPresenter.class.php';
-require_once 'PlanningFactory.class.php';
-require_once 'PlanningParameters.class.php';
-require_once 'NotFoundException.class.php';
-require_once 'PlanningRequestValidator.class.php';
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/AgileDashboard.class.php';
 
 /**
  * Handles the HTTP actions related to a planning.

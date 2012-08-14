@@ -68,6 +68,8 @@ class trackerPlugin extends Plugin {
     public function javascript_file() {        
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerSearchTreeView.js"></script>'."\n";
+            // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
         }
     }
     
@@ -104,7 +106,6 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerArtifact.js',
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
-                '/plugins/tracker/scripts/TrackerFieldDependencies.js',
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )
         );

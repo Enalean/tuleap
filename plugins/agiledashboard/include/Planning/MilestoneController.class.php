@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Milestone.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/NoCrumb.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
-require_once 'SearchContentView.class.php';
-require_once 'MilestonePresenter.class.php';
-require_once 'MilestoneFactory.class.php';
 
 /**
  * Handles the HTTP actions related to a planning milestone.

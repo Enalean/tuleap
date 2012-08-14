@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Planning.class.php';
-require_once 'Item.class.php';
-require_once 'ItemPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/TreeNode/CardPresenterNode.class.php';
 
@@ -41,10 +38,16 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
      */
     private $card_fields;
 
-    public function __construct(Planning $planning, Tracker_CardFields $card_fields, $classname) {
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct(Planning $planning, Tracker_CardFields $card_fields, User $user, $classname) {
         $this->planning    = $planning;
         $this->card_fields = $card_fields;
         $this->classname   = $classname;
+        $this->user        = $user;
     }
 
     /**
@@ -63,11 +66,7 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         $artifact = $node->getObject();
 
         if ($artifact) {
-            $classname = $this->classname;
-            if ($artifact->getTracker() == $this->planning->getBacklogTracker()) {
-                $classname .= ' planning-draggable ';
-            }
-            $planning_item  = new Planning_Item($artifact, $this->planning);
+            $planning_item  = new Planning_Item($artifact, $this->planning, $artifact->getParent($this->user));
             $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
             return $presenter_node;

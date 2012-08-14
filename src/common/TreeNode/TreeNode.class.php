@@ -241,7 +241,7 @@ class TreeNode /*implements Visitable*/ {
     /**
      * Add the child only if the current node doesn't already contain it
      */
-    public function addChildIfNeeded(TreeNode $child) {
+    public function addSingularChild(TreeNode $child) {
         if (!$this->hasChild($child)) {
             $this->addChild($child);
         }

@@ -20,8 +20,7 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
-require_once 'SearchContentView.class.php';
-require_once 'BacklogItemFilterVisitor.class.php';
+
 /**
  * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
  */
@@ -45,8 +44,14 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
         $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
         $tracker_ids = $backlog_hierarchy->flatten();
         $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $already_planned_artifact_ids);
-        $visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
-        $artifacts   = $artifacts->accept($visitor);
+
+        // The following lines allows to tailor/rebuild the result before display
+        // As of today (aug-12), we decided to display everything and to wait for
+        // user feedback to see if we need to enable one of them.
+        //$visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
+        //$artifacts   = $artifacts->accept($visitor);
+        //$visitor     = new Planning_GroupByParentsVisitor($user);
+        //$artifacts->accept($visitor);
 
         $backlog_actions_presenter = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $planning_redirect_parameter);
 

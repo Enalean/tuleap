@@ -1,3 +1,6 @@
+Version 0.9.4 - Tuleap 5.4
+    * Adjust API after agiledashboard v0.48
+
 Version 0.9.3 - Tuleap 5.4
     * Fix defect #1238: Do not attempt to create a cardwall with delete field of value.
 

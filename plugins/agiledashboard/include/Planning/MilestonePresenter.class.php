@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ItemCardPresenterCallback.class.php';
-require_once 'PlanningPresenter.class.php';
-require_once 'MilestoneLinkPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
@@ -147,7 +144,8 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                     AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                     array(
                         'milestone' => $this->milestone,
-                        'panes'     => &$this->additional_panes
+                        'panes'     => &$this->additional_panes,
+                        'user'      => $this->current_user,
                     )
                 );
 
@@ -177,6 +175,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                     new Planning_ItemCardPresenterCallback(
                         $this->milestone->getPlanning(), 
                         new Tracker_CardFields(),
+                        $this->current_user,
                         'planning-draggable-alreadyplanned'
                     )
                 );
