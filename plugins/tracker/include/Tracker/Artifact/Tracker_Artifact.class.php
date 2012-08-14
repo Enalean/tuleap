@@ -1372,7 +1372,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->createNewChangeset($fields_data, $comment, $current_user, $email);
     }
 
-    public function getRedirectUrlAfterArtifactUpdate($request) {
+    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
         $stay     = $request->get('submit_and_stay') ;
         $from_aid = $request->get('from_aid');
 
