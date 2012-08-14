@@ -10,13 +10,14 @@ Version 5.4 (Not released yet)
 	* Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
 
 	== Plugins ==
-	* Agiledashboard: 0.47
-	* Tracker: 5.8.13
-	* Cardwall: 0.9.3
+	* Agiledashboard: 0.48
+	* Tracker: 5.8.14
+	* Cardwall: 0.9.4
 	* Test: 5.4
 	* forumml: 2.6.2
 	* git: 2.7
 	* graphontrackers: 1.5
+	* graphontrackersv5: 5.0.3
 	* hudson: 1.9
 	* pluginsadministration: 1.2
 	* template: 1.2

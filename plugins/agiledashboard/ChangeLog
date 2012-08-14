@@ -1,3 +1,8 @@
+Version 0.48 - Tuleap 5.4
+    * Display all parents in backlog (allow to create children and make priority setting more coherent)
+    * Replace drag'n drop for planning by action arrows (drag'n drop still possible for priority setting)
+    * Add action arrows for priority setting
+
 Version 0.47 - Tuleap 5.4
     * Fix fatal error when an artifact has several parents.
 

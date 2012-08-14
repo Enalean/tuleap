@@ -55,12 +55,19 @@ class Planning_Item {
     private $artifact;
     
     /**
+     * @var Tracker_Artifact
+     */
+    private $parent;
+    
+    /**
      * @param Tracker_Artifact $artifact The underlying artifact to be planned.
      * @param Planning         $planning The planning this item belongs to.
+     * @param Tracker_Artifact $parent   The parent of $artifact or null if no parent (pattern nullobject?)
      */
-    public function __construct(Tracker_Artifact $artifact, Planning $planning) {
+    public function __construct(Tracker_Artifact $artifact, Planning $planning, Tracker_Artifact $parent = null) {
         $this->planning = $planning;
         $this->artifact = $artifact;
+        $this->parent   = $parent;
     }
     
     /**
@@ -115,6 +122,13 @@ class Planning_Item {
      */
     public function getArtifact() {
         return $this->artifact;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getAncestorId() {
+        return $this->parent ? $this->parent->getId() : 0;
     }
     
     /** 

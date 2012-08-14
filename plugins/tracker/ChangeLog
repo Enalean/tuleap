@@ -1,3 +1,8 @@
+Version 5.8.14 - Tuleap 5.4
+    * Add new User parameter for renderer plugin invokation.
+    * Add caching on hierarchy.
+    * Clean code and tests.
+
 Version 5.8.13 - Tuleap 5.4
     * Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
 

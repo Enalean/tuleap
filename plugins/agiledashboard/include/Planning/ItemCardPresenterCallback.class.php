@@ -35,13 +35,22 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
      * @var string the css class name
      */
     private $classname;
-    
+
+    /**
+     * @var Tracker_CardFields
+     */
     private $card_fields;
-    
-    public function __construct(Planning $planning, Tracker_CardFields $card_fields, $classname) {
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct(Planning $planning, Tracker_CardFields $card_fields, User $user, $classname) {
         $this->planning    = $planning;
-        $this->classname   = $classname;
         $this->card_fields = $card_fields;
+        $this->classname   = $classname;
+        $this->user        = $user;
     }
 
     /**
@@ -60,7 +69,7 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         $artifact = $node->getObject();
 
         if ($artifact) {
-            $planning_item  = new Planning_Item($artifact, $this->planning);
+            $planning_item  = new Planning_Item($artifact, $this->planning, $artifact->getParent($this->user));
             $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
             return $presenter_node;
