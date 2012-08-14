@@ -197,6 +197,26 @@ extends DataAccessObject
         return false;
     }
 
+    /**
+     * Check if the update of members of an ugroup is allowed
+     *
+     * @param Integer $ugroup_id User group id
+     *
+     * @return Boolean
+     */
+    public function isMembersUpdateAllowed($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql       = 'SELECT * FROM plugin_ldap_ugroup
+                      WHERE ugroup_id = '.$ugroup_id.'
+                        AND bind_option = "bind"
+                        AND is_synchronized = 1';
+        $rs  = $this->retrieve($sql);
+        if(!empty($rs) && $rs->rowCount() == 1) {
+            return false;
+        }
+        return true;
+    }
+
 }
 
 ?>

@@ -741,7 +741,7 @@ class LdapPlugin extends Plugin {
 
                 $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
                 $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a><br/>';
-                if ($ldapUserGroupManager->isSynchronizedUgroup($params['row']['ugroup_id']) && !$ldapUserGroupManager->isMembersPreserving($params['row']['ugroup_id'])) {
+                if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['row']['ugroup_id'])) {
                     $linkAdd = '';
                 }
 
@@ -814,7 +814,7 @@ class LdapPlugin extends Plugin {
     function ugroup_update_users_allowed(array $params) {
         if ($params['ugroup_id']) {
             $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
-            if ($ldapUserGroupManager->isSynchronizedUgroup($params['ugroup_id']) && !$ldapUserGroupManager->isMembersPreserving($params['ugroup_id'])) {
+            if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['ugroup_id'])) {
                 $params['allowed'] = false;
             }
         }

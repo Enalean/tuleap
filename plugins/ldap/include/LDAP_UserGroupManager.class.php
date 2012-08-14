@@ -111,8 +111,19 @@ extends LDAP_GroupManager
      *
      * @return Boolean
      */
-    public function isMembersPreserving($ugroup_id)  {
-        return $this->getDao()->isMembersPreserving($ugroup_id) ;
+    public function isMembersPreserving($ugroup_id) {
+        return $this->getDao()->isMembersPreserving($ugroup_id);
+    }
+
+    /**
+     * Check if the update of members of an ugroup is allowed
+     *
+     * @param Integer $ugroup_id User group id
+     *
+     * @return Boolean
+     */
+    public function isMembersUpdateAllowed($ugroup_id) {
+        return $this->getDao()->isMembersUpdateAllowed($ugroup_id);
     }
 
     /**
