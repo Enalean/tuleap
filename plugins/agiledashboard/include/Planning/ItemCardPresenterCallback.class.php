@@ -69,10 +69,6 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         $artifact = $node->getObject();
 
         if ($artifact) {
-            $classname = $this->classname;
-            if ($artifact->getTracker() == $this->planning->getBacklogTracker()) {
-                $classname .= ' planning-draggable ';
-            }
             $planning_item  = new Planning_Item($artifact, $this->planning, $artifact->getParent($this->user));
             $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
