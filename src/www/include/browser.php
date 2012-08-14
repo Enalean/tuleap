@@ -71,15 +71,15 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
     $HTTP_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];
 }
 
-if (ereg( 'MSIE ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
+if (preg_match('/MSIE ([0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version)) {
 	$GLOBALS['BROWSER_VER']=$log_version[1];
 	$GLOBALS['BROWSER_AGENT']='IE';
-} elseif (ereg( 'Opera ([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
+} elseif (preg_match('/Opera ([0-9].[0-9]{1,2})/',$HTTP_USER_AGENT,$log_version)) {
 	$GLOBALS['BROWSER_VER']=$log_version[1];
 	$GLOBALS['BROWSER_AGENT']='OPERA';
-} elseif (ereg( 'Mozilla/([0-9].[0-9]{1,2})',$HTTP_USER_AGENT,$log_version)) {
+} elseif (preg_match('#Mozilla/([0-9].[0-9]{1,2})#',$HTTP_USER_AGENT,$log_version)) {
 	$GLOBALS['BROWSER_VER']=$log_version[1];
-        if (preg_match( '/^4/',$GLOBALS['BROWSER_VER'])) {
+        if (preg_match('/^4/',$GLOBALS['BROWSER_VER'])) {
          	$GLOBALS['BROWSER_AGENT']='NETSCAPE4';
         } else {
             $GLOBALS['BROWSER_AGENT']='MOZILLA';

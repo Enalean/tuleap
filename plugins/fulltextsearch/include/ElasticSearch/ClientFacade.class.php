@@ -18,34 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../FullTextSearch/ISearchAndIndexDocuments.class.php';
 
 /**
- * Base class to interact with ElasticSearch 
+ * Base class to interact with ElasticSearch
  */
-class ElasticSearch_ClientFacade implements FullTextSearch_ISearchAndIndexDocuments {
+abstract class ElasticSearch_ClientFacade {
 
     /**
      * @var ElasticSearchClient
      */
-    private $client;
-
+    protected $client;
+    
     public function __construct(ElasticSearchClient $client) {
         $this->client = $client;
     }
-
-    /**
-     * @see ISearchAndIndexDocuments::index
-     */
-    public function index(array $document, $id = false) {
-        $this->client->index($document, $id);
-    }
-
-    /**
-     * @see ISearchAndIndexDocuments::delete
-     */
-    public function delete($id = false) {
-        $this->client->delete($id);
-    }
+    
 }
 ?>

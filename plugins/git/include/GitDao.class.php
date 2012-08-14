@@ -219,28 +219,30 @@ class GitDao extends DataAccessObject {
      *
      * @param Integre $projectId    Project id
      * @param Boolean $onlyGitShell If true list will contain only git repositories no gitolite
+     * @param Boolean $scope        Allows to get all projects ignoring if the scope is project or personal
      * @param Integer $userId       User id
      *
      * @TODO: Add a way to obtain all project repositories including both project scope & user scope
      *
      * @return Array
      */
-    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $userId = null) {
+    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $scope = true, $userId = null) {
         $condition = "";
         if ($onlyGitShell) {
             $condition .= " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
         }
         $projectId = $this->da->escapeInt($projectId);
         $userId    = $this->da->escapeInt($userId);
-        
-        if ( empty($projectId) ) {
+
+        if (empty($projectId)) {
             return false;
         }
-        
-        if ( empty($userId) ) {
-            $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
-        } else {
-            $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
+        if ($scope) {
+            if (empty($userId)) {
+                $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
+            } else {
+                $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
+            }
         }
 
         $sql = "SELECT * FROM $this->tableName
@@ -401,10 +403,19 @@ class GitDao extends DataAccessObject {
         $query = 'SELECT * '.
                  ' FROM '.$this->getTable().
                  ' WHERE '.self::REPOSITORY_ID.'='.$id.
-                 ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+                 ' AND '.self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'";
         return $this->retrieve($query);
     }
 
+    public function searchDeletedRepositoryById($id) {
+        $id = $this->da->escapeInt($id);
+        $query = 'SELECT * '.
+                 ' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_ID.'='.$id.
+                 ' AND '.self::REPOSITORY_DELETION_DATE." != '0000-00-00 00:00:00'";
+        return $this->retrieve($query);
+    }
+    
     /**
      * Retrieve Git repository data given its name and its group name.
      *

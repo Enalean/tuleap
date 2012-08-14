@@ -86,6 +86,22 @@ class Tracker_ArtifactFactory {
     }
     
     /**
+     * Return the artifact corresponding to $id the user can access
+     * 
+     * @param User    $user
+     * @param Integer $id
+     * 
+     * @return Tracker_Artifact
+     */
+    public function getArtifactByIdUserCanView(User $user, $id) {
+        $artifact = $this->getArtifactById($id);
+        if ($artifact && $artifact->userCanView($user)) {
+            return $artifact;
+        }
+        return null;
+    }
+    
+    /**
      * Returns all the artifacts of the tracker racker_id
      *
      * @param int $tracker_id the id of the tracker
@@ -100,6 +116,22 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
+    /**
+     * Given a list of artifact ids, return corresponding artifact objects if any
+     * 
+     * @param array $artifact_ids
+     * 
+     * @return array of Tracker_Artifact
+     */
+    public function getArtifactsByArtifactIdList(array $artifact_ids) {
+        $artifacts = array();
+        foreach ($artifact_ids as $artifact_id) {
+            if ($artifact = $this->getArtifactById($artifact_id)) {
+                $artifacts[$artifact_id] = $artifact;
+            }
+        }
+        return $artifacts;
+    }
     
     /**
      * Returns all the artifacts of the tracker with id $tracker_id the User $user can read
@@ -120,10 +152,13 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
-    public function getOpenArtifactsByTrackerId($tracker_id) {
+    public function getOpenArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {
-            $artifacts[$row['id']] = $this->getInstanceFromRow($row);
+            $artifact = $this->getInstanceFromRow($row);
+            if ($artifact->userCanView($user)) {
+                $artifacts[$row['id']] = $artifact; 
+            }
         }
         return $artifacts;
     }
@@ -234,13 +269,17 @@ class Tracker_ArtifactFactory {
      * @return Tracker_Artifact
      */
     public function getInstanceFromRow($row) {
-        return new Tracker_Artifact(
+        $artifact = new Tracker_Artifact(
             $row['id'], 
             $row['tracker_id'], 
             $row['submitted_by'], 
             $row['submitted_on'], 
             $row['use_artifact_permissions']
         );
+        if (isset($row['title'])) {
+            $artifact->setTitle($row['title']);
+        }
+        return $artifact;
     }
     
     protected $dao;

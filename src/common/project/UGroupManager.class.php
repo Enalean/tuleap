@@ -21,9 +21,14 @@
 
 require_once 'UGroup.class.php';
 require_once 'common/dao/UGroupDao.class.php';
+require_once 'common/dao/UGroupUserDao.class.php';
 
 class UGroupManager {
-    protected $dao;
+    
+    /**
+     * @var UGroupDao
+     */
+    private $dao;
 
     /**
      * Return all UGroups the user belongs to
@@ -57,11 +62,28 @@ class UGroupManager {
      *
      * @return UGroupDao
      */
-    protected function getDao() {
+    private function getDao() {
         if (!$this->dao) {
             $this->dao = new UGroupDao(CodendiDataAccess::instance());
         }
         return $this->dao;
     }
+
+    /**
+     * Get Dynamic ugroups members
+     *
+     * @param Integer $ugroupId Id of the uGroup
+     * @param Integer $groupId  Id of the project
+     *
+     * @return DataAccessResult
+     */
+    public function getDynamicUGroupsMembers($ugroupId, $groupId) {
+        if($ugroupId <= 100) {
+            $dao = new UGroupUserDao(CodendiDataAccess::instance());
+            return $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
+        }
+    }
+
 }
+
 ?>

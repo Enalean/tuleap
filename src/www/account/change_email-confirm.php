@@ -30,11 +30,9 @@ if(validate_email($form_newemail)) {
     db_query("UPDATE user SET confirm_hash='".$confirm_hash."',email_new='".db_es($form_newemail)."' "
              . "WHERE user_id=".$row_user['user_id']);
 
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-
     $message = stripcslashes($Language->getText('account_change_email-confirm', 'message', array($GLOBALS['sys_name'], get_server_url()."/account/change_email-complete.php?confirm_hash=".$confirm_hash)));
 
-    $mail =& new Mail();
+    $mail = new Mail();
     $mail->setTo($form_newemail,true);
     $mail->setSubject($GLOBALS['sys_name'].': '.$Language->getText('account_change_email-confirm', 'title'));
     $mail->setBody($message);

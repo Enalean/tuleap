@@ -26,32 +26,53 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
+        $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
                                              array('getViewBuilder',
                                                    'renderAction',
                                                    'executeAction',
+                                                   'buildController',
                                                    'getPlanningFactory',
-                                                   'getArtifactFactory'));
+                                                   'getProjectManager',
+                                                   'getArtifactFactory',
+                                                   'getMilestoneFactory'));
         $this->router->__construct(mock('Plugin'));
         
+        stub($this->router)->buildController()->returns($this->planning_controller);
         stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
-        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
-        stub($this->router)->getArtifactFactory()->returns(mock('Tracker_ArtifactFactory'));
+        stub($this->router)->getProjectManager()->returns(mock('ProjectManager'));
+        stub($this->router)->getMilestoneFactory()->returns(mock('Planning_MilestoneFactory'));
+    }
+    
+    public function itRoutesPlanningEditionRequests() {
+        $request = aRequest()->with('planning_id', 1)
+                             ->with('action', 'edit')->build();
+        $this->router->expectOnce('renderAction', array($this->planning_controller, 'edit', $request));
+        $this->router->route($request);
+    }
+    
+    public function itRoutesPlanningUpdateRequests() {
+        $request = aRequest()->with('planning_id', 1)
+                             ->with('action', 'update')->build();
+        $this->router->expectOnce('executeAction', array($this->planning_controller, 'update'));
+        $this->router->route($request);
     }
     
     public function itRoutesToTheArtifactPlannificationByDefault() {
         $request = aRequest()->withUri('someurl')->build();
-        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_MilestoneSelectorController'), 'show'));
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*'));
         $this->router->routeShowPlanning($request);
     }
     
     public function itRoutesToTheArtifactPlannificationWhenTheAidIsSetToAPositiveNumber() {
         $request = aRequest()->with('aid', '732')->withUri('someurl')->build();
-        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_ArtifactPlannificationController'), 'show', $request, '*'));
+        $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*'));
         $this->router->routeShowPlanning($request);
     }
 
     public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
+        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
         $request = new Codendi_Request(array('aid' => '-1'));
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $this->router->routeShowPlanning($request);

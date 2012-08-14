@@ -59,6 +59,7 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     }
     
     private function searchAncestorId($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT parent_id FROM tracker_hierarchy WHERE child_id= " . $tracker_id. " LIMIT 1";
         $dar = $this->retrieve($sql);
         $result = array('parent_id'=>null);
@@ -74,6 +75,7 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     }
 
     public function getChildren($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
         $sql = "SELECT child_id FROM tracker_hierarchy WHERE parent_id = $tracker_id";
         return $this->retrieve($sql);
     }
@@ -88,12 +90,22 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     }
     
     public function searchParentChildAssociations($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT h.*
                 FROM       tracker_hierarchy AS h
                 INNER JOIN tracker           AS t ON (t.id = h.parent_id)
                 WHERE t.group_id = $group_id";
         
         return $this->retrieve($sql);
+    }
+    
+    public function deleteParentChildAssociationsForTracker($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = "DELETE h.*
+                FROM tracker_hierarchy AS h
+                WHERE h.parent_id = $tracker_id
+                OR    h.child_id  = $tracker_id";
+        return $this->update($sql);
     }
     
     public function duplicate($parent_id, $child_id, $tracker_mapping){
@@ -106,6 +118,33 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
             
             return $this->update($sql);
         }
+    }
+
+    /**
+     * Return all artifacts parents of given artifact_id
+     *
+     * Given artifact 112 linked artifact 345 (112 -> 345)
+     * And artifact 112 tracker is parent of artifact 345 tracker
+     * When I getParentsInHierarchy(345)
+     * Then I get artifact 112
+     *
+     * Note: this method might return serveral rows but it should be considered
+     * as a defect (one shall have only one parent)
+     *
+     * @param type $artifact_id
+     *
+     * @return DataAccessResult
+     */
+    public function getParentsInHierarchy($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "SELECT parent_art.*
+                FROM           tracker_changeset_value_artifactlink artlink
+                    INNER JOIN tracker_artifact                     child_art  ON (child_art.id = artlink.artifact_id)
+                    INNER JOIN tracker_changeset_value              cv         ON (cv.id = artlink.changeset_value_id)
+                    INNER JOIN tracker_artifact                     parent_art ON (parent_art.last_changeset_id = cv.changeset_id)
+                    INNER JOIN tracker_hierarchy                    hierarchy  ON (hierarchy.parent_id = parent_art.tracker_id AND hierarchy.child_id = child_art.tracker_id)
+                WHERE artlink.artifact_id = $artifact_id";
+        return $this->retrieve($sql);
     }
 }
 

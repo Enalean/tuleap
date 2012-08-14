@@ -35,11 +35,14 @@ class AgileDashboardPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
+            require_once 'constants.php';
             $this->_addHook('cssfile', 'cssfile', false);
+            $this->_addHook(Event::JAVASCRIPT, 'javascript', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
             $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
+            $this->_addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
         }
     }
@@ -60,6 +63,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+        $this->updateBacklogs($params);
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
             require_once 'Planning/PlanningFactory.class.php';
@@ -69,7 +73,20 @@ class AgileDashboardPlugin extends Plugin {
             }
         }
     }
-    
+
+    /**
+     * On create, the artifact was linked to it's immediate parent.
+     * In agiledashoard, to remain consistent, it means that we need to link to all
+     * parents
+     *
+     * @param array $params
+     */
+    private function updateBacklogs(array $params) {
+        require_once 'Planning/ArtifactLinker.class.php';
+        $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance());
+        $artifact_linker->linkWithParents($params['request'], $params['artifact']);
+    }
+
     private function redirectToPlanning($params, $requested_planning, Planning $planning) {
         $redirect_to_artifact = $requested_planning['artifact_id'];
         if ($redirect_to_artifact == -1) {
@@ -130,16 +147,49 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
-                $this->getPluginPath().'/js/drag-n-drop.js',
+                $this->getPluginPath().'/js/planning.js',
+                $this->getPluginPath().'/js/OuterGlow.js',
+                $this->getPluginPath().'/js/expand-collapse.js',
                 $this->getPluginPath().'/js/planning-view.js',
             )
         );
+    }
+    
+    public function javascript($params) {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'agiledashboard');
+        echo PHP_EOL;
     }
     
     public function process(Codendi_Request $request) {
         require_once 'AgileDashboardRouter.class.php';
         $router = new AgileDashboardRouter($this);
         $router->route($request);
+    }
+
+    public function tracker_event_artifact_association_edited($params) {
+        if ($params['request']->isAjax()) {
+            require_once AGILEDASHBOARD_BASE_DIR .'/Planning/Milestone.class.php';
+            $capacity         = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::CAPACITY_FIELD_NAME);
+            $remaining_effort = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::REMAINING_EFFORT_FIELD_NAME);
+
+            header('Content-type: application/json');
+            echo json_encode(array(
+                'remaining_effort' => $remaining_effort,
+                'is_over_capacity' => $capacity !== null && $remaining_effort !== null && $capacity < $remaining_effort,
+            ));
+        }
+    }
+
+    private function getFieldValue(Tracker_FormElementFactory $form_element_factory, User $user, Tracker_Artifact $artifact, $field_name) {
+        $field = $form_element_factory->getComputableFieldByNameForUser(
+            $artifact->getTracker()->getId(),
+            $field_name,
+            $user
+        );
+        if ($field) {
+            return $field->getComputedValue($user, $artifact);
+        }
+        return 0;
     }
 }
 

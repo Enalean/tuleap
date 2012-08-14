@@ -1,3 +1,22 @@
+Version 2.26.2 - Tuleap 5.3.1
+    * Fix missing autocompleter in approval table.
+
+Version 2.26.1 - Tuleap 5.3
+    * Fix JS issue on IE7
+
+Version 2.26 - Tuleap 5.3
+    * Approval tables can remind people to approve them on regular basis (contrib STMicroelectronics).
+
+Version 2.25.7 - Tuleap 5.2
+    * Introduce new hook on document metadata update
+    * Properly serialize permissions on documents resp. their hierarchy.
+
+Version 2.25.6 - Tuleap 5.2
+    * Refactoring of "external permissions"
+
+Version 2.25.5 - Tuleap 5.0.3
+    Allow docman document to be indexed by fulltextsearch plugin
+
 Version 2.25.4 - Tuleap 5.0.3
     Added a directory to the test fixtures
 

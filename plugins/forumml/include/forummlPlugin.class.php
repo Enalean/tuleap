@@ -46,7 +46,7 @@ class ForumMLPlugin extends Plugin {
     function &getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');
-            $this->pluginInfo =& new ForumMLPluginInfo($this);
+            $this->pluginInfo = new ForumMLPluginInfo($this);
         }
         return $this->pluginInfo;
     }

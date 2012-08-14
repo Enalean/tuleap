@@ -29,6 +29,7 @@ require_once 'common/layout/Layout.class.php';
 Mock::generate('Layout');
 
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/user/UserTestBuilder.php';
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
 
 require_once 'MockBuilder.php';
 
@@ -130,7 +131,12 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertNotEmpty($string) {
         return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
     }
-    
+
+    protected function assertArrayNotEmpty($all_artifact_nodes) {
+        $this->assertFalse(count($all_artifact_nodes) == 0, "expected array not to be empty, but it contains 0 elements");
+    }
+   
+
     protected function assertNotBlank($string) {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
@@ -165,6 +171,28 @@ abstract class TuleapTestCase extends UnitTestCase {
      */
     protected function assertStringBeginsWith($string, $start_sequence) {
         return $this->assertPattern("%^$start_sequence%", $string);
+    }
+    
+    /**
+     * Passes if var is inside or equal to either of the two bounds
+     * 
+     * @param type $var
+     * @param type $lower_bound
+     * @param type $higher_bound
+     */
+    protected function assertBetweenClosedInterval($var, $lower_bound, $higher_bound) {
+        $this->assertTrue($var <= $higher_bound, "$var should be lesser than or equal to $higher_bound");
+        $this->assertTrue($var >= $lower_bound,  "$var should be greater than or equal to $lower_bound");
+    }
+
+    /**
+     * Asserts that an array has the expected number of items.
+     * 
+     * @param array $array
+     * @param int $expected_count
+     */
+    protected function assertCount($array, $expected_count) {
+        return $this->assertEqual(count($array), $expected_count);
     }
 }
 ?>

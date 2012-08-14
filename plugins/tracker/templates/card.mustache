@@ -1,12 +1,11 @@
-{{#getData}}
-<li class="planning-draggable {{class}}" id="art-{{id}}">
-    <div class="card">
+{{#getCardPresenter}}
+<div class="card" style="">
+    <div class="card-container">
         {{> card-actions}}
-        {{title}}
+        <a href="#" class="toggle-collapse">+</a>
+        {{getTitle}}
         &nbsp;
+        {{> card-details}}
     </div>
-    {{#hasChildren}}
-        {{> cards}}
-    {{/hasChildren}}
-</li>
-{{/getData}}
+</div>
+{{/getCardPresenter}}

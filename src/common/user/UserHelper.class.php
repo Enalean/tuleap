@@ -243,6 +243,8 @@ class UserHelper {
                     if ($row = $dar->getRow()) {
                         $this->_cache_by_id[$row['user_id']] = $this->getDisplayName($row['user_name'], $row['realname']);
                         $this->_cache_by_username[$row['user_name']] = $this->_cache_by_id[$row['user_id']];
+                    } else {
+                        $this->_cache_by_username[$user_name] = $user_name;
                     }
                 }
                 $display = $this->_cache_by_username[$user_name];

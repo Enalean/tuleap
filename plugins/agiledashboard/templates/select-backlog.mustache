@@ -1,5 +1,5 @@
-<select multiple="multiple" name="backlog_tracker_ids[]" style="vertical-align: top;">
-    {{#available_trackers}}
-        <option value="{{getId}}">{{getName}}</option>
-    {{/available_trackers}}
+<select name="planning[backlog_tracker_id]" style="vertical-align: top;">
+    {{#available_backlog_trackers}}
+        <option value="{{getId}}" {{selectedIfBacklogTracker}}>{{getName}}</option>
+    {{/available_backlog_trackers}}
 </select>

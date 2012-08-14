@@ -21,7 +21,6 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once('Git_Ci.class.php');
 
 /**
  * GitPlugin
@@ -56,7 +55,6 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
-        $this->_addHook(Event::EDIT_SSH_KEYS,                              'edit_ssh_keys',                                false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
 
@@ -85,6 +83,17 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    /**
+     * Returns the configuration defined for given variable name
+     *
+     * @param String $key
+     *
+     * @return Mixed
+     */
+    public function getConfigurationParameter($key) {
+        return $this->getPluginInfo()->getPropertyValueForName($key);
     }
 
     public function cssFile($params) {
@@ -230,23 +239,6 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * Called by hook when SSH keys of users are modified.
-     *
-     * @param array $params
-     */
-    public function edit_ssh_keys($params) {
-        require_once 'Git_GitoliteDriver.class.php';
-        $user = UserManager::instance()->getUserById($params['user_id']);
-        if ($user) {
-            $gitolite = new Git_GitoliteDriver();
-            if (is_dir($gitolite->getAdminPath())) {
-                $gitolite->initUserKeys($user);
-                $gitolite->push();
-            }
-        }
-    }
-
-    /**
      * Called by backend to ensure that all ssh keys are in gitolite conf
      * 
      * As we are root we use a dedicated script to be run as codendiadm.
@@ -258,6 +250,9 @@ class GitPlugin extends Plugin {
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
+        if (isset($params['user'])) {
+            $mvCmd .= ' '.$params['user']->getId();
+        }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {
@@ -375,16 +370,23 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function project_is_deleted($params) {
-        require_once('GitActions.class.php');
         if (!empty($params['group_id'])) {
-            $projectId = intval($params['group_id']);
-            // Delete all gitolite repositories of the project
-            $gitoliteBackend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-            $gitoliteBackend->deleteProjectRepositories($projectId);
-            // Delete all git repositories of the project
-            $gitBackend = Backend::instance('Git','GitBackend');
-            $gitBackend->deleteProjectRepositories($projectId);
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            if ($project) {
+                $repository_manager = $this->getRepositoryManager();
+                $repository_manager->deleteProjectRepositories($project);
+            }
         }
+    }
+
+    private function getRepositoryManager() {
+        require_once 'GitRepositoryManager.class.php';
+        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
+    }
+
+    private function getRepositoryFactory() {
+        require_once 'GitRepositoryFactory.class.php';
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
     /**
@@ -431,6 +433,7 @@ class GitPlugin extends Plugin {
                 $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                 $vRepoId->required();
                 if($params['request']->valid($vRepoId)) {
+                    require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
                     if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
@@ -452,14 +455,14 @@ class GitPlugin extends Plugin {
     public function update_ci_triggers($params) {
         if (isset($params['request']) && !empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
-            $repositoryId = $params['request']->get('new_hudson_use_plugin_git_trigger');
+            $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
             if ($jobId) {
                 $vJobId = new Valid_Uint('job_id');
                 $vJobId->required();
                 if($params['request']->valid($vJobId)) {
                     require_once('Git_Ci.class.php');
                     $ci = new Git_Ci();
-                    $vRepoId = new Valid_Uint('new_hudson_use_plugin_git_trigger');
+                    $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
                     if ($params['request']->valid($vRepoId)) {
                         if (!$ci->saveTrigger($jobId, $repositoryId)) {
@@ -486,6 +489,7 @@ class GitPlugin extends Plugin {
      */
     public function delete_ci_triggers($params) {
         if (isset($params['job_id']) && !empty($params['job_id'])) {
+            require_once('Git_Ci.class.php');
             $ci = new Git_Ci();
             if (!$ci->deleteTrigger($params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));

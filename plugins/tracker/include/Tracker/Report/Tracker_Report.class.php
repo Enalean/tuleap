@@ -203,6 +203,17 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
     
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+        $dump_criteria = array();
+        foreach ($criteria as $c) {
+            $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
+        }
+        $dao->logStart(__METHOD__, json_encode(array(
+            'user'     => $user->getUserName(),
+            'project'  => $tracker->getGroupId(), 
+            'query'    => $dump_criteria,
+            'trackers' => array($tracker->getId()),
+        )));
+        
         $matching_ids = array();
         
         $group_id             = $tracker->getGroupId();
@@ -238,6 +249,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $matching_ids['id']                = '';
             $matching_ids['last_changeset_id'] = '';
         }
+        
+        $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
+        $dao->logEnd(__METHOD__, $nb_matching);
+        
         return $matching_ids;
     }
     
@@ -260,7 +275,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     
     protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified) {
         $hp = Codendi_HTMLPurifier::instance();
-        
         $link_artifact_id = (int)$request->get('link-artifact-id');
         $title            = '';
         $breadcrumbs      = array();
@@ -268,7 +282,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $this->getTracker()->displayHeader($layout, $title, $breadcrumbs);
         }
         
-        if ($request->existAndNonEmpty('pv')) {
+        if ($request->get('pv')) {
             return;
         }
         
@@ -499,7 +513,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }
         if ($request->get('only-renderer')) {
-            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
+            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
         } else {
             $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
             
@@ -706,7 +720,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
+                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -850,7 +864,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $session_criterion = $this->report_session->getCriterion($formElement_id);
             if ( $session_criterion ) {
                 if ($field = $ff->getFormElementById($formElement_id)) {
-                    $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));                   ;
+                    $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));
                 }
             }
         }        

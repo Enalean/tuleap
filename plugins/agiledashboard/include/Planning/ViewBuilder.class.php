@@ -20,35 +20,58 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
+require_once 'SearchContentView.class.php';
+require_once 'BacklogItemFilterVisitor.class.php';
+require_once 'GroupByParentsVisitor.class.php';
 
 /**
- * This class builds the Planning_SearchContentView that is used to display the left column of the Planning
+ * This class builds the Planning_SearchContentView that is used to display the right column of the Planning
  */
 class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
     
     public function build(User $user, 
                           Project $project,
                           Tracker_CrossSearch_Query $cross_search_query, 
-                          array $excluded_artifact_ids, 
-                          array $tracker_ids,
+                          array $already_planned_artifact_ids,
+                          $backlog_tracker_id,
                           Planning $planning,
                           $planning_redirect_parameter) {
     
-        $report    = $this->getReport($user);
-        $criteria  = $this->getCriteria($user, $project, $report, $cross_search_query);
-        $artifacts = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
-        
+        $backlog_hierarchy = $this->hierarchy_factory->getHierarchy(array($backlog_tracker_id));
+
+        $report      = $this->getReport($user);
+        $criteria    = $this->getCriteria($user, $project, $report, $cross_search_query);
+        $tracker_ids = $backlog_hierarchy->flatten();
+        $artifacts   = $this->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $already_planned_artifact_ids);
+
+        // The following lines allows to tailor/rebuild the result before display
+        // As of today (aug-12), we decided to display everything and to wait for
+        // user feedback to see if we need to enable one of them.
+        //$visitor     = new Planning_BacklogItemFilterVisitor($backlog_tracker_id, $this->hierarchy_factory, $already_planned_artifact_ids);
+        //$artifacts   = $artifacts->accept($visitor);
+        //$visitor     = new Planning_GroupByParentsVisitor($user);
+        //$artifacts->accept($visitor);
+
+        $backlog_actions_presenter = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $planning_redirect_parameter);
+
         return new Planning_SearchContentView($report, 
                                               $criteria, 
                                               $artifacts, 
                                               Tracker_ArtifactFactory::instance(), 
                                               $this->form_element_factory,
+                                              $user,
+                                              $backlog_actions_presenter,
                                               $planning,
                                               $planning_redirect_parameter);        
     }
-    
-    
 
+    public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+        $this->hierarchy_factory = $hierarchy_factory;
+    }
 }
 
 ?>

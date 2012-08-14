@@ -65,10 +65,10 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * @param Request $request
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
         $html = '';
         $this->initiateSession();
-        $readonly = !$report_can_be_modified || UserManager::instance()->getCurrentUser()->isAnonymous();
+        $readonly = !$report_can_be_modified || $user->isAnonymous();
 
         if (!$readonly && $this->chart_to_edit) {
             $html .= '<script type="text/javascript" src="/plugins/graphontrackersv5/dependencies.js"></script>';
@@ -106,7 +106,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             $html .= '</form>';
         } else {
             $in_dashboard = false;
-            $html .= $this->fetchCharts($this->report->getMatchingIds(), $in_dashboard, $readonly);
+            $html .= $this->fetchCharts($this->report->getMatchingIds(), $user, $in_dashboard, $readonly);
         }
         return $html;
     }
@@ -114,16 +114,16 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget() {
+    public function fetchWidget(User $user) {
         $html = '';
         $in_dashboard = $readonly = true;
         $store_in_session = false;
-        $html .= $this->fetchCharts($this->report->getMatchingIds(), $in_dashboard, $readonly, $store_in_session);
+        $html .= $this->fetchCharts($this->report->getMatchingIds(), $user, $in_dashboard, $readonly, $store_in_session);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
     }
     
-    protected function fetchCharts($matching_ids, $in_dashboard = false, $readonly = null, $store_in_session = true) {
+    protected function fetchCharts($matching_ids, User $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
         if (!$readonly) {
@@ -148,7 +148,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             }
             $html .= '</p><hr size="1" color="#f0f0f0">';
         }
-        $current_user = UserManager::instance()->getCurrentUser();
         foreach($this->getChartFactory()
                      ->getCharts($this) as $chart) {
             $html .= '<div style="float:left; padding:10px; text-align:right;">';
@@ -300,7 +299,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
     public function exportToXML($root, $formsMapping) {
-        parent::exportToXML(&$root, $formsMapping);
+        parent::exportToXML($root, $formsMapping);
         $child = $root->addChild('charts');
         foreach($this->getChartFactory()->getCharts($this) as $chart) {
             $grandchild = $child->addChild('chart');

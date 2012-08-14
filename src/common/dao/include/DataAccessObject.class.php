@@ -64,6 +64,17 @@ class DataAccessObject {
     }
     
     /**
+     * Like retrieve, but returns only the first row.
+     * 
+     * @param string $sql the query string
+     * 
+     * @return mixed
+     */
+    protected function retrieveFirstRow($sql) {
+        return $this->retrieve($sql)->getRow();
+    }
+    
+    /**
      * Like retrieve, but returns only the ids.
      * 
      * @param string $sql the query string

@@ -134,23 +134,6 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
     }
 
     /**
-     * Repositories activity evolution
-     *
-     * @return Array
-     */
-    function repositoriesEvolutionForPeriod() {
-        $dar = $this->dao->repositoriesEvolutionForPeriod($this->startDate, $this->endDate);
-        $evolution = array();
-        if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
-            $evolution[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_evolution');
-            foreach ($dar as $row) {
-                $evolution[] = $row['repo_count'];
-            }
-        }
-        return $evolution;
-    }
-
-    /**
      * Total repositories having commits in the given period
      *
      * @return Array
@@ -187,7 +170,6 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
         $this->addLine($commitStats['commit_users_number']);
 
         if (!$this->groupId) {
-            $this->addLine($this->repositoriesEvolutionForPeriod());
             $this->addLine($this->repositoriesWithCommit());
             $projectStats = $this->topCommitByProject();
             $this->addLine($projectStats['project']);

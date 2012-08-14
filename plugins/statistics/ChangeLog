@@ -1,3 +1,35 @@
+Version 0.19 - Tuleap 5.4
+    * Display the default quota instead of the max quota when there is no project with a custom quota (contrib STMicroelectronics).
+
+Version 0.18 - Tuleap 5.2
+    * Fix rendering of quota as well as setting of quota when no configuration set (contrib STMicroelectronics).
+
+Version 0.17 - Tuleap 5.2
+    * Prevent conflict between namespaces
+
+Version 0.16 - Tuleap 5.2
+    * Do not load Autocompleter if we aren't in plugin
+
+Version 0.15 - Tuleap 5.2
+    * Follow-up to version 0.14. Export custom quota in soap api
+
+Version 0.14 - Tuleap 5.2
+    * possibility to change disk quota value for one project in order to be able
+      to grant an exception to this project
+
+Version 0.13 - Tuleap 5.2
+	* Uniform sessionKey soap variable naming
+
+Version 0.12 - Tuleap 5.2
+	* Now projects admins know the disk space distribution
+	  in her project's services.
+
+Version 0.11 - Tuleap 5.1
+	* Provide access to statistics through SOAP API
+
+Version 0.10 - Tuleap 5.1
+	* Fix the SVN & CVS sql requests (contrib STMicroelectronics)
+
 Version 0.9
     * Export SVN and CVS statistics to CSV.
     

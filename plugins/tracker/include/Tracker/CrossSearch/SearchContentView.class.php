@@ -48,17 +48,24 @@ class Tracker_CrossSearch_SearchContentView {
      */
     private $factory;
 
+    /**
+     * @var User
+     */
+    private $user;
+    
     public function __construct(Tracker_Report                   $report, 
-                         array                            $criteria, 
-                         TreeNode                         $tree_of_artifacts, 
-                         Tracker_ArtifactFactory          $artifact_factory, 
-                         Tracker_FormElementFactory       $factory) {
+                                array                            $criteria, 
+                                TreeNode                         $tree_of_artifacts, 
+                                Tracker_ArtifactFactory          $artifact_factory, 
+                                Tracker_FormElementFactory       $factory,
+                                User                             $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
         $this->factory           = $factory;
+        $this->user              = $user;
         $collapsable             = true;
         $treeVisitor             = new TreeNode_InjectSpanPaddingInTreeNodeVisitor($collapsable);
         $this->tree_of_artifacts->accept($treeVisitor);
@@ -77,16 +84,21 @@ class Tracker_CrossSearch_SearchContentView {
     private function fetchResults() {  
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
+        $html .= $this->fetchResultActions();
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
-            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
+            $html .= $this->fetchNoMatchingArtifacts();
         }
         $html .= '</div>';
         
         return $html;
     }
-    
+
+    protected function fetchNoMatchingArtifacts() {
+        return '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
+    }
+
     protected function fetchTable() {
         $html  = '';
         $html .= '<table id="treeTable" class="tree-view">';
@@ -171,9 +183,9 @@ class Tracker_CrossSearch_SearchContentView {
                 // GROUP_CONCAT retrieve as much results as linked artifacts, need to filter
                 $linked_artifact_ids = array_unique(explode(',', $row[$key]));
                 foreach ($linked_artifact_ids as $id) {
-                    $values[]= $this->artifact_factory->getArtifactById($id)->getTitle();
+                    $values[]= $this->getArtifactLinkTitle($id);
                 }
-                $value = implode(', ', $values);
+                $value = implode(', ', array_filter($values));
             }
             
         } else {
@@ -181,6 +193,13 @@ class Tracker_CrossSearch_SearchContentView {
         }
         
         return $value;
+    }
+    
+    private function getArtifactLinkTitle($id) {
+        if ($artifact = $this->artifact_factory->getArtifactByIdUserCanView($this->user, $id)) {
+            return $artifact->getTitle();
+        }
+        return '';
     }
     
     private function getFieldFromReportField(Tracker_Report_Field $report_field, Tracker $tracker) {
@@ -192,9 +211,14 @@ class Tracker_CrossSearch_SearchContentView {
     }
     
     private function isASharedField(Tracker_Report_Field $report_field) {
-        return !($report_field instanceof Tracker_CrossSearch_SemanticTitleReportField ||
-                 $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField ||
-                 $report_field instanceof Tracker_CrossSearch_ArtifactReportField);
+        return !(  $report_field instanceof Tracker_CrossSearch_SemanticTitleReportField 
+                || $report_field instanceof Tracker_CrossSearch_SemanticStatusReportField 
+                || $report_field instanceof Tracker_CrossSearch_ArtifactReportField
+        );
+    }
+
+    public function fetchResultActions() {
+        return '<p class="tree-view-actions"></p>';
     }
 
 }

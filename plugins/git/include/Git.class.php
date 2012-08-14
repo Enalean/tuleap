@@ -66,6 +66,11 @@ class Git extends PluginController {
      */
     private $projectManager;
     
+    /**
+     * @var GitPlugin
+     */
+    private $plugin;
+
     public function __construct(GitPlugin $plugin) {
         parent::__construct();
         
@@ -129,7 +134,6 @@ class Git extends PluginController {
         $this->projectManager = $projectManager;
     }
 
-        
     public function setFactory(GitRepositoryFactory $factory) {
         $this->factory = $factory;
     }
@@ -157,7 +161,14 @@ class Git extends PluginController {
     protected function getText($key, $params = array()) {
         return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
-    
+
+    /**
+     * @return GitPlugin
+     */
+    public function getPlugin() {
+        return $this->plugin;
+    }
+
     protected function definePermittedActions($repoId, $user) {
         if ( $this->user->isMember($this->groupId, 'A') === true ) {
             $this->permittedActions = array('index',
@@ -182,6 +193,7 @@ class Git extends PluginController {
             );
         } else {
             $this->addPermittedAction('index');
+            $this->addPermittedAction('view_last_git_pushes');
             if ($this->user->isMember($this->groupId)) {
                 $this->addPermittedAction('fork_repositories');
                 $this->addPermittedAction('do_fork_repositories');
@@ -475,7 +487,9 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        return new $action($this, SystemEventManager::instance(), $this->factory);
+        $system_event_manager   = SystemEventManager::instance();
+        $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

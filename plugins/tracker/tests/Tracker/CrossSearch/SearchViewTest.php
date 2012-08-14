@@ -20,7 +20,7 @@
 
 
 require_once(dirname(__FILE__).'/../../../include/constants.php');
-require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__) . '/../../builders/aTracker.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
 
@@ -178,7 +178,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
     
     private function GivenASharedFactory($criteria) {
-        $shared_factory = new MockTracker_FormElementFactory();
+        $shared_factory = mock('Tracker_FormElementFactory');
         foreach ($criteria as $criterion) {
             $shared_factory->setReturnValue('getFieldFromTrackerAndSharedField', $criterion->field, array('*', $criterion->field));
         }
@@ -237,7 +237,8 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
 
     private function setContentView($report, $criteria, $root, $artifact_factory, $shared_factory) {
-        $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
+        $user = mock('User');
+        $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory, $user);
     }
 }
 

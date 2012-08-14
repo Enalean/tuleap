@@ -28,7 +28,7 @@ class Codendi_Request_TestBuilder {
     private $params = array();
     
     /**
-     * @var UserTestBuilder
+     * @var User
      */
     private $user;
     
@@ -47,14 +47,14 @@ class Codendi_Request_TestBuilder {
         return $this;
     }
     
-    public function withUser(UserTestBuilder $user) {
+    public function withUser(User $user) {
         $this->user = $user;
         return $this;
     }
     
     private function buildUser() {
-        $user = $this->user ? $this->user : aUser();
-        return $user->build();
+        $user = $this->user ? $this->user : aUser()->build();
+        return $user;
     }
     
     public function build() {

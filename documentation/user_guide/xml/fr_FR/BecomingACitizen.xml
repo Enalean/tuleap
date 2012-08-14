@@ -261,10 +261,10 @@
 
     <para>&SYS_PRODUCT_NAME; vous permet de personnaliser votre page à votre convenance. 
     Le contenu de la page est constitué de <emphasis>widgets</emphasis>. 
-    Tous les widgets peuvent être déplacés (1), fermés ou supprimés (2). Certains d'entre eux 
-    peuvent fournir un flux rss (3) ou des préférences peuvent être choisies (4).</para>
+    Tous les widgets peuvent être déplacés, fermés ou supprimés. Certains d'entre eux 
+    peuvent fournir un flux rss ou des préférences peuvent être choisies.</para>
     
-    <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets" (5). 
+    <para>Les widgets peuvent être ajoutés grâce au lien "Ajouter des widgets". 
     Voici une liste non-exhaustive de widgets disponible pour votre page personnelle :</para>
     
     <itemizedlist mark="bullet">

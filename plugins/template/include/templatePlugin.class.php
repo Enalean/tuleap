@@ -13,7 +13,7 @@ class TemplatePlugin extends Plugin {
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'TemplatePluginInfo')) {
             require_once('TemplatePluginInfo.class.php');
-            $this->pluginInfo =& new TemplatePluginInfo($this);
+            $this->pluginInfo = new TemplatePluginInfo($this);
         }
         return $this->pluginInfo;
     }

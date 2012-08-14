@@ -24,6 +24,7 @@ require_once 'SearchContentView.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 require_once 'html.php';
 
@@ -85,9 +86,6 @@ class Tracker_CrossSearch_SearchView {
         $html .= $this->fetchTrackerHomeNav();
         $html .= '<div class="tracker_homenav_cross_search">';
         $html .= '<h1>'. $title .'</h1>';
-        $html .= '<p class="lab_features" title="'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature') .'">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'creation_lab_feature');
-        $html .= '</p>';
         
         if ($this->criteria) {
             $html .= $this->content_view->fetch();
@@ -103,8 +101,8 @@ class Tracker_CrossSearch_SearchView {
     
     private function fetchTrackerHomeNav() {
         $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
-        return $renderer->render('tracker-home-nav', $presenter);
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../../templates');
+        return $renderer->renderToString('tracker-home-nav', $presenter);
     }
 
     private function fetchTrackerList(User $user) {

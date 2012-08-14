@@ -861,13 +861,13 @@
 		
 		if ($this->_queryID === true) {
 		// return simplified empty recordset for inserts/updates/deletes with lower overhead
-			$rs =& new ADORecordSet_empty();
+			$rs = new ADORecordSet_empty();
 			return $rs;
 		}
 		
 		// return real recordset from select statement
 		$rsclass = $this->rsPrefix.$this->databaseType;
-		$rs =& new $rsclass($this->_queryID,$this->fetchMode);
+		$rs = new $rsclass($this->_queryID,$this->fetchMode);
 		$rs->connection = &$this; // Pablo suggestion
 		$rs->Init();
 		if (is_array($sql)) $rs->sql = $sql[0];
@@ -1174,7 +1174,7 @@
 		
 		$arrayClass = $this->arrayClass;
 		
-		$rs2 =& new $arrayClass();
+		$rs2 = new $arrayClass();
 		$rs2->connection = &$this;
 		$rs2->sql = $rs->sql;
 		$rs2->dataProvider = $this->dataProvider;
@@ -1939,7 +1939,7 @@
 
 			$retarr = array();
 			while (!$rs->EOF) { //print_r($rs->fields);
-				$fld =& new ADOFieldObject();
+				$fld = new ADOFieldObject();
 				$fld->name = $upper ? strtoupper($rs->fields[0]) : $rs->fields[0];
 				$fld->type = $rs->fields[1];
 				if (isset($rs->fields[3]) && $rs->fields[3]) {
@@ -2959,7 +2959,7 @@
 	function &FetchObject($isupper=true)
 	{
 		if (empty($this->_obj)) {
-			$this->_obj =& new ADOFetchObj();
+			$this->_obj = new ADOFetchObj();
 			$this->_names = array();
 			for ($i=0; $i <$this->_numOfFields; $i++) {
 				$f = $this->FetchField($i);
@@ -3485,7 +3485,7 @@
 			return false;
 		}
 		
-		$obj =& new $cls();
+		$obj = new $cls();
 		if ($errorfn) $obj->raiseErrorFn = $errorfn;
 		
 		return $obj;
@@ -3525,7 +3525,7 @@
 		@include_once(ADODB_DIR."/perf/perf-$drivername.inc.php");
 		$class = "Perf_$drivername";
 		if (!class_exists($class)) return false;
-		$perf =& new $class($conn);
+		$perf = new $class($conn);
 		
 		return $perf;
 	}
@@ -3544,7 +3544,7 @@
 		}
 		include_once($path);
 		$class = "ADODB2_$drivername";
-		$dict =& new $class();
+		$dict = new $class();
 		$dict->dataProvider = $conn->dataProvider;
 		$dict->connection = &$conn;
 		$dict->upperName = strtoupper($drivername);

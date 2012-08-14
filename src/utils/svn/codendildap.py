@@ -31,7 +31,10 @@ def ldap_connect():
     for server in include.sys_ldap_server.split(','):
         try:
             l = ldap.initialize(server)
-            l.simple_bind_s()
+            if hasattr(include, 'sys_ldap_bind_dn'):
+                l.simple_bind_s(include.sys_ldap_bind_dn, include.sys_ldap_bind_passwd)
+            else:
+                l.simple_bind_s()
             return l
         except ldap.SERVER_DOWN:
             nop

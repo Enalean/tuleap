@@ -33,7 +33,8 @@ require_once('CrossSearch/SearchViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
 require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
@@ -435,9 +436,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
     public function displayTrackerHomeNav(Project $project) {
         $presenter = new Tracker_HomeNavPresenter($project);
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
         
-        echo $renderer->render('tracker-home-nav', $presenter);
+        $renderer->renderToPage('tracker-home-nav', $presenter);
     }
     
     /**
@@ -471,10 +472,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            
-            if ($user->useLabFeatures()) {
-                $this->displayTrackerHomeNav($project);
-            }
+            $this->displayTrackerHomeNav($project);
             
             $html .= '<p>';
             if (count($trackers)) {
@@ -783,7 +781,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     }
 
     public function getCrossSearch(array $art_link_column_field_ids) {
-        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory());
+        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getArtifactFactory());
         $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                  = new Tracker_CrossSearch_SearchDao();
         $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
@@ -828,10 +826,42 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $artifact_factory        = Tracker_ArtifactFactory::instance();
         $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
         $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
-        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory);
+        $tracker_factory         = TrackerFactory::instance();
+        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory, $tracker_factory);
 
         return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
 
     }
+
+    /**
+     * Get all trackers having at least on active date reminder
+     *
+     * @return Array
+     */
+    protected function getTrackersHavingDateReminders() {
+        $trackers = array();
+        $dao = new Tracker_DateReminderDao();
+        $dar = $dao->getTrackersHavingDateReminders();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $trackers[] = $this->getTrackerFactory()->getTrackerById($row['tracker_id']);
+            }
+        }
+        return $trackers;
+    }
+
+    /**
+     * Send Date reminder
+     *
+     * @return Void
+     */
+    public function sendDateReminder() {
+        $trackers       = $this->getTrackersHavingDateReminders();
+        foreach ($trackers as $tracker) {
+            $dateReminderManager = new Tracker_DateReminderManager($tracker);
+            $dateReminderManager->process();
+        }
+    }
 }
+
 ?>

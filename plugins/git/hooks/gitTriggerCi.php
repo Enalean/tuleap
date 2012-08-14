@@ -26,6 +26,7 @@
 
 require_once('pre.php');
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
+require_once(dirname(__FILE__).'/../include/Git_Ci.class.php');
 
 // Check script parameters
 if ($argc != 2) {

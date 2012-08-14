@@ -406,7 +406,7 @@ class DB_ibase extends DB_common
         if ($this->manip_query[(int)$stmt]) {
             $tmp = DB_OK;
         } else {
-            $tmp =& new DB_result($this, $res);
+            $tmp = new DB_result($this, $res);
         }
         return $tmp;
     }

@@ -9,7 +9,7 @@ plugin_git	help_reference_title	Intialiser une référence
 plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (par exemple)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push $1 master</li>
 plugin_git	help_init_reference_msg	Le dépôt n'a pas encore été initialisé, ceci est nécessaire pour permettre aux utilisateurs de le cloner
 plugin_git	help_create_reference_title	Créer une réference
-plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut-être clonée sur le serveur codendi (ex: développement d'une fonctionnalité) et aussi clonée localement par les membres du projet pour leur développements.</li>
+plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut être cloné sur le serveur codendi (ex: développement d'une fonctionnalité) et aussi cloné localement par les membres du projet pour leur développements.</li>
 plugin_git	help_link	Aide
 plugin_git	help_tree	<li>La liste des dépôt est hiérarchique.</li><li>Les références sont les racines tandis que les clones (forks) sont présentés décalés sous leur dépôt parent.</li><li>Chaque dépôt est un lien vers un page de détail et d'adminstration.</li>
 plugin_git	help_fork	<li>Un fork est le clone d'une référence ou d'un fork.</li><li>Il est accessible en lecture et écriture pour tous les membres d'un projet.</li><li>Il peut être utilisé comme le dépôt pour le développement d'une fonctionnalité.</li>
@@ -76,7 +76,7 @@ plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifi�
 plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
 plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans le repertoire
 plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
-plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà
+plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin est en conflit avec un dépôt existant
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
 plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 
@@ -169,7 +169,7 @@ plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
 plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork
 
 plugin_git	ci_trigger	Evénement Git
-plugin_git	ci_repo_id	Id du dépot Git 
+plugin_git	ci_repo_id	Dépot Git 
 plugin_git	ci_field_description	Déclencher un build après un push Git dans le dépot 
 plugin_git	ci_trigger_not_saved	L'evénement Git n'a pas été sauvegardé
 plugin_git	ci_bad_repo_id	Id du dépot Git non valide

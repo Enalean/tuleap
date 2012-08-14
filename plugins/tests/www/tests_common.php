@@ -3,6 +3,7 @@
 ini_set('display_errors', 'on');
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
+date_default_timezone_set('Europe/Paris');
 
 if (version_compare(PHP_VERSION, '5.3.0', '>=')) { 
     error_reporting(E_ALL & ~E_DEPRECATED);

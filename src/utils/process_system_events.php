@@ -20,6 +20,10 @@
  *
  */
 
+// Backend scripts should never ends because of lack of time or memory
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
+
 // Only root is allowed to run this script
 $processUser = posix_getpwuid(posix_geteuid());
 $username = $processUser['name'];

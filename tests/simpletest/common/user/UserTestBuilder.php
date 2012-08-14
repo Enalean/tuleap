@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'common/user/User.class.php';
+
 /**
  * Ease creation of User object
  * 
@@ -26,6 +28,10 @@
  */
 function aUser() {
     return new UserTestBuilder();
+}
+
+function anAnonymousUser() {
+    return aUser()->withId(0);
 }
 
 class UserTestBuilder {
@@ -41,6 +47,11 @@ class UserTestBuilder {
         return $this;
     }
     
+    function withAuthorizedKeysArray(array $keys) {
+        $this->params['authorized_keys'] = implode('###', $keys);
+        return $this;
+    }
+
     function build() {
         return new User($this->params);
     }

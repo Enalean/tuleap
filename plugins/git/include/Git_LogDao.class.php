@@ -142,6 +142,35 @@ class Git_LogDao extends DataAccessObject {
                 ORDER BY time DESC";
     }
 
+    /**
+     * Count all Git pushes for the given period
+     *
+     * @param String $startDate Period start date
+     * @param String $endDate   Period end date
+	 * @param Integer $projectId Id of the project we want to retrieve its git stats
+     *
+     * @return DataAccessResult
+     */
+    function totalPushes($startDate, $endDate, $projectId = null) {
+        $startDate     = $this->da->quoteSmart($startDate);
+        $endDate       = $this->da->quoteSmart($endDate);
+        $projectId     = $this->da->escapeInt($projectId);
+        $projectFilter = "";
+        if (!empty($projectId)) {
+            $projectFilter = " AND project_id = ".$projectId;
+        }
+        $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(push_date), '%M') AS month,
+                    YEAR(FROM_UNIXTIME(push_date)) AS year, 
+                    COUNT(*) AS pushes_count,
+                    COUNT(DISTINCT(repository_id)) AS repositories, 
+                    SUM(commits_number) AS commits_count, 
+                    COUNT(DISTINCT(user_id)) AS users
+                FROM plugin_git_log JOIN plugin_git USING(repository_id)
+                WHERE push_date BETWEEN UNIX_TIMESTAMP(".$startDate.") AND UNIX_TIMESTAMP(".$endDate.")
+                  ".$projectFilter."
+                GROUP BY year, month";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

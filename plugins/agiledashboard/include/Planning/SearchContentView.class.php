@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,50 +18,75 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
-require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'ItemCardPresenterCallback.class.php';
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
+require_once 'BacklogActionsPresenter.class.php';
 
-/**
- * Display the left part of the planning view (cross-search criteria and post-it
- * result).
- * 
- * This class is partially used as a Presenter by ArtifactPlannificationController
- */
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 
-    public $planning;
+    /**
+     * @var TemplateRenderer
+     */
+    private $renderer;
+
+    /**
+     * @var Tracker_TreeNode_CardPresenterNode
+     */
+    private $tree_of_card_presenters;
+
+    // Presenter properties
+    private $planning;
+    private $backlog_actions_presenter;
     public $planning_redirect_parameter = '';
 
-    public function __construct(Tracker_Report             $report,
-                                array                      $criteria,
-                                TreeNode                   $tree_of_artifacts,
-                                Tracker_ArtifactFactory    $artifact_factory,
-                                Tracker_FormElementFactory $factory,
-                                Planning                   $planning,
-                                                           $planning_redirect_param) {
-        
-        parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory);
+
+    public function __construct(
+        Tracker_Report $report,
+        array $criteria,
+        TreeNode $tree_of_artifacts,
+        Tracker_ArtifactFactory $artifact_factory,
+        Tracker_FormElementFactory $factory,
+        User $user,
+        Planning_BacklogActionsPresenter $backlog_actions_presenter,
+        Planning $planning,
+        $planning_redirect_parameter
+    ) {
+        parent::__construct($report, $criteria, $tree_of_artifacts, $artifact_factory, $factory, $user);
+
+        $this->backlog_actions_presenter   = $backlog_actions_presenter;
         $this->planning                    = $planning;
-        $this->planning_redirect_parameter = $planning_redirect_param;
+        $this->planning_redirect_parameter = $planning_redirect_parameter;
+        $this->renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) .'/../../templates');
+
+        $card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($this->planning, new Tracker_CardFields(), $user, 'planning-draggable-toplan'));
+        $this->tree_of_card_presenters = $card_mapper->map($this->tree_of_artifacts);
     }
-    
+
+    public function fetchResultActions() {
+        return $this->renderer->renderToString('backlog-actions', $this->backlog_actions_presenter);
+    }
+
+    protected function fetchNoMatchingArtifacts() {
+        //we need the empty structure to be able to remove item from the plan
+        return parent::fetchNoMatchingArtifacts() . $this->fetchTable();
+    }
+
     protected function fetchTable() {
-        Planning_ArtifactTreeNodeVisitor::build('planning-draggable-toplan')->visit($this->tree_of_artifacts);
-        $renderer = new MustacheRenderer(dirname(__FILE__) .'/../../templates');
-        return $renderer->render('backlog', $this, true);
+        return $this->renderer->renderToString('backlog', $this);
     }
 
     public function getChildren() {
-        return $this->tree_of_artifacts->getChildren();
+        return $this->tree_of_card_presenters->getChildren();
     }
-    
+
     public function allowedChildrenTypes() {
-        return $this->planning->getBacklogTrackers();
+        return $this->planning->getBacklogTracker();
     }
-    
-    public function addLabel() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
+
+    public function setRenderer(TemplateRenderer $renderer) {
+        $this->renderer = $renderer;
     }
 }
 ?>

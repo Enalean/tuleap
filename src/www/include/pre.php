@@ -122,7 +122,7 @@ if (!IS_SCRIPT) {
     // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
     session_cache_limiter(false);
     session_start();
-    $cookie_manager =& new CookieManager();
+    $cookie_manager = new CookieManager();
     $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
 }
 //}}}
@@ -208,37 +208,36 @@ if (user_isloggedin()) {
 }
 
 //Set up the vars and theme functions 
-if(!IS_SCRIPT) {
-    require_once('theme.php');
+require_once('theme.php');
 
 
-    // HTML layout class, may be overriden by the Theme class
+// HTML layout class, may be overriden by the Theme class
 
-    if ($GLOBALS['sys_is_theme_custom']) {
-        $GLOBALS['path_to_theme'] = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-    } else {
-        $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-    }
-    $name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
-    
-    if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php')) {
-        //User wants a theme which doesn't exist
-        //We're looking for default theme
-        $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
-        $name_of_theme_class       = $GLOBALS['sys_user_theme'].'_Theme';
-        if (is_dir($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'])) {
-            $GLOBALS['sys_is_theme_custom'] = false;
-            $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-        } else {
-            $GLOBALS['sys_is_theme_custom'] = true;
-            $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
-        }
-    }
-    require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php');
-    $root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
-    $HTML = new $name_of_theme_class($root_for_theme);
-    $GLOBALS['Response'] =& $HTML;
+if ($GLOBALS['sys_is_theme_custom']) {
+    $GLOBALS['path_to_theme'] = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+} else {
+    $GLOBALS['path_to_theme'] = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
 }
+$name_of_theme_class = $GLOBALS['sys_user_theme'].'_Theme';
+
+if (!file_exists($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php')) {
+    //User wants a theme which doesn't exist
+    //We're looking for default theme
+    $GLOBALS['sys_user_theme'] = $GLOBALS['sys_themedefault'];
+    $name_of_theme_class       = $GLOBALS['sys_user_theme'].'_Theme';
+    if (is_dir($GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'])) {
+        $GLOBALS['sys_is_theme_custom'] = false;
+        $GLOBALS['path_to_theme']       = $GLOBALS['sys_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+    } else {
+        $GLOBALS['sys_is_theme_custom'] = true;
+        $GLOBALS['path_to_theme']       = $GLOBALS['sys_custom_themeroot'].'/'.$GLOBALS['sys_user_theme'];
+    }
+}
+require_once($GLOBALS['path_to_theme'].'/'.$name_of_theme_class.'.class.php');
+$root_for_theme = ($GLOBALS['sys_is_theme_custom']?'/custom/':'/themes/').$GLOBALS['sys_user_theme'];
+$HTML = new $name_of_theme_class($root_for_theme);
+$GLOBALS['Response'] =& $HTML;
+
 
 //Project extends Group and includes preference accessors
 require_once('common/project/Project.class.php');
@@ -262,7 +261,7 @@ if (license_already_declined()) {
 print "<p>DBG: SERVER_NAME = ".$_SERVER['SERVER_NAME'];
 print "<p>DBG: sys_allow_anon= ".$GLOBALS['sys_allow_anon'];
 print "<p>DBG: user_isloggedin= ".user_isloggedin();
-print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME']";
+print "<p>DBG: SCRIPT_NAME = ".$_SERVER['SCRIPT_NAME'];
 */
 
 // Check URL for valid hostname and valid protocol

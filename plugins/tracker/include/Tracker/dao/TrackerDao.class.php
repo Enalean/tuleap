@@ -92,7 +92,13 @@ class TrackerDao extends DataAccessObject {
         $sql = "UPDATE $this->table_name 
                 SET deletion_date = $deletion_date
                 WHERE id = $id";
-        return $this->update($sql);
+        
+        if ($this->update($sql)) {
+            $hierarchy_dao = new Tracker_Hierarchy_Dao();
+            return $hierarchy_dao->deleteParentChildAssociationsForTracker($id);
+        } else {
+            return false;
+        }
     }
     
     function duplicate($atid_template, $group_id, $name, $description, $item_name) {

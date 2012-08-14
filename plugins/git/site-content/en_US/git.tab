@@ -71,7 +71,7 @@ plugin_git	actions_long_description	Too long description
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
 plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2, no slashes at the beginning or the end, it also must not finish with ".git".
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
-plugin_git	actions_create_repo_exists	Repository $1 already exists
+plugin_git	actions_create_repo_exists	Repository $1 already exists or would override an existing path
 plugin_git	actions_delete_ok	Repository has been deleted
 plugin_git	actions_no_repository_forked	No repository has been forked.
 
@@ -172,7 +172,7 @@ plugin_git	missing_parameter_to_project	No project selected for the fork
 plugin_git	missing_parameter_repos	No repository selected for thr fork
 
 plugin_git	ci_trigger	Git trigger
-plugin_git	ci_repo_id	Git repository id
+plugin_git	ci_repo_id	Git repository
 plugin_git	ci_field_description	Trigger a build after Git pushes in repository
 plugin_git	ci_trigger_not_saved	Git trigger not saved
 plugin_git	ci_bad_repo_id	Bad repository id
