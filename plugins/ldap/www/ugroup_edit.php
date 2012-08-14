@@ -83,7 +83,7 @@ if($request->exist('preserve_members') && $request->get('preserve_members') == '
 
 // Check if user has checked the Synchronization option.
 $synchro = false;
-if($request->exist('synchronize') && $request->get('synchronize') == 'on') {
+if ($request->existAndNonEmpty('synchronize')) {
     $synchro = true;
 }
 
