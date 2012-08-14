@@ -56,7 +56,14 @@ interface FullTextSearch_IIndexDocuments {
      *
      * @return array
      */
-    public function buildSetterData(array $current_data, $name, $value);
+    public function appendSetterData(array $current_data, $name, $value);
+
+    /**
+     * Return the base to build a setter data
+     *
+     * @return array
+     */
+    public function initializeSetterData();
 }
 
 ?>

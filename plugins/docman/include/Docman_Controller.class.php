@@ -93,12 +93,13 @@ class Docman_Controller extends Controler {
                          'plugin_docman_event_set_version_author',
                          'plugin_docman_event_set_version_date',
                          'plugin_docman_event_lock_add',
-                         'plugin_docman_event_lock_del'
+                         'plugin_docman_event_lock_del',
+                         'plugin_docman_event_perms_change',
                      );
                      
         $this->logger  =& new Docman_Log();
         foreach ($logEvents as $event) {
-        	$event_manager->addListener($event, $this->logger, 'log', true, 0);
+            $event_manager->addListener($event, $this->logger, 'log', true, 0);
         }
 
         // Other events

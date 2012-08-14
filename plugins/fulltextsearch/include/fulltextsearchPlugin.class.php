@@ -33,10 +33,11 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
-        
+        $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
+
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
-        
+
         // style
         $this->_addHook('cssfile', 'cssfile', false);
     }
@@ -97,18 +98,27 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     /**
+     * Event triggered when the permissions on a document change
+     */
+    public function plugin_docman_event_perms_change($params) {
+        if ($this->isAllowed($params['item']->getGroupId())) {
+            $this->getActions()->updatePermissions($params);
+        }
+    }
+
+    /**
      * Event to display something in siteadmin interface
-     * 
-     * @param array $params 
+     *
+     * @param array $params
      */
     public function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
     }
-    
+
     /**
      * Event to load css stylesheet
-     * 
-     * @param array $params 
+     *
+     * @param array $params
      */
     public function cssfile($params) {
         // Only show the stylesheet if we're actually in the FullTextSearch pages.
@@ -117,7 +127,7 @@ class fulltextsearchPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
+
     private function getIndexClient() {
         $factory     = $this->getClientFactory();
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
@@ -133,12 +143,12 @@ class fulltextsearchPlugin extends Plugin {
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         return $factory->buildSearchClient($client_path, $server_host, $server_port, ProjectManager::instance());
     }
-    
+
     private function getClientFactory() {
         require_once 'ElasticSearch/ClientFactory.class.php';
         return new ElasticSearch_ClientFactory();
     }
-    
+
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
             require_once('FulltextsearchPluginInfo.class.php');
@@ -154,7 +164,7 @@ class fulltextsearchPlugin extends Plugin {
         }
 
         include_once 'FullTextSearch/Controller/Search.class.php';
-        
+
         $request    = HTTPRequest::instance();
         $controller = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
         switch ($request->get('func')) {
