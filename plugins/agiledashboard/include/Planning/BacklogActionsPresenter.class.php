@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -17,9 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
-    var planner = $('planner');
-    if (planner) {
-        new tuleap.agiledashboard.Planning(planner);
+class Planning_BacklogActionsPresenter {
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+    
+    private $planning_redirect_parameter;
+
+    public function __construct(Tracker $tracker = null, $planning_redirect_parameter = null) {
+        $this->tracker                     = $tracker;
+        $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
-});
+    
+    public function getBacklogTracker() {
+        return $this->tracker;
+    }
+    
+    public function addLabel() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_add');
+    }
+
+    public function planning_redirect_parameter() {
+        return $this->planning_redirect_parameter;
+    }
+}
+
+?>

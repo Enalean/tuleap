@@ -249,6 +249,7 @@ class AgileDashboardRouter {
             case 0:
                 $controller = new Planning_MilestoneSelectorController($request, $this->getMilestoneFactory());
                 $this->executeAction($controller, 'show');
+                /* no break */
             default:
                 $controller = $this->buildMilestoneController($request);
                 $action_arguments = array($this->getViewBuilder($request));

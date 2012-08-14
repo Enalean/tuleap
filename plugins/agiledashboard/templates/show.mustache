@@ -52,7 +52,9 @@
         {{#hasSelectedArtifact}}
             {{#additionalPanes}}
                 <div id="{{getIdentifier}}" class="tab-pane {{#isActive}}active{{/isActive}}">
-                    {{{getContent}}}
+                    {{#isActive}}
+                        {{{getContent}}}
+                    {{/isActive}}
                 </div>
             {{/additionalPanes}}
         {{/hasSelectedArtifact}}

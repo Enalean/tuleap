@@ -72,6 +72,10 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
         return $this->planning_item->getId();
     }
     
+    public function getAncestorId() {
+        return $this->planning_item->getAncestorId();
+    }
+    
     public function getArtifact() {
         return $this->planning_item->getArtifact();
     }

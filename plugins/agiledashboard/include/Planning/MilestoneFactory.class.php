@@ -150,10 +150,9 @@ class Planning_MilestoneFactory {
                                         Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return;
 
-
         $parents = array();
+        $node    = $this->makeNodeWithChildren($user, $milestone_artifact, $parents);
 
-        $node = $this->makeNodeWithChildren($user, $milestone_artifact, $parents);
         return $node;
     }
 

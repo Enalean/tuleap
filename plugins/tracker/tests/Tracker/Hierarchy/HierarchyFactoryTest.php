@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../../../include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Hierarchy/HierarchyFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../../builders/aMockTracker.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 
 Mock::generate('Tracker_Hierarchy_Dao');
 
