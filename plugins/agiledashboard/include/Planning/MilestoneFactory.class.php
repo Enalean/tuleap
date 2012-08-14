@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ArtifactMilestone.class.php';
-require_once 'NoMilestone.class.php';
-require_once 'Item.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ArtifactNode.class.php';
 
 /**

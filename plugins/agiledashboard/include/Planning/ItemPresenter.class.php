@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Item.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/CardPresenter.class.php';
-require_once 'ItemFieldPresenter.class.php';
 
 class Planning_ItemPresenter implements Tracker_CardPresenter {
     

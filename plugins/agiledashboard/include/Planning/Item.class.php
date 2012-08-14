@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Planning.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Tracker_Artifact.class.php';
 
 /**

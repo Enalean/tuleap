@@ -21,13 +21,6 @@
 require_once 'common/plugin/Plugin.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
-require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
-require_once 'Planning/PlanningController.class.php';
-require_once 'Planning/MilestoneController.class.php';
-require_once 'Planning/PlanningFactory.class.php';
-require_once 'Planning/ArtifactCreationController.class.php';
-require_once 'Planning/MilestoneSelectorController.class.php';
-require_once 'Planning/ViewBuilder.class.php';
 
 /**
  * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers

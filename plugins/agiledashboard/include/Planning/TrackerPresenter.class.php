@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Planning.class.php';
 require_once dirname(__FILE__) . '/../../../tracker/include/Tracker/Tracker.class.php';
 
 class Planning_TrackerPresenter {
