@@ -67,7 +67,7 @@ plugin_ldap	ugroup_edit_group_synchro_add	Add those who are not already member o
 plugin_ldap	ugroup_edit_group_synchro_del	Remove all users who belong to this $1 group but not to the Directory group if you don't enable the 'Preserve members' option.
 plugin_ldap	ugroup_edit_group_preserve_members_info	Check this option if you want to preserve users that are not part of the Directory group
 plugin_ldap	ugroup_edit_group_preserve_members_option	Preserve members
-plugin_ldap	ugroup_edit_group_synchronize_info	Check this option if you want to synchronize the group nightly with the Directory one
+plugin_ldap	ugroup_edit_group_synchronize_info	Check this option if you want to synchronize the group nightly with the directory one
 plugin_ldap	ugroup_edit_group_synchronize_option	Synchronize daily
 plugin_ldap	ugroup_edit_group_add_users	Users to add:
 plugin_ldap	ugroup_edit_group_bind_with_group	Bind with group from Directory:
