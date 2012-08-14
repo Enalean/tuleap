@@ -20,9 +20,6 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
-require_once 'SearchContentView.class.php';
-require_once 'BacklogItemFilterVisitor.class.php';
-require_once 'GroupByParentsVisitor.class.php';
 
 /**
  * This class builds the Planning_SearchContentView that is used to display the right column of the Planning

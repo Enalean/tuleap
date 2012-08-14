@@ -20,9 +20,8 @@
 
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
-require_once 'ItemCardPresenterCallback.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once 'BacklogActionsPresenter.class.php';
 
 class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
 

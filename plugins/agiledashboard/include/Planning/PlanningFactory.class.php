@@ -19,9 +19,6 @@
  */
 
 require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
-require_once('PlanningDao.class.php');
-require_once('Planning.class.php');
-require_once 'PlanningParameters.class.php';
 
 class PlanningFactory {
     

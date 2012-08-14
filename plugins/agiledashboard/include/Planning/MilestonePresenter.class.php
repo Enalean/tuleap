@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ItemCardPresenterCallback.class.php';
-require_once 'PlanningPresenter.class.php';
-require_once 'MilestoneLinkPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 

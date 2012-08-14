@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once 'MilestoneFactory.class.php';
-require_once 'PlanningFactory.class.php';
 
 class Planning_MilestoneSelectorController extends MVC2_Controller {
     private $milestone_factory;
