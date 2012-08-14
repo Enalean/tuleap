@@ -48,6 +48,19 @@ class FullTextSearchActions {
     }
 
     /**
+     * Index the new permissions of a document
+     *
+     * @param array $params parameters of the docman event
+     */
+    public function updatePermissions($params) {
+        $item        = $params['item'];
+        $update_data = $this->client->initializeSetterData();
+        $permissions = $this->permissions_manager->exportPermissions($item);
+        $update_data = $this->client->appendSetterData($update_data, 'permissions', $permissions);
+        $this->client->update($item->getid(), $update_data);
+    }
+
+    /**
      * Update title and description if they've changed
      * $params are kept as array to be compliant with others events,
      * but we merely need event objects
@@ -57,14 +70,14 @@ class FullTextSearchActions {
     public function updateDocument($params) {
         $item         = $params['item'];
         $new_data     = $params['new'];
-        $update_data  = array('script'=>'', 'params'=> array());
+        $update_data  = $this->client->initializeSetterData();
         $updated      = false;
         if ($this->titleUpdated($new_data['title'], $item)) {
-            $update_data = $this->client->buildSetterData($update_data, 'title', $new_data['title']);
+            $update_data = $this->client->appendSetterData($update_data, 'title', $new_data['title']);
             $updated     = true;
         }
         if ($this->descriptionUpdated($new_data, $item)) {
-            $update_data = $this->client->buildSetterData($update_data, 'description', $new_data['description']);
+            $update_data = $this->client->appendSetterData($update_data, 'description', $new_data['description']);
             $updated     = true;
         }
         if ($updated) {

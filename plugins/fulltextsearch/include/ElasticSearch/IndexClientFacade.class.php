@@ -48,11 +48,22 @@ class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade impleme
      * make a parameter with name $nname and value $value
      * then append it to current_data as script and var
      */
-    public function buildSetterData(array $current_data, $name, $value) {
+    public function appendSetterData(array $current_data, $name, $value) {
         $current_data['script']       .= "ctx._source.$name = $name;";
         $current_data['params'][$name] = $value;
         return $current_data;
     }
-}
 
+    /**
+     * Return the base to build a setter data
+     *
+     * @return array
+     */
+    public function initializeSetterData() {
+        return array(
+            'script' => '',
+            'params' => array()
+        );
+    }
+}
 ?>
