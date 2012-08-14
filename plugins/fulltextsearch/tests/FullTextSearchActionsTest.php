@@ -50,6 +50,10 @@ class FullTextSearchActionsTests extends TuleapTestCase {
             ->getPath()
             ->returns(dirname(__FILE__) .'/_fixtures/file.txt');
 
+        stub($this->client)
+            ->initializeSetterData()
+            ->returns(array('script' => '', 'params' => array()));
+
         $this->params = aSetOfParameters()
             ->withItem($this->item)
             ->withVersion($version)
@@ -77,12 +81,11 @@ class FullTextSearchActionsTests extends TuleapTestCase {
         $item_id = $this->item->getId();
         $expected_title = 'new title';
         $this->params['new'] = array('title' => $expected_title);
-        $update_data = array('script'=>'', 'params'=> array());
         $update_data = array(
             'script'=> 'ctx._source.title = title',
             'params'=> array('title' => $expected_title)
         );
-        stub($this->client)->buildSetterData('*', 'title', $expected_title)->returns($update_data);
+        stub($this->client)->appendSetterData('*', 'title', $expected_title)->returns($update_data);
 
         $expected = array($item_id, $update_data);
         $this->client->expectOnce('update', $expected);
