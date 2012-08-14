@@ -86,7 +86,7 @@ class AgileDashboardPlugin extends Plugin {
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning) {
         require_once 'Planning/PlanningFactory.class.php';
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
-        if ($planning && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_SUBMIT) {
+        if ($planning && !$redirect->stayInTracker()) {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
              $this->setQueryParametersFromRequest($request, $redirect->query_parameters);

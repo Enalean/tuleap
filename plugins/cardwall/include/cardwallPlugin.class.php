@@ -243,40 +243,43 @@ class cardwallPlugin extends Plugin {
 
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
         $cardwall = $params['request']->get('cardwall');
-        if ($cardwall && $this->requestCanLeaveTheTracker($params['request'])) {
+        $redirect = $params['redirect'];
+        if ($cardwall && !$redirect->stayInTracker()) {
             list($redirect_to, $redirect_params) = each($cardwall);
             switch ($redirect_to) {
             case 'agile':
-                $this->redirectToAgileDashboard($redirect_params);
+                $this->redirectToAgileDashboard($redirect, $redirect_params);
                 break;
             case 'renderer':
-                $this->redirectToRenderer($redirect_params);
+                $this->redirectToRenderer($redirect, $redirect_params);
                 break;
             }
         }
     }
 
-    private function redirectToAgileDashboard(array $redirect_params) {
+    private function redirectToAgileDashboard(Tracker_Action_CreateArtifactRedirect $redirect, array $redirect_params) {
         list($planning_id, $artifact_id) = each($redirect_params);
         require_once AGILEDASHBOARD_BASE_DIR .'/Planning/PlanningFactory.class.php';
         $planning = PlanningFactory::build()->getPlanning($planning_id);
         if ($planning) {
-            $GLOBALS['Response']->redirect(AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
+            $redirect->base_url         = AGILEDASHBOARD_BASE_URL;
+            $redirect->query_parameters = array(
                 'group_id'    => $planning->getGroupId(),
                 'planning_id' => $planning->getId(),
                 'action'      => 'show',
                 'aid'         => $artifact_id,
                 'pane'        => 'cardwall',
-            )));
+            );
         }
     }
 
-    private function redirectToRenderer(array $redirect_params) {
+    private function redirectToRenderer(Tracker_Action_CreateArtifactRedirect $redirect, array $redirect_params) {
         list($report_id, $renderer_id) = each($redirect_params);
-        $GLOBALS['Response']->redirect(TRACKER_BASE_URL .'/?'. http_build_query(array(
+        $redirect->base_url            = TRACKER_BASE_URL;
+        $redirect->query_parameters    = array(
             'report'   => $report_id,
             'renderer' => $renderer_id,
-        )));
+        );
     }
 
     public function tracker_event_build_artifact_form_action($params) {
@@ -287,10 +290,6 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    private function requestCanLeaveTheTracker(Codendi_Request $request) {
-        return ! ($request->get('submit_and_stay') || $request->get('submit_and_continue'));
-    }
-    
     /**
      * @return Cardwall_OnTop_Dao
      */

@@ -30,6 +30,10 @@ class Tracker_Action_CreateArtifactRedirect {
     public function toUrl() {
         return $this->base_url.'/?'.http_build_query($this->query_parameters);
     }
+
+    public function stayInTracker() {
+        return ($this->mode != self::STATE_SUBMIT);
+    }
 }
 
 class Tracker_Action_CreateArtifact {
