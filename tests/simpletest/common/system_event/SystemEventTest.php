@@ -38,5 +38,10 @@ class SystemEventTest extends TuleapTestCase {
         $this->expectException('SystemEventMissingParameterException');
         $event->getRequiredParameter(0);
     }
+
+    public function itProperlyEncodesAndDecodesData() {
+        $data = array('coin' => 'String that contains :: (the param separator)');
+        $this->assertEqual($data, SystemEvent::decode(SystemEvent::encode($data)));
+    }
 }
 ?>

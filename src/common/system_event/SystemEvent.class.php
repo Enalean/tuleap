@@ -76,7 +76,8 @@ abstract class SystemEvent {
     const PRIORITY_MEDIUM = 2;
     const PRIORITY_LOW    = 3;
     
-    const PARAMETER_SEPARATOR = '::';
+    const PARAMETER_SEPARATOR        = '::';
+    const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
     
     /**
      * Constructor
@@ -389,6 +390,27 @@ End Date:     {$this->getEndDate()}
      */
     protected function getBackend($type) {
         return Backend::instance($type);
+    }
+
+    /**
+     * @param mixed $data The data to encode (string, array, int, ...)
+     *
+     * @return string suitable to be enclosed as parameter
+     */
+    public static function encode($data) {
+        return str_replace(self::PARAMETER_SEPARATOR, self::PARAMETER_SEPARATOR_ESCAPE, json_encode(array('data' => $data)));
+    }
+
+    /**
+     * @param string $string encoded string
+     *
+     * @return mixed data
+     */
+    public static function decode($string) {
+        $decode = json_decode(str_replace(self::PARAMETER_SEPARATOR_ESCAPE, self::PARAMETER_SEPARATOR, $string), true);
+        if (isset($decode['data'])) {
+            return $decode['data'];
+        }
     }
 }
 
