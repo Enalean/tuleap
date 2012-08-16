@@ -40,6 +40,46 @@ class fulltextsearchPlugin extends Plugin {
 
         // style
         $this->_addHook('cssfile', 'cssfile', false);
+
+        // system events
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+        $this->_addHook(Event::SYSTEM_EVENT_INSTANCIATED, 'system_event_instanciated', false);
+    }
+
+    public function system_event_instanciated($params) {
+        switch ($params['sysevent']->getType()) {
+        case 'FULLTEXTSEARCH_DOCMAN_INDEX':
+        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
+            $params['sysevent']->setFullTextSearchActions($this->getActions())
+                ->setItemFactory(new Docman_ItemFactory())
+                ->setVersionFactory(new Docman_VersionFactory());
+            break;
+        }
+    }
+
+    public function system_event_get_types($params) {
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_INDEX';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
+    }
+
+    /**
+     *This callback make SystemEvent manager knows about git plugin System Events
+     * @param <type> $params
+     */
+    public function get_system_event_class($params) {
+        switch($params['type']) {
+            case 'FULLTEXTSEARCH_DOCMAN_INDEX':
+                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
+                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX';
+                break;
+            case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
+                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
+                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -82,7 +122,14 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_after_new_document($params) {
         if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->indexNewDocument($params);
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
+            SystemEventManager::instance()->createEvent(
+                'FULLTEXTSEARCH_DOCMAN_INDEX',
+                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
+                    $params['item']->getId().SystemEvent::PARAMETER_SEPARATOR.
+                    $params['version']->getNumber(),
+                SystemEvent::PRIORITY_MEDIUM
+            );
         }
     }
 
@@ -102,7 +149,13 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_perms_change($params) {
         if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->updatePermissions($params);
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
+            SystemEventManager::instance()->createEvent(
+                'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS',
+                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
+                    $params['item']->getId().SystemEvent::PARAMETER_SEPARATOR,
+                SystemEvent::PRIORITY_HIGH
+            );
         }
     }
 

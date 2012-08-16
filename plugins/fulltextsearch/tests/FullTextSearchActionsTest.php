@@ -46,7 +46,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
             ->exportPermissions($this->item)
             ->returns(array(3, 102));
 
-        $version = stub('Docman_Version')
+        $this->version = stub('Docman_Version')
             ->getPath()
             ->returns(dirname(__FILE__) .'/_fixtures/file.txt');
 
@@ -56,7 +56,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
 
         $this->params = aSetOfParameters()
             ->withItem($this->item)
-            ->withVersion($version)
+            ->withVersion($this->version)
             ->build();
     }
 
@@ -74,7 +74,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
                          );
         $this->client->expectOnce('index', $expected);
 
-        $this->actions->indexNewDocument($this->params);
+        $this->actions->indexNewDocument($this->item, $this->version);
     }
 
     public function itCallUpdateOnClientWithTitleIfNew() {

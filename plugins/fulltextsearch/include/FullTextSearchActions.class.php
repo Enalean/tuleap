@@ -40,20 +40,20 @@ class FullTextSearchActions {
     /**
      * Index a new document with permissions
      *
-     * @param array $params parameters of the docman event
+     * @param Docman_Item    $item    The docman item
+     * @param Docman_Version $version The version to index
      */
-    public function indexNewDocument($params) {
-        $indexed_data = $this->getIndexedData($params['item'], $params['version']);
-        $this->client->index($indexed_data, $params['item']->getId());
+    public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
+        $indexed_data = $this->getIndexedData($item, $version);
+        $this->client->index($indexed_data, $item->getId());
     }
 
     /**
      * Index the new permissions of a document
      *
-     * @param array $params parameters of the docman event
+     * @param Docman_Item $item The docman item
      */
-    public function updatePermissions($params) {
-        $item        = $params['item'];
+    public function updatePermissions(Docman_Item $item) {
         $update_data = $this->client->initializeSetterData();
         $permissions = $this->permissions_manager->exportPermissions($item);
         $update_data = $this->client->appendSetterData($update_data, 'permissions', $permissions);
