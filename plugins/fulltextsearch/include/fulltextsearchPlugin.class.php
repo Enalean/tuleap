@@ -52,7 +52,9 @@ class fulltextsearchPlugin extends Plugin {
         case 'FULLTEXTSEARCH_DOCMAN_INDEX':
         case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
         case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
-            $params['sysevent']->setFullTextSearchActions($this->getActions())
+        case 'FULLTEXTSEARCH_DOCMAN_DELETE':
+            $params['sysevent']
+                ->setFullTextSearchActions($this->getActions())
                 ->setItemFactory(new Docman_ItemFactory())
                 ->setVersionFactory(new Docman_VersionFactory());
             break;
@@ -63,6 +65,7 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_INDEX';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
     }
 
     /**
@@ -82,6 +85,10 @@ class fulltextsearchPlugin extends Plugin {
             case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
                 require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
                 $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
+                break;
+            case 'FULLTEXTSEARCH_DOCMAN_DELETE':
+                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
+                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE';
                 break;
             default:
                 break;
@@ -152,7 +159,13 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_del($params) {
         if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->delete($params);
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
+            SystemEventManager::instance()->createEvent(
+                'FULLTEXTSEARCH_DOCMAN_DELETE',
+                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
+                    $params['item']->getId(),
+                SystemEvent::PRIORITY_HIGH
+            );
         }
     }
 
@@ -165,7 +178,7 @@ class fulltextsearchPlugin extends Plugin {
             SystemEventManager::instance()->createEvent(
                 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS',
                 $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
-                    $params['item']->getId().SystemEvent::PARAMETER_SEPARATOR,
+                    $params['item']->getId(),
                 SystemEvent::PRIORITY_HIGH
             );
         }

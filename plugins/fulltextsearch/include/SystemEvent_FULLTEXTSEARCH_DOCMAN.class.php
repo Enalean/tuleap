@@ -54,10 +54,13 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
     }
 
     /**
+     * @param int   $item_id The id of the item to retrieve
+     * @param array $params  Various parameters for the retrieval. @see Docman_ItemFactory->getItemFromDb()
+     *
      * @return Docman_Item
      */
-    protected function getItem($item_id) {
-        return $this->item_factory->getItemFromDb($item_id);
+    protected function getItem($item_id, $params = array()) {
+        return $this->item_factory->getItemFromDb($item_id, $params);
     }
 
     /**

@@ -36,7 +36,6 @@ class FullTextSearchActions {
         $this->permissions_manager = $permissions_manager;
     }
 
-
     /**
      * Index a new document with permissions
      *
@@ -67,9 +66,18 @@ class FullTextSearchActions {
      */
     public function updateDocument(Docman_Item $item) {
         $update_data = $this->client->initializeSetterData();
-        $update_data = $this->client->appendSetterData($update_data, 'title', $item->getTitle());
+        $update_data = $this->client->appendSetterData($update_data, 'title',       $item->getTitle());
         $update_data = $this->client->appendSetterData($update_data, 'description', $item->getDescription());
         $this->client->update($item->getid(), $update_data);
+    }
+
+    /**
+     * Remove an indexed document
+     *
+     * @param Docman_Item $item The item to delete
+     */
+    public function delete(Docman_Item $item) {
+        $this->client->delete($item->getId());
     }
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
@@ -81,15 +89,6 @@ class FullTextSearchActions {
             'permissions' => $this->permissions_manager->exportPermissions($item),
             'file'        => $this->fileContentEncode($version->getPath())
         );
-    }
-
-    /**
-     * Remove an indexed document
-     *
-     * @param array $params
-     */
-    public function delete($params) {
-        $this->client->delete($params['item']->getId());
     }
 
     /**

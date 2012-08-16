@@ -98,7 +98,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
         $expected_id = $this->item->getId();
         $this->client->expectOnce('delete', array($expected_id));
 
-        $this->actions->delete($this->params);
+        $this->actions->delete($this->item);
     }
 }
 ?>
