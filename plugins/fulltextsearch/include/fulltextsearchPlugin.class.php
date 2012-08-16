@@ -73,25 +73,9 @@ class fulltextsearchPlugin extends Plugin {
      * @param <type> $params
      */
     public function get_system_event_class($params) {
-        switch($params['type']) {
-            case 'FULLTEXTSEARCH_DOCMAN_INDEX':
-                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
-                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX';
-                break;
-            case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
-                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
-                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
-                break;
-            case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
-                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
-                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
-                break;
-            case 'FULLTEXTSEARCH_DOCMAN_DELETE':
-                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
-                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE';
-                break;
-            default:
-                break;
+        if (strpos($params['type'], 'FULLTEXTSEARCH_') !== false) {
+            $params['class'] = 'SystemEvent_'. $params['type'];
+            require_once $params['class'] .'.class.php';
         }
     }
 
@@ -123,15 +107,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_update($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
-            SystemEventManager::instance()->createEvent(
-                'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA',
-                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
-                    $params['item']->getId(),
-                SystemEvent::PRIORITY_MEDIUM
-            );
-        }
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA', SystemEvent::PRIORITY_MEDIUM, $params['item']);
     }
 
     /**
@@ -140,16 +116,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
-            SystemEventManager::instance()->createEvent(
-                'FULLTEXTSEARCH_DOCMAN_INDEX',
-                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
-                    $params['item']->getId().SystemEvent::PARAMETER_SEPARATOR.
-                    $params['version']->getNumber(),
-                SystemEvent::PRIORITY_MEDIUM
-            );
-        }
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
     }
 
     /**
@@ -158,29 +125,28 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_del($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
-            SystemEventManager::instance()->createEvent(
-                'FULLTEXTSEARCH_DOCMAN_DELETE',
-                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
-                    $params['item']->getId(),
-                SystemEvent::PRIORITY_HIGH
-            );
-        }
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_DELETE', SystemEvent::PRIORITY_HIGH, $params['item']);
     }
 
     /**
      * Event triggered when the permissions on a document change
      */
     public function plugin_docman_event_perms_change($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
+    }
+
+    private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
+        if ($this->isAllowed($item->getGroupId())) {
             require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
-            SystemEventManager::instance()->createEvent(
-                'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS',
-                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
-                    $params['item']->getId(),
-                SystemEvent::PRIORITY_HIGH
-            );
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
+
+            $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
+            if ($additional_params) {
+                $params .= SystemEvent::PARAMETER_SEPARATOR . $additional_params;
+            }
+            SystemEventManager::instance()->createEvent($type, $params, $priority);
         }
     }
 

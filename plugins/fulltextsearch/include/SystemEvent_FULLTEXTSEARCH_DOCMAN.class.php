@@ -54,6 +54,42 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
     }
 
     /**
+     * Process the system event
+     *
+     * @return bool
+     */
+    public function process() {
+        try {
+            $group_id = (int)$this->getRequiredParameter(0);
+            $item_id  = (int)$this->getRequiredParameter(1);
+
+            $item = $this->getItem($item_id);
+            if ($item) {
+                if ($this->processItem($item)) {
+                    $this->done();
+                    return true;
+                }
+            } else {
+                $this->error('Item not found');
+            }
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
+        return false;
+    }
+
+    /**
+     * Execute action on the given item
+     *
+     * @see process()
+     *
+     * @param Docman_Item $item The item
+     *
+     * @return bool true if success (means status=done), false otherwise
+     */
+    protected abstract function processItem(Docman_Item $item);
+
+    /**
      * @param int   $item_id The id of the item to retrieve
      * @param array $params  Various parameters for the retrieval. @see Docman_ItemFactory->getItemFromDb()
      *
@@ -70,6 +106,9 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
         return $this->version_factory->getSpecificVersion($item, $version_number);
     }
 
+    /**
+     * @return string a human readable representation of parameters
+     */
     public function verbalizeParameters($with_link) {
         return $this->parameters;
     }

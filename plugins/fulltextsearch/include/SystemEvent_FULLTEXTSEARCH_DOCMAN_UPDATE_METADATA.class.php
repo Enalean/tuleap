@@ -22,23 +22,9 @@ require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN.class.php';
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
 
-    public function process() {
-        try {
-            $group_id = (int)$this->getRequiredParameter(0);
-            $item_id  = (int)$this->getRequiredParameter(1);
-
-            $item = $this->getItem($item_id);
-            if ($item) {
-                $this->actions->updateDocument($item);
-                $this->done();
-                return true;
-            } else {
-                $this->error('Item not found');
-            }
-        } catch (Exception $e) {
-            $this->error($e->getMessage());
-        }
-        return false;
+    protected function processItem(Docman_Item $item) {
+        $this->actions->updateDocument($item);
+        return true;
     }
 }
 ?>

@@ -22,28 +22,14 @@ require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN.class.php';
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
 
-    public function process() {
-        try {
-            $group_id       = (int)$this->getRequiredParameter(0);
-            $item_id        = (int)$this->getRequiredParameter(1);
-            $version_number = (int)$this->getRequiredParameter(2);
-
-            $item = $this->getItem($item_id);
-            if ($item) {
-                $version = $this->getVersion($item, $version_number);
-                if ($version) {
-                    $this->actions->indexNewDocument($item, $version);
-                    $this->done();
-                    return true;
-                }
-                $this->error('Version not found');
-            } else {
-                $this->error('Item not found');
-            }
-        } catch (Exception $e) {
-            $this->error($e->getMessage());
+    protected function processItem(Docman_Item $item) {
+        $version_number = (int)$this->getRequiredParameter(2);
+        $version = $this->getVersion($item, $version_number);
+        if ($version) {
+            $this->actions->indexNewDocument($item, $version);
+            return true;
         }
-        return false;
+        $this->error('Version not found');
     }
 }
 ?>

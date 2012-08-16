@@ -22,23 +22,13 @@ require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN.class.php';
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
 
-    public function process() {
-        try {
-            $group_id = (int)$this->getRequiredParameter(0);
-            $item_id  = (int)$this->getRequiredParameter(1);
+    protected function processItem(Docman_Item $item) {
+        $this->actions->delete($item);
+        return true;
+    }
 
-            $item = $this->getItem($item_id, array('ignore_deleted' => true));
-            if ($item) {
-                $this->actions->delete($item);
-                $this->done();
-                return true;
-            } else {
-                $this->error('Item not found');
-            }
-        } catch (Exception $e) {
-            $this->error($e->getMessage());
-        }
-        return false;
+    protected function getItem($item_id) {
+        return parent::getItem($item_id, array('ignore_deleted' => true));
     }
 }
 ?>
