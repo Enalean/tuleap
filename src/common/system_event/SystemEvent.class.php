@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
  */
 
-require_once('common/dao/SystemEventsFollowersDao.class.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/event/EventManager.class.php');
+require_once 'common/dao/SystemEventsFollowersDao.class.php';
+require_once 'common/mail/Mail.class.php';
+require_once 'common/event/EventManager.class.php';
+require_once 'SystemEventMissingParameterException.class.php';
 
 /**
  * System Event class
@@ -227,7 +227,18 @@ abstract class SystemEvent {
         } else return 0;
     }
 
+    public function getParameter($index) {
+        $params = $this->getParametersAsArray();
+        return isset($params[$index]) && $params[$index] !== '' ? $params[$index] : null;
+    }
 
+    public function getRequiredParameter($index) {
+        $param = $this->getParameter($index);
+        if ($param === null) {
+            throw new SystemEventMissingParameterException('Missing parameter n°'. (int)$index);
+        }
+        return $param;
+    }
 
     /**
      * Error functions
