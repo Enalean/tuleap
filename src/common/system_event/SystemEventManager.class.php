@@ -346,6 +346,7 @@ class SystemEventManager {
      * @return SystemEvent
      */
     protected function getInstanceFromRow($row) {
+        $em       = EventManager::instance();
         $sysevent = null;
         $klass    = null;
         switch ($row['type']) {
@@ -367,11 +368,10 @@ class SystemEventManager {
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
         case SystemEvent::TYPE_ROOT_DAILY:
-            case SystemEvent::TYPE_COMPUTE_MD5SUM:
-            $klass = 'SystemEvent_'. $row['type'];            
+        case SystemEvent::TYPE_COMPUTE_MD5SUM:
+            $klass = 'SystemEvent_'. $row['type'];
             break;
         default:
-            $em = EventManager::instance();
             $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type'=>$row['type'], 'class'=>&$klass) );
             break;
         }
@@ -385,6 +385,7 @@ class SystemEventManager {
                                    $row['process_date'],
                                    $row['end_date'],
                                    $row['log']);
+            $em->processEvent(Event::SYSTEM_EVENT_INSTANCIATED, array('sysevent' => $sysevent));
         }
         return $sysevent;
     }

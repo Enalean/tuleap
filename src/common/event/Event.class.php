@@ -215,6 +215,14 @@ class Event {
     const SYSTEM_EVENT_GET_TYPES = 'system_event_get_types';
 
     /**
+     * Inform that a new systemevent has been created
+     *
+     * Parameters:
+     *  'sysevent' => the SystemEvent instance
+     */
+    const SYSTEM_EVENT_INSTANCIATED = 'system_event_instanciated';
+
+    /**
      * Display javascript snippets in the page footer (just before </body>)
      *
      * No Parameters.
