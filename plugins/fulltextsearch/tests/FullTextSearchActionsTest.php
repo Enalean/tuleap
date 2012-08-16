@@ -79,19 +79,19 @@ class FullTextSearchActionsTests extends TuleapTestCase {
 
     public function itCallUpdateOnClientWithTitleIfNew() {
         $item_id = $this->item->getId();
-        $expected_title = 'new title';
-        $this->params['new'] = array('title' => $expected_title);
         $update_data = array(
-            'script'=> 'ctx._source.title = title',
-            'params'=> array('title' => $expected_title)
+            'script'=> 'ctx._source.title = title; ctx._source.description = description',
+            'params'=> array(
+                'title'       => $this->item->getTitle(),
+                'description' => $this->item->getDescription()
+            ),
         );
-        stub($this->client)->appendSetterData('*', 'title', $expected_title)->returns($update_data);
+        stub($this->client)->appendSetterData()->returns($update_data);
 
         $expected = array($item_id, $update_data);
         $this->client->expectOnce('update', $expected);
 
-        $this->actions->updateDocument($this->params);
-        unset($this->params['new']);
+        $this->actions->updateDocument($this->item);
     }
 
     public function itCanDeleteADocumentFromItsId() {

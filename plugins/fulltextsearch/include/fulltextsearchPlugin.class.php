@@ -51,6 +51,7 @@ class fulltextsearchPlugin extends Plugin {
         switch ($params['sysevent']->getType()) {
         case 'FULLTEXTSEARCH_DOCMAN_INDEX':
         case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
+        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
             $params['sysevent']->setFullTextSearchActions($this->getActions())
                 ->setItemFactory(new Docman_ItemFactory())
                 ->setVersionFactory(new Docman_VersionFactory());
@@ -61,6 +62,7 @@ class fulltextsearchPlugin extends Plugin {
     public function system_event_get_types($params) {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_INDEX';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
     }
 
     /**
@@ -76,6 +78,10 @@ class fulltextsearchPlugin extends Plugin {
             case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
                 require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
                 $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
+                break;
+            case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
+                require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
+                $params['class'] = 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
                 break;
             default:
                 break;
@@ -111,7 +117,13 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_update($params) {
         if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->updateDocument($params);
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
+            SystemEventManager::instance()->createEvent(
+                'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA',
+                $params['item']->getGroupId().SystemEvent::PARAMETER_SEPARATOR.
+                    $params['item']->getId(),
+                SystemEvent::PRIORITY_MEDIUM
+            );
         }
     }
 

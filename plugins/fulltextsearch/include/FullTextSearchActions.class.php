@@ -61,36 +61,15 @@ class FullTextSearchActions {
     }
 
     /**
-     * Update title and description if they've changed
-     * $params are kept as array to be compliant with others events,
-     * but we merely need event objects
+     * Update title and description of a document
      *
-     * @param array $params
+     * @param Docman_Item $item The item
      */
-    public function updateDocument($params) {
-        $item         = $params['item'];
-        $new_data     = $params['new'];
-        $update_data  = $this->client->initializeSetterData();
-        $updated      = false;
-        if ($this->titleUpdated($new_data['title'], $item)) {
-            $update_data = $this->client->appendSetterData($update_data, 'title', $new_data['title']);
-            $updated     = true;
-        }
-        if ($this->descriptionUpdated($new_data, $item)) {
-            $update_data = $this->client->appendSetterData($update_data, 'description', $new_data['description']);
-            $updated     = true;
-        }
-        if ($updated) {
-            $this->client->update($item->getid(), $update_data);
-        }
-    }
-
-    private function titleUpdated($data, Docman_Item $item) {
-        return isset($data['title']) && $data['title'] != $item->getTitle();
-    }
-
-    private function descriptionUpdated($data, Docman_Item $item) {
-        return isset($data['description']) && $data['description'] != $item->getDescription();
+    public function updateDocument(Docman_Item $item) {
+        $update_data = $this->client->initializeSetterData();
+        $update_data = $this->client->appendSetterData($update_data, 'title', $item->getTitle());
+        $update_data = $this->client->appendSetterData($update_data, 'description', $item->getDescription());
+        $this->client->update($item->getid(), $update_data);
     }
 
     private function getIndexedData(Docman_Item $item, Docman_Version $version) {
