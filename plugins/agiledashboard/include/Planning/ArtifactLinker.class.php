@@ -65,7 +65,6 @@ class Planning_ArtifactLinker {
         $user = $request->getCurrentUser();
         $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
         if ($descendant_milestone_artifact) {
-            var_dump("will be linked to child_milestone ".$descendant_milestone_artifact->getId());
             $this->linkWithPlanning($user, $artifact, $descendant_milestone_artifact);
         }
     }
