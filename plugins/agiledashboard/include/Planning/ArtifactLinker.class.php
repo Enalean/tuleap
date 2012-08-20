@@ -48,20 +48,24 @@ class Planning_ArtifactLinker {
         $ancestors = $artifact->getAllAncestors($user);
         if (count($ancestors) == 0) {
             $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
-            if ($source_artifact) {
-                foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
-                    $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
-                    if ($planning->getBacklogTracker() == $artifact->getTracker()) {
-                        $ancestor->linkArtifact($artifact->getId(), $user);
-                    }
-                }
-            }
+            $this->linkWithBacklogArtifact($user, $source_artifact, $artifact);
         }
     }
 
     private function getSourceArtifact(Codendi_Request $request, $key) {
         $artifact_id = (int) $request->getValidated($key, 'uint', 0);
         return $this->artifact_factory->getArtifactById($artifact_id);
+    }
+
+    private function linkWithBacklogArtifact($user, $source_artifact, $artifact) {
+        if ($source_artifact) {
+            foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
+                $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
+                if ($planning->getBacklogTracker() == $artifact->getTracker()) {
+                    $ancestor->linkArtifact($artifact->getId(), $user);
+                }
+            }
+        }
     }
 
     public function linkWithPlanningParams(Codendi_Request $request, Tracker_Artifact $artifact) {
@@ -73,13 +77,7 @@ class Planning_ArtifactLinker {
     }
 
     public function linkWithPlanning(User $user, Tracker_Artifact $new_artifact, Tracker_Artifact $descendant_milestone_artifact) {
-        $milestone_artifact_ancestors = $descendant_milestone_artifact->getAllAncestors($user);
-        foreach ($milestone_artifact_ancestors as $milestone_artifact_ancestor) {
-            $planning = $this->planning_factory->getPlanningByPlanningTracker($milestone_artifact_ancestor->getTracker());
-            if ($planning->getBacklogTracker() == $new_artifact->getTracker()) {
-                $milestone_artifact_ancestor->linkArtifact($new_artifact->getId(), $user);
-            }
-        }
+        $this->linkWithBacklogArtifact($user, $descendant_milestone_artifact, $new_artifact);
     }
 }
 
