@@ -44,7 +44,7 @@ class fulltextsearchPlugin extends Plugin {
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
-        $this->_addHook(Event::SYSTEM_EVENT_INSTANCIATED, 'system_event_instanciated', false);
+        $this->_addHook(Event::SYSTEM_EVENT_INSTANTIATED, 'system_event_instantiated', false);
     }
 
     public function system_event_instanciated($params) {
@@ -69,8 +69,7 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     /**
-     *This callback make SystemEvent manager knows about git plugin System Events
-     * @param <type> $params
+     * This callback make SystemEvent manager knows about fulltext plugin System Events
      */
     public function get_system_event_class($params) {
         if (strpos($params['type'], 'FULLTEXTSEARCH_') !== false) {

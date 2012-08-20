@@ -385,7 +385,7 @@ class SystemEventManager {
                                    $row['process_date'],
                                    $row['end_date'],
                                    $row['log']);
-            $em->processEvent(Event::SYSTEM_EVENT_INSTANCIATED, array('sysevent' => $sysevent));
+            $em->processEvent(Event::SYSTEM_EVENT_INSTANTIATED, array('sysevent' => $sysevent));
         }
         return $sysevent;
     }

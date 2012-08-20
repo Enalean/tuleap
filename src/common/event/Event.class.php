@@ -220,7 +220,7 @@ class Event {
      * Parameters:
      *  'sysevent' => the SystemEvent instance
      */
-    const SYSTEM_EVENT_INSTANCIATED = 'system_event_instanciated';
+    const SYSTEM_EVENT_INSTANTIATED = 'system_event_instantiated';
 
     /**
      * Display javascript snippets in the page footer (just before </body>)
