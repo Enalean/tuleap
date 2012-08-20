@@ -48,7 +48,15 @@ class Planning_ArtifactLinker {
         $ancestors = $artifact->getAllAncestors($user);
         if (count($ancestors) == 0) {
             $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
-            $this->linkWithBacklogArtifact($user, $source_artifact, $artifact);
+            $this->linkWithBacklogArtifact($user, $artifact, $source_artifact);
+        }
+    }
+
+    public function linkWithPlanning(Codendi_Request $request, Tracker_Artifact $artifact) {
+        $user = $request->getCurrentUser();
+        $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
+        if ($descendant_milestone_artifact) {
+            $this->linkWithBacklogArtifact($user, $artifact, $descendant_milestone_artifact);
         }
     }
 
@@ -57,7 +65,7 @@ class Planning_ArtifactLinker {
         return $this->artifact_factory->getArtifactById($artifact_id);
     }
 
-    private function linkWithBacklogArtifact($user, $source_artifact, $artifact) {
+    private function linkWithBacklogArtifact(User $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
@@ -66,18 +74,6 @@ class Planning_ArtifactLinker {
                 }
             }
         }
-    }
-
-    public function linkWithPlanningParams(Codendi_Request $request, Tracker_Artifact $artifact) {
-        $user = $request->getCurrentUser();
-        $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
-        if ($descendant_milestone_artifact) {
-            $this->linkWithPlanning($user, $artifact, $descendant_milestone_artifact);
-        }
-    }
-
-    public function linkWithPlanning(User $user, Tracker_Artifact $new_artifact, Tracker_Artifact $descendant_milestone_artifact) {
-        $this->linkWithBacklogArtifact($user, $descendant_milestone_artifact, $new_artifact);
     }
 }
 

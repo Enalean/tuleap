@@ -100,6 +100,12 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $this->epic_id      = 2;
         $this->epic_tracker = aTracker()->withId(200)->build();
         $this->epic         = aMockArtifact()->withId($this->epic_id)->withTracker($this->epic_tracker)->build();
+
+        $this->sprint_id    = 32;
+        $this->sprint       = aMockArtifact()->withId($this->sprint_id)->build();
+        stub($this->artifact_factory)->getArtifactById($this->sprint_id)->returns($this->sprint);
+
+        $this->request = aRequest()->with('child_milestone', "$this->sprint_id")->withUser($this->user)->build();
     }
 
 
@@ -109,13 +115,11 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $release          = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
 
-        $sprint  = aMockArtifact()->withId(32)->build();
-        stub($sprint)->getAllAncestors()->returns(array($release));
+        stub($this->sprint)->getAllAncestors()->returns(array($release));
 
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        // I create an epic (argument 2) after having created a story in a sprint (argument 3)
-        $this->linker->linkWithPlanning($this->user, $this->epic, $sprint);
+        $this->linker->linkWithPlanning($this->request, $this->epic);
     }
 
     public function itLinksTheEpicWithMilestonesCorrespondingToStoryPlanning() {
@@ -129,13 +133,12 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $release          = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
 
-        $sprint  = aMockArtifact()->withId(32)->build();
-        stub($sprint)->getAllAncestors()->returns(array($release, $product));
+        stub($this->sprint)->getAllAncestors()->returns(array($release, $product));
 
         $product->expectOnce('linkArtifact', array($this->epic_id, $this->user));
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        $this->linker->linkWithPlanning($this->user, $this->epic, $sprint);
+        $this->linker->linkWithPlanning($this->request, $this->epic);
     }
 
     public function itDoesntLinkTheEpicWithProductPlanningWhenProductPlanningDoesntManageEpics() {
@@ -151,13 +154,12 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $release          = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
         stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
 
-        $sprint  = aMockArtifact()->withId(32)->build();
-        stub($sprint)->getAllAncestors()->returns(array($release, $product));
+        stub($this->sprint)->getAllAncestors()->returns(array($release, $product));
 
         $product->expectNever('linkArtifact');
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        $this->linker->linkWithPlanning($this->user, $this->epic, $sprint);
+        $this->linker->linkWithPlanning($this->request, $this->epic);
     }
 }
 
