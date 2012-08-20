@@ -55,9 +55,7 @@ class Planning_ArtifactLinker {
     public function linkWithPlanning(Codendi_Request $request, Tracker_Artifact $artifact) {
         $user = $request->getCurrentUser();
         $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
-        if ($descendant_milestone_artifact) {
-            $this->linkWithBacklogArtifact($user, $artifact, $descendant_milestone_artifact);
-        }
+        $this->linkWithBacklogArtifact($user, $artifact, $descendant_milestone_artifact);
     }
 
     private function getSourceArtifact(Codendi_Request $request, $key) {
