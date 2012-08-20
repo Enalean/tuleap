@@ -26,48 +26,65 @@ require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+        // corporation     -----> theme
+        // `- product      -----> epic
+        //    `- release   -----> epic
+        $corp_tracker    = aTracker()->build();
+        $product_tracker = aTracker()->build();
+        $release_tracker = aTracker()->build();
+        $epic_tracker    = aTracker()->build();
+        $theme_tracker   = aTracker()->build();
+
+        $corp_planning    = stub('Planning')->getBacklogTracker()->returns($theme_tracker);
+        $product_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
+        $release_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
+
+        $planning_factory = mock('PlanningFactory');
+        stub($planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
+        stub($planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
+        stub($planning_factory)->getPlanningByPlanningTracker($corp_tracker)->returns($corp_planning);
+
+        $this->user   = aUser()->build();
+        $this->epic_id = 2;
+        $this->epic = aMockArtifact()->withId($this->epic_id)->withTracker($epic_tracker)->build();
+        stub($this->epic)->getAllAncestors($this->user)->returns(array());
+
+        $this->corp    = aMockArtifact()->withId(42)->withTracker($corp_tracker)->build();
+
+        $this->product = aMockArtifact()->withId(56)->withTracker($product_tracker)->build();
+        stub($this->product)->getAllAncestors($this->user)->returns(array($this->corp));
+
+        $this->release_id = 7777;
+        $this->release    = aMockArtifact()->withId($this->release_id)->withTracker($release_tracker)->build();
+        stub($this->release)->getAllAncestors($this->user)->returns(array($this->product, $this->corp));
+
+        $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
+    }
+
     public function itDoesntLinkWhenItWasLinkedToAParent() {
-        $user   = aUser()->build();
         $story_id = 5698;
         $story = aMockArtifact()->withId($story_id)->build();
         $task = aMockArtifact()->withId(2)->build();
-        stub($task)->getAllAncestors($user)->returns(array($story));
-
-        $request = aRequest()->with('link-artifact-id', "$story_id")->withUser($user)->build();
+        stub($task)->getAllAncestors($this->user)->returns(array($story));
 
         $story->expectNever('linkArtifact');
 
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        $planning_factory = mock('PlanningFactory');
-        $linker = new Planning_ArtifactLinker($artifact_factory, $planning_factory);
-        $linker->linkWithParents($request, $task);
+        $this->linker->linkWithParents($this->request, $task);
     }
 
     public function itLinksWithAllHierarchyWhenItWasLinkedToAnAssociatedTracker() {
-        $user   = aUser()->build();
-        $epic_id = 2;
-        $epic = aMockArtifact()->withId(2)->build();
-        stub($epic)->getAllAncestors($user)->returns(array());
+        $this->epic->expectNever('linkArtifact');
+        $this->release->expectNever('linkArtifact');
+        $this->product->expectOnce('linkArtifact', array($this->epic_id, $this->user));
+        $this->corp->expectNever('linkArtifact');
 
-        $product = aMockArtifact()->withId(56)->build();
-
-        $release_id = 7777;
-        $release    = aMockArtifact()->withId($release_id)->build();
-        stub($release)->getAllAncestors($user)->returns(array($product));
-
-        $request = aRequest()->with('link-artifact-id', "$release_id")->withUser($user)->build();
-
-        $epic->expectNever('linkArtifact');
-        $release->expectNever('linkArtifact');
-        $product->expectOnce('linkArtifact', array($epic_id, $user));
-
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        stub($artifact_factory)->getArtifactById($release_id)->returns($release);
-        $planning_factory = mock('PlanningFactory');
-        $linker = new Planning_ArtifactLinker($artifact_factory, $planning_factory);
-        $linker->linkWithParents($request, $epic);
+        stub($this->artifact_factory)->getArtifactById($this->release_id)->returns($this->release);
+        $this->linker->linkWithParents($this->request, $this->epic);
     }
-
 }
 
 class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {

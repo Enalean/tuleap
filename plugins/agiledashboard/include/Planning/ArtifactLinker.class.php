@@ -50,7 +50,10 @@ class Planning_ArtifactLinker {
             $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
             if ($source_artifact) {
                 foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
-                    $ancestor->linkArtifact($artifact->getId(), $user);
+                    $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
+                    if ($planning->getBacklogTracker() == $artifact->getTracker()) {
+                        $ancestor->linkArtifact($artifact->getId(), $user);
+                    }
                 }
             }
         }
