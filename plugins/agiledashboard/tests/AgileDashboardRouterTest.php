@@ -25,7 +25,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        
+
         $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
                                              array('getViewBuilder',
@@ -35,13 +35,15 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
                                                    'getPlanningFactory',
                                                    'getProjectManager',
                                                    'getArtifactFactory',
-                                                   'getMilestoneFactory'));
+                                                   'getMilestoneFactory',
+                                                   'buildMilestoneController'));
         $this->router->__construct(mock('Plugin'));
         
         stub($this->router)->buildController()->returns($this->planning_controller);
-        stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
+        stub($this->router)->getViewBuilder()->returns(mock('Planning_ViewBuilder'));
         stub($this->router)->getProjectManager()->returns(mock('ProjectManager'));
         stub($this->router)->getMilestoneFactory()->returns(mock('Planning_MilestoneFactory'));
+        stub($this->router)->buildMilestoneController()->returns(mock('Planning_MilestoneController'));
     }
     
     public function itRoutesPlanningEditionRequests() {

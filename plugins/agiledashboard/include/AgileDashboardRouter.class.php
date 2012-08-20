@@ -168,7 +168,8 @@ class AgileDashboardRouter {
         return new Planning_MilestoneController(
             $request,
             $this->getMilestoneFactory(),
-            $this->getProjectManager()
+            $this->getProjectManager(),
+            $this->getViewBuilder($request)
         );
     }
     
@@ -184,15 +185,8 @@ class AgileDashboardRouter {
                                                     $action_name,
                                     Codendi_Request $request,
                                     array           $args = array()) {
-
-        // If messages are added during action execution (addFeedback) they are
-        // not displayed unless we control output.
-        ob_start();
-        $this->executeAction($controller, $action_name, $args);
-        $content = ob_get_clean();
-
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
-        echo $content;
+        $this->executeAction($controller, $action_name, $args);
         $this->displayFooter($request);
     }
     
@@ -258,7 +252,7 @@ class AgileDashboardRouter {
                 /* no break */
             default:
                 $controller = $this->buildMilestoneController($request);
-                $action_arguments = array($this->getViewBuilder($request));
+                $action_arguments = array();
                 $this->renderAction($controller, 'show', $request, $action_arguments);
         }
     }

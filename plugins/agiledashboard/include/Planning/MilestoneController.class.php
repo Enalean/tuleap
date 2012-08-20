@@ -53,7 +53,8 @@ class Planning_MilestoneController extends MVC2_Controller {
      */
     public function __construct(Codendi_Request           $request,
                                 Planning_MilestoneFactory $milestone_factory,
-                                ProjectManager            $project_manager) {
+                                ProjectManager            $project_manager,
+                                Planning_ViewBuilder      $view_builder) {
         
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory = $milestone_factory;
@@ -71,18 +72,18 @@ class Planning_MilestoneController extends MVC2_Controller {
         if (!$this->milestone) {
             $this->milestone = $this->milestone_factory->getNoMilestone($project, $request->get('planning_id'));
         }
+        $planning     = $this->milestone->getPlanning();
+        $this->content_view = $this->buildContentView($view_builder, $planning, $project);
     }
 
-    public function show(Planning_ViewBuilder $view_builder) {
-        $project              = $this->milestone->getProject();
-        $planning             = $this->milestone->getPlanning();
+    public function show() {
+        $planning     = $this->milestone->getPlanning();
         if ($this->milestone->hasAncestors()) {
             $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
         } else {
             $available_milestones = $this->getAllMilestonesOfCurrentPlanning();
         }
-        $content_view         = $this->buildContentView($view_builder, $planning, $project);
-        $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
+        $presenter = $this->getMilestonePresenter($planning, $this->content_view, $available_milestones);
         
         $this->render('show', $presenter);
     }
@@ -128,7 +129,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
-    private function buildContentView(
+    protected function buildContentView(
         Planning_ViewBuilder $view_builder,
         Planning             $planning,
         Project              $project = null

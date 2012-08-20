@@ -58,8 +58,8 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->request_uri = '/plugins/agiledashboard/';
         $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
         $_SERVER['REQUEST_URI'] = $this->request_uri;
-        
-        
+
+
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
@@ -145,7 +145,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
         $milestone                 = $this->GivenNoMilestone($project);
 
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array($project), new MockTracker_CrossSearch_Search());
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array($project));
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
 
@@ -228,7 +228,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($milestone)->getPlanning()->returns($this->planning);
         stub($milestone)->getProject()->returns(mock('Project'));
         stub($milestone)->getAncestors()->returns(array());
-        
+
         return $milestone;
     }
 
@@ -248,7 +248,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         $user = aUser()->build();
-        
+
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
 
@@ -261,7 +261,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         $user = aUser()->build();
-                
+
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
 
@@ -280,10 +280,10 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockPlanning_ViewBuilder();
         $view_builder->setReturnValue('build', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array(), new MockTracker_CrossSearch_Search());
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array());
     }
 
-    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array $projects, $search) {
+    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array $projects) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
         $tracker_factory = new MockTrackerFactory();
@@ -296,9 +296,9 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                                       ->returns($milestone);
 
         ob_start();
-        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager);
+        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager, $view_builder);
 
-        $controller->show($view_builder, $project_manager, $search);
+        $controller->show();
         $content = ob_get_clean();
         return $content;
     }
@@ -326,7 +326,8 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         $this->product     = aMilestone()->withArtifact(aMockArtifact()->withId(1)->withTitle('Product X')->build())->build();
         $this->release     = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Release 1.0')->build())->build();
         $this->sprint      = aMilestone()->withArtifact(aMockArtifact()->withId(3)->withTitle('Sprint 1')->build())->build();
-        
+        $this->nomilestone = stub('Planning_NoMilestone')->getPlanning()->returns(mock('Planning'));
+
         $this->milestone_factory = mock('Planning_MilestoneFactory');
         $this->project_manager   = mock('ProjectManager');
 
@@ -335,21 +336,27 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     }
 
     public function itHasNoBreadCrumbWhenThereIsNoMilestone() {
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns(mock('Planning_NoMilestone'));
-        
-        $controller = new Planning_MilestoneController($this->request, $this->milestone_factory, $this->project_manager);
-        $breadcrumb = $controller->getBreadcrumbs($this->plugin_path);
-        $this->assertIsA($breadcrumb, 'BreadCrumb_NoCrumb');
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->nomilestone);
+
+        $breadcrumbs = $this->getBreadcrumbs();
+        $this->assertIsA($breadcrumbs, 'BreadCrumb_NoCrumb');
     }
 
     public function itIncludesBreadcrumbsForParentMilestones() {
         $this->sprint->setAncestors(array($this->release, $this->product));
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
 
-        $controller  = new Planning_MilestoneController($this->request, $this->milestone_factory, $this->project_manager);
-
-        $breadcrumbs = $controller->getBreadcrumbs($this->plugin_path);
+        $breadcrumbs = $this->getBreadcrumbs();
         $this->assertEqualToBreadCrumbWithAllMilestones($breadcrumbs);
+    }
+
+    private function getBreadcrumbs() {
+        $controller = partial_mock(
+            'Planning_MilestoneController',
+            array('buildContentView'),
+            array($this->request, $this->milestone_factory, $this->project_manager, mock('Planning_ViewBuilder'))
+        );
+        return $controller->getBreadcrumbs($this->plugin_path);
     }
 
     public function assertEqualToBreadCrumbWithAllMilestones($breadcrumbs) {
@@ -365,7 +372,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 class Planning_MilestoneControllerTrapPresenter extends Planning_MilestoneController {
     public $template_name;
     public $presenter;
-    
+
     protected function render($template_name, $presenter) {
         $this->template_name = $template_name;
         $this->presenter      = $presenter;
@@ -398,6 +405,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $this->current_user = aUser()->build();
         $this->request = aRequest()->withUser($this->current_user)->build();
 
+        $this->view_builder = stub('Planning_ViewBuilder')->build()->returns(mock('Tracker_CrossSearch_SearchContentView'));
         Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
     }
 
@@ -410,7 +418,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
         stub($this->milestone_factory)->getAllMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
-        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
+        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder);
 
         $selectable_artifacts = $this->getSelectableArtifacts();
         $this->assertCount($selectable_artifacts, 2);
@@ -428,7 +436,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
         stub($this->milestone_factory)->getAllMilestones($this->current_user, $planning)->returns(array($milstone_1001, $milstone_1002));
-        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager);
+        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder);
 
         $selectable_artifacts = $this->getSelectableArtifacts();
         $this->assertCount($selectable_artifacts, 2);
@@ -437,8 +445,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
     }
 
     private function getSelectableArtifacts() {
-        $planning_view_builder = stub('Planning_ViewBuilder')->build()->returns(mock('Tracker_CrossSearch_SearchContentView'));
-        $this->controller->show($planning_view_builder);
+        $this->controller->show();
         return $this->controller->presenter->selectableArtifacts();
     }
 
