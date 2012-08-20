@@ -47,8 +47,7 @@ class Planning_ArtifactLinker {
         $user      = $request->getCurrentUser();
         $ancestors = $artifact->getAllAncestors($user);
         if (count($ancestors) == 0) {
-            $artifact_id     = (int)$request->getValidated('link-artifact-id', 'uint', 0);
-            $source_artifact = $this->artifact_factory->getArtifactById($artifact_id);
+            $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
             if ($source_artifact) {
                 foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
                     $ancestor->linkArtifact($artifact->getId(), $user);
@@ -56,7 +55,21 @@ class Planning_ArtifactLinker {
             }
         }
     }
-    
+
+    private function getSourceArtifact(Codendi_Request $request, $key) {
+        $artifact_id = (int) $request->getValidated($key, 'uint', 0);
+        return $this->artifact_factory->getArtifactById($artifact_id);
+    }
+
+    public function linkWithPlanningParams(Codendi_Request $request, Tracker_Artifact $artifact) {
+        $user = $request->getCurrentUser();
+        $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
+        if ($descendant_milestone_artifact) {
+            var_dump("will be linked to child_milestone ".$descendant_milestone_artifact->getId());
+            $this->linkWithPlanning($user, $artifact, $descendant_milestone_artifact);
+        }
+    }
+
     public function linkWithPlanning(User $user, Tracker_Artifact $new_artifact, Tracker_Artifact $descendant_milestone_artifact) {
         $milestone_artifact_ancestors = $descendant_milestone_artifact->getAllAncestors($user);
         foreach ($milestone_artifact_ancestors as $milestone_artifact_ancestor) {

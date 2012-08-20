@@ -72,35 +72,75 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
 class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+        $this->user             = aUser()->build();
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->planning_factory = mock('PlanningFactory');
+
+        $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $this->planning_factory);
+
+        $this->epic_id      = 2;
+        $this->epic_tracker = aTracker()->withId(200)->build();
+        $this->epic         = aMockArtifact()->withId($this->epic_id)->withTracker($this->epic_tracker)->build();
+    }
+
+
+    public function itLinksTheEpicWithReleaseWhenReleaseIsParentOfSprint() {
+        $release_tracker  = aTracker()->withId(41)->build();
+        $release_planning = aPlanning()->withPlanningTracker($release_tracker)->withBacklogTracker($this->epic_tracker)->build();
+        $release          = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
+
+        $sprint  = aMockArtifact()->withId(32)->build();
+        stub($sprint)->getAllAncestors()->returns(array($release));
+
+        $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
+
+        // I create an epic (argument 2) after having created a story in a sprint (argument 3)
+        $this->linker->linkWithPlanning($this->user, $this->epic, $sprint);
+    }
+
     public function itLinksTheEpicWithMilestonesCorrespondingToStoryPlanning() {
-        $user   = aUser()->build();
-        $artifact_factory = mock('Tracker_ArtifactFactory');
-        $planning_factory = mock('PlanningFactory');
-        $linker = new Planning_ArtifactLinker($artifact_factory, $planning_factory);
+        $product_tracker  = aTracker()->withId(40)->build();
+        $product_planning = aPlanning()->withPlanningTracker($product_tracker)->withBacklogTracker($this->epic_tracker)->build();
+        $product          = aMockArtifact()->withId(30)->withTracker($product_tracker)->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
 
-        $epic_id      = 2;
-        $epic_tracker = aTracker()->withId(200)->build();
-        $epic         = aMockArtifact()->withId($epic_id)->withTracker($epic_tracker)->build();
+        $release_tracker  = aTracker()->withId(41)->build();
+        $release_planning = aPlanning()->withPlanningTracker($release_tracker)->withBacklogTracker($this->epic_tracker)->build();
+        $release          = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
 
-        $product_tracker = aTracker()->withId(40)->build();
-        $release_tracker = aTracker()->withId(41)->build();
-
-        $product = aMockArtifact()->withId(30)->withTracker($product_tracker)->build();
-        $release = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
         $sprint  = aMockArtifact()->withId(32)->build();
         stub($sprint)->getAllAncestors()->returns(array($release, $product));
 
-        $product_planning = aPlanning()->withPlanningTracker($product_tracker)->withBacklogTracker($epic_tracker)->build();
-        $release_planning = aPlanning()->withPlanningTracker($release_tracker)->withBacklogTracker($epic_tracker)->build();
+        $product->expectOnce('linkArtifact', array($this->epic_id, $this->user));
+        $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        stub($planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
-        stub($planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
+        $this->linker->linkWithPlanning($this->user, $this->epic, $sprint);
+    }
 
-        $product->expectOnce('linkArtifact', array($epic_id, $user));
-        $release->expectOnce('linkArtifact', array($epic_id, $user));
+    public function itDoesntLinkTheEpicWithProductPlanningWhenProductPlanningDoesntManageEpics() {
+        $theme_tracker = aTracker()->withId(300)->build();
 
-        // I create an epic (argument 2) after having created a story in a sprint (argument 3)
-        $linker->linkWithPlanning($user, $epic, $sprint);
+        $product_tracker  = aTracker()->withId(40)->build();
+        $product_planning = aPlanning()->withPlanningTracker($product_tracker)->withBacklogTracker($theme_tracker)->build();
+        $product          = aMockArtifact()->withId(30)->withTracker($product_tracker)->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
+
+        $release_tracker  = aTracker()->withId(41)->build();
+        $release_planning = aPlanning()->withPlanningTracker($release_tracker)->withBacklogTracker($this->epic_tracker)->build();
+        $release          = aMockArtifact()->withId(31)->withTracker($release_tracker)->build();
+        stub($this->planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
+
+        $sprint  = aMockArtifact()->withId(32)->build();
+        stub($sprint)->getAllAncestors()->returns(array($release, $product));
+
+        $product->expectNever('linkArtifact');
+        $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
+
+        $this->linker->linkWithPlanning($this->user, $this->epic, $sprint);
     }
 }
 
