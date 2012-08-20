@@ -18,38 +18,73 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/project/UGroupLiteralizer.class.php';
 
 /**
- * Allow to perform search on ElasticSearch Index 
+ * Allow to perform search on ElasticSearch Index
  */
 class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_ISearchDocuments {
     /**
      * @var mixed
      */
     private $type;
-    
+
     /**
      * @var ProjectManager
      */
     private $project_manager;
-    
+
     public function __construct(ElasticSearchClient $client, $type, ProjectManager $project_manager) {
         parent::__construct($client);
         $this->type            = $type;
         $this->project_manager = $project_manager;
     }
-    
+
     /**
-     * @see ISearchDocuments::searchDocuments
-     * 
+     * @see ISearchDocuments::searchDocumentsIgnoingPermissions
+     *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocuments($terms) {
+    public function searchDocumentsIgnoringPermissions($terms) {
         $query  = $this->getSearchDocumentsQuery($terms);
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection($search, $this->project_manager);
     }
-    
+
+    /**
+     * @see ISearchDocuments::searchDocuments
+     *
+     * @return ElasticSearch_SearchResultCollection
+     */
+    public function searchDocuments($terms, User $user) {
+        $query  = $this->getSearchDocumentsQueryWithPermissions($terms, $user);
+        $search = $this->client->search($query);
+        return new ElasticSearch_SearchResultCollection($search, $this->project_manager);
+    }
+
+    /**
+     * @return array to be used for querying ES
+     */
+    private function getSearchDocumentsQueryWithPermissions($terms, User $user) {
+        $ugroup_literalizer = new UGroupLiteralizer();
+        $query = $this->getSearchDocumentsQuery($terms);
+        $filtered_query = array(
+            'filtered' => array(
+                'query'  => $query['query'],
+                'filter' => array(
+                    'terms' => array(
+                        'permissions' => $ugroup_literalizer->getUserGroupsForUserWithArobase($user)
+                    )
+                )
+            )
+        );
+        $query['query'] = $filtered_query;
+        return $query;
+    }
+
+    /**
+     * @return array to be used for querying ES
+     */
     private function getSearchDocumentsQuery($terms) {
         return array(
             'query' => array(
@@ -72,17 +107,17 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             )
         );
     }
-    
+
     /**
      * @see ISearchDocuments::getStatus
-     * 
+     *
      * @return array
      */
     public function getStatus() {
         $this->client->setType('');
         $result = $this->client->request(array('_status'), 'GET', $payload = false, $verbose = true);
         $this->client->setType($this->type);
-        
+
         $status = array(
             'size'    => isset($result['indices']['tuleap']['index']['size']) ? $result['indices']['tuleap']['index']['size'] : '0',
             'nb_docs' => isset($result['indices']['tuleap']['docs']['num_docs']) ? $result['indices']['tuleap']['docs']['num_docs'] : 0,

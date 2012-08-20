@@ -523,6 +523,7 @@ if ($type_of_search == "soft") {
     $eParams['search_type']    =& $matchingSearchTypeFound; 
     $eParams['rows_returned']  =& $rows_returned;
     $eParams['rows']           =& $rows;
+    $eParams['group_id']       = $request->get('group_id');
 
     $em =& EventManager::instance();
     $em->processEvent('search_type', $eParams);

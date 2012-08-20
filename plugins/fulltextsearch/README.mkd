@@ -13,6 +13,7 @@ Note: while you can install elasticsearch on the same server than tuleap, we str
 not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
 It depends of the size of your installation but for big deployments, it's worth considering a dedicated server (or even pool of servers).
 
+
 Security
 --------
 If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. See https://github.com/sonian/elasticsearch-jetty
@@ -72,7 +73,8 @@ After few seconds you should be able to test access:
     $ curl -XGET localhost:9200
 
 Now we can create the minimal index configuration.
-Create the index:
+Create the index: (please note that the number of shards|replicas are for development purpose)
+
 
     $ curl -X PUT "localhost:9200/tuleap" -d '{
       "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
@@ -89,6 +91,10 @@ Define the attachment mapping:
               "title" : { "store" : "yes" },
               "file" : { "term_vector":"with_positions_offsets", "store":"yes" }
             }
+          },
+          "permissions": {
+            "type": "string",
+            "index": "not_analyzed"
           }
         }
       }

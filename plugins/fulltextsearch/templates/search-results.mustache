@@ -1,0 +1,22 @@
+{{#has_results}}
+<p>{{result_count}} document(s) match:
+    <ol>
+    {{#search_results}}
+        <li class="fts_result">
+            <div class="fts_title">
+                <a href="{{url}}">{{item_title}}</a>
+            </div>
+            <div class="fts_highlight">{{{highlight}}}...</div>
+            <div class="fts_metadata">Project: {{project_name}}</div>
+            <div class="fts_metadata">Permissions: {{permissions}}</div>
+        </li>
+    {{/search_results}}
+    </ol>
+</p>
+
+<p>Query took {{elapsed_time}}s</p>
+{{/has_results}}
+
+{{#no_results}}
+No results found
+{{/no_results}}

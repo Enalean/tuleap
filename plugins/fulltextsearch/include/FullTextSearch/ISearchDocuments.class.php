@@ -25,14 +25,23 @@
 interface FullTextSearch_ISearchDocuments {
 
     /**
-     * Search for data in the index
+     * Search for data in the index, filter them with permissions
      * 
      * @param String $term terms
+     * @param User   $user The user which do the request
      * 
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocuments($terms);
-    
+    public function searchDocuments($terms, User $user);
+
+    /**
+     * Search for data in the index
+     *
+     * @param String $term terms
+     *
+     * @return FullTextSearch_SearchResultCollection
+     */
+    public function searchDocumentsIgnoringPermissions($terms);
 
     /**
      * Return status of the index

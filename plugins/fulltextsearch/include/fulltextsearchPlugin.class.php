@@ -23,6 +23,8 @@ require_once 'autoload.php';
 
 class fulltextsearchPlugin extends Plugin {
 
+    const SEARCH_TYPE = 'fulltext';
+
     private $actions;
 
     public function __construct($id) {
@@ -45,6 +47,54 @@ class fulltextsearchPlugin extends Plugin {
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+
+        // Search
+        $this->_addHook('search_type_entry', 'search_type_entry', false);
+        $this->_addHook('search_type', 'search_type', false);
+    }
+
+    private function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+
+    public function search_type_entry($params) {
+        if ($this->getCurrentUser()->useLabFeatures()) {
+            $params['output'] .= '<option value="'. self::SEARCH_TYPE .'" ';
+            if ($params['type_of_search'] == self::SEARCH_TYPE) {
+                $params['output'] .= 'selected="selected"';
+            }
+            $params['output'] .= '>'. 'Fulltext';
+            $params['output'] .= '</option>';
+        }
+    }
+
+    public function search_type($params) {
+        if ($this->getCurrentUser()->useLabFeatures()) {
+            if ($params['type_of_search'] === self::SEARCH_TYPE) {
+                $params['search_type'] = true;
+                // hack hack hack
+                require_once 'FullTextSearch/Presenter/Search.class.php';
+                require_once 'common/templating/TemplateRendererFactory.class.php';
+                $search_result = $this->getSearchClient()->searchDocuments($params['words'], $this->getCurrentUser());
+                $presenter     = new FullTextSearch_Presenter_Search(1, $params['words'], $search_result);
+                $renderer      = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+                echo $renderer->renderToString('search-results', $presenter);
+            }
+        }
+    }
+
+    public function system_event_instanciated($params) {
+        switch ($params['sysevent']->getType()) {
+        case 'FULLTEXTSEARCH_DOCMAN_INDEX':
+        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
+        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
+        case 'FULLTEXTSEARCH_DOCMAN_DELETE':
+            $params['sysevent']
+                ->setFullTextSearchActions($this->getActions())
+                ->setItemFactory(new Docman_ItemFactory())
+                ->setVersionFactory(new Docman_VersionFactory());
+            break;
+        }
     }
 
     public function system_event_get_types($params) {
@@ -146,9 +196,9 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function cssfile($params) {
-        // Only show the stylesheet if we're actually in the FullTextSearch pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/search/') === 0
+        ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }

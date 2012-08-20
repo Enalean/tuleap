@@ -50,9 +50,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         stub($this->user)->isMember()->returns(false);
         stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_active','gpig1_project_members');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_active','gpig1_project_members'));
     }
 
     public function itIsProjectAdmin() {
@@ -64,9 +62,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         stub($this->user)->isMember()->returns(true);
         stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_active','gpig2_project_members', 'gpig2_project_admin'));
     }
 
     public function itIsMemberOfAStaticUgroup() {
@@ -75,9 +71,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         stub($this->user)->isMember()->returns(false);
         stub($this->user)->getAllUgroups()->returnsDar(array('ugroup_id'=>304));
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_active','ug_304');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_active','ug_304'));
     }
 
     public function itIsRestricted() {
@@ -86,9 +80,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         stub($this->user)->isMember()->returns(false);
         stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_restricted');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_restricted'));
     }
 
 
@@ -98,8 +90,12 @@ class UGroupLiteralizerTest extends TuleapTestCase {
         stub($this->user)->isMember()->returns(false);
         stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $this->assertEqual(array(), $groups);
+        $this->assertUserGroupsForUser(array());
+    }
+
+    private function assertUserGroupsForUser(array $expected) {
+        $this->assertEqual($expected, $this->ugroup_literalizer->getUserGroupsForUserName('john_do'));
+        $this->assertEqual($expected, $this->ugroup_literalizer->getUserGroupsForUser($this->user));
     }
 
     public function itCanTransformAnArrayWithUGroupMembersConstantIntoString() {
