@@ -77,23 +77,22 @@ class AgileDashboardPlugin extends Plugin {
      * @param array $params
      */
     private function updateBacklogs(array $params) {
-        $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance());
+        $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance(), PlanningFactory::build());
         $artifact_linker->linkWithParents($params['request'], $params['artifact']);
         // On parent creation link with the right milestone
-        //$artifact_linker->linkWithPlanning(...);
+        $artifact_linker->linkWithPlanningParams($params['request'], $params['artifact']);
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning) {
-        require_once 'Planning/PlanningFactory.class.php';
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
         if ($planning && !$redirect->stayInTracker()) {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
              $this->setQueryParametersFromRequest($request, $redirect->query_parameters);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
-             /*if ($planning && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT) {
-                 $redirect->query_parameters['child_planning'] = $planning->getId();
-             }*/
+             if ($planning && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT) {
+                 $redirect->query_parameters['child_milestone'] = $request->get('link-artifact-id');
+             }
         }
     }
 
@@ -113,6 +112,9 @@ class AgileDashboardPlugin extends Plugin {
     
     public function tracker_event_build_artifact_form_action($params) {
         $this->setQueryParametersFromRequest($params['request'], $params['query_parameters']);
+        if ($params['request']->exist('child_milestone')) {
+            $params['query_parameters']['child_milestone'] = $params['request']->getValidated('child_milestone', 'uint', 0);
+        }
     }
 
     private function setQueryParametersFromRequest(Codendi_Request $request, &$query_parameters) {
@@ -140,7 +142,6 @@ class AgileDashboardPlugin extends Plugin {
      */
     public function getPluginInfo() {
         if (!$this->pluginInfo) {
-            include_once 'AgileDashboardPluginInfo.class.php';
             $this->pluginInfo = new AgileDashboardPluginInfo($this);
         }
         return $this->pluginInfo;
