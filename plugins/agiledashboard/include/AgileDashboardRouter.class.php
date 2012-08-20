@@ -184,9 +184,15 @@ class AgileDashboardRouter {
                                                     $action_name,
                                     Codendi_Request $request,
                                     array           $args = array()) {
-        
-        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
+
+        // If messages are added during action execution (addFeedback) they are
+        // not displayed unless we control output.
+        ob_start();
         $this->executeAction($controller, $action_name, $args);
+        $content = ob_get_clean();
+
+        $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
+        echo $content;
         $this->displayFooter($request);
     }
     
