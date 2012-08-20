@@ -86,7 +86,7 @@ function partial_mock($classname, array $mocked_methods, array $construct_params
 }
 
 class OngoingIntelligentStub {
-    private $mock;
+    public $mock;
     private $method;
     private $arguments;
 
