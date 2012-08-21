@@ -373,7 +373,7 @@ class SystemEventManager {
             $klass = 'SystemEvent_'. $row['type'];
             break;
         default:
-            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'params' => &$klass_params));
+            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
             break;
         }
         if (!empty($klass)) {

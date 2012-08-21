@@ -130,13 +130,13 @@ class Event {
      *   'type'  =>
      *
      * Expected result:
-     *   'class'  => (string) SystemEvent_Class_Name
-     *   'params' => (array) OPTIONAL parameters of injectDependencies method of SystemEvent (if any)
+     *   'class'        => (string) SystemEvent_Class_Name
+     *   'dependencies' => (array) OPTIONAL parameters of injectDependencies method of SystemEvent (if any)
      *
      * Example:
-     *    'type'   => 'EVENT_NAME'
-     *    'class'  => SystemEvent_EVENT_NAME
-     *    'params' => array(UserManager::instance(), ProjectManager::instance())
+     *    'type'         => 'EVENT_NAME'
+     *    'class'        => SystemEvent_EVENT_NAME
+     *    'dependencies' => array(UserManager::instance(), ProjectManager::instance())
      *
      * With:
      * class SystemEvent_EVENT_NAME {
