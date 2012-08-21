@@ -20,6 +20,7 @@
 
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../Presenter/Search.class.php';
+require_once dirname(__FILE__).'/../Presenter/ErrorNoSearch.class.php';
 require_once dirname(__FILE__).'/../ISearchDocuments.class.php';
 
 class FullTextSearch_Controller_Search extends MVC2_Controller {
@@ -42,10 +43,14 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     }
     
     public function search() {
-        $terms         = $this->request->getValidated('terms', 'string', '');
-        $index_status  = $this->client->getStatus();
-        $search_result = $this->client->searchDocuments($terms);
-        $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result);
+        $terms = $this->request->getValidated('terms', 'string', '');
+        try {
+            $index_status  = $this->client->getStatus();
+            $search_result = $this->client->searchDocuments($terms);
+            $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result);
+        } catch (ElasticSearchTransportHTTPException $e) {
+            $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+        }
         $this->renderWithHeaderAndFooter($presenter);
     }
 

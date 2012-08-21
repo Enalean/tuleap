@@ -121,10 +121,29 @@ class Event {
      * The subclass must inherit from the wanted backend.
      */
     const BACKEND_FACTORY_GET_PREFIX = 'backend_factory_get_';
-    
+
     /**
      * Use this event to get the class name of an external event type (plugins)
      * see git plugin for implementation example
+     *
+     * Parameters:
+     *   'type'  =>
+     *
+     * Expected result:
+     *   'class'        => (string) SystemEvent_Class_Name
+     *   'dependencies' => (array) OPTIONAL parameters of injectDependencies method of SystemEvent (if any)
+     *
+     * Example:
+     *    'type'         => 'EVENT_NAME'
+     *    'class'        => SystemEvent_EVENT_NAME
+     *    'dependencies' => array(UserManager::instance(), ProjectManager::instance())
+     *
+     * With:
+     * class SystemEvent_EVENT_NAME {
+     *     function injectDependencies(UserManager $user_manager, ProjectManager $project_manager) {
+     *         ...
+     *     }
+     * }
      */
      const GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
 
