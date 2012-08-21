@@ -122,8 +122,8 @@ if (($func=='edit')||($func=='do_create')) {
     echo '</table>';
     echo '</form>';
 
-    $allowed = true;
-    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
+    $ugroupUpdateUsersAllowed = true;
+    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
 
     echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';
     echo '<div style="padding-left:10px">';
@@ -143,7 +143,7 @@ if (($func=='edit')||($func=='do_create')) {
         foreach ($members as $user) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
             echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
-            if ($allowed) {
+            if ($ugroupUpdateUsersAllowed) {
                 echo '<td>';
                 project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
                 echo '</td>';
@@ -156,7 +156,7 @@ if (($func=='edit')||($func=='do_create')) {
         echo $Language->getText('project_admin_editugroup','nobody_yet');
     }
 
-    if ($allowed) {
+    if ($ugroupUpdateUsersAllowed) {
         echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup','add_user').'</a></p>';
         echo '</div>';
     }

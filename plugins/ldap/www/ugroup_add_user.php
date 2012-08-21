@@ -61,9 +61,9 @@ if($res && !db_error($res) && db_numrows($res) == 1) {
 }
 $group_id = $row['group_id'];
 
-$allowed = true;
-$em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
-if ($allowed) {
+$ugroupUpdateUsersAllowed = true;
+$em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
+if ($ugroupUpdateUsersAllowed) {
     $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
     $ldapUserGroupManager->setId($ugroupId);
 

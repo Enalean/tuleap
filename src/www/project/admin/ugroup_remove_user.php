@@ -23,9 +23,9 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
 
 if ($ugroup_id) {
-    $allowed = true;
-    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$allowed));
-    if ($allowed) {
+    $ugroupUpdateUsersAllowed = true;
+    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
+    if ($ugroupUpdateUsersAllowed) {
         $res = ugroup_db_get_ugroup($ugroup_id);
         if ($res) {
             $user_id = $request->getValidated('user_id', 'uint', 0);
