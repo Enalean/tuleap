@@ -586,7 +586,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 case 'is_rank_alpha':
                     $is_rank_alpha = $value ? 1 : 0;
                     if ($this->is_rank_alpha != $is_rank_alpha) {
-                        $this->getDao()->save($this->field->id, $this->is_rank_alpha);
+                        $this->getDao()->save($this->field->id, $is_rank_alpha);
                         $GLOBALS['Response']->addFeedback('info', 'Alpha ranking updated');
                     }
                     break;
