@@ -44,21 +44,6 @@ class fulltextsearchPlugin extends Plugin {
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
-        $this->_addHook(Event::SYSTEM_EVENT_INSTANTIATED, 'system_event_instantiated', false);
-    }
-
-    public function system_event_instanciated($params) {
-        switch ($params['sysevent']->getType()) {
-        case 'FULLTEXTSEARCH_DOCMAN_INDEX':
-        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
-        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
-        case 'FULLTEXTSEARCH_DOCMAN_DELETE':
-            $params['sysevent']
-                ->setFullTextSearchActions($this->getActions())
-                ->setItemFactory(new Docman_ItemFactory())
-                ->setVersionFactory(new Docman_VersionFactory());
-            break;
-        }
     }
 
     public function system_event_get_types($params) {
@@ -73,7 +58,8 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function get_system_event_class($params) {
         if (strpos($params['type'], 'FULLTEXTSEARCH_') !== false) {
-            $params['class'] = 'SystemEvent_'. $params['type'];
+            $params['class']  = 'SystemEvent_'. $params['type'];
+            $params['params'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
             require_once $params['class'] .'.class.php';
         }
     }

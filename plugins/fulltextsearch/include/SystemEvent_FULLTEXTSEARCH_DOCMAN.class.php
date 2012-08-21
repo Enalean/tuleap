@@ -37,6 +37,13 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
      */
     protected $version_factory;
 
+    public function injectDependencies(FullTextSearchActions $actions, Docman_ItemFactory $item_factory, Docman_VersionFactory $version_factory) {
+        parent::injectDependencies();
+        $this->setFullTextSearchActions($actions)
+             ->setItemFactory($item_factory)
+             ->setVersionFactory($version_factory);
+    }
+
     public function setFullTextSearchActions(FullTextSearchActions $actions) {
         $this->actions = $actions;
         return $this;

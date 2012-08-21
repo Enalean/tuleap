@@ -346,9 +346,10 @@ class SystemEventManager {
      * @return SystemEvent
      */
     protected function getInstanceFromRow($row) {
-        $em       = EventManager::instance();
-        $sysevent = null;
-        $klass    = null;
+        $em           = EventManager::instance();
+        $sysevent     = null;
+        $klass        = null;
+        $klass_params = null;
         switch ($row['type']) {
         case SystemEvent::TYPE_SYSTEM_CHECK:
         case SystemEvent::TYPE_EDIT_SSH_KEYS:
@@ -372,7 +373,7 @@ class SystemEventManager {
             $klass = 'SystemEvent_'. $row['type'];
             break;
         default:
-            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type'=>$row['type'], 'class'=>&$klass) );
+            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'params' => &$klass_params));
             break;
         }
         if (!empty($klass)) {
@@ -385,7 +386,9 @@ class SystemEventManager {
                                    $row['process_date'],
                                    $row['end_date'],
                                    $row['log']);
-            $em->processEvent(Event::SYSTEM_EVENT_INSTANTIATED, array('sysevent' => $sysevent));
+            if (!empty($klass_params)) {
+                call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
+            }
         }
         return $sysevent;
     }
