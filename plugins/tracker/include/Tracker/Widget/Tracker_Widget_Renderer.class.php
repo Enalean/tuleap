@@ -19,7 +19,6 @@
  */
 
 require_once 'common/widget/Widget.class.php';
-require_once 'common/widget/WidgetLayoutManager.class.php';
 require_once dirname(__FILE__).'/../Report/Tracker_Report_RendererFactory.class.php';
 
 /**
