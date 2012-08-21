@@ -78,9 +78,7 @@ class AgileDashboardPlugin extends Plugin {
      */
     private function updateBacklogs(array $params) {
         $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance(), PlanningFactory::build());
-        $artifact_linker->linkWithParents($params['request'], $params['artifact']);
-        // On parent creation link with the right milestone
-        $artifact_linker->linkWithPlanningParams($params['request'], $params['artifact']);
+        $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
     }
 
     private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning) {

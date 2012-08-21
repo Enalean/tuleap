@@ -43,6 +43,11 @@ class Planning_ArtifactLinker {
         $this->planning_factory = $planning_factory;
     }
 
+    public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact) {
+        $this->linkWithParents($request, $artifact);
+        $this->linkWithPlanning($request, $artifact);
+    }
+
     public function linkWithParents(Codendi_Request $request, Tracker_Artifact $artifact) {
         $user      = $request->getCurrentUser();
         $ancestors = $artifact->getAllAncestors($user);
