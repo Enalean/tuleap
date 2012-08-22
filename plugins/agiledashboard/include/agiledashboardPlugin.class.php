@@ -71,20 +71,20 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
 
-    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
+    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
         if ($planning && !$redirect->stayInTracker()) {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
              $this->setQueryParametersFromRequest($request, $redirect->query_parameters);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
-             if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT) {
+             if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Artifact_Redirect::STATE_CREATE_PARENT) {
                  $redirect->query_parameters['child_milestone'] = $last_milestone_artifact->getId();
              }
         }
     }
 
-    private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Action_CreateArtifactRedirect $redirect) {
+    private function redirectToPlanning(Tracker_Artifact $artifact, $requested_planning, Planning $planning, Tracker_Artifact_Redirect $redirect) {
         $redirect_to_artifact = $requested_planning['artifact_id'];
         if ($redirect_to_artifact == -1) {
             $redirect_to_artifact = $artifact->getId();

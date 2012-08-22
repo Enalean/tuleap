@@ -261,7 +261,7 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    private function redirectToAgileDashboard(Tracker_Action_CreateArtifactRedirect $redirect, array $redirect_params) {
+    private function redirectToAgileDashboard(Tracker_Artifact_Redirect $redirect, array $redirect_params) {
         list($planning_id, $artifact_id) = each($redirect_params);
         require_once AGILEDASHBOARD_BASE_DIR .'/Planning/PlanningFactory.class.php';
         $planning = PlanningFactory::build()->getPlanning($planning_id);
@@ -277,7 +277,7 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    private function redirectToRenderer(Tracker_Action_CreateArtifactRedirect $redirect, array $redirect_params) {
+    private function redirectToRenderer(Tracker_Artifact_Redirect $redirect, array $redirect_params) {
         list($report_id, $renderer_id) = each($redirect_params);
         $redirect->base_url            = TRACKER_BASE_URL;
         $redirect->query_parameters    = array(

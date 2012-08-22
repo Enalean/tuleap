@@ -25,7 +25,7 @@ require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
 
-    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Action_CreateArtifactRedirect $redirect) {
+    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Artifact_Redirect $redirect) {
         parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect);
     }
 
@@ -124,7 +124,7 @@ class Tracker_Action_CreateArtifact_RedirectToParentCreationTest extends Tracker
         $this->parent_tracker = aTracker()->withId(666)->build();
         $this->art_link_field = mock('Tracker_FormElement_Field_ArtifactLink');
 
-        $this->redirect = new Tracker_Action_CreateArtifactRedirect();
+        $this->redirect = new Tracker_Artifact_Redirect();
     }
 
     public function itDoesRedirectWhenPackageIsComplete() {

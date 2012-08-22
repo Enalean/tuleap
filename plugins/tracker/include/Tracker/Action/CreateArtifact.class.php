@@ -17,24 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-class Tracker_Action_CreateArtifactRedirect {
-    const STATE_CREATE_PARENT    = 'to_parent';
-    const STATE_STAY_OR_CONTINUE = 'stay_continue';
-    const STATE_SUBMIT           = 'submit';
-    
-    public $mode;
-    public $base_url;
-    public $query_parameters;
-    
-    public function toUrl() {
-        return $this->base_url.'/?'.http_build_query($this->query_parameters);
-    }
-
-    public function stayInTracker() {
-        return ($this->mode != self::STATE_SUBMIT);
-    }
-}
+require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
 
 class Tracker_Action_CreateArtifact {
     private $tracker;
@@ -115,7 +98,7 @@ class Tracker_Action_CreateArtifact {
         return $redirect;
     }
 
-    private function executeRedirect(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect) {
+    private function executeRedirect(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Artifact_Redirect $redirect) {
         if ($request->isAjax()) {
             header(json_header(array('aid' => $artifact->getId())));
             exit;
@@ -135,7 +118,7 @@ class Tracker_Action_CreateArtifact {
         return false;
     }
 
-    protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Action_CreateArtifactRedirect $redirect) {
+    protected function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Artifact_Redirect $redirect) {
         $parent_tracker = $this->tracker->getParent();
         if ($parent_tracker) {
             if (count($artifact->getAllAncestors($current_user)) == 0) {
@@ -147,7 +130,7 @@ class Tracker_Action_CreateArtifact {
                         'func'        => 'new-artifact',
                         $art_link_key => $artifact->getId()
                     );
-                    $redirect->mode             = Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT;
+                    $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                     $redirect->query_parameters = $redirect_params;
                 }
             }
@@ -155,15 +138,15 @@ class Tracker_Action_CreateArtifact {
     }
 
     protected function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id) {
-        $redirect = new Tracker_Action_CreateArtifactRedirect();
+        $redirect = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
         
         $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
         if ($stay || $continue) {
-            $redirect->mode = Tracker_Action_CreateArtifactRedirect::STATE_STAY_OR_CONTINUE;
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
         } else {
-            $redirect->mode = Tracker_Action_CreateArtifactRedirect::STATE_SUBMIT;
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
         }
         $redirect->query_parameters = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
 

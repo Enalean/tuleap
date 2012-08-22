@@ -18,10 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Tracker_History.class.php');
-require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
+require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Tracker_History.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Tracker_Dispatchable_Interface.class.php';
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
@@ -1388,12 +1389,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $stay     = $request->get('submit_and_stay') ;
         $from_aid = $request->get('from_aid');
 
-        $redirect = new Tracker_Action_CreateArtifactRedirect();
-        $redirect->mode             = Tracker_Action_CreateArtifactRedirect::STATE_SUBMIT;
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
         $redirect->base_url         = TRACKER_BASE_URL;
         $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
         if ($stay) {
-            $redirect->mode = Tracker_Action_CreateArtifactRedirect::STATE_STAY_OR_CONTINUE;
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
         }
         return $redirect;
     }
@@ -1420,13 +1421,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param Codendi_Request $request The request
      */
-    public function summonArtifactRedirectors(Codendi_Request $request, &$redirect) {
+    public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
         EventManager::instance()->processEvent(
             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
             array(
                 'request'  => $request,
                 'artifact' => $this,
-                'redirect' => &$redirect
+                'redirect' => $redirect
             )
         );
     }
