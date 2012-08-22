@@ -52,11 +52,13 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $corp_planning    = stub('Planning')->getBacklogTracker()->returns($theme_tracker);
         $product_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
         $release_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
+        $sprint_planning = stub('Planning')->getBacklogTracker()->returns($sprint_tracker);
 
         $planning_factory = mock('PlanningFactory');
-        stub($planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
-        stub($planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
         stub($planning_factory)->getPlanningByPlanningTracker($corp_tracker)->returns($corp_planning);
+        stub($planning_factory)->getPlanningByPlanningTracker($product_tracker)->returns($product_planning);
+        stub($planning_factory)->getPlanningByPlanningTracker($release_tracker)->returns($release_planning);
+        stub($planning_factory)->getPlanningByPlanningTracker($sprint_tracker)->returns($sprint_planning);
 
         $this->user   = aUser()->build();
 
@@ -68,7 +70,8 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->release = $this->getArtifact($this->release_id, $release_tracker, array($this->product, $this->corp));
         $this->sprint  = $this->getArtifact($this->sprint_id,  $sprint_tracker,  array($this->release, $this->product, $this->corp));
         $this->theme   = $this->getArtifact($this->theme_id,   $theme_tracker,   array());
-        $this->epic    = $this->getArtifact($this->epic_id,    $epic_tracker,    array(/*$this->theme*/));
+        // Epic has no parent yet because the whole thing is to manage Theme creation after Epic
+        $this->epic    = $this->getArtifact($this->epic_id,    $epic_tracker,    array());
 
         $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
     }
@@ -137,14 +140,14 @@ class Planning_ArtifactLinker_linkBacklogWithPlanningItemsTest extends Planning_
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
         $this->assertEqual(null, $latest_milestone_artifact);
     }
-/*
+
     public function itReturnsNullWhenNotAPlanningItem() {
         $this->request = aRequest()->with('link-artifact-id', "$this->faq_id")->withUser($this->user)->build();
 
         $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
         $this->assertEqual(null, $latest_milestone_artifact);
     }
-*/
+
     public function itReturnsTheAlreadyLinkedMilestoneByDefault() {
         $this->request = aRequest()->with('link-artifact-id', "$this->corp_id")->withUser($this->user)->build();
 
