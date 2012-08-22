@@ -32,8 +32,8 @@ class ElasticSearch_ClientFactory {
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port) {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port);
+    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password) {
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password);
         require_once 'IndexClientFacade.class.php';
         return new ElasticSearch_IndexClientFacade($client);
     }
@@ -47,14 +47,14 @@ class ElasticSearch_ClientFactory {
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, ProjectManager $project_manager) {
+    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
         $type   = 'docman';
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $type);
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
         require_once 'SearchClientFacade.class.php';
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
     }
     
-    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $type = 'docman') {
+    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman') {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
