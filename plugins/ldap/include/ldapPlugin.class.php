@@ -872,16 +872,7 @@ class LdapPlugin extends Plugin {
 
             //Synchronize the ugroups with the ldap ones
             $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
-            $dar = $ldapUserGroupManager->getSynchronizedUgroups();
-            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-                foreach($dar as $row) {
-                    $ldapUserGroupManager->setId($row['ugroup_id']);
-                    $ldapUserGroupManager->setGroupDn($row['ldap_group_dn']);
-                    $isNightlySynchronized = true;
-                    $displayFeedback       = false;
-                    $ldapUserGroupManager->bindWithLdap($row['bind_option'], $isNightlySynchronized, $displayFeedback);
-                }
-            }
+            $ldapUserGroupManager->synchronizeUgroups();
             return true;
         }
     }

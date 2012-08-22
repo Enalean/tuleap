@@ -135,6 +135,24 @@ extends LDAP_GroupManager
     {
         return new LDAP_UserGroupDao(CodendiDataAccess::instance());
     }
+
+    /**
+     * Synchronize the ugroups with the ldap ones
+     *
+     * @return void
+     */
+    function synchronizeUgroups() {
+        $dar = $this->getSynchronizedUgroups();
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        foreach($dar as $row) {
+                $this->setId($row['ugroup_id']);
+                $this->setGroupDn($row['ldap_group_dn']);
+                $isNightlySynchronized = true;
+                $displayFeedback       = false;
+                $this->bindWithLdap($row['bind_option'], $isNightlySynchronized, $displayFeedback);
+            }
+        }
+    }
 }
 
 ?>
