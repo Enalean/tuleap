@@ -21,7 +21,7 @@
 /**
  * Ensure consistency of backlogs.
  *
- * When an element is added to a Plannification item, it must be add to Parents
+ * When an element is added to a Plannification item, it must be added to Parents
  * plannification item as well
  *
  * Given I have following plannings
@@ -43,6 +43,16 @@ class Planning_ArtifactLinker {
         $this->planning_factory = $planning_factory;
     }
 
+    /**
+     * Ensure consistency of backlogs
+     *
+     * This method returns the last milestone artifact we linked $artifact with
+     *
+     * @param Codendi_Request  $request  The comment about the request parameter
+     * @param Tracker_Artifact $artifact The just created artifact
+     *
+     * @return Tracker_Artifact
+     */
     public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact) {
         $user               = $request->getCurrentUser();
         $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact);

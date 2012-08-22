@@ -62,34 +62,24 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
-        $this->updateBacklogs($params);
+        $artifact_linker         = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance(), PlanningFactory::build());
+        $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
+
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
-            $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning);
+            $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning, $last_milestone_artifact);
         }
     }
 
-    /**
-     * On create, the artifact was linked to it's immediate parent.
-     * In agiledashoard, to remain consistent, it means that we need to link to all
-     * parents
-     *
-     * @param array $params
-     */
-    private function updateBacklogs(array $params) {
-        $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance(), PlanningFactory::build());
-        $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
-    }
-
-    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning) {
+    private function redirectOrAppend(Codendi_Request $request, Tracker_Artifact $artifact, Tracker_Action_CreateArtifactRedirect $redirect, $requested_planning, Tracker_Artifact $last_milestone_artifact = null) {
         $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
         if ($planning && !$redirect->stayInTracker()) {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
              $this->setQueryParametersFromRequest($request, $redirect->query_parameters);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
-             if ($planning && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT) {
-                 $redirect->query_parameters['child_milestone'] = $request->get('link-artifact-id');
+             if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Action_CreateArtifactRedirect::STATE_CREATE_PARENT) {
+                 $redirect->query_parameters['child_milestone'] = $last_milestone_artifact->getId();
              }
         }
     }
