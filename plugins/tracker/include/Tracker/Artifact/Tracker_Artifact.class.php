@@ -427,12 +427,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= '<input type="hidden" id="tracker_id" name="tracker_id" value="'.$this->getTrackerId().'"/>';
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
-        $html .= $hp->purify($this->getTracker()->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
-        $html .= ' - '. $hp->purify($this->getTitle(), CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($this->getXRefAndTitle(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</div>';
         return $html;
     }
 
+    public function getXRefAndTitle() {
+        return $this->getXRef() .' - '. $this->getTitle();
+    }
     /**
      * Get the artifact title, or null if no title defined in semantics
      *
