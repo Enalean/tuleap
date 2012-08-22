@@ -1,3 +1,6 @@
+Version 5.8.15 - Tuleap 5.4
+    * Static values from SB field can be sorted alphabetically (sla #1217)
+
 Version 5.8.14 - Tuleap 5.4
     * Add new User parameter for renderer plugin invokation.
     * Add caching on hierarchy.
