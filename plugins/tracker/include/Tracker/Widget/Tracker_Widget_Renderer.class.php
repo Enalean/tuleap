@@ -41,14 +41,12 @@ abstract class Tracker_Widget_Renderer extends Widget {
     }
 
     function getContent() {
-        $content = '';
         $renderer = $this->getRenderer();
         if ($renderer) {
-            echo $renderer->fetchWidget();
+            return $renderer->fetchWidget();
         } else {
-            echo '<em>Renderer does not exist</em>';
+            return '<em>Renderer does not exist</em>';
         }
-        return $content;
     }
 
     /**
