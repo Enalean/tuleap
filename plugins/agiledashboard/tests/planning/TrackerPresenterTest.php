@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__) .'/../../include/constants.php';
 require_once dirname(__FILE__) .'/../../../tracker/include/constants.php';
-require_once AGILEDASHBOARD_BASE_DIR .'/Planning/TrackerPresenter.class.php';
+require_once AGILEDASHBOARD_BASE_DIR .'/autoload.php';
 require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
 
 class Planning_TrackerPresenter_TestCase extends TuleapTestCase {
