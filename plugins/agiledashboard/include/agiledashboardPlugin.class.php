@@ -45,9 +45,17 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
+            $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
         }
     }
-    
+
+    public function event_artifact_parents_selector($params) {
+        $request = HTTPRequest::instance();
+        $link_artifact_id = $request->get('link-artifact-id');
+        $params['label']             = 'Available '. $params['parent_tracker']->getName();
+        $params['possible_parents']  = $artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact);
+    }
+
     public function tracker_event_include_css_file($params) {
         $params['include_tracker_css_file'] = true;
     }

@@ -27,7 +27,7 @@ require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../Tracker_Valid_Rule.class.php');
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
-    
+
     /**
      * @var Tracker_ArtifactFactory
      */
@@ -247,8 +247,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html .= '<select name="'. $name .'[parent]">';
         $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         $html .= '<option value="-1">'. 'Create a new one' .'</option>';
+        $html .= $this->fetchArtifactParentsOptions($parent_tracker, $user, $hp);
+        $html .= '</select>';
+        $html .= '</label>';
+        $html .= '</p>';
+        return $html;
+    }
 
-        $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
+    private function fetchArtifactParentsOptions(Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+        $html  = '';
+        list($label, $possible_parents) = $this->getPossibleArtifactParents($parent_tracker, $user);
         if ($possible_parents) {
             $label = 'Open '. $parent_tracker->getName();
             $html .= '<optgroup label="'. $label .'">';
@@ -257,10 +265,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             }
             $html .= '</optgroup>';
         }
-        $html .= '</select>';
-        $html .= '</label>';
-        $html .= '</p>';
         return $html;
+    }
+
+    private function getPossibleArtifactParents(Tracker $parent_tracker, User $user) {
+        $label            = '';
+        $possible_parents = array();
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR,
+            array(
+                'user'             => $user,
+                'parent_tracker'   => $parent_tracker,
+                'possible_parents' => &$possible_parents,
+                'label'            => &$label,
+            )
+        );
+        if (!$possible_parents) {
+            $label            = 'Open '. $parent_tracker->getName();
+            $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
+        }
+        return array($label, $possible_parents);
     }
 
     /**
