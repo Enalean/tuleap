@@ -11,7 +11,7 @@ You need to install elasticsearch server packages:
 
 Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
 not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
-It depends of the size of your installation bug for big deployments, it's worth considering a dedicated server (or even pool of servers).
+It depends of the size of your installation bug for bug deployments, it's worth considering a dedicated server (or even pool of servers).
 
 If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. See https://github.com/sonian/elasticsearch-jetty
 
@@ -56,7 +56,7 @@ Define the attachment mapping:
 Check it worked:
 
     $ curl "localhost:9200/tuleap/docman/_mapping"
-    {"docman":{"properties":{"file":{"type":"attachment","path":"full","fields":{"file":{"type":"string","store":"yes","term_vector":"with_positions_offsets"},"author":{"type":"string"},"title":{"type":"string","store":"yes"},"name":{"type":"string"},"date":{"type":"date","format":"dateOptionalTime"},"keywords":{"type":"string"},"content_type":{"type":"string"}}},"group_id":{"type":"long"},"id":{"type":"long"},"permissions":{"type":"string"},"title":{"type":"string"}}}}
+    ...
 
 Now you can activate the plugin in Tuleap admin interface and start uploading documents
 
