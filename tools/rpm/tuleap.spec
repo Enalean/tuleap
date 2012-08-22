@@ -316,7 +316,7 @@ Summary: Full-Text Search
 Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-elasticsearch, elasticsearch, elasticsearch-plugin-jetty, elasticsearch-plugin-mapper-attachments
+Requires: %{PKG_NAME}, php-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 

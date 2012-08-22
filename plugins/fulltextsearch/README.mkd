@@ -5,11 +5,17 @@ This plugin is still in heavy development: do not use in production!
 
 QA Server deployment
 --------------------
-If you install tuleap-plugin-fulltextsearch all dependencies are properly installed on the system.
 
-Thus you only need to configure elasticsearch server for your usage.
+You need to install elasticsearch server packages:
+    $ yum install elasticsearch elasticsearch-plugin-jetty elasticsearch-plugin-mapper-attachments
 
-The very minimal setup is to restrict server port binding to localhost only (otherwise anybody can query index anonymously):
+Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
+not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
+It depends of the size of your installation bug for big deployments, it's worth considering a dedicated server (or even pool of servers).
+
+If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. See https://github.com/sonian/elasticsearch-jetty
+
+If you install elasticsearch on the same server than tuleap the very minimal setup is to restrict server port binding to localhost only (otherwise anybody can query index anonymously):
 
     $ edit /etc/elasticsearch/elasticsearch.yml
       ...
