@@ -877,7 +877,9 @@ class LdapPlugin extends Plugin {
                 foreach($dar as $row) {
                     $ldapUserGroupManager->setId($row['ugroup_id']);
                     $ldapUserGroupManager->setGroupDn($row['ldap_group_dn']);
-                    $ldapUserGroupManager->bindWithLdap($row['bind_option'], true, false);
+                    $isNightlySynchronized = true;
+                    $displayFeedback       = false;
+                    $ldapUserGroupManager->bindWithLdap($row['bind_option'], $isNightlySynchronized, $displayFeedback);
                 }
             }
             return true;
