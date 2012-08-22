@@ -36,6 +36,7 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $release_tracker = aTracker()->build();
         $epic_tracker    = aTracker()->build();
         $theme_tracker   = aTracker()->build();
+        $faq_tracker     = aTracker()->build();
 
         $corp_planning    = stub('Planning')->getBacklogTracker()->returns($theme_tracker);
         $product_planning = stub('Planning')->getBacklogTracker()->returns($epic_tracker);
@@ -47,6 +48,7 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         stub($planning_factory)->getPlanningByPlanningTracker($corp_tracker)->returns($corp_planning);
 
         $this->user   = aUser()->build();
+        
         $this->epic_id = 2;
         $this->epic = aMockArtifact()->withId($this->epic_id)->withTracker($epic_tracker)->build();
         stub($this->epic)->getAllAncestors($this->user)->returns(array());
@@ -54,6 +56,10 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->corp_id = 42;
         $this->corp    = aMockArtifact()->withId($this->corp_id)->withTracker($corp_tracker)->build();
         stub($this->corp)->getAllAncestors($this->user)->returns(array());
+
+        $this->faq_id = 13;
+        $this->faq    = aMockArtifact()->withId($this->faq_id)->withTracker($faq_tracker)->build();
+        stub($this->faq)->getAllAncestors($this->user)->returns(array());
 
         $this->product = aMockArtifact()->withId(56)->withTracker($product_tracker)->build();
         stub($this->product)->getAllAncestors($this->user)->returns(array($this->corp));
@@ -67,6 +73,8 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
         stub($this->artifact_factory)->getArtifactById($this->release_id)->returns($this->release);
         stub($this->artifact_factory)->getArtifactById($this->corp_id)->returns($this->corp);
+        stub($this->artifact_factory)->getArtifactById($this->faq_id)->returns($this->faq);
+        
         $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
     }
 }
@@ -174,6 +182,20 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
 
 class Planning_ArtifactLinker_linkBacklogWithPlanningItemsTest extends Planning_ArtifactLinkerTest {
 
+    public function itReturnsNullWhenNotLinkedToAnyArtifacts() {
+        $this->request = aRequest()->withUser($this->user)->build();
+
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
+        $this->assertEqual(null, $latest_milestone_artifact);
+    }
+/*
+    public function itReturnsNullWhenNotAPlanningItem() {
+        $this->request = aRequest()->with('link-artifact-id', "$this->faq_id")->withUser($this->user)->build();
+
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
+        $this->assertEqual(null, $latest_milestone_artifact);
+    }
+*/
     public function itReturnsTheAlreadyLinkedMilestoneByDefault() {
         $this->request = aRequest()->with('link-artifact-id', "$this->corp_id")->withUser($this->user)->build();
 

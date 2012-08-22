@@ -64,7 +64,11 @@ class Planning_ArtifactLinker {
 
     private function getSourceArtifact(Codendi_Request $request, $key) {
         $artifact_id = (int) $request->getValidated($key, 'uint', 0);
-        return $this->artifact_factory->getArtifactById($artifact_id);
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        /*if ($artifact && $this->planning_factory->getPlanningByPlanningTracker($artifact->getTracker())) {
+            return $artifact;
+        }*/
+        return $artifact;
     }
 
     private function linkWithMilestoneArtifact(User $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
