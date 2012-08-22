@@ -8,6 +8,7 @@ Version 5.4 (Not released yet)
 	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
 	* Create 'user' dir (in /var/lib/.../) to store avatars during install
 	* Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
+	* Fix Wiki XHTML ZIP Snapshot link can't be unzipped (contrib STMicroelectronics).
 
 	== Plugins ==
 	* agiledashboard: 0.49
