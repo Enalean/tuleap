@@ -74,11 +74,18 @@ class fulltextsearchPlugin extends Plugin {
                 $params['search_type'] = true;
                 // hack hack hack
                 require_once 'FullTextSearch/Presenter/Search.class.php';
+                require_once 'FullTextSearch/Presenter/ErrorNoSearch.class.php';
                 require_once 'common/templating/TemplateRendererFactory.class.php';
-                $search_result = $this->getSearchClient()->searchDocuments($params['words'], $this->getCurrentUser());
-                $presenter     = new FullTextSearch_Presenter_Search(1, $params['words'], $search_result);
-                $renderer      = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-                echo $renderer->renderToString('search-results', $presenter);
+                try {
+                    $search_result = $this->getSearchClient()->searchDocuments($params['words'], $this->getCurrentUser());
+                    $presenter     = new FullTextSearch_Presenter_Search(1, $params['words'], $search_result);
+                    $renderer      = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+                    echo $renderer->renderToString('search-results', $presenter);
+                } catch (ElasticSearchTransportHTTPException $e) {
+                    $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+                    $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
+                    echo $renderer->renderToString('error-nosearch', $presenter);
+                }
             }
         }
     }
