@@ -86,5 +86,28 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $expected = array($this->product);
         $this->assertEqual($expected, $this->selector->getPossibleParents($this->product_tracker, $this->product, $this->user));
     }
+
+    // nominal cases
+    public function itProvidesEpicsAssociatedToTheReleaseOfTheSprintWhenStoryIsLinkedToASprint() {
+    }
+
+    public function itProvidesThemesAssociatedToTheCorpOfTheReleaseOfTheSprintWhenEpicIsLinkedToASprint() {
+    }
+
+    public function itProvidesThemesAssociatedToACorpWhenEpicIsLinkedToACorp() {
+    }
+
+    // edge cases
+    public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp() {
+    }
+
+    public function itProvidesTheCorpOfTheProductOfTheReleaseWhenProductIsLinkedToARelease() {
+    }
+
+    public function itProvidesNothingWhenTheReleaseIsLinkedToASprint() {
+    }
+
+    public function itProvidesNothingWhenTheReleaseIsLinkedToAFaq() {
+    }
 }
 ?>
