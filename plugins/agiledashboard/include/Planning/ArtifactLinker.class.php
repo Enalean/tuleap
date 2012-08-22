@@ -44,8 +44,12 @@ class Planning_ArtifactLinker {
     }
 
     public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact) {
-        $this->linkWithParents($request, $artifact);
-        $this->linkWithPlanning($request, $artifact);
+        $last_ancestor1 = $this->linkWithParents($request, $artifact);
+        $last_ancestor2 = $this->linkWithPlanning($request, $artifact);
+        if ($last_ancestor2) {
+            return $last_ancestor2;
+        }
+        return $last_ancestor1;
     }
 
     public function linkWithParents(Codendi_Request $request, Tracker_Artifact $artifact) {
@@ -53,14 +57,14 @@ class Planning_ArtifactLinker {
         $ancestors = $artifact->getAllAncestors($user);
         if (count($ancestors) == 0) {
             $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
-            $this->linkWithBacklogArtifact($user, $artifact, $source_artifact);
+            return $this->linkWithBacklogArtifact($user, $artifact, $source_artifact);
         }
     }
 
     public function linkWithPlanning(Codendi_Request $request, Tracker_Artifact $artifact) {
         $user = $request->getCurrentUser();
         $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
-        $this->linkWithBacklogArtifact($user, $artifact, $descendant_milestone_artifact);
+        return $this->linkWithBacklogArtifact($user, $artifact, $descendant_milestone_artifact);
     }
 
     private function getSourceArtifact(Codendi_Request $request, $key) {
@@ -69,14 +73,17 @@ class Planning_ArtifactLinker {
     }
 
     private function linkWithBacklogArtifact(User $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
+        $last_ancestor = $source_artifact;
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
                 $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
                 if ($planning->getBacklogTracker() == $artifact->getTracker()) {
                     $ancestor->linkArtifact($artifact->getId(), $user);
+                    $last_ancestor = $ancestor;
                 }
             }
         }
+        return $last_ancestor;
     }
 }
 

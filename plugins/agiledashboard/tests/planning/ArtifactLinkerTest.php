@@ -51,19 +51,27 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->epic = aMockArtifact()->withId($this->epic_id)->withTracker($epic_tracker)->build();
         stub($this->epic)->getAllAncestors($this->user)->returns(array());
 
-        $this->corp    = aMockArtifact()->withId(42)->withTracker($corp_tracker)->build();
+        $this->corp_id = 42;
+        $this->corp    = aMockArtifact()->withId($this->corp_id)->withTracker($corp_tracker)->build();
+        stub($this->corp)->getAllAncestors($this->user)->returns(array());
 
         $this->product = aMockArtifact()->withId(56)->withTracker($product_tracker)->build();
         stub($this->product)->getAllAncestors($this->user)->returns(array($this->corp));
+
+        $this->theme = aMockArtifact()->withId(750)->withTracker($theme_tracker)->build();
 
         $this->release_id = 7777;
         $this->release    = aMockArtifact()->withId($this->release_id)->withTracker($release_tracker)->build();
         stub($this->release)->getAllAncestors($this->user)->returns(array($this->product, $this->corp));
 
-        $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        stub($this->artifact_factory)->getArtifactById($this->release_id)->returns($this->release);
+        stub($this->artifact_factory)->getArtifactById($this->corp_id)->returns($this->corp);
         $this->linker = new Planning_ArtifactLinker($this->artifact_factory, $planning_factory);
     }
+}
+
+class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinkerTest {
 
     public function itDoesntLinkWhenItWasLinkedToAParent() {
         $story_id = 5698;
@@ -73,6 +81,7 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
         $story->expectNever('linkArtifact');
 
+        $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
         $this->linker->linkWithParents($this->request, $task);
     }
 
@@ -82,7 +91,7 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->product->expectOnce('linkArtifact', array($this->epic_id, $this->user));
         $this->corp->expectNever('linkArtifact');
 
-        stub($this->artifact_factory)->getArtifactById($this->release_id)->returns($this->release);
+        $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
         $this->linker->linkWithParents($this->request, $this->epic);
     }
 }
@@ -160,6 +169,30 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
         $this->linker->linkWithPlanning($this->request, $this->epic);
+    }
+}
+
+class Planning_ArtifactLinker_linkBacklogWithPlanningItemsTest extends Planning_ArtifactLinkerTest {
+
+    public function itReturnsTheAlreadyLinkedMilestoneByDefault() {
+        $this->request = aRequest()->with('link-artifact-id', "$this->corp_id")->withUser($this->user)->build();
+
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->theme);
+        $this->assertEqual($this->corp, $latest_milestone_artifact);
+    }
+
+    public function itReturnsTheLatestMilestoneThatHasBeenLinkedWithLinkArtifactId() {
+        $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
+
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
+        $this->assertEqual($this->product, $latest_milestone_artifact);
+    }
+
+    public function itReturnsTheLatestMilestoneThatHasBeenLinkedWithChildMilestone() {
+        $this->request = aRequest()->with('child_milestone', "$this->release_id")->withUser($this->user)->build();
+
+        $latest_milestone_artifact = $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
+        $this->assertEqual($this->product, $latest_milestone_artifact);
     }
 }
 
