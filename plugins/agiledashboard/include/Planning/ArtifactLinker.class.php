@@ -44,27 +44,22 @@ class Planning_ArtifactLinker {
     }
 
     public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact) {
-        $last_ancestor1 = $this->linkWithParents($request, $artifact);
-        $last_ancestor2 = $this->linkWithPlanning($request, $artifact);
-        if ($last_ancestor2) {
-            return $last_ancestor2;
-        }
-        return $last_ancestor1;
+        $user               = $request->getCurrentUser();
+        $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact);
+        return $this->linkWithMilestoneArtifact($user, $artifact, $milestone_artifact);
     }
 
-    public function linkWithParents(Codendi_Request $request, Tracker_Artifact $artifact) {
-        $user      = $request->getCurrentUser();
-        $ancestors = $artifact->getAllAncestors($user);
-        if (count($ancestors) == 0) {
-            $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
-            return $this->linkWithBacklogArtifact($user, $artifact, $source_artifact);
+    private function getMilestoneArtifact(User $user, Codendi_Request $request, Tracker_Artifact $artifact) {
+        $source_artifact = null;
+        if ($request->exist('link-artifact-id')) {
+            $ancestors = $artifact->getAllAncestors($user);
+            if (count($ancestors) == 0) {
+                $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
+            }
+        } else {
+            $source_artifact = $this->getSourceArtifact($request, 'child_milestone');
         }
-    }
-
-    public function linkWithPlanning(Codendi_Request $request, Tracker_Artifact $artifact) {
-        $user = $request->getCurrentUser();
-        $descendant_milestone_artifact = $this->getSourceArtifact($request, 'child_milestone');
-        return $this->linkWithBacklogArtifact($user, $artifact, $descendant_milestone_artifact);
+        return $source_artifact;
     }
 
     private function getSourceArtifact(Codendi_Request $request, $key) {
@@ -72,7 +67,7 @@ class Planning_ArtifactLinker {
         return $this->artifact_factory->getArtifactById($artifact_id);
     }
 
-    private function linkWithBacklogArtifact(User $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
+    private function linkWithMilestoneArtifact(User $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
         $last_ancestor = $source_artifact;
         if ($source_artifact) {
             foreach ($source_artifact->getAllAncestors($user) as $ancestor) {

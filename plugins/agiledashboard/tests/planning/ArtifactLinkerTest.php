@@ -82,7 +82,7 @@ class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinke
         $story->expectNever('linkArtifact');
 
         $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
-        $this->linker->linkWithParents($this->request, $task);
+        $this->linker->linkBacklogWithPlanningItems($this->request, $task);
     }
 
     public function itLinksWithAllHierarchyWhenItWasLinkedToAnAssociatedTracker() {
@@ -92,7 +92,7 @@ class Planning_ArtifactLinker_linkWithParentsTest extends Planning_ArtifactLinke
         $this->corp->expectNever('linkArtifact');
 
         $this->request = aRequest()->with('link-artifact-id', "$this->release_id")->withUser($this->user)->build();
-        $this->linker->linkWithParents($this->request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
     }
 }
 
@@ -128,7 +128,7 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
 
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        $this->linker->linkWithPlanning($this->request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
     }
 
     public function itLinksTheEpicWithMilestonesCorrespondingToStoryPlanning() {
@@ -147,7 +147,7 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $product->expectOnce('linkArtifact', array($this->epic_id, $this->user));
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        $this->linker->linkWithPlanning($this->request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
     }
 
     public function itDoesntLinkTheEpicWithProductPlanningWhenProductPlanningDoesntManageEpics() {
@@ -168,7 +168,7 @@ class Planning_ArtifactLinker_LinkWithPlanningTest extends TuleapTestCase {
         $product->expectNever('linkArtifact');
         $release->expectOnce('linkArtifact', array($this->epic_id, $this->user));
 
-        $this->linker->linkWithPlanning($this->request, $this->epic);
+        $this->linker->linkBacklogWithPlanningItems($this->request, $this->epic);
     }
 }
 
