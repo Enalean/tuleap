@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../include/AgileDashboardRouter.class.php';
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
 

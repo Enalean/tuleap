@@ -20,6 +20,7 @@
  */
 
 require_once dirname(__FILE__) . '/../../../tracker/include/Tracker/Tracker.class.php';
+require_once 'Planning.class.php';
 
 class Planning_TrackerPresenter {
     

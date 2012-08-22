@@ -152,7 +152,7 @@ class OngoingIntelligentStub {
      * |2 |
      */
     public function returnsDar() {
-        $this->returns(TestHelper::argListToDar(func_get_args()));
+        return $this->returns(TestHelper::argListToDar(func_get_args()));
     }
 
     /**
@@ -162,7 +162,7 @@ class OngoingIntelligentStub {
      * stub('Dao')->getStuff()->returnsEmptyDar()
      */
     public function returnsEmptyDar() {
-        $this->returns(TestHelper::emptyDar());
+        return $this->returns(TestHelper::emptyDar());
     }
 
     /**
@@ -172,7 +172,7 @@ class OngoingIntelligentStub {
      * stub('Dao')->getStuff()->returnsDarWithErrors()
      */
     public function returnsDarWithErrors() {
-        $this->returns(TestHelper::errorDar());
+        return $this->returns(TestHelper::errorDar());
     }
 }
 ?>
