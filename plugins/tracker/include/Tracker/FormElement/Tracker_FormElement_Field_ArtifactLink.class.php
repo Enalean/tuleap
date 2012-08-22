@@ -238,7 +238,31 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
     }
-    
+
+    private function fetchParentSelector($name, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+        $html  = '';
+        $html .= '<p>';
+        $html .= '<label>';
+        $html .= 'Select parent '. $parent_tracker->getItemName() .' ';
+        $html .= '<select name="'. $name .'[parent]">';
+        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+        $html .= '<option value="-1">'. 'Create a new one' .'</option>';
+
+        $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
+        if ($possible_parents) {
+            $label = 'Open '. $parent_tracker->getName();
+            $html .= '<optgroup label="'. $label .'">';
+            foreach ($possible_parents as $parent) {
+                $html .= '<option value="'. $parent->getId() .'">'. $hp->purify($parent->getXRefAndTitle()) .'</option>';
+            }
+            $html .= '</optgroup>';
+        }
+        $html .= '</select>';
+        $html .= '</label>';
+        $html .= '</p>';
+        return $html;
+    }
+
     /**
      * Fetch the html widget for the field
      *
@@ -267,6 +291,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             $html .= '</div>';
+
+            $parent_tracker = $this->getHierarchyFactory()->getParent($this->getTracker());
+            if ($parent_tracker) {
+                $current_user = $this->getCurrentUser();
+                $html .= $this->fetchParentSelector($name, $parent_tracker, $current_user, $hp);
+            }
         }
         $html .= '<div class="tracker-form-element-artifactlink-list">';
         if ($artifact_links) {
@@ -370,7 +400,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $this_project_id = $this->getTracker()->getProject()->getGroupId();
                 $hp = Codendi_HTMLPurifier::instance();
                 
-                $u = UserManager::instance()->getCurrentUser();
+                $u = UserManager::instance()->getCurrentUser(); // Why? it is already given as parameter!
                 $group_id = $this->getTracker()->getGroupId();
                 $ugroups = $u->getUgroups($group_id, array());
                 $ugroups = implode(',', $ugroups);
@@ -440,7 +470,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $this_project_id = $this->getTracker()->getProject()->getGroupId();
                 $hp = Codendi_HTMLPurifier::instance();
 
-                $u = UserManager::instance()->getCurrentUser();
+                $u = UserManager::instance()->getCurrentUser(); // Why? it is already given as parameter!
                 $group_id = $this->getTracker()->getGroupId();
                 $ugroups = $u->getUgroups($group_id, array());
                 $ugroups = implode(',', $ugroups);
@@ -923,9 +953,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function getTrackerFactory() {
         return TrackerFactory::instance();
     }
-    
+
     protected function getTrackerChildrenFromHierarchy(Tracker $tracker) {
-        return Tracker_HierarchyFactory::instance()->getChildren($tracker->getId());
+        return $this->getHierarchyFactory()->getChildren($tracker->getId());
+    }
+
+    /**
+     * @return Tracker_HierarchyFactory
+     */
+    protected function getHierarchyFactory() {
+        return Tracker_HierarchyFactory::instance();
     }
     
     /**
