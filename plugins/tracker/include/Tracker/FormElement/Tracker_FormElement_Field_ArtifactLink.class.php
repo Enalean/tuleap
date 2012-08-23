@@ -958,6 +958,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
+        if (isset($value['parent']) && empty($value['parent'])) {
+            $is_valid = false;
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_choose_parent'));
+        }
         return $is_valid;
     }
     
