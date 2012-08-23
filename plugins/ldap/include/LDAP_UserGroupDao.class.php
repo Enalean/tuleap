@@ -68,14 +68,14 @@ extends DataAccessObject
      * @param Integer $ugroupId           Codendi user group id 
      * @param String  $ldapGroupDn        LDAP group distinguish name
      * @param String  $bindOption         The bind option can take one of 2 possible values 'bind' or 'preserve_members'
-     * @param Boolean $isSynchronized     Synchronization option
+     * @param String  $synchroPolicy      Synchronization option
      *
      * @return Boolean
      */
-    function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $isSynchronized) {
-        $isSynchronized = $this->da->escapeInt($isSynchronized);
-        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, is_synchronized, bind_option)'.
-            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.$isSynchronized.', "'.db_es($bindOption).'")';
+    function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy) {
+        $isSynchronized = $this->da->escapeInt($synchroPolicy);
+        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)'.
+            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.$synchroPolicy.', "'.db_es($bindOption).'")';
         return $this->update($sql);
     }
     
@@ -156,8 +156,8 @@ extends DataAccessObject
      * @return DataAccessResult
      */
     function getSynchronizedUgroups() {
-        $sql = 'SELECT * FROM plugin_ldap_ugroup
-                WHERE is_synchronized = 1';
+        $sql = "SELECT * FROM plugin_ldap_ugroup
+                WHERE synchro_policy = 'auto'";
         return $this->retrieve($sql);
     }
 
@@ -170,8 +170,8 @@ extends DataAccessObject
      */
     function isSynchronizedUgroup($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql = 'SELECT * FROM plugin_ldap_ugroup
-                WHERE ugroup_id = '.$ugroup_id.' and is_synchronized = 1';
+        $sql = "SELECT * FROM plugin_ldap_ugroup
+                WHERE ugroup_id = ".$ugroup_id." and synchro_policy = 'auto'";
         $rs  = $this->retrieve($sql);
         if(!empty($rs) && $rs->rowCount() == 1) {
             return true;
@@ -206,10 +206,10 @@ extends DataAccessObject
      */
     public function isMembersUpdateAllowed($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql       = 'SELECT * FROM plugin_ldap_ugroup
-                      WHERE ugroup_id = '.$ugroup_id.'
-                        AND bind_option = "bind"
-                        AND is_synchronized = 1';
+        $sql       = "SELECT * FROM plugin_ldap_ugroup
+                      WHERE ugroup_id = ".$ugroup_id."
+                        AND bind_option = 'bind'
+                        AND synchro_policy = 'auto'";
         $rs  = $this->retrieve($sql);
         if(!empty($rs) && $rs->rowCount() == 1) {
             return false;
