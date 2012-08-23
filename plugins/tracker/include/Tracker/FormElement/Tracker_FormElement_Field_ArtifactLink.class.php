@@ -259,7 +259,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         list($label, $possible_parents) = $this->getPossibleArtifactParents($parent_tracker, $user);
         if ($possible_parents) {
             $parent_artifact = $artifact->getParent($user);
-            $label = 'Open '. $parent_tracker->getName();
             $html .= '<optgroup label="'. $label .'">';
             foreach ($possible_parents as $possible_parent) {
                 $selected = '';
