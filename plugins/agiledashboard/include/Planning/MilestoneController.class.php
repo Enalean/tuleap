@@ -30,6 +30,11 @@ class Planning_MilestoneController extends MVC2_Controller {
     private $milestone_factory;
 
     /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+
+    /**
      * @var Planning_Milestone
      */
     private $milestone;
@@ -54,10 +59,12 @@ class Planning_MilestoneController extends MVC2_Controller {
     public function __construct(Codendi_Request           $request,
                                 Planning_MilestoneFactory $milestone_factory,
                                 ProjectManager            $project_manager,
-                                Planning_ViewBuilder      $view_builder) {
+                                Planning_ViewBuilder      $view_builder,
+                                Tracker_HierarchyFactory  $hierarchy_factory) {
         
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory = $milestone_factory;
+        $this->hierarchy_factory = $hierarchy_factory;
         $project                 = $project_manager->getProject($request->get('group_id'));
         try {
             $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
@@ -137,7 +144,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         
         $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds();
         $cross_search_query           = $this->getCrossSearchQuery();
-        $view_builder->setHierarchyFactory(Tracker_HierarchyFactory::instance());
+        $view_builder->setHierarchyFactory($this->hierarchy_factory);
 
         $view = $view_builder->build(
             $this->getCurrentUser(),

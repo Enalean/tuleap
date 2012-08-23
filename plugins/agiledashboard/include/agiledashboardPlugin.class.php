@@ -51,9 +51,15 @@ class AgileDashboardPlugin extends Plugin {
 
     public function event_artifact_parents_selector($params) {
         $request = HTTPRequest::instance();
-        $link_artifact_id = $request->get('link-artifact-id');
-        $params['label']             = 'Available '. $params['parent_tracker']->getName();
-        $params['possible_parents']  = $artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact);
+        $source_artifact  = null;
+        if ($request->get('func') == 'new-artifact-link') {
+            $source_artifact = $this->getArtifactFactory()->getArtifactById($request->get('id'));
+        }
+        if ($source_artifact) {
+            $artifact_parents_selector = new Planning_ArtifactParentsSelector($this->getArtifactFactory(), PlanningFactory::build(), $this->getMilestoneFactory(), $this->getHierarchyFactory());
+            $params['label']             = 'Available '. $params['parent_tracker']->getName();
+            $params['possible_parents']  = $artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact, $params['user']);
+        }
     }
 
     public function tracker_event_include_css_file($params) {
@@ -70,7 +76,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
-        $artifact_linker         = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance(), PlanningFactory::build());
+        $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
         $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
 
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
@@ -169,8 +175,38 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        $router = new AgileDashboardRouter($this);
+        $router = new AgileDashboardRouter($this, $this->getMilestoneFactory(), $this->getPlanningFactory(), $this->getHierarchyFactory());
         $router->route($request);
+    }
+
+    /**
+     * Builds a new PlanningFactory instance.
+     * 
+     * @return PlanningFactory 
+     */
+    protected function getPlanningFactory() {
+        return new PlanningFactory(new PlanningDao(),
+                                   TrackerFactory::instance());
+
+    }
+
+    /**
+     * Builds a new Planning_MilestoneFactory instance.
+     * @return Planning_MilestoneFactory 
+     */
+    protected function getMilestoneFactory() {
+        return new Planning_MilestoneFactory(
+            $this->getPlanningFactory(),
+            $this->getArtifactFactory(),
+            Tracker_FormElementFactory::instance());
+    }
+
+    private function getArtifactFactory() {
+        return Tracker_ArtifactFactory::instance();
+    }
+
+    private function getHierarchyFactory() {
+        return Tracker_HierarchyFactory::instance();
     }
 
     public function tracker_event_artifact_association_edited($params) {
