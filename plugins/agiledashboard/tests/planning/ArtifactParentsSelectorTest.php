@@ -117,7 +117,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $milestone = mock('Planning_ArtifactMilestone');
         stub($artifact)->getAllAncestors($this->user)->returns($ancestors);
         stub($this->artifact_factory)->getArtifactById($id)->returns($artifact);
-        stub($this->milestone_factory)->getMilestoneFromArtifactWithPlannedArtifacts(new EqualExpectation($artifact))->returns($milestone);
+        stub($this->milestone_factory)->getMilestoneFromArtifactWithPlannedArtifacts(new EqualExpectation($artifact), $this->user)->returns($milestone);
         return array($artifact, $milestone);
     }
 

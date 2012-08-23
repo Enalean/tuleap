@@ -299,8 +299,9 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifactWithPlannedArtifacts(Tracker_Artifact $artifact) {
-        die('TODO');
+    public function getMilestoneFromArtifactWithPlannedArtifacts(Tracker_Artifact $artifact, User $user) {
+        $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
+        return $this->getMilestoneFromArtifact($artifact, $planned_artifacts);
     }
 
     /**
@@ -310,10 +311,10 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifact(Tracker_Artifact $artifact) {
+    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifact = null) {
         $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
-        return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact);
+        return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact, $planned_artifact);
     }
 
     /**
