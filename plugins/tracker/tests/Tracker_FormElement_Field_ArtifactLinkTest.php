@@ -534,6 +534,38 @@ class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends 
 
         $this->assertEqual($fields_data[$art_link_id]['new_values'], "$new_values,$parent_id");
     }
+
+    public function itDoesntAppendPleaseChooseOption() {
+        $new_values  = '356';
+        $parent_id   = '';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
+                'parent'     => $parent_id
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+    }
+
+    public function itDoesntAppendCreateNewOption() {
+        $new_values  = '356';
+        $parent_id   = '-1';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
+                'parent'     => $parent_id
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+    }
 }
 
 ?>

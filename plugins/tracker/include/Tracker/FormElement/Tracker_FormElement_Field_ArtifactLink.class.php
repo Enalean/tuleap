@@ -1220,11 +1220,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @param type $fields_data
      */
     public function augmentDataFromRequest(&$fields_data) {
-        if (isset($fields_data[$this->getId()]['parent'])) {
-            $parent = $fields_data[$this->getId()]['parent'];
-            $new_values   = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
-            $new_values[] = $parent;
-            $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
+        if (!empty($fields_data[$this->getId()]['parent'])) {
+            $parent = intval($fields_data[$this->getId()]['parent']);
+            if ($parent > 0) {
+                $new_values   = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+                $new_values[] = $parent;
+                $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
+            }
         }
     }
 }
