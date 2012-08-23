@@ -127,14 +127,14 @@ abstract class LDAP_GroupManager
      * Link and synchronize a Codendi Group and an LDAP group
      *
      * @param String  $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
-     * @param Boolean $isSynchronized The option to synchrorize the ugroup nightly
+     * @param String  $synchroPolicy   The option to synchrorize the ugroup nightly
      * @param Boolean $displayFeedback While set to true, it allows the feedback display
      *
      * @return void
      */
-    public function bindWithLdap($option='bind', $isSynchronized = false, $displayFeedback = true) {
+    public function bindWithLdap($option='bind', $synchroPolicy = 'never', $displayFeedback = true) {
         if ($this->getGroupDn()) {
-            $this->bindWithLdapGroup($option, $isSynchronized);
+            $this->bindWithLdapGroup($option, $synchroPolicy);
             $this->syncMembersWithLdap($option);
         } else {
             if ($displayFeedback) {
@@ -327,18 +327,18 @@ abstract class LDAP_GroupManager
      * Save link between Codendi Group and LDAP group
      *
      * @param  String  $bindOption
-     * @param  Boolean $isSynchronized
+     * @param  String  $synchroPolicy
      *
      * @return Boolean
      */
-    protected function bindWithLdapGroup($bindOption ='bind', $isSynchronized = false)
+    protected function bindWithLdapGroup($bindOption ='bind', $synchroPolicy = 'never')
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
         if ($row !== false) {
             $dao->unlinkGroupLdap($this->id);
         }
-        return $dao->linkGroupLdap($this->id, $this->groupDn, $bindOption, $isSynchronized);
+        return $dao->linkGroupLdap($this->id, $this->groupDn, $bindOption, $synchroPolicy);
     }
     
     /**
