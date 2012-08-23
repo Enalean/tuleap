@@ -489,12 +489,27 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateCrossRefTest extends TuleapTe
 
 class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends TuleapTestCase {
 
-    public function itSetParentHasNewValues() {
-        $parent_id   = 657;
+    public function itDoesNothingWhenThereAreNoParentsInRequest() {
+        $new_values  = '32';
         $art_link_id = 555;
         $fields_data = array(
             $art_link_id => array(
-                'new_values' => '',
+                'new_values' => $new_values
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+    }
+
+    public function itSetParentHasNewValues() {
+        $new_values  = '';
+        $parent_id   = '657';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
                 'parent'     => $parent_id
             )
         );
@@ -504,19 +519,20 @@ class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends 
         $this->assertEqual($fields_data[$art_link_id]['new_values'], $parent_id);
     }
 
-    public function itAppendParentToNewValues() {
-        $parent_id   = 657;
+    public function itAppendsParentToNewValues() {
+        $new_values  = '356';
+        $parent_id   = '657';
         $art_link_id = 555;
         $fields_data = array(
             $art_link_id => array(
-                'new_values' => '356',
+                'new_values' => $new_values,
                 'parent'     => $parent_id
             )
         );
         $field = anArtifactLinkField()->withId($art_link_id)->build();
         $field->augmentDataFromRequest($fields_data);
 
-        $this->assertEqual($fields_data[$art_link_id]['new_values'], "356,$parent_id");
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], "$new_values,$parent_id");
     }
 }
 
