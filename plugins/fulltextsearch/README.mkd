@@ -11,7 +11,7 @@ You need to install elasticsearch server packages:
 
 Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
 not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
-It depends of the size of your installation bug for bug deployments, it's worth considering a dedicated server (or even pool of servers).
+It depends of the size of your installation but for big deployments, it's worth considering a dedicated server (or even pool of servers).
 
 If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. See https://github.com/sonian/elasticsearch-jetty
 
