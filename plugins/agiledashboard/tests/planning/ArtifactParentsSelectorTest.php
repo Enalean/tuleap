@@ -39,13 +39,14 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        // corporation     -----> theme
-        // +- product      -----> epic
-        // |  `- release   -----> epic
-        // |     `- sprint -----> story
-        // `- product2
-        //    `- release2
-        // faq
+        '┝ corporation    ──────≫ theme
+         │ ┝ product      ──┬───≫  ┕ epic
+         │ │  ┕ release   ──┘   ┌─≫   ┕ story
+         │ │     ┕ sprint ──────┘
+         │ ┕ product2
+         │    ┕ release2
+         ┕ faq
+        ';
         $this->corp_tracker    = aTracker()->build();
         $this->product_tracker = aTracker()->build();
         $this->release_tracker = aTracker()->build();
@@ -54,6 +55,14 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->theme_tracker   = aTracker()->build();
         $this->faq_tracker     = aTracker()->build();
         $this->story_tracker   = aTracker()->build();
+
+
+        $hierarchy_factory = mock('Tracker_HierarchyFactory');
+        stub($hierarchy_factory)->getParent($this->product_tracker)->returns($this->corp_tracker);
+        stub($hierarchy_factory)->getParent($this->release_tracker)->returns($this->product_tracker);
+        stub($hierarchy_factory)->getParent($this->sprint_tracker)->returns($this->release_tracker);
+        stub($hierarchy_factory)->getParent($this->epic_tracker)->returns($this->theme_tracker);
+        stub($hierarchy_factory)->getParent($this->story_tracker)->returns($this->epic_tracker);
 
         $corp_planning    = stub('Planning')->getBacklogTracker()->returns($this->theme_tracker);
         $product_planning = stub('Planning')->getBacklogTracker()->returns($this->epic_tracker);
@@ -90,7 +99,15 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         stub($this->release_milestone)->getLinkedArtifacts()->returns(array($this->sprint, $this->epic, $this->epic2));
         $this->epics_associated_to_release = array($this->epic, $this->epic2);
 
-        $this->selector = new Planning_ArtifactParentsSelector($this->artifact_factory, $planning_factory, $this->milestone_factory);
+        stub($this->corp)->getLinkedArtifactsOfHierarchy()->returns(array($this->product, $this->product2));
+        stub($this->product)->getLinkedArtifactsOfHierarchy()->returns(array($this->release));
+        stub($this->product2)->getLinkedArtifactsOfHierarchy()->returns(array($this->release2));
+        stub($this->release)->getLinkedArtifactsOfHierarchy()->returns(array($this->sprint));
+        stub($this->release2)->getLinkedArtifactsOfHierarchy()->returns(array());
+        stub($this->theme)->getLinkedArtifactsOfHierarchy()->returns(array($this->epic, $this->epic2));
+        stub($this->theme2)->getLinkedArtifactsOfHierarchy()->returns(array());
+
+        $this->selector = new Planning_ArtifactParentsSelector($this->artifact_factory, $planning_factory, $this->milestone_factory, $hierarchy_factory);
     }
 
     private function getArtifact($id, Tracker $tracker, array $ancestors) {
@@ -100,7 +117,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $milestone = mock('Planning_ArtifactMilestone');
         stub($artifact)->getAllAncestors($this->user)->returns($ancestors);
         stub($this->artifact_factory)->getArtifactById($id)->returns($artifact);
-        stub($this->milestone_factory)->getMilestoneFromArtifactWithPlannedArtifacts($artifact)->returns($milestone);
+        stub($this->milestone_factory)->getMilestoneFromArtifactWithPlannedArtifacts(new EqualExpectation($artifact))->returns($milestone);
         return array($artifact, $milestone);
     }
 
@@ -131,7 +148,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
     }
 
     public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp() {
-        //$this->assertPossibleParentsEqual($this->subreleases_of_corp, $this->release_tracker, $this->corp);
+        $this->assertPossibleParentsEqual($this->subreleases_of_corp, $this->release_tracker, $this->corp);
     }
 
     public function itProvidesTheCorpOfTheProductOfTheReleaseWhenProductIsLinkedToARelease() {
