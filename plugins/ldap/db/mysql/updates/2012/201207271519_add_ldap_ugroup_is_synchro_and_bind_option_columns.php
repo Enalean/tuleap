@@ -21,7 +21,7 @@
 /**
  *
  */
-class b201207271519_add_ldap_ugroup_is_synchro_and_bind_option_columns extends ForgeUpgrade_Bucket {
+class b201207271519_add_ldap_ugroup_synchro_policy_and_bind_option_columns extends ForgeUpgrade_Bucket {
 
     /**
      * Description of the bucket
@@ -30,7 +30,7 @@ class b201207271519_add_ldap_ugroup_is_synchro_and_bind_option_columns extends F
      */
     public function description() {
         return <<<EOT
-Add is_synchronized & bind_option columns to plugin_ldap_ugroup table
+Add synchro_policy & bind_option columns to plugin_ldap_ugroup table
 EOT;
     }
 
@@ -49,13 +49,13 @@ EOT;
      * @return Void
      */
     public function up() {
-        $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN is_synchronized TINYINT(4) NOT NULL DEFAULT 0 AFTER ldap_group_dn";
+        $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN synchro_policy VARCHAR(255) NOT NULL default 'never' AFTER ldap_group_dn";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column is_synchronized to the table plugin_ldap_ugroup');
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column synchro_policy to the table plugin_ldap_ugroup');
         }
 
-        $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN bind_option varchar(255) NOT NULL default 'bind' AFTER is_synchronized";
+        $sql = "ALTER TABLE plugin_ldap_ugroup ADD COLUMN bind_option varchar(255) NOT NULL default 'bind' AFTER synchro_policy";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding the column bind_option  to the table plugin_ldap_ugroup');
@@ -68,8 +68,8 @@ EOT;
      * @return Void
      */
     public function postUp() {
-        if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'is_synchronized')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column is_synchronized in table plugin_ldap_ugroup still not created');
+        if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'synchro_policy')) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column synchro_policy in table plugin_ldap_ugroup still not created');
         }
         if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'bind_option')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column bind_option in table plugin_ldap_ugroup still not created');
