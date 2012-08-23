@@ -40,7 +40,6 @@ require_once TRACKER_BASE_DIR .'/../tests/builders/aMockArtifact.php';
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
 Mock::generate('TrackerFactory');
-Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
 Mock::generate('ProjectManager');
@@ -71,7 +70,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
-        Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
     }
 
     public function tearDown() {
@@ -82,7 +80,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
-        Tracker_HierarchyFactory::clearInstance();
     }
 
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -296,7 +293,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
                                       ->returns($milestone);
 
         ob_start();
-        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager, $view_builder);
+        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager, $view_builder, mock('Tracker_HierarchyFactory'));
 
         $controller->show();
         $content = ob_get_clean();
@@ -354,7 +351,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
         $controller = partial_mock(
             'Planning_MilestoneController',
             array('buildContentView'),
-            array($this->request, $this->milestone_factory, $this->project_manager, mock('Planning_ViewBuilder'))
+            array($this->request, $this->milestone_factory, $this->project_manager, mock('Planning_ViewBuilder'), mock('Tracker_HierarchyFactory'))
         );
         return $controller->getBreadcrumbs($this->plugin_path);
     }
@@ -406,19 +403,13 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $this->request = aRequest()->withUser($this->current_user)->build();
 
         $this->view_builder = stub('Planning_ViewBuilder')->build()->returns(mock('Tracker_CrossSearch_SearchContentView'));
-        Tracker_HierarchyFactory::setInstance(mock('Tracker_HierarchyFactory'));
-    }
-
-    public function tearDown() {
-        parent::tearDown();
-        Tracker_HierarchyFactory::clearInstance();
     }
 
     public function itDisplaysOnlySiblingsMilestones() {
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
         stub($this->milestone_factory)->getAllMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
-        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder);
+        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, mock('Tracker_HierarchyFactory'));
 
         $selectable_artifacts = $this->getSelectableArtifacts();
         $this->assertCount($selectable_artifacts, 2);
@@ -436,7 +427,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
         stub($this->milestone_factory)->getAllMilestones($this->current_user, $planning)->returns(array($milstone_1001, $milstone_1002));
-        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder);
+        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, mock('Tracker_HierarchyFactory'));
 
         $selectable_artifacts = $this->getSelectableArtifacts();
         $this->assertCount($selectable_artifacts, 2);
