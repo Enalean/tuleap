@@ -148,7 +148,7 @@ class Planning_MilestoneFactory {
      */
     public function getPlannedArtifacts(User             $user,
                                         Tracker_Artifact $milestone_artifact) {
-        if ($milestone_artifact == null) return;
+        if ($milestone_artifact == null) return; //it is not possible!
 
         $parents = array();
         $node    = $this->makeNodeWithChildren($user, $milestone_artifact, $parents);
@@ -311,10 +311,10 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifact = null) {
+    public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifacts = null) {
         $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
-        return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact, $planned_artifact);
+        return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact, $planned_artifacts);
     }
 
     /**

@@ -37,8 +37,8 @@ class Planning_ArtifactParentsSelector {
 
     public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, Tracker_HierarchyFactory $hierarchy_factory) {
         $this->commands = array(
-            new Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
             new Planning_ArtifactParentsSelector_SameTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
+            new Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
             new Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
             new Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
         );
