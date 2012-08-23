@@ -55,14 +55,25 @@ class Planning_ArtifactParentsSelector {
      * @return array of Tracker_Artifact
      */
     public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, User $user) {
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($source_artifact->getTracker());
-        if ($planning->getBacklogTracker() == $parent_tracker) {
-            $milestone = $this->milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($source_artifact);
+        $milestone = $this->findNearestMilestoneWithBacklogTracker($parent_tracker, $source_artifact, $user);
+        if ($milestone) {
             $linked_artifacts = $milestone->getLinkedArtifacts($user);
             array_walk($linked_artifacts, array($this, 'keepOnlyArtifactsBelongingToParentTracker'), $parent_tracker);
             return array_values(array_filter($linked_artifacts));
         }
         return array($source_artifact);
+    }
+
+    private function findNearestMilestoneWithBacklogTracker(Tracker $expected_backlog_tracker, Tracker_Artifact $source_artifact, User $user) {
+        $planning = $this->planning_factory->getPlanningByPlanningTracker($source_artifact->getTracker());
+        if ($planning && $planning->getBacklogTracker() == $expected_backlog_tracker) {
+            return  $this->milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($source_artifact);
+        } else {
+            $parent = $source_artifact->getParent($user);
+            if ($parent) {
+                return $this->findNearestMilestoneWithBacklogTracker($expected_backlog_tracker, $parent, $user);
+            }
+        }
     }
 
     private function keepOnlyArtifactsBelongingToParentTracker(&$artifact, $key, $parent_tracker) {

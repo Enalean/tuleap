@@ -33,6 +33,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
     protected $theme_id   = 750;
     protected $theme2_id  = 751;
     protected $epic_id    = 2;
+    protected $epic2_id   = 3;
 
     public function setUp() {
         parent::setUp();
@@ -72,17 +73,23 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         list($this->release, $this->release_milestone) = $this->getArtifact($this->release_id, $this->release_tracker, array($this->product, $this->corp));
         list($this->sprint,  $this->sprint_milestone)  = $this->getArtifact($this->sprint_id,  $this->sprint_tracker,  array($this->release, $this->product, $this->corp));
         list($this->theme,   $this->theme_milestone)   = $this->getArtifact($this->theme_id,   $this->theme_tracker,   array());
-        list($this->theme2,  $this->theme2_milestone)  = $this->getArtifact($this->theme2_id,   $this->theme_tracker,   array());
+        list($this->theme2,  $this->theme2_milestone)  = $this->getArtifact($this->theme2_id,   $this->theme_tracker,  array());
         list($this->epic,    $this->epic_milestone)    = $this->getArtifact($this->epic_id,    $this->epic_tracker,    array($this->theme));
+        list($this->epic2,   $this->epic2_milestone)   = $this->getArtifact($this->epic2_id,    $this->epic_tracker,   array($this->theme));
 
         stub($this->corp_milestone)->getLinkedArtifacts()->returns(array($this->product, $this->theme, $this->theme2));
         $this->themes_associated_to_corp = array($this->theme, $this->theme2);
+
+        stub($this->release_milestone)->getLinkedArtifacts()->returns(array($this->sprint, $this->epic, $this->epic2));
+        $this->epics_associated_to_release = array($this->epic, $this->epic2);
 
         $this->selector = new Planning_ArtifactParentsSelector($this->artifact_factory, $planning_factory, $this->milestone_factory);
     }
 
     private function getArtifact($id, Tracker $tracker, array $ancestors) {
-        $artifact  = aMockArtifact()->withId($id)->withTracker($tracker)->build();
+        reset($ancestors);
+        $parent = current($ancestors);
+        $artifact  = aMockArtifact()->withId($id)->withTracker($tracker)->withParent($parent)->build();
         $milestone = mock('Planning_ArtifactMilestone');
         stub($artifact)->getAllAncestors($this->user)->returns($ancestors);
         stub($this->artifact_factory)->getArtifactById($id)->returns($artifact);
@@ -90,13 +97,10 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         return array($artifact, $milestone);
     }
 
-    public function itProvidesItselfWhenReleaseIsLinkedToAProduct() {
-        $expected = array($this->product);
-        $this->assertEqual($expected, $this->selector->getPossibleParents($this->product_tracker, $this->product, $this->user));
-    }
-
     // nominal cases
     public function itProvidesEpicsAssociatedToTheReleaseOfTheSprintWhenStoryIsLinkedToASprint() {
+        $expected = $this->epics_associated_to_release;
+        $this->assertEqual($expected, $this->selector->getPossibleParents($this->epic_tracker, $this->sprint, $this->user));
     }
 
     public function itProvidesThemesAssociatedToTheCorpOfTheReleaseOfTheSprintWhenEpicIsLinkedToASprint() {
@@ -108,6 +112,11 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
     }
 
     // edge cases
+    public function itProvidesItselfWhenReleaseIsLinkedToAProduct() {
+        $expected = array($this->product);
+        $this->assertEqual($expected, $this->selector->getPossibleParents($this->product_tracker, $this->product, $this->user));
+    }
+
     public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp() {
     }
 
