@@ -404,7 +404,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
 
-        $html .= $this->fetchTitle();
+        $html .= $this->fetchTitleInHierarchy($current_user);
 
         $html .= $this->fetchFields($request->get('artifact'));
 
@@ -424,6 +424,43 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         exit();
     }
 
+    private function fetchTitleInHierarchy(User $current_user) {
+        $html = '';
+        $hp = Codendi_HTMLPurifier::instance();
+        $html .= $this->fetchHiddenTrackerId();
+        $hierarchy = $this->getAllAncestors($current_user);
+        array_unshift($hierarchy, $this);
+        $html .= $this->fetchParentsTitle($hp, $hierarchy);
+        return $html;
+    }
+
+    private function fetchParentsTitle(Codendi_HTMLPurifier $hp, array $parents, $padding_prefix = '') {
+        $html   = '';
+        $parent = array_pop($parents);
+        if ($parent) {
+            $html .= '<ul class="tracker-hierarchy">';
+            $html .= '<li>';
+            $html .= $padding_prefix;
+            $html .= '<div class="tree-last">&nbsp;</div> ';
+            $html .= $hp->purify($parent->getXRefAndTitle());
+            if ($parents) {
+                
+                $div_prefix = '';
+                $div_suffix = '';
+                if (count($parents) == 1) {
+                    $div_prefix = '<div class="tracker_artifact_title">';
+                    $div_suffix = '</div>';
+                }
+                $html .= $div_prefix;
+                $html .= $this->fetchParentsTitle($hp, $parents, $padding_prefix . '<div class="tree-blank">&nbsp;</div>');
+                $html .= $div_suffix;
+            }
+            $html .= '</li>';
+            $html .= '</ul>';
+        }
+        return $html;
+    }
+
     /**
      * Returns HTML code to display the artifact title
      *
@@ -434,12 +471,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchTitle($prefix = '') {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
-        $html .= '<input type="hidden" id="tracker_id" name="tracker_id" value="'.$this->getTrackerId().'"/>';
+        $html .= $this->fetchHiddenTrackerId();
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
         $html .= $hp->purify($this->getXRefAndTitle(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</div>';
         return $html;
+    }
+
+    public function fetchHiddenTrackerId() {
+        return '<input type="hidden" id="tracker_id" name="tracker_id" value="'.$this->getTrackerId().'"/>';
     }
 
     public function getXRefAndTitle() {

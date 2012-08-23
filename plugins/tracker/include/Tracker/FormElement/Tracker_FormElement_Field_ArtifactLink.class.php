@@ -322,7 +322,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= '</div>';
 
             $parent_tracker = $this->getTracker()->getParent();
-            if ($parent_tracker) {
+            $is_submit      = $artifact->getId() == -1;
+            if ($parent_tracker && $is_submit) {
                 $current_user = $this->getCurrentUser();
                 $html .= $this->fetchParentSelector($artifact, $name, $parent_tracker, $current_user, $hp);
             }
