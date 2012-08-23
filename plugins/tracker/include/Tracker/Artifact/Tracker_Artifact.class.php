@@ -87,6 +87,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     }
 
+    /**
+     * Return true if given given artifact refer to the same DB object (basically same id).
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Boolean
+     */
+    public function equals(Tracker_Artifact $artifact = null) {
+        return $artifact && $this->id == $artifact->getId();
+    }
 
     /**
     * Set the value of use_artifact_permissions
@@ -656,6 +666,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
                     $GLOBALS['Response']->redirect($redirect->toUrl());
+                    //die();
                 } else {
                     $this->display($layout, $request, $current_user);
                 }

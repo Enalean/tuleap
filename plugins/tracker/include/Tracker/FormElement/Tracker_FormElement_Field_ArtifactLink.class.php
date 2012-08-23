@@ -239,7 +239,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
     }
 
-    private function fetchParentSelector($name, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+    private function fetchParentSelector(Tracker_Artifact $artifact, $name, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
         $html  = '';
         $html .= '<p>';
         $html .= '<label>';
@@ -247,21 +247,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $html .= '<select name="'. $name .'[parent]">';
         $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
         $html .= '<option value="-1">'. 'Create a new one' .'</option>';
-        $html .= $this->fetchArtifactParentsOptions($parent_tracker, $user, $hp);
+        $html .= $this->fetchArtifactParentsOptions($artifact, $parent_tracker, $user, $hp);
         $html .= '</select>';
         $html .= '</label>';
         $html .= '</p>';
         return $html;
     }
 
-    private function fetchArtifactParentsOptions(Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+    private function fetchArtifactParentsOptions(Tracker_Artifact $artifact, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
         $html  = '';
         list($label, $possible_parents) = $this->getPossibleArtifactParents($parent_tracker, $user);
         if ($possible_parents) {
+            $parent_artifact = $artifact->getParent($user);
             $label = 'Open '. $parent_tracker->getName();
             $html .= '<optgroup label="'. $label .'">';
-            foreach ($possible_parents as $parent) {
-                $html .= '<option value="'. $parent->getId() .'">'. $hp->purify($parent->getXRefAndTitle()) .'</option>';
+            foreach ($possible_parents as $possible_parent) {
+                $selected = '';
+                if ($parent_artifact->equals($possible_parent)) {
+                    $selected = ' selected="selected"';
+                }
+                $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $hp->purify($possible_parent->getXRefAndTitle()) .'</option>';
             }
             $html .= '</optgroup>';
         }
@@ -290,15 +295,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     /**
      * Fetch the html widget for the field
      *
-     * @param string $name                   The name, if any
-     * @param array  $artifact_links         The current artifact links
-     * @param string $prefill_new_values     Prefill new values field (what the user has submitted, if any)
-     $ @param array  $prefill_removed_values Pre-remove values (what the user has submitted, if any)
-     * @param bool   $read_only              True if the user can't add or remove links
+     * @param Tracker_Artifact $artifact               Artifact on which we operate
+     * @param string           $name                   The name, if any
+     * @param array            $artifact_links         The current artifact links
+     * @param string           $prefill_new_values     Prefill new values field (what the user has submitted, if any)
+     $ @param array            $prefill_removed_values Pre-remove values (what the user has submitted, if any)
+     * @param bool             $read_only              True if the user can't add or remove links
      *
      * @return string html
      */
-    protected function fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $from_aid = null) {
+    protected function fetchHtmlWidget(Tracker_Artifact $artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $from_aid = null) {
         $html = '';
         $html_name_new = '';
         $html_name_del = '';
@@ -319,7 +325,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $parent_tracker = $this->getTracker()->getParent();
             if ($parent_tracker) {
                 $current_user = $this->getCurrentUser();
-                $html .= $this->fetchParentSelector($name, $parent_tracker, $current_user, $hp);
+                $html .= $this->fetchParentSelector($artifact, $name, $parent_tracker, $current_user, $hp);
             }
         }
         $html .= '<div class="tracker-form-element-artifactlink-list">';
@@ -597,7 +603,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $name      = 'artifact['. $this->id .']';
         $from_aid      = $artifact->getId();
         
-        return $this->fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $from_aid);
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $from_aid);
     }
     
     
@@ -618,7 +624,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $name                   = '';
         $prefill_new_values     = '';
         $prefill_removed_values = array();
-        return $this->fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only);
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only);
     }
     
     /**
@@ -641,8 +647,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $name                   = 'artifact['. $this->id .']';
         $prefill_removed_values = array();
         $artifact_links         = array();
-        
-        return $this->fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only);
+
+        // Well, shouldn't be here but API doesn't provide a Null Artifact on creation yet
+        // Here to avoid having to pass null arg for fetchHtmlWidget
+        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
+
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only);
     }
 
     /**
