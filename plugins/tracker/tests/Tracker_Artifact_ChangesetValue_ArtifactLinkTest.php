@@ -18,6 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/constants.php';
+require_once dirname(__FILE__).'/builders/all.php';
+
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
@@ -76,7 +79,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         unset($this->artlink_info_666);
         unset($this->artlink_info_999);
     }
-    
+
     function testNoDiff() {
         $field  = new $this->field_class();
         $art_links_1 = array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999);
@@ -85,30 +88,6 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
         $this->assertFalse($list_1->diff($list_2));
         $this->assertFalse($list_2->diff($list_1));
-    }
-    
-    function testHasChangesNoChanges() {
-        $field  = new Tracker_Artifact_ChangesetValue_ArtifactLinkTestVersion();
-        $empty_array = array();
-        $field->setReturnReference('getArtifactIds', $empty_array);
-        $new_value = array('new_values' => '');
-        $this->assertFalse($field->hasChanges($new_value));
-    }
-    
-    function testHasChangesNoChanges2() {
-        $field  = new Tracker_Artifact_ChangesetValue_ArtifactLinkTestVersion();
-        $art_ids = array('1','2','3');
-        $field->setReturnReference('getArtifactIds', $art_ids);
-        $new_value = array('new_values' => '3,2,1');
-        $this->assertFalse($field->hasChanges($new_value));
-    }
-    
-    function testHasChangesWithChanges() {
-        $field  = new Tracker_Artifact_ChangesetValue_ArtifactLinkTestVersion();
-        $art_ids = array('1','2','3');
-        $field->setReturnReference('getArtifactIds', $art_ids);
-        $new_value = array('new_values' => '4,6');
-        $this->assertTrue($field->hasChanges($new_value));
     }
     
     function testDiff_cleared() {
@@ -192,6 +171,30 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
         $field      = new $this->field_class();
         $value_list = new $this->changesetvalue_class(111, $field, false, array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999));
         $this->assertEqual($value_list->getSoapValue(), "123, 321, 999");
+    }
+}
+
+class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends TuleapTestCase {
+
+    function itHasNoChangesWhenNoNewValues() {
+        $old_values      = array();
+        $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
+        $new_value       = array('new_values' => '');
+        $this->assertFalse($changeset_value->hasChanges($new_value));
+    }
+
+    function itHasNoChangesWhenSameValues() {
+        $old_values      = array(1 => new stdClass(), 2 => new stdClass(), 3 => new stdClass());
+        $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
+        $new_value       = array('new_values' => '3 ,2,1');
+        $this->assertFalse($changeset_value->hasChanges($new_value));
+    }
+
+    function itHasChangesWhenNewValuesAreDifferent() {
+        $old_values      = array(1 => new stdClass(), 2 => new stdClass(), 3 => new stdClass());
+        $changeset_value = aChangesetValueArtifactLink()->withArtifactLinks($old_values)->build();
+        $new_value       = array('new_values' => '4,6');
+        $this->assertTrue($changeset_value->hasChanges($new_value));
     }
     
 }

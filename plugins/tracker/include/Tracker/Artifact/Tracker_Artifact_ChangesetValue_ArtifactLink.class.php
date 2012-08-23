@@ -52,7 +52,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             // no changes
             return false;
         } else {
-            $array_new_values = explode(',', $new_value['new_values']);
+            $array_new_values = array_map('intval', explode(',', $new_value['new_values']));
             $array_cur_values = $this->getArtifactIds();
             sort($array_new_values);
             sort($array_cur_values);
