@@ -92,11 +92,20 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         list($this->epic,     $this->epic_milestone)     = $this->getArtifact($this->epic_id,    $this->epic_tracker,     array($this->theme));
         list($this->epic2,    $this->epic2_milestone)    = $this->getArtifact($this->epic2_id,    $this->epic_tracker,    array($this->theme));
 
-        stub($this->corp_milestone)->getPlannedArtifacts()->returns(array($this->product, $this->product2, $this->theme, $this->theme2));
+        stub($this->corp_milestone)->getPlannedArtifacts()->returns(aNode()->withChildren(
+            aNode()->withObject($this->product),
+            aNode()->withObject($this->product2),
+            aNode()->withObject($this->theme),
+            aNode()->withObject($this->theme2)
+        )->build());
         $this->themes_associated_to_corp = array($this->theme, $this->theme2);
         $this->subreleases_of_corp       = array($this->release, $this->release2);
 
-        stub($this->release_milestone)->getPlannedArtifacts()->returns(array($this->sprint, $this->epic, $this->epic2));
+        stub($this->release_milestone)->getPlannedArtifacts()->returns(aNode()->withChildren(
+            aNode()->withObject($this->sprint),
+            aNode()->withObject($this->epic),
+            aNode()->withObject($this->epic2)
+        )->build());
         $this->epics_associated_to_release = array($this->epic, $this->epic2);
 
         stub($this->corp)->getLinkedArtifactsOfHierarchy()->returns(array($this->product, $this->product2));
