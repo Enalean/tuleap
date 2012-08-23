@@ -316,7 +316,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             $html .= '</div>';
 
-            $parent_tracker = $this->getHierarchyFactory()->getParent($this->getTracker());
+            $parent_tracker = $this->getTracker()->getParent();
             if ($parent_tracker) {
                 $current_user = $this->getCurrentUser();
                 $html .= $this->fetchParentSelector($name, $parent_tracker, $current_user, $hp);
