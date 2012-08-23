@@ -253,7 +253,6 @@ class Git extends PluginController {
     }
     
     public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
-        $repository = $this->factory->getRepositoryById($repoId);
         switch ($action) {
             #CREATE REF
             case 'create':
@@ -288,6 +287,7 @@ class Git extends PluginController {
                     $this->addView('view');
                 }
                 else if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
+                    $repository = $this->factory->getRepositoryById($repoId);
                     $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
@@ -376,6 +376,7 @@ class Git extends PluginController {
             #confirm_private
             case 'confirm_private':
                 if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
+                    $repository = $this->factory->getRepositoryById($repoId);
                     $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
