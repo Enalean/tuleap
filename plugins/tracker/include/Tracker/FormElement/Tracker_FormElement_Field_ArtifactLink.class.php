@@ -424,17 +424,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $this_project_id = $this->getTracker()->getProject()->getGroupId();
                 $hp = Codendi_HTMLPurifier::instance();
                 
-                $u = UserManager::instance()->getCurrentUser(); // Why? it is already given as parameter!
-                $group_id = $this->getTracker()->getGroupId();
-                $ugroups = $u->getUgroups($group_id, array());
-                $ugroups = implode(',', $ugroups);
+                $ugroups = $current_user->getUgroups($this_project_id, array());
                 
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
                 $result  = array();
                 //We must retrieve the last changeset ids of each artifact id.
                 $dao = new Tracker_ArtifactDao();
-                foreach($dao->searchLastChangesetIds($ids, $ugroups) as $matching_ids) {
+                foreach($dao->searchLastChangesetIds($ids, $ugroups, $current_user->isSuperUser()) as $matching_ids) {
                     $tracker_id = $matching_ids['tracker_id'];
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
@@ -491,19 +488,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $read_only              = true;
                 $use_data_from_db       = false;
                 
-                $this_project_id = $this->getTracker()->getProject()->getGroupId();
-                $hp = Codendi_HTMLPurifier::instance();
-
-                $u = UserManager::instance()->getCurrentUser(); // Why? it is already given as parameter!
-                $group_id = $this->getTracker()->getGroupId();
-                $ugroups = $u->getUgroups($group_id, array());
-                $ugroups = implode(',', $ugroups);
-
-                $ids = $request->get('ids'); //2, 14, 15
+                $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId(), array());
+                $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
                 $json = array('tabs' => array());
                 $dao = new Tracker_ArtifactDao();
-                foreach ($dao->searchLastChangesetIds($ids, $ugroups) as $matching_ids) {
+                foreach ($dao->searchLastChangesetIds($ids, $ugroups, $current_user->isSuperUser()) as $matching_ids) {
                     $tracker_id = $matching_ids['tracker_id'];
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();

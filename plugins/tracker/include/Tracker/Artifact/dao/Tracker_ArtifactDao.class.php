@@ -51,17 +51,16 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * @param string $artifact_ids "2,14,15"
      */
-    public function searchLastChangesetIds($artifact_ids, $ugroups) {
-        $artifact_ids = explode(',', $artifact_ids); // array(2, 14, 15);
-        $artifact_ids = array_map(array($this->da, 'escapeInt'), $artifact_ids); // array(2, 14, 15)
-        $artifact_ids = implode(',', $artifact_ids); // 2,14,15
+    public function searchLastChangesetIds($artifact_ids, array $ugroups, $user_is_admin) {
+        $artifact_ids = $this->da->escapeIntImplode(explode(',', $artifact_ids));
+
         $sql = " SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id";
         $from = " FROM $this->table_name AS artifact";
         $where = " WHERE id IN (" .$artifact_ids. ")";
         $group = " GROUP BY tracker_id";
                 
-        $user = UserManager::instance()->getCurrentuser();
-        if (!$user->isSuperUser()) {
+        if (!$user_is_admin) {
+            $ugroups = $this->da->escapeIntImplode($ugroups);
             $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.id AS CHAR) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". $ugroups.")))";
         }
