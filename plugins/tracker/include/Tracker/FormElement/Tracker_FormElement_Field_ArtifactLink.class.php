@@ -1207,6 +1207,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $artifacts;
     }
 
+    /**
+     * If request come with a 'parent', it should be automagically transformed as
+     * 'new_values'.
+     * Please note that it only work on artifact creation.
+     * 
+     * @param type $fields_data
+     */
     public function augmentDataFromRequest(&$fields_data) {
         if (isset($fields_data[$this->getId()]['parent'])) {
             $parent = $fields_data[$this->getId()]['parent'];
