@@ -97,24 +97,26 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         return array($artifact, $milestone);
     }
 
+    private function assertPossibleParentsEqual(array $expected, Tracker $parent_tracker, Tracker_Artifact $source_artifact) {
+        $this->assertEqual($expected, $this->selector->getPossibleParents($parent_tracker, $source_artifact, $this->user));
+    }
+
     // nominal cases
     public function itProvidesEpicsAssociatedToTheReleaseOfTheSprintWhenStoryIsLinkedToASprint() {
-        $expected = $this->epics_associated_to_release;
-        $this->assertEqual($expected, $this->selector->getPossibleParents($this->epic_tracker, $this->sprint, $this->user));
+        $this->assertPossibleParentsEqual($this->epics_associated_to_release, $this->epic_tracker, $this->sprint);
     }
 
     public function itProvidesThemesAssociatedToTheCorpOfTheReleaseOfTheSprintWhenEpicIsLinkedToASprint() {
+        $this->assertPossibleParentsEqual($this->themes_associated_to_corp, $this->theme_tracker, $this->sprint);
     }
 
     public function itProvidesThemesAssociatedToACorpWhenEpicIsLinkedToACorp() {
-        $expected = $this->themes_associated_to_corp;
-        $this->assertEqual($expected, $this->selector->getPossibleParents($this->theme_tracker, $this->corp, $this->user));
+        $this->assertPossibleParentsEqual($this->themes_associated_to_corp, $this->theme_tracker, $this->corp);
     }
 
     // edge cases
     public function itProvidesItselfWhenReleaseIsLinkedToAProduct() {
-        $expected = array($this->product);
-        $this->assertEqual($expected, $this->selector->getPossibleParents($this->product_tracker, $this->product, $this->user));
+        $this->assertPossibleParentsEqual(array($this->product), $this->product_tracker, $this->product);
     }
 
     public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp() {
