@@ -55,9 +55,9 @@ if($request->exist('preserve_members') && $request->get('preserve_members') == '
 }
 
 // Check if user has checked the Synchronization option.
-$synchro = false;
+$synchro = 'never';
 if($request->exist('synchronize') && $request->get('synchronize') == 'on') {
-    $synchro = true;
+    $synchro = 'auto';
 }
 
 // Get LDAP group name

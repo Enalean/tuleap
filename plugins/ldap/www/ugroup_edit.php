@@ -82,9 +82,9 @@ if($request->exist('preserve_members') && $request->get('preserve_members') == '
 }
 
 // Check if user has checked the Synchronization option.
-$synchro = false;
+$synchro = 'never';
 if ($request->existAndNonEmpty('synchronize')) {
-    $synchro = true;
+    $synchro = 'auto';
 }
 
 
@@ -165,7 +165,7 @@ if($request->isPost() && $request->valid($vSubmit)) {
                     if($bindOption == 'preserve_members') {
                         echo '<input type="hidden" name="preserve_members" value="on" />';
                     }
-                    if($synchro == true) {
+                    if($synchro == 'auto') {
                         echo '<input type="hidden" name="synchronize" value="on" />';
                     }
                     echo '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
