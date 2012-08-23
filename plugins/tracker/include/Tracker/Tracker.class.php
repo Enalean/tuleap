@@ -2077,7 +2077,7 @@ EOS;
     private $cached_permission_authorized_ugroups;
 
     public function permission_db_authorized_ugroups( $permission_type ) {
-        if (!$this->cached_permission_authorized_ugroups) {
+        if (!$this->cached_permission_authorized_ugroups || empty($this->cached_permission_authorized_ugroups)) {
             $this->cached_permission_authorized_ugroups = array();
             $res = permission_db_authorized_ugroups($permission_type, $this->getId());
             if ( db_numrows($res) > 0 ) { 
