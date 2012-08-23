@@ -139,7 +139,7 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
     }
 
     public function itProvidesNothingWhenTheReleaseIsLinkedToAnEpic() {
-        //$this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->epic);
+        $this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->epic);
     }
 }
 ?>
