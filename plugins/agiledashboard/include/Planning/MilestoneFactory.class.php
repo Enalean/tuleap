@@ -293,6 +293,17 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Create a Milestone corresponding to given artifact and loads the artifacts planned for this milestone
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Planning_ArtifactMilestone 
+     */
+    public function getMilestoneFromArtifactWithPlannedArtifacts(Tracker_Artifact $artifact) {
+        die('TODO');
+    }
+
+    /**
      * Create a Milestone corresponding to given artifact
      *
      * @param Tracker_Artifact $artifact
