@@ -85,7 +85,7 @@ extends LDAP_GroupManager
     }
 
     /**
-     * Retrieve usergrousp having is_synchronized option enabled
+     * Retrieve usergroups having synchro_policy option as 'auto'
      *
      * @return DataAccessResult
      */
