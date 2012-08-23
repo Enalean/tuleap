@@ -815,19 +815,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
             $html .= '<p class="submit_instructions">' . $hp->purify($this->submit_instructions, CODENDI_PURIFIER_FULL) . '</p>';
         }
         
-        $query_parameters = array(
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->base_url = TRACKER_BASE_URL;
+        $redirect->query_parameters = array(
             'tracker'  => $this->id,
             'func'     => 'submit-artifact',
         );
         EventManager::instance()->processEvent(
             TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
             array(
-                'request'          => $request,
-                'query_parameters' => &$query_parameters,
+                'request'  => $request,
+                'redirect' => $redirect,
             )
         );
         
-        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($query_parameters) .'" method="POST" enctype="multipart/form-data">';
+        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
         if ($link) {
             $html .= '<input type="hidden" name="link-artifact-id" value="'. (int)$link .'" />';
             if ($request->get('immediate')) {

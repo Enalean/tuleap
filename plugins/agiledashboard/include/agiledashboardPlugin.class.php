@@ -90,7 +90,7 @@ class AgileDashboardPlugin extends Plugin {
         if ($planning && !$redirect->stayInTracker()) {
             $this->redirectToPlanning($artifact, $requested_planning, $planning, $redirect);
         } else {
-             $this->setQueryParametersFromRequest($request, $redirect->query_parameters);
+             $this->setQueryParametersFromRequest($request, $redirect);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
              if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Artifact_Redirect::STATE_CREATE_PARENT) {
                  $redirect->query_parameters['child_milestone'] = $last_milestone_artifact->getId();
@@ -113,18 +113,18 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_build_artifact_form_action($params) {
-        $this->setQueryParametersFromRequest($params['request'], $params['query_parameters']);
+        $this->setQueryParametersFromRequest($params['request'], $params['redirect']);
         if ($params['request']->exist('child_milestone')) {
-            $params['query_parameters']['child_milestone'] = $params['request']->getValidated('child_milestone', 'uint', 0);
+            $params['redirect']->query_parameters['child_milestone'] = $params['request']->getValidated('child_milestone', 'uint', 0);
         }
     }
 
-    private function setQueryParametersFromRequest(Codendi_Request $request, &$query_parameters) {
+    private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($request);
         if ($requested_planning) {
             $key   = 'planning['. $requested_planning['planning_id'] .']';
             $value = $requested_planning['artifact_id'];
-            $query_parameters[$key] = $value;
+            $redirect->query_parameters[$key] = $value;
         }
     }
     

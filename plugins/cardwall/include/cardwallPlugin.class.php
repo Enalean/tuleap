@@ -256,7 +256,7 @@ class cardwallPlugin extends Plugin {
                     break;
                 }
             } else {
-                $this->appendCardwallParameter($cardwall, $redirect->query_parameters);
+                $this->appendCardwallParameter($redirect, $cardwall);
             }
         }
     }
@@ -289,13 +289,13 @@ class cardwallPlugin extends Plugin {
     public function tracker_event_build_artifact_form_action($params) {
         $cardwall = $params['request']->get('cardwall');
         if ($cardwall) {
-            $this->appendCardwallParameter($cardwall, $params['query_parameters']);
+            $this->appendCardwallParameter($params['redirect'], $cardwall);
         }
     }
 
-    private function appendCardwallParameter($cardwall, &$query_parameters) {
+    private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall) {
         list($key, $value) = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
-        $query_parameters[$key] = $value;
+        $redirect->query_parameters[$key] = $value;
     }
 
     /**
