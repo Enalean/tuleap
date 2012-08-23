@@ -328,6 +328,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $html .= $this->fetchParentSelector($artifact, $name, $parent_tracker, $current_user, $hp);
             }
         }
+
+        $parent_artifact = $artifact->getParent($this->getCurrentUser());
+        if ($parent_artifact) {
+            $artifact_links[$parent_artifact->getId()] = Tracker_ArtifactLinkInfo::buildFromArtifact($parent_artifact);
+        }
+
         $html .= '<div class="tracker-form-element-artifactlink-list">';
         if ($artifact_links) {
             $ids = array();
