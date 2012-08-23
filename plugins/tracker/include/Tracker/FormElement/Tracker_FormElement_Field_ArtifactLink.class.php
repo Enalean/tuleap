@@ -263,7 +263,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= '<optgroup label="'. $label .'">';
             foreach ($possible_parents as $possible_parent) {
                 $selected = '';
-                if ($parent_artifact->equals($possible_parent)) {
+                if ($possible_parent->equals($parent_artifact)) {
                     $selected = ' selected="selected"';
                 }
                 $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $hp->purify($possible_parent->getXRefAndTitle()) .'</option>';
@@ -819,7 +819,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return bool true if there are differences
      */
-    public function hasChanges(Tracker_Artifact_ChangesetValue $old_value, $new_value) {
+    public function hasChanges(Tracker_Artifact_ChangesetValue_ArtifactLink $old_value, $new_value) {
         return $old_value->hasChanges($new_value);
     }
     
@@ -1206,6 +1206,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $artifacts;
     }
-    
+
+    public function augmentDataFromRequest(&$fields_data) {
+        if (isset($fields_data[$this->getId()]['parent'])) {
+            $parent = $fields_data[$this->getId()]['parent'];
+            $new_values   = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+            $new_values[] = $parent;
+            $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
+        }
+    }
 }
 ?>

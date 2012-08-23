@@ -196,7 +196,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink_HasChangesTest extends Tuleap
         $new_value       = array('new_values' => '4,6');
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
-    
+
 }
 
 ?>
