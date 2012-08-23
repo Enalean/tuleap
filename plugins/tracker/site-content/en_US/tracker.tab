@@ -978,6 +978,7 @@ plugin_tracker_artifact	to	to
 plugin_tracker_artifact	removed	removed
 plugin_tracker_artifact	added	added
 plugin_tracker_artifact	formelement_artifactlink_help	Enter artifact ids separated with a comma
+plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Create a new one
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
