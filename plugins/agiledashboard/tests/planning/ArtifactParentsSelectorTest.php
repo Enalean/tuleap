@@ -25,22 +25,26 @@ require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class ArtifactParentsSelectorTest extends TuleapTestCase {
 
-    protected $faq_id     = 13;
-    protected $corp_id    = 42;
-    protected $product_id = 56;
-    protected $release_id = 7777;
-    protected $sprint_id  = 9001;
-    protected $theme_id   = 750;
-    protected $theme2_id  = 751;
-    protected $epic_id    = 2;
-    protected $epic2_id   = 3;
+    protected $faq_id      = 13;
+    protected $corp_id     = 42;
+    protected $product_id  = 56;
+    protected $product2_id = 57;
+    protected $release_id  = 7777;
+    protected $release2_id = 7778;
+    protected $sprint_id   = 9001;
+    protected $theme_id    = 750;
+    protected $theme2_id   = 751;
+    protected $epic_id     = 2;
+    protected $epic2_id    = 3;
 
     public function setUp() {
         parent::setUp();
         // corporation     -----> theme
-        // `- product      -----> epic
-        //    `- release   -----> epic
-        //       `- sprint -----> story
+        // +- product      -----> epic
+        // |  `- release   -----> epic
+        // |     `- sprint -----> story
+        // `- product2
+        //    `- release2
         // faq
         $this->corp_tracker    = aTracker()->build();
         $this->product_tracker = aTracker()->build();
@@ -67,18 +71,21 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
         $this->milestone_factory = mock('Planning_MilestoneFactory');
 
-        list($this->faq,     $this->faq_milestone)     = $this->getArtifact($this->faq_id,     $this->faq_tracker,     array());
-        list($this->corp,    $this->corp_milestone)    = $this->getArtifact($this->corp_id,    $this->corp_tracker,    array());
-        list($this->product, $this->product_milestone) = $this->getArtifact($this->product_id, $this->product_tracker, array($this->corp));
-        list($this->release, $this->release_milestone) = $this->getArtifact($this->release_id, $this->release_tracker, array($this->product, $this->corp));
-        list($this->sprint,  $this->sprint_milestone)  = $this->getArtifact($this->sprint_id,  $this->sprint_tracker,  array($this->release, $this->product, $this->corp));
-        list($this->theme,   $this->theme_milestone)   = $this->getArtifact($this->theme_id,   $this->theme_tracker,   array());
-        list($this->theme2,  $this->theme2_milestone)  = $this->getArtifact($this->theme2_id,   $this->theme_tracker,  array());
-        list($this->epic,    $this->epic_milestone)    = $this->getArtifact($this->epic_id,    $this->epic_tracker,    array($this->theme));
-        list($this->epic2,   $this->epic2_milestone)   = $this->getArtifact($this->epic2_id,    $this->epic_tracker,   array($this->theme));
+        list($this->faq,      $this->faq_milestone)      = $this->getArtifact($this->faq_id,     $this->faq_tracker,      array());
+        list($this->corp,     $this->corp_milestone)     = $this->getArtifact($this->corp_id,    $this->corp_tracker,     array());
+        list($this->product,  $this->product_milestone)  = $this->getArtifact($this->product_id, $this->product_tracker,  array($this->corp));
+        list($this->product2, $this->product2_milestone) = $this->getArtifact($this->product2_id, $this->product_tracker, array($this->corp));
+        list($this->release,  $this->release_milestone)  = $this->getArtifact($this->release_id, $this->release_tracker,  array($this->product, $this->corp));
+        list($this->release2, $this->release2_milestone) = $this->getArtifact($this->release2_id, $this->release_tracker, array($this->product2, $this->corp));
+        list($this->sprint,   $this->sprint_milestone)   = $this->getArtifact($this->sprint_id,  $this->sprint_tracker,   array($this->release, $this->product, $this->corp));
+        list($this->theme,    $this->theme_milestone)    = $this->getArtifact($this->theme_id,   $this->theme_tracker,    array());
+        list($this->theme2,   $this->theme2_milestone)   = $this->getArtifact($this->theme2_id,   $this->theme_tracker,   array());
+        list($this->epic,     $this->epic_milestone)     = $this->getArtifact($this->epic_id,    $this->epic_tracker,     array($this->theme));
+        list($this->epic2,    $this->epic2_milestone)    = $this->getArtifact($this->epic2_id,    $this->epic_tracker,    array($this->theme));
 
-        stub($this->corp_milestone)->getLinkedArtifacts()->returns(array($this->product, $this->theme, $this->theme2));
+        stub($this->corp_milestone)->getLinkedArtifacts()->returns(array($this->product, $this->product2, $this->theme, $this->theme2));
         $this->themes_associated_to_corp = array($this->theme, $this->theme2);
+        $this->subreleases_of_corp       = array($this->release, $this->release2);
 
         stub($this->release_milestone)->getLinkedArtifacts()->returns(array($this->sprint, $this->epic, $this->epic2));
         $this->epics_associated_to_release = array($this->epic, $this->epic2);
@@ -114,21 +121,25 @@ class ArtifactParentsSelectorTest extends TuleapTestCase {
         $this->assertPossibleParentsEqual($this->themes_associated_to_corp, $this->theme_tracker, $this->corp);
     }
 
+    public function itProvidesNothingWhenTheReleaseIsLinkedToAFaq() {
+        $this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->faq);
+    }
+
     // edge cases
     public function itProvidesItselfWhenReleaseIsLinkedToAProduct() {
         $this->assertPossibleParentsEqual(array($this->product), $this->product_tracker, $this->product);
     }
 
     public function itProvidesSubReleasesOfTheCorpWhenSprintIsLinkedToACorp() {
+        //$this->assertPossibleParentsEqual($this->subreleases_of_corp, $this->release_tracker, $this->corp);
     }
 
     public function itProvidesTheCorpOfTheProductOfTheReleaseWhenProductIsLinkedToARelease() {
+        //$this->assertPossibleParentsEqual(array($this->corp), $this->corp_tracker, $this->release);
     }
 
-    public function itProvidesNothingWhenTheReleaseIsLinkedToASprint() {
-    }
-
-    public function itProvidesNothingWhenTheReleaseIsLinkedToAFaq() {
+    public function itProvidesNothingWhenTheReleaseIsLinkedToAnEpic() {
+        //$this->assertPossibleParentsEqual(array(), $this->product_tracker, $this->epic);
     }
 }
 ?>
