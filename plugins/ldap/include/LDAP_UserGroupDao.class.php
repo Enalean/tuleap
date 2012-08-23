@@ -73,7 +73,7 @@ extends DataAccessObject
      * @return Boolean
      */
     function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy) {
-        $isSynchronized = $this->da->escapeInt($synchroPolicy);
+        $synchroPolicy = $this->da->quoteSmart($synchroPolicy);
         $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)'.
             ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.$synchroPolicy.', "'.db_es($bindOption).'")';
         return $this->update($sql);
