@@ -31,121 +31,30 @@
 class Planning_ArtifactParentsSelector {
 
     /**
-     * @var Tracker_ArtifactFactory
+     * @var array of Planning_ArtifactParentsSelector_Command
      */
-    private $artifact_factory;
-
-    /**
-     * @var PlanningFactory
-     */
-    private $planning_factory;
-
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
-
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
+    private $commands;
 
     public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory, Tracker_HierarchyFactory $hierarchy_factory) {
-        $this->artifact_factory  = $artifact_factory;
-        $this->planning_factory  = $planning_factory;
-        $this->milestone_factory = $milestone_factory;
-        $this->hierarchy_factory = $hierarchy_factory;
+        $this->commands = array(
+            new Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
+            new Planning_ArtifactParentsSelector_SameTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
+            new Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
+            new Planning_ArtifactParentsSelector_SubChildrenBelongingToTrackerCommand($artifact_factory, $planning_factory, $milestone_factory, $hierarchy_factory),
+        );
     }
 
     /**
      * @return array of Tracker_Artifact
      */
     public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, User $user) {
-        $milestone = $this->findNearestMilestoneWithBacklogTracker($parent_tracker, $source_artifact, $user);
-        if ($milestone) {
-            $linked_artifacts = $milestone->getLinkedArtifacts($user);
-            array_walk($linked_artifacts, array($this, 'keepOnlyArtifactsBelongingToParentTracker'), $parent_tracker);
-            return array_values(array_filter($linked_artifacts));
-        }
-        if ($source_artifact->getTracker() == $parent_tracker) {
-            return array($source_artifact);
-        }
-        $parent_in_same_hierarchy = $this->getParentInSameHierarchy($parent_tracker, $source_artifact, $user);
-        if ($parent_in_same_hierarchy) {
-            return array($parent_in_same_hierarchy);
-        }
-        $sub_childs = $this->getSubChildrenBelongingToTracker($source_artifact, $parent_tracker, $user);
-        if ($sub_childs) {
-            return $sub_childs;
+        foreach ($this->commands as $command) {
+            $artifacts = $command->getPossibleParents($parent_tracker, $source_artifact, $user);
+            if ($artifacts) {
+                return $artifacts;
+            }
         }
         return array();
-    }
-
-    private function getSubChildrenBelongingToTracker(Tracker_Artifact $source_artifact, Tracker $expected_tracker, User $user) {
-        $hierarchy = $this->getParentTrackersAndStopAtGivenTracker($expected_tracker, $source_artifact->getTracker());
-        if ($hierarchy) {
-            return $this->recursivelyFindChildrenBelongingToTracker($source_artifact, $expected_tracker, $user, $hierarchy);
-        }
-    }
-
-    private function recursivelyFindChildrenBelongingToTracker(Tracker_Artifact $source_artifact, Tracker $expected_tracker, User $user, array $hierarchy) {
-        $artifacts = array();
-        $children = $source_artifact->getLinkedArtifactsOfHierarchy($user);
-        if (isset($hierarchy[$source_artifact->getId()])) {
-            array_walk($children, array($this, 'keepOnlyArtifactsBelongingToParentTracker'), $hierarchy[$source_artifact->getId()]);
-            array_filter($children);
-        }
-        if ($children) {
-            foreach ($children as $child) {
-                if ($child->getTracker() == $expected_tracker) {
-                    $artifacts[] = $child;
-                } else {
-                    $artifacts = array_merge($artifacts, $this->recursivelyFindChildrenBelongingToTracker($child, $expected_tracker, $user, $hierarchy));
-                }
-            }
-        }
-        return $artifacts;
-    }
-
-    private function getParentTrackersAndStopAtGivenTracker(Tracker $tracker, Tracker $stop) {
-        $hierarchy = array();
-        while (($parent = $this->hierarchy_factory->getParent($tracker)) && $parent != $stop) {
-            $hierarchy[$parent->getId()] = $tracker;
-            $tracker = $parent;
-        }
-        if ($parent == $stop) {
-            $hierarchy[$stop->getId()] = $tracker;
-            return $hierarchy;
-        }
-    }
-
-    private function getParentInSameHierarchy(Tracker $expected_parent_tracker, Tracker_Artifact $source_artifact, User $user) {
-        if ($source_artifact->getTracker() == $expected_parent_tracker) {
-            return $source_artifact;
-        } else {
-            $parent = $source_artifact->getParent($user);
-            if ($parent) {
-                return $this->getParentInSameHierarchy($expected_parent_tracker, $parent, $user);
-            }
-        }
-    }
-
-    private function findNearestMilestoneWithBacklogTracker(Tracker $expected_backlog_tracker, Tracker_Artifact $source_artifact, User $user) {
-        $planning = $this->planning_factory->getPlanningByPlanningTracker($source_artifact->getTracker());
-        if ($planning && $planning->getBacklogTracker() == $expected_backlog_tracker) {
-            return  $this->milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($source_artifact);
-        } else {
-            $parent = $source_artifact->getParent($user);
-            if ($parent) {
-                return $this->findNearestMilestoneWithBacklogTracker($expected_backlog_tracker, $parent, $user);
-            }
-        }
-    }
-
-    private function keepOnlyArtifactsBelongingToParentTracker(&$artifact, $key, $parent_tracker) {
-        if ($artifact->getTracker() != $parent_tracker) {
-            $artifact = null;
-        }
     }
 }
 ?>
