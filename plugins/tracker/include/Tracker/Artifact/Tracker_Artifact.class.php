@@ -429,8 +429,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $hp = Codendi_HTMLPurifier::instance();
         $html .= $this->fetchHiddenTrackerId();
         $hierarchy = $this->getAllAncestors($current_user);
-        array_unshift($hierarchy, $this);
-        $html .= $this->fetchParentsTitle($hp, $hierarchy);
+        if ($hierarchy) {
+            array_unshift($hierarchy, $this);
+            $html .= $this->fetchParentsTitle($hp, $hierarchy);
+        } else {
+            $html .= $this->fetchTitle();
+        }
         return $html;
     }
 
@@ -442,9 +446,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $html .= '<li>';
             $html .= $padding_prefix;
             $html .= '<div class="tree-last">&nbsp;</div> ';
+            if ($parents) {
+                $html .= '<a href="'. $parent->getURI() .'" class="direct-link-to-artifact">';
+            }
             $html .= $hp->purify($parent->getXRefAndTitle());
             if ($parents) {
-                
+                $html .= '</a>';
                 $div_prefix = '';
                 $div_suffix = '';
                 if (count($parents) == 1) {
