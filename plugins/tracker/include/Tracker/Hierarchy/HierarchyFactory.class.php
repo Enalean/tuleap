@@ -130,6 +130,15 @@ class Tracker_HierarchyFactory {
     }
 
     /**
+     * @return Tracker
+     */
+    public function getParent(Tracker $tracker) {
+        $hierarchy         = $this->getHierarchy(array($tracker->getId()));
+        $parent_tracker_id = $hierarchy->getParent($tracker->getId());
+        return $this->tracker_factory->getTrackerById($parent_tracker_id);
+    }
+
+    /**
      * Return the parent artifact
      *
      * @param User $user

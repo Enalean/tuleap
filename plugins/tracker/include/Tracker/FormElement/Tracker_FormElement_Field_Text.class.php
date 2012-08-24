@@ -157,14 +157,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $html = '';
-        $value = '';
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $value = $this->getValueFromSubmitOrDefault($submitted_values);
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<textarea name="artifact['. $this->id .']" 
                             rows="'. $this->getProperty('rows') .'" 
                             cols="'. $this->getProperty('cols') .'" 

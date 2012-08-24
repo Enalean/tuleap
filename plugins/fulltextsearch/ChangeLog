@@ -1,3 +1,6 @@
+Version 0.9 - Tuleap 5.4
+    * Provides RPMS for elastic search
+
 Version 0.8 - Tuleap 5.4
     * Asynchronous document indexing for better responsivness of UI.
 

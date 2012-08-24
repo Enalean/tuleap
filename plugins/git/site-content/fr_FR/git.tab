@@ -68,13 +68,13 @@ plugin_git	disable_fork_gitolite	Le fork d'un dépôt de type "Gitolite" n'est p
 
 plugin_git	actions_params_error	Paramètre requis manquants
 plugin_git	actions_long_description	Description trop longue
-plugin_git	actions_delete_process	Le dépôt va être supprimé dans quelques secondes
+plugin_git	actions_delete_process	Le dépôt '$1' va être supprimé dans quelques secondes
 plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères, pas de slash au début ou à la fin, le nom ne doit pas finir avec ".git" non plus.
 plugin_git	actions_create_repo_process	Le dépôt va être crée dans quelques secondes
 plugin_git	actions_repo_not_found	Le dépôt n'existe pas
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
 plugin_git	actions_save_repo_process	Les données du dépôt ont été enregistrées
-plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans le repertoire
+plugin_git	actions_delete_backup	Une sauvegarde du dépôt '$1' sera disponible dans le repertoire
 plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà ou le chemin est en conflit avec un dépôt existant
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
@@ -92,7 +92,7 @@ plugin_git	view_repo_access_public	Public
 plugin_git	view_repo_access_private	Privé
 
 plugin_git	repo_not_initialized	Le dépôt n'est pas initialisé
-plugin_git	confirm_deletion_msg	Etes-vous certain(e) de vouloir supprimer ce dépôt ?
+plugin_git	confirm_deletion_msg	Etes-vous certain(e) de vouloir supprimer le dépôt '$1' ?
 
 plugin_git	yes	Oui
 plugin_git	no	Non
@@ -131,7 +131,7 @@ plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier
 
 plugin_git	feedback_event_create	Un événement est en attente pour la création du dépôt $1. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_fork	Un événement est en attente pour le fork ($1) d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
-plugin_git	feedback_event_delete	Un événement est en attente pour la suppression d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
+plugin_git	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 
 plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépôts Git

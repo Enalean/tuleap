@@ -1,3 +1,6 @@
+Version 2.7.1 - Tuleap 5.4
+    * Add info message about the name of the repository on deletion process (contrib STMicroelectronics).
+
 Version 2.7 - Tuleap 5.4
     * SSH keys are now dumped asynchronously to avoid potential conflicts with several concurrent updates (sla #1215).
 

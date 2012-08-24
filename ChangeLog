@@ -11,14 +11,14 @@ Version 5.4 (Not released yet)
 	* Fix Wiki XHTML ZIP Snapshot link can't be unzipped (contrib STMicroelectronics).
 
 	== Plugins ==
-	* agiledashboard: 0.49
-	* Tracker: 5.8.15
-	* Cardwall: 0.9.4
+	* agiledashboard: 0.50
+	* Tracker: 5.9
+	* Cardwall: 0.9.5
 	* docman: 2.26.3
 	* tests: 5.5
 	* forumml: 2.6.2
-	* fulltextsearch: 0.8
-	* git: 2.7
+	* fulltextsearch: 0.9
+	* git: 2.7.1
 	* graphontrackers: 1.5
 	* graphontrackersv5: 5.0.3
 	* hudson: 1.9

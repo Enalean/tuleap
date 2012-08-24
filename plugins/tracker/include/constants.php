@@ -107,4 +107,9 @@ define('TRACKER_EVENT_PROCESS', 'tracker_event_process');
  *  No expected results
  */
 define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_association_edited');
+
+/**
+ * TODO
+ */
+define('TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR', 'tracker_event_artifact_parents_selector');
 ?>
