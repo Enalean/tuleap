@@ -1,6 +1,7 @@
 <?php
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) France Telecom, 2012. All Rights Reserved.
  * 
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +26,10 @@ $syncClass = 'LDAPPluginCustomUserSyncOrange';
 
 
 /**
- * Handle synchro between LDAP and Tuleap user.
+ * Orange sample implementation: 
+ *  CommonName is sn + givenName
+ *  Account status is based on Email
+ * 
  */
 class LDAPPluginCustomUserSyncOrange extends LDAP_UserSync {
     
@@ -56,17 +60,17 @@ class LDAPPluginCustomUserSyncOrange extends LDAP_UserSync {
 
     $realname = $this->getCommonName($lr);
         
-        if (($realname !== null) && ($user->getRealName() != substr($realname, 0, 32))) {
-            $user->setRealName($realname);
-            $modified = true;
-        }
+    if (($realname !== null) && ($user->getRealName() != substr($realname, 0, 32))) {
+        $user->setRealName($realname);
+        $modified = true;
+    }
 
     $ldapEmail = $lr->getEmail();
 
-        if (($ldapEmail !== null) && ($user->getEmail() != $ldapEmail)) {
-            $user->setEmail($ldapEmail);
-            $modified = true;
-        }
+    if (($ldapEmail !== null) && ($user->getEmail() != $ldapEmail)) {
+        $user->setEmail($ldapEmail);
+        $modified = true;
+    }
 
     $userEmail = $user->getEmail();
 
