@@ -76,15 +76,15 @@ $ldapUserGroupManager->setGroupName($request->get('bind_with_group'));
 $ldapUserGroupManager->setId($ugroupId);
 
 // Check if user have choosen the preserve members option.
-$bindOption = 'bind';
+$bindOption = LDAP_GroupManager::BIND_OPTION;
 if($request->exist('preserve_members') && $request->get('preserve_members') == 'on') {
-    $bindOption = 'preserve_members';
+    $bindOption = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
 }
 
 // Check if user has checked the Synchronization option.
-$synchro = 'never';
+$synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
 if ($request->existAndNonEmpty('synchronize')) {
-    $synchro = 'auto';
+    $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
 }
 
 
@@ -165,7 +165,7 @@ if($request->isPost() && $request->valid($vSubmit)) {
                     if($bindOption == 'preserve_members') {
                         echo '<input type="hidden" name="preserve_members" value="on" />';
                     }
-                    if($synchro == 'auto') {
+                    if($synchro == LDAP_GroupManager::AUTO_SYNCHRONIZATION) {
                         echo '<input type="hidden" name="synchronize" value="on" />';
                     }
                     echo '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
