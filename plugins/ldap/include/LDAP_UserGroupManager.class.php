@@ -147,7 +147,7 @@ extends LDAP_GroupManager
         foreach($dar as $row) {
                 $this->setId($row['ugroup_id']);
                 $this->setGroupDn($row['ldap_group_dn']);
-                $isNightlySynchronized = true;
+                $isNightlySynchronized = 'auto';
                 $displayFeedback       = false;
                 $this->bindWithLdap($row['bind_option'], $isNightlySynchronized, $displayFeedback);
             }
