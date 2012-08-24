@@ -588,6 +588,7 @@ CREATE TABLE filemodule (
 CREATE TABLE filemodule_monitor (
   filemodule_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
+  anonymous TINYINT(1) NOT NULL default '1',
   KEY idx_filemodule_monitor_id (filemodule_id)
 );
 
