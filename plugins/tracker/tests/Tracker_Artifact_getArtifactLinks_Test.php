@@ -70,19 +70,10 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
         $field = mock('Tracker_FormElement_Field_ArtifactLink');
         stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns($expected_list);
-        stub($field)->userCanRead($this->user)->returns(true);
 
-        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
+        stub($this->factory)->getAnArtifactLinkField($this->user, $this->tracker)->returns($field);
 
         $this->assertEqual($expected_list, $this->artifact->getLinkedArtifacts($this->user));
-    }
-
-    public function itReturnsEmptyArrayIfUserCannotSeeArtifactLinkField() {
-        $field = new MockTracker_FormElement_Field_ArtifactLink();
-        stub($field)->userCanRead($this->user)->returns(false);
-        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
-
-        $this->assertEqual($this->artifact->getAnArtifactLinkField($this->user), null);
     }
 
     /**
@@ -99,9 +90,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
         stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns(array($artifact1, $artifact2));
-        stub($field)->userCanRead($this->user)->returns(true);
 
-        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
+        stub($this->factory)->getAnArtifactLinkField($this->user, $this->tracker)->returns($field);
 
         $expected_result = array($artifact1);
         $this->assertEqual($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
@@ -123,8 +113,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
     
         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
         stub($field)->getLinkedArtifacts($this->changeset, $this->user)->returns(array($artifact1, $artifact4));
-        stub($field)->userCanRead($this->user)->returns(true);
-        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($field));
+        stub($this->factory)->getAnArtifactLinkField($this->user, $this->tracker)->returns($field);
     
         $expected_result = array($artifact1);
         $this->assertEqual($expected_result, $this->artifact->getUniqueLinkedArtifacts($this->user));
@@ -222,8 +211,7 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
         $changeset = mock('Tracker_Artifact_Changeset');
         $field     = mock('Tracker_FormElement_Field_ArtifactLink');
         stub($field)->getLinkedArtifacts($changeset, $this->user)->returns($children);
-        stub($field)->userCanRead($this->user)->returns(true);
-        stub($this->factory)->getUsedArtifactLinkFields($tracker)->returns(array($field));
+        stub($this->factory)->getAnArtifactLinkField($this->user, $tracker)->returns($field);
     
         $artifact_id = $this->current_id + 100;
         $this->artifact_collaborators[$artifact_id] = array(
