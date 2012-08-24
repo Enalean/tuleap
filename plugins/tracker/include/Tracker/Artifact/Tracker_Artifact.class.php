@@ -383,23 +383,25 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html = '';
 
-        $action_params = array(
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->base_url = TRACKER_BASE_URL;
+        $redirect->query_parameters = array(
             'aid'       => $this->id,
             'func'      => 'artifact-update',
         );
 
         if ($from_aid != null) {
-            $action_params['from_aid'] = $from_aid;
+            $redirect->query_parameters['from_aid'] = $from_aid;
         }
         EventManager::instance()->processEvent(
             TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
             array(
-                'request'          => $request,
-                'query_parameters' => &$action_params,
+                'request'  => $request,
+                'redirect' => $redirect,
             )
         );
 
-        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($action_params) .'" method="POST" enctype="multipart/form-data">';
+        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
 
 
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
