@@ -82,7 +82,7 @@ class ServerAdmin {
     }
     function _fetchServices(&$server) {
         $html = '';
-        $service_dao =& new ServiceDao(CodendiDataAccess::instance());
+        $service_dao = new ServiceDao(CodendiDataAccess::instance());
         $dar =& $service_dao->searchByServerId($server->getId());
         if ($dar) {
             $matches = array();
@@ -167,7 +167,7 @@ class ServerAdmin {
     function edit(&$request) {
         $html = '';
         if ($request->exist('server')) {
-            $server =& new Server($request->get('server'));
+            $server = new Server($request->get('server'));
         } else if ($request->exist('id')) {
             $server =& $this->server_factory->getServerById($request->get('id'));
         }
@@ -243,7 +243,7 @@ if (!isset($_GET['r']) || !$_GET['r']) {
 require_once('common/include/HTTPRequest.class.php');
 $request =& HTTPRequest::instance();
 
-$server_admin =& new ServerAdmin();
+$server_admin = new ServerAdmin();
 $method = $_REQUEST['action'];
 
 if (method_exists($server_admin, $method)) {

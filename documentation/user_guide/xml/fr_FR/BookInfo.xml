@@ -147,6 +147,14 @@
             Rafraichissement de la documentation et des captures d'écran
         </revremark>
       </revision>
+      <revision>
+        <revnumber>5.3</revnumber>
+        <date>17-July-2012</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>
+            Suppression de références relatives à d'anciennes captures d'écran
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

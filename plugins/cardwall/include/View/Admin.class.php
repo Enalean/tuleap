@@ -35,22 +35,23 @@ class Cardwall_View_Admin extends Cardwall_View {
         Cardwall_OnTop_Config $config
     ) {
 
-        $column_definition_view = $config->getColumns()->accept($this, $config);
+        $column_definition_view = $config->getDashboardColumns()->accept($this, $config);
 
-        $checked    = $config->isEnabled() ? 'checked="checked"' : '';
-        $token_html = $token->fetchHTMLInput();
-        $formview   = new Cardwall_View_Admin_Form($column_definition_view);
+        $checked           = $config->isEnabled() ? 'checked="checked"' : '';
+        $freestyle_checked = $config->isFreestyleEnabled() ? 'checked="checked"' : '';
+        $token_html        = $token->fetchHTMLInput();
+        $formview          = new Cardwall_View_Admin_Form($column_definition_view);
 
         $config->getTracker()->displayAdminItemHeader($layout, 'plugin_cardwall');
-        $formview->displayAdminForm($token_html, $checked, $config->getTracker()->getId());
+        $formview->displayAdminForm($token_html, $checked, $freestyle_checked, $config->getTracker()->getId());
         $config->getTracker()->displayFooter($layout);
     }
 
-    public function visitColumnStatusCollection($collection, $config) {
+    public function visitColumnStatusCollection($collection, Cardwall_OnTop_Config $config) {
         return new Cardwall_OnTop_Config_View_SemanticStatusColumnDefinition($config);
     }
 
-    public function visitColumnFreestyleCollection($collection, $config) {
+    public function visitColumnFreestyleCollection($collection, Cardwall_OnTop_Config $config) {
         return new Cardwall_OnTop_Config_View_FreestyleColumnDefinition($config);
     }
 }

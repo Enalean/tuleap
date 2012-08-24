@@ -1996,7 +1996,7 @@ EOS;
 		echo '<h3><a name="GlobalEmailNotification"></a>'.$Language->getText('tracker_include_type','global_mail_notif').' '.
 		help_button('TrackerAdministration.html#TrackerGlobalEmailNotification').'</h3>';
 		
-        $agnf =& new ArtifactGlobalNotificationFactory();
+        $agnf = new ArtifactGlobalNotificationFactory();
         $notifs = $agnf->getGlobalNotificationsForTracker($this->getID());
 		if ($this->userIsAdmin()) {
 		    echo '<p>'. $Language->getText('tracker_include_type','admin_note') .'</p>';

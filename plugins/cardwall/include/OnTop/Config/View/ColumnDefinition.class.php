@@ -51,7 +51,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
     /**
      * @return string
      */
-    protected abstract function fetchColumnHeader(Cardwall_OnTop_Config_Column $column);
+    protected abstract function fetchColumnHeader(Cardwall_Column $column);
 
     /**
      * @return string
@@ -62,7 +62,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html  = '';
         $html .= '<table class="cardwall_admin_ontop_mappings"><thead><tr valign="bottom">';
         $html .= '<td></td>';
-        foreach ($this->config->getColumns() as $column) {
+        foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<th style="background-color: '. $column->bgcolor .'; color: '. $column->fgcolor .';">';
             $html .= $this->fetchColumnHeader($column);
             $html .= '</th>';
@@ -100,7 +100,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '</select>';
         $html .= $this->fetchCustomizationSwitch($mapping_tracker);
         $html .= '</td>';
-        foreach ($this->config->getColumns() as $column) {
+        foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<td>';
             $html .= '&nbsp;';
             $html .= '</td>';
@@ -126,7 +126,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '</select>';
         $html .= $this->fetchCustomizationSwitch($mapping_tracker);
         $html .= '</td>';
-        foreach ($this->config->getColumns() as $column) {
+        foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<td>';
             $html .= $mapping->getSelectedValueLabel($column, '<em>'.$this->translate('plugin_cardwall', 'on_top_no_matching_for_column').'</em>');
             $html .= '</td>';
@@ -153,7 +153,7 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
         $html .= '</select>';
         $html .= $this->fetchCustomizationSwitch($mapping_tracker, true);
         $html .= '</td>';
-        foreach ($this->config->getColumns() as $column) {
+        foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<td>';
             $html .= $this->editValues($mapping_tracker, $column, $mapping_values, $field);
             $html .= '</td>';
@@ -183,6 +183,9 @@ abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View
             $html .= '<select name="mapping_field['. (int)$mapping_tracker->getId() .'][values]['. $column_id .'][]" multiple="multiple" size="'. count($field_values) .'">';
             foreach ($field_values as $value) {
                 $selected = '';
+                
+                //TODO rather use the TrackerMapping and ask it some question, cannot rely on the fact that this array is indexed
+                // on value->getId(), for instance in the case of status mappings it ain't!
                 if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
                     $selected = 'selected="selected"';
                 }

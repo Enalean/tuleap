@@ -264,7 +264,7 @@ td.artifact_spacer { width: 5%; }
         background-image: url(../images/ic/error.png)
 }
 .feedback_warning {
-        border:medium solid darkorange;
+        border:thin solid darkorange;
         color:peru;
         font-weight:normal;
         background-image: url(../images/ic/warning.png)

@@ -20,7 +20,9 @@
 
 require_once 'ValueMapping.class.php';
 require_once 'ColumnCollection.class.php';
+require_once dirname(__FILE__). '/../../constants.php';
 require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
+require_once CARDWALL_BASE_DIR .'/../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 
@@ -66,6 +68,10 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
      * @return array of Cardwall_OnTop_Config_ValueMapping
      */
     public function getMappings(Tracker $tracker, Tracker $mapping_tracker, Tracker_FormElement_Field $mapping_field) {
+        
+        // Why does we return a collection indexed on value_id in the case of freestyle mappings, and a collection
+        // indexed on column_id in the case of status mappings @see getStatusMappings?????????
+        // Shouldn't we let TrackerMapping do the indexing so that code in TrackerMapping might exploit that?
         $mappings = $this->getMappingFieldValuesIndexedByTracker($tracker);
         if (isset($mappings[$mapping_tracker->getId()][$mapping_field->getId()])) {
             return $mappings[$mapping_tracker->getId()][$mapping_field->getId()];
@@ -77,11 +83,15 @@ class Cardwall_OnTop_Config_ValueMappingFactory {
         $mappings = array();
         foreach ($this->dao->searchMappingFieldValues($tracker->getId()) as $row) {
             $field = $this->element_factory->getFieldById($row['field_id']);
-            $value = $field->getListValueById($row['value_id']);
-            $mappings[$row['tracker_id']][$row['field_id']][$row['value_id']] = new Cardwall_OnTop_Config_ValueMapping(
-                $value,
-                $row['column_id']
-            );
+            if ($field) {
+                $value = $field->getListValueById($row['value_id']);
+                if ($value) {
+                    $mappings[$row['tracker_id']][$row['field_id']][$row['value_id']] = new Cardwall_OnTop_Config_ValueMapping(
+                        $value,
+                        $row['column_id']
+                    );
+                }
+            }
         }
         return $mappings;
     }

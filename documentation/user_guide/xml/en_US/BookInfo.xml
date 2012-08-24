@@ -661,6 +661,14 @@
             Refresh documentation and its screenshots
         </revremark>
       </revision>
+      <revision>
+        <revnumber>5.3</revnumber>
+        <date>17-July-2012</date>
+        <authorinitials>Enalean Team</authorinitials>
+        <revremark>
+            Remove references to old screenshots
+        </revremark>
+      </revision>
     </revhistory>
   </bookinfo>
 <!--

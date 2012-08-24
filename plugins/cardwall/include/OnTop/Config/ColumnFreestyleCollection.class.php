@@ -19,11 +19,13 @@
  */
 
 require_once 'ColumnCollection.class.php';
+require_once 'ColumnsVisitor.class.php';
 
 /**
  * Wrapper of array of columns defined freely by the user
  */
-class Cardwall_OnTop_Config_ColumnFreestyleCollection extends Cardwall_OnTop_Config_ColumnCollection {
+class Cardwall_OnTop_Config_ColumnFreestyleCollection extends Cardwall_OnTop_Config_ColumnCollection
+                                                      implements Cardwall_OnTop_Config_ColumnsVisitor {
 
     public function accept($visitor, $parameter = '') {
         return $visitor->visitColumnFreestyleCollection($this, $parameter);

@@ -87,9 +87,9 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
     public function itLoadStatusValues() {
         $columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
             array(
-                new Cardwall_OnTop_Config_Column(1, 'Todo', 'white', 'black'),
-                new Cardwall_OnTop_Config_Column(2, 'In Progress', 'white', 'black'),
-                new Cardwall_OnTop_Config_Column(3, 'Done', 'white', 'black'),
+                new Cardwall_Column(1, 'Todo', 'white', 'black'),
+                new Cardwall_Column(2, 'In Progress', 'white', 'black'),
+                new Cardwall_Column(3, 'Done', 'white', 'black'),
             )
         );
 
@@ -97,6 +97,44 @@ class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TuleapTestCase {
         $this->assertEqual(1, $mappings[1001]->getColumnId());
         $this->assertFalse(isset($mappings[1002]));
         $this->assertEqual(3, $mappings[1003]->getColumnId());
+    }
+}
+
+class Cardwall_OnTop_Config_ValueMappingFactory2Test extends TuleapTestCase {
+
+    public function setUp() {
+        $element_factory = mock('Tracker_FormElementFactory');
+
+        $this->dao      = mock('Cardwall_OnTop_ColumnMappingFieldValueDao');
+        $this->factory  = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $this->dao);
+
+        $this->field_124    = aMockField()->withId(124)->build();
+
+        stub($element_factory)->getFieldById(124)->returns($this->field_124);
+
+        $group_id           = 234;
+        $this->tracker      = aMockTracker()->withId(3)->withProjectId($group_id)->build();
+        $this->tracker_20   = aMockTracker()->withId(20)->build();
+
+        stub($this->dao)->searchMappingFieldValues($this->tracker->getId())->returnsDar(
+            array(
+                'tracker_id' => 10,
+                'field_id'   => 125,
+                'value_id'   => 1000,
+                'column_id'  => 1,
+            ),
+            array(
+                'tracker_id' => 20,
+                'field_id'   => 124,
+                'value_id'   => 1001,
+                'column_id'  => 1,
+            )
+        );
+    }
+
+    public function itLoadsMappingsFromTheDatabase() {
+        $mappings = $this->factory->getMappings($this->tracker, $this->tracker_20, $this->field_124);
+        $this->assertEqual(array(), $mappings);
     }
 }
 ?>

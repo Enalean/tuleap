@@ -170,7 +170,7 @@ if ( $func == 'gotoid' ) {
                         
                         //Check Field Dependencies
                         require_once('common/tracker/ArtifactRulesManager.class.php');
-                        $arm =& new ArtifactRulesManager();
+                        $arm = new ArtifactRulesManager();
                         if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
                         }
@@ -205,7 +205,7 @@ if ( $func == 'gotoid' ) {
                                 }
 
                                 // send an email to notify the user of the artifact add
-                                $agnf =& new ArtifactGlobalNotificationFactory();
+                                $agnf = new ArtifactGlobalNotificationFactory();
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
 
@@ -300,7 +300,7 @@ if ( $func == 'gotoid' ) {
 				$ah->addFollowUpComment($follow_up_comment,$comment_type_id,$canned_response,$changes,$comment_format);
 
                                 // send an email to notify the user of the artifact update
-                                    $agnf =& new ArtifactGlobalNotificationFactory();
+                                    $agnf = new ArtifactGlobalNotificationFactory();
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
                                     
@@ -340,7 +340,7 @@ if ( $func == 'gotoid' ) {
 
                                 $changed = $ah->deleteCC($artifact_cc_id,$changes);
                                 if ($changed) {
-                                    $agnf =& new ArtifactGlobalNotificationFactory();
+                                    $agnf = new ArtifactGlobalNotificationFactory();
                                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
                                     $ah->mailFollowupWithPermissions($addresses, $changes);
                                 }
@@ -408,7 +408,7 @@ if ( $func == 'gotoid' ) {
                         $dependent_on_artifact_id = $request->get('dependent_on_artifact_id');
                         $changed = $ah->deleteDependency($dependent_on_artifact_id,$changes);
                         if ($changed) {
-                            $agnf =& new ArtifactGlobalNotificationFactory();
+                            $agnf = new ArtifactGlobalNotificationFactory();
                             $addresses = $agnf->getAllAddresses($ath->getID(), true);
                             $ah->mailFollowupWithPermissions($addresses, $changes);
                         }
@@ -494,7 +494,7 @@ if ( $func == 'gotoid' ) {
 
                         //Check Field Dependencies
                         require_once('common/tracker/ArtifactRulesManager.class.php');
-                        $arm =& new ArtifactRulesManager();
+                        $arm = new ArtifactRulesManager();
                         if (!$arm->validate($atid, $art_field_fact->extractFieldList(), $art_field_fact)) {
                             exit_error($Language->getText('global','error'),$Language->getText('tracker_index','invalid_field_dependency'));
                         }
@@ -536,7 +536,7 @@ if ( $func == 'gotoid' ) {
                             $changed |= $ah->addCC($add_cc,$sanitizer->sanitize($request->get('cc_comment')),$changes);
                         }
                         if ($changed && $changes) {
-                            $agnf =& new ArtifactGlobalNotificationFactory();
+                            $agnf = new ArtifactGlobalNotificationFactory();
                             $addresses = $agnf->getAllAddresses($ath->getID(), true);
                             $ah->mailFollowupWithPermissions($addresses, $changes);
                         }
@@ -768,7 +768,7 @@ if ( $func == 'gotoid' ) {
             }
             
             // send an email to notify the user of the bug update
-            $agnf =& new ArtifactGlobalNotificationFactory();
+            $agnf = new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($ath->getID(), true);
             $ah->mailFollowupWithPermissions($addresses, $changes);
             $GLOBALS['Response']->redirect('?group_id='. (int)$group_id .'&atid='. (int)$atid .'&func=browse');
@@ -867,7 +867,7 @@ if ( $func == 'gotoid' ) {
                 $comment_format = $request->getValidated('comment_format', $vFormat, Artifact::FORMAT_TEXT);
                 if ($ah->updateFollowupComment($request->get('artifact_history_id'),$followup_update,$changes,$comment_format)) {  
                     $GLOBALS['Response']->addFeedback('info',$GLOBALS['Language']->getText('tracker_common_artifact','followup_upd_succ'));		  
-                    $agnf =& new ArtifactGlobalNotificationFactory();
+                    $agnf = new ArtifactGlobalNotificationFactory();
                     $addresses = $agnf->getAllAddresses($ath->getID(), true);
                     $ah->mailFollowupWithPermissions($addresses,$changes);
                 } else {

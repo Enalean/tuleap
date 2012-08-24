@@ -623,7 +623,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getFirstValueFor(Tracker_Artifact_Changeset $changeset) {
         if ($this->userCanRead()) {
-            if ($last_values = $changeset->getValue($this)->getListValues()) {
+            $value = $changeset->getValue($this);
+            if ($value && ($last_values = $value->getListValues())) {
                 // let's assume there is no more that one status
                 if ($label = array_shift($last_values)->getLabel()) {
                     return $label;

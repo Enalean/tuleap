@@ -121,10 +121,29 @@ class Event {
      * The subclass must inherit from the wanted backend.
      */
     const BACKEND_FACTORY_GET_PREFIX = 'backend_factory_get_';
-    
+
     /**
      * Use this event to get the class name of an external event type (plugins)
      * see git plugin for implementation example
+     *
+     * Parameters:
+     *   'type'  =>
+     *
+     * Expected result:
+     *   'class'        => (string) SystemEvent_Class_Name
+     *   'dependencies' => (array) OPTIONAL parameters of injectDependencies method of SystemEvent (if any)
+     *
+     * Example:
+     *    'type'         => 'EVENT_NAME'
+     *    'class'        => SystemEvent_EVENT_NAME
+     *    'dependencies' => array(UserManager::instance(), ProjectManager::instance())
+     *
+     * With:
+     * class SystemEvent_EVENT_NAME {
+     *     function injectDependencies(UserManager $user_manager, ProjectManager $project_manager) {
+     *         ...
+     *     }
+     * }
      */
      const GET_SYSTEM_EVENT_CLASS = 'get_system_event_class';
 
@@ -144,7 +163,30 @@ class Event {
       *   array('keyword' => 'awsome', label => 'Really kick ass')
       */
      const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
-     
+
+     /**
+      * Allow to define the group_id of an artifact reference
+      *
+      * Parameters
+      *     'artifact_id' => Id of an artifact
+      *
+      * Expected results:
+      *     'group_id'    => Id of the project the artifact belongs to
+      */
+     const GET_ARTIFACT_REFERENCE_GROUP_ID = 'get_artifact_reference_group_id';
+
+     /**
+      * Build a reference for given entry in database
+      *
+      * Parameters:
+      *     'row'    => array, a row of "reference" database table
+      *     'ref_id' => ??? reference id ?
+      *
+      * Expected result IN/OUT:
+      *     'ref' => a Reference object
+      */
+     const BUILD_REFERENCE = 'build_reference';
+
     /**
      * Project unix name changed
      *

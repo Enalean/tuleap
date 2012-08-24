@@ -71,33 +71,30 @@ class Tracker_DateReminderManager {
      * @return Void
      */
     public function processReminder(TrackerManager $trackerManager, HTTPRequest $request, $currentUser) {
-        if ($request->get('submit')) {
-            if ($request->get('action') == 'new_reminder') {
-                try {
-                    $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_added'));
-                } catch (Tracker_DateReminderException $e) {
-                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
-            } elseif ($request->get('action') == 'update_reminder') {
-                try {
-                    $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_updated'));
-                } catch (Tracker_DateReminderException $e) {
-                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                }
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
-            }
-        } elseif ($request->get('confirm_delete') && $request->get('action') == 'confirm_delete_reminder' ) {
-            try {
+        $action      = $request->get('action');
+        $do_redirect = false;
+        $feedback    = false;
+        try {
+            if ($request->get('submit') && $action == 'new_reminder') {
+                $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
+                $feedback    = 'tracker_date_reminder_added';
+                $do_redirect = true;
+            } elseif ($request->get('submit') && $action == 'update_reminder') {
+                $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($request);
+                $feedback    = 'tracker_date_reminder_updated';
+                $do_redirect = true;
+            } elseif ($request->get('confirm_delete') && $action == 'confirm_delete_reminder') {
                 $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($request->get('reminder_id'));
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder','tracker_date_reminder_deleted'));
-            } catch (Tracker_DateReminderException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                $feedback = 'tracker_date_reminder_deleted';
             }
-        } elseif ($request->get('cancel_delete_reminder')) {
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->id);
+            if ($feedback) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_date_reminder',$feedback));
+            }
+        } catch (Tracker_DateReminderException $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+        }
+        if ($do_redirect || $request->get('cancel_delete_reminder')) {
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?func=admin-notifications&tracker='.$this->getTracker()->getId());
         }
     }
 
@@ -289,7 +286,12 @@ class Tracker_DateReminderManager {
      * @return Array
      */
     public function getArtifactsByreminder(Tracker_DateReminder $reminder) {
-        $date  = DateHelper::getDistantDateFromToday($reminder->getDistance(), $reminder->getNotificationType());
+        $time_string = '-';
+        if ($reminder->getNotificationType() == 0) {
+            $time_string = '+';
+        }
+        $time_string .= $reminder->getDistance().' days';
+        $date  = DateHelper::getTimestampAtMidnight($time_string);
         $field = $reminder->getField();
         return $field->getArtifactsByCriterias($date, $this->getTracker()->getId());
     }

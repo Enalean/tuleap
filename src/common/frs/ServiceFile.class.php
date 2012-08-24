@@ -67,7 +67,7 @@ class ServiceFile extends Service {
                     </tr>
             ';
             require_once('FileModuleMonitorFactory.class.php');
-            $fmmf =& new FileModuleMonitorFactory();
+            $fmmf = new FileModuleMonitorFactory();
             foreach($packages as $package) {
                 // the icon is different whether the package is monitored or not
                 if ($fmmf->isMonitoring($package['package_id'])) {

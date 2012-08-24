@@ -33,6 +33,7 @@ require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
 require_once('Hierarchy/Controller.class.php');
+require_once('Hierarchy/HierarchyFactory.class.php');
 require_once 'IFetchTrackerSwitcher.class.php';
 
 require_once('json.php');
@@ -3093,6 +3094,15 @@ EOS;
         return array_filter($redirect_params);
     }
 
+    /**
+     * Return the hierarchy the tracker belongs to
+     *
+     * @return Tracker_Hierarchy
+     */
+    public function getHierarchy() {
+        $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
+        return $hierarchy_factory->getHierarchy(array($this->getId()));
+    }
 }
 
 ?>

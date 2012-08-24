@@ -1,14 +1,61 @@
-Version 5.3 (not released yet)
+Version 5.4 (Not released yet)
+	== Bug fix ==
+	* Fix typo in french translation.
+	* Avatar was not sent in tracker v3 notifications
+	* art #... does not work cross project
+	* Fix fatal error raised when creating a followup comment using SOAP (contrib STMicroelectronics).
+	* Make possible the restore into a hidden release in FRS (contrib STMicroelectronics).
+	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
+	* Create 'user' dir (in /var/lib/.../) to store avatars during install
+	* Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
+	* Fix Wiki XHTML ZIP Snapshot link can't be unzipped (contrib STMicroelectronics).
+
 	== Plugins ==
-	* Agildashboard: 0.43
-	* Cardwall: 0.5.11
-	* Docman: 2.26
+	* agiledashboard: 0.49
+	* Tracker: 5.8.15
+	* Cardwall: 0.9.4
+	* docman: 2.26.3
+	* tests: 5.5
+	* forumml: 2.6.2
+	* fulltextsearch: 0.9
+	* git: 2.7.1
+	* graphontrackers: 1.5
+	* graphontrackersv5: 5.0.3
+	* hudson: 1.9
+	* pluginsadministration: 1.2
+	* template: 1.2
+	* userlog: 1.2
+	* statistics: 0.19
+
+	== Development ==
+	* Add script to prepare plugins changelog (to be used by Tuleap integrators when merging into stable)
+	* Continue PHP 5.3 compat (Contrib Philippe Goetz)
+	* All unit tests pass with PHP 5.3
+	* First step toward autoloading in order to increase performances
+
+Version 5.3.1 (Monday, July 23rd 2012)
+	== Plugins ==
+	* Docman 2.26.2
+	* Tracker: 5.8.7
+
+	== Bug fix ==
+	* Fix bug on user SSH key dump on filesystem (didn't take case into account and process context was not restored).
+	* Fix warning on Subversion conf serialization.
+
+Version 5.3 (Thursday, July 19th 2012)
+	== Plugins ==
+	* Agildashboard: 0.45
+	* Cardwall: 0.9.1
+	* Docman: 2.26.1
 	* FullTextSearch: 0.6
 	* Git: 2.6.3
 	* LDAP: 3.16
 	* Test: 5.1
-	* Tracker: 5.8.2
+	* Tracker: 5.8.6
 	* GraphOnTrackerv5 5.0.2
+
+	== Enhancement ==
+   * Documentation update (remove references to old screenshots).
 
 	== Development ==
 	Update mustache renderer

@@ -20,8 +20,6 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
-require_once 'OnTop/ConfigFactory.class.php';
-require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
 
 /**
  * CardwallPlugin
@@ -35,6 +33,8 @@ class cardwallPlugin extends Plugin {
     
     public function getConfigFactory() {
         if (!$this->config_factory) {
+            require_once 'OnTop/ConfigFactory.class.php';
+            require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
             $tracker_factory  = TrackerFactory::instance();
             $element_factory  = Tracker_FormElementFactory::instance();
             $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
@@ -59,6 +59,7 @@ class cardwallPlugin extends Plugin {
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
+                $this->_addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT, 'agiledashboard_event_milestone_selector_redirect', false);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -69,10 +70,9 @@ class cardwallPlugin extends Plugin {
     public function tracker_event_trackers_duplicated($params) {
         foreach ($params['tracker_mapping'] as $from_tracker_id => $to_tracker_id) {
             if ($this->getOnTopDao()->duplicate($from_tracker_id, $to_tracker_id)) {
-                if ($this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $params)) {
-                    $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
-                    $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping'], $params['plugin_cardwall_column_mapping']);
-                }
+                $this->getOnTopColumnDao()->duplicate($from_tracker_id, $to_tracker_id, $params);
+                $this->getOnTopColumnMappingFieldDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping']);
+                $this->getOnTopColumnMappingFieldValueDao()->duplicate($from_tracker_id, $to_tracker_id, $params['tracker_mapping'], $params['field_mapping'], $params['plugin_cardwall_column_mapping']);
             }
         }
     }
@@ -118,9 +118,13 @@ class cardwallPlugin extends Plugin {
                 }
             }
 
-            $report           = $params['report'];
-            $config           = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
-
+            $report = $params['report'];
+            require_once('OnTop/ConfigEmpty.class.php');
+            $config = new Cardwall_OnTop_ConfigEmpty();
+            
+            if ($report->tracker_id != 0) {
+                $config = $this->getConfigFactory()->getOnTopConfigByTrackerId($report->tracker_id);
+            }
             //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
                 $this,
@@ -224,7 +228,16 @@ class cardwallPlugin extends Plugin {
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             require_once 'Pane.class.php';
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
-            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config);
+            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config, $params['user']);
+        }
+    }
+
+    public function agiledashboard_event_milestone_selector_redirect($params) {
+        if ($params['milestone']->getArtifact()) {
+            $tracker  = $params['milestone']->getArtifact()->getTracker();
+            if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
+                $params['redirect_parameters']['pane'] = 'cardwall';
+            }
         }
     }
 

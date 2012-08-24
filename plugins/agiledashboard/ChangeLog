@@ -1,3 +1,27 @@
+Version 0.49 - Tuleap 5.4
+    * First step toward autoloading in order to increase performances
+
+Version 0.48 - Tuleap 5.4
+    * Display all parents in backlog (allow to create children and make priority setting more coherent)
+    * Replace drag'n drop for planning by action arrows (drag'n drop still possible for priority setting)
+    * Add action arrows for priority setting
+
+Version 0.47 - Tuleap 5.4
+    * Fix fatal error when an artifact has several parents.
+
+Version 0.46 - Tuleap 5.4
+    * Reduce number of click to get on agile dashboard.
+    * Allow to switch from one sprint to another from cardwall
+    * Display only sibling sprints in selector
+    * Allow to create epics directly into release plan
+
+Version 0.45 - Tuleap 5.3
+    * Fix selection of backlog tracker
+    * Fix display of remaining effort
+
+Version 0.44 - Tuleap 5.3
+    * Centralize management of ancestors in Planning view.
+
 Version 0.43 - Tuleap 5.3
     * Fix bug on breadcrumbs display (wrong order of planning parents).
 

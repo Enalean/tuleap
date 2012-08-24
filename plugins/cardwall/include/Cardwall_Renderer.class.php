@@ -56,7 +56,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param int    $field_id       the field id
      * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
-    public function __construct(Plugin $plugin, Cardwall_OnTop_Config $config,
+    public function __construct(Plugin $plugin, Cardwall_OnTop_IConfig $config,
                                 $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
@@ -107,13 +107,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      *
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->getField(), $used_sb);
-        return $this->fetchCards($matching_ids, $form);
+        return $this->fetchCards($matching_ids, $user, $form);
     }
     
-    private function fetchCards($matching_ids, $form = null) {
+    private function fetchCards($matching_ids, User $user, $form = null) {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
@@ -121,7 +121,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
 
         $artifact_ids     = explode(',', $matching_ids['id']);
         $artifacts = $this->getForestsOfArtifacts($artifact_ids, Tracker_ArtifactFactory::instance());
-        $presenter = $this->getPresenter($artifacts, $form);
+        $presenter = $this->getPresenter($artifacts, $user, $form);
 
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         
@@ -139,16 +139,18 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * @return Cardwall_RendererPresenter
      */
-    private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
+    private function getPresenter(TreeNode $forest_of_artifacts, User $user, $form = null) {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
         
         $field              = $this->getField();
+        
         if (! $field) {
-            $board = new Cardwall_Board(array(), array(), new Cardwall_MappingCollection());
+            $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
         } else {
             $board_factory      = new Cardwall_BoardFactory();
             $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
-            $board              = $board_factory->getBoard($field_retriever, $field, $forest_of_artifacts, $this->config);
+            $columns            = $this->config->getRendererColumns($field);
+            $board              = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user);
         }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
@@ -200,10 +202,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget() {
+    public function fetchWidget(User $user) {
         $this->enable_qr_code = false;
         $html  = '';
-        $html .= $this->fetchCards($this->report->getMatchingIds());
+        $html .= $this->fetchCards($this->report->getMatchingIds(), $user);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
     }

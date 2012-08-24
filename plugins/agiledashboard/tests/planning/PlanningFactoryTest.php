@@ -27,13 +27,15 @@ Mock::generate('Planning');
 Mock::generate('PlanningDao');
 Mock::generate('Tracker');
 
-class PlanningFactoryTest extends TuleapTestCase {
-    
+abstract class PlanningFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         
         $this->user = aUser()->build();
     }
+}
+
+class PlanningFactoryTest_getPlanningWithTrackersTest extends PlanningFactoryTest {
     
     public function itCanRetrieveBothAPlanningAndItsTrackers() {
         $group_id            = 42;
@@ -72,7 +74,10 @@ class PlanningFactoryTest extends TuleapTestCase {
         $this->assertEqual($planning->getPlanningTracker(), $planning_tracker);
         $this->assertEqual($planning->getBacklogTracker(), $backlog_tracker);
     }
-    
+}
+
+class PlanningFactory_duplicationTest extends PlanningFactoryTest {
+        
     public function itDuplicatesPlannings() {
         $dao     = new MockPlanningDao();
         $factory = aPlanningFactory()->withDao($dao)->build();
@@ -133,6 +138,67 @@ class PlanningFactoryTest extends TuleapTestCase {
         
         $factory->duplicatePlannings($group_id, $empty_tracker_mapping);
     }
+ 
+}
+
+class PlanningFactoryTest_getPlanningByPlanningTrackerTest extends PlanningFactoryTest {
+    public function itReturnsNothingIfThereIsNoAssociatedPlanning() {
+        $tracker   = aMockTracker()->withId(99)->build();
+        $empty_dar = TestHelper::arrayToDar();
+        $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($empty_dar);
+        $factory   = aPlanningFactory()->withDao($dao)->build();
+        $this->assertNull($factory->getPlanningByPlanningTracker($tracker));
+    }
+    
+    public function itReturnsAPlanning() {
+        $tracker   = aMockTracker()->withId(99)->build();
+        $dar       = TestHelper::arrayToDar(
+                        array('id' => 1, 'name' => 'Release Planning', 'group_id' => 102, 
+                              'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan',
+                              'backlog_tracker_id'  => 104));
+        $dao       = stub('PlanningDao')->searchByPlanningTrackerId()->returns($dar);
+
+        $planning_tracker = mock('Tracker');
+        $backlog_tracker  = mock('Tracker');
+        $tracker_factory  = mock('TrackerFactory');
+        stub($tracker_factory)->getTrackerById(103)->returns($planning_tracker);
+        stub($tracker_factory)->getTrackerById('*')->returns($backlog_tracker);
+
+        $factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
+        $planning  = new Planning(1, 'Release Planning', 102, 'Release Backlog', 'Sprint Plan', 104, 103);
+        $planning->setPlanningTracker($planning_tracker);
+        $planning->setBacklogTracker($backlog_tracker);
+        
+        $this->assertEqual($planning, $factory->getPlanningByPlanningTracker($tracker));
+    }
+    
+    public function itAddsThePlanningAndTheBacklogTrackers() {
+        $tracker   = aMockTracker()->withId(99)->build();
+        $dar       = TestHelper::arrayToDar(
+                        array('id' => 1, 'name' => 'Release Planning', 'group_id' => 102, 
+                              'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan',
+                              'backlog_tracker_id'  => 104));
+        $backlog_tracker_row = array('tracker_id' => 104);
+        
+        $dao       = mock('PlanningDao');
+        stub($dao)->searchByPlanningTrackerId(99)->returns($dar);
+        stub($dao)->searchBacklogTrackerById(1)->returns($backlog_tracker_row);
+        
+        $planning_tracker = aTracker()->withName('planning tracker')->withId(103)->build();
+        $backlog_tracker  = aTracker()->withName('backlog  tracker')->withId(104)->build();
+        
+        $tracker_factory  = mock('TrackerFactory');
+        stub($tracker_factory)->getTrackerById(103)->returns($planning_tracker);
+        stub($tracker_factory)->getTrackerById(104)->returns($backlog_tracker);
+        $factory   = aPlanningFactory()->withDao($dao)->withTrackerFactory($tracker_factory)->build();
+
+        $actual_planning = $factory->getPlanningByPlanningTracker($tracker);
+        $this->assertEqual($planning_tracker, $actual_planning->getPlanningTracker());
+        $this->assertEqual($backlog_tracker, $actual_planning->getBacklogTracker());
+    }
+    
+}
+class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
     
     public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $dao          = new MockPlanningDao();
@@ -186,6 +252,9 @@ class PlanningFactoryTest extends TuleapTestCase {
         );
         $this->assertEqual($expected, $factoryBuilder->build()->getPlannings($this->user, 123));
     }
+}
+
+class PlanningFactoryTest_getPlanningTrackerIdsByGroupIdTest extends PlanningFactoryTest {
     
     public function itDelegatesRetrievalOfPlanningTrackerIdsByGroupIdToDao() {
         $group_id     = 456;
@@ -198,6 +267,9 @@ class PlanningFactoryTest extends TuleapTestCase {
         $actual_ids = $factory->getPlanningTrackerIdsByGroupId($group_id);
         $this->assertEqual($actual_ids, $expected_ids);
     }
+}
+
+class PlanningFactoryTest_getAvailablePlanningTrackersTest extends PlanningFactoryTest {
     
     public function itRetrievesAvailablePlanningTrackersIncludingTheCurrentPlanningTracker() {
         $group_id         = 789;

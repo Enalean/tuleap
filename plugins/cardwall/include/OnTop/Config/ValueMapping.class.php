@@ -39,6 +39,10 @@ class Cardwall_OnTop_Config_ValueMapping {
         return $this->value->getId();
     }
 
+    public function getValueLabel() {
+        return $this->value->getLabel();
+    }
+
     /**
      * @return Tracker_FormElement_Field_List_Value
      */
@@ -48,6 +52,25 @@ class Cardwall_OnTop_Config_ValueMapping {
 
     public function getColumnId() {
         return $this->column_id;
+    }
+
+    /**
+     * Return true is the given status label match the current value
+     *
+     * @param String $artifact_status_label
+     *
+     * @return Boolean
+     */
+    public function matchStatusLabel($artifact_status_label) {
+        return $this->matchLabel($artifact_status_label) || $this->matchNone($artifact_status_label);
+    }
+
+    private function matchLabel($artifact_status_label) {
+        return $this->getValueLabel() == $artifact_status_label;
+    }
+
+    private function matchNone($artifact_status_label) {
+        return $artifact_status_label === null && $this->getValueId() == 100;
     }
 }
 ?>

@@ -1141,7 +1141,7 @@ function getUsedFields() {
       }
     }    
     if($notify) {
-        $agnf =& new ArtifactGlobalNotificationFactory();
+        $agnf = new ArtifactGlobalNotificationFactory();
         $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = false));
     }
     
@@ -1201,7 +1201,7 @@ function getUsedFields() {
         }
     }
     if($notify && (count($changes)>0 || $add_cc || $comments_ok)) {
-        $agnf =& new ArtifactGlobalNotificationFactory();
+        $agnf = new ArtifactGlobalNotificationFactory();
         $ah->mailFollowupWithPermissions($agnf->getAllAddresses($this->ath->getID(), $update = true), $changes);
     }
 

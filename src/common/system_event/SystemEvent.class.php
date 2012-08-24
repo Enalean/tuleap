@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  *
- * 
  */
 
-require_once('common/dao/SystemEventsFollowersDao.class.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/event/EventManager.class.php');
+require_once 'common/dao/SystemEventsFollowersDao.class.php';
+require_once 'common/mail/Mail.class.php';
+require_once 'common/event/EventManager.class.php';
+require_once 'SystemEventMissingParameterException.class.php';
 
 /**
  * System Event class
@@ -76,7 +76,8 @@ abstract class SystemEvent {
     const PRIORITY_MEDIUM = 2;
     const PRIORITY_LOW    = 3;
     
-    const PARAMETER_SEPARATOR = '::';
+    const PARAMETER_SEPARATOR        = '::';
+    const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
     
     /**
      * Constructor
@@ -100,6 +101,16 @@ abstract class SystemEvent {
         $this->process_date = is_numeric($process_date) ? date('Y-m-d H:i:s', $process_date) : $process_date;
         $this->end_date     = is_numeric($end_date) ? date('Y-m-d H:i:s', $end_date) : $end_date;
         $this->log          = $log;
+    }
+
+    /**
+     * Allow custom system event to have other, external dependencies injected on instantiation
+     *
+     * Extra parameters should be given via Event::GET_SYSTEM_EVENT_CLASS arguments and should
+     * be regular function parameters
+     * @see Event::GET_SYSTEM_EVENT_CLASS
+     */
+    public function injectDependencies() {
     }
 
     // Getters
@@ -227,7 +238,18 @@ abstract class SystemEvent {
         } else return 0;
     }
 
+    public function getParameter($index) {
+        $params = $this->getParametersAsArray();
+        return isset($params[$index]) && $params[$index] !== '' ? $params[$index] : null;
+    }
 
+    public function getRequiredParameter($index) {
+        $param = $this->getParameter($index);
+        if ($param === null) {
+            throw new SystemEventMissingParameterException('Missing parameter n°'. (int)$index);
+        }
+        return $param;
+    }
 
     /**
      * Error functions
@@ -378,6 +400,27 @@ End Date:     {$this->getEndDate()}
      */
     protected function getBackend($type) {
         return Backend::instance($type);
+    }
+
+    /**
+     * @param mixed $data The data to encode (string, array, int, ...)
+     *
+     * @return string suitable to be enclosed as parameter
+     */
+    public static function encode($data) {
+        return str_replace(self::PARAMETER_SEPARATOR, self::PARAMETER_SEPARATOR_ESCAPE, json_encode(array('data' => $data)));
+    }
+
+    /**
+     * @param string $string encoded string
+     *
+     * @return mixed data
+     */
+    public static function decode($string) {
+        $decode = json_decode(str_replace(self::PARAMETER_SEPARATOR_ESCAPE, self::PARAMETER_SEPARATOR, $string), true);
+        if (isset($decode['data'])) {
+            return $decode['data'];
+        }
     }
 }
 

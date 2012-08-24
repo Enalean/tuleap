@@ -21,7 +21,6 @@
 
 require_once 'common/dao/include/DataAccessObject.class.php';
 require_once TRACKER_BASE_DIR .'/Tracker/dao/TrackerDao.class.php';
-require_once 'PlanningParameters.class.php';
 
 class PlanningDao extends DataAccessObject {
     

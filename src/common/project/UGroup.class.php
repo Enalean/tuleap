@@ -100,6 +100,7 @@ class UGroup {
     public function getMembers() {
         if (! $this->members) {
             $this->members = array();
+            $this->members_name = array();
             $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
             foreach($dar as $row) {
                 $currentUser          = new User($row);

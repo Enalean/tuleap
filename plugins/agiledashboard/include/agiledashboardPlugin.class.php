@@ -19,6 +19,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'autoload.php';
 
 /**
  * AgileDashboardPlugin
@@ -52,9 +53,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_trackers_duplicated($params) {
-        require_once 'Planning/PlanningDao.class.php';
         require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
-        require_once 'Planning/PlanningFactory.class.php';
         
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
@@ -63,16 +62,28 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
+        $this->updateBacklogs($params);
         $requested_planning = $this->extractPlanningAndArtifactFromRequest($params['request']);
         if ($requested_planning) {
-            require_once 'Planning/PlanningFactory.class.php';
             $planning = PlanningFactory::build()->getPlanning($requested_planning['planning_id']);
             if ($planning && $this->requestCanLeaveTheTracker($params['request'])) {
                 $this->redirectToPlanning($params, $requested_planning, $planning);
             }
         }
     }
-    
+
+    /**
+     * On create, the artifact was linked to it's immediate parent.
+     * In agiledashoard, to remain consistent, it means that we need to link to all
+     * parents
+     *
+     * @param array $params
+     */
+    private function updateBacklogs(array $params) {
+        $artifact_linker = new Planning_ArtifactLinker(Tracker_ArtifactFactory::instance());
+        $artifact_linker->linkWithParents($params['request'], $params['artifact']);
+    }
+
     private function redirectToPlanning($params, $requested_planning, Planning $planning) {
         $redirect_to_artifact = $requested_planning['artifact_id'];
         if ($redirect_to_artifact == -1) {
@@ -133,7 +144,8 @@ class AgileDashboardPlugin extends Plugin {
         $params['scripts'] = array_merge(
             $params['scripts'],
             array(
-                $this->getPluginPath().'/js/drag-n-drop.js',
+                $this->getPluginPath().'/js/planning.js',
+                $this->getPluginPath().'/js/OuterGlow.js',
                 $this->getPluginPath().'/js/expand-collapse.js',
                 $this->getPluginPath().'/js/planning-view.js',
             )
@@ -146,14 +158,12 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        require_once 'AgileDashboardRouter.class.php';
         $router = new AgileDashboardRouter($this);
         $router->route($request);
     }
 
     public function tracker_event_artifact_association_edited($params) {
         if ($params['request']->isAjax()) {
-            require_once AGILEDASHBOARD_BASE_DIR .'/Planning/Milestone.class.php';
             $capacity         = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::CAPACITY_FIELD_NAME);
             $remaining_effort = $this->getFieldValue($params['form_element_factory'], $params['user'], $params['artifact'], Planning_Milestone::REMAINING_EFFORT_FIELD_NAME);
 

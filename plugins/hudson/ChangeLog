@@ -1,3 +1,6 @@
+Version 1.9
+    * Continue PHP 5.3 compat (Contrib Philippe Goetz)
+
 1.8 - Tuleal 5.0
     * Introduce possibility for other plugins to interact with hudson plugin.
       Used by git to trigger build on push. (Contrib STMicroelectronics).

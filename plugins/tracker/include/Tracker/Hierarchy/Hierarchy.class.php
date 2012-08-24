@@ -65,7 +65,17 @@ class Tracker_Hierarchy {
             return false;
         }
     }
-    
+
+    /**
+     * Return True if given tracker is at the root of the Hierarchy
+     *
+     * @param type $tracker_id
+     * @return type
+     */
+    public function isRoot($tracker_id) {
+        return $this->getLevel($tracker_id) == 0;
+    }
+
     /**
      * @throws Tracker_Hierarchy_NotInHierarchyException
      * @throws Tracker_Hierarchy_CyclicHierarchyException
@@ -107,8 +117,22 @@ class Tracker_Hierarchy {
         $callstack[] = $tracker_id;
     }
 
+    /**
+     * Returns all trackers defined in hierarchy from the top (older) to bottom
+     * if there are trackers outside hierarchy in the given list, happend to
+     * the end
+     *
+     * @return Array
+     */
     public function sortTrackerIds(array $tracker_ids) {
+        // God will kill plenty of kittens every day that this bug is not fixed:
+        // https://bugs.php.net/bug.php?id=50688
+        // Ignore all E_WARNING errors during the usort.
+        // Or use @usort()?
+        $old_level = error_reporting();
+        error_reporting($old_level ^ E_WARNING);
         usort($tracker_ids, array($this, 'sortByLevel'));
+        error_reporting($old_level);
         return $tracker_ids;
     }
     

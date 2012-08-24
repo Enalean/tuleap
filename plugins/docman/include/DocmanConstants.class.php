@@ -40,6 +40,8 @@ define('PLUGIN_DOCMAN_EVENT_RESTORE_VERSION', 13);
 define('PLUGIN_DOCMAN_EVENT_LOCK_ADD',        20);
 define('PLUGIN_DOCMAN_EVENT_LOCK_DEL',        21);
 
+define('PLUGIN_DOCMAN_EVENT_PERMS_CHANGE', 22);
+
 define('PLUGIN_DOCMAN_VIEW_PREF',            'plugin_docman_view');
 define('PLUGIN_DOCMAN_EXPAND_FOLDER_PREF', 'plugin_docman_hide');
 define('PLUGIN_DOCMAN_EXPAND_FOLDER',      2);

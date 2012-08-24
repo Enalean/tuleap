@@ -41,14 +41,22 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @var bool
      */
     private $enable_qr_code;
-    
-    /** @var Cardwall_OnTop_Config */
+
+    /**
+     * @var Cardwall_OnTop_Config
+     */
     private $config;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config) {
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
+        $this->user           = $user;
     }
 
     /**
@@ -69,26 +77,23 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
-        $tracker = $this->milestone->getArtifact()->getTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        if (! $field) {
-            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
-        }
+        $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        
-        return $renderer->renderToString('agiledashboard-pane', $this->getPresenter($field, $tracker));
+        return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
+        // TODO what if no semantic status and no mapping????
     }
 
     /**
      * @return Cardwall_PaneContentPresenter
      */
-    private function getPresenter(Tracker_FormElement_Field_Selectbox $field, $tracker) {
+    private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $board_factory      = new Cardwall_BoardFactory();
         $planned_artifacts  = $this->milestone->getPlannedArtifacts();
 
-        $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config, new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
-        
-        $board              = $board_factory->getBoard($field_retriever, $field, $planned_artifacts, $this->config);
+        $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
+                                new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
+
+        $board              = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
         $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';

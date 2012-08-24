@@ -44,38 +44,33 @@ class Cardwall_Column {
     public $fgcolor;
 
     /**
-     * @var Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
-     */
-    private $field_provider;
-    
-    /**
      * @param int    $id
      * @param string $label
      */
-    public function __construct($id, $label, $bgcolor, $fgcolor, 
-                                Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
-                                $config) {
+    public function __construct($id, $label, $bgcolor, $fgcolor) {
         $this->id      = $id;
         $this->label   = $label;
         $this->bgcolor = $bgcolor;
         $this->fgcolor = $fgcolor;
-        $this->field_provider = $field_provider;
-        $this->config = $config;
     }
-    
-    public function isInColumn(Tracker_Artifact $artifact) {
-        $field           = $this->field_provider->getField($artifact);
-        $artifact_status = null;
-        if ($field) {
-            $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
-        }
 
-        
-        return $this->config->isMappedTo($artifact->getTrackerId(), $artifact_status, $this) || 
-               $this->isMatchForThisColumn($artifact_status);
+    /**
+     * Return true if the given status can belong to current column
+     *
+     * @param String                               $artifact_status
+     * @param Cardwall_OnTop_Config_TrackerMapping $tracker_mapping
+     *
+     * @return Boolean
+     */
+    public function canContainStatus($artifact_status, Cardwall_OnTop_Config_TrackerMapping $tracker_mapping = null) {
+        $is_mapped = false;
+        if ($tracker_mapping) {
+            $is_mapped = $tracker_mapping->isMappedTo($this, $artifact_status);
+        }
+        return $is_mapped || $this->matchesStatus($artifact_status);
     }
-    
-    private function isMatchForThisColumn($artifact_status) {
+
+    private function matchesStatus($artifact_status) {
         return $this->matchesLabel($artifact_status) || $this->matchesTheNoneColumn($artifact_status);
     }
 
@@ -87,6 +82,33 @@ class Cardwall_Column {
         return $artifact_status === null && $this->id == 100;
     }
 
+    /**
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel() {
+        return $this->label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBgcolor() {
+        return $this->bgcolor;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFgcolor() {
+        return $this->fgcolor;
+    }
 
 }
 ?>

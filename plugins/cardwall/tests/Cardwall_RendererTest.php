@@ -23,7 +23,7 @@
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../include/Cardwall_Renderer.class.php';
 require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
-require_once 'src/common/plugin/Plugin.class.php';
+require_once 'common/plugin/Plugin.class.php';
 
 
 class Cardwall_Renderer_getForestsOfArtifactsTest extends TuleapTestCase {

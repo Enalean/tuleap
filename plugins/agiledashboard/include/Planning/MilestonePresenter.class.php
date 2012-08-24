@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ItemCardPresenterCallback.class.php';
-require_once 'PlanningPresenter.class.php';
-require_once 'MilestoneLinkPresenter.class.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
@@ -53,12 +50,22 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * @var string
      */
     public $planning_redirect_parameter;
-    
+
+    /**
+     * @var string 
+     */
+    private $planning_redirect_to_new;
+
     /**
      * @var array
      */
     private $additional_panes = array();
-    
+
+    /**
+     * @var Codendi_Request
+     */
+    private $request;
+
     /**
      * Instanciates a new presenter.
      * 
@@ -73,23 +80,39 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * @param User                                  $current_user                The user to which the artifact plannification UI is presented.
      * @param string                                $planning_redirect_parameter The request parameter representing the artifact being planned, used for redirection (e.g: "planning[2]=123").
      */
-    public function __construct(Planning                              $planning,
-                                Tracker_CrossSearch_SearchContentView $backlog_search_view,
-                                array                                 $available_milestones,
-                                Planning_Milestone                    $milestone, 
-                                User                                  $current_user,
-                                                                      $planning_redirect_parameter) {
+    public function __construct(
+        Planning                              $planning,
+        Tracker_CrossSearch_SearchContentView $backlog_search_view,
+        array                                 $available_milestones,
+        Planning_Milestone                    $milestone, 
+        User                                  $current_user,
+        Codendi_Request                       $request,
+                                              $planning_redirect_parameter,
+                                              $planning_redirect_to_new
+    ) {
         parent::__construct($planning);
         
         $this->milestone                   = $milestone;
         $this->available_milestones        = $available_milestones;
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
+        $this->request                     = $request;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
+        $this->planning_redirect_to_new    = $planning_redirect_to_new;
         $this->current_uri                 = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
         $this->planned_artifacts_tree      = $this->buildPlannedArtifactsTree();
     }
-    
+
+    public function milestoneTitle() {
+        return $this->milestone->getArtifactTitle();
+    }
+
+    public function currentPaneUrlParam() {
+        if (!$this->isPlannerPaneActive()) {
+            return '&pane='.$this->request->get('pane');
+        }
+    }
+
     /**
      * @return bool
      */
@@ -121,11 +144,12 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                     AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                     array(
                         'milestone' => $this->milestone,
-                        'panes'     => &$this->additional_panes
+                        'panes'     => &$this->additional_panes,
+                        'user'      => $this->current_user,
                     )
                 );
 
-                $requested_pane   = HTTPRequest::instance()->get('pane');
+                $requested_pane   = $this->request->get('pane');
                 foreach($this->additional_panes as $pane) {
                     $pane->setActive($requested_pane === $pane->getIdentifier());
                     $a_pane_is_active = $pane->isActive();
@@ -151,6 +175,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                     new Planning_ItemCardPresenterCallback(
                         $this->milestone->getPlanning(), 
                         new Tracker_CardFields(),
+                        $this->current_user,
                         'planning-draggable-alreadyplanned'
                     )
                 );
@@ -267,7 +292,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      * @return string
      */
     public function createNewItemToPlan() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($this->milestone->getPlanning()->getPlanningTracker()->getItemName()));
     }
     
     /**
@@ -286,7 +311,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $capacity         = $this->milestone->getCapacity() != null ? $this->milestone->getCapacity() : 0;
 
         $html  = '';
-        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'remaining_effort');
+        $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'capacity');
         $html .= '&nbsp;<span class="planning_remaining_effort">'.$remaining_effort.'</span>';
         $html .= '&nbsp;/&nbsp;'.$capacity;
         return $html;
@@ -295,6 +320,25 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function isOverCapacity() {
         return $this->canDisplayRemainingEffort() &&
                $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
+    }
+
+    public function planningPaneTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
+    }
+    
+    public function planningTrackerId() {
+        return $this->milestone->getPlanning()->getPlanningTrackerId();
+    }
+    
+    public function parentArtifactId() {
+        $ancestors = $this->milestone->getAncestors();
+        if (count($ancestors) > 0) {
+            return $ancestors[0]->getArtifactId();
+        }
+    }
+
+    public function planningRedirectToNew() {
+        return $this->planning_redirect_to_new;
     }
 }
 ?>

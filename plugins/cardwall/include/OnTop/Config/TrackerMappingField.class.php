@@ -52,7 +52,7 @@ abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_
     /**
      * @return string
      */
-    public function getSelectedValueLabel($column, $default = '') {
+    public function getSelectedValueLabel(Cardwall_Column $column, $default = '') {
         foreach ($this->value_mappings as $mapping) {
             if ($mapping->getColumnId() == $column->getId()) {
                 return $mapping->getValue()->getLabel();

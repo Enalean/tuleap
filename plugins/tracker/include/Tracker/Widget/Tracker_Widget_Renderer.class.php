@@ -45,7 +45,8 @@ abstract class Tracker_Widget_Renderer extends Widget {
         $arrf = Tracker_Report_RendererFactory::instance();
         $store_in_session = false;
         if ($renderer = $arrf->getReportRendererById($this->renderer_id, null, $store_in_session)) {
-            echo $renderer->fetchWidget();
+            $current_user = UserManager::instance()->getCurrentUser();
+            echo $renderer->fetchWidget($current_user);
         } else {
             echo '<em>Renderer does not exist</em>';
         }

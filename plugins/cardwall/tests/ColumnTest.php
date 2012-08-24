@@ -21,11 +21,19 @@
 
 class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     
+    
+    //TODO move this to the configTest file
     public function setUp() {
         parent::setUp();
-        $this->artifact = mock('Tracker_Artifact');
+        $tracker = aMockTracker()->withId(33)->build();
+        $swimline_tracker = aMockTracker()->build();
+        $this->artifact = stub('Tracker_Artifact')->getTracker()->returns($tracker);
         $this->field = mock('Tracker_FormElement_Field_MultiSelectbox');
         $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
+        $dao = mock('Cardwall_OnTop_Dao');
+        $column_factory = mock('Cardwall_OnTop_Config_ColumnFactory');
+        $tracker_mapping_factory = mock('Cardwall_OnTop_Config_TrackerMappingFactory');
+        $this->config = new Cardwall_OnTop_Config($tracker, $swimline_tracker, $dao, $column_factory, $tracker_mapping_factory);
     }
     
     public function itIsInTheCellIfTheLabelMatches() {
@@ -61,16 +69,16 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     }
 
     private function assertIn($column) {
-         $this->assertTrue($column->isInColumn($this->artifact));
+         $this->assertTrue($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
     
     private function assertNotIn($column) {
-         $this->assertFalse($column->isInColumn($this->artifact));
+         $this->assertFalse($this->config->isInColumn($this->artifact, $this->field_provider, $column));
     }
 
     public function newCardwall_Column($id, $label) {
         $bgcolor = $fgcolor = 0;
-        return new Cardwall_Column($id, $label, $bgcolor, $fgcolor, $this->field_provider, mock('Cardwall_OnTop_Config'));
+        return new Cardwall_Column($id, $label, $bgcolor, $fgcolor);
     }
     
 }

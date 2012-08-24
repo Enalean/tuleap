@@ -43,6 +43,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected $changesets;
 
     /**
+     * @var array of Tracker_Artifact
+     */
+    private $ancestors;
+
+    /**
      * @var Tracker
      */
     private $tracker;
@@ -418,6 +423,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchTitle($prefix = '') {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
+        $html .= '<input type="hidden" id="tracker_id" name="tracker_id" value="'.$this->getTrackerId().'"/>';
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
         $html .= $hp->purify($this->getTracker()->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
@@ -1282,14 +1288,49 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
+    
+    public function __toString() {
+        return __CLASS__." #$this->id";
+    }
 
     /**
+     * Returns all ancestors of current artifact (from direct parent to oldest ancestor)
+     *
      * @param User $user
      *
      * @return Array of Tracker_Artifact
      */
     public function getAllAncestors(User $user) {
-        return $this->getHierarchyFactory()->getAllAncestors($user, $this);
+        if (!isset($this->ancestors)) {
+            $this->ancestors = $this->getHierarchyFactory()->getAllAncestors($user, $this);
+        }
+        return $this->ancestors;
+    }
+    
+    public function setAllAncestors(array $ancestors) {
+        $this->ancestors = $ancestors;
+    }
+
+    /**
+     * Return the parent artifact of current artifact if any
+     *
+     * @param User $user
+     * 
+     * @return Tracker_Artifact
+     */
+    public function getParent(User $user) {
+        return array_shift($this->getAllAncestors($user));
+    }
+
+    /**
+     * Get artifacts
+     * 
+     * @param User $user
+     *
+     * @return Array of Tracker_Artifact
+     */
+    public function getSiblings(User $user) {
+        return $this->getHierarchyFactory()->getSiblings($user, $this);
     }
 
     /**
