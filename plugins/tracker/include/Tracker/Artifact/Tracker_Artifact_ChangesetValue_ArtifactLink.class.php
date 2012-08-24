@@ -72,20 +72,20 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
         $next     = $this->getValue();
         $changes = false;
         if ($previous != $next) {
-            $removed_elements = array_diff($previous, $next);
+            $removed_elements = array_diff(array_keys($previous), array_keys($next));
             $removed_arr = array();
             $method = 'getLabel';
             if ($format === 'html') {
                 $method = 'getUrl';
             }
-            foreach ($removed_elements as $art_id => $removed_element) {
-                $removed_arr[] = $removed_element->$method();
+            foreach ($removed_elements as $key) {
+                $removed_arr[] = $previous[$key]->$method();
             }
             $removed = implode(', ', $removed_arr);
-            $added_elements = array_diff($next, $previous);
+            $added_elements = array_diff(array_keys($next), array_keys($previous));
             $added_arr = array();
-            foreach ($added_elements as $art_id => $added_element) {
-                $added_arr[] = $added_element->$method();
+            foreach ($added_elements as $key) {
+                $added_arr[] = $next[$key]->$method();
             }
             $added   = implode(', ', $added_arr);
             if (empty($next)) {
