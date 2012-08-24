@@ -36,6 +36,7 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
                           array $already_planned_artifact_ids,
                           $backlog_tracker_id,
                           Planning $planning,
+                          Planning_BacklogActionsPresenter $backlog_actions_presenter,
                           $planning_redirect_parameter) {
     
         $backlog_hierarchy = $this->hierarchy_factory->getHierarchy(array($backlog_tracker_id));
@@ -52,8 +53,6 @@ class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
         //$artifacts   = $artifacts->accept($visitor);
         //$visitor     = new Planning_GroupByParentsVisitor($user);
         //$artifacts->accept($visitor);
-
-        $backlog_actions_presenter = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $planning_redirect_parameter);
 
         return new Planning_SearchContentView($report, 
                                               $criteria, 

@@ -146,6 +146,8 @@ class Planning_MilestoneController extends MVC2_Controller {
         $cross_search_query           = $this->getCrossSearchQuery();
         $view_builder->setHierarchyFactory($this->hierarchy_factory);
 
+        $backlog_actions_presenter = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $this->milestone, $this->getPlanningRedirectToSelf());
+
         $view = $view_builder->build(
             $this->getCurrentUser(),
             $project,
@@ -153,6 +155,7 @@ class Planning_MilestoneController extends MVC2_Controller {
             $already_planned_artifact_ids,
             $planning->getBacklogTrackerId(),
             $planning,
+            $backlog_actions_presenter,
             $this->getPlanningRedirectToSelf()
         );
         
