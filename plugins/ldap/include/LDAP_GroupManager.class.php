@@ -43,6 +43,10 @@ require_once 'LDAP.class.php';
  */
 abstract class LDAP_GroupManager
 {
+
+    const NO_SYNCHRONIZATION   = 'never';
+    const AUTO_SYNCHRONIZATION = 'auto';
+
     /**
      * @type LDAP
      */
@@ -132,7 +136,7 @@ abstract class LDAP_GroupManager
      *
      * @return void
      */
-    public function bindWithLdap($option='bind', $synchroPolicy = 'never', $displayFeedback = true) {
+    public function bindWithLdap($option='bind', $synchroPolicy = self::NO_SYNCHRONIZATION, $displayFeedback = true) {
         if ($this->getGroupDn()) {
             $this->bindWithLdapGroup($option, $synchroPolicy);
             $this->syncMembersWithLdap($option);
@@ -331,7 +335,7 @@ abstract class LDAP_GroupManager
      *
      * @return Boolean
      */
-    protected function bindWithLdapGroup($bindOption ='bind', $synchroPolicy = 'never')
+    protected function bindWithLdapGroup($bindOption ='bind', $synchroPolicy = self::NO_SYNCHRONIZATION)
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
