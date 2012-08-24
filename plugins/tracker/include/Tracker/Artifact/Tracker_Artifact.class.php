@@ -449,9 +449,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $html .= $padding_prefix;
             $html .= '<div class="tree-last">&nbsp;</div> ';
             if ($parents) {
-                $html .= '<a href="'. $parent->getURI() .'" class="direct-link-to-artifact">';
+                $html .= $parent->fetchDirectLinkToArtifactWithTitle();
+            } else {
+                $html .= $hp->purify($parent->getXRefAndTitle());
             }
-            $html .= $hp->purify($parent->getXRefAndTitle());
             if ($parents) {
                 $html .= '</a>';
                 $div_prefix = '';
@@ -763,6 +764,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchDirectLinkToArtifact() {
         return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
+    }
+
+    /**
+     * @return string html
+     */
+    public function fetchDirectLinkToArtifactWithTitle() {
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getXRefAndTitle()) . '</a>';
     }
 
     /**
