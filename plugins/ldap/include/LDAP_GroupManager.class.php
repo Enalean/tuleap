@@ -46,6 +46,7 @@ abstract class LDAP_GroupManager
 
     const NO_SYNCHRONIZATION   = 'never';
     const AUTO_SYNCHRONIZATION = 'auto';
+    const BIND_OPTION          = 'bind';
 
     /**
      * @type LDAP
@@ -136,7 +137,7 @@ abstract class LDAP_GroupManager
      *
      * @return void
      */
-    public function bindWithLdap($option='bind', $synchroPolicy = self::NO_SYNCHRONIZATION, $displayFeedback = true) {
+    public function bindWithLdap($option = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION, $displayFeedback = true) {
         if ($this->getGroupDn()) {
             $this->bindWithLdapGroup($option, $synchroPolicy);
             $this->syncMembersWithLdap($option);
@@ -164,8 +165,8 @@ abstract class LDAP_GroupManager
                 $this->addUserToGroup($this->id, $userId);
             }
         }
-        if($option == 'bind') {
-            $toRemove = $this->getUsersToBeRemoved('bind');
+        if($option == self::BIND_OPTION) {
+            $toRemove = $this->getUsersToBeRemoved(self::BIND_OPTION);
             if ($toRemove) {
                 foreach($toRemove as $userId) {
                     $this->removeUserFromGroup($this->id, $userId);
@@ -335,7 +336,7 @@ abstract class LDAP_GroupManager
      *
      * @return Boolean
      */
-    protected function bindWithLdapGroup($bindOption ='bind', $synchroPolicy = self::NO_SYNCHRONIZATION)
+    protected function bindWithLdapGroup($bindOption = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION)
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
