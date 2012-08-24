@@ -27,7 +27,7 @@ extractRef()
 	for rev in $(git rev-list $oldrev..$newrev)
 	do
 		text=$(git cat-file -p "$rev")
-	    echo "$text" | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --repo_path="$repo_location" --login="$tuleap_login" --type="git_commit" --rev_id="$tuleap_repo_name/$rev"
+	    echo "$text" | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --repo_path="$repo_location" --login="$tuleap_login" --type="git_commit" --rev_id="$tuleap_repo_name/$rev" >/dev/null
 	done
 }
 
