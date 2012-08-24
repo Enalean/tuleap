@@ -907,9 +907,8 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
         if ($artifact = $af->createArtifact($tracker, $fields_data, $user, null)) {
             return $artifact->getId();
         } else {
-            $response = new Response();
-            if ($response->feedbackHasErrors()) {
-                return new SoapFault(update_artifact_fault, $response->getRawFeedback(),'addArtifact');
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(),'addArtifact');
             } else {
                 return new SoapFault(update_artifact_fault, 'Unknown error','addArtifact');
             }
