@@ -54,12 +54,14 @@ class AgileDashboardPlugin extends Plugin {
         $source_artifact  = null;
         if ($request->get('func') == 'new-artifact-link') {
             $source_artifact = $this->getArtifactFactory()->getArtifactById($request->get('id'));
+        } elseif ($request->get('child_milestone')) {
+            $source_artifact = $this->getArtifactFactory()->getArtifactById($request->get('child_milestone'));
         }
         if ($source_artifact) {
-            $artifact_parents_selector = new Planning_ArtifactParentsSelector($this->getArtifactFactory(), PlanningFactory::build(), $this->getMilestoneFactory(), $this->getHierarchyFactory());
+            $artifact_parents_selector   = new Planning_ArtifactParentsSelector($this->getArtifactFactory(), PlanningFactory::build(), $this->getMilestoneFactory(), $this->getHierarchyFactory());
             $params['label']             = 'Available '. $params['parent_tracker']->getName();
             $params['possible_parents']  = $artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact, $params['user']);
-            $we_are_linking_the_artifact_to_a_parent = $params['possible_parents'] == array($source_artifact);
+            $we_are_linking_the_artifact_to_a_parent = ($params['possible_parents'] == array($source_artifact));
             if ($we_are_linking_the_artifact_to_a_parent) {
                 $params['display_selector'] = false;
             }
