@@ -381,6 +381,7 @@ class Planning_MilestoneControllerTrapPresenter extends Planning_MilestoneContro
 
 class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
+    private $sprint_planning;
     private $sprint_1;
     private $sprint_2;
     private $milestone_factory;
@@ -392,10 +393,12 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
+        $this->sprint_planning = aPlanning()->withBacklogTracker(aTracker()->build())->build();
+        
         $this->sprint_1 = mock('Planning_Milestone');
         stub($this->sprint_1)->getArtifactId()->returns(1);
         stub($this->sprint_1)->getArtifactTitle()->returns('Sprint 1');
-        stub($this->sprint_1)->getPlanning()->returns(aPlanning()->build());
+        stub($this->sprint_1)->getPlanning()->returns($this->sprint_planning);
         stub($this->sprint_1)->getLinkedArtifacts()->returns(array());
         stub($this->sprint_1)->hasAncestors()->returns(true);
         $this->sprint_2 = aMilestone()->withArtifact(aMockArtifact()->withId(2)->withTitle('Sprint 2')->build())->build();
@@ -426,14 +429,13 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
     public function itDisplaysASelectorOfArtifactWhenThereAreNoMilestoneSelected() {
         $project = mock('Project');
-        $planning = mock('Planning');
-        $current_milstone = new Planning_NoMilestone($project, $planning);
+        $current_milstone = new Planning_NoMilestone($project, $this->sprint_planning);
 
         $milstone_1001 = aMilestone()->withArtifact(aMockArtifact()->withId(1001)->withTitle('An open artifact')->build())->build();
         $milstone_1002 = aMilestone()->withArtifact(aMockArtifact()->withId(1002)->withTitle('Another open artifact')->build())->build();
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
-        stub($this->milestone_factory)->getAllMilestones($this->current_user, $planning)->returns(array($milstone_1001, $milstone_1002));
+        stub($this->milestone_factory)->getAllMilestones($this->current_user, $this->sprint_planning)->returns(array($milstone_1001, $milstone_1002));
         $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory);
 
         $selectable_artifacts = $this->getSelectableArtifacts();
@@ -446,7 +448,6 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $this->controller->show();
         return $this->controller->presenter->selectableArtifacts();
     }
-
 }
 
 ?>

@@ -26,7 +26,7 @@ class Planning_BacklogActionsPresenter {
     private $planning_redirect_parameter;
     private $current_milestone;
 
-    public function __construct(Tracker $tracker = null, Planning_Milestone $current_milestone = null, $planning_redirect_parameter = null) {
+    public function __construct(Tracker $tracker, Planning_Milestone $current_milestone = null, $planning_redirect_parameter = null) {
         $this->tracker                     = $tracker;
         $this->current_milestone           = $current_milestone;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
