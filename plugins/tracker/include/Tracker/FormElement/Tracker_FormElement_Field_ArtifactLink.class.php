@@ -242,21 +242,25 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
         $html  = '';
         $html .= '<p>';
-        $html .= '<label>';
-        $html .= 'Select parent '. $parent_tracker->getItemName() .' ';
-        $html .= '<select name="'. $name .'[parent]">';
-        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-        $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
-        $html .= $this->fetchArtifactParentsOptions($prefill_parent, $parent_tracker, $user, $hp);
-        $html .= '</select>';
-        $html .= '</label>';
+        list($label, $possible_parents, $display_selector) = $this->getPossibleArtifactParents($parent_tracker, $user);
+        if ($display_selector) {
+            $html .= '<label>';
+            $html .= 'Select parent '. $parent_tracker->getItemName() .' ';
+            $html .= '<select name="'. $name .'[parent]">';
+            $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+            $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
+            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents, $hp);
+            $html .= '</select>';
+            $html .= '</label>';
+        } elseif ($possible_parents) {
+            $html .= 'Will have '. $possible_parents[0]->fetchDirectLinkToArtifactWithTitle() .' as parent.';
+        }
         $html .= '</p>';
         return $html;
     }
 
-    private function fetchArtifactParentsOptions($prefill_parent, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+    private function fetchArtifactParentsOptions($prefill_parent, $label, array $possible_parents, Codendi_HTMLPurifier $hp) {
         $html  = '';
-        list($label, $possible_parents) = $this->getPossibleArtifactParents($parent_tracker, $user);
         if ($possible_parents) {
             $html .= '<optgroup label="'. $label .'">';
             foreach ($possible_parents as $possible_parent) {
@@ -274,6 +278,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     private function getPossibleArtifactParents(Tracker $parent_tracker, User $user) {
         $label            = '';
         $possible_parents = array();
+        $display_selector = true;
         EventManager::instance()->processEvent(
             TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR,
             array(
@@ -281,13 +286,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 'parent_tracker'   => $parent_tracker,
                 'possible_parents' => &$possible_parents,
                 'label'            => &$label,
+                'display_selector' => &$display_selector,
             )
         );
         if (!$possible_parents) {
             $label            = 'Open '. $parent_tracker->getName();
             $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
         }
-        return array($label, $possible_parents);
+        return array($label, $possible_parents, $display_selector);
     }
 
     /**
