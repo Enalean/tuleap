@@ -44,9 +44,10 @@ require_once 'LDAP.class.php';
 abstract class LDAP_GroupManager
 {
 
-    const NO_SYNCHRONIZATION   = 'never';
-    const AUTO_SYNCHRONIZATION = 'auto';
-    const BIND_OPTION          = 'bind';
+    const NO_SYNCHRONIZATION      = 'never';
+    const AUTO_SYNCHRONIZATION    = 'auto';
+    const BIND_OPTION             = 'bind';
+    const PRESERVE_MEMBERS_OPTION = 'preserve_members';
 
     /**
      * @type LDAP
@@ -193,7 +194,7 @@ abstract class LDAP_GroupManager
             $this->usersNotImpacted = array();
 
             foreach($projectMembers as $userId) {
-                if (!isset($ldapGroupMembers[$userId]) && $option != 'preserve_members') {
+                if (!isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
                     $this->usersToRemove[$userId] = $userId;
                 } else {
                     $this->usersNotImpacted[$userId] = $userId;
