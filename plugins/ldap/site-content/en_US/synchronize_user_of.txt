@@ -54,52 +54,52 @@ class LDAPPluginCustomUserSyncOrange extends LDAP_UserSync {
     public function sync(User $user, LDAPResult $lr) {
         $modified  = false;
 
-	$realname = $this->getCommonName($lr);
+    $realname = $this->getCommonName($lr);
         
         if (($realname !== null) && ($user->getRealName() != substr($realname, 0, 32))) {
             $user->setRealName($realname);
             $modified = true;
         }
 
-	$ldapEmail = $lr->getEmail();
+    $ldapEmail = $lr->getEmail();
 
         if (($ldapEmail !== null) && ($user->getEmail() != $ldapEmail)) {
             $user->setEmail($ldapEmail);
             $modified = true;
         }
 
-	$userEmail = $user->getEmail();
+    $userEmail = $user->getEmail();
 
-	if ($userEmail !== null) {
-		if ($user->getStatus() != User::STATUS_ACTIVE) {
-			if (preg_match("/.ext@orange.com/i", $userEmail)) {
-				$user->setStatus(User::STATUS_RESTRICTED);
-				if (isset($GLOBALS['Response'])) {
-					$GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
-				}
-				$modified = true;
-			} else {
-				if (preg_match("/@orange.com/i", $userEmail)) {
-					$user->setStatus(User::STATUS_ACTIVE);
-					$modified = true;
-				} else {
-					$user->setStatus(User::STATUS_RESTRICTED);
-					if (isset($GLOBALS['Response'])) {
-						$GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
-					}
-					$modified = true;
-				}
-			}
-		}
-	} else {
-		if ($user->getStatus() != User::STATUS_ACTIVE) {
-			$user->setStatus(User::STATUS_RESTRICTED);
-			if (isset($GLOBALS['Response'])) {
-				$GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
-			}
-			$modified = true;
-		}
-	}
+    if ($userEmail !== null) {
+        if ($user->getStatus() != User::STATUS_ACTIVE) {
+            if (preg_match("/.ext@orange.com/i", $userEmail)) {
+                $user->setStatus(User::STATUS_RESTRICTED);
+                if (isset($GLOBALS['Response'])) {
+                    $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
+                }
+                $modified = true;
+            } else {
+                if (preg_match("/@orange.com/i", $userEmail)) {
+                    $user->setStatus(User::STATUS_ACTIVE);
+                    $modified = true;
+                } else {
+                    $user->setStatus(User::STATUS_RESTRICTED);
+                    if (isset($GLOBALS['Response'])) {
+                        $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
+                    }
+                    $modified = true;
+                }
+            }
+        }
+    } else {
+        if ($user->getStatus() != User::STATUS_ACTIVE) {
+            $user->setStatus(User::STATUS_RESTRICTED);
+            if (isset($GLOBALS['Response'])) {
+                $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
+            }
+            $modified = true;
+        }
+    }
 
         return $modified;
     }
