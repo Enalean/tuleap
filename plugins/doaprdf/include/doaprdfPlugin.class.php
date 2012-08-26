@@ -39,6 +39,10 @@ class doaprdfPlugin extends Plugin {
 		$this->_addHook("alt_representations");
 
 	}
+	
+	public function CallHook($event, $params) {
+	    $this->$event($params);
+	}
 
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...

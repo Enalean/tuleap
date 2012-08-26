@@ -1474,4 +1474,144 @@ foreach($times as $key => $time) {
 }
 */
 
+
+/**
+ * TODO: Enter description here ...
+ * @param unknown_type $script
+ * @param unknown_type $default_content_type
+ * @return Ambiguous
+ */
+function util_negociate_alternate_content_types($script, $default_content_type) {
+    $accepted_types = array($default_content_type);
+    $content_type   = $default_content_type;
+
+	// Invoke plugins' hooks 'script_accepted_types' to discover which alternate content types they would accept for /users/...
+	$hook_params = array(
+	    'script'         => $script,
+	    'accepted_types' => &$accepted_types,
+	);
+	EventManager::instance()->processEvent('script_accepted_types', $hook_params);
+	if (count($accepted_types) > 1) {
+
+		// PEAR::HTTP (for negotiateMimeType())
+		require_once('HTTP.php');
+
+		// negociate accepted content-type depending on the preferred ones declared by client
+		$http=new HTTP();
+		$content_type = $http->negotiateMimeType($accepted_types, false);
+	}
+	return $content_type;
+}
+
+function plugin_hook_by_reference($event, $hook_params) {
+    EventManager::instance()->processEvent($event, $hook_params);
+}
+function forge_get_config($var) {
+    return Config::get($var);
+}
+/**
+ * Create URL for a project's page
+ *
+ * @param string $groupame
+ * @param int $group_id
+ * @return string
+ */
+function util_make_url_g ($groupame, $group_id) {
+	if (isset ($GLOBALS['sys_noforcetype']) && $GLOBALS['sys_noforcetype']) {
+		return util_make_url ("/project/?group_id=$group_id");
+	} else {
+		return util_make_url ("/projects/$groupame/");
+	}
+}
+
+/**
+ * Constructs the forge's URL prefix out of forge_get_config('url_prefix')
+ *
+ * @return string
+ */
+function normalized_urlprefix() {
+	$prefix = forge_get_config('url_prefix') ;
+	$prefix = preg_replace ("/^\//", "", $prefix) ;
+	$prefix = preg_replace ("/\/$/", "", $prefix) ;
+	$prefix = "/$prefix/" ;
+	if ($prefix == '//')
+		$prefix = '/' ;
+	return $prefix ;
+}
+
+/**
+ * Return URL prefix (http:// or https://)
+ *
+ * @param       string  $prefix (optional) : 'http' or 'https' to force it
+ * @return	string	URL prefix
+ */
+function util_url_prefix($prefix = '') {
+	if ($prefix == 'http' || $prefix == 'https' ) {
+		return $prefix . '://';
+	}
+	else {
+		if (forge_get_config('use_ssl')) {
+			return "https://";
+		} else {
+			return "http://";
+		}
+	}
+}
+
+/**
+ * Construct the base URL http[s]://forge_name[:port]
+ *
+ * @param       string  $prefix (optional) : 'http' or 'https' to force it
+ * @return	string base URL
+ */
+function util_make_base_url($prefix = '') {
+	$url = util_url_prefix($prefix);
+	$url .= forge_get_config('web_host') ;
+	if (forge_get_config('https_port') && (forge_get_config('https_port') != 443)) {
+		$url .= ":".forge_get_config('https_port') ;
+	}
+	return $url;
+}
+
+/**
+ * Construct full URL from a relative path
+ *
+ * @param	string	$path (optional)
+ * @param       string  $prefix (optional) : 'http' or 'https' to force it
+ * @return	string	URL
+ */
+function util_make_url($path = '', $prefix = '') {
+	$url = util_make_base_url($prefix).util_make_uri($path) ;
+	return $url;
+}
+
+/**
+ * Find the relative URL from full URL, removing http[s]://forge_name[:port]
+ *
+ * @param	string	URL
+ */
+function util_find_relative_referer($url) {
+	$relative_url = str_replace(util_make_base_url(), '', $url);
+	//now remove previous feedback, error_msg or warning_msg
+	$relative_url = preg_replace('/&error_msg=.*&/', '&', $relative_url);
+	$relative_url = preg_replace('/&warning_msg=.*&/', '&', $relative_url);
+	$relative_url = preg_replace('/&feedback=.*&/', '&', $relative_url);
+	$relative_url = preg_replace('/&error_msg=.*/', '', $relative_url);
+	$relative_url = preg_replace('/&warning_msg=.*/', '', $relative_url);
+	$relative_url = preg_replace('/&feedback=.*/', '', $relative_url);
+	return $relative_url;
+}
+
+/**
+ * Construct proper (relative) URI (prepending prefix)
+ *
+ * @param string $path
+ * @return string URI
+ */
+function util_make_uri($path) {
+	$path = preg_replace('/^\//', '', $path);
+	$uri = normalized_urlprefix();
+	$uri .= $path;
+	return $uri;
+}
 ?>
