@@ -7,10 +7,14 @@
 // 
 
 require_once('pre.php');
+
 $default_content_type = 'text/html';
 
+$project       = null;
 $expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
-$project = ProjectManager::instance()->getProjectFromAutocompleter(urldecode($expl_pathinfo[2]));
+if (isset($expl_pathinfo[2])) {
+    $project = ProjectManager::instance()->getProjectFromAutocompleter(urldecode($expl_pathinfo[2]));
+}
 if ($project && !$project->isError()) {
     $group_id = $project->getId();
 
@@ -24,21 +28,22 @@ if ($project && !$project->isError()) {
 
     // if a custom content-type is selected, then redirect to plugin's rendering
     if($content_type != $default_content_type) {
-         $content = '';
+         $content             = '';
+         $accept_content_type = $content_type;
+         $content_type        = '';
          $hook_params = array(
             'groupname'    => $project->getUnixName(),
-            'accept'       => $content_type,
+            'accept'       => $accept_content_type,
             'return'       => '',
             'content_type' => &$content_type,
             'group_id'     => $project->getID(),
             'content'      => &$content,
         );
         EventManager::instance()->processEvent('content_negociated_project_home', $hook_params);
-        if($content_type != ''){
+        if ($content_type != ''){
             header('Content-type: '. $content_type);
             echo $content;
-        }
-        else {
+        } else {
             header('HTTP/1.1 406 Not Acceptable',true,406);
             exit(0);
         }
@@ -85,9 +90,33 @@ if ($project && !$project->isError()) {
         }
     }
 } else {
-    header("HTTP/1.0 404 Not Found");
-    if (!$request->isAjax()) {
-        exit_no_group();
+
+    $script = 'projects_list';
+    $content_type = util_negociate_alternate_content_types($script, $default_content_type);
+
+    if($content_type != $default_content_type) {
+        $content             = '';
+        $accept_content_type = $content_type;
+        $content_type        = '';
+        $hook_params = array(
+            'accept'       => $accept_content_type,
+            'return'       => '',
+            'content_type' => &$content_type,
+            'content'      => &$content,
+        );
+        EventManager::instance()->processEvent('content_negociated_projects_list', $hook_params);
+        if ($content_type != ''){
+            header('Content-type: '. $content_type);
+            echo $content;
+        } else {
+            header('HTTP/1.1 406 Not Acceptable',true,406);
+            exit(0);
+        }
+    } else {
+        header("HTTP/1.0 404 Not Found");
+        if (!$request->isAjax()) {
+            exit_no_group();
+        }
     }
 }
 

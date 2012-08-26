@@ -1,0 +1,4 @@
+Package: @PACKAGE@-plugin-admssw
+Architecture: all
+Depends: @OLDPACKAGE@-common, @OLDPACKAGE@-db-postgresql | @OLDPACKAGE@-db, @OLDPACKAGE@-web-apache2 | @OLDPACKAGE@-web, php-http, @PACKAGE@-plugin-doaprdf, ${misc:Depends}
+Description: collaborative development tool - ADMS.SW plugin

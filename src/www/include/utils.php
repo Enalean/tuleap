@@ -1492,7 +1492,6 @@ function util_negociate_alternate_content_types($script, $default_content_type) 
 	);
 	EventManager::instance()->processEvent('script_accepted_types', $hook_params);
 	if (count($accepted_types) > 1) {
-
 		// PEAR::HTTP (for negotiateMimeType())
 		require_once('HTTP.php');
 
