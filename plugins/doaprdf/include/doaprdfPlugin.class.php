@@ -26,7 +26,7 @@
  */
 
 
-require_once('common/include/ProjectManager.class.php');
+//require_once('common/include/ProjectManager.class.php');
 require_once('common/include/rdfutils.php');
 
 class doaprdfPlugin extends Plugin {
