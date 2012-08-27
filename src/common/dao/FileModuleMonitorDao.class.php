@@ -38,7 +38,27 @@ class FileModuleMonitorDao extends DataAccessObject {
         
         return $this->retrieve($sql);
     }
-    
+
+    /**
+     * Get the list of users publicly monitoring a package
+     *
+     * @param Integer $packageId Id of the package
+     *
+     * @return DataAccessResult
+     */
+    function whoIsPubliclyMonitoringPackage($packageId){
+        $packageId = $this->da->quoteSmart($packageId);
+
+        $sql = "SELECT u.user_name
+                FROM user AS u,filemodule_monitor AS fm, frs_package AS p
+                WHERE u.user_id = fm.user_id
+                  AND fm.filemodule_id = p.package_id
+                  AND fm.filemodule_id = ".$packageId."
+                  AND (u.status='A' OR u.status='R')
+                  AND fm.anonymous = 0";
+        return $this->retrieve($sql);
+    }
+
     function searchById($id) {
         $_id = (int) $id;
         return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_id), '', ' ORDER BY filemodule_id DESC');

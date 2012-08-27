@@ -30,9 +30,8 @@ if (user_isloggedin()) {
         $user  = UserManager::instance()->getCurrentUser();
         $frspf = new FRSPackageFactory();
         $fmmf  = new FileModuleMonitorFactory();
-        if ($frspf->userCanAdmin($user, $group_id)) {
-            // @TODO: Display  list of users publicly monitoring & form to edit that list
-        }
+        // @TODO: i18n
+        echo '<h3>Manage my package monitoring</h3>';
         echo '<form id="filemodule_monitor_form" method="post" action="filemodule_monitor.php" >';
         echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
         $anonymousOption = '';
@@ -41,13 +40,28 @@ if (user_isloggedin()) {
         } else {
             // @TODO: i18n
             $anonymousOption .= 'Monitor anonymously (uncheck to inform admins that you are monitoring this package)';
-            // @TODO: checked is verified from DB & keep default value as checked
             $anonymousOption .= '<input type="checkbox" id="anonymous_frs_monitoring" name="anonymous_frs_monitoring" checked="checked" /><br />';
             $submit = '<input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
         }
         echo $anonymousOption;
         echo $submit;
         echo '</form>';
+        if ($frspf->userCanAdmin($user, $group_id)) {
+            // @TODO: i18n
+            echo '<h3>Manage list of people monitoring the package</h3>';
+            $list = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
+            if ($list->rowCount() == 0) {
+                // @TODO: i18n
+                echo 'No users publicly monitoring this package';
+            } else {
+                echo '<table>';
+                foreach ($list as $user) {
+                    echo '<tr><td>'.$user['user_name'].'</td></tr>';
+                }
+                echo '</table>';
+            }
+            // @TODO: Display form to edit the list
+        }
         file_utils_footer($params);
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','choose_p'));

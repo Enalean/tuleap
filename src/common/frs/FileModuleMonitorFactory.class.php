@@ -51,7 +51,24 @@ class FileModuleMonitorFactory {
 		}
         return $data_array;
 	}
-	
+
+    /**
+     * Get the list of users publicly monitoring a package
+     *
+     * @param Integer $packageId Id of the package
+     *
+     * @return DataAccessResult
+     */
+    function whoIsPubliclyMonitoringPackage($packageId) {
+        $dao    = $this->_getFileModuleMonitorDao();
+        $dar    = $dao->whoIsPubliclyMonitoringPackage($packageId);
+        $result = array();
+        if ($dar && !$dar->isError()) {
+            $result = $dar;
+        }
+        return $result;
+    }
+
 	function &getFilesModuleMonitorFromDb($id) {
         $_id = (int) $id;
         $dao =& $this->_getFileModuleMonitorDao();
