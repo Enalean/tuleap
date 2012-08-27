@@ -18,6 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Release     ->   Epic
+ * `- Sprint   ->   `- Story
+ *
+ * => if we create a story in a sprint, then the nearest milestone is the parent
+ *    release of the sprint. The release contains epics that are suitable parents
+ *    for the upcoming story.
+ */
 class Planning_ArtifactParentsSelector_NearestMilestoneWithBacklogTrackerCommand extends Planning_ArtifactParentsSelector_Command {
 
     /**
