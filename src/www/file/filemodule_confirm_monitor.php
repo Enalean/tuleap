@@ -31,19 +31,19 @@ if (user_isloggedin()) {
         $frspf = new FRSPackageFactory();
         $fmmf  = new FileModuleMonitorFactory();
         if ($frspf->userCanAdmin($user, $group_id)) {
-            // @TODO: Display  list of users publicly monitoring
+            // @TODO: Display  list of users publicly monitoring & form to edit that list
         }
-        echo '<form method="post" action="filemodule_monitor.php" >';
-        echo '<input type="hidden" name="filemodule_id" value="'.$filemodule_id.'" />';
+        echo '<form id="filemodule_monitor_form" method="post" action="filemodule_monitor.php" >';
+        echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
         $anonymousOption = '';
         if ($fmmf->isMonitoring($filemodule_id)) {
-            $submit = '<input type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+            $submit = '<input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
         } else {
             // @TODO: i18n
             $anonymousOption .= 'Monitor anonymously (uncheck to inform admins that you are monitoring this package)';
             // @TODO: checked is verified from DB & keep default value as checked
             $anonymousOption .= '<input type="checkbox" id="anonymous_frs_monitoring" name="anonymous_frs_monitoring" checked="checked" /><br />';
-            $submit = '<input type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+            $submit = '<input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
         }
         echo $anonymousOption;
         echo $submit;

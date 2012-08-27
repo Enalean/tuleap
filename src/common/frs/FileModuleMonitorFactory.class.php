@@ -101,12 +101,20 @@ class FileModuleMonitorFactory {
 		return $this->dao;
 	}
 
-	function setMonitor($filemodule_id) {
-		$dao = & $this->_getFileModuleMonitorDao();
-		$res = $dao->create($filemodule_id);
-		return $res;
-	}
-    
+    /**
+     * Set package monitoring
+     *
+     * @param Integer $filemodule_id Id of the package
+     * @param Boolean $anonymous     True if the user want to monitor the package anonymously
+     *
+     * @return DataAccessResult
+     */
+    function setMonitor($filemodule_id, $anonymous = true) {
+        $dao = $this->_getFileModuleMonitorDao();
+        $res = $dao->create($filemodule_id, $anonymous);
+        return $res;
+    }
+
     function stopMonitor($filemodule_id){
     	$_id = (int) $filemodule_id;
     	$dao =& $this->_getFileModuleMonitorDao();

@@ -30,8 +30,14 @@ if (user_isloggedin()) {
 				User is not already monitoring this filemodule, so 
 				insert a row so monitoring can begin
 			*/
-            
-			$result = $frsfmf->setMonitor($filemodule_id);
+
+            $anonymous  = false;
+            $vAnonymous = $request->get('anonymous_frs_monitoring');
+            if (isset($vAnonymous) && !empty($vAnonymous)) {
+                $anonymous = true;
+            }
+
+			$result = $frsfmf->setMonitor($filemodule_id, $anonymous);
 
 			if (!$result) {
 				$GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));

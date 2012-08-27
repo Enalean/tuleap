@@ -69,22 +69,25 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create($filemodule_id) {
+    function create($filemodule_id, $anonymous = true) {
 
-        $arg    = array();
-        $values = array();
+        $arg      = array();
+        $values   = array();
 
-        $arg[] = 'filemodule_id';
+        $arg[]    = 'filemodule_id';
         $values[] = ($this->da->escapeInt($filemodule_id));
         
-		$um =& UserManager::instance();
-        $user =& $um->getCurrentUser();
-        $arg[] = 'user_id';
+        $um       = UserManager::instance();
+        $user     = $um->getCurrentUser();
+        $arg[]    = 'user_id';
         $values[] = $this->da->quoteSmart($user->getID());
 
-        $sql = 'INSERT INTO filemodule_monitor'
-            .'('.implode(', ', $arg).')'
-            .' VALUES ('.implode(', ', $values).')';
+        $arg[]    = 'anonymous';
+        $values[] = ($this->da->escapeInt($anonymous));
+
+        $sql      = "INSERT INTO filemodule_monitor
+                     (".implode(", ", $arg).")
+                     VALUES (".implode(", ", $values).")";
         return $this->update($sql);
     }
 
