@@ -157,7 +157,7 @@ extends DataAccessObject
      */
     function getSynchronizedUgroups() {
         $sql = "SELECT * FROM plugin_ldap_ugroup
-                WHERE synchro_policy = '".LDAP_GroupManager::AUTO_SYNCHRONIZATION."'";
+                WHERE synchro_policy = '".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION)."'";
         return $this->retrieve($sql);
     }
 
@@ -171,7 +171,7 @@ extends DataAccessObject
     function isSynchronizedUgroup($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * FROM plugin_ldap_ugroup
-                WHERE ugroup_id = ".$ugroup_id." and synchro_policy = '".LDAP_GroupManager::AUTO_SYNCHRONIZATION."'";
+                WHERE ugroup_id = ".$ugroup_id." and synchro_policy = '".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION)."'";
         $rs  = $this->retrieve($sql);
         if(!empty($rs) && $rs->rowCount() == 1) {
             return true;
@@ -189,7 +189,7 @@ extends DataAccessObject
     function isMembersPreserving($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = 'SELECT * FROM plugin_ldap_ugroup
-                WHERE ugroup_id = '.$ugroup_id.' and bind_option = "'.LDAP_GroupManager::PRESERVE_MEMBERS_OPTION.'"';
+                WHERE ugroup_id = '.$ugroup_id.' and bind_option = "'.$this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION).'"';
         $rs  = $this->retrieve($sql);
         if(!empty($rs) && $rs->rowCount() == 1) {
             return true;
@@ -208,8 +208,8 @@ extends DataAccessObject
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql       = "SELECT * FROM plugin_ldap_ugroup
                       WHERE ugroup_id = ".$ugroup_id."
-                        AND bind_option = '".LDAP_GroupManager::BIND_OPTION."'
-                        AND synchro_policy = '".LDAP_GroupManager::AUTO_SYNCHRONIZATION."'";
+                        AND bind_option = '".$this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION)."'
+                        AND synchro_policy = '".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION)."'";
         $rs  = $this->retrieve($sql);
         if(!empty($rs) && $rs->rowCount() == 1) {
             return false;
