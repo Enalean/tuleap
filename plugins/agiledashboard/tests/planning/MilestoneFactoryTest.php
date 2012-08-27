@@ -374,6 +374,30 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
     }
 }
 
+class MilestoneFactory_getMilestoneFromArtifactWithPlannedArtifactsTest extends TuleapTestCase {
+
+    public function itCreateMilestoneFromArtifactAndLoadsItsPlannedArtifacts() {
+        $milestone_factory = partial_mock(
+            'Planning_MilestoneFactory', 
+            array('getPlannedArtifacts', 'getMilestoneFromArtifact'), 
+            array(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'))
+        );
+
+        $user     = aUser()->build();
+        $artifact = aMockArtifact()->withId(101)->build();
+
+        $planned_artifacts = array(
+            aMockArtifact()->withId(102)->build(),
+            aMockArtifact()->withId(103)->build(),
+        );
+
+        stub($milestone_factory)->getPlannedArtifacts($user, $artifact)->once()->returns($planned_artifacts);
+        stub($milestone_factory)->getMilestoneFromArtifact($artifact, $planned_artifacts)->once();
+
+        $milestone_factory->getMilestoneFromArtifactWithPlannedArtifacts($artifact, $user);
+    }
+}
+
 class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
 
     public function setUp() {

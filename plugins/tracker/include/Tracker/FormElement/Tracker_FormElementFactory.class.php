@@ -417,8 +417,20 @@ class Tracker_FormElementFactory {
     public function getUsedArtifactLinkFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('art_link'));
     }
-    
-    
+
+    /**
+     * Return the first (and only one) ArtifactLink field (if any)
+     *
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getAnArtifactLinkField(User $user, Tracker $tracker) {
+        $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
+        if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
+            return $artifact_link_fields[0];
+        }
+        return null;
+    }
+
     /**
      * @param Tracker $tracker
      *

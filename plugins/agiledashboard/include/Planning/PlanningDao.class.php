@@ -94,7 +94,22 @@ class PlanningDao extends DataAccessObject {
         
         return $this->retrieve($sql);
     }
-    
+
+    public function searchByBacklogTrackerId($backlog_tracker_id) {
+        $backlog_tracker_id = $this->da->escapeInt($backlog_tracker_id);
+        $sql = "
+            SELECT p.*,
+                   b.tracker_id AS backlog_tracker_id
+
+            FROM      plugin_agiledashboard_planning                  AS p
+            INNER JOIN plugin_agiledashboard_planning_backlog_tracker AS b ON p.id = b.planning_id
+
+            WHERE b.tracker_id = $backlog_tracker_id
+            GROUP BY p.id;
+        ";
+        return $this->retrieve($sql);
+    }
+
     function searchBacklogTrackerById($planning_id){
         $planning_id = $this->da->escapeInt($planning_id);
         // TODO: Merge table 'plugin_agiledashboard_planning_backlog_tracker' into 'plugin_agiledashboard_planning'

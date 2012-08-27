@@ -153,12 +153,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $value = '';        
-        if (!empty($submitted_values[$this->getId()])) {
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
+        $value   = $this->getValueFromSubmitOrDefault($submitted_values);
         $checked = '';
         if (is_array($value)) {
             if (isset($value['use_artifact_permissions']) && $value['use_artifact_permissions']) {

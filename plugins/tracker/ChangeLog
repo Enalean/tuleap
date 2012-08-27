@@ -1,3 +1,8 @@
+Version 5.9 - Tuleap 5.4
+    * Refactor artifact creation to take into account automatic parent creation according to hierarchy
+    * On artifact update, display it's parents
+    * On artifact creation allow to choose to link to an existing artifact.
+
 Version 5.8.15 - Tuleap 5.4
     * Static values from SB field can be sorted alphabetically (sla #1217)
 
