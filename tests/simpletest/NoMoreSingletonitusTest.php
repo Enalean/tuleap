@@ -27,7 +27,7 @@ require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/S
 class NoMoreSingletonitusTest extends TuleapTestCase {
     
     public function testThereAreNoNewSingletonLookups() {
-        $singleton_counter          = new SingletonCount();
+        $singleton_counter          = new SingletonCounter();
         $expected_singleton_lookups = $singleton_counter->contentsOfCountFile();
         $actual_singleton_lookups   = $singleton_counter->countSingletonLookupsInProject();
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
@@ -51,7 +51,7 @@ class SingletonCounterTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->counter = new SingletonCount();
+        $this->counter = new SingletonCounter();
         $this->value_b4_test = $this->counter->contentsOfCountFile();
     }
     

@@ -21,7 +21,7 @@
 
 require_once dirname(__FILE__). '/singletons/SingletonCounter.class.php';
 
-$counter = new SingletonCount();
+$counter = new SingletonCounter();
 $counter->replaceCurrentSingletonCountWithActualCount();
 
 ?>

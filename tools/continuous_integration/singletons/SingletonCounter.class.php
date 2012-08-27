@@ -28,7 +28,7 @@ define("SINGLETON_COUNT_FILE", dirname(__FILE__).'/current_singleton_count.txt')
  * Replace current amount in reference file SINGLETON_COUNT_FILE.
  * Provide current amount in reference file SINGLETON_COUNT_FILE.
  */
-class SingletonCount {
+class SingletonCounter {
 
     public function countSingletonLookupsInProject() {
         $basedir                    = PROJECT_BASEDIR;
@@ -45,7 +45,7 @@ class SingletonCount {
     }
    
     public function replaceCurrentSingletonCountWithActualCount() {
-        $this->replaceCurrentSingletonCountWith($this->countSingletonLookupsInProject(PROJECT_BASEDIR));
+        $this->replaceCurrentSingletonCountWith($this->countSingletonLookupsInProject());
     }
 
     public function replaceCurrentSingletonCountWith($count) {
