@@ -18,10 +18,11 @@ Version 5.4 (Not released yet)
 	* tests: 5.5
 	* forumml: 2.6.2
 	* fulltextsearch: 0.9
-	* git: 2.7.1
+	* git: 2.7.2
 	* graphontrackers: 1.5
 	* graphontrackersv5: 5.0.3
 	* hudson: 1.9
+	* ldap: 3.17
 	* pluginsadministration: 1.2
 	* template: 1.2
 	* userlog: 1.2
