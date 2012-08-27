@@ -18,10 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Tracker_History.class.php');
-require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
+require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Tracker_History.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Tracker_Dispatchable_Interface.class.php';
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
@@ -41,6 +42,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected $submitted_on;
 
     protected $changesets;
+
+    /**
+     * @var array of Tracker_Artifact
+     */
+    private $ancestors;
 
     /**
      * @var Tracker
@@ -81,6 +87,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     }
 
+    /**
+     * Return true if given given artifact refer to the same DB object (basically same id).
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Boolean
+     */
+    public function equals(Tracker_Artifact $artifact = null) {
+        return $artifact && $this->id == $artifact->getId();
+    }
 
     /**
     * Set the value of use_artifact_permissions
@@ -367,28 +383,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html = '';
 
-        $action_params = array(
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->base_url = TRACKER_BASE_URL;
+        $redirect->query_parameters = array(
             'aid'       => $this->id,
             'func'      => 'artifact-update',
         );
 
         if ($from_aid != null) {
-            $action_params['from_aid'] = $from_aid;
+            $redirect->query_parameters['from_aid'] = $from_aid;
         }
         EventManager::instance()->processEvent(
             TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
             array(
-                'request'          => $request,
-                'query_parameters' => &$action_params,
+                'request'  => $request,
+                'redirect' => $redirect,
             )
         );
 
-        $html .= '<form action="'. TRACKER_BASE_URL .'/?'. http_build_query($action_params) .'" method="POST" enctype="multipart/form-data">';
+        $html .= '<form action="'. $redirect->toUrl() .'" method="POST" enctype="multipart/form-data">';
 
 
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
 
-        $html .= $this->fetchTitle();
+        $html .= $this->fetchTitleInHierarchy($current_user);
 
         $html .= $this->fetchFields($request->get('artifact'));
 
@@ -408,6 +426,51 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         exit();
     }
 
+    private function fetchTitleInHierarchy(User $current_user) {
+        $html = '';
+        $hp = Codendi_HTMLPurifier::instance();
+        $html .= $this->fetchHiddenTrackerId();
+        $hierarchy = $this->getAllAncestors($current_user);
+        if ($hierarchy) {
+            array_unshift($hierarchy, $this);
+            $html .= $this->fetchParentsTitle($hp, $hierarchy);
+        } else {
+            $html .= $this->fetchTitle();
+        }
+        return $html;
+    }
+
+    private function fetchParentsTitle(Codendi_HTMLPurifier $hp, array $parents, $padding_prefix = '') {
+        $html   = '';
+        $parent = array_pop($parents);
+        if ($parent) {
+            $html .= '<ul class="tracker-hierarchy">';
+            $html .= '<li>';
+            $html .= $padding_prefix;
+            $html .= '<div class="tree-last">&nbsp;</div> ';
+            if ($parents) {
+                $html .= $parent->fetchDirectLinkToArtifactWithTitle();
+            } else {
+                $html .= $hp->purify($parent->getXRefAndTitle());
+            }
+            if ($parents) {
+                $html .= '</a>';
+                $div_prefix = '';
+                $div_suffix = '';
+                if (count($parents) == 1) {
+                    $div_prefix = '<div class="tracker_artifact_title">';
+                    $div_suffix = '</div>';
+                }
+                $html .= $div_prefix;
+                $html .= $this->fetchParentsTitle($hp, $parents, $padding_prefix . '<div class="tree-blank">&nbsp;</div>');
+                $html .= $div_suffix;
+            }
+            $html .= '</li>';
+            $html .= '</ul>';
+        }
+        return $html;
+    }
+
     /**
      * Returns HTML code to display the artifact title
      *
@@ -418,14 +481,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchTitle($prefix = '') {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
+        $html .= $this->fetchHiddenTrackerId();
         $html .= '<div class="tracker_artifact_title">';
         $html .= $prefix;
-        $html .= $hp->purify($this->getTracker()->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
-        $html .= ' - '. $hp->purify($this->getTitle(), CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($this->getXRefAndTitle(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</div>';
         return $html;
     }
 
+    public function fetchHiddenTrackerId() {
+        return '<input type="hidden" id="tracker_id" name="tracker_id" value="'.$this->getTrackerId().'"/>';
+    }
+
+    public function getXRefAndTitle() {
+        return $this->getXRef() .' - '. $this->getTitle();
+    }
     /**
      * Get the artifact title, or null if no title defined in semantics
      *
@@ -644,9 +714,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
-                    $this->summonArtifactRedirectors($request);
-
-                    $GLOBALS['Response']->redirect($this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId()));
+                    $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
+                    $this->summonArtifactRedirectors($request, $redirect);
+                    $GLOBALS['Response']->redirect($redirect->toUrl());
+                    //die();
                 } else {
                     $this->display($layout, $request, $current_user);
                 }
@@ -693,6 +764,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchDirectLinkToArtifact() {
         return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $this->getXRef() . '</a>';
+    }
+
+    /**
+     * @return string html
+     */
+    public function fetchDirectLinkToArtifactWithTitle() {
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getXRefAndTitle()) . '</a>';
     }
 
     /**
@@ -1282,14 +1361,49 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
+    
+    public function __toString() {
+        return __CLASS__." #$this->id";
+    }
 
     /**
+     * Returns all ancestors of current artifact (from direct parent to oldest ancestor)
+     *
      * @param User $user
      *
      * @return Array of Tracker_Artifact
      */
     public function getAllAncestors(User $user) {
-        return $this->getHierarchyFactory()->getAllAncestors($user, $this);
+        if (!isset($this->ancestors)) {
+            $this->ancestors = $this->getHierarchyFactory()->getAllAncestors($user, $this);
+        }
+        return $this->ancestors;
+    }
+    
+    public function setAllAncestors(array $ancestors) {
+        $this->ancestors = $ancestors;
+    }
+
+    /**
+     * Return the parent artifact of current artifact if any
+     *
+     * @param User $user
+     * 
+     * @return Tracker_Artifact
+     */
+    public function getParent(User $user) {
+        return array_shift($this->getAllAncestors($user));
+    }
+
+    /**
+     * Get artifacts
+     * 
+     * @param User $user
+     *
+     * @return Array of Tracker_Artifact
+     */
+    public function getSiblings(User $user) {
+        return $this->getHierarchyFactory()->getSiblings($user, $this);
     }
 
     /**
@@ -1330,11 +1444,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_FormElement_Field_ArtifactLink
      */
     public function getAnArtifactLinkField(User $user) {
-        $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
-        if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
-            return $artifact_link_fields[0];
-        }
-        return null;
+        return $this->getFormElementFactory()->getAnArtifactLinkField($user, $this->getTracker());
     }
 
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
@@ -1347,19 +1457,18 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->createNewChangeset($fields_data, $comment, $current_user, $email);
     }
 
-    public function getRedirectUrlAfterArtifactUpdate($request) {
+    protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
         $stay     = $request->get('submit_and_stay') ;
         $from_aid = $request->get('from_aid');
 
-        $redirect_params = $this->calculateRedirectParams($stay, $from_aid);
-        EventManager::instance()->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'          => $request,
-                'query_parameters' => &$redirect_params,
-            )
-        );
-        return TRACKER_BASE_URL.'/?'.  http_build_query($redirect_params);
+        $redirect = new Tracker_Artifact_Redirect();
+        $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
+        $redirect->base_url         = TRACKER_BASE_URL;
+        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
+        if ($stay) {
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
+        }
+        return $redirect;
     }
 
     private function calculateRedirectParams($stay, $from_aid) {
@@ -1384,12 +1493,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param Codendi_Request $request The request
      */
-    public function summonArtifactRedirectors(Codendi_Request $request) {
+    public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
         EventManager::instance()->processEvent(
             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
             array(
                 'request'  => $request,
                 'artifact' => $this,
+                'redirect' => $redirect
             )
         );
     }

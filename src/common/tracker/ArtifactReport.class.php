@@ -550,7 +550,7 @@ class ArtifactReport extends Error {
                 if (isset($permissions['TRACKER_ACCESS_ASSIGNEE']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_ASSIGNEE'])) > 0) {
                     
                     //Get only once the field_id of assigned_to/multi_assigned_to
-                    $field_dao =& new ArtifactFieldDao(CodendiDataAccess::instance());
+                    $field_dao = new ArtifactFieldDao(CodendiDataAccess::instance());
                     $dar =& $field_dao->searchAssignedToFieldIdByArtifactTypeId($this->group_artifact_id);
                     $assigned_to = array();
                     while ($row = $dar->getRow()) {

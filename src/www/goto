@@ -37,7 +37,7 @@ if ($keyword=='wiki') {
     $args=explode("/",$request->get('val'));
 }
 
-$ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args));
+$ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args), $request->get('val'));
 if (!$ref) {
     exit_error($GLOBALS['Language']->getText('global','error'),
                $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
@@ -55,6 +55,7 @@ while ($groups_array = db_fetch_array($results)) {
  }
 
 $ref->replaceLink($args,$projname);
+
 if ($request->isAjax()) {
     switch($ref->getServiceShortName()) {
         case 'tracker':

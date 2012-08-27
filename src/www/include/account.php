@@ -22,7 +22,7 @@ require_once('common/valid/Rule.class.php');
 // ***** function account_pwvalid()
 // ***** check for valid password
 function account_pwvalid($pw, &$errors) {
-    $password_strategy =& new PasswordStrategy();
+    $password_strategy = new PasswordStrategy();
     include($GLOBALS['Language']->getContent('account/password_strategy'));
     $valid = $password_strategy->validate($pw);
     $errors = $password_strategy->errors;

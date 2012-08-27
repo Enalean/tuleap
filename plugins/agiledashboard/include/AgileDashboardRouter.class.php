@@ -21,12 +21,6 @@
 require_once 'common/plugin/Plugin.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
-require_once dirname(__FILE__) .'/BreadCrumbs/BreadCrumbGenerator.class.php';
-require_once 'Planning/PlanningController.class.php';
-require_once 'Planning/MilestoneController.class.php';
-require_once 'Planning/PlanningFactory.class.php';
-require_once 'Planning/ArtifactCreationController.class.php';
-require_once 'Planning/ViewBuilder.class.php';
 
 /**
  * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers
@@ -47,9 +41,27 @@ class AgileDashboardRouter {
      * @param Service
      */
     private $service;
-    
-    public function __construct(Plugin $plugin) {
-        $this->plugin = $plugin;
+
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
+
+    /**
+     * @var PlanningFactory
+     */
+    private $planning_factory;
+
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+
+    public function __construct(Plugin $plugin, Planning_MilestoneFactory $milestone_factory, PlanningFactory $planning_factory, Tracker_HierarchyFactory $hierarchy_factory) {
+        $this->plugin            = $plugin;
+        $this->milestone_factory = $milestone_factory;
+        $this->planning_factory  = $planning_factory;
+        $this->hierarchy_factory = $hierarchy_factory;
     }
     
     /**
@@ -171,11 +183,13 @@ class AgileDashboardRouter {
      * @return Planning_MilestoneController 
      */
     protected function buildMilestoneController(Codendi_Request $request) {
-        $milestone_factory = $this->getMilestoneFactory();
-        
-        return new Planning_MilestoneController($request,
-                                                $milestone_factory,
-                                                $this->getProjectManager());
+        return new Planning_MilestoneController(
+            $request,
+            $this->getMilestoneFactory(),
+            $this->getProjectManager(),
+            $this->getViewBuilder($request),
+            $this->hierarchy_factory
+        );
     }
     
     /**
@@ -190,7 +204,6 @@ class AgileDashboardRouter {
                                                     $action_name,
                                     Codendi_Request $request,
                                     array           $args = array()) {
-        
         $this->displayHeader($controller, $request, $this->getHeaderTitle($action_name));
         $this->executeAction($controller, $action_name, $args);
         $this->displayFooter($request);
@@ -246,43 +259,43 @@ class AgileDashboardRouter {
      * @param Codendi_Request $request 
      */
     public function routeShowPlanning(Codendi_Request $request) {
-        
-        if ($request->get('aid') == -1) {
-            $controller = new Planning_ArtifactCreationController($this->getPlanningFactory(), $request);
-            $this->executeAction($controller, 'createArtifact');
-        } else {
-            $controller = $this->buildMilestoneController($request);
-            $action_arguments = array($this->getViewBuilder($request));
-            $this->renderAction($controller, 'show', $request, $action_arguments);
+        $aid = $request->getValidated('aid', 'int', 0);
+        switch ($aid) {
+            case -1:
+                $controller = new Planning_ArtifactCreationController($this->getPlanningFactory(), $request);
+                $this->executeAction($controller, 'createArtifact');
+                break;
+            case 0:
+                $controller = new Planning_MilestoneSelectorController($request, $this->getMilestoneFactory());
+                $this->executeAction($controller, 'show');
+                /* no break */
+            default:
+                $controller = $this->buildMilestoneController($request);
+                $action_arguments = array();
+                $this->renderAction($controller, 'show', $request, $action_arguments);
         }
     }
 
     public function getProjectManager() {
         return ProjectManager::instance();
     }
+
     /**
-     * Builds a new PlanningFactory instance.
-     * 
      * TODO:
      *   - Use Planning_MilestoneFactory instead.
      * 
      * @return PlanningFactory 
      */
     protected function getPlanningFactory() {
-        return new PlanningFactory(new PlanningDao(),
-                                   TrackerFactory::instance());
+        return $this->planning_factory;
 
     }
 
     /**
-     * Builds a new Planning_MilestoneFactory instance.
      * @return Planning_MilestoneFactory 
      */
     protected function getMilestoneFactory() {
-        return new Planning_MilestoneFactory(
-            $this->getPlanningFactory(),
-            Tracker_ArtifactFactory::instance(),
-            Tracker_FormElementFactory::instance());
+        return $this->milestone_factory;
     }
 }
 

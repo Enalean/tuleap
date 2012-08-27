@@ -681,6 +681,7 @@ plugin_tracker_common_artifact	error_float_value	n'est pas une valeur du type fl
 plugin_tracker_common_artifact	error_string_value	$1 n'est pas une valeur de type chaîne de caractère.
 plugin_tracker_common_artifact	error_string_value_characters	$1 ne peut contenir ni retour chariot, ni le caractère null.
 plugin_tracker_common_artifact	error_artifactlink_value	$1 : $2 n'est pas un id d'artefact.
+plugin_tracker_common_artifact	error_artifactlink_choose_parent	Vous devez lier cet artefact à un parent existant ou en créer un nouveau.
 plugin_tracker_common_artifact	error_date_value	$1 n'est pas une valeur du type date.
 plugin_tracker_common_artifact	error_text_value	$1 n'est pas une valeur du type texte.
 
@@ -975,6 +976,7 @@ plugin_tracker_artifact	to	à
 plugin_tracker_artifact	removed	retiré
 plugin_tracker_artifact	added	ajouté
 plugin_tracker_artifact	formelement_artifactlink_help	Entrez des ids d'artefacts séparés par une virgule
+plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Créer un nouvel artefact
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
 plugin_tracker_artifact	fields_not_valid	Les champs ne sont pas valides
@@ -1080,6 +1082,7 @@ plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloi
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible de supprimer ce champ (utilisé en sémantique, pour le workflow ou sur une dépendance entre champs)
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
+plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
 
 plugin_tracker_formelement_property	hint	Indication
 plugin_tracker_formelement_property	default_value_type	Valeur par défaut

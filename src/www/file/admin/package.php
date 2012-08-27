@@ -86,7 +86,7 @@ if ($request->valid($vFunc)) {
             $GLOBALS['Response']->redirect('/file/?group_id='.$group_id);
             break;
         case 'add':
-            $package =& new FRSPackage(array('group_id' => $group_id));
+            $package = new FRSPackage(array('group_id' => $group_id));
             frs_display_package_form($package, $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p'), '?group_id='. $group_id .'&amp;func=create', $existing_packages);
             break;
         case 'create':
@@ -100,7 +100,7 @@ if ($request->valid($vFunc)) {
                     $package_data['name'] = htmlspecialchars($package_data['name']);
                     if ($frspf->isPackageNameExist($package_data['name'], $group_id)) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_admin_editpackages','p_name_exists'));
-                        $package =& new FRSPackage($package_data);
+                        $package = new FRSPackage($package_data);
                         frs_display_package_form($package, $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p'), '?func=create&amp;group_id='. $group_id, $existing_packages);
                     } else {
                         //create a new package

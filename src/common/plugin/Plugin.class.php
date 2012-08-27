@@ -68,7 +68,7 @@ class Plugin {
     
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'PluginInfo')) {
-            $this->pluginInfo =& new PluginInfo($this);
+            $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
     }

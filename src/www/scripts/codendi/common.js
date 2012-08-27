@@ -53,7 +53,11 @@ codendi.imgroot = codendi.imgroot || '/themes/common/images/';
 codendi.locales = codendi.locales || { };
 
 codendi.getText = function(key1, key2) {
-    return codendi.locales[key1][key2];
+    var str = codendi.locales[key1][key2];
+    str = $A(arguments).slice(2).inject(str, function (str, value, index) {
+        return str.gsub('$' + (index + 1), value);
+    });
+    return str
 };
 
 document.observe('dom:loaded', function () {

@@ -149,11 +149,6 @@ class GitRepositoryFactory {
         }
         return $repository;
     }
-    
-    public function isRepositoryExistingByName(Project $project, $name) {
-        $path = GitRepository::getPathFromProjectAndName($project, $name);
-        return $this->dao->isRepositoryExisting($project->getID(), $path);
-    }
 }
 
 ?>

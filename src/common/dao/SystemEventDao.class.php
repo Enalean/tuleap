@@ -58,7 +58,7 @@ class SystemEventDao extends DataAccessObject {
         return $updated;
     }
 
-   /**
+    /**
      * Return next system event    
      * criteria: higer priority first, then most recent first
      * And set the event status to 'RUNNING'
@@ -130,6 +130,17 @@ class SystemEventDao extends DataAccessObject {
 
         return $this->retrieve($sql);
     }
-}
 
+    /**
+     * @return DataAccessResult
+     */
+    public function resetStatus($id, $status) {
+        $id     = $this->da->escapeInt($id);
+        $status = $this->da->quoteSmart($status);
+        $sql = "UPDATE system_event
+                SET status = $status
+                WHERE id = $id";
+        return $this->update($sql);
+    }
+}
 ?>

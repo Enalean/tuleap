@@ -54,19 +54,19 @@ class ElasticSearch_ClientFactory {
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
     }
     
-    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $type='docman') {
+    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $type = 'docman') {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
             $error_message = $GLOBALS['Language']->getText('plugin_fulltextsearch', 'client_library_not_found');
             $GLOBALS['Response']->addFeedback('error', $error_message);
-            $GLOBALS['HTML']->redirect('/docman/?group_id=' . $this->getId());
+            $GLOBALS['HTML']->redirect('/');
             die();
         }
 
         require_once $client_path;
 
-        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);        
+        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);
         return new ElasticSearchClient($transport, 'tuleap', $type);
     }
 }

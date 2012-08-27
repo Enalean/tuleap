@@ -3,25 +3,34 @@ Elastic Search
 
 This plugin is still in heavy development: do not use in production!
 
+QA Server deployment
+--------------------
 
-Development setup
------------------
+You need to install elasticsearch server packages:
+    $ yum install elasticsearch elasticsearch-plugin-jetty elasticsearch-plugin-mapper-attachments
 
-Install elasticsearch server:
+Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
+not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
+It depends of the size of your installation but for big deployments, it's worth considering a dedicated server (or even pool of servers).
 
-    $ cd /opt
-    $ wget --no-check-certificate https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.0.tar.gz
-    $ tar zxf elasticsearch-0.19.0.tar.gz
-    $ cd elasticsearch-0.19.0
+If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. See https://github.com/sonian/elasticsearch-jetty
 
-Install the elasticsearch attachments plugin:
+If you install elasticsearch on the same server than tuleap the very minimal setup is to restrict server port binding to localhost only (otherwise anybody can query index anonymously):
 
-    $ ./bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.2.0
+    $ edit /etc/elasticsearch/elasticsearch.yml
+      ...
+      network.host: 127.0.0.1
+      ...
 
-Start the elasticsearch server:
+Then you can start the server:
 
-    $ ./bin/elasticsearch
+    $ service elasticsearch start
 
+After few seconds you should be able to test access:
+
+    $ curl -XGET localhost:9200
+
+Now we can create the minimal index configuration.
 Create the index:
 
     $ curl -X PUT "localhost:9200/tuleap" -d '{
@@ -47,6 +56,27 @@ Define the attachment mapping:
 Check it worked:
 
     $ curl "localhost:9200/tuleap/docman/_mapping"
+    ...
+
+Now you can activate the plugin in Tuleap admin interface and start uploading documents
+
+Development setup
+-----------------
+
+Install elasticsearch server:
+
+    $ cd /opt
+    $ wget --no-check-certificate https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.8.tar.gz
+    $ tar zxf elasticsearch-0.19.8.tar.gz
+    $ cd elasticsearch-0.19.8
+
+Install the elasticsearch attachments plugin:
+
+    $ ./bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.4.0
+
+Start the elasticsearch server:
+
+    $ ./bin/elasticsearch
 
 Now upload a file into the docman. Then, for some text (e.g. Foo) in the
 uploaded file:

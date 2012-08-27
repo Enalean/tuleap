@@ -33,12 +33,35 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_after_new_document', 'plugin_docman_after_new_document', false);
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
-        
+        $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
+
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
-        
+
         // style
         $this->_addHook('cssfile', 'cssfile', false);
+
+        // system events
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+    }
+
+    public function system_event_get_types($params) {
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_INDEX';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
+    }
+
+    /**
+     * This callback make SystemEvent manager knows about fulltext plugin System Events
+     */
+    public function get_system_event_class($params) {
+        if (strpos($params['type'], 'FULLTEXTSEARCH_') !== false) {
+            $params['class']        = 'SystemEvent_'. $params['type'];
+            $params['dependencies'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
+            require_once $params['class'] .'.class.php';
+        }
     }
 
     /**
@@ -69,9 +92,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_update($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->updateDocument($params);
-        }
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA', SystemEvent::PRIORITY_MEDIUM, $params['item']);
     }
 
     /**
@@ -80,9 +101,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->indexNewDocument($params);
-        }
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
     }
 
     /**
@@ -91,24 +110,44 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_del($params) {
-        if ($this->isAllowed($params['item']->getGroupId())) {
-            $this->getActions()->delete($params);
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_DELETE', SystemEvent::PRIORITY_HIGH, $params['item']);
+    }
+
+    /**
+     * Event triggered when the permissions on a document change
+     */
+    public function plugin_docman_event_perms_change($params) {
+        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
+    }
+
+    private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
+        if ($this->isAllowed($item->getGroupId())) {
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
+            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
+
+            $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
+            if ($additional_params) {
+                $params .= SystemEvent::PARAMETER_SEPARATOR . $additional_params;
+            }
+            SystemEventManager::instance()->createEvent($type, $params, $priority);
         }
     }
 
     /**
      * Event to display something in siteadmin interface
-     * 
-     * @param array $params 
+     *
+     * @param array $params
      */
     public function site_admin_option_hook($params) {
         echo '<li><a href="'.$this->getPluginPath().'/">Full Text Search</a></li>';
     }
-    
+
     /**
      * Event to load css stylesheet
-     * 
-     * @param array $params 
+     *
+     * @param array $params
      */
     public function cssfile($params) {
         // Only show the stylesheet if we're actually in the FullTextSearch pages.
@@ -117,7 +156,7 @@ class fulltextsearchPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
+
     private function getIndexClient() {
         $factory     = $this->getClientFactory();
         $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
@@ -133,12 +172,12 @@ class fulltextsearchPlugin extends Plugin {
         $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         return $factory->buildSearchClient($client_path, $server_host, $server_port, ProjectManager::instance());
     }
-    
+
     private function getClientFactory() {
         require_once 'ElasticSearch/ClientFactory.class.php';
         return new ElasticSearch_ClientFactory();
     }
-    
+
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
             require_once('FulltextsearchPluginInfo.class.php');
@@ -154,7 +193,7 @@ class fulltextsearchPlugin extends Plugin {
         }
 
         include_once 'FullTextSearch/Controller/Search.class.php';
-        
+
         $request    = HTTPRequest::instance();
         $controller = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
         switch ($request->get('func')) {

@@ -63,7 +63,7 @@ $ADODB_INCLUDED_CSV = 1;
 			$flds[] = $o;
 		}
 		
-		$rs =& new ADORecordSet_array();
+		$rs = new ADORecordSet_array();
 		$rs->InitArrayFields($rows,$flds);
 		return $line.serialize($rs);
 	}
@@ -119,7 +119,7 @@ $ADODB_INCLUDED_CSV = 1;
 					}
 					$rs->fields = array();
 					$rs->timeCreated = $meta[1];
-					$rs =& new ADORecordSet($val=true);
+					$rs = new ADORecordSet($val=true);
 					$rs->EOF = true;
 					$rs->_numOfFields=0;
 					$rs->sql = urldecode($meta[2]);
@@ -208,7 +208,7 @@ $ADODB_INCLUDED_CSV = 1;
 					$flds = false;
 					break;
 				}
-				$fld =& new ADOFieldObject();
+				$fld = new ADOFieldObject();
 				$fld->name = urldecode($o2[0]);
 				$fld->type = $o2[1];
 				$fld->max_length = $o2[2];
@@ -236,7 +236,7 @@ $ADODB_INCLUDED_CSV = 1;
 			if (get_magic_quotes_runtime()) $err .= ". Magic Quotes Runtime should be disabled!";
 			return false;
 		}
-		$rs =& new ADORecordSet_array();
+		$rs = new ADORecordSet_array();
 		$rs->timeCreated = $ttl;
 		$rs->InitArrayFields($arr,$flds);
 		return $rs;
