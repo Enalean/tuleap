@@ -17,6 +17,7 @@
  */
 
 require_once('pre.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
 
 if (user_isloggedin()) {
@@ -26,13 +27,27 @@ if (user_isloggedin()) {
         $filemodule_id = $request->get('filemodule_id');
         $pm = ProjectManager::instance();
         file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
-        // @TODO: Display form in different way depending if the user has admin permissions or not
+        $user  = UserManager::instance()->getCurrentUser();
+        $frspf = new FRSPackageFactory();
+        $fmmf  = new FileModuleMonitorFactory();
+        if ($frspf->userCanAdmin($user, $group_id)) {
+            // @TODO: Display  list of users publicly monitoring
+        }
         echo '<form>';
-        // @TODO: i18n
-        echo 'Monitor anonymously (uncheck to inform admins that you are monitoring this package)';
-        echo '<input type="checkbox" id="anonymous_frs_monitoring" name="anonymous_frs_monitoring" checked="checked" />';
-        echo '<br />';
-        echo '<a HREF="/file/filemodule_monitor.php?filemodule_id='.$filemodule_id.'">'.$GLOBALS['HTML']->getImage("ic/notification_start.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring'))).'</a>';
+        $anonymousOption = '';
+        $link = '  <a href="filemodule_monitor.php?filemodule_id=' . $filemodule_id .'" >';
+        if ($fmmf->isMonitoring($filemodule_id)) {
+            $link .= '<img src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+        } else {
+            // @TODO: i18n
+            $anonymousOption .= 'Monitor anonymously (uncheck to inform admins that you are monitoring this package)';
+            // @TODO: checked is verified from DB & keep default value as checked
+            $anonymousOption .= '<input type="checkbox" id="anonymous_frs_monitoring" name="anonymous_frs_monitoring" checked="checked" /><br />';
+            $link .= '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+        }
+        $link .= '</a>';
+        echo $anonymousOption;
+        echo $link;
         echo '</form>';
         file_utils_footer($params);
     } else {
