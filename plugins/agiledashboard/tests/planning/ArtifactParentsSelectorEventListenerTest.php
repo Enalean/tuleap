@@ -25,35 +25,19 @@ require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
 
-    protected $faq_id      = 13;
-    protected $corp_id     = 42;
-    protected $product_id  = 56;
-    protected $product2_id = 57;
-    protected $release_id  = 7777;
-    protected $release2_id = 7778;
     protected $sprint_id   = 9001;
-    protected $theme_id    = 750;
-    protected $theme2_id   = 751;
     protected $epic_id     = 2;
     protected $epic2_id    = 3;
 
     public function setUp() {
         parent::setUp();
-        '┝ corporation    ──────≫ theme
-         │ ┝ product      ──┬───≫  ┕ epic
-         │ │  ┕ release   ──┘   ┌─≫   ┕ story
-         │ │     ┕ sprint ──────┘
-         │ ┕ product2
-         │    ┕ release2
-         ┕ faq
+        '
+                              epic
+         ┕ sprint ───────≫   ┕ story
         ';
-        $this->corp_tracker    = aTracker()->withName('corp_tracker')->build();
-        $this->product_tracker = aTracker()->withName('product_tracker')->build();
-        $this->release_tracker = aTracker()->withName('release_tracker')->build();
+
         $this->sprint_tracker  = aTracker()->withName('sprint_tracker')->build();
         $this->epic_tracker    = aTracker()->withName('epic_tracker')->build();
-        $this->theme_tracker   = aTracker()->withName('theme_tracker')->build();
-        $this->faq_tracker     = aTracker()->withName('faq_tracker')->build();
         $this->story_tracker   = aTracker()->withName('story_tracker')->build();
 
         $this->user    = aUser()->build();
@@ -61,15 +45,7 @@ class ArtifactParentsSelectorEventListenerTest extends TuleapTestCase {
 
         $this->artifact_factory  = mock('Tracker_ArtifactFactory');
 
-        $this->faq      = $this->getArtifact($this->faq_id,     $this->faq_tracker);
-        $this->corp     = $this->getArtifact($this->corp_id,    $this->corp_tracker);
-        $this->product  = $this->getArtifact($this->product_id, $this->product_tracker);
-        $this->product2 = $this->getArtifact($this->product2_id, $this->product_tracker);
-        $this->release  = $this->getArtifact($this->release_id, $this->release_tracker);
-        $this->release2 = $this->getArtifact($this->release2_id, $this->release_tracker);
         $this->sprint   = $this->getArtifact($this->sprint_id,  $this->sprint_tracker);
-        $this->theme    = $this->getArtifact($this->theme_id,   $this->theme_tracker);
-        $this->theme2   = $this->getArtifact($this->theme2_id,   $this->theme_tracker);
         $this->epic     = $this->getArtifact($this->epic_id,    $this->epic_tracker);
         $this->epic2    = $this->getArtifact($this->epic2_id,    $this->epic_tracker);
 
