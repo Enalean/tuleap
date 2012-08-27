@@ -54,3 +54,4 @@ foreach ($changelog as $line) {
 
 file_put_contents('ChangeLog', implode(PHP_EOL, $new_changelog));
 
+?>
