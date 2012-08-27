@@ -347,5 +347,16 @@ class Event {
      */
     const WSDL_DOC2SOAP_TYPES = 'wsdl_doc2soap_types';
 
+    /**
+     * Check that the update of members of an ugroup is allowed or not.
+     *
+     * Parameters:
+     *     'ugroup_id' => Id of the ugroup
+     *
+     * Expected results
+     *     'allowed' => Boolean indicating that the update of members of the ugroup is allowed
+     */
+    const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
+
 }
 ?>
