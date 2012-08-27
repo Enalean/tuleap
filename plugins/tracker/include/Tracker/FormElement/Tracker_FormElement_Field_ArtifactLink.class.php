@@ -245,7 +245,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         list($label, $possible_parents, $display_selector) = $this->getPossibleArtifactParents($parent_tracker, $user);
         if ($display_selector) {
             $html .= '<label>';
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent') . $parent_tracker->getItemName() .' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $parent_tracker->getItemName());
             $html .= '<select name="'. $name .'[parent]">';
             $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
             $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';

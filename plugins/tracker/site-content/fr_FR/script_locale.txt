@@ -14,7 +14,7 @@ codendi.locales['tracker_renderer'] = {
 codendi.locales['tracker_artifact_link'] = {
     nb_artifacts: 'artefact(s)',
     or: ' ou ',
-    select: 'Selectionner les artefacts à lier',
+    select: 'Sélectionner les artefacts à lier',
     create: 'Créer un nouvel artefact',
     advanced: 'Les fonctionnalités avancées (recherche d\'artefacts...) ne sont pas disponibles à la création d\'un artefact.'
 };

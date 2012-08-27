@@ -977,7 +977,7 @@ plugin_tracker_artifact	removed	retiré
 plugin_tracker_artifact	added	ajouté
 plugin_tracker_artifact	formelement_artifactlink_help	Entrez des ids d'artefacts séparés par une virgule
 plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Créer un nouvel artefact
-plugin_tracker_artifact	formelement_artifactlink_choose_parent	Sélectionner un parent
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Sélectionner un parent $1 : 
 plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Aura $1 comme parent
 plugin_tracker_artifact	formelement_artifactlink_open_parent	$1 ouvert(es)
 
