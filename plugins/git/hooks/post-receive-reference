@@ -20,15 +20,15 @@
 
 extractRef()
 {
-	tuleap_login=$(whoami)
-	repo_location=$(cd $GIT_DIR; pwd)
-	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
-	
-	for rev in $(git rev-list $oldrev..$newrev)
-	do
-		text=$(git cat-file -p "$rev")
-	    echo "$text" | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --repo_path="$repo_location" --login="$tuleap_login" --type="git_commit" --rev_id="$tuleap_repo_name/$rev" >/dev/null
-	done
+    tuleap_login=$(whoami)
+    repo_location=$(cd $GIT_DIR; pwd)
+    tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
+    
+    for rev in $(git rev-list $oldrev..$newrev)
+    do
+        text=$(git cat-file -p "$rev")
+        echo "$text" | php /usr/share/codendi/plugins/git/hooks/extractCrossRef.php --repo_path="$repo_location" --login="$tuleap_login" --type="git_commit" --rev_id="$tuleap_repo_name/$rev" >/dev/null
+    done
 }
 
 # --- Config
@@ -36,13 +36,13 @@ extractRef()
 # variable.
 GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
 if [ -z "$GIT_DIR" ]; then
-	echo >&2 "fatal: post-receive-reference: GIT_DIR not set"
-	exit 1
+    echo >&2 "fatal: post-receive-reference: GIT_DIR not set"
+    exit 1
 fi
 
 if [ -n $oldrev -a -n $newrev ]; then
-	extractRef $newrev $oldrev
+    extractRef $newrev $oldrev
 else
-	echo >&2 "fatal: post-receive-reference: Usage is post-receive-reference oldrev newrev"
-	exit 1
+    echo >&2 "fatal: post-receive-reference: Usage is post-receive-reference oldrev newrev"
+    exit 1
 fi
