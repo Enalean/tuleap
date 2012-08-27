@@ -41,35 +41,4 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
                  It should be : $actual_singleton_lookups");
     }
 }
-
-
-/**
- * We're also testing the utility class, because it is used to update the expected singleton count as \
- * well as report on the current amount
- */
-class SingletonCounterTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        $this->counter = new SingletonCounter();
-        $this->value_b4_test = $this->counter->contentsOfCountFile();
-    }
-    
-    public function itCanReplaceTheCurrentAmount() {
-        $this->counter->replaceCurrentSingletonCountWith(0);
-        $this->assertNotEqual($this->counter->contentsOfCountFile(), $this->counter->countSingletonLookupsInProject());
-        
-        $this->counter->replaceCurrentSingletonCountWithActualCount();
-        $this->assertEqual($this->counter->contentsOfCountFile(), $this->counter->countSingletonLookupsInProject());
-    }
-    
-    public function tearDown() {
-        parent::tearDown();
-        $this->counter->replaceCurrentSingletonCountWith($this->value_b4_test);
-    }
-
-}
-
-
-
 ?>
