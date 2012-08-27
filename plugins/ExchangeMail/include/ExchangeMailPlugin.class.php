@@ -62,7 +62,7 @@ class ExchangeMailPlugin extends Plugin {
             $ZendMail= new ExchangeMail($theMail,$config);
             $ZendMail->send();
         } else {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'missing_parameters');
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'missing_parameters'));
         
         }
     }
