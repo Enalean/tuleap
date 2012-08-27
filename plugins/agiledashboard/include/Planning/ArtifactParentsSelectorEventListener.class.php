@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * This class is responsible of processing the TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR event
+ * in the agiledashboard.
+ */
 class Planning_ArtifactParentsSelectorEventListener {
 
     /**
@@ -45,6 +49,9 @@ class Planning_ArtifactParentsSelectorEventListener {
         $this->request                   = $request;
     }
 
+    /**
+     * @param array $params the parameters of the event see TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR
+     */
     public function process($params) {
         $source_artifact = $this->getSourceArtifact();
         if ($source_artifact) {
