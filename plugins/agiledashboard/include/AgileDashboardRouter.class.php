@@ -185,7 +185,7 @@ class AgileDashboardRouter {
     protected function buildMilestoneController(Codendi_Request $request) {
         return new Planning_MilestoneController(
             $request,
-            $this->getMilestoneFactory(),
+            $this->milestone_factory,
             $this->getProjectManager(),
             $this->getViewBuilder($request),
             $this->hierarchy_factory
@@ -240,7 +240,7 @@ class AgileDashboardRouter {
         $group_id             = $request->get('group_id');
         $user                 = $request->getCurrentUser();
         $object_god           = new TrackerManager();
-        $planning_trackers    = $this->getPlanningFactory()->getPlanningTrackers($group_id, $user);
+        $planning_trackers    = $this->planning_factory->getPlanningTrackers($group_id, $user);
         $art_link_field_ids   = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
         
         return new Planning_ViewBuilder(
@@ -262,11 +262,11 @@ class AgileDashboardRouter {
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
             case -1:
-                $controller = new Planning_ArtifactCreationController($this->getPlanningFactory(), $request);
+                $controller = new Planning_ArtifactCreationController($this->planning_factory, $request);
                 $this->executeAction($controller, 'createArtifact');
                 break;
             case 0:
-                $controller = new Planning_MilestoneSelectorController($request, $this->getMilestoneFactory());
+                $controller = new Planning_MilestoneSelectorController($request, $this->milestone_factory);
                 $this->executeAction($controller, 'show');
                 /* no break */
             default:
@@ -278,24 +278,6 @@ class AgileDashboardRouter {
 
     public function getProjectManager() {
         return ProjectManager::instance();
-    }
-
-    /**
-     * TODO:
-     *   - Use Planning_MilestoneFactory instead.
-     * 
-     * @return PlanningFactory 
-     */
-    protected function getPlanningFactory() {
-        return $this->planning_factory;
-
-    }
-
-    /**
-     * @return Planning_MilestoneFactory 
-     */
-    protected function getMilestoneFactory() {
-        return $this->milestone_factory;
     }
 }
 

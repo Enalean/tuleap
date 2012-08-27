@@ -27,7 +27,7 @@ require_once 'autoload.php';
 class AgileDashboardPlugin extends Plugin {
 
     private $service;
-    
+
     /**
      * Plugin constructor
      */
@@ -50,37 +50,29 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function event_artifact_parents_selector($params) {
-        $request = HTTPRequest::instance();
-        $source_artifact  = null;
-        if ($request->get('func') == 'new-artifact-link') {
-            $source_artifact = $this->getArtifactFactory()->getArtifactById($request->get('id'));
-        } elseif ($request->get('child_milestone')) {
-            $source_artifact = $this->getArtifactFactory()->getArtifactById($request->get('child_milestone'));
-        }
-        if ($source_artifact) {
-            $artifact_parents_selector   = new Planning_ArtifactParentsSelector($this->getArtifactFactory(), PlanningFactory::build(), $this->getMilestoneFactory(), $this->getHierarchyFactory());
-            $params['label']             = $GLOBALS['Language']->getText('plugin_agiledashboard', 'available'). $params['parent_tracker']->getName();
-            $params['possible_parents']  = $artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact, $params['user']);
-            $we_are_linking_the_artifact_to_a_parent = ($params['possible_parents'] == array($source_artifact));
-            if ($we_are_linking_the_artifact_to_a_parent) {
-                $params['display_selector'] = false;
-            }
-        }
+        $artifact_parents_selector = new Planning_ArtifactParentsSelector(
+            $this->getArtifactFactory(),
+            PlanningFactory::build(),
+            $this->getMilestoneFactory(),
+            $this->getHierarchyFactory()
+        );
+        $event_listener = new Planning_ArtifactParentsSelectorEventListener($this->getArtifactFactory(), $artifact_parents_selector, HTTPRequest::instance());
+        $event_listener->process($params);
     }
 
     public function tracker_event_include_css_file($params) {
         $params['include_tracker_css_file'] = true;
     }
-    
+
     public function tracker_event_trackers_duplicated($params) {
         require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
-        
+
         PlanningFactory::build()->duplicatePlannings(
             $params['group_id'],
             $params['tracker_mapping']
         );
     }
-    
+
     public function tracker_event_redirect_after_artifact_creation_or_update($params) {
         $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
         $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
@@ -117,7 +109,7 @@ class AgileDashboardPlugin extends Plugin {
             'aid'         => $redirect_to_artifact,
         );
     }
-    
+
     public function tracker_event_build_artifact_form_action($params) {
         $this->setQueryParametersFromRequest($params['request'], $params['redirect']);
         if ($params['request']->exist('child_milestone')) {
@@ -133,13 +125,13 @@ class AgileDashboardPlugin extends Plugin {
             $redirect->query_parameters[$key] = $value;
         }
     }
-    
+
     private function extractPlanningAndArtifactFromRequest(Codendi_Request $request) {
         $from_planning = $request->get('planning');
         if (is_array($from_planning) && count($from_planning)) {
             list($planning_id, $planning_artifact_id) = each($from_planning);
             return array(
-                'planning_id' => $planning_id, 
+                'planning_id' => $planning_id,
                 'artifact_id' => $planning_artifact_id
             );
         }
@@ -154,7 +146,7 @@ class AgileDashboardPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+
     public function cssfile($params) {
         // Only show the stylesheet if we're actually in the AgileDashboard pages.
         // This stops styles inadvertently clashing with the main site.
@@ -162,7 +154,7 @@ class AgileDashboardPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
+
     public function combined_scripts($params) {
         $params['scripts'] = array_merge(
             $params['scripts'],
@@ -174,12 +166,12 @@ class AgileDashboardPlugin extends Plugin {
             )
         );
     }
-    
+
     public function javascript($params) {
         include $GLOBALS['Language']->getContent('script_locale', null, 'agiledashboard');
         echo PHP_EOL;
     }
-    
+
     public function process(Codendi_Request $request) {
         $router = new AgileDashboardRouter($this, $this->getMilestoneFactory(), $this->getPlanningFactory(), $this->getHierarchyFactory());
         $router->route($request);
@@ -187,8 +179,8 @@ class AgileDashboardPlugin extends Plugin {
 
     /**
      * Builds a new PlanningFactory instance.
-     * 
-     * @return PlanningFactory 
+     *
+     * @return PlanningFactory
      */
     protected function getPlanningFactory() {
         return new PlanningFactory(new PlanningDao(),
@@ -198,7 +190,7 @@ class AgileDashboardPlugin extends Plugin {
 
     /**
      * Builds a new Planning_MilestoneFactory instance.
-     * @return Planning_MilestoneFactory 
+     * @return Planning_MilestoneFactory
      */
     protected function getMilestoneFactory() {
         return new Planning_MilestoneFactory(
