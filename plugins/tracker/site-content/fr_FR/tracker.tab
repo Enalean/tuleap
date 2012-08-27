@@ -977,6 +977,8 @@ plugin_tracker_artifact	removed	retiré
 plugin_tracker_artifact	added	ajouté
 plugin_tracker_artifact	formelement_artifactlink_help	Entrez des ids d'artefacts séparés par une virgule
 plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Créer un nouvel artefact
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Sélectionner un parent
+
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
 plugin_tracker_artifact	fields_not_valid	Les champs ne sont pas valides
