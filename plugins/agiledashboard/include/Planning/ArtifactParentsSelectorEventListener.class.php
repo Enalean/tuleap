@@ -48,7 +48,7 @@ class Planning_ArtifactParentsSelectorEventListener {
     public function process($params) {
         $source_artifact = $this->getSourceArtifact();
         if ($source_artifact) {
-            $params['label']             = 'Available '. $params['parent_tracker']->getName();
+            $params['label']             = $GLOBALS['Language']->getText('plugin_agiledashboard', 'available', $params['parent_tracker']->getName());
             $params['possible_parents']  = $this->artifact_parents_selector->getPossibleParents($params['parent_tracker'], $source_artifact, $params['user']);
             $we_are_linking_the_artifact_to_a_parent = ($params['possible_parents'] == array($source_artifact));
             if ($we_are_linking_the_artifact_to_a_parent) {

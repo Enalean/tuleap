@@ -25,4 +25,4 @@ plugin_agiledashboard	backlog_add	Ajouter
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
 
 plugin_agiledashboard	capacity	Capacité :
-plugin_agiledashboard	available	Disponible 
+plugin_agiledashboard	available	$1 disponible(s)
