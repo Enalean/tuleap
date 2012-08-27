@@ -57,6 +57,7 @@ if (user_isloggedin()) {
                 $userHelper = new UserHelper();
                 $um         = UserManager::instance();
                 echo '<form id="filemodule_monitor_form_delete" method="post" >';
+                echo '<input type="hidden" name="action" value="delete_monitoring">';
                 // @TODO: i18n
                 echo html_build_list_table_top(array('User', 'Delete?'), false, false, false);
                 $rowBgColor = 0;
@@ -67,9 +68,19 @@ if (user_isloggedin()) {
                 // @TODO: put correct icon & text
                 echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" /></td></tr>';
                 echo '</table>';
-                echo '</form';
+                echo '</form>';
+                echo '<form id="filemodule_monitor_form_add" method="post" >';
+                echo '<input type="hidden" name="action" value="add_monitoring">';
+                echo '<input type="hidden" name="package_id" value="'.$filemodule_id.'">';
+                // @TODO: i18n
+                echo '<h4>Add users to the monitoring list :</h4>';
+                echo '<br /><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
+                $autocomplete = "new UserAutoCompleter('listeners_to_add','".util_get_dir_image_theme()."',true);";
+                $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
+                // @TODO: put correct icon & text
+                echo '<br /><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+                echo '</form>';
             }
-            // @TODO: Display form to edit the list
         }
         file_utils_footer($params);
     } else {
