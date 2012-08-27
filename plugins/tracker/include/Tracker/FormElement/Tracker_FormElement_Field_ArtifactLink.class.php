@@ -253,7 +253,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= '</select>';
             $html .= '</label>';
         } elseif ($possible_parents) {
-            $html .= 'Will have '. $possible_parents[0]->fetchDirectLinkToArtifactWithTitle() .' as parent.';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_will_have') .' '. $possible_parents[0]->fetchDirectLinkToArtifactWithTitle() 
+                     .' '. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_as_parent');
         }
         $html .= '</p>';
         return $html;
@@ -290,7 +291,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             )
         );
         if (!$possible_parents) {
-            $label            = 'Open '. $parent_tracker->getName();
+            $label            = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_open_parent'). ' '. $parent_tracker->getName();
             $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
         }
         return array($label, $possible_parents, $display_selector);

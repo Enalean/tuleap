@@ -980,6 +980,9 @@ plugin_tracker_artifact	added	added
 plugin_tracker_artifact	formelement_artifactlink_help	Enter artifact ids separated with a comma
 plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Create a new one
 plugin_tracker_artifact	formelement_artifactlink_choose_parent	Select parent
+plugin_tracker_artifact	formelement_artifactlink_will_have	Will have
+plugin_tracker_artifact	formelement_artifactlink_as_parent	as parent
+plugin_tracker_artifact	formelement_artifactlink_open_parent	Open
 
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
