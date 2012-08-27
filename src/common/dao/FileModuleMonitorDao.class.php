@@ -49,10 +49,9 @@ class FileModuleMonitorDao extends DataAccessObject {
     function whoIsPubliclyMonitoringPackage($packageId){
         $packageId = $this->da->quoteSmart($packageId);
 
-        $sql = "SELECT u.user_name
-                FROM user AS u,filemodule_monitor AS fm, frs_package AS p
+        $sql = "SELECT u.user_id
+                FROM user AS u,filemodule_monitor AS fm
                 WHERE u.user_id = fm.user_id
-                  AND fm.filemodule_id = p.package_id
                   AND fm.filemodule_id = ".$packageId."
                   AND (u.status='A' OR u.status='R')
                   AND fm.anonymous = 0";

@@ -54,11 +54,20 @@ if (user_isloggedin()) {
                 // @TODO: i18n
                 echo 'No users publicly monitoring this package';
             } else {
-                echo '<table>';
-                foreach ($list as $user) {
-                    echo '<tr><td>'.$user['user_name'].'</td></tr>';
+                $userHelper = new UserHelper();
+                $um         = UserManager::instance();
+                echo '<form id="filemodule_monitor_form_delete" method="post" >';
+                // @TODO: i18n
+                echo html_build_list_table_top(array('User', 'Delete?'), false, false, false);
+                $rowBgColor = 0;
+                foreach ($list as $entry) {
+                    $user = $um->getUserById($entry['user_id']);
+                    echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="'.$entry['user_id'].'" /></td></tr>';
                 }
+                // @TODO: put correct icon & text
+                echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" /></td></tr>';
                 echo '</table>';
+                echo '</form';
             }
             // @TODO: Display form to edit the list
         }
