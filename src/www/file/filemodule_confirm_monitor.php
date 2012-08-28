@@ -31,6 +31,77 @@ if (user_isloggedin()) {
         $user  = $um->getCurrentUser();
         $frspf = new FRSPackageFactory();
         $fmmf  = new FileModuleMonitorFactory();
+        $editContent = "";
+        if ($frspf->userCanAdmin($user, $group_id)) {
+            if ($request->valid(new Valid_WhiteList('action', array('add_monitoring','delete_monitoring')))) {
+                $action = $request->get('action');
+                switch ($action) {
+                    case 'add_monitoring' :
+                        $users = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
+                        foreach ($users as $userName) {
+                            $user = $um->findUser($userName);
+                            if ($user) {
+                                // @TODO: Check user permissions on package
+                                // @TODO: feedback after action
+                                $anonymous = false;
+                                $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                            }
+                        }
+                        break;
+                    case 'delete_monitoring' :
+                        $users = $request->get('delete_user');
+                        if ($users && !empty($users) && is_array($users)) {
+                            foreach ($users as $userId) {
+                                $user = $um->getUserById($userId);
+                                if ($user) {
+                                    if (true) {
+                                        $onlyPublic = true;
+                                        $result = $fmmf->stopMonitor($filemodule_id, $user, $onlyPublic);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+
+            // @TODO: i18n
+            $editContent = '<h3>Manage list of people monitoring the package</h3>';
+            $list    = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
+            if ($list->rowCount() == 0) {
+                // @TODO: i18n
+                $editContent .= 'No users publicly monitoring this package';
+            } else {
+                $userHelper = new UserHelper();
+                $editContent    .= '<form id="filemodule_monitor_form_delete" method="post" >';
+                $editContent    .= '<input type="hidden" name="action" value="delete_monitoring">';
+                // @TODO: i18n
+                $editContent    .= html_build_list_table_top(array('User', 'Delete?'), false, false, false);
+                $rowBgColor = 0;
+                foreach ($list as $entry) {
+                    $user    = $um->getUserById($entry['user_id']);
+                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
+                }
+                // @TODO: put correct icon & text
+                $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" /></td></tr>';
+                $editContent .= '</table>';
+                $editContent .= '</form>';
+            }
+            $editContent .= '<form id="filemodule_monitor_form_add" method="post" >';
+            $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
+            $editContent .= '<input type="hidden" name="package_id" value="'.$filemodule_id.'">';
+            // @TODO: i18n
+            $editContent .= '<h3>Add users to the monitoring list :</h3>';
+            $editContent .= '<br /><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
+            // @TODO: Add this to combined
+            $autocomplete = "new UserAutoCompleter('listeners_to_add','".util_get_dir_image_theme()."',true);";
+            $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
+            // @TODO: put correct icon & text
+            $editContent .= '<br /><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+            $editContent .= '</form>';
+        }
         // @TODO: i18n
         echo '<h3>Manage my package monitoring</h3>';
         echo '<form id="filemodule_monitor_form" method="post" action="filemodule_monitor.php" >';
@@ -47,63 +118,7 @@ if (user_isloggedin()) {
         echo $anonymousOption;
         echo $submit;
         echo '</form>';
-        if ($frspf->userCanAdmin($user, $group_id)) {
-            if ($request->valid(new Valid_WhiteList('action', array('add_monitoring','delete_monitoring')))) {
-                $action = $request->get('action');
-                switch ($action) {
-                    case 'add_monitoring' :
-                        $validUsers = array();
-                        $users      = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
-                        foreach ($users as $userName) {
-                            $user = $um->findUser($userName);
-                            if ($user) {
-                                $anonymous = false;
-                                $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
-                            }
-                        }
-                        break;
-                    case 'delete_monitoring' :
-                        
-                        break;
-                    default :
-                        break;
-                }
-            }
-
-            // @TODO: i18n
-            echo '<h3>Manage list of people monitoring the package</h3>';
-            $list = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
-            if ($list->rowCount() == 0) {
-                // @TODO: i18n
-                echo 'No users publicly monitoring this package';
-            } else {
-                $userHelper = new UserHelper();
-                echo '<form id="filemodule_monitor_form_delete" method="post" >';
-                echo '<input type="hidden" name="action" value="delete_monitoring">';
-                // @TODO: i18n
-                echo html_build_list_table_top(array('User', 'Delete?'), false, false, false);
-                $rowBgColor = 0;
-                foreach ($list as $entry) {
-                    $user = $um->getUserById($entry['user_id']);
-                    echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
-                }
-                // @TODO: put correct icon & text
-                echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" /></td></tr>';
-                echo '</table>';
-                echo '</form>';
-                echo '<form id="filemodule_monitor_form_add" method="post" >';
-                echo '<input type="hidden" name="action" value="add_monitoring">';
-                echo '<input type="hidden" name="package_id" value="'.$filemodule_id.'">';
-                // @TODO: i18n
-                echo '<h4>Add users to the monitoring list :</h4>';
-                echo '<br /><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
-                $autocomplete = "new UserAutoCompleter('listeners_to_add','".util_get_dir_image_theme()."',true);";
-                $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
-                // @TODO: put correct icon & text
-                echo '<br /><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
-                echo '</form>';
-            }
-        }
+        echo $editContent;
         file_utils_footer($params);
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','choose_p'));

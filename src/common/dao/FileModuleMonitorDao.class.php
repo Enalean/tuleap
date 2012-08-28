@@ -125,12 +125,19 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @param Integer $package_id Id of the package
      * @param User    $user       The user
+     * @param Boolean $onlyPublic If true delete only users publicly monitoring the package
      *
      * @return true if there is no error
      */
-    function delete($filemodule_id, User $user) {
-        $sql = sprintf("DELETE FROM filemodule_monitor WHERE filemodule_id=%d AND user_id=%d",
-                       $this->da->escapeInt($filemodule_id), $this->da->escapeInt($user->getID()));
+    function delete($filemodule_id, User $user, $onlyPublic = false) {
+        $option = "";
+        if ($onlyPublic) {
+            $option = "AND anonymous = 0";
+        }
+        $sql = "DELETE FROM filemodule_monitor
+                WHERE filemodule_id = ".$this->da->escapeInt($filemodule_id)."
+                  AND user_id = ".$this->da->escapeInt($user->getID())."
+                  ".$option;
 
         $deleted = $this->update($sql);
         return $deleted;
