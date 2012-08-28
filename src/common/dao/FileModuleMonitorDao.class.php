@@ -23,7 +23,7 @@ require_once('common/user/UserManager.class.php');
 
 class FileModuleMonitorDao extends DataAccessObject {
 
-    function whoIsMonitoringPackageByID($group_id, $package_id){
+    function whoIsMonitoringPackageByID($group_id, $package_id) {
         $_package_id = (int) $package_id;
         $_group_id = (int) $group_id;
         
@@ -47,7 +47,7 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function whoIsPubliclyMonitoringPackage($packageId){
+    function whoIsPubliclyMonitoringPackage($packageId) {
         $packageId = $this->da->quoteSmart($packageId);
 
         $sql = "SELECT u.user_id
@@ -128,7 +128,7 @@ class FileModuleMonitorDao extends DataAccessObject {
      /**
      * Delete entry that match $package_id and $user_id (current user) in filemodule_monitor
      *
-     * @param Integer $package_id Id of the package
+     * @param Integer $filemodule_id Id of the package
      * @param User    $user       The user
      * @param Boolean $onlyPublic If true delete only user publicly monitoring the package
      *
