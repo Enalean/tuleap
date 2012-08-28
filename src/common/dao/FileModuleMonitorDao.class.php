@@ -125,7 +125,7 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @param Integer $package_id Id of the package
      * @param User    $user       The user
-     * @param Boolean $onlyPublic If true delete only users publicly monitoring the package
+     * @param Boolean $onlyPublic If true delete only user publicly monitoring the package
      *
      * @return true if there is no error
      */

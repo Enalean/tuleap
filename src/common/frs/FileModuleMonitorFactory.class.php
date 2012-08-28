@@ -135,13 +135,14 @@ class FileModuleMonitorFactory {
      *
      * @param Integer $filemodule_id Id of th package
      * @param User    $user          The user
+     * @param Boolean $onlyPublic    If true delete only user publicly monitoring the package
      *
      * @return Boolean
      */
-    function stopMonitor($filemodule_id, User $user) {
+    function stopMonitor($filemodule_id, User $user, $onlyPublic = false) {
         $_id = (int) $filemodule_id;
         $dao = $this->_getFileModuleMonitorDao();
-        return $dao->delete($_id, $user);
+        return $dao->delete($_id, $user, $onlyPublic);
     }
      
 }
