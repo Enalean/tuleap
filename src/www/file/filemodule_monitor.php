@@ -67,27 +67,29 @@ if (user_isloggedin()) {
                         case 'add_monitoring' :
                             $users = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
                             foreach ($users as $userName) {
-                                $user = $um->findUser($userName);
-                                if ($user) {
-                                    $publicly = true;
-                                    if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
-                                        if (!$fmmf->isMonitoring($filemodule_id, $user, $publicly)) {
-                                            $anonymous = false;
-                                            $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
-                                            if ($result) {
-                                                $historyDao->groupAddHistory("frs_add_monitor_package", $filemodule_id."_".$user->getId(), $group_id);
-                                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','monitoring_added', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                if (!empty($userName)) {
+                                    $user = $um->findUser($userName);
+                                    if ($user) {
+                                        $publicly = true;
+                                        if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
+                                            if (!$fmmf->isMonitoring($filemodule_id, $user, $publicly)) {
+                                                $anonymous = false;
+                                                $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                                                if ($result) {
+                                                    $historyDao->groupAddHistory("frs_add_monitor_package", $filemodule_id."_".$user->getId(), $group_id);
+                                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','monitoring_added', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                                } else {
+                                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
+                                                }
                                             } else {
-                                                $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
+                                                $GLOBALS['Response']->addFeedback('warning', $Language->getText('file_filemodule_monitor','already_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
                                             }
                                         } else {
-                                            $GLOBALS['Response']->addFeedback('warning', $Language->getText('file_filemodule_monitor','already_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                            $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','user_no_permission', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
                                         }
                                     } else {
-                                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','user_no_permission', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','no_user', array($userName)));
                                     }
-                                } else {
-                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','no_user', array($userName)));
                                 }
                             }
                             break;
