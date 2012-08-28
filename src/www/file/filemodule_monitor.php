@@ -21,7 +21,7 @@ if (user_isloggedin()) {
         $user          = $um->getCurrentUser();
         $frspf         = new FRSPackageFactory();
         $fmmf          = new FileModuleMonitorFactory();
-        $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $historyDao    = new ProjectHistoryDao();
 
         if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
             if ($request->get('action') == 'monitor_package') {
