@@ -144,7 +144,7 @@ class FileModuleMonitorFactory {
         $dao = $this->_getFileModuleMonitorDao();
         return $dao->delete($_id, $user, $onlyPublic);
     }
-     
+
 }
 
 ?>

@@ -33,9 +33,30 @@ if (user_isloggedin()) {
         $fmmf  = new FileModuleMonitorFactory();
         $editContent = "";
         if ($frspf->userCanAdmin($user, $group_id)) {
-            if ($request->valid(new Valid_WhiteList('action', array('add_monitoring','delete_monitoring')))) {
+            if ($request->valid(new Valid_WhiteList('action', array('monitor_package', 'add_monitoring','delete_monitoring')))) {
                 $action = $request->get('action');
                 switch ($action) {
+                    case 'monitor_package' :
+                        if (!$fmmf->isMonitoring($filemodule_id, $user)) {
+                            $anonymous  = false;
+                            $vAnonymous = $request->get('anonymous_frs_monitoring');
+                            if (isset($vAnonymous) && !empty($vAnonymous)) {
+                                $anonymous = true;
+                            }
+                            $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                            if (!$result) {
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
+                            } else {
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','p_monitored'));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','now_emails'));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
+                            }
+                        } else {
+                            $result = $fmmf->stopMonitor($filemodule_id, $user);
+                            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','monitor_turned_off'));
+                            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','no_emails'));
+                        }
+                        break;
                     case 'add_monitoring' :
                         $users = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
                         foreach ($users as $userName) {
@@ -55,6 +76,7 @@ if (user_isloggedin()) {
                                 $user = $um->getUserById($userId);
                                 if ($user) {
                                     if (true) {
+                                        // @TODO: feedback after action
                                         $onlyPublic = true;
                                         $result = $fmmf->stopMonitor($filemodule_id, $user, $onlyPublic);
                                     }
@@ -104,7 +126,8 @@ if (user_isloggedin()) {
         }
         // @TODO: i18n
         echo '<h3>Manage my package monitoring</h3>';
-        echo '<form id="filemodule_monitor_form" method="post" action="filemodule_monitor.php" >';
+        echo '<form id="filemodule_monitor_form" method="post" >';
+        echo '<input type="hidden" name="action" value="monitor_package">';
         echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
         $anonymousOption = '';
         if ($fmmf->isMonitoring($filemodule_id, $user)) {
