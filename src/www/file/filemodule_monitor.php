@@ -27,6 +27,7 @@ if (user_isloggedin()) {
         $filemodule_id = $request->get('filemodule_id');
         $pm            = ProjectManager::instance();
         $um            = UserManager::instance();
+        $userHelper    = new UserHelper();
         $user          = $um->getCurrentUser();
         $frspf         = new FRSPackageFactory();
         $fmmf          = new FileModuleMonitorFactory();
@@ -64,14 +65,28 @@ if (user_isloggedin()) {
                             foreach ($users as $userName) {
                                 $user = $um->findUser($userName);
                                 if ($user) {
-                                    // @TODO: feedback after action
                                     $publicly = true;
-                                    if (!$fmmf->isMonitoring($filemodule_id, $user, $publicly)) {
-                                        if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
+                                    if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
+                                        if (!$fmmf->isMonitoring($filemodule_id, $user, $publicly)) {
                                             $anonymous = false;
                                             $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                                            if ($result) {
+                                                // @TODO: i18n
+                                                $GLOBALS['Response']->addFeedback('info', 'Package is now being monitored by "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'"');
+                                            } else {
+                                                $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
+                                            }
+                                        } else {
+                                            // @TODO: i18n
+                                            $GLOBALS['Response']->addFeedback('warning', 'User "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'" already monitoring this package');
                                         }
+                                    } else {
+                                        // @TODO: i18n
+                                        $GLOBALS['Response']->addFeedback('error', 'User "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'" doesn\'t have permission to read the package');
                                     }
+                                } else {
+                                    // @TODO: i18n
+                                    $GLOBALS['Response']->addFeedback('error', 'Couldn\'t find user: '.$userName);
                                 }
                             }
                             break;
@@ -81,13 +96,26 @@ if (user_isloggedin()) {
                                 foreach ($users as $userId) {
                                     $user = $um->getUserById($userId);
                                     if ($user) {
-                                        if (true) {
-                                            // @TODO: feedback after action
+                                        $publicly = true;
+                                        if ($fmmf->isMonitoring($filemodule_id, $user, $publicly)) {
                                             $onlyPublic = true;
                                             $result = $fmmf->stopMonitor($filemodule_id, $user, $onlyPublic);
+                                            if ($result) {
+                                                // @TODO: i18n
+                                                $GLOBALS['Response']->addFeedback('info', 'Package is now being monitored by "'.$userName.'"');
+                                            } else {
+                                                // @TODO: i18n
+                                                GLOBALS['Response']->addFeedback('error', 'Couldn\'t remove monitoring for user "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'"');
+                                            }
+                                        } else {
+                                            // @TODO: i18n
+                                            $GLOBALS['Response']->addFeedback('error', 'User "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'" wasn\'t monitoring this package');
                                         }
                                     }
                                 }
+                            } else {
+                                // @TODO: i18n
+                                $GLOBALS['Response']->addFeedback('warning', 'Nothing to delete');
                             }
                             break;
                         default :
@@ -97,12 +125,11 @@ if (user_isloggedin()) {
 
                 // @TODO: i18n
                 $editContent = '<h3>Manage list of people monitoring the package</h3>';
-                $list    = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
+                $list = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
                 if ($list->rowCount() == 0) {
                     // @TODO: i18n
                     $editContent .= 'No users publicly monitoring this package';
                 } else {
-                    $userHelper = new UserHelper();
                     $editContent    .= '<form id="filemodule_monitor_form_delete" method="post" >';
                     $editContent    .= '<input type="hidden" name="action" value="delete_monitoring">';
                     // @TODO: i18n
