@@ -160,10 +160,11 @@ if (user_isloggedin()) {
             file_utils_footer($params);
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','no_permission'));
+            $GLOBALS['Response']->redirect('showfiles.php?group_id='.$group_id);
         }
     } else {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','choose_p'));
-        
+        $GLOBALS['Response']->redirect('showfiles.php?group_id='.$group_id);
     }
 } else {
     exit_not_logged_in();
