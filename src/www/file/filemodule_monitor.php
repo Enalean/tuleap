@@ -105,7 +105,7 @@ if (user_isloggedin()) {
                                                 $GLOBALS['Response']->addFeedback('info', 'Package is now being monitored by "'.$userName.'"');
                                             } else {
                                                 // @TODO: i18n
-                                                GLOBALS['Response']->addFeedback('error', 'Couldn\'t remove monitoring for user "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'"');
+                                                $GLOBALS['Response']->addFeedback('error', 'Couldn\'t remove monitoring for user "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'"');
                                             }
                                         } else {
                                             // @TODO: i18n
