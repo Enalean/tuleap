@@ -70,14 +70,19 @@ class FileModuleMonitorDao extends DataAccessObject {
      *
      * @param Integer $package_id Id of the package
      * @param User    $user       The user
+     * @param Boolean $publicly   If true check if the user is monitoring publicly
      *
      * @return DataAccessResult
      */
-    function searchMonitoringFileByUserAndPackageId($package_id, User $user) {
+    function searchMonitoringFileByUserAndPackageId($package_id, User $user, $publicly = false) {
+        $option = "";
+        if ($publicly) {
+            $option = "AND anonymous = 0";
+        }
         $_package_id = (int) $package_id;
-        $arg[] = 'released_by';
         $_user_id = $user->getID();
-        return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id), '', ' ORDER BY filemodule_id DESC');
+        
+        return $this->_search(' fm.filemodule_id = '.$this->da->escapeInt($_package_id).' AND fm.user_id ='.$this->da->escapeInt($_user_id).' '.$option, '', ' ORDER BY filemodule_id DESC');
     }
     
     function _search($where, $group = '', $order = '', $from = array()) {

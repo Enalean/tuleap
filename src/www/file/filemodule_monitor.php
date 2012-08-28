@@ -62,10 +62,14 @@ if (user_isloggedin()) {
                         foreach ($users as $userName) {
                             $user = $um->findUser($userName);
                             if ($user) {
-                                // @TODO: Check user permissions on package
                                 // @TODO: feedback after action
-                                $anonymous = false;
-                                $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                                $publicly = true;
+                                if (!$fmmf->isMonitoring($filemodule_id, $user, $publicly)) {
+                                    if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
+                                        $anonymous = false;
+                                        $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                                    }
+                                }
                             }
                         }
                         break;
