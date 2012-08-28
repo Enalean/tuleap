@@ -66,11 +66,12 @@ class FileModuleMonitorDao extends DataAccessObject {
     
 
     /**
-     * 
+     * Is the user in the list of people monitoring this package.
      *
-     * @param Integer $package_id
+     * @param Integer $package_id Id of the package
+     * @param User    $user       The user
      *
-     * @return Boolean
+     * @return DataAccessResult
      */
     function searchMonitoringFileByUserAndPackageId($package_id, User $user) {
         $_package_id = (int) $package_id;
