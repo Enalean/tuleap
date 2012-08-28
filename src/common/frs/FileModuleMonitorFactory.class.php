@@ -91,8 +91,11 @@ class FileModuleMonitorFactory {
      *
      * @return Boolean is_monitoring
      */
-    function isMonitoring($filemodule_id, User $user) {
+    function isMonitoring($filemodule_id, User $user = null) {
         $_filemodule_id = (int) $filemodule_id;
+        if (!$user) {
+            $user = UserManager::instance()->getCurrentUser();
+        }
         $dao = $this->_getFileModuleMonitorDao();
         $dar = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user);
 

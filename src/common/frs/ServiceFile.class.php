@@ -80,7 +80,7 @@ class ServiceFile extends Service {
                   <TR class="boxitem">
                   <TD>
                     <B>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODENDI_PURIFIER_CONVERT_HTML)  . '</B>&nbsp;
-                    <a HREF="/file/filemodule_confirm_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id='.$this->getGroupId().'">'.
+                    <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id='.$this->getGroupId().'">'.
                         $monitor_img . '     
                     </a>
                   </TD>';
