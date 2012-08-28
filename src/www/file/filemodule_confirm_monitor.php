@@ -36,7 +36,7 @@ if (user_isloggedin()) {
         echo '<form id="filemodule_monitor_form" method="post" action="filemodule_monitor.php" >';
         echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
         $anonymousOption = '';
-        if ($fmmf->isMonitoring($filemodule_id)) {
+        if ($fmmf->isMonitoring($filemodule_id, $user)) {
             $submit = '<input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
         } else {
             // @TODO: i18n
@@ -48,6 +48,28 @@ if (user_isloggedin()) {
         echo $submit;
         echo '</form>';
         if ($frspf->userCanAdmin($user, $group_id)) {
+            if ($request->valid(new Valid_WhiteList('action', array('add_monitoring','delete_monitoring')))) {
+                $action = $request->get('action');
+                switch ($action) {
+                    case 'add_monitoring' :
+                        $validUsers = array();
+                        $users      = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
+                        foreach ($users as $userName) {
+                            $user = $um->findUser($userName);
+                            if ($user) {
+                                $anonymous = false;
+                                $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                            }
+                        }
+                        break;
+                    case 'delete_monitoring' :
+                        
+                        break;
+                    default :
+                        break;
+                }
+            }
+
             // @TODO: i18n
             echo '<h3>Manage list of people monitoring the package</h3>';
             $list = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
@@ -63,7 +85,7 @@ if (user_isloggedin()) {
                 $rowBgColor = 0;
                 foreach ($list as $entry) {
                     $user = $um->getUserById($entry['user_id']);
-                    echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="'.$entry['user_id'].'" /></td></tr>';
+                    echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
                 }
                 // @TODO: put correct icon & text
                 echo '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" /></td></tr>';

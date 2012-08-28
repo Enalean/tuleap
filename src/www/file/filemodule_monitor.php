@@ -23,9 +23,11 @@ if (user_isloggedin()) {
 			this thread. If they are, say so and quit.
 			If they are NOT, then insert a row into the db
 		*/
-		$frsfmf = new FileModuleMonitorFactory();
+        $frsfmf = new FileModuleMonitorFactory();
+        $um    = UserManager::instance();
+        $user  = $um->getCurrentUser();
 
-		if (!$frsfmf->isMonitoring($filemodule_id)) {
+        if (!$frsfmf->isMonitoring($filemodule_id, $user)) {
 			/*
 				User is not already monitoring this filemodule, so 
 				insert a row so monitoring can begin
@@ -37,7 +39,7 @@ if (user_isloggedin()) {
                 $anonymous = true;
             }
 
-			$result = $frsfmf->setMonitor($filemodule_id, $anonymous);
+            $result = $frsfmf->setMonitor($filemodule_id, $user, $anonymous);
 
 			if (!$result) {
 				$GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
@@ -48,7 +50,7 @@ if (user_isloggedin()) {
 			}
 
 		} else {
-			$result = $frsfmf->stopMonitor($filemodule_id);
+			$result = $frsfmf->stopMonitor($filemodule_id, $user);
             $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','monitor_turned_off'));
             $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','no_emails'));
 		}
@@ -68,4 +70,5 @@ if (user_isloggedin()) {
 } else {
 	exit_not_logged_in();
 }
+
 ?>

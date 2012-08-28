@@ -26,31 +26,29 @@ require_once('common/dao/FileModuleMonitorDao.class.php');
  */
 class FileModuleMonitorFactory {
 
-    function FileModuleMonitorFactory() {
-        
-    }
+    var $dao;
 
-	function whoIsMonitoringPackageById($group_id, $package_id){
-		$_group_id = (int) $group_id;
-		$_package_id = (int) $package_id;
-		
-        $dao =& $this->_getFileModuleMonitorDao();
+    function whoIsMonitoringPackageById($group_id, $package_id) {
+        $_group_id   = (int) $group_id;
+        $_package_id = (int) $package_id;
+
+        $dao = $this->_getFileModuleMonitorDao();
         $dar = $dao->whoIsMonitoringPackageByID($group_id, $package_id);
-        if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
         
-        if(!$dar->valid()) {
+        if (!$dar->valid()) {
             return;
         }
         
         $data_array = array();
-		while ($dar->valid()){
-        	$data_array[] = $dar->current();
-        	$dar->next();
-		}
+        while ($dar->valid()) {
+            $data_array[] = $dar->current();
+            $dar->next();
+        }
         return $data_array;
-	}
+    }
 
     /**
      * Get the list of users publicly monitoring a package
@@ -69,15 +67,15 @@ class FileModuleMonitorFactory {
         return $result;
     }
 
-	function &getFilesModuleMonitorFromDb($id) {
+    function getFilesModuleMonitorFromDb($id) {
         $_id = (int) $id;
-        $dao =& $this->_getFileModuleMonitorDao();
+        $dao = $this->_getFileModuleMonitorDao();
         $dar = $dao->searchById($_id);
         
 
         $data_array = array();
-        if(!$dar->isError() && $dar->valid()) {
-            while ($dar->valid()){
+        if (!$dar->isError() && $dar->valid()) {
+            while ($dar->valid()) {
                 $data_array[] = $dar->current();
                 $dar->next();
             }
@@ -86,56 +84,64 @@ class FileModuleMonitorFactory {
     }
     
     /**
-	 *  isMonitoring - Is the current user in the list of people monitoring this package.
-	 *
-	 *  @return	boolean	is_monitoring.
-	 */
-	function isMonitoring($filemodule_id) {
+     * Is the user in the list of people monitoring this package.
+     *
+     * @param Integer $filemodule_id Id of the package
+     * @param User    $user          The user
+     *
+     * @return Boolean is_monitoring
+     */
+    function isMonitoring($filemodule_id, User $user) {
+        $_filemodule_id = (int) $filemodule_id;
+        $dao = $this->_getFileModuleMonitorDao();
+        $dar = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user);
 
-		$_filemodule_id = (int) $filemodule_id;
-        $dao =& $this->_getFileModuleMonitorDao();
-        $dar = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id);
-		
-		if($dar->isError()){
+        if ($dar->isError()) {
             return;
         }
 
 
-		if (!$dar->valid() || $dar->rowCount() < 1) {
-			return false;
-		} else {
-			return true;
-		}
-	}
+        if (!$dar->valid() || $dar->rowCount() < 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
-
-	var $dao;
-
-	function & _getFileModuleMonitorDao() {
-		if (!$this->dao) {
-			$this->dao = new FileModuleMonitorDao(CodendiDataAccess :: instance());
-		}
-		return $this->dao;
-	}
+    function _getFileModuleMonitorDao() {
+        if (!$this->dao) {
+            $this->dao = new FileModuleMonitorDao(CodendiDataAccess :: instance());
+        }
+        return $this->dao;
+    }
 
     /**
      * Set package monitoring
      *
      * @param Integer $filemodule_id Id of the package
+     * @param User    $user          The user
      * @param Boolean $anonymous     True if the user want to monitor the package anonymously
      *
      * @return DataAccessResult
      */
-    function setMonitor($filemodule_id, $anonymous = true) {
+    function setMonitor($filemodule_id, User $user, $anonymous = true) {
         $dao = $this->_getFileModuleMonitorDao();
-        $res = $dao->create($filemodule_id, $anonymous);
+        $res = $dao->create($filemodule_id, $user, $anonymous);
         return $res;
     }
 
-    function stopMonitor($filemodule_id){
-    	$_id = (int) $filemodule_id;
-    	$dao =& $this->_getFileModuleMonitorDao();
-    	return $dao->delete($_id);
+    /**
+     * Stop the package monitoring
+     *
+     * @param Integer $filemodule_id Id of th package
+     * @param User    $user          The user
+     *
+     * @return Boolean
+     */
+    function stopMonitor($filemodule_id, User $user) {
+        $_id = (int) $filemodule_id;
+        $dao = $this->_getFileModuleMonitorDao();
+        return $dao->delete($_id, $user);
     }
      
 }
