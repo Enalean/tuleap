@@ -27,7 +27,8 @@ if (user_isloggedin()) {
         $filemodule_id = $request->get('filemodule_id');
         $pm = ProjectManager::instance();
         file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
-        $user  = UserManager::instance()->getCurrentUser();
+        $um    = UserManager::instance();
+        $user  = $um->getCurrentUser();
         $frspf = new FRSPackageFactory();
         $fmmf  = new FileModuleMonitorFactory();
         // @TODO: i18n
@@ -55,7 +56,6 @@ if (user_isloggedin()) {
                 echo 'No users publicly monitoring this package';
             } else {
                 $userHelper = new UserHelper();
-                $um         = UserManager::instance();
                 echo '<form id="filemodule_monitor_form_delete" method="post" >';
                 echo '<input type="hidden" name="action" value="delete_monitoring">';
                 // @TODO: i18n
