@@ -253,6 +253,21 @@ file_filemodule_monitor	turn_monitor_off	Pour arrêter le suivi, cliquer sur l'i
 file_filemodule_monitor	monitor_turned_off	Le suivi de ce paquet est désactivé
 file_filemodule_monitor	no_emails	Vous ne recevrez plus de courrier électronique concernant les nouvelles versions de ce paquet.
 file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
+file_filemodule_monitor	no_permission	Vous n'avez pas assez de permission pour effectuer cette action
+file_filemodule_monitor	list_title	Liste des personnes qui monitorent ce package
+file_filemodule_monitor	no_list	Aucun utilisateur qui monitore ce package publiquement
+file_filemodule_monitor	user	Utilisateur
+file_filemodule_monitor	add_users	Ajouter un utilisateur a la liste
+file_filemodule_monitor	my_monitoring	Mon monitoring
+file_filemodule_monitor	anonymous	Monitorer anonymement (décocher pour informer les admins que vous monitorez ce package)
+file_filemodule_monitor	no_delete	Rien a supprimer
+file_filemodule_monitor	not_monitoring	L'utilisateur "$1" ne monitorait pas ce package
+file_filemodule_monitor	delete_error	Impossible de supprimer le monitring pour l'utilisateur "$1"
+file_filemodule_monitor	deleted	Monitoring supprimé pour l'utilisateur "$1"
+file_filemodule_monitor	no_user	Impossible de trouver l'utilisateur "$1"
+file_filemodule_monitor	user_no_permission	L'utilisateur "$1" ne peut pas acceder en lecture a ce package
+file_filemodule_monitor	already_monitoring	L'utilisateur "$1" monitorait ce package
+file_filemodule_monitor	monitoring_added	Le package est maintenant monitoré par "$1"
 #
 #-----------------------------------------------
 # Script: SF/www/file/file_utils.php
