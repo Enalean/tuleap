@@ -31,6 +31,7 @@ if (user_isloggedin()) {
         $user          = $um->getCurrentUser();
         $frspf         = new FRSPackageFactory();
         $fmmf          = new FileModuleMonitorFactory();
+        $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
 
         if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
             if ($request->get('action') == 'monitor_package') {
@@ -44,6 +45,9 @@ if (user_isloggedin()) {
                     if (!$result) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
                     } else {
+                        if (!$anonymous) {
+                            $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
+                        }
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','p_monitored'));
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','now_emails'));
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
@@ -71,6 +75,7 @@ if (user_isloggedin()) {
                                             $anonymous = false;
                                             $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
                                             if ($result) {
+                                                $historyDao->groupAddHistory("frs_add_monitor_package", $filemodule_id."_".$user->getId(), $group_id);
                                                 // @TODO: i18n
                                                 $GLOBALS['Response']->addFeedback('info', 'Package is now being monitored by "'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'"');
                                             } else {
@@ -101,6 +106,7 @@ if (user_isloggedin()) {
                                             $onlyPublic = true;
                                             $result = $fmmf->stopMonitor($filemodule_id, $user, $onlyPublic);
                                             if ($result) {
+                                                $historyDao->groupAddHistory("frs_stop_monitor_package", $filemodule_id."_".$user->getId(), $group_id);
                                                 // @TODO: i18n
                                                 $GLOBALS['Response']->addFeedback('info', 'Package is now being monitored by "'.$userName.'"');
                                             } else {
