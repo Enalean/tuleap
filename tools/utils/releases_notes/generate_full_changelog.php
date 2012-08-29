@@ -31,7 +31,7 @@ foreach ($changelog as $line) {
     if (strpos($line, 'Version ') === 0) {
         if ($release_notes) {
             if ($sub_release_notes) {
-                $release_notes[] = convert($sub_release_notes);                
+                $release_notes[] = convert_to_ul_li($sub_release_notes);
             }
             break;
         }
@@ -39,7 +39,7 @@ foreach ($changelog as $line) {
         $release_notes[] = 'Tuleap ' . $tuleap_version .'('.$matches[1].')';
     } elseif (preg_match('/^\s*== /', $line)) {
         if ($sub_release_notes) {
-            $release_notes[] = convert($sub_release_notes);
+            $release_notes[] = convert_to_ul_li($sub_release_notes);
         }
         $section           = trim(str_replace('==', '', $line));
         $release_notes[]   = '=='. $section .'==';
@@ -65,24 +65,25 @@ foreach ($changelog as $line) {
 echo implode($separator, $release_notes);
 echo $separator;
 
+
 function extract_changelog_of_plugin($plugin_name) {
     global $tuleap_version, $separator;
     $release_notes = array();
     $changelog = file('plugins/'.$plugin_name.'/ChangeLog', FILE_IGNORE_NEW_LINES);
 
     foreach ($changelog as $line) {
-       if (strpos($line, 'Version ') === 0) {
+        if (strpos($line, 'Version ') === 0) {
             if (!preg_match('/Tuleap '. $tuleap_version .'\s*$/i', $line)) {
                 break;
             }
-        } else if ($line) {
+        } elseif ($line) {
             $release_notes[] = $line;
         }
     }
     return implode($separator, $release_notes);
 }
 
-function convert(array $release_notes) {
+function convert_to_ul_li(array $release_notes) {
     global $separator;
     $html  = '';
     $in_li = false;

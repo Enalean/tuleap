@@ -72,6 +72,7 @@ function extract_changelog_of_plugin($plugin_name) {
     global $tuleap_version, $separator;
     $release_notes = array();
     $changelog = file('plugins/'.$plugin_name.'/ChangeLog', FILE_IGNORE_NEW_LINES);
+
     foreach ($changelog as $line) {
         if (strpos($line, 'Version ') === 0) {
             if (!preg_match('/Tuleap '. $tuleap_version .'\s*$/i', $line)) {
