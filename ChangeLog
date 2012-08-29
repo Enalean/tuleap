@@ -12,10 +12,8 @@ Version 5.4 (Not released yet)
 
 	== Plugins ==
 	* agiledashboard: 0.51
-	* tracker: 5.10
 	* cardwall: 0.9.5
 	* docman: 2.26.3
-	* tests: 5.5
 	* forumml: 2.6.2
 	* fulltextsearch: 0.9
 	* git: 2.7.2
@@ -24,9 +22,11 @@ Version 5.4 (Not released yet)
 	* hudson: 1.9
 	* ldap: 3.17
 	* pluginsadministration: 1.2
-	* template: 1.2
-	* userlog: 1.2
 	* statistics: 0.19
+	* template: 1.2
+	* tests: 5.5
+	* tracker: 5.10
+	* userlog: 1.2
 
 	== Development ==
 	* Add script to prepare plugins changelog (to be used by Tuleap integrators when merging into stable)
