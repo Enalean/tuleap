@@ -31,11 +31,11 @@ if ((!$request->valid($vKey))
 $keyword=$request->get('key');
 $args=array();
 
-if ($keyword=='wiki') {
+$args=explode("/",$request->get('val'));
+
+if ($keyword=='wiki' && wikiPageExists($request->get('val'), $group_id)) {
     $args[]=$request->get('val');
-} else {
-    $args=explode("/",$request->get('val'));
-}
+} 
 
 $ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args), $request->get('val'));
 if (!$ref) {
@@ -201,6 +201,13 @@ if ($request->isAjax()) {
     header($location);
     exit;
 }
+
+function wikiPageExists($wiki_page, $group_id) {
+    $wiki = new WikiDao();
+    if ($wiki->retrieveWikiPageId($wiki_page, $group_id) == null) return false;
+    return true;
+}
+
 // For emacs users
 // Local Variables:
 // mode: php
