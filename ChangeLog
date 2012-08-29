@@ -1,4 +1,4 @@
-Version 5.4 (Not released yet)
+Version 5.4 (Wednesday, August 29th 2012)
 	== Bug fix ==
 	* Fix typo in french translation.
 	* Avatar was not sent in tracker v3 notifications
