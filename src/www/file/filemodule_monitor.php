@@ -20,8 +20,9 @@ if (user_isloggedin()) {
         $userHelper    = new UserHelper();
         $user          = $um->getCurrentUser();
         $frspf         = new FRSPackageFactory();
+        $package       = $frspf->getFRSPackageFromDb($filemodule_id);
         $fmmf          = new FileModuleMonitorFactory();
-        $historyDao    = new ProjectHistoryDao();
+        $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
 
         if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
             if ($request->get('action') == 'monitor_package') {
@@ -67,6 +68,7 @@ if (user_isloggedin()) {
                                                 $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
                                                 if ($result) {
                                                     $historyDao->groupAddHistory("frs_add_monitor_package", $filemodule_id."_".$user->getId(), $group_id);
+                                                    $fmmf->notifyAfterAdd($package, $user);
                                                     $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'monitoring_added', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
                                                 } else {
                                                     $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
@@ -95,6 +97,7 @@ if (user_isloggedin()) {
                                             $result = $fmmf->stopMonitor($filemodule_id, $user, $onlyPublic);
                                             if ($result) {
                                                 $historyDao->groupAddHistory("frs_stop_monitor_package", $filemodule_id."_".$user->getId(), $group_id);
+                                                $fmmf->notifyAfterDelete($package, $user);
                                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'deleted', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
                                             } else {
                                                 $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'delete_error', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));

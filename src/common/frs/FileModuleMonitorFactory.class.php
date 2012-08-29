@@ -149,6 +149,76 @@ class FileModuleMonitorFactory {
         return $dao->delete($_id, $user, $onlyPublic);
     }
 
+    /**
+     * Prepare mail
+     *
+     * @param FRSPackage $package Id of th package
+     * @param User       $user    The deleted user
+     *
+     * @return Codendi_Mail
+     */
+    function prepareMail($package, User $user) {
+        $subject   = $GLOBALS['Language']->getText('file_filemodule_monitor', 'mail_subject', array($GLOBALS['sys_name'], $package->getName()));
+        $mail      = new Codendi_Mail();
+        $mail->getLookAndFeelTemplate()->set('title', $subject);
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo($user->getEmail());
+        $mail->setSubject($subject);
+        return $mail;
+    }
+
+    /**
+     * Notify after adding monitoring for a user
+     *
+     * @param FRSPackage $package Id of th package
+     * @param User       $user    The added user
+     *
+     * @return Boolean
+     */
+    function notifyAfterAdd($package, User $user) {
+        $mailMgr   = new MailManager();
+        $mailPrefs = $mailMgr->getMailPreferencesByUser($user);
+        $mail      = $this->prepareMail($package, $user);
+        if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
+            $htmlBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail');
+            $htmlBody .= ' <a href="'.get_server_url().'/file/showfiles.php?group_id='.$package->getGroupID().'&package_id='.$package->getPackageID().'" >'.$package->getName().'</a>';
+            $htmlBody .= '<br /><br /><a href="'.get_server_url().'/file/filemodule_monitor.php?group_id='.$package->getGroupID().'&filemodule_id='.$package->getPackageID().'" >'.$GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring').'</a>';
+            $mail->setBodyHtml($htmlBody);
+        }
+        $txtBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'add_monitor_mail').' "'.$package->getName().'" : ';
+        $txtBody .= get_server_url().'/file/showfiles.php?group_id='.$package->getGroupID().'&package_id='.$package->getPackageID();
+        $txtBody .= "\n\n".$GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring').': ';
+        $txtBody .= get_server_url().'/file/filemodule_monitor.php?group_id='.$package->getGroupID().'&filemodule_id='.$package->getPackageID();
+        $mail->setBodyText($txtBody);
+        return $mail->send();
+    }
+
+    /**
+     * Notify after deleting monitoring for a user
+     *
+     * @param FRSPackage $package Id of th package
+     * @param User       $user    The deleted user
+     *
+     * @return Boolean
+     */
+    function notifyAfterDelete($package, User $user) {
+        $mailMgr   = new MailManager();
+        $mailPrefs = $mailMgr->getMailPreferencesByUser($user);
+        $mail      = $this->prepareMail($package, $user);
+        if ($mailPrefs == Codendi_Mail_Interface::FORMAT_HTML) {
+            $htmlBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail');
+            $htmlBody .= ' <a href="'.get_server_url().'/file/showfiles.php?group_id='.$package->getGroupID().'&package_id='.$package->getPackageID().'" >'.$package->getName().'</a>';
+            $htmlBody .= '<br /><br /><a href="'.get_server_url().'/file/filemodule_monitor.php?group_id='.$package->getGroupID().'&filemodule_id='.$package->getPackageID().'" >'.$GLOBALS['Language']->getText('file_showfiles', 'start_monitoring').'</a>';
+            $mail->setBodyHtml($htmlBody);
+        }
+        $txtBody = $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_monitor_mail').' "'.$package->getName().'" : ';
+        $txtBody .= get_server_url().'/file/showfiles.php?group_id='.$package->getGroupID().'&package_id='.$package->getPackageID();
+        $txtBody .= "\n\n".$GLOBALS['Language']->getText('file_showfiles', 'start_monitoring').': ';
+        $txtBody .= get_server_url().'/file/filemodule_monitor.php?group_id='.$package->getGroupID().'&filemodule_id='.$package->getPackageID();
+        $mail->setBodyText($txtBody);
+        return $mail->send();
+    }
+
 }
 
 ?>

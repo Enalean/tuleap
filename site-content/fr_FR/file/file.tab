@@ -268,6 +268,9 @@ file_filemodule_monitor	no_user	Impossible de trouver l'utilisateur "$1"
 file_filemodule_monitor	user_no_permission	L'utilisateur "$1" ne peut pas acceder en lecture a ce package
 file_filemodule_monitor	already_monitoring	L'utilisateur "$1" monitorait ce package
 file_filemodule_monitor	monitoring_added	Le package est maintenant monitoré par "$1"
+file_filemodule_monitor	mail_subject	[$1] Monitoring du package "$2"
+file_filemodule_monitor	add_monitor_mail	Vous avez été ajouté pour monitorer le package
+file_filemodule_monitor	delete_monitor_mail	Votre monitoring a été supprimé du package
 #
 #-----------------------------------------------
 # Script: SF/www/file/file_utils.php
