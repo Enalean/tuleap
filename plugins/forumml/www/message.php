@@ -37,11 +37,12 @@ require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_HTMLPurifier.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_MessageManager.class.php');
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('forumml');
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('forumml');
 if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 
-	$request =& HTTPRequest::instance();
+	$request = HTTPRequest::instance();
+	$user    = $request->getCurrentUser();
 	
 	$vGrp = new Valid_UInt('group_id');
 	$vGrp->required();
@@ -86,7 +87,10 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
 	} else {
 		$list_id = $request->get('list');
-		if (!user_isloggedin() || (!mail_is_list_public($list_id) && !user_ismember($group_id))) {
+		$project = ProjectManager::instance()->getProject($group_id);
+		if (!$user->isMember($group_id) && 
+		    ($user->isRestricted() || !mail_is_list_public($list_id) || !$project->isPublic())
+		) {
 			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
 		}		
 		if (!mail_is_list_active($list_id)) {
