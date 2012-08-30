@@ -20,8 +20,7 @@
 
 require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
-require_once dirname(__FILE__).'/../include/FullTextSearchActions.class.php';
-require_once dirname(__FILE__) .'/../include/ElasticSearch/ClientFacade.class.php';
+require_once dirname(__FILE__) .'/../include/autoload.php';
 
 class FullTextSearchActionsTests extends TuleapTestCase {
     protected $client;
