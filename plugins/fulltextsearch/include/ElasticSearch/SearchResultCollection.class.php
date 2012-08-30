@@ -33,7 +33,12 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
         }
         if (isset($result['hits']['hits'])) {
             foreach ($result['hits']['hits'] as $hit) {
-                $this->results[] = new ElasticSearch_SearchResult($hit, $project_manager);
+                $project = $project_manager->getProject($hit['fields']['group_id']);
+                if ($project->isError()) {
+                    $this->nb_documents_found--;
+                } else {
+                    $this->results[] = new ElasticSearch_SearchResult($hit, $project);
+                }
             }
         }
     }
