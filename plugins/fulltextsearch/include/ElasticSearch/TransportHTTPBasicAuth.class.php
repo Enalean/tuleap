@@ -30,5 +30,78 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
         }
         curl_setopt($this->ch, CURLOPT_FAILONERROR, true);
     }
+
+    /**
+     * @see ElasticSearchTransportHTTP::call()
+     */
+    protected function call($url, $method="GET", $payload=false) {
+        $conn = $this->ch;
+        $protocol = "http";
+        $requestURL = $protocol . "://" . $this->host . $url;
+        curl_setopt($conn, CURLOPT_URL, $requestURL);
+        curl_setopt($conn, CURLOPT_TIMEOUT, self::TIMEOUT);
+        curl_setopt($conn, CURLOPT_PORT, $this->port);
+        curl_setopt($conn, CURLOPT_RETURNTRANSFER, 1) ;
+        curl_setopt($conn, CURLOPT_CUSTOMREQUEST, strtoupper($method));
+        curl_setopt($conn, CURLOPT_FORBID_REUSE , 0) ;
+
+        if (is_array($payload) && count($payload) > 0)
+            curl_setopt($conn, CURLOPT_POSTFIELDS, json_encode($payload)) ;
+        else
+        	curl_setopt($conn, CURLOPT_POSTFIELDS, null);
+
+        $data = curl_exec($conn);
+        if ($data !== false)
+            $data = json_decode($data, true);
+        else
+        {
+            /**
+             * cUrl error code reference can be found here:
+             * http://curl.haxx.se/libcurl/c/libcurl-errors.html
+             */
+            $errno = curl_errno($conn);
+            switch ($errno)
+            {
+                case CURLE_UNSUPPORTED_PROTOCOL:
+                    $error = "Unsupported protocol [$protocol]";
+                    break;
+                case CURLE_FAILED_INIT:
+                    $error = "Internal cUrl error?";
+                    break;
+                case CURLE_URL_MALFORMAT:
+                    $error = "Malformed URL [$requestURL] -d " . json_encode($payload);
+                    break;
+                case CURLE_COULDNT_RESOLVE_PROXY:
+                    $error = "Couldnt resolve proxy";
+                    break;
+                case CURLE_COULDNT_RESOLVE_HOST:
+                    $error = "Couldnt resolve host";
+                    break;
+                case CURLE_COULDNT_CONNECT:
+                    $error = "Couldnt connect to host [{$this->host}], ElasticSearch down?";
+                    break;
+                case CURLE_OPERATION_TIMEDOUT:
+                    $error = "Operation timed out on [$requestURL]";
+                    break;
+                default:
+                    $error = "Unknown error";
+                    if ($errno == 0)
+                        $error .= ". Non-cUrl error";
+                    break;
+            }
+            $exception = new ElasticSearchTransportHTTPException($error);
+            $exception->payload = $payload;
+            $exception->port = $this->port;
+            $exception->protocol = $protocol;
+            $exception->host = $this->host;
+            $exception->method = $method;
+            throw $exception;
+        }
+
+        if (array_key_exists('error', $data))
+            $this->handleError($url, $method, $payload, $data);
+
+        return $data;
+    }
 }
 ?>
