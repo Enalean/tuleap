@@ -85,6 +85,48 @@ extends LDAP_GroupManager
     }
 
     /**
+     * Retrieve usergroups having synchro_policy option as 'auto'
+     *
+     * @return DataAccessResult
+     */
+    public function getSynchronizedUgroups() {
+        return $this->getDao()->getSynchronizedUgroups();
+    }
+
+    /**
+     * Check if a given ugroup is synchronized with an ldap group
+     *
+     * @param Integer $ugroup_id User group id to check
+     *
+     * @return Boolean
+     */
+    public function isSynchronizedUgroup($ugroup_id) {
+        return $this->getDao()->isSynchronizedUgroup($ugroup_id);
+    }
+
+    /**
+     * Check if a given ugroup is preserving members
+     *
+     * @param Integer $ugroup_id User group id to check
+     *
+     * @return Boolean
+     */
+    public function isMembersPreserving($ugroup_id) {
+        return $this->getDao()->isMembersPreserving($ugroup_id);
+    }
+
+    /**
+     * Check if the update of members of an ugroup is allowed
+     *
+     * @param Integer $ugroup_id User group id
+     *
+     * @return Boolean
+     */
+    public function isMembersUpdateAllowed($ugroup_id) {
+        return $this->getDao()->isMembersUpdateAllowed($ugroup_id);
+    }
+
+    /**
      * Return dao
      *
      * @return LDAP_UserGroupDao
@@ -92,6 +134,24 @@ extends LDAP_GroupManager
     function getDao() 
     {
         return new LDAP_UserGroupDao(CodendiDataAccess::instance());
+    }
+
+    /**
+     * Synchronize the ugroups with the ldap ones
+     *
+     * @return void
+     */
+    function synchronizeUgroups() {
+        $dar = $this->getSynchronizedUgroups();
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        foreach($dar as $row) {
+                $this->setId($row['ugroup_id']);
+                $this->setGroupDn($row['ldap_group_dn']);
+                $isNightlySynchronized = self::AUTO_SYNCHRONIZATION;
+                $displayFeedback       = false;
+                $this->bindWithLdap($row['bind_option'], $isNightlySynchronized, $displayFeedback);
+            }
+        }
     }
 }
 

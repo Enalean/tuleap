@@ -437,6 +437,23 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     protected abstract function fetchSubmitValue();
 
     /**
+     * Return a value from user submitted request (if any) or from default value (if any)
+     *
+     * @param mixed $submitted_values
+     * 
+     * @return mixed
+     */
+    protected function getValueFromSubmitOrDefault($submitted_values) {
+        $value = '';
+        if (isset($submitted_values[$this->getId()])) {
+            $value = $submitted_values[$this->getId()];
+        } else if ($this->hasDefaultValue()) {
+            $value = $this->getDefaultValue();
+        }
+        return $value;
+    }
+
+    /**
      * Fetch the html code to display the field value in masschange submission form
      *
      * @return string html

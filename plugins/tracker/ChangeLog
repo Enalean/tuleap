@@ -1,3 +1,17 @@
+Version 5.11 - Tuleap 5.5
+    * Tracker v5 artifacts or reports are no longer displayed if the project they belong to is inactive or deleted. (contrib STMicroelectronics).
+
+Version 5.10 - Tuleap 5.4
+    * Create backlog item in milestone context: choose parent upon artifact creation
+
+Version 5.9 - Tuleap 5.4
+    * Refactor artifact creation to take into account automatic parent creation according to hierarchy
+    * On artifact update, display it's parents
+    * On artifact creation allow to choose to link to an existing artifact.
+
+Version 5.8.15 - Tuleap 5.4
+    * Static values from SB field can be sorted alphabetically (sla #1217)
+
 Version 5.8.14 - Tuleap 5.4
     * Add new User parameter for renderer plugin invokation.
     * Add caching on hierarchy.

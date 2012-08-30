@@ -1,3 +1,6 @@
+Version 2.26.3 - Tuleap 5.4
+    * Refactoring to update docman item perms in fulltext
+
 Version 2.26.2 - Tuleap 5.3.1
     * Fix missing autocompleter in approval table.
 

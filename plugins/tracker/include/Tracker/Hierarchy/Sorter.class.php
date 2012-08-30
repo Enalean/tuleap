@@ -124,11 +124,11 @@ class Tracker_Hierarchy_Sorter {
      * @param DataAccessResult $artifacts_info
      * @return \TreeNode
      */
-    public function buildTreeWithMissingChildren(User $user, $artifacts_info) {
+    public function buildTreeWithMissingChildren(User $user, $artifacts_info, array $excluded_artifact_ids) {
         $root           = new TreeNode();
         $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
         $artifacts      = $this->getArtifactsFromArtifactInfo($artifacts_info);
-        $this->buildArtifactsTree($user, $root, $artifacts, $artifacts_info);
+        $this->buildArtifactsTree($user, $root, $artifacts, $artifacts_info, array_flip($excluded_artifact_ids));
         return $root;
     }
 
@@ -148,12 +148,14 @@ class Tracker_Hierarchy_Sorter {
         return $artifacts;
     }
 
-    private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info) {
+    private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info, array $excluded_artifact_ids) {
         foreach ($artifacts as $artifact) {
-            $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));
-            $node->setObject($artifact);
-            $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user), $artifacts_info);
-            $root->addChild($node);
+            if (!isset($excluded_artifact_ids[$artifact->getId()])) {
+                $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));
+                $node->setObject($artifact);
+                $this->buildArtifactsTree($user, $node, $artifact->getHierarchyLinkedArtifacts($user), $artifacts_info, $excluded_artifact_ids);
+                $root->addChild($node);
+            }
         }
     }
 

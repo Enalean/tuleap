@@ -97,8 +97,8 @@ class GitActions extends PluginActions {
         if ($repository) {
             if ($repository->canBeDeleted()) {
                 $this->markAsDeleted($repository);
-                $c->addInfo( $this->getText('actions_delete_process') );
-                $c->addInfo( $this->getText('actions_delete_backup').' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir') );
+                $c->addInfo($this->getText('actions_delete_process', array($repository->getFullName())));
+                $c->addInfo($this->getText('actions_delete_backup', array($repository->getFullName())).' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir'));
             } else {
                 $c->addError( $this->getText('backend_delete_haschild_error') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
@@ -354,14 +354,14 @@ class GitActions extends PluginActions {
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
-    public function confirmDeletion($projectId, $repoId) {
+    public function confirmDeletion($projectId, $repository) {
         $c = $this->getController();
-        if ( empty($repoId) ) {
+        if (empty($repository)) {
             $c->addError( $this->getText('actions_params_error') );
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        $c->addWarn( $this->getText('confirm_deletion_msg'));
+        $c->addWarn($this->getText('confirm_deletion_msg', array($repository->getFullName())));
     }
 
     /**

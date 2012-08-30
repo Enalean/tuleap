@@ -691,6 +691,7 @@ plugin_tracker_common_artifact	error_float_value	is not a float.
 plugin_tracker_common_artifact	error_string_value	$1 is not a string.
 plugin_tracker_common_artifact	error_string_value_characters	$1 can contain neiher carriage return nor null char.
 plugin_tracker_common_artifact	error_artifactlink_value	$1: $2 is not an artifact id.
+plugin_tracker_common_artifact	error_artifactlink_choose_parent	You must choose to link to an existing parent artifact or to create a new one.
 plugin_tracker_common_artifact	error_date_value	$1 is not a date.
 plugin_tracker_common_artifact	error_text_value	$1 is not a text.
 
@@ -977,6 +978,11 @@ plugin_tracker_artifact	to	to
 plugin_tracker_artifact	removed	removed
 plugin_tracker_artifact	added	added
 plugin_tracker_artifact	formelement_artifactlink_help	Enter artifact ids separated with a comma
+plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Create a new one
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Select $1 parent: 
+plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Will have $1 as parent.
+plugin_tracker_artifact	formelement_artifactlink_open_parent	Open $1
+
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
@@ -1082,6 +1088,7 @@ plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to ch
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible to delete this field (used in semantics, workflow or field dependency)
 plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
 plugin_tracker_formelement_admin	hide_value	Show/hide this value
+plugin_tracker_formelement_admin	alpha_ranking_updated	Alpha Ranking updated
 
 plugin_tracker_formelement_property	hint	Hint
 plugin_tracker_formelement_property	default_value_type	Default value type

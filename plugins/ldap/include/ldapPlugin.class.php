@@ -90,10 +90,11 @@ class LdapPlugin extends Plugin {
         $this->_addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->_addHook('ugroup_table_title', 'ugroup_table_title', false);
-        $this->_addHook('ugroup_table_row', 'ugroup_table_row', false);
-        $this->_addHook('project_admin_add_user_form', 'project_admin_add_user_form', false);
-        
+        $this->_addHook('ugroup_table_title',               'ugroup_table_title',          false);
+        $this->_addHook('ugroup_table_row',                 'ugroup_table_row',            false);
+        $this->_addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
+        $this->_addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
+
         // Svn intro
         $this->_addHook('svn_intro', 'svn_intro', false);
         $this->_addHook('svn_check_access_username', 'svn_check_access_username', false);
@@ -737,10 +738,13 @@ class LdapPlugin extends Plugin {
                 $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
                 
                 $baseUrl = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'];
-                
+
                 $urlAdd = $this->getPluginPath().'/ugroup_add_user.php?ugroup_id='.$params['row']['ugroup_id'].'&func=add_user';
-                $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a>';
-                
+                $linkAdd = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_users').'</a><br/>';
+                if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['row']['ugroup_id'])) {
+                    $linkAdd = '';
+                }
+
                 $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($params['row']['ugroup_id']);
                 if($ldapGroup !== null) {
                     $grpName = $hp->purify($ldapGroup->getCommonName());
@@ -752,7 +756,7 @@ class LdapPlugin extends Plugin {
                 $urlBind = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'].'&func=bind_with_group';
                 $linkBind = '<a href="'.$urlBind.'">- '.$title.'</a>';
                 
-                $link = $linkAdd.'<br/>'.$linkBind;
+                $link = $linkAdd.$linkBind;
                 
                 $params['html_array'][150] = array('value' => $link, 'html_attrs' => 'align="center"');
             }
@@ -797,6 +801,22 @@ class LdapPlugin extends Plugin {
             $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 
             echo $html;
+        }
+    }
+
+    /**
+     * Check if adding or deleting users from the ugroup is allowed
+     *
+     * @param Array $params
+     *
+     * @return Void
+     */
+    function ugroup_update_users_allowed(array $params) {
+        if ($params['ugroup_id']) {
+            $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+            if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['ugroup_id'])) {
+                $params['allowed'] = false;
+            }
         }
     }
 
@@ -849,9 +869,14 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isDailySyncEnabled()) {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
+
+            //Synchronize the ugroups with the ldap ones
+            $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+            $ldapUserGroupManager->synchronizeUgroups();
+            return true;
         }
     }
-    
+
     /**
      * The daily synchro is enabled if the variable is not defined or if the variable is defined to 1
      * 

@@ -77,6 +77,17 @@ class Tracker_Hierarchy {
     }
 
     /**
+     * Return the parent of given tracker_id or null if tracker has no parent
+     *
+     * @param Integer $tracker_id
+     *
+     * @return Integer
+     */
+    public function getParent($tracker_id) {
+        return isset($this->parents[$tracker_id]) ? $this->parents[$tracker_id] : null;
+    }
+
+    /**
      * @throws Tracker_Hierarchy_NotInHierarchyException
      * @throws Tracker_Hierarchy_CyclicHierarchyException
      *
