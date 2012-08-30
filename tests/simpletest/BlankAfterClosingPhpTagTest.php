@@ -45,6 +45,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
+            'post_merge_actions.php',
         );
         
         //Those files are allowed to contain something after closing tag
