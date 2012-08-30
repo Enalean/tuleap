@@ -28,6 +28,7 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
         if ($user && $password) {
             curl_setopt($this->ch, CURLOPT_USERPWD, $user .':'. $password);
         }
+        curl_setopt($this->ch, CURLOPT_FAILONERROR, true);
     }
 }
 ?>
