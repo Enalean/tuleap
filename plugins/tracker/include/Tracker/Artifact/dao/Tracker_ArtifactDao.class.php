@@ -122,6 +122,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -164,6 +166,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -208,6 +212,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
