@@ -32,7 +32,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
             $group_name = 'name="'. $name .'[]" ';
         }
         
-        $html .= '<ul style="list-style-type:none;padding-left:5px; margin-top: 2px;"';
+        $html .= '<ul class="tracker-form-element-checkbox"';
         if ($id) {
             $html .= 'id="'. $id .'" ';
         }
