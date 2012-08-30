@@ -84,9 +84,14 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
                     $error = "Operation timed out on [$requestURL]";
                     break;
                 default:
-                    $error = "Unknown error";
-                    if ($errno == 0)
-                        $error .= ". Non-cUrl error";
+                    $status = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+                    if ($status == 401) {
+                        $error = "Server misconfigured. Tuleap cannot access to host [{$this->host}]";
+                    } else {
+                        $error = "Unknown error";
+                        if ($errno == 0)
+                            $error .= ". Non-cUrl error";
+                    }
                     break;
             }
             $exception = new ElasticSearchTransportHTTPException($error);
