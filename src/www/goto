@@ -28,20 +28,28 @@ if ((!$request->valid($vKey))
                $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
  }
 
-$keyword=$request->get('key');
+$keyword = $request->get('key');
+$value = $request->get('val');
+
 $args=array();
 
-$args=explode("/",$request->get('val'));
+$args=explode("/", $value);
 
-if ($keyword=='wiki' && wikiPageExists($request->get('val'), $group_id)) {
-    $args[]=$request->get('val');
-} 
+$wiki = new WikiDao();
+// Wiki Specific
+//If wiki page exists, we keep the value to handle 'toto/titi' wiki page
+//If wiki page does not exist, we check if  there is a version number in the wiki page name to handle 'toto/titi/1'
+if ($keyword=='wiki' && $wiki->retrieveWikiPageId($value, $group_id) != null) {
+    $args = array($value);
+} else if (preg_match('%^(.*)/(\d+)$%', $val, $matches)) {
+    $args = array($matches[1], $matches[2]);
+}
 
 $ref=& $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword,$group_id,count($args), $request->get('val'));
 if (!$ref) {
     exit_error($GLOBALS['Language']->getText('global','error'),
                $GLOBALS['Language']->getText('include_exit', 'missing_param_err'));
- }
+}
 
 // Get groupname (might be useful in replace rules)
 $projname=null;
@@ -200,12 +208,6 @@ if ($request->isAjax()) {
     $location = "Location: ".$ref->getLink().$feed;
     header($location);
     exit;
-}
-
-function wikiPageExists($wiki_page, $group_id) {
-    $wiki = new WikiDao();
-    if ($wiki->retrieveWikiPageId($wiki_page, $group_id) == null) return false;
-    return true;
 }
 
 // For emacs users
