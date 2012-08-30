@@ -29,9 +29,8 @@ if ((!$request->valid($vKey))
  }
 
 $keyword = $request->get('key');
-$value = $request->get('val');
-
-$args = explode("/", $value);
+$value   = $request->get('val');
+$args    = explode("/", $value);
 
 if ($keyword == 'wiki') {
     $wiki = new WikiDao();
