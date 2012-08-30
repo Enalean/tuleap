@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_ClientFactory extends ElasticSearchTransportHTTP {
-    
+/**
+ * Support for Basic Auth
+ */
+class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
+
     public function __construct($host, $port, $user, $password) {
         parent::__construct($host, $port);
         if ($user && $password) {
