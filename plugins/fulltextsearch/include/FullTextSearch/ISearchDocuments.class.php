@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchResultCollection.class.php';
 
 /**
  * Interface which define the base contract for search library clients

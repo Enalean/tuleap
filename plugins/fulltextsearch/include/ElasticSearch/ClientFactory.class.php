@@ -26,35 +26,38 @@ class ElasticSearch_ClientFactory {
     /**
      * Build instance of ClientFacade
      *
-     * @param string $path_to_elasticsearch_client /usr/share/elasticsearch
-     * @param string the host of the search server
-     * @param string the port of the search server
+     * @param string  $path_to_elasticsearch_client /usr/share/elasticsearch
+     * @param string  $server_host                  the host of the search server
+     * @param string  $server_port                  the port of the search server
+     * @param string  $server_user                  the user of the search server (Basic Auth)
+     * @param string  $server_password              the pass of the search server (Basic Auth)
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port) {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port);
-        require_once 'IndexClientFacade.class.php';
+    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password) {
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password);
         return new ElasticSearch_IndexClientFacade($client);
     }
-    
+
     /**
      * Build instance of ClientFacade
      *
-     * @param string $path_to_elasticsearch_client /usr/share/elasticsearch
-     * @param string the host of the search server
-     * @param string the port of the search server
+     * @param string         $path_to_elasticsearch_client /usr/share/elasticsearch
+     * @param string         $server_host                  the host of the search server
+     * @param string         $server_port                  the port of the search server
+     * @param string         $server_user                  the user of the search server (Basic Auth)
+     * @param string         $server_password              the pass of the search server (Basic Auth)
+     * @param ProjectManager $project_manager              The project manager
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, ProjectManager $project_manager) {
+    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
         $type   = 'docman';
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $type);
-        require_once 'SearchClientFacade.class.php';
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
     }
-    
-    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $type = 'docman') {
+
+    private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman') {
         //todo use installation dir defined by elasticsearch rpm
         $client_path = $path_to_elasticsearch_client .'/ElasticSearchClient.php';
         if (! file_exists($client_path)) {
@@ -66,7 +69,7 @@ class ElasticSearch_ClientFactory {
 
         require_once $client_path;
 
-        $transport  = new ElasticSearchTransportHTTP($server_host, $server_port);
+        $transport  = new ElasticSearch_TransportHTTPBasicAuth($server_host, $server_port, $server_user, $server_password);
         return new ElasticSearchClient($transport, 'tuleap', $type);
     }
 }

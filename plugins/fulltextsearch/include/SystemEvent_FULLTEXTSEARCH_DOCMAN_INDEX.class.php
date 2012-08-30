@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN.class.php';
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX extends SystemEvent_FULLTEXTSEARCH_DOCMAN {
 

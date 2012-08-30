@@ -19,6 +19,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'autoload.php';
 
 class fulltextsearchPlugin extends Plugin {
 
@@ -80,7 +81,6 @@ class fulltextsearchPlugin extends Plugin {
 
     private function getActions() {
         if (!isset($this->actions) && ($search_client = $this->getIndexClient())) {
-            require_once 'FullTextSearchActions.class.php';
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
@@ -122,10 +122,6 @@ class fulltextsearchPlugin extends Plugin {
 
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
         if ($this->isAllowed($item->getGroupId())) {
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
 
             $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
             if ($additional_params) {
@@ -158,29 +154,31 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getIndexClient() {
-        $factory     = $this->getClientFactory();
-        $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        return $factory->buildIndexClient($client_path, $server_host, $server_port);
+        $factory         = $this->getClientFactory();
+        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
+        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
+        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password);
     }
 
     private function getSearchClient() {
-        $factory     = $this->getClientFactory();
-        $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, ProjectManager::instance());
+        $factory         = $this->getClientFactory();
+        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
+        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, ProjectManager::instance());
     }
 
     private function getClientFactory() {
-        require_once 'ElasticSearch/ClientFactory.class.php';
         return new ElasticSearch_ClientFactory();
     }
 
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
-            require_once('FulltextsearchPluginInfo.class.php');
             $this->pluginInfo = new FulltextsearchPluginInfo($this);
         }
         return $this->pluginInfo;

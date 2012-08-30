@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'FullTextSearch/IIndexDocuments.class.php';
 require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
 /**
  * Class responsible to send requests to an indexation server

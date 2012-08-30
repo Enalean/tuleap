@@ -25,8 +25,7 @@ class ElasticSearch_SearchResult {
     public $project_name;
     public $highlight;
         
-    public function __construct(array $hit, ProjectManager $project_manager) {
-        $project            = $project_manager->getProject($hit['fields']['group_id']);
+    public function __construct(array $hit, Project $project) {
         $this->item_title   = $hit['fields']['title'];
         $this->url          = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
         $this->permissions  = implode(', ', $hit['fields']['permissions']);
@@ -34,5 +33,4 @@ class ElasticSearch_SearchResult {
         $this->highlight    = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
     }
 }
-
 ?>

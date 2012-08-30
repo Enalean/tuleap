@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Index.class.php';
-require_once dirname(__FILE__).'/../SearchResultCollection.class.php';
 
 class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template = 'search';

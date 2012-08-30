@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'FullTextSearchActions.class.php';
+require_once 'common/system_event/SystemEvent.class.php';
 
 abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
 

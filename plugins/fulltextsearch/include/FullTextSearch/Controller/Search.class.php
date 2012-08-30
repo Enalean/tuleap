@@ -19,29 +19,30 @@
  */
 
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../Presenter/Search.class.php';
-require_once dirname(__FILE__).'/../Presenter/ErrorNoSearch.class.php';
-require_once dirname(__FILE__).'/../ISearchDocuments.class.php';
 
 class FullTextSearch_Controller_Search extends MVC2_Controller {
-    
+
     /**
      * @var FullTextSearch_ISearchDocuments
      */
     private $client;
-    
+
     public function __construct(Codendi_Request                 $request,
                                 FullTextSearch_ISearchDocuments $client) {
         parent::__construct('fulltextsearch', $request);
         $this->client = $client;
     }
-    
+
     public function index() {
-        $index_status = $this->client->getStatus();
-        $presenter    = new FullTextSearch_Presenter_Index($index_status);
+        try {
+            $index_status = $this->client->getStatus();
+            $presenter    = new FullTextSearch_Presenter_Index($index_status);
+        } catch (ElasticSearchTransportHTTPException $e) {
+            $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
+        }
         $this->renderWithHeaderAndFooter($presenter);
     }
-    
+
     public function search() {
         $terms = $this->request->getValidated('terms', 'string', '');
         try {
