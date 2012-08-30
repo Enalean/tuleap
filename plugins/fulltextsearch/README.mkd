@@ -51,17 +51,6 @@ Edit elasticsearch/conf/jetty.xml to restrict access to ES server:
     </New>
 
     <New class="org.eclipse.jetty.http.security.Constraint"
-         id="ReadOnlyUserDataSecurityConstraint">
-        <Set name="authenticate">true</Set>
-        <Set name="name">BASIC</Set>
-        <Set name="roles">
-            <Array type="java.lang.String">
-                <Item>readwrite</Item>
-            </Array>
-        </Set>
-    </New>
-
-    <New class="org.eclipse.jetty.http.security.Constraint"
          id="ReadOnlyClusterDataSecurityConstraint">
         <Set name="authenticate">true</Set>
         <Set name="name">BASIC</Set>
