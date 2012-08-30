@@ -19,9 +19,6 @@
  */
 
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../Presenter/Search.class.php';
-require_once dirname(__FILE__).'/../Presenter/ErrorNoSearch.class.php';
-require_once dirname(__FILE__).'/../ISearchDocuments.class.php';
 
 class FullTextSearch_Controller_Search extends MVC2_Controller {
     

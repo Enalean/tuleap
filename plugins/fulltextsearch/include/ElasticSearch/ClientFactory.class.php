@@ -36,7 +36,6 @@ class ElasticSearch_ClientFactory {
      */
     public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password) {
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password);
-        require_once 'IndexClientFacade.class.php';
         return new ElasticSearch_IndexClientFacade($client);
     }
 
@@ -55,7 +54,6 @@ class ElasticSearch_ClientFactory {
     public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
         $type   = 'docman';
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
-        require_once 'SearchClientFacade.class.php';
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
     }
 

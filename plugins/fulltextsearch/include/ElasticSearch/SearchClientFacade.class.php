@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ClientFacade.class.php';
-require_once dirname(__FILE__) .'/../FullTextSearch/ISearchDocuments.class.php';
-require_once 'SearchResultCollection.class.php';
 
 /**
  * Allow to perform search on ElasticSearch Index 

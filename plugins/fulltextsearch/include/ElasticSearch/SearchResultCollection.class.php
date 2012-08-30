@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchResult.class.php';
-require_once dirname(__FILE__).'/../FullTextSearch/SearchResultCollection.class.php';
 
 class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResultCollection {
     private $nb_documents_found = 0;
