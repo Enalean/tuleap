@@ -1,6 +1,10 @@
 Version 5.5 (Not released yet)
     == Plugins ==
     * tracker: 5.11
+
+	== Development ==
+	* Add tool to easily fix the singleton count after a merge
+
     
 Version 5.4 (Wednesday, August 29th 2012)
 	== Bug fix ==
