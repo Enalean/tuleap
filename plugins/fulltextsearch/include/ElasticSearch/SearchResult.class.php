@@ -21,6 +21,7 @@
 class ElasticSearch_SearchResult {
     public $item_title;
     public $url;
+    public $display_permissions;
     public $permissions;
     public $project_name;
     public $highlight;
@@ -28,9 +29,12 @@ class ElasticSearch_SearchResult {
     public function __construct(array $hit, Project $project) {
         $this->item_title   = $hit['fields']['title'];
         $this->url          = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
-        $this->permissions  = implode(', ', $hit['fields']['permissions']);
         $this->project_name = $project->getPublicName();
         $this->highlight    = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
+        $this->display_permissions = isset($hit['fields']['permissions']);
+        if ($this->display_permissions) {
+            $this->permissions = implode(', ', $hit['fields']['permissions']);
+        }
     }
 }
 ?>

@@ -78,7 +78,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                 )
             )
         );
-        $query['query'] = $filtered_query;
+        $query['query']  = $filtered_query;
+        $query['fields'] = array_diff($query['fields'], array('permissions'));
         //print_r(json_encode($query));
         return $query;
     }
