@@ -245,11 +245,9 @@ class fulltextsearchPlugin extends Plugin {
         }
 
         $controller = $this->getSearchController();
-        switch ($request->get('func')) {
-            case 'search':
+        if ($request->get('terms')) {
                 $controller->adminSearch();
-                break;
-            default:
+        } else {
                 $controller->index();
         }
     }
