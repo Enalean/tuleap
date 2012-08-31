@@ -1,5 +1,11 @@
+.fts_results {
+    margin: 0;
+    padding: 0;
+}
 .fts_result {
-    margin-bottom: 0.5em;
+    margin-bottom: 1em;
+    padding-bottom: 1em;
+    list-style: none;
 }
 
 .fts_title {
@@ -12,4 +18,7 @@
 
 .fts_metadata {
     color: #888;
+}
+.fts_highlight {
+    margin: 0.25em 0em;
 }
