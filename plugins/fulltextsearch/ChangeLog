@@ -1,3 +1,6 @@
+Version 0.10 - Tuleap 5.5
+    * Add support for Basic Auth
+
 Version 0.9 - Tuleap 5.4
     * Provides RPMS for elastic search
 
