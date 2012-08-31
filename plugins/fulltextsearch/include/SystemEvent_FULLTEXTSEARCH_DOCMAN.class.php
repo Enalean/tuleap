@@ -122,7 +122,10 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
         $group_id = (int)$this->getRequiredParameter(0);
         $item_id  = (int)$this->getRequiredParameter(1);
         $version  = (int)$this->getParameter(2);
-        $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', item id: '. $this->verbalizeDocmanItemId($group_id, $item_id, $with_link) .', version: '. $version;
+        $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', item id: '. $this->verbalizeDocmanItemId($group_id, $item_id, $with_link);
+        if ($version) {
+            $txt .= ', version: '. $version;
+        }
         return $txt;
     }
 
