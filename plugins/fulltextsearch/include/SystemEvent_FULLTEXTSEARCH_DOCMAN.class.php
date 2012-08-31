@@ -117,7 +117,21 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMAN extends SystemEvent {
      * @return string a human readable representation of parameters
      */
     public function verbalizeParameters($with_link) {
-        return $this->parameters;
+        $txt = '';
+
+        $group_id = (int)$this->getRequiredParameter(0);
+        $item_id  = (int)$this->getRequiredParameter(1);
+        $version  = (int)$this->getParameter(2);
+        $txt .= 'project: '. $this->verbalizeProjectId($group_id, $with_link) .', item id: '. $this->verbalizeDocmanItemId($group_id, $item_id, $with_link) .', version: '. $version;
+        return $txt;
+    }
+
+    private function verbalizeDocmanItemId($group_id, $item_id, $with_link) {
+        $txt = '#'. $item_id;
+        if ($with_link) {
+            $txt = '<a href="/plugins/docman/?group_id='. $group_id .'&action=details&id='. $item_id .'&section=properties">'. $txt .'</a>';
+        }
+        return $txt;
     }
 }
 ?>
