@@ -122,13 +122,13 @@ if (user_isloggedin()) {
                 } else {
                     $editContent    .= '<form id="filemodule_monitor_form_delete" method="post" >';
                     $editContent    .= '<input type="hidden" name="action" value="delete_monitoring">';
-                    $editContent    .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'btn_delete').'?'), false, false, false);
+                    $editContent    .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'delete').'?'), false, false, false);
                     $rowBgColor = 0;
                     foreach ($list as $entry) {
                         $user    = $um->getUserById($entry['user_id']);
                         $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
                     }
-                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" /></td></tr>';
+                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'delete').'" /></td></tr>';
                     $editContent .= '</table>';
                     $editContent .= '</form>';
                 }
@@ -139,7 +139,7 @@ if (user_isloggedin()) {
                 $editContent .= '<br /><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
                 $autocomplete = "new UserAutoCompleter('listeners_to_add', '".util_get_dir_image_theme()."', true);";
                 $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
-                $editContent .= '<br /><input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+                $editContent .= '<br /><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'add').'" />';
                 $editContent .= '</form>';
             }
             file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
@@ -149,11 +149,11 @@ if (user_isloggedin()) {
             echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
             $anonymousOption = '';
             if ($fmmf->isMonitoring($filemodule_id, $user)) {
-                $submit = '<input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+                $submit = $Language->getText('file_showfiles', 'stop_monitoring').': <input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
             } else {
                 $anonymousOption .= $Language->getText('file_filemodule_monitor', 'anonymous');
                 $anonymousOption .= '<input type="checkbox" id="anonymous_frs_monitoring" name="anonymous_frs_monitoring" checked="checked" /><br />';
-                $submit = '<input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+                $submit = $Language->getText('file_showfiles', 'start_monitoring').': <input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
             }
             echo $anonymousOption;
             echo $submit;
