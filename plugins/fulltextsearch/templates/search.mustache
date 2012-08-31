@@ -1,5 +1,6 @@
-{{> index}}
+<form name="fts_query" method="get" action="/search/">
+    <input type="hidden" name="type_of_search" value="fulltext" />
+    <input type="text" name="words" value="{{terms}}" />
+    <input type="submit" value="{{search_label}}" />
+</form>
 {{> search-results}}
-{{#has_results}}
-<p>Query took {{elapsed_time}}s</p>
-{{/has_results}}

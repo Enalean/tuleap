@@ -48,7 +48,7 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         try {
             $index_status  = $this->client->getStatus();
             $search_result = $this->client->searchDocumentsIgnoringPermissions($terms);
-            $presenter     = new FullTextSearch_Presenter_Search($index_status, $terms, $search_result);
+            $presenter     = new FullTextSearch_Presenter_AdminSearch($index_status, $terms, $search_result);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
         }
@@ -63,7 +63,7 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
         }
-        $this->render('search-results', $presenter);
+        $this->render($presenter->template, $presenter);
     }
 
     private function renderWithHeaderAndFooter($presenter) {
