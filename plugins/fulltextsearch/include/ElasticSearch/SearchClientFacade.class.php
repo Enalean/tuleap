@@ -45,10 +45,10 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocumentsIgnoringPermissions($terms) {
-        $query  = $this->getSearchDocumentsQuery($terms);
+    public function searchDocumentsIgnoringPermissions($terms, array $facets) {
+        $query  = $this->getSearchDocumentsQuery($terms, $facets);
         $search = $this->client->search($query);
-        return new ElasticSearch_SearchResultCollection($search, $this->project_manager);
+        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
     }
 
     /**
@@ -56,18 +56,18 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, User $user) {
-        $query  = $this->getSearchDocumentsQueryWithPermissions($terms, $user);
+    public function searchDocuments($terms, array $facets, User $user) {
+        $query  = $this->getSearchDocumentsQueryWithPermissions($terms, $facets, $user);
         $search = $this->client->search($query);
-        return new ElasticSearch_SearchResultCollection($search, $this->project_manager);
+        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
     }
 
     /**
      * @return array to be used for querying ES
      */
-    private function getSearchDocumentsQueryWithPermissions($terms, User $user) {
+    private function getSearchDocumentsQueryWithPermissions($terms, array $facets, User $user) {
         $ugroup_literalizer = new UGroupLiteralizer();
-        $query = $this->getSearchDocumentsQuery($terms);
+        $query = $this->getSearchDocumentsQuery($terms, $facets);
         $filtered_query = array(
             'filtered' => array(
                 'query'  => $query['query'],
@@ -84,11 +84,28 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         return $query;
     }
 
+    private function filterWithGivenFacets(array &$query, array $facets) {
+        if (isset($facets['group_id'])) {
+            $filter_on_project = array('or' => array());
+            foreach ($facets['group_id'] as $group_id) {
+                $filter_on_project['or'][] = array(
+                    'range' => array(
+                        'group_id' => array(
+                            'from' => $group_id,
+                            'to'   => $group_id
+                        )
+                    )
+                );
+            }
+            $query['filter'] = $filter_on_project;
+        }
+    }
+
     /**
      * @return array to be used for querying ES
      */
-    private function getSearchDocumentsQuery($terms) {
-        return array(
+    private function getSearchDocumentsQuery($terms, array $facets) {
+        $query = array(
             'query' => array(
                 'query_string' => array(
                     'query' => $terms
@@ -104,10 +121,19 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                 'pre_tags' => array('<em class="fts_word">'),
                 'post_tags' => array('</em>'),
                 'fields' => array(
-                    'file' => new stdClass
+                    'file' => new stdClass()
+                )
+            ),
+            'facets' => array(
+                'projects' => array(
+                    'terms' => array(
+                        'field' => 'group_id'
+                    )
                 )
             )
         );
+        $this->filterWithGivenFacets($query, $facets);
+        return $query;
     }
 
     /**

@@ -27,10 +27,11 @@ class ElasticSearch_SearchResult {
     public $highlight;
         
     public function __construct(array $hit, Project $project) {
-        $this->item_title   = $hit['fields']['title'];
-        $this->url          = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
-        $this->project_name = $project->getPublicName();
-        $this->highlight    = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
+        $this->item_title    = $hit['fields']['title'];
+        $this->url           = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+        $this->project_name  = $project->getPublicName();
+        $this->highlight     = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
+        $this->has_highlight = !empty($this->highlight);
         $this->display_permissions = isset($hit['fields']['permissions']);
         if ($this->display_permissions) {
             $this->permissions = implode(', ', $hit['fields']['permissions']);

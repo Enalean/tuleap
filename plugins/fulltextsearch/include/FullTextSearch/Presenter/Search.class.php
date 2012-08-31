@@ -36,6 +36,14 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
         return ($this->result_count() > 0);
     }
     
+    public function has_facets() {
+        return (count($this->facets()) > 0);
+    }
+    
+    public function facets() {
+        return $this->query_result->getFacets();
+    }
+    
     public function no_results() {
         return !$this->has_results();
     }

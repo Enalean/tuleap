@@ -44,10 +44,12 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     }
 
     public function adminSearch() {
-        $terms = $this->request->getValidated('terms', 'string', '');
+        $terms  = $this->request->getValidated('terms', 'string', '');
+        $facets = $this->getFacets();
+
         try {
             $index_status  = $this->client->getStatus();
-            $search_result = $this->client->searchDocumentsIgnoringPermissions($terms);
+            $search_result = $this->client->searchDocumentsIgnoringPermissions($terms, $facets);
             $presenter     = new FullTextSearch_Presenter_AdminSearch($index_status, $terms, $search_result);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
@@ -56,9 +58,11 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     }
 
     public function search() {
-        $terms = $this->request->getValidated('words', 'string', '');
+        $terms  = $this->request->getValidated('words', 'string', '');
+        $facets = $this->getFacets();
+
         try {
-            $search_result = $this->client->searchDocuments($terms, $this->request->getCurrentUser());
+            $search_result = $this->client->searchDocuments($terms, $facets, $this->request->getCurrentUser());
             $presenter     = new FullTextSearch_Presenter_Search(1, $terms, $search_result);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
@@ -70,6 +74,14 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         $GLOBALS['HTML']->header(array('title' => 'Full text search', 'selected_top_tab' => 'admin'));
         $this->render($presenter->template, $presenter);
         $GLOBALS['HTML']->footer(array());
+    }
+
+    private function getFacets() {
+        $facets = $this->request->get('facets');
+        if (!is_array($facets)) {
+            $facets = array();
+        }
+        return $facets;
     }
 }
 

@@ -2,9 +2,10 @@
     margin: 0;
     padding: 0;
 }
+
 .fts_result {
     margin-bottom: 1em;
-    padding-bottom: 1em;
+    padding-bottom: 0.5em;
     list-style: none;
 }
 
@@ -20,9 +21,22 @@
 .fts_metadata {
     color: #888;
 }
+
 .fts_highlight {
     margin: 0.25em 0em;
 }
+
 .fts_resultcount {
     color: #888;
+    margin-top: 0;
+}
+
+.frs_facet {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.frs_facet_main_title {
+    margin-bottom: 0.5em;
 }

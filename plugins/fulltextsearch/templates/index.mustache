@@ -7,9 +7,12 @@ site admin usage for the time being.</p>
     <li>Number of indexed documents: {{nb_docs}}</li>
 </ul></p>
 
-<form name="fts_query" method="get" action="?">
-    <p>
-        <input type="text" name="terms" value="{{terms}}" />
-        <input type="submit" value="{{search_label}}" />
-    </p>
-</form>
+<div class="container-fluid">
+    <form name="fts_query" method="get" action="?">
+        <div class="row">
+            <div class="span12">
+                <input type="text" name="terms" value="{{terms}}" size="30" />
+                <input type="submit" value="{{search_label}}" />
+            </div>
+        </div>
+        <br />

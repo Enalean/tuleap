@@ -1,21 +1,43 @@
-{{#has_results}}
-<p class="fts_resultcount">{{result_count}}</p>
-<ol class="fts_results">
-{{#search_results}}
-    <li class="fts_result">
-        <div class="fts_title">
-            <a href="{{url}}">{{item_title}}</a>
-        </div>
-        <p class="fts_highlight">{{{highlight}}}...</p>
-        <div class="fts_metadata">Project: {{project_name}}</div>
-        {{#display_permissions}}
-        <div class="fts_metadata">Permissions: {{permissions}}</div>
-        {{/display_permissions}}
-    </li>
-{{/search_results}}
-</ol>
-{{/has_results}}
 
-{{#no_results}}
-<p>No results found</p>
-{{/no_results}}
+<div class="row">
+
+<div class="span3">
+    {{#has_results}}
+    <p class="fts_resultcount">{{result_count}}</p>
+    
+    {{#has_facets}}
+    <h3 class="frs_facet_main_title">Filter results by projects:</h3>
+    <ul class="frs_facet">
+    {{#facets}}
+        <li><label><input type="checkbox" value="{{value}}" name="facets[{{name}}][]" {{checked}} onclick="this.form.submit()"/>{{label}} ({{count}})</label></li>
+    {{/facets}}
+    </ul>
+    {{/has_facets}}
+</div>
+
+<div class="span9">
+    <ol class="fts_results">
+    {{#search_results}}
+        <li class="fts_result">
+            <div class="fts_title">
+                <a href="{{url}}">{{item_title}}</a>
+            </div>
+            {{#has_highlight}}
+                <p class="fts_highlight">{{{highlight}}}...</p>
+            {{/has_highlight}}
+            <div class="fts_metadata">Project: {{project_name}}</div>
+            {{#display_permissions}}
+            <div class="fts_metadata">Permissions: {{permissions}}</div>
+            {{/display_permissions}}
+        </li>
+    {{/search_results}}
+    </ol>
+    {{/has_results}}
+    
+    {{#no_results}}
+    <p>No results found</p>
+    {{/no_results}}
+</div>
+</div>
+
+</form>

@@ -27,21 +27,23 @@ interface FullTextSearch_ISearchDocuments {
     /**
      * Search for data in the index, filter them with permissions
      * 
-     * @param String $term terms
-     * @param User   $user The user which do the request
+     * @param String $term   terms
+     * @param array  $facets submitted by user for faceted navigation
+     * @param User   $user   The user which do the request
      * 
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, User $user);
+    public function searchDocuments($terms, array $facets, User $user);
 
     /**
      * Search for data in the index
      *
-     * @param String $term terms
+     * @param String $term   terms
+     * @param array  $facets submitted by user for faceted navigation
      *
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocumentsIgnoringPermissions($terms);
+    public function searchDocumentsIgnoringPermissions($terms, array $facets);
 
     /**
      * Return status of the index
