@@ -66,7 +66,7 @@ class FileModuleMonitorDao extends DataAccessObject {
     
 
     /**
-     * Is the user in the list of people monitoring this package.
+     * Check user's monitoring of the given package.
      *
      * @param Integer $package_id Id of the package
      * @param User    $user       The user

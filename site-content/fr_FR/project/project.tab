@@ -454,7 +454,7 @@ project_admin_utils	to	Jusqu'a
 project_admin_utils	status	Statut modifié
 project_admin_utils	frs_self_add_monitor_package	Auto ajout de monitoring de package
 project_admin_utils	frs_add_monitor_package	Ajout de monitoring de package
-project_admin_utils	frs_stop_monitor_package	Arret de monitoring de package
+project_admin_utils	frs_stop_monitor_package	Arrêt de monitoring de package
 #... end of values
 #
 #-----------------------------------------------

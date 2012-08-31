@@ -28,8 +28,7 @@ if (user_isloggedin()) {
             if ($request->get('action') == 'monitor_package') {
                 if (!$fmmf->isMonitoring($filemodule_id, $user)) {
                     $anonymous  = false;
-                    $vAnonymous = $request->get('anonymous_frs_monitoring');
-                    if (isset($vAnonymous) && !empty($vAnonymous)) {
+                    if ($request->existAndNonEmpty('anonymous_frs_monitoring')) {
                         $anonymous = true;
                     }
                     $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
