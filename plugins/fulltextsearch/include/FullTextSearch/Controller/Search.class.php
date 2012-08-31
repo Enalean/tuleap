@@ -59,7 +59,6 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         $terms = $this->request->getValidated('words', 'string', '');
         try {
             $search_result = $this->client->searchDocuments($terms, $this->request->getCurrentUser());
-            $search_result = $this->client->searchDocumentsIgnoringPermissions($terms);
             $presenter     = new FullTextSearch_Presenter_Search(1, $terms, $search_result);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());

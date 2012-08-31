@@ -79,6 +79,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             )
         );
         $query['query'] = $filtered_query;
+        //print_r(json_encode($query));
         return $query;
     }
 
