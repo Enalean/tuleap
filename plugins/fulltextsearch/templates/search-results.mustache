@@ -1,5 +1,5 @@
 {{#has_results}}
-<p>{{result_count}} document(s) match:</p>
+<p class="fts_resultcount">{{result_count}}</p>
 <ol class="fts_results">
 {{#search_results}}
     <li class="fts_result">
@@ -17,5 +17,5 @@
 {{/has_results}}
 
 {{#no_results}}
-No results found
+<p>No results found</p>
 {{/no_results}}

@@ -22,3 +22,6 @@
 .fts_highlight {
     margin: 0.25em 0em;
 }
+.fts_resultcount {
+    color: #888;
+}

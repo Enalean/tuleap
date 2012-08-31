@@ -41,7 +41,7 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     }
         
     public function result_count() {
-        return $this->query_result->count();
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'result_count', array($this->query_result->count(), number_format($this->query_result->getQueryTime(), 2, '.', '')));
     }
     
     public function search_results() {
