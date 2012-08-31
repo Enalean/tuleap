@@ -18,20 +18,20 @@ if (user_isloggedin()) {
         $pm            = ProjectManager::instance();
         $um            = UserManager::instance();
         $userHelper    = new UserHelper();
-        $user          = $um->getCurrentUser();
+        $currentUser   = $um->getCurrentUser();
         $frspf         = new FRSPackageFactory();
         $package       = $frspf->getFRSPackageFromDb($filemodule_id);
         $fmmf          = new FileModuleMonitorFactory();
         $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
 
-        if ($frspf->userCanRead($group_id, $filemodule_id, $user->getId())) {
+        if ($frspf->userCanRead($group_id, $filemodule_id, $currentUser->getId())) {
             if ($request->get('action') == 'monitor_package') {
-                if (!$fmmf->isMonitoring($filemodule_id, $user)) {
+                if (!$fmmf->isMonitoring($filemodule_id, $currentUser)) {
                     $anonymous  = false;
                     if ($request->existAndNonEmpty('anonymous_frs_monitoring')) {
                         $anonymous = true;
                     }
-                    $result = $fmmf->setMonitor($filemodule_id, $user, $anonymous);
+                    $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
                     if (!$result) {
                         $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
                     } else {
@@ -43,14 +43,14 @@ if (user_isloggedin()) {
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
                     }
                 } else {
-                    $result = $fmmf->stopMonitor($filemodule_id, $user);
+                    $result = $fmmf->stopMonitor($filemodule_id, $currentUser);
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'monitor_turned_off'));
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'no_emails'));
                 }
             }
 
             $editContent = "";
-            if ($frspf->userCanAdmin($user, $group_id)) {
+            if ($frspf->userCanAdmin($currentUser, $group_id)) {
                 if ($request->valid(new Valid_WhiteList('action', array('add_monitoring', 'delete_monitoring')))) {
                     $action = $request->get('action');
                     switch ($action) {
@@ -130,7 +130,7 @@ if (user_isloggedin()) {
                     $editContent .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'delete').'?'), false, false, false);
                     $rowBgColor  = 0;
                     foreach ($list as $entry) {
-                        $user    = $um->getUserById($entry['user_id']);
+                        $user        = $um->getUserById($entry['user_id']);
                         $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
                     }
                     $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'delete').'" /></td></tr>';
@@ -153,7 +153,7 @@ if (user_isloggedin()) {
             echo '<input type="hidden" name="action" value="monitor_package">';
             echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
             $anonymousOption = '';
-            if ($fmmf->isMonitoring($filemodule_id, $user)) {
+            if ($fmmf->isMonitoring($filemodule_id, $currentUser)) {
                 $submit = $Language->getText('file_showfiles', 'stop_monitoring').': <input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
             } else {
                 $anonymousOption .= $Language->getText('file_filemodule_monitor', 'anonymous');
