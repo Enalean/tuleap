@@ -72,20 +72,8 @@ class fulltextsearchPlugin extends Plugin {
         if ($this->getCurrentUser()->useLabFeatures()) {
             if ($params['type_of_search'] === self::SEARCH_TYPE) {
                 $params['search_type'] = true;
-                // hack hack hack
-                require_once 'FullTextSearch/Presenter/Search.class.php';
-                require_once 'FullTextSearch/Presenter/ErrorNoSearch.class.php';
-                require_once 'common/templating/TemplateRendererFactory.class.php';
-                try {
-                    $search_result = $this->getSearchClient()->searchDocuments($params['words'], $this->getCurrentUser());
-                    $presenter     = new FullTextSearch_Presenter_Search(1, $params['words'], $search_result);
-                    $renderer      = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-                    echo $renderer->renderToString('search-results', $presenter);
-                } catch (ElasticSearchTransportHTTPException $e) {
-                    $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
-                    $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-                    echo $renderer->renderToString('error-nosearch', $presenter);
-                }
+
+                $this->getSearchController()->search();
             }
         }
     }
@@ -241,19 +229,25 @@ class fulltextsearchPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    private function getSearchController() {
+        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient());
+    }
+
+    private function getRequest() {
+        return HTTPRequest::instance();
+    }
+
     public function process() {
+        $request = $this->getRequest();
         // Grant access only to site admin
-        if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+        if (!$request->getCurrentUser()->isSuperUser()) {
             header('Location: ' . get_server_url());
         }
 
-        include_once 'FullTextSearch/Controller/Search.class.php';
-
-        $request    = HTTPRequest::instance();
-        $controller = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
+        $controller = $this->getSearchController();
         switch ($request->get('func')) {
             case 'search':
-                $controller->search();
+                $controller->adminSearch();
                 break;
             default:
                 $controller->index();
