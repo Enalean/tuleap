@@ -6,7 +6,7 @@
     <? foreach ($section->sections as $section): ?>
         <h3><?= $section->label ?></h3>
         <? include 'changes.php'; ?>
-        
+
     <? endforeach; ?>
 
 <? endforeach; ?>
