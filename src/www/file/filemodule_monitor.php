@@ -115,15 +115,20 @@ if (user_isloggedin()) {
                     }
                 }
 
-                $editContent = '<h3>'.$Language->getText('file_filemodule_monitor', 'list_title').'</h3>';
+                $editContent = '<h3>'.$Language->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
+                $count = count($fmmf->getFilesModuleMonitorFromDb($filemodule_id));
+                if ($count > 0) {
+                    $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'<br />';
+                }
                 $list = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
                 if ($list->rowCount() == 0) {
                     $editContent .= $Language->getText('file_filemodule_monitor', 'no_list');
                 } else {
-                    $editContent    .= '<form id="filemodule_monitor_form_delete" method="post" >';
-                    $editContent    .= '<input type="hidden" name="action" value="delete_monitoring">';
-                    $editContent    .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'delete').'?'), false, false, false);
-                    $rowBgColor = 0;
+                    $editContent .= '<h4>'.$Language->getText('file_filemodule_monitor', 'list_title').'</h4>';
+                    $editContent .= '<form id="filemodule_monitor_form_delete" method="post" >';
+                    $editContent .= '<input type="hidden" name="action" value="delete_monitoring">';
+                    $editContent .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'delete').'?'), false, false, false);
+                    $rowBgColor  = 0;
                     foreach ($list as $entry) {
                         $user    = $um->getUserById($entry['user_id']);
                         $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
