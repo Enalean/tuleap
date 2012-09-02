@@ -9,23 +9,27 @@ QA Server deployment
 You need to install elasticsearch server packages:
     $ yum install elasticsearch elasticsearch-plugin-jetty elasticsearch-plugin-mapper-attachments
 
-Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
-not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
-It depends of the size of your installation but for big deployments, it's worth considering a dedicated server (or even pool of servers).
+> Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
+> not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
+> It depends of the size of your installation but for big deployments, it's worth considering a 
+> dedicated server (or even pool of servers).
 
 
 Security
 --------
-If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. See https://github.com/sonian/elasticsearch-jetty
+If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. 
+See https://github.com/sonian/elasticsearch-jetty
 
-If you install elasticsearch on the same server than tuleap the very minimal setup is to restrict server port binding to localhost only (otherwise anybody can query index anonymously):
+If you install elasticsearch on the same server than tuleap the very minimal setup is to restrict 
+server port binding to localhost only (otherwise anybody can query index anonymously):
 
     $ edit /etc/elasticsearch/elasticsearch.yml
       ...
       network.host: 127.0.0.1
       ...
 
-Setup same credentials in plugin properties (fulltextsearch_user, fulltextsearch_password) than in elasticsearch/conf/realm.properties.
+Setup same credentials in plugin properties (fulltextsearch_user, fulltextsearch_password) than 
+in elasticsearch/conf/realm.properties.
 
 Edit elasticsearch/conf/jetty.xml to restrict access to ES server:
 
@@ -135,6 +139,8 @@ Monitoring
 
 You can install elasticsearch-head to monitor your ElasticSearch cluster.
 See more information on http://mobz.github.com/elasticsearch-head/
+
+> Note: You may encounter problems if you set up Basic Auth.
 
 References
 ----------
