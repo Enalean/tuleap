@@ -23,7 +23,8 @@ if (user_isloggedin()) {
         $package       = $frspf->getFRSPackageFromDb($filemodule_id);
         $fmmf          = new FileModuleMonitorFactory();
         $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
-
+        $anonymous     = true;
+        $performAction = false;
         if ($frspf->userCanRead($group_id, $filemodule_id, $currentUser->getId())) {
             if ($request->get('action') == 'monitor_package') {
                 if ($request->valid(new Valid_WhiteList('frs_monitoring', array('stop_monitoring', 'anonymous_monitoring', 'public_monitoring')))) {
@@ -38,22 +39,15 @@ if (user_isloggedin()) {
                             break;
                         case 'public_monitoring' :
                             $anonymous = false;
-                            if (!$fmmf->isMonitoring($filemodule_id, $user, !$anonymous)) {
-                                $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
-                                if (!$result) {
-                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
-                                } else {
-                                    $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
-                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'p_monitored'));
-                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'now_emails'));
-                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
-                                }
-                            }
-                            break;
                         case 'anonymous_monitoring' :
-                            $anonymous = true;
-                            if (!$fmmf->isMonitoring($filemodule_id, $user) || $fmmf->isMonitoring($filemodule_id, $user, true)) {
+                            if ($anonymous && (!$fmmf->isMonitoring($filemodule_id, $user) || $fmmf->isMonitoring($filemodule_id, $user, true))) {
+                                $performAction = true;
                                 $fmmf->stopMonitor($filemodule_id, $currentUser);
+                            } elseif (!$anonymous && !$fmmf->isMonitoring($filemodule_id, $user, !$anonymous)) {
+                                $performAction = true;
+                                $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
+                            }
+                            if ($performAction) {
                                 $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
                                 if (!$result) {
                                     $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
