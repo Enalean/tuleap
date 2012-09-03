@@ -40,7 +40,7 @@ if (user_isloggedin()) {
                         case 'public_monitoring' :
                             $anonymous = false;
                         case 'anonymous_monitoring' :
-                            if ($anonymous && (!$fmmf->isMonitoring($filemodule_id, $user) || $fmmf->isMonitoring($filemodule_id, $user, true))) {
+                            if ($anonymous && (!$fmmf->isMonitoring($filemodule_id, $user) || $fmmf->isMonitoring($filemodule_id, $user, $anonymous))) {
                                 $performAction = true;
                                 $fmmf->stopMonitor($filemodule_id, $currentUser);
                             } elseif (!$anonymous && !$fmmf->isMonitoring($filemodule_id, $user, !$anonymous)) {
