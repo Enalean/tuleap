@@ -263,7 +263,7 @@ file_filemodule_monitor	choose_p	Error - Choose a package First
 file_filemodule_monitor	no_permission	You don't have enough permissions to perform this action
 file_filemodule_monitor	monitoring_people_title	People monitoring the package
 file_filemodule_monitor	list_title	List of people publicly monitoring the package
-file_filemodule_monitor	users_monitor	$1 user(s) are monitoring this package (including people monitoring anonymously).
+file_filemodule_monitor	users_monitor	$1 user(s) are monitoring anonymously.
 file_filemodule_monitor	no_list	No users publicly monitoring this package
 file_filemodule_monitor	user	User
 file_filemodule_monitor	add_users	Add users to the monitoring list

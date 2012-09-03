@@ -126,12 +126,11 @@ if (user_isloggedin()) {
                 }
 
                 $editContent = '<h3>'.$Language->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
-                $count = count($fmmf->getFilesModuleMonitorFromDb($filemodule_id));
-                if ($count > 0) {
-                    $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'<br />';
-                }
-                $list = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
+                $list        = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
+                $totalCount  = count($fmmf->getFilesModuleMonitorFromDb($filemodule_id));
+                $count       = $totalCount - count($fmmf->whoIsPubliclyMonitoringPackage($filemodule_id));
                 if ($list->rowCount() == 0) {
+                    $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'<br />';
                     $editContent .= $Language->getText('file_filemodule_monitor', 'no_list');
                 } else {
                     $editContent .= '<h4>'.$Language->getText('file_filemodule_monitor', 'list_title').'</h4>';
@@ -143,6 +142,7 @@ if (user_isloggedin()) {
                         $user        = $um->getUserById($entry['user_id']);
                         $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
                     }
+                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'</td><td></td></tr>';
                     $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'delete').'" /></td></tr>';
                     $editContent .= '</table>';
                     $editContent .= '</form>';

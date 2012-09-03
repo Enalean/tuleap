@@ -256,7 +256,7 @@ file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
 file_filemodule_monitor	no_permission	Vous n'avez pas assez de permission pour effectuer cette action
 file_filemodule_monitor	monitoring_people_title	Personnes qui monitorent ce package
 file_filemodule_monitor	list_title	Liste des personnes qui monitorent publiquement ce package
-file_filemodule_monitor	users_monitor	$1 utilisateur(s) monitorent ce package (les personnes monitorant anonymement sont aussi inclus).
+file_filemodule_monitor	users_monitor	$1 utilisateur(s) monitorent ce package anonymement.
 file_filemodule_monitor	no_list	Aucun utilisateur qui monitore ce package publiquement
 file_filemodule_monitor	user	Utilisateur
 file_filemodule_monitor	add_users	Ajouter un utilisateur à la liste
