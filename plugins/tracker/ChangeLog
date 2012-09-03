@@ -1,3 +1,6 @@
+Version 5.12 - Tuleap 5.5
+    * Improve JS performance on cross search
+
 Version 5.11 - Tuleap 5.5
     * Tracker v5 artifacts or reports are no longer displayed if the project they belong to is inactive or deleted. (contrib STMicroelectronics).
 

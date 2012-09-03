@@ -1,9 +1,14 @@
 Version 5.5 (Not released yet)
+	== Bug Fix ==
+	* fix sla #433: wiki references with version number
+	* Allow anonymous to browse public forumml archives
+
     == Plugins ==
-    * tracker: 5.11
+    * tracker: 5.12
 
 	== Development ==
 	* Add tool to easily fix the singleton count after a merge
+	* Add tool to easily generate release notes
 
     
 Version 5.4 (Wednesday, August 29th 2012)

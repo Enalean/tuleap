@@ -36,6 +36,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/git/gitphp',
                                 'plugins/git/gitphp-0.1.0',
                                 'plugins/webdav/include/lib',
+                                'tools/utils/releases_notes',
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag
@@ -45,6 +46,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
+            'post_merge_actions.php',
         );
         
         //Those files are allowed to contain something after closing tag

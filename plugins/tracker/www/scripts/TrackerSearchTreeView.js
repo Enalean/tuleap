@@ -52,11 +52,11 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
         return new Element('a', {href: '#'}).update(text).observe('click', func.bind(this));
     },
 
-    getChildren: function(TRElement) {
+    getChildren: function(tr) {
         var children     = $A();
-        if (!TRElement) return children;
-        var myLevel      = this.getLevel(TRElement);
-        var currentEl    = TRElement.next('TR');
+        if (!tr) return children;
+        var myLevel      = this.getLevel(tr);
+        var currentEl    = tr.next('TR');
         var currentLevel = this.getLevel(currentEl);
         while (currentLevel > myLevel) {
             if (currentLevel == myLevel + 1) {
@@ -68,23 +68,20 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
         return children;
     },
 
-    hasChildren: function(TRElement) {
-        return TRElement.select('.node-child').length > 0;
+    hasChildren: function(tr) {
+        return tr.down('.node-child');
     },
 
-    getNodeChild: function(TRElement) {
-        if(TRElement) {
-            var nodeChild = TRElement.select('.node-child');
-            if (nodeChild[0]) {
-                return nodeChild[0];
-            }
+    getNodeChild: function(tr) {
+        if(tr) {
+            return tr.down('.node-child');
         }
     },
 
-    getLevel: function(TRElement) {
+    getLevel: function(tr) {
         var numSpan = 0;
-        if (TRElement) {
-            var curEl = TRElement.down('TD');
+        if (tr) {
+            var curEl = tr.down('TD');
             if (curEl) {
                 curEl = curEl.down('SPAN');
                 while (curEl) {
@@ -98,7 +95,7 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
     },
 
     collapseAll: function() {
-        this.root.getElementsBySelector('TR').each(this.collapse, this);
+        this.root.down('tbody').childElements().each(this.collapse, this);
         return this;
     },
 
@@ -107,77 +104,79 @@ codendi.tracker.crossSearch.TreeTable = Class.create({
         return this;
     },
 
-    isCollapsed: function(TRElement) {
-        var nodeChild = this.getNodeChild(TRElement);
+    isCollapsed: function(tr) {
+        var nodeChild = this.getNodeChild(tr);
         if (nodeChild) {
             return nodeChild.visible() == false;
         }
         return false;
     },
 
-    toggleCollapse: function(TRElement) {
-        if(this.isCollapsed(TRElement)) {
-            this.expand(TRElement);
+    toggleCollapse: function(tr) {
+        if(this.isCollapsed(tr)) {
+            this.expand(tr);
         } else {
-            this.collapse(TRElement);
+            this.collapse(tr);
         }
     },
 
-    setNodeTreeImage: function(TRElement, NodeTreeImage) {
-        var nodeTree = TRElement.select('.node-tree');
-        if (nodeTree.length > 0) {
-            nodeTree[0].setStyle({backgroundImage:'url(' + codendi.imgroot + NodeTreeImage + ')'});
+    setNodeTreeImage: function(tr, NodeTreeImage) {
+        var nodeTree = tr.down('.node-tree');
+        if (nodeTree) {
+            nodeTree.setStyle({backgroundImage:'url(' + codendi.imgroot + NodeTreeImage + ')'});
         }
     },
 
-    collapseImg: function(TRElement) {
-        this.setNodeTreeImage(TRElement, '/ic/toggle-small.png');
+    collapseImg: function(tr) {
+        this.setNodeTreeImage(tr, '/ic/toggle-small.png');
     },
 
-    expandImg: function(TRElement) {
-        this.setNodeTreeImage(TRElement, '/ic/toggle-small-expand.png');
+    expandImg: function(tr) {
+        this.setNodeTreeImage(tr, '/ic/toggle-small-expand.png');
     },
 
-    collapse: function(TRElement) {
-        var nodeChild = this.getNodeChild(TRElement);
+    collapse: function(tr) {
+        var nodeChild = this.getNodeChild(tr);
         if (nodeChild) {
-            var TRHeight = this._getHeight(TRElement) - this._getHeight(nodeChild) + 'px';
             nodeChild.hide();
-            var children = this.getChildren(TRElement);
+            var children = this.getChildren(tr);
             children.each(function(child) {
                 this.hide(child);
             }, this);
-            this.expandImg(TRElement);
-            TRElement.setStyle({height: TRHeight});
+            this.expandImg(tr);
         }
         return this;
     },
 
-    expand: function(TRElement) {
-        var nodeChild = this.getNodeChild(TRElement);
+    expand: function(tr) {
+        var nodeChild = this.getNodeChild(tr);
         if (nodeChild) {
             nodeChild.show();
-            this.getChildren(TRElement).each(this.show, this);
-            this.collapseImg(TRElement);
+            this.getChildren(tr).invoke('show');
+            this.collapseImg(tr);
         }
         return this;
     },
 
-    hide: function(TRElement) {
-        this.collapse(TRElement);
-        TRElement.hide();
-    },
-
-    show: function(TRElement) {
-        TRElement.show();
-    },
-
-    _getHeight: function(HTMLElement) {
-        var ElementHeight = HTMLElement.getHeight();
-        if ( typeof ElementHeight != 'number') {
-            ElementHeight = ElementHeight.match(/[0-9]+/);
-        }
-        return ElementHeight;
+    hide: function(tr) {
+        // We are hiding sub children recursively. therefore we dont need to
+        // wait for all children to be hidden before giving hand to the
+        // user (else we block the browser).
+        //
+        // solution: start a new 'thread'. This is done with setTimeout.
+        //
+        // we need to store a reference to the current object for setTimeout:
+        //
+        // > The function that was passed as the first parameter will get
+        // > called by the global object, which means that this inside the
+        // > called function refers to that very object
+        // -- http://bonsaiden.github.com/JavaScript-Garden/#other.timeouts
+        //
+        var that = this;
+        setTimeout(function () {
+            that.collapse(tr);
+            tr.hide();
+        }, 0);
     }
 });
 

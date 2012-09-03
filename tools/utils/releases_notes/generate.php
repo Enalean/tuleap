@@ -1,6 +1,5 @@
 #!/usr/bin/php
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -20,9 +19,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__). '/singletons/SingletonCounter.class.php';
+require_once 'ChangeLogReader.class.php';
 
-$counter = new SingletonCounter();
-$counter->replaceCurrentSingletonCountWithActualCount();
+$formats = array('html', 'frs');
+if ($argc != 2 || !in_array($argv[1], $formats)) {
+    echo "\nUsage: {$argv[0]} <format>\n
+    with <format> = html | frs
+
+    ";
+    die();
+}
+$format = $argv[1];
+
+$reader  = new ChangeLogReader();
+$release = $reader->parse();
+include 'templates/'. $format .'/index.php';
 
 ?>
