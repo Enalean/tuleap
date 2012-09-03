@@ -28,7 +28,6 @@ if (user_isloggedin()) {
             if ($request->get('action') == 'monitor_package') {
                 if ($request->valid(new Valid_WhiteList('frs_monitoring', array('stop_monitoring', 'anonymous_monitoring', 'public_monitoring')))) {
                     $action = $request->get('frs_monitoring');
-                    $anonymous = true;
                     switch ($action) {
                         case 'stop_monitoring' :
                             if ($fmmf->isMonitoring($filemodule_id, $user)) {
@@ -39,18 +38,30 @@ if (user_isloggedin()) {
                             break;
                         case 'public_monitoring' :
                             $anonymous = false;
-                        case 'anonymous_monitoring' :
-                            $fmmf->stopMonitor($filemodule_id, $currentUser);
-                            $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
-                            if (!$result) {
-                                $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
-                            } else {
-                                if (!$anonymous) {
+                            if (!$fmmf->isMonitoring($filemodule_id, $user, !$anonymous)) {
+                                $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
+                                if (!$result) {
+                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
+                                } else {
                                     $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'p_monitored'));
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'now_emails'));
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
                                 }
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'p_monitored'));
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'now_emails'));
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
+                            }
+                            break;
+                        case 'anonymous_monitoring' :
+                            $anonymous = true;
+                            if (!$fmmf->isMonitoring($filemodule_id, $user) || $fmmf->isMonitoring($filemodule_id, $user, true)) {
+                                $fmmf->stopMonitor($filemodule_id, $currentUser);
+                                $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
+                                if (!$result) {
+                                    $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
+                                } else {
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'p_monitored'));
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'now_emails'));
+                                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
+                                }
                             }
                             break;
                         default :
