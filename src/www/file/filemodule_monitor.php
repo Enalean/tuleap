@@ -153,7 +153,7 @@ if (user_isloggedin()) {
                         $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
                     }
                     $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'</td><td></td></tr>';
-                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td></td><td><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'delete').'" /></td></tr>';
+                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$Language->getText('global', 'total').': '.$totalCount.'</td><td><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'delete').'" /></td></tr>';
                     $editContent .= '</table>';
                     $editContent .= '</form>';
                 }
