@@ -1212,3 +1212,12 @@ td.first-column {
     font-weight: bold;
 }
 /* }}} */
+.tracker_artifact_attachment_delete.pc_check_unchecked {
+    background-image:url('../images/ic/cross-disabled.png');
+}
+.tracker_artifact_attachment_delete.pc_check_checked {
+    background-image:url('../images/ic/cross.png');
+}
+.tracker_artifact_attachment_deleted {
+   text-decoration: line-through;
+}

@@ -243,6 +243,19 @@ document.observe('dom:loaded', function () {
         });
     }
 
+    function toggle_tracker_artifact_attachment_delete(elem) {
+        if (elem.checked) {
+            elem.up('td').next().addClassName('tracker_artifact_attachment_deleted');
+        } else {
+            elem.up('td').next().removeClassName('tracker_artifact_attachment_deleted');
+        }
+    }
+
+    $$(".tracker_artifact_attachment_delete > input[type=checkbox]").each(function (elem) {
+        //on load strike (useful when the checkbox is already checked on dom:loaded. (Missing required field for example)
+        toggle_tracker_artifact_attachment_delete(elem);
+        elem.observe('click', function (evt) { toggle_tracker_artifact_attachment_delete(elem); });
+    });
 });
 
 codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
