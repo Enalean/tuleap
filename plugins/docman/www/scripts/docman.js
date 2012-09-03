@@ -637,6 +637,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
         this.close = options.close;
         this.defaultUrl = this.docman.options.pluginPath+'/index.php?group_id='+this.docman.group_id+'&id='+item_id;
         Event.observe($('docman_item_show_menu_'+item_id), 'click', this.show.bind(this));
+        this._lockIcon();
     },
     _createLi: function(element) {
         var li = Builder.node('li');
