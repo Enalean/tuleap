@@ -19,6 +19,7 @@
  */
 
 require_once 'common/project/UGroupLiteralizer.class.php';
+require_once 'common/project/ProjectManager.class.php';
 
 /**
  * Allow to perform search on ElasticSearch Index
