@@ -144,7 +144,6 @@ if (user_isloggedin()) {
                     $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'<br />';
                     $editContent .= $Language->getText('file_filemodule_monitor', 'no_list');
                 } else {
-                    $editContent .= '<h4>'.$Language->getText('file_filemodule_monitor', 'list_title').'</h4>';
                     $editContent .= '<form id="filemodule_monitor_form_delete" method="post" >';
                     $editContent .= '<input type="hidden" name="action" value="delete_monitoring">';
                     $editContent .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'delete').'?'), false, false, false);
@@ -192,7 +191,7 @@ if (user_isloggedin()) {
             echo '<tr><td><input type="radio" id="anonymous_frs_monitoring" name="frs_monitoring" value="anonymous_monitoring" '.$monitoringAnonymously.'/></td>';
             echo '<td>'.$Language->getText('file_filemodule_monitor', 'anonymous').'</td></tr>';
             echo '<tr><td><input type="radio" id="public_frs_monitoring" name="frs_monitoring" value="public_monitoring" '.$monitoringPublicly.'/></td>';
-            echo '<td>'.$Language->getText('file_showfiles', 'start_monitoring').'</td></tr>';
+            echo '<td>'.$Language->getText('file_showfiles', 'start_monitoring').' ('.$Language->getText('file_filemodule_monitor', 'public').')</td></tr>';
             echo '<tr><td></td><td><input type="submit" value="'.$Language->getText('global', 'btn_apply').'" /></td></tr>';
             echo '</table>';
             echo '</form>';
