@@ -171,9 +171,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';
+        $html             = '';
         $submitter_needed = true;
-        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, $submitted_values);
+        $read_only        = !false;
+        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, $submitted_values, $read_only);
         $html .= $this->fetchSubmitValue();
         return $html;
     }
@@ -272,7 +273,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $html;
     }
     
-    protected function fetchAllAttachment($artifact_id, $values, $submitter_needed, $submitted_values) {
+    protected function fetchAllAttachment($artifact_id, $values, $submitter_needed, $submitted_values, $read_only = true) {
         $html = '';
         if (count($values)) {
             $hp = Codendi_HTMLPurifier::instance();
@@ -301,8 +302,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 
                 $add = '<div class="tracker_artifact_attachment">';
                 $add .= '<table><tr><td>';
-                $add .= $this->fetchDeleteCheckbox($fileinfo);
-                $add .= '</td><td>';
+                if (!$read_only) {
+                    $add .= $this->fetchDeleteCheckbox($fileinfo);
+                    $add .= '</td><td>';
+                }
                 if ($fileinfo->isImage()) {
                     $query_add = http_build_query(
                         array(
