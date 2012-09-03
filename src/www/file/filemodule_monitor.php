@@ -26,26 +26,36 @@ if (user_isloggedin()) {
 
         if ($frspf->userCanRead($group_id, $filemodule_id, $currentUser->getId())) {
             if ($request->get('action') == 'monitor_package') {
-                if (!$fmmf->isMonitoring($filemodule_id, $currentUser)) {
-                    $anonymous  = false;
-                    if ($request->existAndNonEmpty('anonymous_frs_monitoring')) {
-                        $anonymous = true;
+                if ($request->valid(new Valid_WhiteList('frs_monitoring', array('stop_monitoring', 'anonymous_monitoring', 'public_monitoring')))) {
+                    $action = $request->get('frs_monitoring');
+                    $anonymous = true;
+                    switch ($action) {
+                        case 'stop_monitoring' :
+                            if ($fmmf->isMonitoring($filemodule_id, $user)) {
+                                $result = $fmmf->stopMonitor($filemodule_id, $currentUser);
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'monitor_turned_off'));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'no_emails'));
+                            }
+                            break;
+                        case 'public_monitoring' :
+                            $anonymous = false;
+                        case 'anonymous_monitoring' :
+                            $fmmf->stopMonitor($filemodule_id, $currentUser);
+                            $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
+                            if (!$result) {
+                                $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
+                            } else {
+                                if (!$anonymous) {
+                                    $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
+                                }
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'p_monitored'));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'now_emails'));
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
+                            }
+                            break;
+                        default :
+                            break;
                     }
-                    $result = $fmmf->setMonitor($filemodule_id, $currentUser, $anonymous);
-                    if (!$result) {
-                        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'insert_err'));
-                    } else {
-                        if (!$anonymous) {
-                            $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
-                        }
-                        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'p_monitored'));
-                        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'now_emails'));
-                        $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
-                    }
-                } else {
-                    $result = $fmmf->stopMonitor($filemodule_id, $currentUser);
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'monitor_turned_off'));
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'no_emails'));
                 }
             }
 
@@ -152,16 +162,28 @@ if (user_isloggedin()) {
             echo '<form id="filemodule_monitor_form" method="post" >';
             echo '<input type="hidden" name="action" value="monitor_package">';
             echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
-            $anonymousOption = '';
+            $notMonitring          = '';
+            $monitoringPublicly    = '';
+            $monitoringAnonymously = '';
             if ($fmmf->isMonitoring($filemodule_id, $currentUser)) {
-                $submit = $Language->getText('file_showfiles', 'stop_monitoring').': <input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
+                $publicly = true;
+                if ($fmmf->isMonitoring($filemodule_id, $currentUser, $publicly)) {
+                    $monitoringPublicly = 'checked="checked"';
+                } else {
+                    $monitoringAnonymously = 'checked="checked"';
+                }
             } else {
-                $anonymousOption .= $Language->getText('file_filemodule_monitor', 'anonymous');
-                $anonymousOption .= '<input type="checkbox" id="anonymous_frs_monitoring" name="anonymous_frs_monitoring" checked="checked" /><br />';
-                $submit = $Language->getText('file_showfiles', 'start_monitoring').': <input id="filemodule_monitor_submit" type="image" src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
+                $notMonitring = 'checked="checked"';
             }
-            echo $anonymousOption;
-            echo $submit;
+            echo '<table>';
+            echo '<tr><td><input type="radio" id="stop_frs_monitoring" name="frs_monitoring" value="stop_monitoring" '.$notMonitring.'/></td>';
+            echo '<td>'.$Language->getText('file_showfiles', 'stop_monitoring').'</td></tr>';
+            echo '<tr><td><input type="radio" id="anonymous_frs_monitoring" name="frs_monitoring" value="anonymous_monitoring" '.$monitoringAnonymously.'/></td>';
+            echo '<td>'.$Language->getText('file_filemodule_monitor', 'anonymous').'</td></tr>';
+            echo '<tr><td><input type="radio" id="public_frs_monitoring" name="frs_monitoring" value="public_monitoring" '.$monitoringPublicly.'/></td>';
+            echo '<td>'.$Language->getText('file_showfiles', 'start_monitoring').'</td></tr>';
+            echo '<tr><td></td><td><input type="submit" value="'.$Language->getText('global', 'btn_apply').'" /></td></tr>';
+            echo '</table>';
             echo '</form>';
             echo $editContent;
             file_utils_footer($params);
