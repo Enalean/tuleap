@@ -157,7 +157,7 @@ class FileModuleMonitorFactory {
      *
      * @return Codendi_Mail
      */
-    function prepareMail($package, User $user) {
+    function prepareMail(FRSPackage $package, User $user) {
         $subject   = $GLOBALS['Language']->getText('file_filemodule_monitor', 'mail_subject', array($GLOBALS['sys_name'], $package->getName()));
         $mail      = new Codendi_Mail();
         $mail->getLookAndFeelTemplate()->set('title', $subject);
@@ -175,7 +175,7 @@ class FileModuleMonitorFactory {
      *
      * @return Boolean
      */
-    function notifyAfterAdd($package, User $user) {
+    function notifyAfterAdd(FRSPackage $package, User $user) {
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($user);
         $mail      = $this->prepareMail($package, $user);
@@ -201,7 +201,7 @@ class FileModuleMonitorFactory {
      *
      * @return Boolean
      */
-    function notifyAfterDelete($package, User $user) {
+    function notifyAfterDelete(FRSPackage $package, User $user) {
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($user);
         $mail      = $this->prepareMail($package, $user);
