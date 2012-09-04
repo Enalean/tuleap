@@ -245,9 +245,11 @@ document.observe('dom:loaded', function () {
 
     function toggle_tracker_artifact_attachment_delete(elem) {
         if (elem.checked) {
-            elem.up('td').next().addClassName('tracker_artifact_attachment_deleted');
+            elem.up('td').nextSiblings().invoke('addClassName', 'tracker_artifact_attachment_deleted');
+            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 0.4);
         } else {
-            elem.up('td').next().removeClassName('tracker_artifact_attachment_deleted');
+            elem.up('td').nextSiblings().invoke('removeClassName', 'tracker_artifact_attachment_deleted');
+            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 1);
         }
     }
 
