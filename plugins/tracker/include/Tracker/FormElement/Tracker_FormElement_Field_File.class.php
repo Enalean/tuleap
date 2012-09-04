@@ -94,7 +94,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         $html = '';
         $submitter_needed = true;
-        $html .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed);
+        $html .= $this->fetchAllAttachment($artifact_id, $this->getChangesetValues($changeset_id), $submitter_needed, array());
         return $html;
     }
     
@@ -171,9 +171,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $html = '';
+        $html             = '';
         $submitter_needed = true;
-        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed);
+        $read_only        = false;
+        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, $submitted_values, $read_only);
         $html .= $this->fetchSubmitValue();
         return $html;
     }
@@ -206,7 +207,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
         $submitter_needed = true;
-        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed);
+        $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, array());
         return $html;
     }
     
@@ -267,17 +268,16 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         if (count($to_values)) {
             $submitter_needed = false;
-            $html .= 'Added: '. $this->fetchAllAttachment($artifact->id, $to_values, $submitter_needed);
+            $html .= 'Added: '. $this->fetchAllAttachment($artifact->id, $to_values, $submitter_needed, array());
         }
         return $html;
     }
     
-    protected function fetchAllAttachment($artifact_id, $values, $submitter_needed) {
+    protected function fetchAllAttachment($artifact_id, $values, $submitter_needed, $submitted_values, $read_only = true) {
         $html = '';
         if (count($values)) {
             $hp = Codendi_HTMLPurifier::instance();
             $uh = UserHelper::instance();
-            
             $added = array();
             foreach ($values as $fileinfo) {
                 $query_link = http_build_query(
@@ -302,6 +302,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 
                 $add = '<div class="tracker_artifact_attachment">';
                 $add .= '<table><tr><td>';
+                if (!$read_only) {
+                    $add .= $this->fetchDeleteCheckbox($fileinfo, $submitted_values);
+                    $add .= '</td><td>';
+                }
                 if ($fileinfo->isImage()) {
                     $query_add = http_build_query(
                         array(
@@ -327,6 +331,18 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             }
             $html .= implode('', $added);
         }
+        return $html;
+    }
+
+    private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, $submitted_values) {
+        $html = '';
+        $html .= '<label class="pc_checkbox tracker_artifact_attachment_delete">';
+        $checked = '';
+        if (!empty($submitted_values[0][$this->id]['delete']) && in_array($fileinfo->getId(), $submitted_values[0][$this->id]['delete'])) {
+            $checked = 'checked="checked"';
+        }
+        $html .= '<input type="checkbox" name="artifact['. $this->id .'][delete][]" value="'. $fileinfo->getId() .'" title="delete" '. $checked .' />&nbsp;';
+        $html .= '</label>';
         return $html;
     }
 
@@ -611,8 +627,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             if (!$this->has_errors) {
                 $r = new Rule_File();
                 foreach($value as $i => $attachment) {
-                    //is no description and no file uploaded => ignore it
-                    if ( (!empty($attachment['error']) && $attachment['error'] != UPLOAD_ERR_NO_FILE) || trim($attachment['description'])) {
+                    //is delete or no description and no file uploaded => ignore it
+                    if ( "$i" != 'delete' && ((!empty($attachment['error']) && $attachment['error'] != UPLOAD_ERR_NO_FILE) || trim($attachment['description']))) {
                         if (!$r->isValid($attachment)) {
                             $this->has_errors = true;
                             $GLOBALS['Response']->addFeedback('error', $this->getLabel() .' #'. $i .' has error: '. $r->getErrorMessage());
@@ -637,8 +653,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $r = new Rule_File();
         $a_file_is_sent = false;
         reset($files);
-        while (!$a_file_is_sent && (list(,$attachment) = each($files))) {
-            $a_file_is_sent = $r->isValid($attachment);
+        while (!$a_file_is_sent && (list($action, $attachment) = each($files))) {
+            if ("$action" != 'delete') {
+                $a_file_is_sent = $r->isValid($attachment);
+            }
         }
         return $a_file_is_sent;
     }
@@ -712,7 +730,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         if ($previous_changesetvalue) {
             $previous_fileinfo_ids = array();
             foreach($previous_changesetvalue as $previous_attachment) {
-                $previous_fileinfo_ids[] = $previous_attachment->getId();
+                if (empty($value['delete']) || !in_array($previous_attachment->getId(), $value['delete'])) {
+                    $previous_fileinfo_ids[] = $previous_attachment->getId();
+                }
             }
             if (count($previous_fileinfo_ids)) {
                 $dao->create($changeset_value_id, $previous_fileinfo_ids);
@@ -723,7 +743,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $current_user = UserManager::instance()->getCurrentUser();
         $r = new Rule_File();
         foreach ($value as $i => $file_info) {
-            if ($r->isValid($file_info)) {
+            if ("$i" != 'delete' && $r->isValid($file_info)) {
                 if ($attachment = Tracker_FileInfo::create($this, $current_user->getId(), trim($file_info['description']), $file_info['name'], $file_info['size'], $file_info['type'])) {
                     $path = $this->getRootPath();
                     if (!is_dir($path .'/thumbnails')) {
@@ -812,7 +832,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function hasChanges(Tracker_Artifact_ChangesetValue $old_value, $new_value) {
         //"old" and "new" value are irrelevant in this context.
         //We just have to know if there is at least one file successfully uploaded
-        return $this->checkThatAtLeastOneFileIsUploaded($new_value);
+        return $this->checkThatAtLeastOneFileIsUploaded($new_value) || !empty($new_value['delete']);
     }
     
     /**

@@ -243,6 +243,21 @@ document.observe('dom:loaded', function () {
         });
     }
 
+    function toggle_tracker_artifact_attachment_delete(elem) {
+        if (elem.checked) {
+            elem.up('td').nextSiblings().invoke('addClassName', 'tracker_artifact_attachment_deleted');
+            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 0.4);
+        } else {
+            elem.up('td').nextSiblings().invoke('removeClassName', 'tracker_artifact_attachment_deleted');
+            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 1);
+        }
+    }
+
+    $$(".tracker_artifact_attachment_delete > input[type=checkbox]").each(function (elem) {
+        //on load strike (useful when the checkbox is already checked on dom:loaded. (Missing required field for example)
+        toggle_tracker_artifact_attachment_delete(elem);
+        elem.observe('click', function (evt) { toggle_tracker_artifact_attachment_delete(elem); });
+    });
 });
 
 codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
