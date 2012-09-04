@@ -173,7 +173,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $html             = '';
         $submitter_needed = true;
-        $read_only        = !false;
+        $read_only        = false;
         $html .= $this->fetchAllAttachment($artifact->id, $value, $submitter_needed, $submitted_values, $read_only);
         $html .= $this->fetchSubmitValue();
         return $html;
