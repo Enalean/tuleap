@@ -103,8 +103,9 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         $some_results = array();
         stub($this->elasticsearchclient)->search($query_excpectation)->once()->returns($some_results);
 
+        $offset                     = 666;
         $no_facet_submitted_by_user = array();
-        $this->client->searchDocumentsIgnoringPermissions('some terms', $no_facet_submitted_by_user, $this->user);
+        $this->client->searchDocumentsIgnoringPermissions('some terms', $no_facet_submitted_by_user, $offset, $this->user);
     }
 }
 

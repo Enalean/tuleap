@@ -33,7 +33,7 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     }
     
     public function has_results() {
-        return ($this->result_count() > 0);
+        return ($this->query_result->count() > 0);
     }
     
     public function has_facets() {

@@ -46,10 +46,11 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     public function adminSearch() {
         $terms  = $this->request->getValidated('terms', 'string', '');
         $facets = $this->getFacets();
+        $offset = $this->request->getValidated('offset', 'uint', 0);
 
         try {
             $index_status  = $this->client->getStatus();
-            $search_result = $this->client->searchDocumentsIgnoringPermissions($terms, $facets);
+            $search_result = $this->client->searchDocumentsIgnoringPermissions($terms, $facets, $offset);
             $presenter     = new FullTextSearch_Presenter_AdminSearch($index_status, $terms, $search_result);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
@@ -64,7 +65,11 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
 
         try {
             $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
-            $presenter     = new FullTextSearch_Presenter_Search(1, $terms, $search_result);
+            if ($this->request->isAjax()) {
+                $presenter = new FullTextSearch_Presenter_SearchOnlyResults($search_result);
+            } else {
+                $presenter = new FullTextSearch_Presenter_Search(null, $terms, $search_result);
+            }
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
         }

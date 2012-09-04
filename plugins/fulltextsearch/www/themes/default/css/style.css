@@ -40,3 +40,13 @@
 .frs_facet_main_title {
     margin-bottom: 0.5em;
 }
+
+.fts_more {
+    padding: 1em 0em;
+    font-style: italic;
+    color: #888;
+}
+
+.fts_more > a {
+    font-style: normal;
+}

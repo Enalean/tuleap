@@ -46,8 +46,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocumentsIgnoringPermissions($terms, array $facets) {
-        $query  = $this->getSearchDocumentsQuery($terms, $facets);
+    public function searchDocumentsIgnoringPermissions($terms, array $facets, $offset) {
+        $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset);
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
     }
@@ -68,7 +68,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      */
     private function getSearchDocumentsQueryWithPermissions($terms, array $facets, $offset, User $user) {
         $ugroup_literalizer = new UGroupLiteralizer();
-        $query = $this->getSearchDocumentsQuery($terms, $facets);
+        $query = $this->getSearchDocumentsQuery($terms, $facets, $offset);
         $filtered_query = array(
             'filtered' => array(
                 'query'  => $query['query'],
@@ -81,7 +81,6 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         );
         $query['query']  = $filtered_query;
         $query['fields'] = array_diff($query['fields'], array('permissions'));
-        $query['from']   = (int)$offset;
         //print_r(json_encode($query));
         return $query;
     }
@@ -106,8 +105,9 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    private function getSearchDocumentsQuery($terms, array $facets) {
+    private function getSearchDocumentsQuery($terms, array $facets, $offset) {
         $query = array(
+            'from' => (int)$offset,
             'query' => array(
                 'query_string' => array(
                     'query' => $terms
@@ -132,7 +132,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                         'field' => 'group_id'
                     )
                 )
-            )
+            ),
         );
         $this->filterWithGivenFacets($query, $facets);
         return $query;

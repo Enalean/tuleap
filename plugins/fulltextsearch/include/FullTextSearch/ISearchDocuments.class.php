@@ -29,7 +29,7 @@ interface FullTextSearch_ISearchDocuments {
      * 
      * @param String $term   terms
      * @param array  $facets submitted by user for faceted navigation
-     * @param int    $offset The offset of the searchça 
+     * @param int    $offset The offset of the search
      * @param User   $user   The user which do the request
      * 
      * @return FullTextSearch_SearchResultCollection
@@ -41,10 +41,11 @@ interface FullTextSearch_ISearchDocuments {
      *
      * @param String $term   terms
      * @param array  $facets submitted by user for faceted navigation
+     * @param int    $offset The offset of the search
      *
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocumentsIgnoringPermissions($terms, array $facets);
+    public function searchDocumentsIgnoringPermissions($terms, array $facets, $offset);
 
     /**
      * Return status of the index

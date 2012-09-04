@@ -1,0 +1,28 @@
+
+<div class="row">
+
+<div class="span3">
+    {{#has_results}}
+    <p class="fts_resultcount">{{result_count}}</p>
+    
+    {{#has_facets}}
+    <h3 class="frs_facet_main_title">Filter results by projects:</h3>
+    <ul class="frs_facet">
+    {{#facets}}
+        <li><label><input type="checkbox" value="{{value}}" name="facets[{{name}}][]" {{checked}} onclick="this.form.submit()"/>{{label}} ({{count}})</label></li>
+    {{/facets}}
+    </ul>
+    {{/has_facets}}
+    {{/has_results}}
+</div>
+
+<div class="span9">
+    {{> search-results}}
+    
+    {{#no_results}}
+    <p>No results found</p>
+    {{/no_results}}
+</div>
+</div>
+
+</form>

@@ -43,6 +43,7 @@ class fulltextsearchPlugin extends Plugin {
 
         // style
         $this->_addHook('cssfile', 'cssfile', false);
+        $this->_addHook('javascript_file', 'javascript_file', false);
 
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
@@ -192,11 +193,20 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function cssfile($params) {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], '/search/') === 0
-        ) {
+        if ($this->canIncludeAssets()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
+    }
+
+    function javascript_file($params) {
+        if ($this->canIncludeAssets()) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>';
+        }
+    }
+
+    private function canIncludeAssets() {
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/search/') === 0;
     }
 
     private function getIndexClient() {
