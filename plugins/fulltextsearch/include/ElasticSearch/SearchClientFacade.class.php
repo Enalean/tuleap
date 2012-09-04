@@ -57,8 +57,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, array $facets, User $user) {
-        $query  = $this->getSearchDocumentsQueryWithPermissions($terms, $facets, $user);
+    public function searchDocuments($terms, array $facets, $offset, User $user) {
+        $query  = $this->getSearchDocumentsQueryWithPermissions($terms, $facets, $offset, $user);
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
     }
@@ -66,7 +66,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    private function getSearchDocumentsQueryWithPermissions($terms, array $facets, User $user) {
+    private function getSearchDocumentsQueryWithPermissions($terms, array $facets, $offset, User $user) {
         $ugroup_literalizer = new UGroupLiteralizer();
         $query = $this->getSearchDocumentsQuery($terms, $facets);
         $filtered_query = array(
@@ -81,6 +81,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         );
         $query['query']  = $filtered_query;
         $query['fields'] = array_diff($query['fields'], array('permissions'));
+        $query['from']   = (int)$offset;
         //print_r(json_encode($query));
         return $query;
     }

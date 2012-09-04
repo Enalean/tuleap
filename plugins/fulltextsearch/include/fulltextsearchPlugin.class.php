@@ -71,7 +71,8 @@ class fulltextsearchPlugin extends Plugin {
     public function search_type($params) {
         if ($this->getCurrentUser()->useLabFeatures()) {
             if ($params['type_of_search'] === self::SEARCH_TYPE) {
-                $params['search_type'] = true;
+                $params['search_type']        = true;
+                $params['pagination_handled'] = true;
 
                 $this->getSearchController()->search();
             }

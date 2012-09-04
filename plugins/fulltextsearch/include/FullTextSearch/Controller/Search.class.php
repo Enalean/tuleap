@@ -60,9 +60,10 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     public function search() {
         $terms  = $this->request->getValidated('words', 'string', '');
         $facets = $this->getFacets();
+        $offset = $this->request->getValidated('offset', 'uint', 0);
 
         try {
-            $search_result = $this->client->searchDocuments($terms, $facets, $this->request->getCurrentUser());
+            $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
             $presenter     = new FullTextSearch_Presenter_Search(1, $terms, $search_result);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
