@@ -303,7 +303,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $add = '<div class="tracker_artifact_attachment">';
                 $add .= '<table><tr><td>';
                 if (!$read_only) {
-                    $add .= $this->fetchDeleteCheckbox($fileinfo);
+                    $add .= $this->fetchDeleteCheckbox($fileinfo, $submitted_values);
                     $add .= '</td><td>';
                 }
                 if ($fileinfo->isImage()) {
@@ -334,7 +334,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $html;
     }
 
-    private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo) {
+    private function fetchDeleteCheckbox(Tracker_FileInfo $fileinfo, $submitted_values) {
         $html = '';
         $html .= '<label class="pc_checkbox tracker_artifact_attachment_delete">';
         $checked = '';
