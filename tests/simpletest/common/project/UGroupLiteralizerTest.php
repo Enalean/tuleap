@@ -29,8 +29,8 @@ class UGroupLiteralizerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user      = mock('User');
-        $user_manager     = mock('UserManager');
+        $this->user   = mock('User');
+        $user_manager = mock('UserManager');
         stub($user_manager)->getUserByUserName()->returns($this->user);
         UserManager::setInstance($user_manager);
         $this->ugroup_literalizer = new UGroupLiteralizer();
@@ -100,11 +100,21 @@ class UGroupLiteralizerTest extends TuleapTestCase {
 
     public function itCanTransformAnArrayWithUGroupMembersConstantIntoString() {
         $ugroup_ids = array(Ugroup::PROJECT_MEMBERS);
-        $project    = mock('Project');
-        stub($project)->getUnixName()->returns('gpig');
         $expected   = array('@gpig_project_members');
-        $result     = $this->ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
+        $this->assertUgroupIdsToString($ugroup_ids, $expected);
+    }
 
+    public function itDoesntIncludeTwiceProjectMemberIfSiteActive() {
+        $ugroup_ids = array(Ugroup::REGISTERED, Ugroup::PROJECT_MEMBERS);
+        $expected   = array('@site_active', '@gpig_project_members');
+        $this->assertUgroupIdsToString($ugroup_ids, $expected);
+    }
+
+    private function assertUgroupIdsToString($ugroup_ids, $expected) {
+        $project = mock('Project');
+        stub($project)->getUnixName()->returns('gpig');
+
+        $result = $this->ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
         $this->assertEqual($expected, $result);
     }
 

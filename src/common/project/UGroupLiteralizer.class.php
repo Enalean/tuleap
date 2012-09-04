@@ -180,12 +180,15 @@ class UGroupLiteralizer {
     }
 
     public function ugroupIdsToString($ugroup_ids, Project $project) {
-        $project_name   = $project->getUnixName();
+        $project_name = $project->getUnixName();
+        $strings      = array();
         foreach ($ugroup_ids as $key => $ugroup_id) {
-            $ugroup_ids[$key] = $this->ugroupIdToString($ugroup_id, $project_name);
+            foreach (explode(' ', $this->ugroupIdToString($ugroup_id, $project_name)) as $string) {
+                $strings[] = $string;
+            }
         }
 
-        return array_values(array_filter($ugroup_ids));
+        return array_values(array_unique(array_filter($strings)));
     }
 }
 ?>
