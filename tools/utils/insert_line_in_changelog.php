@@ -18,8 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$plugin  = $argv[1];
-$version = $argv[2];
+$plugin         = $argv[1];
+$version        = $argv[2];
+$tuleap_version = $argv[3];
 
 $reference_line_to_plugin = "\t* $plugin: $version";
 
@@ -30,7 +31,7 @@ $in_plugins      = false;
 $section_stopped = false;
 foreach ($changelog as $line) {
     if (!$section_started) {
-        if (preg_match('/^Version 5.4/i', $line)) {
+        if (preg_match('/^Version '. preg_quote($tuleap_version) .'/i', $line)) {
             $section_started = true;
         }
     } else if ($section_started && !$section_stopped) {

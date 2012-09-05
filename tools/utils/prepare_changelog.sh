@@ -39,7 +39,7 @@ for p in $modified_plugins ; do
     minor_version=`expr 1 + $minor_version`
     version="$major_version.$minor_version"
     echo "    * $p: $version"
-    php tools/utils/insert_line_in_changelog.php "$p" "$version"
+    php tools/utils/insert_line_in_changelog.php "$p" "$version" "$tuleap_version"
     echo $version > plugins/$p/VERSION
     touch plugins/$p/ChangeLog
     prepend "" plugins/$p/ChangeLog
