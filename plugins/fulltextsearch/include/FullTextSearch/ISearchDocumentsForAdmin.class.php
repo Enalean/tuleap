@@ -22,18 +22,17 @@
 /**
  * Interface which define the base contract for search library clients
  */
-interface FullTextSearch_ISearchDocuments {
+interface FullTextSearch_ISearchDocumentsForAdmin extends FullTextSearch_ISearchDocuments {
 
     /**
-     * Search for data in the index, filter them with permissions
+     * Return status of the index
      * 
-     * @param String $term   terms
-     * @param array  $facets submitted by user for faceted navigation
-     * @param int    $offset The offset of the search
-     * @param User   $user   The user which do the request
+     * The returned array is:
+     * array('size'   => string with human readable size
+     *       'nb_docs => integer, number of documents in index)
      * 
-     * @return FullTextSearch_SearchResultCollection
+     * @return array 
      */
-    public function searchDocuments($terms, array $facets, $offset, User $user);
+    public function getStatus();
 }
 ?>

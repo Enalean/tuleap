@@ -23,6 +23,11 @@
  */
 class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
 
+    public function __construct(Codendi_Request                         $request,
+                                FullTextSearch_ISearchDocumentsForAdmin $client) {
+        parent::__construct($request, $client);
+    }
+
     public function index() {
         try {
             $index_status = $this->client->getStatus();
@@ -31,10 +36,6 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
         }
         $this->render($presenter->template, $presenter);
-    }
-
-    protected function getResults($terms, $facets, $offset) {
-        return $this->client->searchDocumentsIgnoringPermissions($terms, $facets, $offset);
     }
 
     protected function getSearchPresenter($terms, $search_result) {

@@ -25,15 +25,16 @@ require_once 'common/project/ProjectManager.class.php';
  * Allow to perform search on ElasticSearch Index
  */
 class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_ISearchDocuments {
+
     /**
      * @var mixed
      */
-    private $type;
+    protected $type;
 
     /**
      * @var ProjectManager
      */
-    private $project_manager;
+    protected $project_manager;
 
     public function __construct(ElasticSearchClient $client, $type, ProjectManager $project_manager) {
         parent::__construct($client);
@@ -42,23 +43,15 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     }
 
     /**
-     * @see ISearchDocuments::searchDocumentsIgnoingPermissions
-     *
-     * @return ElasticSearch_SearchResultCollection
-     */
-    public function searchDocumentsIgnoringPermissions($terms, array $facets, $offset) {
-        $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset);
-        $search = $this->client->search($query);
-        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
-    }
-
-    /**
      * @see ISearchDocuments::searchDocuments
      *
      * @return ElasticSearch_SearchResultCollection
      */
     public function searchDocuments($terms, array $facets, $offset, User $user) {
-        $query  = $this->getSearchDocumentsQueryWithPermissions($terms, $facets, $offset, $user);
+        $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user);
+        // For debugging purpose, uncomment the statement below to see the
+        // content of the request (can be directly injected in a curl request)
+        //var_dump(json_encode($query));
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
     }
@@ -66,46 +59,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    private function getSearchDocumentsQueryWithPermissions($terms, array $facets, $offset, User $user) {
-        $ugroup_literalizer = new UGroupLiteralizer();
-        $query = $this->getSearchDocumentsQuery($terms, $facets, $offset);
-        $filtered_query = array(
-            'filtered' => array(
-                'query'  => $query['query'],
-                'filter' => array(
-                    'terms' => array(
-                        'permissions' => $ugroup_literalizer->getUserGroupsForUserWithArobase($user)
-                    )
-                )
-            )
-        );
-        $query['query']  = $filtered_query;
-        $query['fields'] = array_diff($query['fields'], array('permissions'));
-        //print_r(json_encode($query));
-        return $query;
-    }
-
-    private function filterWithGivenFacets(array &$query, array $facets) {
-        if (isset($facets['group_id'])) {
-            $filter_on_project = array('or' => array());
-            foreach ($facets['group_id'] as $group_id) {
-                $filter_on_project['or'][] = array(
-                    'range' => array(
-                        'group_id' => array(
-                            'from' => $group_id,
-                            'to'   => $group_id
-                        )
-                    )
-                );
-            }
-            $query['filter'] = $filter_on_project;
-        }
-    }
-
-    /**
-     * @return array to be used for querying ES
-     */
-    private function getSearchDocumentsQuery($terms, array $facets, $offset) {
+    protected function getSearchDocumentsQuery($terms, array $facets, $offset, User $user) {
         $query = array(
             'from' => (int)$offset,
             'query' => array(
@@ -117,7 +71,6 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
                 'id',
                 'group_id',
                 'title',
-                'permissions'
             ),
             'highlight' => array(
                 'pre_tags' => array('<em class="fts_word">'),
@@ -135,25 +88,40 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
             ),
         );
         $this->filterWithGivenFacets($query, $facets);
+        $this->filterQueryWithPermissions($query, $user);
         return $query;
     }
 
-    /**
-     * @see ISearchDocuments::getStatus
-     *
-     * @return array
-     */
-    public function getStatus() {
-        $this->client->setType('');
-        $result = $this->client->request(array('_status'), 'GET', $payload = false, $verbose = true);
-        $this->client->setType($this->type);
-
-        $status = array(
-            'size'    => isset($result['indices']['tuleap']['index']['size']) ? $result['indices']['tuleap']['index']['size'] : '0',
-            'nb_docs' => isset($result['indices']['tuleap']['docs']['num_docs']) ? $result['indices']['tuleap']['docs']['num_docs'] : 0,
+    protected function filterQueryWithPermissions(array &$query, User $user) {
+        $ugroup_literalizer = new UGroupLiteralizer();
+        $filtered_query = array(
+            'filtered' => array(
+                'query'  => $query['query'],
+                'filter' => array(
+                    'terms' => array(
+                        'permissions' => $ugroup_literalizer->getUserGroupsForUserWithArobase($user)
+                    )
+                )
+            )
         );
+        $query['query'] = $filtered_query;
+    }
 
-        return $status;
+    private function filterWithGivenFacets(array &$query, array $facets) {
+        if (isset($facets['group_id'])) {
+            $filter_on_project = array('or' => array());
+            foreach ($facets['group_id'] as $group_id) {
+                $filter_on_project['or'][] = array(
+                    'range' => array(
+                        'group_id' => array(
+                            'from' => $group_id,
+                            'to'   => $group_id
+                        )
+                    )
+                );
+            }
+            $query['filter'] = $filter_on_project;
+        }
     }
 }
 

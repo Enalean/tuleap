@@ -42,7 +42,7 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         $offset = $this->request->getValidated('offset', 'uint', 0);
 
         try {
-            $search_result = $this->getResults($terms, $facets, $offset, $this->request->getCurrentUser());
+            $search_result = $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
             if ($this->request->isAjax()) {
                 $presenter = new FullTextSearch_Presenter_SearchOnlyResults($search_result);
             } else {
@@ -52,10 +52,6 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
         }
         $this->render($presenter->template, $presenter);
-    }
-
-    protected function getResults($terms, $facets, $offset) {
-        return $this->client->searchDocuments($terms, $facets, $offset, $this->request->getCurrentUser());
     }
 
     protected function getSearchPresenter($terms, $search_result) {

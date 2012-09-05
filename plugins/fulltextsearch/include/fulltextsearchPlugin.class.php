@@ -80,20 +80,6 @@ class fulltextsearchPlugin extends Plugin {
         }
     }
 
-    public function system_event_instanciated($params) {
-        switch ($params['sysevent']->getType()) {
-        case 'FULLTEXTSEARCH_DOCMAN_INDEX':
-        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS':
-        case 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA':
-        case 'FULLTEXTSEARCH_DOCMAN_DELETE':
-            $params['sysevent']
-                ->setFullTextSearchActions($this->getActions())
-                ->setItemFactory(new Docman_ItemFactory())
-                ->setVersionFactory(new Docman_VersionFactory());
-            break;
-        }
-    }
-
     public function system_event_get_types($params) {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_INDEX';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
@@ -232,6 +218,16 @@ class fulltextsearchPlugin extends Plugin {
         return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, ProjectManager::instance());
     }
 
+    private function getSearchAdminClient() {
+        $factory         = $this->getClientFactory();
+        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
+        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
+        return $factory->buildSearchAdminClient($client_path, $server_host, $server_port, $server_user, $server_password, ProjectManager::instance());
+    }
+
     private function getClientFactory() {
         return new ElasticSearch_ClientFactory();
     }
@@ -248,7 +244,7 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getAdminController() {
-        return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchClient());
+        return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchAdminClient());
     }
 
     private function getRequest() {

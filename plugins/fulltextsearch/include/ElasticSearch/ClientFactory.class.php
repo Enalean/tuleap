@@ -40,7 +40,7 @@ class ElasticSearch_ClientFactory {
     }
 
     /**
-     * Build instance of ClientFacade
+     * Build instance of SearchClientFacade
      *
      * @param string         $path_to_elasticsearch_client /usr/share/elasticsearch
      * @param string         $server_host                  the host of the search server
@@ -55,6 +55,24 @@ class ElasticSearch_ClientFactory {
         $type   = 'docman';
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
+    }
+
+    /**
+     * Build instance of SearchAdminClientFacade
+     *
+     * @param string         $path_to_elasticsearch_client /usr/share/elasticsearch
+     * @param string         $server_host                  the host of the search server
+     * @param string         $server_port                  the port of the search server
+     * @param string         $server_user                  the user of the search server (Basic Auth)
+     * @param string         $server_password              the pass of the search server (Basic Auth)
+     * @param ProjectManager $project_manager              The project manager
+     *
+     * @return ElasticSearch_ClientFacade
+     */
+    public function buildSearchAdminClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
+        $type   = 'docman';
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
+        return new ElasticSearch_SearchAdminClientFacade($client, $type, $project_manager);
     }
 
     private function getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman') {
