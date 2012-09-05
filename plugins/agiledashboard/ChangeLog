@@ -1,3 +1,6 @@
+Version 0.52 - Tuleap 5.5
+    * Fix fatal error when no planning on parent
+
 Version 0.51 - Tuleap 5.4
     * Create backlog item in milestone context: choose parent upon artifact creation
 
