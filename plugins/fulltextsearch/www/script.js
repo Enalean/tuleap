@@ -24,7 +24,11 @@ document.observe('dom:loaded', function (evt) {
         var link         = new Element('a', { href: '#' }).update('<if class="icon-chevron-down"></i> more'),
             button       = new Element('div').addClassName('fts_more').insert(link),
             parameters   = $(results.up('form')).serialize(true),
-            initial_size = results.childElements().size();
+            initial_size = $F('fts_size');
+
+        if (results.childElements().size() < initial_size) {
+            button.update('No more results.');
+        }
 
         results.insert({after: button});
         link.observe('click', function (evt) {
