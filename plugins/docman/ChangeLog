@@ -1,3 +1,6 @@
+Version 2.26.4 - Tuleap 5.5
+    * Fix: fatal error when applying permissions recursively (Contrib STMicroelectronics)
+
 Version 2.26.3 - Tuleap 5.4
     * Refactoring to update docman item perms in fulltext
 
