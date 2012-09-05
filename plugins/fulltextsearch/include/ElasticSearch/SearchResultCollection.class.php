@@ -23,8 +23,9 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     private $nb_documents_found = 0;
     private $query_time         = 0;
     private $results            = array();
+    private $facets             = array();
     
-    public function __construct(array $result, ProjectManager $project_manager) {
+    public function __construct(array $result, array $submitted_facets, ProjectManager $project_manager) {
         if (isset($result['hits']['total'])) {
             $this->nb_documents_found = $result['hits']['total'];
         }
@@ -41,6 +42,9 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
                 }
             }
         }
+        if (isset($result['facets']['projects'])) {
+            $this->facets = new ElasticSearch_SearchResultProjectsFacetCollection($result['facets']['projects'], $project_manager, $submitted_facets);
+        }
     }
     
     public function count() {
@@ -53,6 +57,10 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     
     public function getResults() {
         return $this->results;
+    }
+    
+    public function getFacets() {
+        return $this->facets;
     }
 }
 

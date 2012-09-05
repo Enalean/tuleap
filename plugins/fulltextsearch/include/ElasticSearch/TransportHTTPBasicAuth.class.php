@@ -85,10 +85,15 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
                     break;
                 default:
                     $status = curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
-                    if ($status == 401) {
+                    switch ($status) {
+                    case 404:
+                        $error = "404 Not Found. Document may have not been indexed. $requestURL.";
+                        break;
+                    case 401:
                         $error = "Server misconfigured. Tuleap cannot access to host [{$this->host}]";
-                    } else {
-                        $error = "Unknown error";
+                        break;
+                    default:
+                        $error = "Unknown error (status: $status) (errno: $errno) ($requestURL)";
                         if ($errno == 0)
                             $error .= ". Non-cUrl error";
                     }

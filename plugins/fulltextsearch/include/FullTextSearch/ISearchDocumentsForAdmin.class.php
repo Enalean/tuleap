@@ -18,29 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_Presenter_Index {
-    public $template = 'index';
-    
-    private $index_status;
-    private $terms;
-    
-    public function __construct($index_status, $terms = '') {
-        $this->index_status = $index_status;
-        $this->terms        = $terms;
-        $this->search_label = $GLOBALS['Language']->getText('search_index', 'search');
-    }
-    
-    public function index_size() {
-        return $this->index_status['size'];
-    }
-    
-    public function nb_docs() {
-        return $this->index_status['nb_docs'];
-    }
-    
-    public function terms() {
-        return $this->terms;
-    }
-}
 
+/**
+ * Interface which define the base contract for search library clients
+ */
+interface FullTextSearch_ISearchDocumentsForAdmin extends FullTextSearch_ISearchDocuments {
+
+    /**
+     * Return status of the index
+     * 
+     * The returned array is:
+     * array('size'   => string with human readable size
+     *       'nb_docs => integer, number of documents in index)
+     * 
+     * @return array 
+     */
+    public function getStatus();
+}
 ?>

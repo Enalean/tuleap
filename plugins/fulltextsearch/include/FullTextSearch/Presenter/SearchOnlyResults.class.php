@@ -18,29 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_Presenter_Index {
-    public $template = 'index';
-    
-    private $index_status;
-    private $terms;
-    
-    public function __construct($index_status, $terms = '') {
-        $this->index_status = $index_status;
-        $this->terms        = $terms;
-        $this->search_label = $GLOBALS['Language']->getText('search_index', 'search');
-    }
-    
-    public function index_size() {
-        return $this->index_status['size'];
-    }
-    
-    public function nb_docs() {
-        return $this->index_status['nb_docs'];
-    }
-    
-    public function terms() {
-        return $this->terms;
+
+class FullTextSearch_Presenter_SearchOnlyResults extends FullTextSearch_Presenter_Search {
+    public $template = 'search-results';
+
+    public function __construct(FullTextSearch_SearchResultCollection $query_result) {
+        parent::__construct(null, null, $query_result);
     }
 }
-
 ?>
