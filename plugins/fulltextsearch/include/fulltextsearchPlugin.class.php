@@ -247,6 +247,10 @@ class fulltextsearchPlugin extends Plugin {
         return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient());
     }
 
+    private function getAdminController() {
+        return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchClient());
+    }
+
     private function getRequest() {
         return HTTPRequest::instance();
     }
@@ -258,9 +262,9 @@ class fulltextsearchPlugin extends Plugin {
             header('Location: ' . get_server_url());
         }
 
-        $controller = $this->getSearchController();
-        if ($request->get('terms')) {
-                $controller->adminSearch();
+        $controller = $this->getAdminController();
+        if ($request->get('words')) {
+                $controller->search();
         } else {
                 $controller->index();
         }

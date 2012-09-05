@@ -527,9 +527,9 @@ if ($type_of_search == "soft") {
         'offset'             => $offset,
         'nbRows'             => 25,
         'type_of_search'     => $type_of_search,
-        'search_type'        =>& $matchingSearchTypeFound,
-        'rows_returned'      =>& $rows_returned,
-        'rows'               =>& $rows,
+        'search_type'        => &$matchingSearchTypeFound,
+        'rows_returned'      => &$rows_returned,
+        'rows'               => &$rows,
         'pagination_handled' => &$pagination_handled,
         'group_id'           => $request->get('group_id'),
     );
