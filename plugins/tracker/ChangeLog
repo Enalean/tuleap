@@ -1,3 +1,6 @@
+Version 5.10.1 - Tuleap 5.4.1
+    * Improve JS performance on cross search
+
 Version 5.10 - Tuleap 5.4
     * Create backlog item in milestone context: choose parent upon artifact creation
 
