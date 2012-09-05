@@ -23,11 +23,12 @@
 # printout the list of plugins for the main ChangeLog (to be copy-pasted by hand)
 
 # Usage: 
-# $ tools/utils/prepare_changelog.sh "Default changelog message to add in each plugins"
+# $ tools/utils/changelogs/generate.sh "Default changelog message to add in each plugins"
 
 default_changelog_message=$1
 
 tuleap_version=`php -r '$v = explode(".", file_get_contents("VERSION")); echo $v[0] .".". ($v[1]+1);'`
+php tools/utils/changelogs/increment_tuleap_version.php
 
 modified_plugins=`git status --porcelain | grep "^M  plugins/" | awk -F' ' '{print $2}' | cut -d/ -f2 | uniq`
 prepend() {
@@ -39,7 +40,7 @@ for p in $modified_plugins ; do
     minor_version=`expr 1 + $minor_version`
     version="$major_version.$minor_version"
     echo "    * $p: $version"
-    php tools/utils/insert_line_in_changelog.php "$p" "$version" "$tuleap_version"
+    php tools/utils/changelogs/insert_line_in_changelog.php "$p" "$version" "$tuleap_version"
     echo $version > plugins/$p/VERSION
     touch plugins/$p/ChangeLog
     prepend "" plugins/$p/ChangeLog
