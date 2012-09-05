@@ -28,7 +28,8 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
         $this->user                = mock('User');
         $project_manager           = mock('ProjectManager');
         $this->elasticsearchclient = mock('ElasticSearchClient');
-        $this->client = new ElasticSearch_SearchClientFacade($this->elasticsearchclient, 'whatever', $project_manager);
+        $this->client              = new ElasticSearch_SearchClientFacade($this->elasticsearchclient, 'whatever', $project_manager);
+        $this->admin_client        = new ElasticSearch_SearchAdminClientFacade($this->elasticsearchclient, 'whatever', $project_manager);
     }
 
     public function itAsksToElasticsearchToReturnOnlyResultsWithMatchingPermissions() {
@@ -105,7 +106,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
 
         $offset                     = 666;
         $no_facet_submitted_by_user = array();
-        $this->client->searchDocumentsIgnoringPermissions('some terms', $no_facet_submitted_by_user, $offset, $this->user);
+        $this->admin_client->searchDocuments('some terms', $no_facet_submitted_by_user, $offset, $this->user);
     }
 }
 

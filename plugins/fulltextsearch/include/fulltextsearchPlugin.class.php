@@ -215,7 +215,7 @@ class fulltextsearchPlugin extends Plugin {
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, ProjectManager::instance());
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
     }
 
     private function getSearchAdminClient() {
@@ -225,7 +225,7 @@ class fulltextsearchPlugin extends Plugin {
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchAdminClient($client_path, $server_host, $server_port, $server_user, $server_password, ProjectManager::instance());
+        return $factory->buildSearchAdminClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
     }
 
     private function getClientFactory() {
@@ -245,6 +245,10 @@ class fulltextsearchPlugin extends Plugin {
 
     private function getAdminController() {
         return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchAdminClient());
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     private function getRequest() {
