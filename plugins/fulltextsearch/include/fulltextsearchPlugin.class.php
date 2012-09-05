@@ -41,9 +41,9 @@ class fulltextsearchPlugin extends Plugin {
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
 
-        // style
+        // assets
         $this->_addHook('cssfile', 'cssfile', false);
-        $this->_addHook('javascript_file', 'javascript_file', false);
+        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
 
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
@@ -198,10 +198,13 @@ class fulltextsearchPlugin extends Plugin {
         }
     }
 
-    function javascript_file($params) {
-        if ($this->canIncludeAssets()) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>';
-        }
+    function combined_scripts($params) {
+        $params['scripts'] = array_merge(
+            $params['scripts'],
+            array(
+                $this->getPluginPath().'/script.js',
+            )
+        );
     }
 
     private function canIncludeAssets() {
