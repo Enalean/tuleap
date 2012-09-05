@@ -271,12 +271,16 @@ class GitRepository implements DVCSRepository {
             $this->load();            
             $parent = new GitRepository();
             $parent->setId($this->parentId);
-            if ( !$this->getDao()->getProjectRepositoryById($parent) ) {
-                //no parent or error
+            try {
+                if ( !$this->getDao()->getProjectRepositoryById($parent) ) {
+                    //no parent or error
+                    $parent = null;
+                } else {
+                    //there is a parent
+                    $this->parentId = $parent->getId();//not very useful
+                }
+            } catch (GitDaoException $e) {
                 $parent = null;
-            } else {
-                //there is a parent
-                $this->parentId = $parent->getId();//not very useful
             }
             $this->parent = $parent;
         }
