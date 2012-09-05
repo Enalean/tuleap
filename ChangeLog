@@ -5,6 +5,7 @@ Version 5.5 (Not released yet)
 
     == Plugins ==
 	* tracker: 5.13
+	* git: 2.7.3
 
 	== Development ==
 	* Add tool to easily fix the singleton count after a merge

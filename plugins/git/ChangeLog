@@ -1,3 +1,6 @@
+Version 2.7.3 - Tuleap 5.5
+    * Fix: fatal error while trying to browse forked repository after deleting its parent (Contrib STMicroelectronics)
+
 Version 2.7.2 - Tuleap 5.4
     * Fix git cross-references (sla #1156)
     
