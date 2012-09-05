@@ -375,7 +375,7 @@ $GLOBALS['server']->register(
         'artifact_id'=>'xsd:int',
         'value'=>'tns:ArrayOfArtifactFieldValue',
         'comment' => 'xsd:string',
-        'commentFormat' => 'xsd:int'
+        'comment_format' => 'xsd:string'
     ),
     array('return'=>'xsd:int'),
     $GLOBALS['uri'],
