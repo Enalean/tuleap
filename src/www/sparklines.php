@@ -54,6 +54,9 @@ if (is_array($sparkline_urls)) {
             
             //Get the reference
             $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($key, $group_id, count($args));
+            if (! $ref) {
+                continue;
+            }
             
             // Get groupname (might be useful in replace rules)
             $projname = null;
