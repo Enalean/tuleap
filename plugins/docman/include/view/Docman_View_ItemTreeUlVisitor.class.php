@@ -155,7 +155,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                 $dpm = Docman_PermissionsManager::instance($item->getGroupId());
                 if($dpm->getLockFactory()->itemIsLocked($item)) {
                     $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<img src= "'. $lockIconSrc .'" id="docman_item_icon_locked_'.$item->getId().'" class="docman_item_icon" />';
+                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'" class="icon-lock"></i>';
                     $this->html  .=  $lockIcon;
                 }
 

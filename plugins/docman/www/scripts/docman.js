@@ -1004,9 +1004,8 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     _lockIcon:function() {
         if(this.docman.actionsForItem[this.item_id].canUnlock) {
             if(!$('docman_item_icon_locked_'+this.item_id)) {
-                var icon = Builder.node('img', {'id'   : 'docman_item_icon_locked_'+this.item_id,
-                                                'class': 'docman_item_icon',
-                                                'src'  : this.docman.options.themePath+'/images/ic/lock_delete.png'});
+                var icon = Builder.node('i', {'id'   : 'docman_item_icon_locked_'+this.item_id,
+                                              'class': 'icon-lock'});
                 $('docman_item_link_'+this.item_id).appendChild(icon);
             }
         } else {
