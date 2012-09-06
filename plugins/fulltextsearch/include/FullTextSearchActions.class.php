@@ -47,6 +47,18 @@ class FullTextSearchActions {
     }
 
     /**
+     * Index a new document with permissions
+     *
+     * @param Docman_Item    $item    The docman item
+     * @param Docman_Version $version The version to index
+     */
+    public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
+        $update_data = $this->client->initializeSetterData();
+        $update_data = $this->client->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
+        $this->client->update($item->getid(), $update_data);
+    }
+
+    /**
      * Index the new permissions of a document
      *
      * @param Docman_Item $item The docman item

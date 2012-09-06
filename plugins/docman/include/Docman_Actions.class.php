@@ -277,10 +277,9 @@ class Docman_Actions extends Actions {
 
             $eArray = array('group_id' => $item->getGroupId(),
                             'item'     => &$item,
-                            'version'  => $vId,
+                            'version'  => $newVersion,
                             'user'     => &$user);
-            $this->event_manager->processEvent('plugin_docman_event_new_version',
-                                               $eArray);
+            $this->event_manager->processEvent('plugin_docman_event_new_version', $eArray);
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
 
             // Approval table
