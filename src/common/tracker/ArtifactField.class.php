@@ -941,8 +941,12 @@ class ArtifactField extends Error {
 			
 		case $this->DATATYPE_INT:
 		case $this->DATATYPE_USER:
-			$name = "valueInt";
-			$values .= ($value? db_ei($value) :"0");
+            $name = "valueInt";
+            if ($this->isSelectBox() || $this->isMultiSelectBox()) {
+                $values .= ($value <> 0 ? db_ei($value) :"100");
+            } else {
+                $values .= ($value? db_ei($value) :"0");
+            }
 			break;
 			
 		case $this->DATATYPE_FLOAT:
@@ -957,7 +961,6 @@ class ArtifactField extends Error {
 		} // switch
 		
 		$sql .= $name . ") VALUES (" . $values . ")";
-		
 		$result=db_query($sql);
 		
 		if ( !$result ) {
@@ -997,7 +1000,11 @@ class ArtifactField extends Error {
             case $this->DATATYPE_INT:
             case $this->DATATYPE_USER:
                 $name = "valueInt";
-                $values .= ($value? db_ei($value) :"0");
+                if ($this->isSelectBox() || $this->isMultiSelectBox()) {
+                    $values .= ($value <> 0 ? db_ei($value) :"100");
+                } else {
+                    $values .= ($value? db_ei($value) :"0");
+                } 
                 break;
                 
             case $this->DATATYPE_FLOAT:
