@@ -92,13 +92,10 @@ class FileModuleMonitorFactory {
      *
      * @return Boolean is_monitoring
      */
-    function isMonitoring($filemodule_id, User $user = null, $publicly = false) {
+    function isMonitoring($filemodule_id, User $user, $publicly) {
         $_filemodule_id = (int) $filemodule_id;
-        if (!$user) {
-            $user = UserManager::instance()->getCurrentUser();
-        }
-        $dao = $this->_getFileModuleMonitorDao();
-        $dar = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user, $publicly);
+        $dao            = $this->_getFileModuleMonitorDao();
+        $dar            = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user, $publicly);
 
         if ($dar->isError()) {
             return;

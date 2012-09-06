@@ -31,7 +31,7 @@ if (user_isloggedin()) {
                     $action = $request->get('frs_monitoring');
                     switch ($action) {
                         case 'stop_monitoring' :
-                            if ($fmmf->isMonitoring($filemodule_id, $user)) {
+                            if ($fmmf->isMonitoring($filemodule_id, $currentUser, false)) {
                                 $result = $fmmf->stopMonitor($filemodule_id, $currentUser);
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'monitor_turned_off'));
                                 $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor', 'no_emails'));
@@ -40,10 +40,10 @@ if (user_isloggedin()) {
                         case 'public_monitoring' :
                             $anonymous = false;
                         case 'anonymous_monitoring' :
-                            if ($anonymous && (!$fmmf->isMonitoring($filemodule_id, $user) || $fmmf->isMonitoring($filemodule_id, $user, $anonymous))) {
+                            if ($anonymous && (!$fmmf->isMonitoring($filemodule_id, $currentUser, false) || $fmmf->isMonitoring($filemodule_id, $currentUser, $anonymous))) {
                                 $performAction = true;
                                 $fmmf->stopMonitor($filemodule_id, $currentUser);
-                            } elseif (!$anonymous && !$fmmf->isMonitoring($filemodule_id, $user, !$anonymous)) {
+                            } elseif (!$anonymous && !$fmmf->isMonitoring($filemodule_id, $currentUser, !$anonymous)) {
                                 $performAction = true;
                                 $historyDao->groupAddHistory("frs_self_add_monitor_package", $filemodule_id, $group_id);
                             }
@@ -169,7 +169,7 @@ if (user_isloggedin()) {
             $notMonitring          = '';
             $monitoringPublicly    = '';
             $monitoringAnonymously = '';
-            if ($fmmf->isMonitoring($filemodule_id, $currentUser)) {
+            if ($fmmf->isMonitoring($filemodule_id, $currentUser, false)) {
                 $publicly = true;
                 if ($fmmf->isMonitoring($filemodule_id, $currentUser, $publicly)) {
                     $monitoringPublicly = 'checked="checked"';

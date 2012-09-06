@@ -54,7 +54,7 @@ class FileModuleMonitorDao extends DataAccessObject {
                 FROM user AS u,filemodule_monitor AS fm
                 WHERE u.user_id = fm.user_id
                   AND fm.filemodule_id = ".$packageId."
-                  AND (u.status='A' OR u.status='R')
+                  AND u.status IN ('A', 'R')
                   AND fm.anonymous = 0";
         return $this->retrieve($sql);
     }
