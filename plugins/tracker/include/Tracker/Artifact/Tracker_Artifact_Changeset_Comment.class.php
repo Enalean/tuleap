@@ -188,12 +188,7 @@ class Tracker_Artifact_Changeset_Comment {
                     //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
                     //}
                     if ( !empty($this->body) ) {
-                        if ($this->bodyFormat == self::HTML_COMMENT) {
-                            $level = CODENDI_PURIFIER_STRIP_HTML;
-                        } else {
-                            $level = CODENDI_PURIFIER_DISABLED;
-                        }
-                        $body = $hp->purify($this->body, $level);
+                        $body    = $this->getPurifiedBodyForText();
                         $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
                     }
                     return $output;
