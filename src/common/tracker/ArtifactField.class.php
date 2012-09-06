@@ -943,7 +943,7 @@ class ArtifactField extends Error {
 		case $this->DATATYPE_USER:
             $name = "valueInt";
             if ($this->isSelectBox() || $this->isMultiSelectBox()) {
-                $values .= ($value <> 0 ? db_ei($value) :"100");
+                $values .= ($value != 0 ? db_ei($value) :"100");
             } else {
                 $values .= ($value? db_ei($value) :"0");
             }
@@ -1001,7 +1001,7 @@ class ArtifactField extends Error {
             case $this->DATATYPE_USER:
                 $name = "valueInt";
                 if ($this->isSelectBox() || $this->isMultiSelectBox()) {
-                    $values .= ($value <> 0 ? db_ei($value) :"100");
+                    $values .= ($value != 0 ? db_ei($value) :"100");
                 } else {
                     $values .= ($value? db_ei($value) :"0");
                 } 
