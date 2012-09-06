@@ -611,8 +611,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             Tracker_Artifact_Changeset_Comment::HTML_COMMENT
         );
         $comment_format = $request->getValidated(
-            $comment_format_field_name, 
-            new Valid_WhiteList($comment_format_field_name, $formats), 
+            $comment_format_field_name,
+            new Valid_WhiteList($comment_format_field_name, $formats),
             $default_format
         );
         return $comment_format;

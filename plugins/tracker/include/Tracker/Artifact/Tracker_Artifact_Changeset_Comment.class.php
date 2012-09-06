@@ -25,7 +25,7 @@ class Tracker_Artifact_Changeset_Comment {
      * @const Changeset comment format is text.
      */
     const TEXT_COMMENT = 'text';
-    
+
     /**
      * @const Changeset comment format is HTML
      */
@@ -44,9 +44,7 @@ class Tracker_Artifact_Changeset_Comment {
     public $body;
     public $bodyFormat;
     public $parent_id;
-    
-    
-    
+
     /**
      * Constructor
      *
@@ -60,14 +58,14 @@ class Tracker_Artifact_Changeset_Comment {
      * @param string                     $bodyFormat         The comment type (text or html follow-up comment)
      * @param int                        $parent_id          The id of the parent (if comment has been modified)
      */
-    public function __construct($id, 
-                                $changeset, 
-                                $comment_type_id, 
-                                $canned_response_id, 
-                                $submitted_by, 
-                                $submitted_on, 
-                                $body, 
-                                $bodyFormat, 
+    public function __construct($id,
+                                $changeset,
+                                $comment_type_id,
+                                $canned_response_id,
+                                $submitted_by,
+                                $submitted_on,
+                                $body,
+                                $bodyFormat,
                                 $parent_id) {
         $this->id                 = $id;
         $this->changeset          = $changeset;
@@ -79,7 +77,7 @@ class Tracker_Artifact_Changeset_Comment {
         $this->bodyFormat         = $bodyFormat;
         $this->parent_id          = $parent_id;
     }
-    
+
     /**
      * Returns the HTML code of this comment
      *
