@@ -46,6 +46,22 @@ class Tracker_Artifact_Changeset_Comment {
     public $parent_id;
 
     /**
+     * @var array of purifier levels to be used when the comment is displayed in text/plain context
+     */
+    public static $PURIFIER_LEVEL_IN_TEXT = array(
+        'html' => CODENDI_PURIFIER_STRIP_HTML,
+        'text' => CODENDI_PURIFIER_DISABLED,
+    );
+
+    /**
+     * @var array of purifier levels to be used when the comment is displayed in text/html context
+     */
+    public static $PURIFIER_LEVEL_IN_HTML = array(
+        'html' => CODENDI_PURIFIER_FULL,
+        'text' => CODENDI_PURIFIER_BASIC,
+    );
+
+    /**
      * Constructor
      *
      * @param int                        $id                 Changeset comment Id
@@ -76,6 +92,27 @@ class Tracker_Artifact_Changeset_Comment {
         $this->body               = $body;
         $this->bodyFormat         = $bodyFormat;
         $this->parent_id          = $parent_id;
+    }
+
+    /**
+     * @return string the cleaned body to be included in a text/plain context
+     */
+    public function getPurifiedBodyForText() {
+        $level = self::$PURIFIER_LEVEL_IN_TEXT[$this->bodyFormat];
+        return $this->purifyBody($level);
+    }
+
+    /**
+     * @return string the cleaned body to be included in a text/html context
+     */
+    public function getPurifiedBodyForHTML() {
+        $level = self::$PURIFIER_LEVEL_IN_HTML[$this->bodyFormat];
+        return $this->purifyBody($level);
+    }
+
+    private function purifyBody($level) {
+        $hp = Codendi_HTMLPurifier::instance();
+        return $hp->purify($this->body, $level, $this->changeset->artifact->getTracker()->group_id);
     }
 
     /**
@@ -134,12 +171,7 @@ class Tracker_Artifact_Changeset_Comment {
                         if ($this->parent_id && !trim($this->body)) {
                             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                         } else {
-                            if ($this->bodyFormat == self::HTML_COMMENT) {
-                                $level = CODENDI_PURIFIER_FULL;
-                            } else {
-                                $level = CODENDI_PURIFIER_BASIC;
-                            }
-                            $html .= $hp->purify($this->body, $level, $this->changeset->artifact->getTracker()->group_id);
+                            $html .= $this->getPurifiedBodyForHTML();
                         }
                         $html .= '</div>';
                     }
