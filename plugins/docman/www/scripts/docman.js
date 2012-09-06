@@ -1004,9 +1004,11 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     _lockIcon:function() {
         if(this.docman.actionsForItem[this.item_id].canUnlock) {
             if(!$('docman_item_icon_locked_'+this.item_id)) {
-                var icon = Builder.node('i', {'id'   : 'docman_item_icon_locked_'+this.item_id,
-                                              'class': 'icon-lock'});
-                $('docman_item_link_'+this.item_id).appendChild(icon);
+                var span = Builder.node('span', {'id' :   'docman_item_icon_locked_'+this.item_id,
+                                                 'title' : this.docman.options.language.event_lock_add});
+                var icon = Builder.node('i', {'class': 'icon-lock'});
+                span.appendChild(icon);
+                $('docman_item_link_'+this.item_id).appendChild(span);
             }
         } else {
             if($('docman_item_icon_locked_'+this.item_id)) {
