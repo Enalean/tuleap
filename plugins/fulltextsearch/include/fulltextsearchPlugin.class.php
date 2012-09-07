@@ -159,7 +159,11 @@ class fulltextsearchPlugin extends Plugin {
      * Event triggered when the permissions on a document version update
      */
     public function plugin_docman_event_new_version($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        // will be done in plugin_docman_after_new_document since we
+        // receive both event for a new document
+        if ($params['version']->getNumber() > 1) {
+            $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        }
     }
 
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
