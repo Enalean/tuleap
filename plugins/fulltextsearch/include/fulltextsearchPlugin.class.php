@@ -37,6 +37,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
         $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
+        $this->_addHook('plugin_docman_event_new_version', 'plugin_docman_event_new_version', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -85,6 +86,7 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE';
     }
 
     /**
@@ -151,6 +153,17 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function plugin_docman_event_perms_change($params) {
         $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
+    }
+
+    /**
+     * Event triggered when the permissions on a document version update
+     */
+    public function plugin_docman_event_new_version($params) {
+        // will be done in plugin_docman_after_new_document since we
+        // receive both event for a new document
+        if ($params['version']->getNumber() > 1) {
+            $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        }
     }
 
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
