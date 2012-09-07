@@ -130,6 +130,7 @@ if (user_isloggedin()) {
                     }
                 }
 
+                // Display the list of people monitoring the package with the delete form
                 $editContent = '<h3>'.$Language->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
                 $list        = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
                 $totalCount  = count($fmmf->getFilesModuleMonitorFromDb($filemodule_id));
@@ -151,6 +152,8 @@ if (user_isloggedin()) {
                     $editContent .= '</table>';
                     $editContent .= '</form>';
                 }
+
+                // Display the form to add a user to the monitoring people by the admin
                 $editContent .= '<form id="filemodule_monitor_form_add" method="post" >';
                 $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
                 $editContent .= '<input type="hidden" name="package_id" value="'.$filemodule_id.'">';
@@ -161,6 +164,8 @@ if (user_isloggedin()) {
                 $editContent .= '<br /><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'add').'" />';
                 $editContent .= '</form>';
             }
+
+            // Display the form to manage user's self monitoring of the package
             file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
             echo '<h3>'.$Language->getText('file_filemodule_monitor', 'my_monitoring').'</h3>';
             echo '<form id="filemodule_monitor_form" method="post" >';
