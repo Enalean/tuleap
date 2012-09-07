@@ -1,3 +1,6 @@
+Version 0.12 - Tuleap 5.5
+    * When a new version is uploaded, index it in ES
+
 Version 0.11 - Tuleap 5.5
     * Users can now search documents in FullText
 

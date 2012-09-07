@@ -6,9 +6,9 @@ Version 5.5 (Not released yet)
     == Plugins ==
 	* tracker: 5.13
 	* git: 2.7.3
-	* docman: 2.26.4
+	* docman: 2.26.5
 	* agiledashboard: 0.52
-	* fulltextsearch: 0.11
+	* fulltextsearch: 0.12
 
 	== Development ==
 	* Add tool to easily fix the singleton count after a merge

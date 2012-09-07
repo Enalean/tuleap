@@ -1,3 +1,7 @@
+Version 2.26.5 - Tuleap 5.5
+    * Dev: `version` parameter of plugin_docman_event_new_version is now the
+	object, not just its id.
+
 Version 2.26.4 - Tuleap 5.5
     * Fix: fatal error when applying permissions recursively (Contrib STMicroelectronics)
 
