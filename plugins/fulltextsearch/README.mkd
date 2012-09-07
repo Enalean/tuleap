@@ -66,6 +66,16 @@ Edit elasticsearch/conf/jetty.xml to restrict access to ES server:
         </Set>
     </New>
 
+Cluster
+-------
+ElasticSearch works in a cluster. It autodiscovers nodes you add to it. This means that for each tuleap instance you need 
+to have a dedicated cluster. See http://www.elasticsearch.org/guide/reference/modules/discovery/ for details.
+
+Give a unique name to your cluster in elasticsearch.yml
+
+    cluster.name: <unique-name>
+
+
 Setup index
 -----------
 Then you can start the server:
