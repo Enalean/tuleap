@@ -1012,7 +1012,7 @@ class ArtifactField extends Error {
                     }
                 } else {
                     $values .= ($value? db_ei($value) :"0");
-                } 
+                }
                 break;
                 
             case $this->DATATYPE_FLOAT:
