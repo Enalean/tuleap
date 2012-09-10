@@ -1004,15 +1004,14 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
     _lockIcon:function() {
         if(this.docman.actionsForItem[this.item_id].canUnlock) {
             if(!$('docman_item_icon_locked_'+this.item_id)) {
-                var span = Builder.node('span', {'id' :   'docman_item_icon_locked_'+this.item_id,
-                                                 'title' : this.docman.options.language.event_lock_add});
-                var icon = Builder.node('i', {'class': 'icon-lock'});
-                span.appendChild(icon);
-                $('docman_item_link_'+this.item_id).appendChild(span);
+                var lock_icon = new Element('i', {
+                    id:    'docman_item_icon_locked_'+this.item_id,
+                    title: this.docman.options.language.event_lock_add
+                }).addClassName('icon-lock');
+                $('docman_item_title_link_'+this.item_id).up().insert({ after: lock_icon });
             }
         } else {
             if($('docman_item_icon_locked_'+this.item_id)) {
-                $('docman_item_icon_locked_'+this.item_id).hide();
                 $('docman_item_icon_locked_'+this.item_id).remove();
             }
         }
