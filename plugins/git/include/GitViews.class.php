@@ -743,9 +743,9 @@ class GitViews extends PluginViews {
         if ( empty($params) ) {
             $params = $this->getData();
         }
-        if ( !empty($params['repository_list']) ) {
+        if (!empty($params['repository_list']) || (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0)) {
             //echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
-            if (!empty($params['repositories_owners'])) {
+            if (isset($params['repositories_owners']) && $params['repositories_owners']->rowCount() > 0) {
                 $current_id = null;
                 if (!empty($params['user'])) {
                     $current_id = (int)$params['user'];
