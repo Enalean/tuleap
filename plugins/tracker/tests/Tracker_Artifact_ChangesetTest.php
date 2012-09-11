@@ -381,12 +381,12 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
         $this->changeset_id = 1234;
         $this->changeset    = partial_mock(
             'Tracker_Artifact_Changeset',
-            array('getCommentDao', 'getChangesetDao', 'getValues'),
+            array('getCommentDao', 'getChangesetDao', 'getFormElementFactory', 'getValueDao'),
             array($this->changeset_id, null, null, null, null)
         );
     }
 
-    public function itDeletesComment() {
+    public function itDeletesCommentsValuesAndChangeset() {
         $changeset_dao = mock('Tracker_Artifact_ChangesetDao');
         $changeset_dao->expectOnce('delete', array($this->changeset_id));
         stub($this->changeset)->getChangesetDao()->returns($changeset_dao);
@@ -395,12 +395,22 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
         $comment_dao->expectOnce('delete', array($this->changeset_id));
         stub($this->changeset)->getCommentDao()->returns($comment_dao);
 
-        $value_text  = mock('Tracker_Artifact_ChangesetValue_Text');
-        $value_text->expectOnce('delete');
-        $value_float = mock('Tracker_Artifact_ChangesetValue_Float');
-        $value_float->expectOnce('delete');
-        stub($this->changeset)->getValues()->returns(array($value_text, $value_float));
-        
+        $value_dao = mock('Tracker_Artifact_Changeset_ValueDao');
+        $value_dao->expectOnce('delete', array($this->changeset_id));
+        stub($this->changeset)->getValueDao()->returns($value_dao);
+
+        stub($value_dao)->searchById($this->changeset_id)->returnsDar(array('field_id' => 125), array('field_id' => 126));
+
+        $formelement_factory = mock('Tracker_FormElementFactory');
+        $field_text = mock('Tracker_FormElement_Field_Text');
+        $field_text->expectOnce('deleteChangesetValue');
+        stub($formelement_factory)->getFieldById(125)->returns($field_text);
+        $field_float = mock('Tracker_FormElement_Field_Float');
+        $field_float->expectOnce('deleteChangesetValue');
+        stub($formelement_factory)->getFieldById(126)->returns($field_float);
+
+        stub($this->changeset)->getFormElementFactory()->returns($formelement_factory);
+
         $this->changeset->delete($this->user);
     }
 }

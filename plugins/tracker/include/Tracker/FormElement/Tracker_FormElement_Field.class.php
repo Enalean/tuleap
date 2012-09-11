@@ -221,7 +221,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function fetchSubmitAdditionnalInfo() {
         return '';
     }
-    
+
+    public function deleteChangesetValue(Tracker_Artifact_ChangesetValue $value) {
+        return $this->getValueDao()->delete($value->getId());
+    }
+
     /**
      * Delete the criteria value
      * @param Criteria $criteria the corresponding criteria

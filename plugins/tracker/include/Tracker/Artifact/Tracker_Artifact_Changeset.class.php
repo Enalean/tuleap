@@ -121,6 +121,32 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * Delete the changeset
+     *
+     * @param User $user the user who wants to delete the changeset
+     *
+     * @return void
+     */
+    public function delete(User $user) {
+        if ($this->userCanDelete($user)) {
+            $this->getChangesetDao()->delete($this->id);
+            $this->getCommentDao()->delete($this->id);
+            $this->deleteValues();
+        }
+    }
+
+    protected function deleteValues() {
+        $value_dao = $this->getValueDao();
+        $factory = $this->getFormElementFactory();
+        foreach ($value_dao->searchById($this->id) as $row) {
+            if ($field = $factory->getFieldById($row['field_id'])) {
+                $field->deleteChangesetValue($this);
+            }
+        }
+        $value_dao->delete($this->id);
+    }
+
+    /**
      * Returns the ValueDao
      *
      * @return Tracker_Artifact_Changeset_ValueDao The dao
@@ -285,25 +311,6 @@ class Tracker_Artifact_Changeset {
     public function updateComment($body, $user) {
         if ($this->userCanEdit($user)) {
             $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id);
-        }
-    }
-
-    /**
-     * Delete the changeset
-     *
-     * @param User $user the user who wants to delete the changeset
-     *
-     * @return void
-     */
-    public function delete(User $user) {
-        if ($this->userCanDelete($user)) {
-            $this->getChangesetDao()->delete($this->id);
-            $this->getCommentDao()->delete($this->id);
-            foreach ($this->getValues() as $value) {
-                $value->delete();
-            }
-            //$this->getValueDao()->delete($this->id);
-            //todo go deeper in the deletion cascade
         }
     }
 
