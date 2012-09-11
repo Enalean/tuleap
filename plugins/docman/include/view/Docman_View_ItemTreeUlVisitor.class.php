@@ -136,7 +136,7 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     $open   = '';
                 }
                 $icon_src = $this->params['docman_icons']->getIconForItem($item, $params);
-                $icon = '<img src="'. $icon_src .'" class="docman_item_icon" />';
+                $icon = '<img src="'. $icon_src .'" id="docman_item_icon_'.$item->getId().'" class="docman_item_icon" />';
                 
                 $this->html .= '<div>';
                 $action = isset($this->params['item_to_move']) ? false : $item->accept($this->get_action_on_icon, array('view' => &$this->view));
@@ -147,9 +147,18 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                     }
                     $url = Docman_View_View::buildUrl($this->params['default_url'], array('action' => $action,
                                                                                           'id' => $item->getId()));
-                    $this->html .= '<a href="'.$url.'" class="'. $class .'">';
+                    $this->html .= '<a href="'.$url.'" id="docman_item_link_'.$item->getId().'" class="'. $class .'">';
                 }
                 $this->html .=  $icon;
+
+                //Display a lock icon for the locked document
+                $dpm = Docman_PermissionsManager::instance($item->getGroupId());
+                if($dpm->getLockFactory()->itemIsLocked($item)) {
+                    $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
+                    $lockIcon    = '<img src= "'. $lockIconSrc .'" id="docman_item_icon_locked_'.$item->getId().'" class="docman_item_icon" />';
+                    $this->html  .=  $lockIcon;
+                }
+
                 if ($action) {
                     $this->html .= '</a>';
                 }
