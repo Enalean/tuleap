@@ -1472,4 +1472,18 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
         $this->assertEqual(null, $this->sprint->getParent(aUser()->build()));
     }
 }
+
+class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
+    public function itDeletesAllChangeset() {
+        $user = aUser()->build();
+        $changeset_1 = mock('Tracker_Artifact_Changeset');
+        $changeset_1->expectOnce('delete', array($user));
+        $changeset_2 = mock('Tracker_Artifact_Changeset');
+        $changeset_2->expectOnce('delete', array($user));
+        $changeset_3 = mock('Tracker_Artifact_Changeset');
+        $changeset_3->expectOnce('delete', array($user));
+        $artifact = anArtifact()->withChangesets(array($changeset_1, $changeset_2, $changeset_3))->build();
+        $artifact->delete($user);
+    }
+}
 ?>
