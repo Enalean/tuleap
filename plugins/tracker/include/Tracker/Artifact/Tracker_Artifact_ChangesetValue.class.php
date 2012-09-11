@@ -95,5 +95,8 @@ abstract class Tracker_Artifact_ChangesetValue {
      */
     public abstract function getValue();
 
+    public function delete() {
+        
+    }
 }
 ?>

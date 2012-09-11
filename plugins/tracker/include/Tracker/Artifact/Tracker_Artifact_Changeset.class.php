@@ -299,7 +299,10 @@ class Tracker_Artifact_Changeset {
         if ($this->userCanDelete($user)) {
             $this->getChangesetDao()->delete($this->id);
             $this->getCommentDao()->delete($this->id);
-            $this->getValueDao()->delete($this->id);
+            foreach ($this->getValues() as $value) {
+                $value->delete();
+            }
+            //$this->getValueDao()->delete($this->id);
             //todo go deeper in the deletion cascade
         }
     }

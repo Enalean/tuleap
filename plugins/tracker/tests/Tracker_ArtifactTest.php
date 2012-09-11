@@ -1474,6 +1474,7 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 }
 
 class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
+
     public function itDeletesAllChangeset() {
         $user = aUser()->build();
         $changeset_1 = mock('Tracker_Artifact_Changeset');

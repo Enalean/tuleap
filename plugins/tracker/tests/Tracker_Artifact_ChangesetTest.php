@@ -369,4 +369,40 @@ BODY;
 
     }
 }
+
+class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
+    private $user;
+    private $changeset_id;
+    private $changeset;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user         = stub('User')->isSuperUser()->returns(true);
+        $this->changeset_id = 1234;
+        $this->changeset    = partial_mock(
+            'Tracker_Artifact_Changeset',
+            array('getCommentDao', 'getChangesetDao', 'getValues'),
+            array($this->changeset_id, null, null, null, null)
+        );
+    }
+
+    public function itDeletesComment() {
+        $changeset_dao = mock('Tracker_Artifact_ChangesetDao');
+        $changeset_dao->expectOnce('delete', array($this->changeset_id));
+        stub($this->changeset)->getChangesetDao()->returns($changeset_dao);
+
+        $comment_dao = mock('Tracker_Artifact_Changeset_CommentDao');
+        $comment_dao->expectOnce('delete', array($this->changeset_id));
+        stub($this->changeset)->getCommentDao()->returns($comment_dao);
+
+        $value_text  = mock('Tracker_Artifact_ChangesetValue_Text');
+        $value_text->expectOnce('delete');
+        $value_float = mock('Tracker_Artifact_ChangesetValue_Float');
+        $value_float->expectOnce('delete');
+        stub($this->changeset)->getValues()->returns(array($value_text, $value_float));
+        
+        $this->changeset->delete($this->user);
+    }
+}
+
 ?>
