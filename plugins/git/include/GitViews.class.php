@@ -635,7 +635,10 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $this->_getBreadCrumb();
         echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
-        echo $this->getText('fork_repositories_desc');
+        if ($this->user->isMember($this->groupId)) {
+            echo $this->getText('fork_personal_repositories_desc');
+        }
+        echo $this->getText('fork_project_repositories_desc');
         if ( !empty($params['repository_list']) ) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
