@@ -142,8 +142,11 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
             // body
             $rowCount = 0;
             $html .= '<tbody>'. $this->fetchRows($tree, 0) .'</tbody>';
-        }
+
             $html .= '</table>';
+        } else {
+            $html .= "<h3>".$GLOBALS['Language']->getText('plugin_git', 'tree_msg_no_available_repo')."</h3>";
+        }
         return $html;
     }
     
