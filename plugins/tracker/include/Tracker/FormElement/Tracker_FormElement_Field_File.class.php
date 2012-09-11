@@ -917,5 +917,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return array();
     }
 
+    public function deleteChangesetValue(Tracker_Artifact_ChangesetValue_File $value) {
+        parent::deleteChangesetValue($value);
+        foreach($value as $fileinfo) {
+            unlink($this->getRootPath().'/'.$fileinfo->getFilename());
+        }
+    }
 }
 ?>
