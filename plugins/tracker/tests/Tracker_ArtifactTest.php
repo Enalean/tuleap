@@ -1476,6 +1476,14 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
 
     public function itDeletesAllChangeset() {
+        $artifact_id = 12345;
+        
+        $artifact = partial_mock(
+            'Tracker_Artifact',
+            array('getChangesets', 'getDao'),
+            array($artifact_id, null, null, null, null)
+        );
+        
         $user = aUser()->build();
         $changeset_1 = mock('Tracker_Artifact_Changeset');
         $changeset_1->expectOnce('delete', array($user));
@@ -1483,7 +1491,13 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         $changeset_2->expectOnce('delete', array($user));
         $changeset_3 = mock('Tracker_Artifact_Changeset');
         $changeset_3->expectOnce('delete', array($user));
-        $artifact = anArtifact()->withChangesets(array($changeset_1, $changeset_2, $changeset_3))->build();
+        
+        stub($artifact)->getChangesets()->returns(array($changeset_1, $changeset_2, $changeset_3));
+        
+        $dao = mock('Tracker_ArtifactDao');
+        $dao->expectOnce('delete', array($artifact_id));
+        stub($artifact)->getDao()->returns($dao);
+        
         $artifact->delete($user);
     }
 }

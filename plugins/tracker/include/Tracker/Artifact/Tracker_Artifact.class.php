@@ -1521,6 +1521,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach($this->getChangesets() as $changeset) {
             $changeset->delete($user);
         }
+        $this->getDao()->delete($this->getId());
+    }
+
+    protected function getDao() {
+        return new Tracker_ArtifactDao();
     }
 }
 
