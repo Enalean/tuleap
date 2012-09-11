@@ -200,9 +200,8 @@ class Git extends PluginController {
             }
             
             if ($repoId !== 0) {
-                $repo = new GitRepository();
-                $repo->setId($repoId);
-                if ($repo->exists() && $repo->userCanRead($user)) {
+                $repo = $this->factory->getRepositoryById($repoId);
+                if ($repo && $repo->userCanRead($user)) {
                     $this->addPermittedAction('view');
                     $this->addPermittedAction('edit');
                     $this->addPermittedAction('clone');
@@ -292,6 +291,7 @@ class Git extends PluginController {
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
+                    $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
                     $valid = new Valid_Text('repo_desc');
                     $valid->required();
                     if($this->request->valid($valid)) {
