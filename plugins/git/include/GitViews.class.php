@@ -610,13 +610,10 @@ class GitViews extends PluginViews {
     protected function _getBreadCrumb() {
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
         echo ' | ';
-        
-        
-        if ($this->user->isMember($this->groupId)) {
-            echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
-            echo ' | ';
-        }
-        
+
+        echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
+        echo ' | ';
+
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
     
@@ -669,8 +666,12 @@ class GitViews extends PluginViews {
             echo '</td>';
 
             echo '<td>';
+            $options = ' disabled="true" ';
+            if ($this->user->isMember($this->groupId)) {
+                $options = ' checked="true" ';
+            }
             echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
+                <input id="choose_personal" type="radio" name="choose_destination" value="personal" '.$options.' />
                 <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
             </div>';
 
@@ -699,8 +700,12 @@ class GitViews extends PluginViews {
         $html = '';
         $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
         if ($userProjectOptions) {
+            $options = ' checked="true" ';
+            if ($this->user->isMember($this->groupId)) {
+                $options = '';
+            }
             $html .= '<div>
-                <input id="choose_project" type="radio" name="choose_destination" value="project" />
+                <input id="choose_project" type="radio" name="choose_destination" value="project" '.$options.' />
                 <label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
             </div>';
             
