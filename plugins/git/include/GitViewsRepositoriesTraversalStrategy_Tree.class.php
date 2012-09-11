@@ -94,7 +94,10 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         foreach ($repositories as $repoId => $row) {
             $path = explode('/', unixPathJoin(array($row['repository_namespace'], $row['repository_name'])));
             $repo = $this->getRepository($row);
-            $this->insertInTree($tree, $repo, $path);
+            $user = UserManager::instance()->getCurrentUser();
+            if ($repo->userCanRead($user)) {
+                $this->insertInTree($tree, $repo, $path);
+            }
         }
         return $tree;
     }
@@ -124,22 +127,23 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
             return '';
         }
         $tree = $this->getTree($repositories);
-        $html .= '<table cellspacing="0" id="git_repositories_list">';
-        
-        // header
-        $html .= '<thead>';
-        $html .= '<tr>';
-        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_repository') .'</th>';
-        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_description') .'</th>';
-        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_last_push') .'</th>';
-        $html .= '</tr>';
-        $html .= '</thead>';
-        
-        // body
-        $rowCount = 0;
-        $html .= '<tbody>'. $this->fetchRows($tree, 0) .'</tbody>';
-        
-        $html .= '</table>';
+        if (!empty($tree)) {
+            $html .= '<table cellspacing="0" id="git_repositories_list">';
+
+            // header
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_repository') .'</th>';
+            $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_description') .'</th>';
+            $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_last_push') .'</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+
+            // body
+            $rowCount = 0;
+            $html .= '<tbody>'. $this->fetchRows($tree, 0) .'</tbody>';
+        }
+            $html .= '</table>';
         return $html;
     }
     
