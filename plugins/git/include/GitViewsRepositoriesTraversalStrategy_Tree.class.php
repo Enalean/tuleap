@@ -89,12 +89,11 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         return $inner;
     }
     
-    public function getTree(array $repositories) {
+    public function getTree(array $repositories, User $user) {
         $tree = array();
         foreach ($repositories as $repoId => $row) {
             $path = explode('/', unixPathJoin(array($row['repository_namespace'], $row['repository_name'])));
             $repo = $this->getRepository($row);
-            $user = UserManager::instance()->getCurrentUser();
             if ($repo->userCanRead($user)) {
                 $this->insertInTree($tree, $repo, $path);
             }
@@ -126,7 +125,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         if (empty($repositories)) {
             return '';
         }
-        $tree = $this->getTree($repositories);
+        $tree = $this->getTree($repositories, $user);
         if (!empty($tree)) {
             $html .= '<table cellspacing="0" id="git_repositories_list">';
 
