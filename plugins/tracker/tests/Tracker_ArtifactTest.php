@@ -1499,6 +1499,7 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         
         $dao = mock('Tracker_ArtifactDao');
         $dao->expectOnce('delete', array($artifact_id));
+        $dao->expectOnce('deleleArtifactLinkReference', array($artifact_id));
         stub($artifact)->getDao()->returns($dao);
         
         $permissions_manager = mock('PermissionsManager');

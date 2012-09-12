@@ -1524,6 +1524,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         $this->getPermissionsManager()->clearPermission(self::PERMISSION_ACCESS, $this->getId());
         $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $this->getDao()->deleleArtifactLinkReference($this->getId());
         $this->getDao()->delete($this->getId());
     }
 

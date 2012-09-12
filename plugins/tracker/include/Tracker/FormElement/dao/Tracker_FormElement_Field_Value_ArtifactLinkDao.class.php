@@ -76,5 +76,12 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
             WHERE keyword=$oldKeyword AND group_id=$group_id";
         return $this->update($sql);
     }
+
+    public function deleteReference($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "DELETE FROM $this->table_name
+                WHERE artifact_id = $artifact_id";
+        return $this->update($sql);
+    }
 }
 ?>

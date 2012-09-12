@@ -19,6 +19,7 @@
  */
 
 require_once 'PriorityDao.class.php';
+require_once dirname(__FILE__).'/../../FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 
 class Tracker_ArtifactDao extends DataAccessObject {
 
@@ -309,6 +310,11 @@ class Tracker_ArtifactDao extends DataAccessObject {
     public function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
+    }
+
+    public function deleleArtifactLinkReference($id) {
+        $dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        return $dao->deleteReference($id);
     }
 
     /**
