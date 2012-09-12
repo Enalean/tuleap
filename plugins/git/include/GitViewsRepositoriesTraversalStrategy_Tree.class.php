@@ -88,7 +88,15 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     protected function getGroupWrapper($label, $inner) {
         return $inner;
     }
-    
+
+    /**
+     * Obtain the tree of git repositories for a user
+     *
+     * @param Array $repositories Array of raw representation of repositories, indexed by repository id (the person that made the choice of the format must be executed)
+     * @param User  $user         The user who traverse the forest (yet another foolish expression)
+     *
+     * @result Array
+     */
     public function getTree(array $repositories, User $user) {
         $tree = array();
         foreach ($repositories as $repoId => $row) {
