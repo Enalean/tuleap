@@ -1476,13 +1476,16 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
 
     public function itDeletesAllChangeset() {
+        $group_id    = 687;
+        $tracker     = aTracker()->withProjectId($group_id)->build();
         $artifact_id = 12345;
         
         $artifact = partial_mock(
             'Tracker_Artifact',
-            array('getChangesets', 'getDao'),
+            array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager'),
             array($artifact_id, null, null, null, null)
         );
+        $artifact->setTracker($tracker);
         
         $user = aUser()->build();
         $changeset_1 = mock('Tracker_Artifact_Changeset');
@@ -1497,6 +1500,14 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         $dao = mock('Tracker_ArtifactDao');
         $dao->expectOnce('delete', array($artifact_id));
         stub($artifact)->getDao()->returns($dao);
+        
+        $permissions_manager = mock('PermissionsManager');
+        $permissions_manager->expectOnce('clearPermission', array('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact_id));
+        stub($artifact)->getPermissionsManager()->returns($permissions_manager);
+        
+        $cross_ref_mgr = mock('CrossReferenceManager');
+        $cross_ref_mgr->expectOnce('deleteEntity', array($artifact_id, 'plugin_tracker_artifact', $group_id));
+        stub($artifact)->getCrossReferenceManager()->returns($cross_ref_mgr);
         
         $artifact->delete($user);
     }
