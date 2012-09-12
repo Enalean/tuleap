@@ -277,14 +277,15 @@ class Tracker_Artifact_Changeset {
     /**
      * Update the content
      *
-     * @param string $body The new content
-     * @param User   $user The user
+     * @param string  $body          The new content
+     * @param User    $user          The user
+     * @param String  $comment_format Format of the comment
      *
      * @return void
      */
-    public function updateComment($body, $user) {
+    public function updateComment($body, $user, $comment_format) {
         if ($this->userCanEdit($user)) {
-            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id);
+            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
         }
     }
 
@@ -320,6 +321,7 @@ class Tracker_Artifact_Changeset {
                                                     $row['submitted_by'],
                                                     $row['submitted_on'],
                                                     $row['body'],
+                                                    $row['body_format'],
                                                     $row['parent_id']);
         }
         return $this->latest_comment;

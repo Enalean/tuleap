@@ -224,6 +224,7 @@ CREATE TABLE tracker_changeset_comment(
     submitted_by INT(11) NULL,
     submitted_on INT(11) NOT NULL,
     body TEXT NOT NULL,
+    body_format varchar(16) NOT NULL default 'text',
     old_artifact_history_id INT(11) NULL,
     INDEX changeset_idx(changeset_id)
 );
@@ -642,4 +643,3 @@ INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACK
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',2);
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',3,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',4);
-

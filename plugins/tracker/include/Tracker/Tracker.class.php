@@ -1759,7 +1759,7 @@ EOS;
         $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
         $html .= '<textarea wrap="soft" rows="12" cols="80" name="artifact_masschange_followup_comment" id="artifact_masschange_followup_comment">'.$GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change').'</textarea>';
         $html .= '<br />';
-        
+
         // Send notification checkbox
         $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_import','send_notifications');
         $html .= '<input type="checkbox" name="notify" value="ok" />';
@@ -1772,7 +1772,7 @@ EOS;
         $this->displayFooter($layout);
     }
 
-    public function updateArtifactsMasschange($submitter , $masschange_aids, $masschange_data, $comment, $send_notifications) {
+    public function updateArtifactsMasschange($submitter , $masschange_aids, $masschange_data, $comment, $send_notifications, $comment_format) {
         //building data for update
         $fields_data  = array();
         foreach ( $masschange_data as $field_id => $data ) {
@@ -1793,7 +1793,7 @@ EOS;
                 continue;
             }
             
-            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications) ) {
+            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
                 $not_updated_aids[] = $aid;
                 continue;
             }
