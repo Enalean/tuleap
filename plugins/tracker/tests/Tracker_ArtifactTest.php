@@ -1499,17 +1499,18 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         
         $dao = mock('Tracker_ArtifactDao');
         $dao->expectOnce('delete', array($artifact_id));
-        $dao->expectOnce('deleleArtifactLinkReference', array($artifact_id));
+        $dao->expectOnce('deleteArtifactLinkReference', array($artifact_id));
+        $dao->expectOnce('deletePriority', array($artifact_id));
         stub($artifact)->getDao()->returns($dao);
-        
+
         $permissions_manager = mock('PermissionsManager');
         $permissions_manager->expectOnce('clearPermission', array('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact_id));
         stub($artifact)->getPermissionsManager()->returns($permissions_manager);
-        
+
         $cross_ref_mgr = mock('CrossReferenceManager');
         $cross_ref_mgr->expectOnce('deleteEntity', array($artifact_id, 'plugin_tracker_artifact', $group_id));
         stub($artifact)->getCrossReferenceManager()->returns($cross_ref_mgr);
-        
+
         $artifact->delete($user);
     }
 }

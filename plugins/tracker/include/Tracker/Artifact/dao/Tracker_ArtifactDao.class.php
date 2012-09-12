@@ -306,15 +306,20 @@ class Tracker_ArtifactDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }
 
-    public function deleleArtifactLinkReference($id) {
+    public function deleteArtifactLinkReference($id) {
         $dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
         return $dao->deleteReference($id);
+    }
+
+    public function deletePriority($id) {
+        $dao = new Tracker_Artifact_PriorityDao();
+        return $dao->remove($id);
     }
 
     /**
