@@ -63,6 +63,23 @@ class GitTest extends TuleapTestCase {
 
     }
 
+    public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember() {
+        $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
+        $request = new Codendi_Request(array('choose_destination' => 'personal'));
+        $git->setRequest($request);
+        $git->expectNever('_doDispatchForkRepositories');
+
+        $factory = new MockGitRepositoryFactory();
+        $git->setFactory($factory);
+
+        $user = new MockUser();
+        $user->setReturnValue('isMember', false);
+        $git->user = $user;
+
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+
+    }
+
     public function testDispatchToForkCrossProjectIfRequestsProject() {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkCrossProject', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'project'));
