@@ -207,6 +207,7 @@ class URLVerification {
             } else {
                 $location  .= $server['REQUEST_URI'];
             } 
+
         return $location;
     }
 
@@ -281,7 +282,7 @@ class URLVerification {
         if ($user->isRestricted()) {
             $url = $this->getUrl();
             if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
-                $this->displayRestrictedUserError($url);
+                $this->displayRestrictedUserError($url);                
             }
         }
     }
@@ -458,10 +459,8 @@ class URLVerification {
      * @return void
      */
     function displayRestrictedUserError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit','exit_error')));
         $error = new Error_PermissionDenied_RestrictedUser($url);
         $error->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
     
@@ -509,10 +508,8 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
 
@@ -534,16 +531,24 @@ class URLVerification {
             $this->verifyProtocol($server);
             $this->verifyHost($server);
             $this->verifyRequest($server);
+            
+            $this->checkNotActiveProject($server);
+            $this->checkRestrictedAccess($server);
+            $this->checkPrivateAccess($server);
+   
             $chunks = $this->getUrlChunks();
+
             if (isset($chunks)) {
                 $location = $this->getRedirectionURL($server);
                 $this->header($location);
             }
-            $this->checkNotActiveProject($server);
-            $this->checkRestrictedAccess($server);
-            $this->checkPrivateAccess($server);
+            
         }
     }
+    
+    /**
+     * Check if the user is  
+     */
 
     /**
      * Checks that only super users can access to not active projects.
@@ -614,7 +619,7 @@ class URLVerification {
         exit;
 
     }
-
+    
 }
 
 ?>

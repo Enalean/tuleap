@@ -91,6 +91,9 @@ abstract class Error_PermissionDenied {
         
         $param = $this->returnBuildInterfaceParam();
         
+        site_header(array('title' => $GLOBALS['Language']->getText('include_exit','exit_error')));
+
+        
         echo "<b>".$GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied')."</b>";
         echo '<br></br>';
         echo "<br>".$GLOBALS['Language']->getText($this->getTextBase(), $param['index']);
@@ -117,7 +120,11 @@ abstract class Error_PermissionDenied {
                   <input type="hidden" id="data" name="url_data" value="' .$_SERVER['REQUEST_URI']. '">
                   <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>
               </form>';
+           
         }
+    
+        $GLOBALS['HTML']->footer(array('showfeedback' => false));
+        
     }
 
     /**
