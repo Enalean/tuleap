@@ -95,7 +95,6 @@ $title_arr[200]='Binding';
 $title_arr[300]=$Language->getText('project_admin_editugroup','desc');
 $title_arr[400]=$Language->getText('project_admin_ugroup','members');
 $title_arr[500]=$Language->getText('project_admin_servicebar','del?');
-$em->processEvent('ugroup_table_title', array('html_array' => &$title_arr));
 ksort($title_arr);
 echo "<tr class=\"boxtable\">\n";
 foreach($title_arr as $title) {
@@ -108,11 +107,10 @@ $result = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id")
 while ($row = db_fetch_array($result)) {
     if ($project->usesDocman() || ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key')) {
         $ugroupRow[100] = util_translate_name_ugroup($row['name']).' *';
-        $ugroupRow[200] = '';
+        $ugroupRow[200] = array('value' => '-', 'html_attrs' => 'align="center"');
         $ugroupRow[300] = util_translate_desc_ugroup($row['description']);
         $ugroupRow[400] = array('value' => '-', 'html_attrs' => 'align="center"');
         $ugroupRow[500] = array('value' => '-', 'html_attrs' => 'align="center"');
-        $em->processEvent('ugroup_table_row', array('row' => $row, 'html_array' => &$ugroupRow));
         ksort($ugroupRow);
         format_html_row($ugroupRow, $row_num);
     }
@@ -126,7 +124,11 @@ if ($group_id != 100) {
     $uGroupBinding = new UGroupBinding();
     while ($row = db_fetch_array($result)) {
         $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';
-        $ugroupRow[200] = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($ugroup_id).'</a>';
+        $bindingContent = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($ugroup_id).'</a>';
+        if (!$uGroupBinding->isBinded($ugroup_id)) {
+            $em->processEvent('ugroup_table_row', array('row' => $row, 'html' => &$bindingContent));
+        }
+        $ugroupRow[200] = array('value' => $bindingContent, 'html_attrs' => 'align="center"');
         $ugroupRow[300] = util_translate_desc_ugroup($row['description']);
         $res2=db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
         $nb_members=db_result($res2,0,0);
@@ -140,7 +142,6 @@ if ($group_id != 100) {
         $warn = $Language->getText('project_admin_ugroup','del_ug');
         $alt  = $Language->getText('project_admin_servicebar','del');
         $ugroupRow[500] = html_trash_link($link, $warn, $alt);
-        $em->processEvent('ugroup_table_row', array('row' => $row, 'html_array' => &$ugroupRow));
         ksort($ugroupRow);
         format_html_row($ugroupRow, $row_num);
     }

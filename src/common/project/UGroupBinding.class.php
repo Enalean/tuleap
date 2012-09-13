@@ -60,10 +60,10 @@ class UGroupBinding {
     public function getLinkTitle($ugroupId) {
         if ($this->isBinded($groupId)) {
             // @TODO: i18n
-            return 'Update binding';
+            return '- Update binding';
         } else {
             // @TODO: i18n
-            return 'Add binding';
+            return '- Add binding';
         }
     }
 
