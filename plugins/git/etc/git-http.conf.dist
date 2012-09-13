@@ -1,0 +1,26 @@
+<VirtualHost *:80>
+        ServerName git.%sys_domain_name%
+
+        include conf.d/auth_mysql.conf
+
+        SetEnv GIT_PROJECT_ROOT /var/lib/codendi/gitolite/repositories
+        SetEnv GIT_HTTP_EXPORT_ALL
+        SetEnv GITOLITE_HTTP_HOME /usr/com/gitolite
+        SetEnv GIT_HTTP_BACKEND /usr/bin/git-http-backend
+        ScriptAlias /git/ /usr/lib/codendi/bin/gitolite-suexec-wrapper.sh/
+
+         <Location />
+                AuthType Basic
+                AuthName "Private Git Access"
+                Require valid-user
+
+                AuthMYSQLEnable on
+                AuthMySQLUser dbauthuser
+                AuthMySQLPassword %dbauthuser_password%
+                AuthMySQLDB codendi
+                AuthMySQLUserTable "user"
+                AuthMySQLNameField user.user_name
+                AuthMySQLPasswordField user.unix_pw
+                AuthMySQLUserCondition "user.status='A'"
+         </Location>
+</VirtualHost>
