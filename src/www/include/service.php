@@ -22,7 +22,7 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
     } else {
       //for non-system templates
-      $link=str_replace($template['name'],$pm->getProject($group_id)->getUnixName(),$link);
+      $link=preg_replace('#(/www/|/projects/|=)'.$template['name'].'(/|&|=)#','$1'.$pm->getProject($group_id)->getUnixName().'$2',$link);
       $link=preg_replace('/group_id='. $template['id'] .'([^\d]|$)/', 'group_id='. $group_id .'$1', $link);
     }
 
