@@ -1161,7 +1161,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','clean'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','clean'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','clean_desc'),
-                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-hierarchy.png'),
+                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-delete.png'),
                 ),
         );
         EventManager::instance()->processEvent(
