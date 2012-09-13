@@ -21,14 +21,21 @@
 require_once('pre.php');
 require_once('common/project/UGroupBinding.class.php');
 
-$group_id = $request->getValidated('group_id', 'GroupId', 0);
+$groupId  = $request->getValidated('group_id', 'GroupId', 0);
+$ugroupId = $request->getValidated('ugroup_id', 'uint', 0);
 
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+session_require(array('group' => $groupId, 'admin_flags' => 'A'));
+
+$ugroupBinding = new UGroupBinding();
+
+$ugroupBinding->processRequest($ugroupId, $request);
 
 // @TODO: i18n
 project_admin_header(array('title' => 'Edit ugroup binding',
-                           'group' => $group_id,
+                           'group' => $groupId,
                            'help'  => 'UserGroups.html'));
+
+echo $ugroupBinding->getHTMLContent($ugroupId);
 
 project_admin_footer(array());
 

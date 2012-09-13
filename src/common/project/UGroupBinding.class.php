@@ -67,6 +67,42 @@ class UGroupBinding {
         }
     }
 
+    /**
+     * Perform actions on user group binding
+     *
+     * @param Integer         $ugroupId Id of the user group
+     * @param Codendi_Request $request  the HTTP request
+     *
+     * @return Void
+     */
+    public function processRequest($ugroupId, Codendi_Request $request) {
+        $func = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
+        if ($func) {
+            // @TODO: i18n
+            $GLOBALS['Response']->addFeedback('info', 'Action performed');
+        }
+    }
+
+    /**
+     * The form that will be displayed to add/edit user group binding
+     *
+     * @param Integer $ugroupId Id of the user group
+     *
+     * @return String
+     */
+    public function getHTMLContent($ugroupId) {
+        $html = '<form action="" method="post">';
+        $html .= '<input type="hidden" name="action" value="add_binding" />';
+        $html .= '<table>';
+        // @TODO: i18n
+        $html .= '<tr><td>Source user group</td><td><input name="source_ugroup" /></td></tr>';
+        // @TODO: i18n
+        $html .= '<tr><td></td><td><input type="submit" value="Add binding"/></td></tr>';
+        $html .= '</table>';
+        $html .= '</form>';
+        return $html;
+    }
+
 }
 
 ?>
