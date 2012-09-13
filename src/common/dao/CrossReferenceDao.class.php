@@ -48,7 +48,7 @@ class CrossReferenceDao extends DataAccessObject {
         $nature   = $this->da->quoteSmart($nature);
         $group_id = $this->da->escapeInt($group_id);
 
-        $sql = "DELETE $this->table_name
+        $sql = "DELETE FROM $this->table_name
                 WHERE (source_type = $nature AND source_id = $id AND source_gid = $group_id)
                    OR (target_type = $nature AND target_id = $id AND target_gid = $group_id)";
         return $this->update($sql);
