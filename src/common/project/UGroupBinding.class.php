@@ -86,16 +86,40 @@ class UGroupBinding {
     /**
      * The form that will be displayed to add/edit user group binding
      *
-     * @param Integer $ugroupId Id of the user group
+     * @param Integer $ugroupId      Id of the user group
+     * @param Integer $sourceProject Id of the project from which the source ugroup may be taken
      *
      * @return String
      */
-    public function getHTMLContent($ugroupId) {
+    public function getHTMLContent($ugroupId, $sourceProject = null) {
+        $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
+        $projectSelect = '<select name="source_project">';
+        foreach ($projects as $project) {
+            $project = ProjectManager::instance()->getProject($project['group_id']);
+            if ($project->userIsAdmin()) {
+                $selected = '';
+                if ($sourceProject == $project->getID()) {
+                    $selected = 'selected="selected"';
+                }
+                $projectSelect .= '<option value="'.$project->getID().'" '.$selected.' >'.$project->getPublicName().'</option>';
+            }
+        }
+        $projectSelect .= '</select>';
+        if ($sourceProject) {
+            $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
+            $ugroupSelect = '<select name="source_ugroup">';
+            while ($ugroup = db_fetch_array($ugroups)) {
+                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
+            }
+            $ugroupSelect .= '</select>';
+        }
         $html = '<form action="" method="post">';
         $html .= '<input type="hidden" name="action" value="add_binding" />';
         $html .= '<table>';
         // @TODO: i18n
-        $html .= '<tr><td>Source user group</td><td><input name="source_ugroup" /></td></tr>';
+        $html .= '<tr><td>Source project</td><td>'.$projectSelect.'</td><td><input type="submit" value="Select Project"/></td></tr>';
+        // @TODO: i18n
+        $html .= '<tr><td>Source user group</td><td>'.$ugroupSelect.'</td></tr>';
         // @TODO: i18n
         $html .= '<tr><td></td><td><input type="submit" value="Add binding"/></td></tr>';
         $html .= '</table>';

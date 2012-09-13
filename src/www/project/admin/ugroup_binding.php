@@ -21,8 +21,9 @@
 require_once('pre.php');
 require_once('common/project/UGroupBinding.class.php');
 
-$groupId  = $request->getValidated('group_id', 'GroupId', 0);
-$ugroupId = $request->getValidated('ugroup_id', 'uint', 0);
+$groupId       = $request->getValidated('group_id', 'GroupId', 0);
+$ugroupId      = $request->getValidated('ugroup_id', 'uint', 0);
+$sourceProject = $request->getValidated('source_project', 'GroupId', 0);
 
 session_require(array('group' => $groupId, 'admin_flags' => 'A'));
 
@@ -35,7 +36,7 @@ project_admin_header(array('title' => 'Edit ugroup binding',
                            'group' => $groupId,
                            'help'  => 'UserGroups.html'));
 
-echo $ugroupBinding->getHTMLContent($ugroupId);
+echo $ugroupBinding->getHTMLContent($ugroupId, $sourceProject);
 
 project_admin_footer(array());
 
