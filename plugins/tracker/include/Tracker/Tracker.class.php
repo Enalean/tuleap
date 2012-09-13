@@ -352,6 +352,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $this->group_id);
                 break;
+            case 'delete-artifact':
+                $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
+                if ($artifact) {
+                    $artifact->delete($current_user);
+                }
+                //$GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $this->group_id);
+                break;
             case 'admin':
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdmin($layout, $request, $current_user);

@@ -1519,6 +1519,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function delete(User $user) {
+        $this->getDao()->da->startTransaction();
         foreach($this->getChangesets() as $changeset) {
             $changeset->delete($user);
         }
@@ -1527,6 +1528,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getDao()->deleteArtifactLinkReference($this->getId());
         $this->getDao()->deletePriority($this->getId());
         $this->getDao()->delete($this->getId());
+        $this->getDao()->da->commit();
     }
 
     protected function getDao() {

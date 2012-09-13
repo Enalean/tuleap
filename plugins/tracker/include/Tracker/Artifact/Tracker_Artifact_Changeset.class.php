@@ -140,7 +140,7 @@ class Tracker_Artifact_Changeset {
         $factory = $this->getFormElementFactory();
         foreach ($value_dao->searchById($this->id) as $row) {
             if ($field = $factory->getFieldById($row['field_id'])) {
-                $field->deleteChangesetValue($this);
+                $field->deleteChangesetValue($row['id']);
             }
         }
         $value_dao->delete($this->id);
@@ -281,8 +281,8 @@ class Tracker_Artifact_Changeset {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
-        // Only super user can edit a comment
-        return $user->isSuperUser();
+        // Only tracker admin can edit a comment
+        return $this->artifact->getTracker()->userIsAdmin($user);
     }
 
     /**

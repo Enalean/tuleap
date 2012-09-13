@@ -222,8 +222,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return '';
     }
 
-    public function deleteChangesetValue(Tracker_Artifact_ChangesetValue $value) {
-        return $this->getValueDao()->delete($value->getId());
+    public function deleteChangesetValue($changeset_value_id) {
+        return $this->getValueDao()->delete($changeset_value_id);
     }
 
     /**
