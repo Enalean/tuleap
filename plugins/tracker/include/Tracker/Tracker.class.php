@@ -352,13 +352,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $this->group_id);
                 break;
-            case 'delete-artifact':
-                $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
-                if ($artifact) {
-                    $artifact->delete($current_user);
-                }
-                //$GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $this->group_id);
-                break;
             case 'admin':
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdmin($layout, $request, $current_user);
@@ -578,6 +571,29 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userIsAdmin($current_user)) {
                     
                     $this->getHierarchyController($request)->update();
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+                break;
+            case 'admin-clean':
+                if ($this->userIsAdmin($current_user)) {
+                    $this->displayAdminClean($layout);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+                break;
+            case 'admin-delete-artifact':
+                if ($this->userIsAdmin($current_user)) {
+                    $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
+                    if ($artifact && $artifact->getTrackerId() == $this->getId()) {
+                        $artifact->delete($current_user);
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info_deleted', array($request->get('id'))));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_error_noart', array($request->get('id'))));
+                    }
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId().'&func=admin');
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -1138,6 +1154,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy_desc'),
+                        'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-hierarchy.png'),
+                ),
+                'clean' => array(
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-clean',
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','clean'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','clean'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','clean_desc'),
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-hierarchy.png'),
                 ),
         );
@@ -1733,6 +1756,17 @@ EOS;
         echo '<br>';
         echo '<input type="hidden" name="action" value="import_preview">';
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_import','submit_info').'">';
+        echo '</form>';
+        $this->displayFooter($layout);
+    }
+
+    public function displayAdminClean(Tracker_IDisplayTrackerLayout $layout) {
+        $this->displayAdminItemHeader($layout, 'clean');
+        echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info').'</p>';
+        echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact">';
+        echo '<label>'.$GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_id').' <input type="text" name="id" value=""></label>';
+        echo '<br>';
+        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'">';
         echo '</form>';
         $this->displayFooter($layout);
     }
