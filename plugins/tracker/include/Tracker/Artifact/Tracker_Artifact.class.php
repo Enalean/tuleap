@@ -127,7 +127,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         //Individual artifact permission
         $can_access = ! $this->useArtifactPermissions();
         if (!$can_access) {
-            $rows = $this->permission_db_authorized_ugroups('PLUGIN_ TRACKER_ARTIFACT_ACCESS');
+            $rows = $this->permission_db_authorized_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS');
             if ( $rows !== false ) {
                 foreach ( $rows as $row ) {
                     if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
