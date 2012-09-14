@@ -23,7 +23,7 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
     } else {
         //for non-system templates
-        //$link = service_replace_template_name_in_link($link, $template, $pm, $group_id);
+        $link = service_replace_template_name_in_link($link, $template, $pm, $group_id);
     }
 
     $is_used   = isset($template['is_used'])   ? $template['is_used']   : $arr['is_used'];
