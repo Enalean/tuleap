@@ -1,34 +1,28 @@
-<VirtualHost 192.168.122.10:80>
-        ServerName git.shunt.cro.enalean.com
-        SetEnv GIT_PROJECT_ROOT /var/lib/codendi/gitolite/repositories
-        SetEnv GIT_HTTP_EXPORT_ALL
-        SetEnv GITOLITE_HTTP_HOME /usr/com/gitolite
-        SetEnv GIT_HTTP_BACKEND /usr/bin/git-http-backend
-	ScriptAlias /git/ /var/www/bin/gitolite-suexec-wrapper.sh/
+How to enable git for http/https
+--------------------------------
 
-         <Location />
-                AuthType Basic
-                AuthName "Private Git Access"
-                Require valid-user
-                AuthUserFile /tmp/passfile
-         </Location>
-</VirtualHost>
+Requirement: you will need a dedicated name and IP address to deliver git over *http(s).
+If your server is 'example.com', git will be delivered on 
+'http://git.example.com'
 
-sudo:
-# Gitolite smart http
-Defaults:codendiadm !requiretty
-Defaults:codendiadm !env_reset
-codendiadm ALL= (gitolite) SETENV: NOPASSWD: /usr/bin/gl-auth-command
+Sudo configuration
+------------------
+Copy the snippet in etc/sudoers.d/gitolite-http in central sudo configuration 
+(use visudo).
 
--bash-3.2$ cat /var/www/bin/gitolite-suexec-wrapper.sh 
-#!/bin/bash
-#
-# Suexec wrapper for gitolite-shell
-#
+Apache configuration
+--------------------
+Copy the snippet in plugins/git/etc/httpd/git.conf.dist into 
+/etc/http/conf/httpd.conf just after main virtualhost definition (ie. before 
+svn and home pages)
 
-export GIT_PROJECT_ROOT="/var/lib/codendi/gitolite/repositories"
-export GITOLITE_HTTP_HOME="/usr/com/gitolite"
+-> you will need to adapt the authentication. By default it's mysql based but 
+   you might want to use ldap or perl depending of your setup.
 
-exec sudo -E -u gitolite /usr/bin/gl-auth-command
------------------------------------------------------------------------
+-> restart apache (service httpd restart)
+
+Test
+----
+After restart, you should be able to clone/push:
+git clone http://git.example.com/git/projectname/reponame.git
 
