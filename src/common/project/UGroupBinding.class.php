@@ -93,7 +93,8 @@ class UGroupBinding {
      */
     public function getHTMLContent($ugroupId, $sourceProject = null) {
         $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
-        $projectSelect = '<select name="source_project">';
+        $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
+        $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
             $project = ProjectManager::instance()->getProject($project['group_id']);
             if ($project->userIsAdmin()) {
@@ -107,7 +108,7 @@ class UGroupBinding {
         $projectSelect .= '</select>';
         if ($sourceProject) {
             $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
-            $ugroupSelect = '<select name="source_ugroup">';
+            $ugroupSelect = '<select name="source_ugroup" >';
             while ($ugroup = db_fetch_array($ugroups)) {
                 $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
             }
@@ -116,7 +117,7 @@ class UGroupBinding {
         $html = '<table>';
         // @TODO: i18n
         $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$projectSelect.'</td>';
-        $html .= '<td><input type="submit" value="Select Project"/></form></td></tr>';
+        $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
         if ($sourceProject) {
             // @TODO: i18n
             $html .= '<tr><td>Source user group</td>';
