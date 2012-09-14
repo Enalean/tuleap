@@ -1475,43 +1475,48 @@ class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
 
 class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
 
-    public function itDeletesAllChangeset() {
-        $group_id    = 687;
-        $tracker     = aTracker()->withProjectId($group_id)->build();
-        $artifact_id = 12345;
-        
-        $artifact = partial_mock(
+    public function setUp() {
+        parent::setUp();
+
+        $this->group_id    = 687;
+        $tracker           = aTracker()->withProjectId($this->group_id)->build();
+        $this->artifact_id = 12345;
+
+        $this->artifact = partial_mock(
             'Tracker_Artifact',
             array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager'),
-            array($artifact_id, null, null, null, null)
+            array($this->artifact_id, null, null, null, null)
         );
-        $artifact->setTracker($tracker);
-        
-        $user = aUser()->build();
+        $this->artifact->setTracker($tracker);
+
+        $this->user = aUser()->build();
+    }
+
+    public function itDeletesAllChangeset() {
         $changeset_1 = mock('Tracker_Artifact_Changeset');
-        $changeset_1->expectOnce('delete', array($user));
+        $changeset_1->expectOnce('delete', array($this->user));
         $changeset_2 = mock('Tracker_Artifact_Changeset');
-        $changeset_2->expectOnce('delete', array($user));
+        $changeset_2->expectOnce('delete', array($this->user));
         $changeset_3 = mock('Tracker_Artifact_Changeset');
-        $changeset_3->expectOnce('delete', array($user));
+        $changeset_3->expectOnce('delete', array($this->user));
         
-        stub($artifact)->getChangesets()->returns(array($changeset_1, $changeset_2, $changeset_3));
+        stub($this->artifact)->getChangesets()->returns(array($changeset_1, $changeset_2, $changeset_3));
         
         $dao = mock('Tracker_ArtifactDao');
-        $dao->expectOnce('delete', array($artifact_id));
-        $dao->expectOnce('deleteArtifactLinkReference', array($artifact_id));
-        $dao->expectOnce('deletePriority', array($artifact_id));
-        stub($artifact)->getDao()->returns($dao);
+        $dao->expectOnce('delete', array($this->artifact_id));
+        $dao->expectOnce('deleteArtifactLinkReference', array($this->artifact_id));
+        $dao->expectOnce('deletePriority', array($this->artifact_id));
+        stub($this->artifact)->getDao()->returns($dao);
 
         $permissions_manager = mock('PermissionsManager');
-        $permissions_manager->expectOnce('clearPermission', array('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact_id));
-        stub($artifact)->getPermissionsManager()->returns($permissions_manager);
+        $permissions_manager->expectOnce('clearPermission', array('PLUGIN_TRACKER_ARTIFACT_ACCESS', $this->artifact_id));
+        stub($this->artifact)->getPermissionsManager()->returns($permissions_manager);
 
         $cross_ref_mgr = mock('CrossReferenceManager');
-        $cross_ref_mgr->expectOnce('deleteEntity', array($artifact_id, 'plugin_tracker_artifact', $group_id));
-        stub($artifact)->getCrossReferenceManager()->returns($cross_ref_mgr);
+        $cross_ref_mgr->expectOnce('deleteEntity', array($this->artifact_id, 'plugin_tracker_artifact', $this->group_id));
+        stub($this->artifact)->getCrossReferenceManager()->returns($cross_ref_mgr);
 
-        $artifact->delete($user);
+        $this->artifact->delete($this->user);
     }
 }
 ?>
