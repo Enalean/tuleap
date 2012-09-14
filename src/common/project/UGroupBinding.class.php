@@ -113,17 +113,18 @@ class UGroupBinding {
             }
             $ugroupSelect .= '</select>';
         }
-        $html = '<form action="" method="post">';
-        $html .= '<input type="hidden" name="action" value="add_binding" />';
-        $html .= '<table>';
+        $html = '<table>';
         // @TODO: i18n
-        $html .= '<tr><td>Source project</td><td>'.$projectSelect.'</td><td><input type="submit" value="Select Project"/></td></tr>';
-        // @TODO: i18n
-        $html .= '<tr><td>Source user group</td><td>'.$ugroupSelect.'</td></tr>';
-        // @TODO: i18n
-        $html .= '<tr><td></td><td><input type="submit" value="Add binding"/></td></tr>';
+        $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$projectSelect.'</td>';
+        $html .= '<td><input type="submit" value="Select Project"/></form></td></tr>';
+        if ($sourceProject) {
+            // @TODO: i18n
+            $html .= '<tr><td>Source user group</td>';
+            $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$ugroupSelect.'</td>';
+            // @TODO: i18n
+            $html .= '<td><input type="submit" value="Add binding"/></form</td></tr>';
+        }
         $html .= '</table>';
-        $html .= '</form>';
         return $html;
     }
 
