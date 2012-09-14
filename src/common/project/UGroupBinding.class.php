@@ -109,6 +109,7 @@ class UGroupBinding {
         if ($sourceProject) {
             $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
             $ugroupSelect = '<select name="source_ugroup" >';
+            $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
             while ($ugroup = db_fetch_array($ugroups)) {
                 $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
             }
