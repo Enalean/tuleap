@@ -22,15 +22,6 @@
 require_once('common/plugin/Plugin.class.php');
 Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'));
 
-class TestPlugin extends Plugin {
-    function addHook($hook, $callback = null, $recallHook = false) {
-        $this->_addHook($hook, $callback, $recallHook);
-    }
-    function removeHook(&$hook) {
-        $this->_removeHook($hook);
-    }
-}
-
 require_once('common/plugin/PluginManager.class.php');
 Mock::generate('PluginManager');
 
@@ -57,7 +48,7 @@ class PluginTest extends UnitTestCase {
     }
     
     function testHooks() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         $col =& $p->getHooks();
         $this->assertTrue($col->isEmpty());
         
@@ -84,7 +75,7 @@ class PluginTest extends UnitTestCase {
     }
     
     function testDefaultCallback() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         $col =& $p->getHooksAndCallbacks();
         $this->assertTrue($col->isEmpty());
         
@@ -95,10 +86,10 @@ class PluginTest extends UnitTestCase {
         $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   $hook);
-        $this->assertTrue($current_hook['recallHook']);
+        $this->assertFalse($current_hook['recallHook']);
     }
     function testSpecialCallback() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         
         $hook     = 'name_of_hook';
         $callback = 'doSomething';
@@ -108,14 +99,14 @@ class PluginTest extends UnitTestCase {
         $current_hook =& $it->current();
         $this->assertEqual($current_hook['hook'],       $hook);
         $this->assertEqual($current_hook['callback'],   $callback);
-        $this->assertTrue($current_hook['recallHook']);
+        $this->assertFalse($current_hook['recallHook']);
     }
     function testAnotherSpecialCallback() {
-        $p =& new TestPlugin();
+        $p =& new Plugin();
         
         $hook     = 'name_of_hook';
         $callback = 'doSomething';
-        $recall   = false;
+        $recall   = true;
         $p->addHook($hook, $callback, $recall);
         $col =& $p->getHooksAndCallbacks();
         $it =& $col->iterator();

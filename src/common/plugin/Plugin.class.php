@@ -81,7 +81,7 @@ class Plugin {
         return $this->hooks->getValues();
     }
     
-    protected function _addHook($hook, $callback = null, $recallHook = true) {
+    public function addHook($hook, $callback = null, $recallHook = false) {
         $value = array();
         $value['hook']       = $hook;
         $value['callback']   = $callback ? $callback : $hook;
@@ -89,7 +89,15 @@ class Plugin {
         $this->hooks->put($hook, $value);
     }
     
-    protected function _removeHook($hook) {
+    /**
+     * @deprecated
+     * @see addHook()
+     */
+    protected function _addHook($hook, $callback = null, $recallHook = false) {
+        return $this->addHook($hook, $callback, $recallHook);
+    }
+
+    public function removeHook($hook) {
         $this->hooks->removeKey($hook);
     }
     
