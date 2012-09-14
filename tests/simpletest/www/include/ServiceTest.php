@@ -32,6 +32,12 @@ class ServiceTest extends TuleapTestCase {
         $this->assertLinkEquals($link, $expected);
     }
     
+    public function itReplacesNameIfLinkContainesAmpersand() {
+        $link     = 'test=template-name&group=template-name';
+        $expected = 'test=template-name&group=h1tst';
+        $this->assertLinkEquals($link, $expected);
+    }
+    
     public function itReplacesGroupId() {
         $link     = '/www/?group_id=120';
         $expected = '/www/?group_id=101';
