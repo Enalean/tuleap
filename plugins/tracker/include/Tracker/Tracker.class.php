@@ -2032,13 +2032,18 @@ EOS;
      */
     private $cached_permission_authorized_ugroups;
 
-    public function permission_db_authorized_ugroups( $permission_type ) {
-        if ( ! isset($this->cached_permission_authorized_ugroups)) {
+    /**
+     * Retreives the permissions set on a given tracker
+     *
+     * @return array
+     */
+    public function getPermissionsAuthorizedUgroups() {
+        if (!$this->cached_permission_authorized_ugroups || empty($this->cached_permission_authorized_ugroups)) {
             $this->cached_permission_authorized_ugroups = array();
-            $res = permission_db_authorized_ugroups($permission_type, $this->getId());
-            if ( db_numrows($res) > 0 ) { 
-                while ( $row = db_fetch_array($res) ) {
-                    $this->cached_permission_authorized_ugroups[] = $row;
+            $perm_dao = new Tracker_PermDao();
+            if ($dar = $perm_dao->searchAccessPermissionsByTrackerId($this->getId())) {
+                while ($row = $dar->getRow()) {
+                    $this->cached_permission_authorized_ugroups[$row['permission_type']][] = $row['ugroup_id'];
                 }
             }
         }
