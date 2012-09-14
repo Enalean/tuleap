@@ -26,10 +26,13 @@ require_once('include/DataAccessObject.class.php');
 class UGroupDao extends DataAccessObject {
 
     /**
-    * Searches static UGroup by GroupId 
-    * return all static ugroups
-    * @return DataAccessResult
-    */
+     * Searches static UGroup by GroupId
+     * return all static ugroups
+     *
+     * @param Integer $group_id
+     *
+     * @return DataAccessResult
+     */
     function searchByGroupId($group_id) {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
@@ -47,11 +50,13 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-    * Searches group that user belongs to one of its static ugroup
-    * return all groups 
-    * @param Integer $userId
-    * @return DataAccessResult
-    */
+     * Searches group that user belongs to one of its static ugroup
+     * return all groups
+     *
+     * @param Integer $userId
+     *
+     * @return DataAccessResult
+     */
     function searchGroupByUserId($userId) {
         $sql = 'SELECT group_id FROM ugroup 
                 JOIN ugroup_user USING (ugroup_id) 
@@ -75,13 +80,13 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-    * Checks UGroup  validity by GroupId 
-    *
-    * @param Integer $groupId the group id
-    * @param Integer $ugroupId the ugroup id
-    *
-    * @return boolean
-    */
+     * Checks UGroup  validity by GroupId
+     *
+     * @param Integer $groupId the group id
+     * @param Integer $ugroupId the ugroup id
+     *
+     * @return boolean
+     */
     function checkUGroupValidityByGroupId($groupId, $ugroupId) {
         $groupId = $this->da->escapeInt($groupId);
         $ugroupId = $this->da->escapeInt($ugroupId);
@@ -98,13 +103,13 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-    * Update binding option for a given UGroup
-    *
-    * @param Integer $ugroupId the binded ugroup id
-    * @param Integer $sourceId the ugroup id we want to clone
-    *
-    * @return boolean
-    */
+     * Update binding option for a given UGroup
+     *
+     * @param Integer $ugroupId the binded ugroup id
+     * @param Integer $sourceId the ugroup id we want to clone
+     *
+     * @return boolean
+     */
     function updateUgroupBinding($ugroupId, $sourceId = NULL) {
         $ugroupId = $this->da->escapeInt($ugroupId);
         if(isset($sourceId)) {
@@ -112,36 +117,36 @@ class UGroupDao extends DataAccessObject {
         } else {
             $sourceId = NULL;
         }
-        $sql = 'UPDATE ugroup
+        $sql = "UPDATE ugroup
                 SET source_id = $sourceId
-                WHERE ugroup_id = $ugroupId';
+                WHERE ugroup_id = $ugroupId";
          return $this->update($sql);
     }
 
     /**
-    * Retrieve all binded UGroups of a given UGroup
-    *
-    * @param Integer $sourceId the source ugroup id
-    *
-    * @return DataAccessResult
-    */
-    function searchBySourceUGroupId($sourceId) {
+     * Retrieve all binded UGroups of a given UGroup
+     *
+     * @param Integer $sourceId the source ugroup id
+     *
+     * @return DataAccessResult
+     */
+    function searchUGroupByBindingSource($sourceId) {
         $ugroupId = $this->da->escapeInt($sourceId);
-        $sql = 'SELECT ugroup_id FROM ugroup WHERE source_id = $sourceId';
+        $sql = "SELECT ugroup_id FROM ugroup WHERE source_id = $sourceId";
         return $this->retrieve($sql);
     }
 
     /**
-    * Searches static UGroup by GroupId
-    *
-    * @param Integer $ugroupId the source ugroup id
-    *
-    * @return DataAccessResult
-    */
-    function getUgroupSourceId($ugroupId) {
-        $group_id = $this->da->escapeInt($ugroupId);
-        $sql = 'SELECT source_id FROM ugroup
-                WHERE ugroup_id = $ugroupId';
+     * Searches static UGroup by GroupId
+     *
+     * @param Integer $ugroupId the source ugroup id
+     *
+     * @return DataAccessResult
+     */
+    function getUgroupBindingSource($ugroupId) {
+        $ugroupId = $this->da->escapeInt($ugroupId);
+        $sql      = "SELECT source_id FROM ugroup
+                     WHERE ugroup_id = $ugroupId";
         return $this->retrieve($sql);
     }
 }
