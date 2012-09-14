@@ -1899,7 +1899,14 @@ EOS;
     public function getTrackerSemanticManager() {
         return new Tracker_SemanticManager($this);
     }
-
+    
+    /**
+     * @return Tracker_RulesManager
+     */
+    public function getTrackerRulesManager() {
+        return new Tracker_RulesManager($this);
+    }
+    
     /**
      * @return Tracker_Tooltip
      */
@@ -2216,7 +2223,12 @@ EOS;
         $tsm = $this->getTrackerSemanticManager();
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
-
+        
+        //field dependencies
+        $trm = $this->getTrackerRulesManager();
+        $child = $xmlElem->addChild('dependencies');
+        $trm->exportToXML($child, $xmlMapping);
+        
         // only the reports with project scope are exported
         $reports = $this->getReportFactory()->getReportsByTrackerId($this->id, null);
         if ($reports) {
