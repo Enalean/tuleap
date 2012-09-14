@@ -93,15 +93,16 @@ class EventManager_ProcessEventTest extends TuleapTestCase {
     }
 
     public function itFallbackToCallHookIfGivenCallbackDoesNotExist() {
-        $listener = new Event2MockEventListener($this);
-        stub($listener)->CallHook()->once();
+        $event  = 'an_event';
+        $params = array('some_params');
 
-        $event = 'an_event';
+        $listener = new Event2MockEventListener($this);
+        stub($listener)->CallHook($event, $params)->once();
 
         $em = new EventManager();
         $em->addListener($event, $listener, 'doSomething', false, 0);
 
-        $em->processEvent($event, array());
+        $em->processEvent($event, $params);
     }
 }
 

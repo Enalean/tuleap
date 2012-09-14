@@ -95,7 +95,8 @@ class EventManager {
         $callback = $entry['callback'];
         $recallEvent = $entry['recallEvent'];
         if (!method_exists($listener, $callback)) {
-            $callback = self::DEFAULT_CALLBACK;
+            $callback    = self::DEFAULT_CALLBACK;
+            $recallEvent = true;
         }
         if ($recallEvent) {
             $listener->$callback($event, $params);
