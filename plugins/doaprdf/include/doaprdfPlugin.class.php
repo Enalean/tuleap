@@ -40,10 +40,6 @@ class doaprdfPlugin extends Plugin {
 
 	}
 	
-	public function CallHook($event, $params) {
-	    $this->$event($params);
-	}
-
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...
 	 * @param unknown_type $params

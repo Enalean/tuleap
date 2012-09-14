@@ -37,11 +37,6 @@ class admsswPlugin extends Plugin {
 		$this->_addHook("content_negociated_projects_list");
 	}
 	
-	public function CallHook($event, $params) {
-	    $this->$event($params);
-	}
-
-
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...
 	 * @param unknown_type $params
