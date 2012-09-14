@@ -19,6 +19,7 @@
  */
 
 require_once('common/dao/UGroupDao.class.php');
+require_once('common/project/UGroupManager.class.php');
 
 /**
  * UGroup object
@@ -122,11 +123,28 @@ class UGroupBinding {
      * @return String
      */
     public function getHTMLContent($ugroupId, $sourceProject = null) {
+        $pm = ProjectManager::instance();
+        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $ugroupManager = new UGroupManager();
+            $row           = $dar->getRow();
+            $source        = $ugroupManager->getById($row['source_id']);
+            $project       = $pm->getProject($row['group_id']);
+            if ($source && $project->userIsAdmin()) {
+                // @TODO: i18n
+                // @TODO: add links to ugroup & project
+                $currentBindHTML = 'Binding is to '.$source->getName().' in project '.$project->getPublicName().' Remove current binding';
+            } else {
+                // @TODO: i18n
+                $currentBindHTML = 'Remove current binding';
+            }
+            // @TODO: delete form
+        }
         $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
         $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
-            $project = ProjectManager::instance()->getProject($project['group_id']);
+            $project = $pm->getProject($project['group_id']);
             if ($project->userIsAdmin()) {
                 $selected = '';
                 if ($sourceProject == $project->getID()) {
