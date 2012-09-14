@@ -46,9 +46,14 @@ class UGroupBinding {
      *
      * @return Boolean
      */
-     public function isBinded($ugroupId) {
-         return false;
-     }
+    public function isBinded($ugroupId) {
+        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
+        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return  true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Get title of the link to binding interface
