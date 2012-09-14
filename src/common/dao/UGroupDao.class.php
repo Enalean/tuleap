@@ -137,7 +137,7 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-     * Searches static UGroup by GroupId
+     * Retrieve the source user group from a given binded ugroup id
      *
      * @param Integer $ugroupId the source ugroup id
      *
