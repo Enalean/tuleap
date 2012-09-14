@@ -81,16 +81,16 @@ class Plugin {
         return $this->hooks->getValues();
     }
     
-    protected function _addHook($hook, $callback = 'CallHook', $recallHook = true) {
+    protected function _addHook($hook, $callback = null, $recallHook = true) {
         $value = array();
         $value['hook']       = $hook;
-        $value['callback']   = $callback;
+        $value['callback']   = $callback ? $callback : $hook;
         $value['recallHook'] = $recallHook;
-        $this->hooks->put( $hook, $value);
+        $this->hooks->put($hook, $value);
     }
     
     protected function _removeHook($hook) {
-        $this->hooks->removeKey( $hook);
+        $this->hooks->removeKey($hook);
     }
     
     public function CallHook($hook, $param) {
