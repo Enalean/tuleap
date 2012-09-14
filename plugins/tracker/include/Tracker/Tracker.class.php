@@ -2075,9 +2075,10 @@ EOS;
      * @var array
      */
     private $cached_permission_authorized_ugroups;
+
     /**
-     * retreives the permissions set on a given tracker
-     * 
+     * Retreives the permissions set on a given tracker
+     *
      * @return array
      */
     public function getPermissionsAuthorizedUgroups() {
