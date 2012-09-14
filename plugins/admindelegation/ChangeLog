@@ -1,2 +1,5 @@
+Version 2.4 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
 Version 2.3 - Tuleap 4.0.24
     * Fix user realname output

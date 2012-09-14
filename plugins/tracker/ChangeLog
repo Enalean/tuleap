@@ -1,3 +1,6 @@
+Version 5.15 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
 Version 5.14 - Tuleap 5.5
     * Add html follow-ups (Contrib STMicroelectronics)
 
