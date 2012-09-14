@@ -27,14 +27,14 @@ BKPDIR=/var/lib/codendi/__tmp_svn__backup__
 
 set -e${debug}
 
-function error {
+error() {
     set -e${debug}
 
     echo "*** error: $@"
     exit 1
 }
 
-function check_fstype {
+check_fstype() {
     set -e${debug}
 
     svnrepository=$1
@@ -57,7 +57,7 @@ function check_fstype {
     fi
 }
 
-function bkp_repo {
+bkp_repo() {
     set -e${debug}
     
     root=$1
@@ -68,7 +68,7 @@ function bkp_repo {
     ${CP} -ap  ${root}/.SVNAccessFile.bck ${bkpdir}/.SVNAccessFile
 }
 
-function dump_repo {
+dump_repo() {
     set -e${debug}
 
     root=$1
@@ -79,7 +79,7 @@ function dump_repo {
     ${SVNADMIN} dump ${root} > ${dumpfile}
 }
 
-function create_repo {
+create_repo() {
     set -e${debug}
 
     root=$1
@@ -92,7 +92,7 @@ function create_repo {
 EOF
 }
 
-function restore_repo {
+restore_repo() {
     set -e${debug}
 
     root=$1
@@ -101,7 +101,7 @@ function restore_repo {
     ${SVNADMIN} load ${root} < ${dumpfile}
 }
 
-function restore_prefs {
+restore_prefs() {
     set -e${debug}
     
     root=$1
@@ -111,7 +111,7 @@ function restore_prefs {
     ${CP} -ap  ${bkpdir}/.SVNAccessFile ${root}
 }
 
-function set_access_rights {
+set_access_rights() {
     set -e${debug}
 
     root=$1
@@ -120,7 +120,7 @@ function set_access_rights {
     ${CHOWN} -R ${sys_http_user}:${repo} ${root}
 }
 
-function lock_repo {
+lock_repo() {
     set -e${debug}
 
     repo=$1
@@ -132,7 +132,7 @@ function lock_repo {
 EOF
 }
 
-function convert {
+convert() {
   set -e${debug}
 
   svnrepository=$1
@@ -175,7 +175,7 @@ function convert {
 
 	echo "Done"
     else 
-	if [ "${verbose}" == "true" ]; then
+	if [ "${verbose}" = "true" ]; then
 	    echo "Already fsfs (${svnrepository})"
 	fi
     fi
@@ -228,7 +228,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [ ${svnrepository} == "false" ] && [ ${svnroot} == "false" ]; then
+if [ ${svnrepository} = "false" ] && [ ${svnroot} = "false" ]; then
    echo Usage: $0 [--force] [--verbose] [--identify or --convert] [--svnroot=path or --repository=path]
    exit 1
 fi
