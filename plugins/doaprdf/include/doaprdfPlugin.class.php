@@ -103,7 +103,10 @@ class doaprdfPlugin extends Plugin {
 			if($project_description) {
 				$res->setProp('doap:description', $project_description);
 			}
-			$res->setProp('doap:homepage', $project->getHomePage());
+			$homepage = $project->getHomePage();
+			if ($homepage) {
+				$res->setProp('doap:homepage', $homepage);
+			}
 			$tags = array();
 			if($tags_list) {
 				$tags = split(', ',$tags_list);
