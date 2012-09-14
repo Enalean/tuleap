@@ -103,8 +103,13 @@ class UGroupBinding {
     public function processRequest($ugroupId, Codendi_Request $request) {
         $func = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
         if ($func) {
-            // @TODO: i18n
-            $GLOBALS['Response']->addFeedback('info', 'Action performed');
+            // @TODO: i18n, data validation
+            $sourceId = $request->get('source_ugroup');
+            if($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
+                $GLOBALS['Response']->addFeedback('info', 'Action performed');
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'Something went wrong when binding user group');
+            }
         }
     }
 
