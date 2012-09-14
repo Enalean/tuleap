@@ -458,10 +458,8 @@ class URLVerification {
      * @return void
      */
     function displayRestrictedUserError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit','exit_error')));
         $error = new Error_PermissionDenied_RestrictedUser($url);
         $error->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
     
@@ -509,10 +507,8 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
 
