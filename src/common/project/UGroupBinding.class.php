@@ -68,7 +68,7 @@ class UGroupBinding {
         $ugroups = array();
         if ($dar && !empty($dar) && !$dar->isError()) {
             foreach ($dar as $row) {
-                $cloneId = $ugroup['ugroup_id'];
+                $cloneId = $row['ugroup_id'];
                 $ugroups[$cloneId]['cloneName'] = $row['name'];
                 $ugroups[$cloneId]['group_id']  = $row['group_id'];
             }
@@ -141,6 +141,23 @@ class UGroupBinding {
             }
             // @TODO: delete form
         }
+        $clones     = $this->getUGroupsByBindingSource($ugroupId);
+        $clonesHTML = '<table>';
+        if (!empty($clones)) {
+            $count = 0;
+            foreach ($clones as $cloneId => $clone) {
+                $project = $pm->getProject($clone['group_id']);
+                if ($project->userIsAdmin()) {
+                    $clonesHTML .= '<tr><td>'.$clone['cloneName'].' in project '.$project->getPublicName().' is binded to this ugroup</td></tr>';
+                } else {
+                    $count ++;
+                }
+            }
+            $clonesHTML .= '<tr><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
+        } else {
+            $clonesHTML .= '<tr><td>This ugroup is not the source of any other ugroup</td></tr>';
+            $clonesHTML .= '</table>';
+        }
         $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
         $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
@@ -167,6 +184,7 @@ class UGroupBinding {
             $ugroupSelect .= '</select>';
         }
         $html = $currentBindHTML;
+        $html .= $clonesHTML;
         $html .= '<table>';
         // @TODO: i18n
         $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$projectSelect.'</td>';
