@@ -222,6 +222,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return '';
     }
 
+    /**
+     * Remove a changeset value corresponding to field an id
+     *
+     * @param Integer $changeset_value_id
+     *
+     * @return Boolean
+     */
     public function deleteChangesetValue($changeset_value_id) {
         return $this->getValueDao()->delete($changeset_value_id);
     }
