@@ -258,7 +258,7 @@ class Project extends Group {
         The URL for this project's home page
     */
     function getHomePage() {
-        return $this->service_data_array['homepage']['link'];
+        return $this->usesHomePage() ? $this->service_data_array['homepage']['link'] : '';
     }
     
     function getWikiPage(){
