@@ -4,15 +4,24 @@ Version 5.5 (Not released yet)
 	* Allow anonymous to browse public forumml archives
 
     == Plugins ==
-	* tracker: 5.14
-	* git: 2.7.3
-	* docman: 2.26.6
+	* tracker: 5.15
+	* git: 2.7.4
+	* docman: 2.26.7
 	* agiledashboard: 0.52
 	* fulltextsearch: 0.12
+	* IM: 1.5.4
+	* admindelegation: 2.4
+	* forumml: 2.6.3
+	* graphontrackers: 1.6
+	* graphontrackersv5: 5.0.4
+	* ldap: 3.18
+	* statistics: 0.20
 
 	== Development ==
 	* Add tool to easily fix the singleton count after a merge
 	* Add tool to easily generate release notes
+	* Various permissions cleanups and POSIX compatibility for shell scripts
+	(Contrib Raphaël Hertzog)
 
     
 Version 5.4 (Wednesday, August 29th 2012)

@@ -1,3 +1,6 @@
+Version 1.6 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
 Version 1.5 - Tuleap 5.4
     * Continue PHP 5.3 compat (Contrib Philippe Goetz)
 

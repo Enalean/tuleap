@@ -1,3 +1,6 @@
+Version 2.7.4 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
 Version 2.7.3 - Tuleap 5.5
     * Fix: fatal error while trying to browse forked repository after deleting its parent (Contrib STMicroelectronics)
 
