@@ -32,11 +32,13 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket {
     }
     
     public function up() {
-        $sql    = 'ALTER TABLE tracker_fileinfo DROP INDEX fltxt';
-        $result = $this->db->dbh->exec($sql);
-        if ($result === false) {
-            $error_message = implode(', ', $this->db->dbh->errorInfo());
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+        if ($this->db->indexNameExists('tracker_fileinfo', 'fltxt')) {
+            $sql    = 'ALTER TABLE tracker_fileinfo DROP INDEX fltxt';
+            $result = $this->db->dbh->exec($sql);
+            if ($result === false) {
+                $error_message = implode(', ', $this->db->dbh->errorInfo());
+                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+            }
         }
 
         $tables = array(
@@ -108,14 +110,23 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket {
             'tracker_hierarchy ',
             'tracker_reminder');
         foreach ($tables as $table) {
-            $sql = "ALTER TABLE $table ENGINE = InnoDB";
-            $result = $this->db->dbh->exec($sql);
+            if (!$this->isTableInnoDB($table)) {
+                $this->log->info("Convert $table");
+                $sql = "ALTER TABLE $table ENGINE = InnoDB";
+                $result = $this->db->dbh->exec($sql);
         
-            if ($result === false) {
-                $error_message = implode(', ', $this->db->dbh->errorInfo());
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+                if ($result === false) {
+                    $error_message = implode(', ', $this->db->dbh->errorInfo());
+                    throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($error_message);
+                }
             }
         }
+    }
+
+    private function isTableInnoDB($table) {
+        $sql = "SHOW TABLE STATUS WHERE Name = '$table' AND Engine = 'InnoDB'";
+        $result = $this->db->dbh->query($sql);
+        return ($result->fetch() !== false);
     }
 }
 ?>
