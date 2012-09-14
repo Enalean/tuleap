@@ -138,7 +138,6 @@ if (($func=='edit')||($func=='do_create')) {
         echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
         echo '<table>';
         $i = 0;
-        $hp = Codendi_HTMLPurifier::instance();
         $userHelper = UserHelper::instance();
         foreach ($members as $user) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
