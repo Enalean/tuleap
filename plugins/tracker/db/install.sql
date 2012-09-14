@@ -315,8 +315,7 @@ CREATE TABLE tracker_fileinfo(
     description TEXT NULL,
     filename TEXT NOT NULL,
     filesize BIGINT UNSIGNED NOT NULL,
-    filetype TEXT NOT NULL,
-    FULLTEXT fltxt (description, filename)
+    filetype TEXT NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 
 DROP TABLE IF EXISTS tracker_report;
