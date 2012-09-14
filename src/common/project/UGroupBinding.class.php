@@ -159,11 +159,14 @@ class UGroupBinding {
             $ugroupSelect = '<select name="source_ugroup" >';
             $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
             while ($ugroup = db_fetch_array($ugroups)) {
-                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
+                if ($ugroupId != $ugroup['ugroup_id']) {
+                    $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
+                }
             }
             $ugroupSelect .= '</select>';
         }
-        $html = '<table>';
+        $html = $currentBindHTML;
+        $html .= '<table>';
         // @TODO: i18n
         $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$projectSelect.'</td>';
         $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
