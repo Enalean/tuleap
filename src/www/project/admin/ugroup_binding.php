@@ -36,7 +36,7 @@ project_admin_header(array('title' => 'Edit ugroup binding',
                            'group' => $groupId,
                            'help'  => 'UserGroups.html'));
 
-echo $ugroupBinding->getHTMLContent($ugroupId, $sourceProject);
+echo $ugroupBinding->getHTMLContent($groupId, $ugroupId, $sourceProject);
 
 project_admin_footer(array());
 

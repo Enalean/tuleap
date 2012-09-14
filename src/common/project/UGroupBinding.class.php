@@ -117,12 +117,13 @@ class UGroupBinding {
     /**
      * The form that will be displayed to add/edit user group binding
      *
+     * @param Integer $groupId       Id of the current project
      * @param Integer $ugroupId      Id of the user group
      * @param Integer $sourceProject Id of the project from which the source ugroup may be taken
      *
      * @return String
      */
-    public function getHTMLContent($ugroupId, $sourceProject = null) {
+    public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
         $pm = ProjectManager::instance();
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
@@ -144,13 +145,15 @@ class UGroupBinding {
         $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
-            $project = $pm->getProject($project['group_id']);
-            if ($project->userIsAdmin()) {
-                $selected = '';
-                if ($sourceProject == $project->getID()) {
-                    $selected = 'selected="selected"';
+            if ($groupId != $project['group_id']) {
+                $project = $pm->getProject($project['group_id']);
+                if ($project->userIsAdmin()) {
+                    $selected = '';
+                    if ($sourceProject == $project->getID()) {
+                        $selected = 'selected="selected"';
+                    }
+                    $projectSelect .= '<option value="'.$project->getID().'" '.$selected.' >'.$project->getPublicName().'</option>';
                 }
-                $projectSelect .= '<option value="'.$project->getID().'" '.$selected.' >'.$project->getPublicName().'</option>';
             }
         }
         $projectSelect .= '</select>';
@@ -159,9 +162,7 @@ class UGroupBinding {
             $ugroupSelect = '<select name="source_ugroup" >';
             $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
             while ($ugroup = db_fetch_array($ugroups)) {
-                if ($ugroupId != $ugroup['ugroup_id']) {
-                    $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
-                }
+                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
             }
             $ugroupSelect .= '</select>';
         }
