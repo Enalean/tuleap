@@ -56,6 +56,26 @@ class UGroupBinding {
     }
 
     /**
+     * Retrieve All Ugroups binded to a given Ugroup
+     *
+     * @param Integer $ugroupId Id of the source user goup
+     *
+     * @return Array
+     */
+    public function getUGroupsByBindingSource($ugroupId) {
+        $dar = $this->getUGroupDao()->searchUGroupByBindingSource($ugroupId);
+        $ugroups = array();
+        if ($dar && !empty($dar) && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $cloneId = $ugroup['ugroup_id'];
+                $ugroups[$cloneId]['cloneName'] = $row['name'];
+                $ugroups[$cloneId]['group_id']  = $row['group_id'];
+            }
+        }
+        return $ugroups;
+    }
+
+    /**
      * Get title of the link to binding interface
      *
      * @param Integer $ugroupId Id of the user group

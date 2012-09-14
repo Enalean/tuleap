@@ -132,7 +132,7 @@ class UGroupDao extends DataAccessObject {
      */
     function searchUGroupByBindingSource($sourceId) {
         $ugroupId = $this->da->escapeInt($sourceId);
-        $sql = "SELECT ugroup_id FROM ugroup WHERE source_id = $sourceId";
+        $sql = "SELECT * FROM ugroup WHERE source_id = $sourceId";
         return $this->retrieve($sql);
     }
 
