@@ -1233,4 +1233,10 @@ td.first-column {
 .tracker_confirm_delete_buttons {
     text-align:center;
 }
+.tracker_confirm_delete_preview {
+    border: medium inset lightgray;
+    background: #eee;
+    padding: 0.5em 1em;
+    margin: 1em auto;
+}
 /* }}} */

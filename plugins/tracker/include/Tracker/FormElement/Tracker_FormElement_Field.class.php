@@ -307,23 +307,44 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string html
      */
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
+        if ($this->userCanUpdate()) {
+            $value       = $artifact->getLastChangeset()->getValue($this);
+            $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
+            $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
+            return $this->fetchArtifactField($artifact, $html_value);
+        }
+        return $this->fetchArtifactReadOnly($artifact);
+    }
+
+    /**
+     * Get the html code to display the field for the given artifact in read only mode
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string html
+     */
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
+        $value       = $artifact->getLastChangeset()->getValue($this);
+        $html_value  = $this->fetchArtifactValueReadOnly($artifact, $value);
+        $html_value .= $this->fetchArtifactAdditionnalInfo($value);
+        return $this->fetchArtifactField($artifact, $html_value);
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact   the artifact
+     * @param string           $html_value in html
+     *
+     * @return string html
+     */
+    private function fetchArtifactField(Tracker_Artifact $artifact, $html_value) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
-
-            $value = $artifact->getLastChangeset()->getValue($this);
-
             $html .= '<br />';
-            if ($this->userCanUpdate()) {
-                $html .= $this->fetchArtifactValue($artifact, $value, $submitted_values);
-                $html .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-            } else if ($this->userCanRead()) {
-                $html .= $this->fetchArtifactValueReadOnly($artifact, $value);
-                $html .= $this->fetchArtifactAdditionnalInfo($value);
-            }
+            $html .= $html_value;
             $html .= '</div>';
         }
         return $html;

@@ -258,6 +258,21 @@ class Tracker implements Tracker_Dispatchable_Interface {
     }
 
     /**
+     * fetch FormElements in read only mode
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string
+     */
+    public function fetchFormElementsReadOnly($artifact) {
+        $html = '';
+        foreach($this->getFormElements() as $formElement) {
+            $html .= $formElement->fetchArtifactReadOnly($artifact);
+        }
+        return $html;
+    }
+
+    /**
      * fetch FormElements
      * @return string
      */
@@ -1799,7 +1814,9 @@ EOS;
         echo '<div class="tracker_confirm_delete">';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact">';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()), CODENDI_PURIFIER_DISABLED);
-        echo '<br>';
+        echo '<div class="tracker_confirm_delete_preview">';
+        echo $this->fetchFormElementsReadOnly($artifact);
+        echo '</div>';
         echo '<input type="hidden" name="id" value="'.$artifact->getId().'" />';
         echo '<div class="tracker_confirm_delete_buttons">';
         echo '<input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm') .'" />';
