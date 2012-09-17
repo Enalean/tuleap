@@ -88,9 +88,9 @@ abstract class Error_PermissionDenied {
      */
     function buildInterface() {
         $user = $this->getUserManager()->getCurrentUser();
-        $redirect = new URLRedirect();
 
         if ($user->isAnonymous()) {
+            $redirect = new URLRedirect();
             $url = $redirect->buildReturnToLogin();
             $GLOBALS['HTML']->redirect($url);
         } else {
