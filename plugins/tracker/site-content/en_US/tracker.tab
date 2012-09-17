@@ -1143,6 +1143,10 @@ plugin_tracker_admin	clean_info	Allow to permanently delete an artifact. Warning
 plugin_tracker_admin	clean_id	Id of the artifact to delete: 
 plugin_tracker_admin	clean_error_noart	Artifact $1 doesn't exist or doesn't belong to current tracker
 plugin_tracker_admin	clean_info_deleted	Artifact $1 successfully deleted
+plugin_tracker_admin	clean_confirm	Confirm
+plugin_tracker_admin	clean_cancel	Cancel
+plugin_tracker_admin	clean_confirm_text	<p>You are about to delete permanently the artifact "$1".</p><p><strong>There is no way to restore the artifact.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Delete canceled
 
 plugin_tracker_admin_notification	successfully_updated	Notifications successfully updated.
 

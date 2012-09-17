@@ -1141,7 +1141,10 @@ plugin_tracker_admin	clean_info	Cette opération efface de manière irréversibl
 plugin_tracker_admin	clean_id	Id de l'artefact à supprimer: 
 plugin_tracker_admin	clean_error_noart	L'artefact $1 n'existe pas ou n'appartient pas à ce tracker
 plugin_tracker_admin	clean_info_deleted	L'artefact $1 a été supprimé
-
+plugin_tracker_admin	clean_confirm	Confirmer
+plugin_tracker_admin	clean_cancel	Annuler
+plugin_tracker_admin	clean_confirm_text	<p>Vous êtes sur le point de supprimer définitivement "$1".</p><p><strong>Cette opération est irréversible, il n'y a aucun moyen de restauration des données supprimées.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Suppression annulée
 
 plugin_tracker_admin_notification	successfully_updated	Notifications mises à jour avec succès.
 
