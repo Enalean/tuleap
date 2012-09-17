@@ -192,8 +192,7 @@ class UGroupBinding {
         if($currentSource) {
             if ($currentSource && $currentProject->userIsAdmin()) {
                 // @TODO: i18n
-                // @TODO: add links to ugroup & project
-                $currentBindHTML = 'Binding is to '.$currentSource->getName().' in project '.$currentProject->getPublicName();
+                $currentBindHTML = 'Binding is to <a href="/project/admin/ugroup.php?group_id='.$currentProject->getID().'" >'.$currentSource->getName().'</a> in project <a href="/projects/'.$currentProject->getUnixName().'" >'.$currentProject->getPublicName().'</a>';
             }
             // @TODO: i18n
             $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="Remove current binding"/></form>';
@@ -218,7 +217,7 @@ class UGroupBinding {
             foreach ($clones as $cloneId => $clone) {
                 $project = $this->_getProjectManager()->getProject($clone['group_id']);
                 if ($project->userIsAdmin()) {
-                    $clonesHTML .= '<tr><td>'.$clone['cloneName'].' in project '.$project->getPublicName().' is binded to this ugroup</td></tr>';
+                    $clonesHTML .= '<tr><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a> in project <a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a> is binded to this ugroup</td></tr>';
                 } else {
                     $count ++;
                 }
