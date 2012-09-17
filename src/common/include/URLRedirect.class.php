@@ -27,7 +27,6 @@
  */
 class URLRedirect {
 
-    function URLRedirect(){}
     /**
      * Build the redirection of user to the login page.
      */
