@@ -320,6 +320,35 @@ Requires: %{PKG_NAME}, php-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
+%package plugin-fusionforge_compat
+Summary: FusionForge Compatibility
+Group: Development/Tools
+Version: @@PLUGIN_FUSIONFORGE_COMPAT_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%description plugin-fusionforge_compat
+Allows some fusionforge plugins to be installed in a Tuleap instance.
+
+%package plugin-admssw
+Summary: Full-Text Search
+Group: Development/Tools
+Version: @@PLUGIN_ADMSSW_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, plugin-fusionforge_compat
+%description plugin-admssw
+This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
+/projects URLs with content-negociation (application/rdf+xml).
+
+%package plugin-doaprdf
+Summary: Full-Text Search
+Group: Development/Tools
+Version: @@PLUGIN_DOAPRDF_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, plugin-fusionforge_compat
+%description plugin-doaprdf
+This plugin provides DOAP RDF documents for projects on /projects URLs with
+content-negociation (application/rdf+xml).
+
 #
 ## Themes
 #
@@ -879,6 +908,18 @@ fi
 %files plugin-fulltextsearch
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/fulltextsearch
+
+%files plugin-fusionforge_compat
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/fusionforge_compat
+
+%files plugin-admssw
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/admssw
+
+%files plugin-doaprdf
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/doaprdf
 
 #
 # Themes
