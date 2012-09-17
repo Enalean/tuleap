@@ -1,3 +1,6 @@
+Version 5.16 - Tuleap 5.5
+    * Fix tracker v5 'tracker permission' issue
+
 Version 5.15 - Tuleap 5.5
     * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 
