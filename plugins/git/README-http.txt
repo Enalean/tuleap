@@ -13,8 +13,7 @@ Copy the snippet in etc/sudoers.d/gitolite-http in central sudo configuration
 Apache configuration
 --------------------
 Copy the snippet in plugins/git/etc/httpd/git.conf.dist into 
-/etc/http/conf/httpd.conf just after main virtualhost definition (ie. before 
-svn and home pages)
+/etc/http/conf/ssl.conf just after main virtualhost definition
 
 -> you will need to adapt the authentication. By default it's mysql based but 
    you might want to use ldap or perl depending of your setup.

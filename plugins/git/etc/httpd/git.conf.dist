@@ -1,5 +1,13 @@
-<VirtualHost *:80>
-        ServerName git.%sys_domain_name%
+<VirtualHost %git_server_ip_address%:443>
+	ErrorLog logs/error_log
+        TransferLog logs/access_log
+        LogLevel warn
+
+        SSLEngine on
+        SSLProtocol all -SSLv2
+        SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+        SSLCertificateFile /etc/pki/tls/certs/localhost.crt
+        SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
 
         include conf.d/auth_mysql.conf
 
