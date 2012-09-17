@@ -156,17 +156,18 @@ class UGroupBinding {
                 }
             }
         }
+        $clones = $this->getUGroupsByBindingSource($ugroupId);
         // @TODO: i18n
         $html = '<h3>Current binding</h3>';
         $html .= $this->getCurrentBindingHTML($currentProject, $currentSource);
         // @TODO: i18n
         $html .= '<h3>Ugroups binded to this one</h3>';
-        $html .= $this->getClonesHTML($ugroupId);
+        $html .= $this->getClonesHTML($clones);
         // @TODO: i18n
         $html .= '<h3>Edit binding</h3>';
         $html .= '<table>';
         // @TODO: i18n
-        $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$this->getProjectsSelect($sourceProject).'</td>';
+        $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProject).'</td>';
         $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
         if ($sourceProject) {
             // @TODO: i18n
@@ -206,12 +207,11 @@ class UGroupBinding {
     /**
      * Get the HTML output for ugroups binded to the current one
      *
-     * @param Integer $ugroupId Id of the ugroup
+     * @param Array $clones List of ugroups binded to this one
      *
      * @return String
      */
-    private function getClonesHTML($ugroupId) {
-        $clones     = $this->getUGroupsByBindingSource($ugroupId);
+    private function getClonesHTML($clones) {
         $clonesHTML = '<table>';
         if (!empty($clones)) {
             $count = 0;
@@ -236,12 +236,13 @@ class UGroupBinding {
     /**
      * Get the HTML select listing the source projects
      *
+     * @param Integer $groupId       Id of the project
      * @param Integer $sourceProject Id of the current soucrce project
      *
      * @return String
      */
-    private function getProjectsSelect($sourceProject) {
-        $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
+    private function getProjectsSelect($groupId, $sourceProject) {
+        $projects      = UserManager::instance()->getCurrentUser()->getProjects(true);
         $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
@@ -269,15 +270,17 @@ class UGroupBinding {
      * @return String
      */
     private function getUgroupSelect($sourceProject, UGroup $currentSource = null) {
-        $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
+        $ugroups      = ugroup_db_get_existing_ugroups($sourceProject);
         $ugroupSelect = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         while ($ugroup = db_fetch_array($ugroups)) {
-            $selected = '';
-            if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
-                $selected = 'selected="selected"';
+            if (!$this->isBinded($ugroup['ugroup_id'])) {
+                $selected = '';
+                if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
+                    $selected = 'selected="selected"';
+                }
+                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
             }
-            $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
         }
         $ugroupSelect .= '</select>';
         return $ugroupSelect;
