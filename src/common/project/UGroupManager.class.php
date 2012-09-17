@@ -64,7 +64,7 @@ class UGroupManager {
      */
     private function getDao() {
         if (!$this->dao) {
-            $this->dao = new UGroupDao(CodendiDataAccess::instance());
+            $this->dao = new UGroupDao();
         }
         return $this->dao;
     }
@@ -72,18 +72,26 @@ class UGroupManager {
     /**
      * Get Dynamic ugroups members
      *
-     * @param Integer $ugroupId Id of the uGroup
+     * @param Integer $ugroupId Id of the ugroup
      * @param Integer $groupId  Id of the project
      *
-     * @return DataAccessResult
+     * @return array of User
      */
     public function getDynamicUGroupsMembers($ugroupId, $groupId) {
-        if($ugroupId <= 100) {
-            $dao = new UGroupUserDao(CodendiDataAccess::instance());
-            return $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
+        if ($ugroupId > 100) {
+            return array();
         }
+        $um = UserManager::instance();
+        $users   = array();
+        $dao     = new UGroupUserDao();
+        $members = $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
+        if ($members && !$members->isError()) {
+            foreach ($members as $member) {
+                $users[] = $um->getUserById($member['user_id']);
+            }
+        }
+        return $users;
     }
-
 }
 
 ?>
