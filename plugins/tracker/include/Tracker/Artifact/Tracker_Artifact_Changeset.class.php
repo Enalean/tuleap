@@ -128,7 +128,7 @@ class Tracker_Artifact_Changeset {
      * @return void
      */
     public function delete(User $user) {
-        if ($this->userCanDelete($user)) {
+        if ($this->userCanDeletePermanently($user)) {
             $this->getChangesetDao()->delete($this->id);
             $this->getCommentDao()->delete($this->id);
             $this->deleteValues();
@@ -271,6 +271,18 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * Say if a user can permanently (no restore) delete a changeset
+     *
+     * @param User $user The user who does the delete
+     *
+     * @return boolean true if the user can delete
+     */
+    protected function userCanDeletePermanently(User $user) {
+        // Only tracker admin can edit a comment
+        return $this->artifact->getTracker()->userIsAdmin($user);
+    }
+
+    /**
      * Say if a user can delete a changeset
      *
      * @param User $user The user. If null, the current logged in user will be used.
@@ -282,7 +294,7 @@ class Tracker_Artifact_Changeset {
             $user = $this->getUserManager()->getCurrentUser();
         }
         // Only tracker admin can edit a comment
-        return $this->artifact->getTracker()->userIsAdmin($user);
+        return $user->isSuperUser();
     }
 
     /**
