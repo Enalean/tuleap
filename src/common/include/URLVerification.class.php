@@ -265,6 +265,15 @@ class URLVerification {
                     $returnTo .= "&pv=2";
                 }
             }
+            if (strpos($url['path'], '/projects') === 0) {
+                $default_content_type = 'text/html';
+                $script               = 'project_home';
+                $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
+                if ($content_type != $default_content_type) {
+                    header('HTTP/1.0 401 Unauthorized', true, 401);
+                    exit;
+                }
+            }
             $this->urlChunks['script']   = '/account/login.php?return_to='.$returnTo;
         }
     }
@@ -509,6 +518,13 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
+        header('HTTP/1.0 401 Unauthorized', true, 401);
+        $default_content_type = 'text/html';
+        $script               = 'project_home';
+        $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
+        if ($content_type != $default_content_type) {
+            exit;
+        }
         site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
