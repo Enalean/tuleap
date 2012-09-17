@@ -3,3 +3,4 @@ src/utils/*.pyc
 src/utils/cvs1/*.pyc
 src/utils/svn/*.pyc
 tests/simpletest/common/include/_fixtures/big_file
+plugins/git/tests/_fixtures/tmp/repo.git/
