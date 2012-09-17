@@ -218,12 +218,14 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 
     protected function _GivenABackendGitolite() {
-        $driver             = new MockGit_GitoliteDriver();
-        $dao                = new MockGitDao();
-        $permissionsManager = new MockPermissionsManager();
+        $driver             = mock('Git_GitoliteDriver');
+        $dao                = mock('GitDao');
+        $permissionsManager = mock('PermissionsManager');
+        $gitPlugin          = mock('GitPlugin');
         $backend = new Git_Backend_Gitolite($driver);
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
+        $backend->setGitPlugin($gitPlugin);
         return $backend;
     }
 
@@ -231,8 +233,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
         $backend    = $this->_GivenABackendGitolite();
         
-        $url = $backend->getAccessUrl($repository);
-        
+        $urls = $backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
         // url starts by gitolite
         $this->assertPattern('%^gitolite@%', $url);
     }
@@ -241,8 +244,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
         $backend    = $this->_GivenABackendGitolite();
         
-        $url = $backend->getAccessUrl($repository);
-        
+        $urls = $backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
         // url ends by the namespace + name
         $this->assertPattern('%:gpig/u/johndoe/uber/bionic\.git$%', $url);
     }
@@ -251,8 +255,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', '');
         $backend    = $this->_GivenABackendGitolite();
         
-        $url = $backend->getAccessUrl($repository);
-        
+        $urls = $backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
         // url ends by the namespace + name
         $this->assertPattern('%:gpig/bionic\.git$%', $url);
     }
