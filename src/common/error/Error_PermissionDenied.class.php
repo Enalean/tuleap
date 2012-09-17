@@ -22,6 +22,7 @@ require_once('common/include/URL.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/project/Project.class.php');
 require_once('common/user/User.class.php');
+require_once('common/include/URLRedirect.class.php');
 
 /**
  * It allows the management of permission denied error.
@@ -87,9 +88,11 @@ abstract class Error_PermissionDenied {
      */
     function buildInterface() {
         $user = $this->getUserManager()->getCurrentUser();
+        $redirect = new URLRedirect();
 
         if ($user->isAnonymous()) {
-            $this->redirectToLogin();
+            $url = $redirect->buildReturnToLogin();
+            $GLOBALS['HTML']->redirect($url);
         } else {
             $this->buildPermissionDeniedInterface();
         }
@@ -251,24 +254,6 @@ abstract class Error_PermissionDenied {
      */
     protected function getUGroup() {
         return new UGroup();
-    }
-
-    /**
-     * Redirect the user to the login page
-     */
-    private function redirectToLogin(){
-        $returnTo = urlencode((($_SERVER['REQUEST_URI'] === "/") ? "/my/" : $_SERVER['REQUEST_URI']));
-            $url = parse_url($_SERVER['REQUEST_URI']);
-            if (isset($url['query'])) {
-                $query = $url['query'];
-                if (strstr($query, 'pv=2')) {
-                    $returnTo .= "&pv=2";
-                }
-            }
-
-            $url = '/account/login.php?return_to=' . $returnTo;
-
-            $GLOBALS['HTML']->redirect($url);
     }
 
     /**

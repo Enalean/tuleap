@@ -256,16 +256,9 @@ class URLVerification {
      */
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
+        $redirect = new URLRedirect();
         if (!$GLOBALS['sys_allow_anon'] && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
-            $returnTo = urlencode((($server['REQUEST_URI'] === "/")?"/my/":$server['REQUEST_URI']));
-            $url = parse_url($server['REQUEST_URI']);
-            if (isset($url['query'])) {
-                $query = $url['query'];
-                if (strstr($query, 'pv=2')) {
-                    $returnTo .= "&pv=2";
-                }
-            }
-            $this->urlChunks['script']   = '/account/login.php?return_to='.$returnTo;
+            $this->urlChunks['script']   = $redirect->buildReturnToLogin();
         }
     }
 
