@@ -126,6 +126,15 @@ class UGroupBinding {
     }
 
     /**
+     * Get ProjectManager instance
+     *
+     * @return ProjectManager
+     */
+     private function _getProjectManager() {
+         return ProjectManager::instance();
+     }
+
+    /**
      * The form that will be displayed to add/edit user group binding
      *
      * @param Integer $groupId       Id of the current project
@@ -135,30 +144,79 @@ class UGroupBinding {
      * @return String
      */
     public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
-        $pm = ProjectManager::instance();
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $ugroupManager  = new UGroupManager();
             $row            = $dar->getRow();
             $currentSource  = $ugroupManager->getById($row['source_id']);
-            $currentProject = $pm->getProject($row['group_id']);
-            if ($currentSource && $currentProject->userIsAdmin()) {
-                // @TODO: i18n
-                // @TODO: add links to ugroup & project
-                $currentBindHTML = 'Binding is to '.$currentSource->getName().' in project '.$currentProject->getPublicName();
+            $currentProject = $this->_getProjectManager()->getProject($row['group_id']);
+            if ($currentProject && $currentProject->userIsAdmin()) {
                 if (!$sourceProject) {
                     $sourceProject = $currentProject->getID();
                 }
             }
+        }
+        // @TODO: i18n
+        $html = '<h3>Current binding</h3>';
+        $html .= $this->getCurrentBindingHTML($currentProject, $currentSource);
+        // @TODO: i18n
+        $html .= '<h3>Ugroups binded to this one</h3>';
+        $html .= $this->getClonesHTML($ugroupId);
+        // @TODO: i18n
+        $html .= '<h3>Edit binding</h3>';
+        $html .= '<table>';
+        // @TODO: i18n
+        $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$this->getProjectsSelect($sourceProject).'</td>';
+        $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
+        if ($sourceProject) {
+            // @TODO: i18n
+            $html .= '<tr><td>Source user group</td>';
+            $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProject, $currentSource).'</td>';
+            // @TODO: i18n
+            $html .= '<td><input type="submit" value="Edit binding"/></form></td></tr>';
+        }
+        $html .= '</table>';
+        return $html;
+    }
+
+    /**
+     * Get the HTML output for current binding
+     *
+     * @param Project $currentProject Project of the currently binded ugroup
+     * @param UGroup  $currentSource  Currently binded ugroup
+     *
+     * @return String
+     */
+    private function getCurrentBindingHTML(Project $currentProject = null, UGroup $currentSource = null) {
+        if($currentSource) {
+            if ($currentSource && $currentProject->userIsAdmin()) {
+                // @TODO: i18n
+                // @TODO: add links to ugroup & project
+                $currentBindHTML = 'Binding is to '.$currentSource->getName().' in project '.$currentProject->getPublicName();
+            }
             // @TODO: i18n
             $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="Remove current binding"/></form>';
+        } else {
+            // @TODO: i18n
+            $currentBindHTML .= 'This ugroup is not binded to any other ugroup';
         }
+        return $currentBindHTML;
+    }
+
+    /**
+     * Get the HTML output for ugroups binded to the current one
+     *
+     * @param Integer $ugroupId Id of the ugroup
+     *
+     * @return String
+     */
+    private function getClonesHTML($ugroupId) {
         $clones     = $this->getUGroupsByBindingSource($ugroupId);
         $clonesHTML = '<table>';
         if (!empty($clones)) {
             $count = 0;
             foreach ($clones as $cloneId => $clone) {
-                $project = $pm->getProject($clone['group_id']);
+                $project = $this->_getProjectManager()->getProject($clone['group_id']);
                 if ($project->userIsAdmin()) {
                     $clonesHTML .= '<tr><td>'.$clone['cloneName'].' in project '.$project->getPublicName().' is binded to this ugroup</td></tr>';
                 } else {
@@ -172,12 +230,23 @@ class UGroupBinding {
             $clonesHTML .= '<tr><td>This ugroup is not the source of any other ugroup</td></tr>';
         }
         $clonesHTML .= '</table>';
+        return $clonesHTML;
+    }
+
+    /**
+     * Get the HTML select listing the source projects
+     *
+     * @param Integer $sourceProject Id of the current soucrce project
+     *
+     * @return String
+     */
+    private function getProjectsSelect($sourceProject) {
         $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
         $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
             if ($groupId != $project['group_id']) {
-                $project = $pm->getProject($project['group_id']);
+                $project = $this->_getProjectManager()->getProject($project['group_id']);
                 if ($project->userIsAdmin()) {
                     $selected = '';
                     if ($sourceProject == $project->getID()) {
@@ -188,40 +257,30 @@ class UGroupBinding {
             }
         }
         $projectSelect .= '</select>';
-        if ($sourceProject) {
-            $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
-            $ugroupSelect = '<select name="source_ugroup" >';
-            $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
-            while ($ugroup = db_fetch_array($ugroups)) {
-                $selected = '';
-                if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
-                    $selected = 'selected="selected"';
-                }
-                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
+        return $projectSelect;
+    }
+
+    /**
+     * Get the HTML select listing the source ugroups by project
+     *
+     * @param Integer $sourceProject Id of the current soucrce project
+     * @param UGroup  $currentSource Currently binded ugroup
+     *
+     * @return String
+     */
+    private function getUgroupSelect($sourceProject, UGroup $currentSource = null) {
+        $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
+        $ugroupSelect = '<select name="source_ugroup" >';
+        $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
+        while ($ugroup = db_fetch_array($ugroups)) {
+            $selected = '';
+            if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
+                $selected = 'selected="selected"';
             }
-            $ugroupSelect .= '</select>';
+            $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
         }
-        // @TODO: i18n
-        $html = '<h3>Current binding</h3>';
-        $html .= $currentBindHTML;
-        // @TODO: i18n
-        $html .= '<h3>Ugroups binded to this one</h3>';
-        $html .= $clonesHTML;
-        // @TODO: i18n
-        $html .= '<h3>Edit binding</h3>';
-        $html .= '<table>';
-        // @TODO: i18n
-        $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$projectSelect.'</td>';
-        $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
-        if ($sourceProject) {
-            // @TODO: i18n
-            $html .= '<tr><td>Source user group</td>';
-            $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$ugroupSelect.'</td>';
-            // @TODO: i18n
-            $html .= '<td><input type="submit" value="Edit binding"/></form></td></tr>';
-        }
-        $html .= '</table>';
-        return $html;
+        $ugroupSelect .= '</select>';
+        return $ugroupSelect;
     }
 
 }
