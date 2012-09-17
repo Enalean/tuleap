@@ -26,8 +26,8 @@
  */
 
 
-//require_once('common/include/ProjectManager.class.php');
-require_once('common/include/rdfutils.php');
+require_once 'common/include/ProjectManager.class.php';
+require_once 'common/include/rdfutils.php';
 
 class doaprdfPlugin extends Plugin {
 	public function __construct($id=0) {
@@ -39,7 +39,7 @@ class doaprdfPlugin extends Plugin {
 		$this->_addHook("alt_representations");
 
 	}
-	
+
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...
 	 * @param unknown_type $params
@@ -99,10 +99,7 @@ class doaprdfPlugin extends Plugin {
 			if($project_description) {
 				$res->setProp('doap:description', $project_description);
 			}
-			$homepage = $project->getHomePage();
-			if ($homepage) {
-				$res->setProp('doap:homepage', $homepage);
-			}
+			$res->setProp('doap:homepage', $project->getHomePage());
 			$tags = array();
 			if($tags_list) {
 				$tags = split(', ',$tags_list);
@@ -168,5 +165,3 @@ class doaprdfPlugin extends Plugin {
 // mode: php
 // c-file-style: "bsd"
 // End:
-
-?>

@@ -28,5 +28,3 @@ register_plugin ($doaprdfPluginObject) ;
 // mode: php
 // c-file-style: "bsd"
 // End:
-
-?>
