@@ -192,7 +192,7 @@ class UGroupBinding {
         if($currentSource) {
             if ($currentSource && $currentProject->userIsAdmin()) {
                 // @TODO: i18n
-                $currentBindHTML = 'Binding is to <a href="/project/admin/ugroup.php?group_id='.$currentProject->getID().'" >'.$currentSource->getName().'</a> in project <a href="/projects/'.$currentProject->getUnixName().'" >'.$currentProject->getPublicName().'</a>';
+                $currentBindHTML = 'Binding is to <a href="/project/admin/ugroup.php?group_id='.$currentProject->getID().'" ><b>'.$currentSource->getName().'</b></a> in project <a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>';
             }
             // @TODO: i18n
             $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="Remove current binding"/></form>';
@@ -213,17 +213,19 @@ class UGroupBinding {
     private function getClonesHTML($clones) {
         $clonesHTML = '<table>';
         if (!empty($clones)) {
-            $count = 0;
+            $clonesHTML .= html_build_list_table_top(array('Project', 'UGroup'), false, false , false);
+            $count      = 0;
+            $i          = 0;
             foreach ($clones as $cloneId => $clone) {
                 $project = $this->_getProjectManager()->getProject($clone['group_id']);
                 if ($project->userIsAdmin()) {
-                    $clonesHTML .= '<tr><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a> in project <a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a> is binded to this ugroup</td></tr>';
+                    $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'"><td><a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a></td><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a></td></tr>';
                 } else {
                     $count ++;
                 }
             }
             if ($count) {
-                $clonesHTML .= '<tr><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
+                $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'" colspan="2" ><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
             }
         } else {
             $clonesHTML .= '<tr><td>This ugroup is not the source of any other ugroup</td></tr>';
