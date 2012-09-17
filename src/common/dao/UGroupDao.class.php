@@ -113,13 +113,12 @@ class UGroupDao extends DataAccessObject {
     function updateUgroupBinding($ugroupId, $sourceId = NULL) {
         $ugroupId = $this->da->escapeInt($ugroupId);
         if(isset($sourceId)) {
-            $sourceId = $this->da->escapeInt($sourceId);
+            $sourceId      = $this->da->escapeInt($sourceId);
+            $bindingclause = " SET source_id = ".$sourceId;
         } else {
-            $sourceId = NULL;
+            $bindingclause = " SET source_id = NULL";
         }
-        $sql = "UPDATE ugroup
-                SET source_id = ".$sourceId."
-                WHERE ugroup_id = ".$ugroupId;
+        $sql = "UPDATE ugroup ".$bindingclause." WHERE ugroup_id = ".$ugroupId;
          return $this->update($sql);
     }
 

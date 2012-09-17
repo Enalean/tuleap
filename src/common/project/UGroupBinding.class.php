@@ -114,7 +114,11 @@ class UGroupBinding {
                 }
             break;
             case 'remove_binding':
-                $GLOBALS['Response']->addFeedback('info', 'Action performed');
+                if($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+                    $GLOBALS['Response']->addFeedback('info', 'User group binding successfully removed');
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', 'User group binding not removed');
+                }
             break;
             default:
             break;
