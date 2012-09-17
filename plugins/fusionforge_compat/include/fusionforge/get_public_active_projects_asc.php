@@ -18,17 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
+/**
+ * get_public_active_projects_asc() - Get a list of rows for public active projects (initially in trove/full_list)
+ *
+ * @param  int Opional Maximum number of rows to limit query length·
+ */
+function get_public_active_projects_asc($max_query_limit = -1) {
 
-class fusionforge_compatPlugin extends Plugin {
-    
-    public function loaded() {
-        require_once 'fusionforge/forge_get_config.php';
-        require_once 'fusionforge/forge_check_perm.php';
-        require_once 'fusionforge/plugin_hook_by_reference.php';
-        require_once 'fusionforge/utils.php';
-        require_once 'fusionforge/get_public_active_projects_asc.php';
-        require_once 'fusionforge/FusionForge.php';
-    }
+	$res_grp = db_query("
+        SELECT group_id, group_name, unix_group_name, short_description, register_time
+        FROM groups
+        WHERE status = 'A' AND is_public=1 AND group_id>4 AND register_time > 0
+        ORDER BY group_name ASC
+			");
+	$projects = array();
+	while ($row_grp = db_fetch_array($res_grp)) {
+		if (!forge_check_perm ('project_read', $row_grp['group_id'])) {
+			continue ;
+		}
+		$projects[] = $row_grp;
+	}
+	return $projects;
 }
 

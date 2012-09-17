@@ -18,17 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
-
-class fusionforge_compatPlugin extends Plugin {
-    
-    public function loaded() {
-        require_once 'fusionforge/forge_get_config.php';
-        require_once 'fusionforge/forge_check_perm.php';
-        require_once 'fusionforge/plugin_hook_by_reference.php';
-        require_once 'fusionforge/utils.php';
-        require_once 'fusionforge/get_public_active_projects_asc.php';
-        require_once 'fusionforge/FusionForge.php';
-    }
+function forge_check_perm() {
+    return true;
 }
-
