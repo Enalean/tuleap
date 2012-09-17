@@ -20,6 +20,7 @@
  * 
  */
 
+require_once('common/project/UGroupBinding.class.php');
 
 /**
 * System Event classes
@@ -34,7 +35,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * 
      * @param bool $with_link true if you want links to entities. The returned 
      * string will be html instead of plain/text
-     *
+     *GHASSAN KANAFANI
+GHASSAN KANAFANI
      * @return string
      */
     public function verbalizeParameters($with_link) {
@@ -56,6 +58,9 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         } else {
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
+        // Remove ugroup binding to this user group
+        $this->cleanupUgroupBinding($ugroup_id);
+
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
             if ($project->usesSVN()) {
@@ -69,6 +74,18 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
 
         $this->done();
         return true;
+    }
+
+    /**
+     * Remove all user group binded to the given user group.
+     *
+     * @param Integer $ugroup_id
+     *
+     * @return Boolean
+     */
+    protected function cleanupUgroupBinding($ugroup_id) {
+        $bindingManager = new UGroupBinding();
+        return $bindingManager->removeAllUGroupsBinding($ugroup_id);
     }
 
 }

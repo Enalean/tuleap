@@ -77,6 +77,26 @@ class UGroupBinding {
     }
 
     /**
+     * Remove all Ugroups binding to a given Ugroup
+     *
+     * @param Integer $ugroupId Id of the source user goup
+     *
+     * @return boolean
+     */
+    public function removeAllUGroupsBinding($ugroupId) {
+        $bindedUgroups  = $this->getUGroupsByBindingSource($ugroupId);
+        $bindingRemoved = true;
+        if (!empty($bindedUgroups)) {
+            foreach ($bindedUgroups as $ugroup) {
+                if(!$this->getUGroupDao()->updateUgroupBinding($ugroup['ugroup_id'])) {
+                    $bindingRemoved = false;
+                }
+            }
+        }
+        return $bindingRemoved;
+    }
+
+    /**
      * Get title of the link to binding interface
      *
      * @param Integer $ugroupId Id of the user group
