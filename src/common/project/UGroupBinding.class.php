@@ -170,8 +170,8 @@ class UGroupBinding {
             }
         } else {
             $clonesHTML .= '<tr><td>This ugroup is not the source of any other ugroup</td></tr>';
-            $clonesHTML .= '</table>';
         }
+        $clonesHTML .= '</table>';
         $projects = UserManager::instance()->getCurrentUser()->getProjects(true);
         $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
@@ -201,8 +201,14 @@ class UGroupBinding {
             }
             $ugroupSelect .= '</select>';
         }
-        $html = $currentBindHTML;
+        // @TODO: i18n
+        $html = '<h3>Current binding</h3>';
+        $html .= $currentBindHTML;
+        // @TODO: i18n
+        $html .= '<h3>Ugroups binded to this one</h3>';
         $html .= $clonesHTML;
+        // @TODO: i18n
+        $html .= '<h3>Edit binding</h3>';
         $html .= '<table>';
         // @TODO: i18n
         $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$projectSelect.'</td>';
@@ -212,7 +218,7 @@ class UGroupBinding {
             $html .= '<tr><td>Source user group</td>';
             $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$ugroupSelect.'</td>';
             // @TODO: i18n
-            $html .= '<td><input type="submit" value="Add binding"/></form></td></tr>';
+            $html .= '<td><input type="submit" value="Edit binding"/></form></td></tr>';
         }
         $html .= '</table>';
         return $html;
