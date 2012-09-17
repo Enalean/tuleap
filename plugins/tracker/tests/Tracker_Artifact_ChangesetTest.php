@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
+require_once dirname(__FILE__).'/builders/all.php';
 require_once dirname(__FILE__).'/../include/constants.php';
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generatePartial(
@@ -369,4 +370,57 @@ BODY;
 
     }
 }
+
+class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
+    private $user;
+    private $changeset_id;
+    private $changeset;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker      = aMockTracker()->build();
+        $artifact     = anArtifact()->withTracker($this->tracker)->build();
+        $this->user         = stub('User')->isSuperUser()->returns(true);
+        $this->changeset_id = 1234;
+        $this->changeset    = partial_mock(
+            'Tracker_Artifact_Changeset',
+            array('getCommentDao', 'getChangesetDao', 'getFormElementFactory', 'getValueDao'),
+            array($this->changeset_id, $artifact, null, null, null)
+        );
+    }
+
+    public function itDeletesCommentsValuesAndChangeset() {
+        stub($this->tracker)->userIsAdmin($this->user)->returns(true);
+
+        $changeset_dao = mock('Tracker_Artifact_ChangesetDao');
+        $changeset_dao->expectOnce('delete', array($this->changeset_id));
+        stub($this->changeset)->getChangesetDao()->returns($changeset_dao);
+
+        $comment_dao = mock('Tracker_Artifact_Changeset_CommentDao');
+        $comment_dao->expectOnce('delete', array($this->changeset_id));
+        stub($this->changeset)->getCommentDao()->returns($comment_dao);
+
+        $value_dao = mock('Tracker_Artifact_Changeset_ValueDao');
+        $value_dao->expectOnce('delete', array($this->changeset_id));
+        stub($this->changeset)->getValueDao()->returns($value_dao);
+
+        stub($value_dao)->searchById($this->changeset_id)->returnsDar(
+            array('id' => 1025, 'field_id' => 125),
+            array('id' => 1026, 'field_id' => 126)
+        );
+
+        $formelement_factory = mock('Tracker_FormElementFactory');
+        $field_text = mock('Tracker_FormElement_Field_Text');
+        $field_text->expectOnce('deleteChangesetValue', array(1025));
+        stub($formelement_factory)->getFieldById(125)->returns($field_text);
+        $field_float = mock('Tracker_FormElement_Field_Float');
+        $field_float->expectOnce('deleteChangesetValue', array(1026));
+        stub($formelement_factory)->getFieldById(126)->returns($field_float);
+
+        stub($this->changeset)->getFormElementFactory()->returns($formelement_factory);
+
+        $this->changeset->delete($this->user);
+    }
+}
+
 ?>
