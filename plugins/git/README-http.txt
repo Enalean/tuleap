@@ -21,6 +21,12 @@ svn and home pages)
 
 -> restart apache (service httpd restart)
 
+Tuleap configuration
+--------------------
+Add the following line to /etc/codendi/plugins/git/config.inc
+
+    $git_http_url = "https://git.example.com/p";
+
 Test
 ----
 After restart, you should be able to clone/push:
