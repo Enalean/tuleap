@@ -117,7 +117,6 @@ class UGroupBinding {
                 $GLOBALS['Response']->addFeedback('info', 'Action performed');
             break;
             default:
-                $GLOBALS['Response']->addFeedback('warning', 'Unkown action');
             break;
         }
     }
@@ -135,19 +134,20 @@ class UGroupBinding {
         $pm = ProjectManager::instance();
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
         if($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $ugroupManager = new UGroupManager();
-            $row           = $dar->getRow();
-            $source        = $ugroupManager->getById($row['source_id']);
-            $project       = $pm->getProject($row['group_id']);
-            if ($source && $project->userIsAdmin()) {
+            $ugroupManager  = new UGroupManager();
+            $row            = $dar->getRow();
+            $currentSource  = $ugroupManager->getById($row['source_id']);
+            $currentProject = $pm->getProject($row['group_id']);
+            if ($currentSource && $currentProject->userIsAdmin()) {
                 // @TODO: i18n
                 // @TODO: add links to ugroup & project
-                $currentBindHTML = 'Binding is to '.$source->getName().' in project '.$project->getPublicName().' Remove current binding';
-            } else {
-                // @TODO: i18n
-                $currentBindHTML = 'Remove current binding';
+                $currentBindHTML = 'Binding is to '.$currentSource->getName().' in project '.$currentProject->getPublicName();
+                if (!$sourceProject) {
+                    $sourceProject = $currentProject->getID();
+                }
             }
-            // @TODO: delete form
+            // @TODO: i18n
+            $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="Remove current binding"/></form>';
         }
         $clones     = $this->getUGroupsByBindingSource($ugroupId);
         $clonesHTML = '<table>';
@@ -161,7 +161,9 @@ class UGroupBinding {
                     $count ++;
                 }
             }
-            $clonesHTML .= '<tr><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
+            if ($count) {
+                $clonesHTML .= '<tr><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
+            }
         } else {
             $clonesHTML .= '<tr><td>This ugroup is not the source of any other ugroup</td></tr>';
             $clonesHTML .= '</table>';
@@ -187,7 +189,11 @@ class UGroupBinding {
             $ugroupSelect = '<select name="source_ugroup" >';
             $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
             while ($ugroup = db_fetch_array($ugroups)) {
-                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" >'.$ugroup['name'].'</option>';
+                $selected = '';
+                if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
+                    $selected = 'selected="selected"';
+                }
+                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
             }
             $ugroupSelect .= '</select>';
         }
@@ -202,7 +208,7 @@ class UGroupBinding {
             $html .= '<tr><td>Source user group</td>';
             $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$ugroupSelect.'</td>';
             // @TODO: i18n
-            $html .= '<td><input type="submit" value="Add binding"/></form</td></tr>';
+            $html .= '<td><input type="submit" value="Add binding"/></form></td></tr>';
         }
         $html .= '</table>';
         return $html;

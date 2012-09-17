@@ -94,6 +94,15 @@ class UGroup {
     }
 
     /**
+     * Get the ugroup id
+     *
+     * @return Integer
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
      * Return array of all ugroup members as User objects
      * WARNING: this does not work currently with dynamic ugroups
      */
