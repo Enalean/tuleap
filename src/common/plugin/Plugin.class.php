@@ -54,7 +54,15 @@ class Plugin {
         
         $this->_scope = Plugin::SCOPE_SYSTEM;
     }
-    
+
+    /**
+     * Callback called when the plugin is loaded
+     *
+     * @return void
+     */
+    public function loaded() {
+    }
+
     public function isAllowed($group_id) {
         if(!isset($this->allowedForProject[$group_id])) {
             $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
