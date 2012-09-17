@@ -7,7 +7,7 @@
         SetEnv GIT_HTTP_EXPORT_ALL
         SetEnv GITOLITE_HTTP_HOME /usr/com/gitolite
         SetEnv GIT_HTTP_BACKEND /usr/bin/git-http-backend
-        ScriptAlias /git/ /usr/lib/codendi/bin/gitolite-suexec-wrapper.sh/
+        ScriptAlias /p/ /usr/lib/codendi/bin/gitolite-suexec-wrapper.sh/
 
          <Location />
                 AuthType Basic

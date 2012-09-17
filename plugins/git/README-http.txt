@@ -24,5 +24,5 @@ svn and home pages)
 Test
 ----
 After restart, you should be able to clone/push:
-git clone http://git.example.com/git/projectname/reponame.git
+git clone http://git.example.com/p/projectname/reponame.git
 
