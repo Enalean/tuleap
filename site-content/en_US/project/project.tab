@@ -968,3 +968,21 @@ project_privacy	tooltip_public_wo_anon	<p>Project privacy set to <big><strong>pu
 
 project_service	service_not_used	$1 service is not enabled
 project	does_not_exist	The project doesn't exist
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	update_binding	Update binding
+project_ugroup_binding	add_binding	Add binding
+project_ugroup_binding	binding_added	Binding added
+project_ugroup_binding	add_error	Something went wrong when binding user group
+project_ugroup_binding	binding_removed	User group binding successfully removed
+project_ugroup_binding	remove_error	User group binding not removed
+project_ugroup_binding	current_binding	Current binding
+project_ugroup_binding	binding_sources	UGroups binded to this one
+project_ugroup_binding	edit_binding	Edit binding
+project_ugroup_binding	source_project	Source project
+project_ugroup_binding	source_ugroup	Source UGroup
+project_ugroup_binding	no_binding	This ugroup is not binded to any other ugroup
+project_ugroup_binding	remove_binding	Remove current binding
+project_ugroup_binding	current_binded	Binding is to $1 in project $2
+project_ugroup_binding	not_source	This ugroup is not the source of any other ugroup

@@ -964,4 +964,21 @@ project_privacy	tooltip_public_wo_anon	<p>Le niveau de confidentialité du proje
 
 project_service	service_not_used	Le service $1 n'est pas activé
 project	does_not_exist	Le projet n'existe pas
-
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	update_binding	???
+project_ugroup_binding	add_binding	???
+project_ugroup_binding	binding_added	???
+project_ugroup_binding	add_error	???
+project_ugroup_binding	binding_removed	???
+project_ugroup_binding	remove_error	???
+project_ugroup_binding	current_binding	???
+project_ugroup_binding	binding_sources	???
+project_ugroup_binding	edit_binding	???
+project_ugroup_binding	source_project	???
+project_ugroup_binding	source_ugroup	???
+project_ugroup_binding	no_binding	???
+project_ugroup_binding	remove_binding	???
+project_ugroup_binding	current_binded	??? $1 ??? $2
+project_ugroup_binding	not_source	???

@@ -85,11 +85,9 @@ class UGroupBinding {
      */
     public function getLinkTitle($ugroupId) {
         if ($this->isBinded($ugroupId)) {
-            // @TODO: i18n
-            return '- Update binding';
+            return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'update_binding');
         } else {
-            // @TODO: i18n
-            return '- Add binding';
+            return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'add_binding');
         }
     }
 
@@ -103,21 +101,22 @@ class UGroupBinding {
      */
     public function processRequest($ugroupId, Codendi_Request $request) {
         $func = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
-        // @TODO: i18n, data validation
+        // @TODO: data validation
         switch($func) {
             case 'add_binding':
                 $sourceId = $request->get('source_ugroup');
                 if($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
-                    $GLOBALS['Response']->addFeedback('info', 'Action performed');
+                    // @TODO: Bind users
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', 'Something went wrong when binding user group');
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
                 }
             break;
             case 'remove_binding':
                 if($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
-                    $GLOBALS['Response']->addFeedback('info', 'User group binding successfully removed');
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', 'User group binding not removed');
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
                 }
             break;
             default:
@@ -157,24 +156,18 @@ class UGroupBinding {
             }
         }
         $clones = $this->getUGroupsByBindingSource($ugroupId);
-        // @TODO: i18n
-        $html = '<h3>Current binding</h3>';
+        $html = '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'current_binding').'</h3>';
         $html .= $this->getCurrentBindingHTML($currentProject, $currentSource);
-        // @TODO: i18n
-        $html .= '<h3>Ugroups binded to this one</h3>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
         $html .= $this->getClonesHTML($clones);
-        // @TODO: i18n
-        $html .= '<h3>Edit binding</h3>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'</h3>';
         $html .= '<table>';
-        // @TODO: i18n
-        $html .= '<tr><td>Source project</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProject).'</td>';
+        $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProject).'</td>';
         $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
         if ($sourceProject) {
-            // @TODO: i18n
-            $html .= '<tr><td>Source user group</td>';
+            $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_ugroup').'</td>';
             $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProject, $currentSource).'</td>';
-            // @TODO: i18n
-            $html .= '<td><input type="submit" value="Edit binding"/></form></td></tr>';
+            $html .= '<td><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'"/></form></td></tr>';
         }
         $html .= '</table>';
         return $html;
@@ -191,14 +184,11 @@ class UGroupBinding {
     private function getCurrentBindingHTML(Project $currentProject = null, UGroup $currentSource = null) {
         if($currentSource) {
             if ($currentSource && $currentProject->userIsAdmin()) {
-                // @TODO: i18n
-                $currentBindHTML = 'Binding is to <a href="/project/admin/ugroup.php?group_id='.$currentProject->getID().'" ><b>'.$currentSource->getName().'</b></a> in project <a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>';
+                $currentBindHTML = $GLOBALS['Language']->getText('project_ugroup_binding', 'current_binded', array('<a href="/project/admin/ugroup.php?group_id='.$currentProject->getID().'" ><b>'.$currentSource->getName().'</b></a>', '<a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>'));
             }
-            // @TODO: i18n
-            $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="Remove current binding"/></form>';
+            $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'remove_binding').'"/></form>';
         } else {
-            // @TODO: i18n
-            $currentBindHTML .= 'This ugroup is not binded to any other ugroup';
+            $currentBindHTML .= $GLOBALS['Language']->getText('project_ugroup_binding', 'no_binding');
         }
         return $currentBindHTML;
     }
@@ -213,7 +203,7 @@ class UGroupBinding {
     private function getClonesHTML($clones) {
         $clonesHTML = '<table>';
         if (!empty($clones)) {
-            $clonesHTML .= html_build_list_table_top(array('Project', 'UGroup'), false, false , false);
+            $clonesHTML .= html_build_list_table_top(array($GLOBALS['Language']->getText('project_reference', 'ref_scope_P'), 'UGroup'), false, false , false);
             $count      = 0;
             $i          = 0;
             foreach ($clones as $cloneId => $clone) {
@@ -228,7 +218,7 @@ class UGroupBinding {
                 $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'" colspan="2" ><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
             }
         } else {
-            $clonesHTML .= '<tr><td>This ugroup is not the source of any other ugroup</td></tr>';
+            $clonesHTML .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'not_source').'</td></tr>';
         }
         $clonesHTML .= '</table>';
         return $clonesHTML;
