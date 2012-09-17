@@ -109,9 +109,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	}
 
 	// Build the mail to be sent
-	$vSrep = new Valid_WhiteList('send_reply',array($GLOBALS['Language']->getText('global', 'btn_submit')));
-	$vSrep->required();
-	if ($request->valid($vSrep)) {
+	if ($request->exist('send_reply')) {
 		// process the mail
 		$ret = plugin_forumml_process_mail($p,true);
 		if ($ret) {
@@ -136,7 +134,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	}
 	mail_header($params);
 
-	if ($request->valid($vSrep) && $request->valid($vTopic)) {
+	if ($request->exist('send_reply') && $request->valid($vTopic)) {
 		if (isset($ret) && $ret) {
 			// wait few seconds before redirecting to archives page
 			echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."&topic=".$topic."\"',3000) </script>";
