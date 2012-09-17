@@ -2,6 +2,13 @@ document.observe('dom:loaded', function () {
     var repoDesc = $('repo_desc')
       , fork_repositories_prefix = $('fork_repositories_prefix');
 
+    // Update clone url field value according to selected protocol
+    $$('.plugin_git_transport').each(function (radio) {
+       radio.observe('click', function (event) {
+           $('plugin_git_clone_field').value = event.target.value;
+       }) 
+    });
+
     if ( repoDesc ) {
         var span = new Element('span').update( repoDesc.value.escapeHTML() );
         repoDesc.insert({before:span});

@@ -87,9 +87,29 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository) {
+    public function getAccessURL(GitRepository $repository) {
+        $transports = array('ssh' => $this->getSSHAccessURL($repository));
+        $http_transport = $this->getHTTPAccessURL($repository);
+        if ($http_transport) {
+            $transports['http'] = $http_transport;
+        }
+        return $transports;
+    }
+
+    private function getSSHAccessURL(GitRepository $repository) {
         $serverName = $_SERVER['SERVER_NAME'];
         return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+    }
+
+    public function getHTTPAccessURL(GitRepository $repository) {
+        $plugin_manager = PluginManager::instance();
+        $git_plugin     = $plugin_manager->getPluginByName('git');
+        if ($git_plugin) {
+            $http_url = $git_plugin->getConfigurationParameter('git_http_url');
+            if ($http_url) {
+                return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+            }
+        }
     }
 
     /**

@@ -213,9 +213,28 @@ class GitViews extends PluginViews {
         echo '<p id="plugin_git_description">'.$this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId).'</p>';
     }
     ?>
-    <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $repository->getAccessURL(); ?>" />
-    </p>
+    <div id="plugin_git_clone_url">
+    <ul>
+    <?php 
+    $urls      = $repository->getAccessURL();
+    $selected  = ' checked="checked"';
+    $first_url = '';
+    $is_first  = true;
+    foreach ($urls as $transport => $url) {
+        echo '<li><label>';
+        echo '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'.$url.'"'.$selected.'/>';
+        echo $transport;
+        echo '</label></li>';        
+        if ($is_first) {
+            $first_url = $url;
+            $selected  = '';
+            $is_first  = false;
+        }
+    } 
+    ?>
+    </ul>
+    <input id="plugin_git_clone_field" type="text" value="<?= $first_url; ?>" /></label>
+    </div>
 </form>
         <?php
         echo '</div>';
