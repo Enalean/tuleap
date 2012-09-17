@@ -84,7 +84,7 @@ class UGroupBinding {
      * @return String
      */
     public function getLinkTitle($ugroupId) {
-        if ($this->isBinded($groupId)) {
+        if ($this->isBinded($ugroupId)) {
             // @TODO: i18n
             return '- Update binding';
         } else {
