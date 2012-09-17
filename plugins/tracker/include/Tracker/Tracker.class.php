@@ -603,6 +603,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
            case 'admin-delete-artifact-confirm':
                 if ($this->userIsAdmin($current_user)) {
+                    $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm');
+                    $token->check();
                     $artifact_id = $request->getValidated('id', 'uint', 0);
                     $artifact    = $this->getTrackerArtifactFactory()->getArtifactById($artifact_id);
                     if ($artifact) {
@@ -619,6 +621,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
 
             case 'admin-delete-artifact':
                 if ($this->userIsAdmin($current_user)) {
+                    $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact');
+                    $token->check();
                     if ($request->exist('confirm')) {
                         $artifact = $this->getTrackerArtifactFactory()->getArtifactById($request->get('id'));
                         if ($artifact && $artifact->getTrackerId() == $this->getId()) {
@@ -1799,9 +1803,11 @@ EOS;
     }
 
     public function displayAdminClean(Tracker_IDisplayTrackerLayout $layout) {
+        $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm');
         $this->displayAdminItemHeader($layout, 'clean');
         echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info').'</p>';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact-confirm">';
+        echo $token->fetchHTMLInput();
         echo '<label>'.$GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_id').' <input type="text" name="id" value=""></label>';
         echo '<br>';
         echo '<input type="submit" value="'.$GLOBALS['Language']->getText('global','btn_submit').'">';
@@ -1810,18 +1816,20 @@ EOS;
     }
 
     public function displayAdminConfirmDelete(Tracker_IDisplayTrackerLayout $layout, Tracker_Artifact $artifact) {
+        $token = new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact');
         $this->displayAdminItemHeader($layout, 'clean');
         echo '<div class="tracker_confirm_delete">';
         echo '<form name="delete_artifact" method="post" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id.'&amp;func=admin-delete-artifact">';
+        echo $token->fetchHTMLInput();
         echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()), CODENDI_PURIFIER_DISABLED);
-        echo '<div class="tracker_confirm_delete_preview">';
-        echo $this->fetchFormElementsReadOnly($artifact);
-        echo '</div>';
-        echo '<input type="hidden" name="id" value="'.$artifact->getId().'" />';
         echo '<div class="tracker_confirm_delete_buttons">';
         echo '<input type="submit" tabindex="2" name="confirm" value="'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm') .'" />';
         echo '<input type="submit" tabindex="1" name="cancel" value="'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel') .'" />';        
         echo '</div>';
+        echo '<div class="tracker_confirm_delete_preview">';
+        echo $this->fetchFormElementsReadOnly($artifact);
+        echo '</div>';
+        echo '<input type="hidden" name="id" value="'.$artifact->getId().'" />';
         echo '</form>';
         echo '</div>';
         $this->displayFooter($layout);
