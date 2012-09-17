@@ -640,10 +640,6 @@ class GitRepository implements DVCSRepository {
         return $this->getBackend()->getAccessURL($this);
     }
 
-    public function getHTTPAccessURL() {
-        return $this->getBackend()->getHTTPAccessURL($this);
-    }
-
     /**
      * Clone a repository, it inherits access
      * @param String forkName
