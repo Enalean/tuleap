@@ -18,6 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Create URL for user's profile page
+ *
+ * @param string $username
+ * @param int $user_id
+ * @return string URL
+ */
+function util_make_url_u ($username, $user_id) {
+    return util_make_url ("/users/$username/");
+}
 
 
 /**
