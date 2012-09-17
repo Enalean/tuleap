@@ -109,7 +109,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	}
 
 	// Build the mail to be sent
-	$vSrep = new Valid_WhiteList('send_reply',array('Submit'));
+	$vSrep = new Valid_WhiteList('send_reply',array($GLOBALS['Language']->getText('global', 'btn_submit')));
 	$vSrep->required();
 	if ($request->valid($vSrep)) {
 		// process the mail
