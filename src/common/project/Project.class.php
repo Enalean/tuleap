@@ -15,9 +15,9 @@ require_once('common/frs/ServiceFile.class.php');
 require_once('common/svn/ServiceSVN.class.php');
 
 require_once('ProjectManager.class.php');
-
 require_once('ServiceNotAllowedForProjectException.class.php');
 
+require_once 'UGroupManager.class.php';
 /*
 
 	An object wrapper for project data
@@ -395,6 +395,31 @@ class Project extends Group {
 			
 		}
     	
+    }
+
+    private function getUGroupManager() {
+        return new UGroupManager();
+    }
+
+    /**
+     * @return array of User admin of the project
+     */
+    public function getAdmins() {
+        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_ADMIN, $this->getID());
+    }
+
+    /**
+     * @return array of User members of the project
+     */
+    public function getMembers() {
+        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_MEMBERS, $this->getID());
+    }
+
+    /**
+     * Alias of @see getMembers()
+     */
+    public function getUsers() {
+        return $this->getMembers();
     }
 }
 ?>

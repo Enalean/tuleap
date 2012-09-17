@@ -523,6 +523,13 @@ class User {
         return $this->user_name;
     }
     /**
+     * alias of getUserName()
+     * @return string the name of the user (aka login)
+     */
+    function getUnixName() {
+        return $this->getUserName();
+    }
+    /**
      * @return string the real name of the user
      */
     function getRealName() {
