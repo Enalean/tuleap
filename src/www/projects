@@ -10,6 +10,7 @@ require_once('pre.php');
 
 $default_content_type = 'text/html';
 
+$event_manager = EventManager::instance();
 $project       = null;
 $expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
 if (isset($expl_pathinfo[2])) {
@@ -39,7 +40,7 @@ if ($project && !$project->isError()) {
             'group_id'     => $project->getID(),
             'content'      => &$content,
         );
-        EventManager::instance()->processEvent('content_negociated_project_home', $hook_params);
+        $event_manager->processEvent('content_negociated_project_home', $hook_params);
         if ($content_type != ''){
             header('Content-type: '. $content_type);
             echo $content;
@@ -104,7 +105,7 @@ if ($project && !$project->isError()) {
             'content_type' => &$content_type,
             'content'      => &$content,
         );
-        EventManager::instance()->processEvent('content_negociated_projects_list', $hook_params);
+        $event_manager->processEvent('content_negociated_projects_list', $hook_params);
         if ($content_type != ''){
             header('Content-type: '. $content_type);
             echo $content;
