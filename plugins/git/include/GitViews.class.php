@@ -73,12 +73,7 @@ class GitViews extends PluginViews {
     <h3><?php echo $this->getText('help_reference_title'); ?></h3>
     <p>
                        <?php
-                       if (isset($params['repository'])) {
-                           $access = $params['repository']->getAccessURL();
-                       } else {
-                           $access = 'user@'.$_SERVER['SERVER_NAME'].':/path/to/repo.git';
-                       }
-                       echo '<ul>'.$this->getText('help_init_reference', array($access)).'</ul>';
+                       echo '<ul>'.$this->getText('help_init_reference').'</ul>';
                        ?>
     </p>
     </div>
@@ -150,12 +145,11 @@ class GitViews extends PluginViews {
             }
             $creationDate = html_time_ago(strtotime($repository->getCreationDate()));
 
-            if ( $initialized ) {
-                ob_start();
-                $this->getView($repository);
-                $gitphp = ob_get_contents();
-                ob_end_clean();    
-            }
+            ob_start();
+            $this->getView($repository);
+            $gitphp = ob_get_contents();
+            ob_end_clean();
+
             //download
             if ( $this->request->get('noheader') == 1 ) {
                 die($gitphp);
@@ -163,7 +157,6 @@ class GitViews extends PluginViews {
 
             echo '<br />';
             if ( !$initialized ) {
-                echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
                 $this->help('init', array('repository'=>$repository));
             }
             $this->_getBreadCrumb();
@@ -238,9 +231,7 @@ class GitViews extends PluginViews {
 </form>
         <?php
         echo '</div>';
-        if ( $initialized ) {
-            echo $gitphp;
-        }
+        echo $gitphp;
     }
 
     /**
@@ -251,8 +242,6 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $repoId       = $repository->getId();
         $repoName     = $repository->getName();
-        $initialized  = $repository->isInitialized();
-        $description  = $repository->getDescription();
         $this->repoId = $repository->getId();
         $mailPrefix   = $repository->getMailPrefix();
         echo "<br/>";
