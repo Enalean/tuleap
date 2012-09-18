@@ -23,6 +23,7 @@
 require_once 'common/project/Project.class.php';
 require_once 'common/system_event/SystemEvent.class.php';
 require_once 'common/tracker/ArtifactTypeFactory.class.php';
+require_once('common/project/UGroupBinding.class.php');
 
 /**
 * System Event classes
@@ -63,6 +64,11 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
 
             if (!$this->deleteMembershipRequestNotificationEntries($groupId)) {
                 $this->error("Could not remove membership request notification ugroups or message");
+                $deleteState = false;
+            }
+
+            if (!$this->cleanupProjectUgroupsBinding($groupId)) {
+                $this->error("Could not remove ugroups binding");
                 $deleteState = false;
             }
 
@@ -216,6 +222,17 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
         return ProjectManager::instance();
     }
 
+    /**
+     * Remove all binding to user groups from a the given user group.
+     *
+     * @param Integer $groupId Id of the deleted project
+     *
+     * @return Boolean
+     */
+    protected function cleanupProjectUgroupsBinding($groupId) {
+        $bindingManager = new UGroupBinding();
+        return $bindingManager->removeProjectUGroupsBinding($groupId);
+    }
 }
 
 ?>

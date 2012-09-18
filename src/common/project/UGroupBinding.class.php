@@ -103,7 +103,7 @@ class UGroupBinding {
      *
      * @return boolean
      */
-    public function removeAllUGroupsBindingByGroup($groupId) {
+    public function removeProjectUGroupsBinding($groupId) {
         $ugroups        = ugroup_db_get_existing_ugroups($groupId);
         $bindingRemoved = true;
         while ($ugroup = db_fetch_array($ugroups)) {
