@@ -193,10 +193,23 @@ class Git_GitoliteDriver {
 
         // Dump keys
         $i    = 0;
-        foreach ($user->getAuthorizedKeys(true) as $key) {
+        foreach ($user->getAuthorizedKeysArray() as $key) {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            file_put_contents($filePath, $key);
+            $this->writeKeyIfChanged($filePath, $key);
             $i++;
+        }
+    }
+
+    private function writeKeyIfChanged($filePath, $key) {
+        $changed = true;
+        if (is_file($filePath)) {
+            $stored_key = file_get_contents($filePath);
+            if ($stored_key == $key) {
+                $changed = false;
+            }
+        }
+        if ($changed) {
+            file_put_contents($filePath, $key);
         }
     }
 
