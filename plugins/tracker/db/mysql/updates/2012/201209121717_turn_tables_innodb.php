@@ -32,7 +32,7 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket {
     }
     
     public function up() {
-        if ($this->db->indexNameExists('tracker_fileinfo', 'fltxt')) {
+        if ($this->indexNameExists('tracker_fileinfo', 'fltxt')) {
             $sql    = 'ALTER TABLE tracker_fileinfo DROP INDEX fltxt';
             $result = $this->db->dbh->exec($sql);
             if ($result === false) {
@@ -127,6 +127,16 @@ class b201209121717_turn_tables_innodb extends ForgeUpgrade_Bucket {
         $sql = "SHOW TABLE STATUS WHERE Name = '$table' AND Engine = 'InnoDB'";
         $result = $this->db->dbh->query($sql);
         return ($result->fetch() !== false);
+    }
+
+    private function indexNameExists($tableName, $index) {
+        $sql = 'SHOW INDEX FROM '.$tableName.' WHERE Key_name LIKE '.$this->db->dbh->quote($index);
+        $res = $this->db->dbh->query($sql);
+        if ($res && $res->fetch() !== false) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 ?>
