@@ -4,11 +4,13 @@ Version 5.5 (Not released yet)
 	* Allow anonymous to browse public forumml archives
 	* Fix art #1277: Wrong URL inheritance when creating a project
 	* Fix commit-email.pl: When no notification is set, don't generate error
+	* When consulting private file anonymously, a login screen should be
+	displayed instead of permissions error screen
 
     == Plugins ==
 	* tracker: 5.18
 	* git: 2.7.4
-	* docman: 2.26.7
+	* docman: 2.26.8
 	* agiledashboard: 0.52
 	* fulltextsearch: 0.12
 	* IM: 1.5.4
