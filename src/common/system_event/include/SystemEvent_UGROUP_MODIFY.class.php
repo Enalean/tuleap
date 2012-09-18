@@ -58,7 +58,9 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
         // Remove ugroup binding to this user group
-        $this->cleanupUgroupBinding($ugroup_id);
+        if (!$this->cleanupUgroupBinding($ugroup_id)) {
+            $this->error("Could not remove binding to this user group ($ugroup_id)");
+        }
 
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
