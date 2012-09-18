@@ -27,6 +27,7 @@ require_once('common/project/UGroupManager.class.php');
 class UGroupBinding {
 
     protected $_ugroupdao;
+    protected $_ugroupUserDao;
 
     /**
      * Obtain UGroupDao
@@ -38,6 +39,18 @@ class UGroupBinding {
             $this->_ugroupdao = new UGroupDao();
         }
         return $this->_ugroupdao;
+    }
+
+    /**
+     * Obtain UGroupUserDao
+     *
+     * @raturn UGroupUserDao
+     */
+    protected function getUGroupUserDao() {
+        if (!$this->_ugroupUserDao) {
+            $this->_ugroupUserDao = new UGroupUserDao();
+        }
+        return $this->_ugroupUserDao;
     }
 
     /**
@@ -145,7 +158,9 @@ class UGroupBinding {
                 case 'add_binding':
                     $sourceId = $request->get('source_ugroup');
                     if($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
-                        // @TODO: Bind users
+                        // @TODO: Clean up bind users, flash ugroup before cloning...
+                        $bindUsers = $this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId);
+
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
