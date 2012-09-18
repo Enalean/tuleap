@@ -759,7 +759,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     } else {
                         //Something goes wrong
                         //delete the attachment
-                        Tracker_FileInfo::delete($attachment);
+                        $attachment->delete();
                     }
                 }
             }
@@ -917,5 +917,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return array();
     }
 
+    public function deleteChangesetValue($changeset_value_id) {
+        $values = $this->getChangesetValue(null, $changeset_value_id, false);
+        foreach($values as $fileinfo) {
+            $fileinfo->delete();
+        }
+        parent::deleteChangesetValue($changeset_value_id);
+    }
 }
 ?>

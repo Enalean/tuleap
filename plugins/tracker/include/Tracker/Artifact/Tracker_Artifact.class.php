@@ -28,12 +28,13 @@ require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once('common/reference/CrossReferenceManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
-
-    const REFERENCE_NATURE = 'plugin_tracker_artifact';
+    const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    const REFERENCE_NATURE  = 'plugin_tracker_artifact';
 
     public $id;
     public $tracker_id;
@@ -1548,6 +1549,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
+    public function delete(User $user) {
+        $this->getDao()->startTransaction();
+        foreach($this->getChangesets() as $changeset) {
+            $changeset->delete($user);
+        }
+        $this->getPermissionsManager()->clearPermission(self::PERMISSION_ACCESS, $this->getId());
+        $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $this->getDao()->deleteArtifactLinkReference($this->getId());
+        $this->getDao()->deletePriority($this->getId());
+        $this->getDao()->delete($this->getId());
+        $this->getDao()->commit();
+    }
+
+    protected function getDao() {
+        return new Tracker_ArtifactDao();
+    }
+
+    protected function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    protected function getCrossReferenceManager() {
+        return new CrossReferenceManager();
+    }
 }
 
 ?>

@@ -164,19 +164,23 @@ class Tracker_FileInfo {
         }
         return $instance;
     }
-    
+
     /**
-     * delete a file info4
-     *
-     * @param Tracker_FileInfo $file_info
+     * delete a file info
      *
      * @return boolean true on success
      */
-    public static function delete(Tracker_FileInfo $file_info) {
+    public function delete() {
+        if (file_exists($this->getPath())) {
+            unlink($this->getPath());
+        }
+        if (file_exists($this->getThumbnailPath())) {
+            unlink($this->getThumbnailPath());
+        }
         $dao = new Tracker_FileInfoDao();
-        return $dao->create($file_info->getId());
+        return $dao->delete($this->getId());
     }
-    
+
     protected static $instances_by_id;
     /**
      * get an instance of fileinfo, identified by its $id
