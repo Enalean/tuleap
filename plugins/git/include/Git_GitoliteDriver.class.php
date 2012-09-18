@@ -178,17 +178,9 @@ class Git_GitoliteDriver {
      * @param User $user
      */
     private function initUserKeys($user) {
-        // First remove existing keys
-        $this->removeUserExistingKeys($user);
-
-        // Create path if need
-        clearstatcache();
         $keydir = 'keydir';
-        if (!is_dir($keydir)) {
-            if (!mkdir($keydir)) {
-                throw new Exception('Unable to create "keydir" directory in '.getcwd());
-            }
-        }
+
+        $this->createKeydir($keydir);
 
         // Dump keys
         $i    = 0;
@@ -196,6 +188,16 @@ class Git_GitoliteDriver {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
             $this->writeKeyIfChanged($filePath, $key);
             $i++;
+        }
+        $this->removeUserExistingKeys($user, $i);
+    }
+
+    private function createKeydir($keydir) {
+        clearstatcache();
+        if (!is_dir($keydir)) {
+            if (!mkdir($keydir)) {
+                throw new Exception('Unable to create "keydir" directory in '.getcwd());
+            }
         }
     }
 
@@ -217,14 +219,16 @@ class Git_GitoliteDriver {
      *
      * @param User $user
      */
-    protected function removeUserExistingKeys($user) {
+    private function removeUserExistingKeys($user, $last_key_id) {
         $keydir = 'keydir';
         if (is_dir($keydir)) {
-            $dir = new DirectoryIterator($keydir);
-            foreach ($dir as $file) {
-                $userbase = $user->getUserName().'@';
-                if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                     $this->gitExec->rm($file->getPathname());
+            $userbase = $user->getUserName().'@';
+            foreach (glob("$keydir/$userbase*.pub") as $file) {
+                $matches = array();
+                if (preg_match('%^'.$keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+                    if ($matches[1] >= $last_key_id) {
+                        $this->gitExec->rm($file);
+                    }
                 }
             }
         }
