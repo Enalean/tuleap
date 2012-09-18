@@ -139,26 +139,30 @@ class UGroupBinding {
      */
     public function processRequest($ugroupId, Codendi_Request $request) {
         $func = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
-        // @TODO: data validation
-        switch($func) {
-            case 'add_binding':
-                $sourceId = $request->get('source_ugroup');
-                if($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
-                    // @TODO: Bind users
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
-                }
-            break;
-            case 'remove_binding':
-                if($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
-                } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
-                }
-            break;
-            default:
-            break;
+        $validUgroup = $this->getUGroupDao()->checkUGroupValidityByGroupId($request->get('group_id'), $ugroupId);
+        if ($validUgroup) {
+            switch($func) {
+                case 'add_binding':
+                    $sourceId = $request->get('source_ugroup');
+                    if($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
+                        // @TODO: Bind users
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+                    }
+                break;
+                case 'remove_binding':
+                    if($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
+                    }
+                break;
+                default:
+                break;
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
     }
 
