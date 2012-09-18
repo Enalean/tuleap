@@ -1,7 +1,8 @@
 Version 5.5 (Not released yet)
-	== Bug Fix ==
-	* fix sla #433: wiki references with version number
+    == Bug Fix ==
+        * fix sla #433: wiki references with version number
 	* Allow anonymous to browse public forumml archives
+	* Fix art #1277: Wrong URL inheritance when creating a project
 
     == Plugins ==
 	* tracker: 5.18
