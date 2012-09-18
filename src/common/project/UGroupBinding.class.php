@@ -87,8 +87,8 @@ class UGroupBinding {
         $bindedUgroups  = $this->getUGroupsByBindingSource($ugroupId);
         $bindingRemoved = true;
         if (!empty($bindedUgroups)) {
-            foreach ($bindedUgroups as $ugroup) {
-                if (!$this->getUGroupDao()->updateUgroupBinding($ugroup['ugroup_id'])) {
+            foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
+                if (!$this->getUGroupDao()->updateUgroupBinding($ugroupKey)) {
                     $bindingRemoved = false;
                 }
             }
