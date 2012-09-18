@@ -140,6 +140,7 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
     }
+
     public function testAddUserKey() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
 
