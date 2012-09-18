@@ -4,7 +4,7 @@ Version 5.5 (Not released yet)
 	* Allow anonymous to browse public forumml archives
 
     == Plugins ==
-	* tracker: 5.15
+	* tracker: 5.17
 	* git: 2.7.4
 	* docman: 2.26.7
 	* agiledashboard: 0.52

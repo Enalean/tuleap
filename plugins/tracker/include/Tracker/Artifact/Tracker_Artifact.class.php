@@ -28,12 +28,13 @@ require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once('common/reference/CrossReferenceManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
-
-    const REFERENCE_NATURE = 'plugin_tracker_artifact';
+    const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    const REFERENCE_NATURE  = 'plugin_tracker_artifact';
 
     public $id;
     public $tracker_id;
@@ -148,41 +149,47 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         }
         if ($can_access) {
-            // Full access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_FULL');
-            foreach ( $rows as $row ) {
-                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                    return true;
-                }
-            }
-
-            // 'submitter' access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_SUBMITTER');
-            foreach ($rows as $row) {
-                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                    // check that submitter is also a member
-                    $user_subby = $um->getUserById($this->getSubmittedBy());
-                    if ($user_subby->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        return true;
-                    }
-                }
-            }
-
-            // 'assignee' access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_ASSIGNEE');
-            foreach ($rows as $row) {
-                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                    $contributor_field = $this->getTracker()->getContributorField();
-                    if ($contributor_field) {
-                        // check that one of the assignees is also a member
-                        $assignees = $this->getValue($contributor_field)->getValue();
-                        foreach ($assignees as $assignee) {
-                            $user_assignee = $um->getUserById($assignee);
-                            if ($user_assignee->isMemberOfUGroup( $row['ugroup_id'], $this->getTracker()->getGroupId())) {
+            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
+            foreach ($permissions  as $permission => $ugroups) {
+                switch($permission) {
+                    // Full access
+                    case 'PLUGIN_TRACKER_ACCESS_FULL':
+                        foreach ($ugroups as $ugroup) {
+                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
                                 return true;
                             }
                         }
-                    }
+                        break;
+                    // 'submitter' access
+                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+                        foreach ($ugroups as $ugroup) {
+                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
+                                // check that submitter is also a member
+                                $user_subby = $um->getUserById($this->getSubmittedBy());
+                                if ($user_subby->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
+                                    return true;
+                                }
+                            }
+                        }
+                    break;
+                    // 'assignee' access
+                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                        foreach ($ugroups as $ugroup) {
+                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
+                                $contributor_field = $this->getTracker()->getContributorField();
+                                if ($contributor_field) {
+                                    // check that one of the assignees is also a member
+                                    $assignees = $this->getValue($contributor_field)->getValue();
+                                    foreach ($assignees as $assignee) {
+                                        $user_assignee = $um->getUserById($assignee);
+                                        if ($user_assignee->isMemberOfUGroup( $ugroup, $this->getTracker()->getGroupId())) {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    break;
                 }
             }
         }
@@ -1542,6 +1549,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
+    public function delete(User $user) {
+        $this->getDao()->startTransaction();
+        foreach($this->getChangesets() as $changeset) {
+            $changeset->delete($user);
+        }
+        $this->getPermissionsManager()->clearPermission(self::PERMISSION_ACCESS, $this->getId());
+        $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $this->getDao()->deleteArtifactLinkReference($this->getId());
+        $this->getDao()->deletePriority($this->getId());
+        $this->getDao()->delete($this->getId());
+        $this->getDao()->commit();
+    }
+
+    protected function getDao() {
+        return new Tracker_ArtifactDao();
+    }
+
+    protected function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    protected function getCrossReferenceManager() {
+        return new CrossReferenceManager();
+    }
 }
 
 ?>
