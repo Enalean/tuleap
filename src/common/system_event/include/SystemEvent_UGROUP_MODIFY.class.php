@@ -35,8 +35,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * 
      * @param bool $with_link true if you want links to entities. The returned 
      * string will be html instead of plain/text
-     *GHASSAN KANAFANI
-GHASSAN KANAFANI
+     *
      * @return string
      */
     public function verbalizeParameters($with_link) {
@@ -87,7 +86,7 @@ GHASSAN KANAFANI
         $bindingManager = new UGroupBinding();
         return $bindingManager->removeAllUGroupsBinding($ugroup_id);
     }
-
+ 
 }
 
 ?>
