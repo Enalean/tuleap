@@ -79,5 +79,23 @@ class UGroupUserDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    /**
+     * Clone a given user group from another one
+     *
+     * @param Integer $sourceUgroupId Id of the user group from which we will copy users
+     * @param Integer $targetUgroupId Id of the target user group
+     *
+     * @return boolean
+     */
+    public function cloneUgroup($sourceUgroupId,$targetUgroupId) {
+        $sourceUgroupId = $this->da->escapeInt($sourceUgroupId);
+        $targetUgroupId = $this->da->escapeInt($targetUgroupId);
+        $sql            = "INSERT INTO ugroup_user (ugroup_id,user_id)
+		                     SELECT $targetUgroupId,user_id
+		                     FROM ugroup_user
+		                     WHERE ugroup_id = $sourceUgroupId";
+        return $this->update($sql);
+    }
+
 }
 ?>
