@@ -3,6 +3,7 @@ Version 5.5 (Not released yet)
         * fix sla #433: wiki references with version number
 	* Allow anonymous to browse public forumml archives
 	* Fix art #1277: Wrong URL inheritance when creating a project
+	* Fix commit-email.pl: When no notification is set, don't generate error
 
     == Plugins ==
 	* tracker: 5.18
