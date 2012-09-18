@@ -79,7 +79,7 @@ class UGroupBinding {
     /**
      * Remove all Ugroups binding to a given Ugroup
      *
-     * @param Integer $ugroupId Id of the source user goup
+     * @param Integer $ugroupId Id of the source user group
      *
      * @return boolean
      */
@@ -88,9 +88,27 @@ class UGroupBinding {
         $bindingRemoved = true;
         if (!empty($bindedUgroups)) {
             foreach ($bindedUgroups as $ugroup) {
-                if(!$this->getUGroupDao()->updateUgroupBinding($ugroup['ugroup_id'])) {
+                if (!$this->getUGroupDao()->updateUgroupBinding($ugroup['ugroup_id'])) {
                     $bindingRemoved = false;
                 }
+            }
+        }
+        return $bindingRemoved;
+    }
+
+    /**
+     * Remove binding to all ugroups of a given project
+     *
+     * @param Integer $groupId Id of the project
+     *
+     * @return boolean
+     */
+    public function removeAllUGroupsBindingByGroup($groupId) {
+        $ugroups        = ugroup_db_get_existing_ugroups($groupId);
+        $bindingRemoved = true;
+        while ($ugroup = db_fetch_array($ugroups)) {
+            if (!$this->removeAllUGroupsBinding($ugroup['ugroup_id'])) {
+                $bindingRemoved = false;
             }
         }
         return $bindingRemoved;
