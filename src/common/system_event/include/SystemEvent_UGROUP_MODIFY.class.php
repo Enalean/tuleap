@@ -80,7 +80,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     /**
      * Remove all user group binded to the given user group.
      *
-     * @param Integer $ugroup_id
+     * @param Integer $ugroup_id Id of the modified user group
      *
      * @return Boolean
      */
