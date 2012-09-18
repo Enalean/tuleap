@@ -30,9 +30,9 @@ class URLRedirect {
     /**
      * Build the redirection of user to the login page.
      */
-    public function buildReturnToLogin(){
-        $returnTo = urlencode((($_SERVER['REQUEST_URI'] === "/") ? "/my/" : $_SERVER['REQUEST_URI']));
-        $url = parse_url($_SERVER['REQUEST_URI']);
+    public function buildReturnToLogin($server){
+        $returnTo = urlencode((($server['REQUEST_URI'] === "/") ? "/my/" : $server['REQUEST_URI']));
+        $url = parse_url($server['REQUEST_URI']);
         if (isset($url['query'])) {
             $query = $url['query'];
             if (strstr($query, 'pv=2')) {
@@ -42,6 +42,11 @@ class URLRedirect {
 
         $url = '/account/login.php?return_to=' . $returnTo;
         return $url;
+    }
+
+    public function redirectToLogin(){
+        $url = $this->buildReturnToLogin($_SERVER);
+        $GLOBALS['HTML']->redirect($url);
     }
 }
 
