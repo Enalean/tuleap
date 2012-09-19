@@ -38,6 +38,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/webdav/include/lib',
                                 'plugins/doaprdf',
                                 'plugins/admssw',
+                                'plugins/foafprofiles',
                                 'plugins/fusionforge_compat',
                                 'tools/utils/releases_notes',
                                 )) .')$`';
