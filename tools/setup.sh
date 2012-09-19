@@ -130,6 +130,15 @@ generate_passwd() {
     $CAT /dev/urandom | tr -dc "a-zA-Z0-9" | fold -w 9 | head -1
 }
 
+has_package() {
+    local pkg=$1
+    if [ "$INSTALL_PROFILE" = "debian" ]; then
+	dpkg -s $pkg 2>/dev/null | grep -q "Status: install ok installed"
+    else
+	$RPM -q $pkg >/dev/null 2>&1
+    fi
+}
+
 ##############################################
 # Setup chunks
 ##############################################
@@ -541,7 +550,7 @@ done
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
 else
-    if ! $RPM -q mysql-server 2>&1 >/dev/null; then
+    if ! has_package mysql-server; then
 	die "No --mysql-host nor local mysql server installed, exit. Please install 'mysql-server' package"
     fi
 fi
@@ -595,13 +604,13 @@ fi
 
 # Check if mailman is installed
 enable_core_mailman="false"
-if $RPM -q mailman-tuleap 2>&1 >/dev/null; then
+if has_package mailman-tuleap; then
     enable_core_mailman="true"
 fi
 
 # Check if munin is installed
 enable_munin="false"
-if $RPM -q munin 2>&1 >/dev/null; then
+if has_package munin; then
     enable_munin="true"
 fi
 
@@ -1063,7 +1072,7 @@ echo "$PROJECT_NAME-admin:          root" >> /etc/aliases
 
 ##############################################
 # CVS
-if $RPM -q cvs-tuleap 2>&1 >/dev/null; then
+if has_package cvs-tuleap; then
     setup_cvs
 fi
 
@@ -1074,7 +1083,7 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 ##############################################
 # FTP
-if $RPM -q vsftpd 2>&1 >/dev/null; then
+if has_package vsftpd; then
     setup_vsftpd
 fi
 
