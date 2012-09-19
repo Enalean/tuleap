@@ -81,5 +81,22 @@ class Response {
         header("HTTP/1.0 $code");
         echo $this->getRawFeedback();
     }
+
+    /**
+     * Send 401 Unauthorized and exit if the client asks for something else than text/html
+     *
+     * Please note that the negociation is hard coded with the script 'project_home'. 
+     * This variable may need to be passed in parameters for others urls with content 
+     * negotiation. Keep it as is for now.
+     */
+    public function send401UnauthorizedHeader() {
+        header('HTTP/1.0 401 Unauthorized', true, 401);
+        $default_content_type = 'text/html';
+        $script               = 'project_home';
+        $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
+        if ($content_type != $default_content_type) {
+            exit;
+        }
+    }
 }
 ?>

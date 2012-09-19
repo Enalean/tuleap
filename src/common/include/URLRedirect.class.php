@@ -40,7 +40,7 @@ class URLRedirect {
             }
         }
         if (strpos($url['path'], '/projects') === 0) {
-            $this->send401UnauthorizedHeader();
+            $GLOBALS['Response']->send401UnauthorizedHeader();
         }
 
         $url = '/account/login.php?return_to=' . $returnTo;
@@ -50,16 +50,6 @@ class URLRedirect {
     public function redirectToLogin(){
         $url = $this->buildReturnToLogin($_SERVER);
         $GLOBALS['HTML']->redirect($url);
-    }
-
-    public function send401UnauthorizedHeader() {
-        header('HTTP/1.0 401 Unauthorized', true, 401);
-        $default_content_type = 'text/html';
-        $script               = 'project_home';
-        $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
-        if ($content_type != $default_content_type) {
-            exit;
-        }
     }
 }
 
