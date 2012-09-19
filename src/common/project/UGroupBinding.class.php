@@ -170,6 +170,20 @@ class UGroupBinding {
     }
 
     /**
+     * Mark a given user group as binded to another one
+     *
+     * @param Integer $ugroupId Id of the binded user group
+     * @param Integer $sourceId Id of the source user group
+     *
+     * @return void
+     */
+    public function updateUgroupBinding($ugroupId, $sourceId) {
+        if (!$this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
+            throw new Exception('Unable to store ugroup binding');
+        }
+    }
+
+    /**
      * Bind a given user group to another one
      *
      * @param Integer $ugroupId Id of the binded user group
@@ -182,7 +196,7 @@ class UGroupBinding {
         try {
             $this->resetUgroup($ugroupId);
             $this->cloneUgroup($sourceId, $ugroupId);
-            $this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId);
+            $this->updateUgroupBinding($ugroupId, $sourceId);
         } catch(Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
             return false;
