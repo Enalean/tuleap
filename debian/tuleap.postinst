@@ -16,8 +16,10 @@ handle_initial_install() {
 }
 
 handle_upgrade() {
-    # Re-generate language files
-    /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/generate_language_files.php
+    # Re-generate language files if already configured
+    if [ -e /etc/tuleap/conf/local.inc ]; then
+	/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/generate_language_files.php
+    fi
     # XXX: disabled to verify if anything breaks
     # chown -R www-data:www-data /var/cache/codendi/lang
 
