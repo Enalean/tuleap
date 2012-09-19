@@ -31,10 +31,11 @@ $ugroupBinding = new UGroupBinding();
 
 $ugroupBinding->processRequest($ugroupId, $request);
 
-// @TODO: i18n
-project_admin_header(array('title' => 'Edit ugroup binding',
+project_admin_header(
+                     array('title' => $GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding'),
                            'group' => $groupId,
-                           'help'  => 'UserGroups.html'));
+                           'help'  => 'UserGroups.html')
+                    );
 
 echo $ugroupBinding->getHTMLContent($groupId, $ugroupId, $sourceProject);
 

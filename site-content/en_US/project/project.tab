@@ -971,6 +971,7 @@ project	does_not_exist	The project doesn't exist
 #-----------------------------------------------
 # Script: /www/project/admin/ugroup_binding.php
 #
+project_ugroup_binding	edit_binding	Edit ugroup binding
 project_ugroup_binding	update_binding	Update binding
 project_ugroup_binding	add_binding	Add binding
 project_ugroup_binding	binding_added	Binding added
