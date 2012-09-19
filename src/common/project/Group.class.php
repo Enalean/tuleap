@@ -127,7 +127,7 @@ class Group extends Error {
      * @return Boolean
      */
     function isProject() {
-        $template = TemplateSingleton::instance();
+        $template = $this->_getTemplateSingleton();
         return $template->isProject($this->data_array['type']);
     }
 
