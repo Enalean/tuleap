@@ -13,7 +13,18 @@
 # ./setup.sh 2>&1 | tee /root/tuleap_install.log
 
 TODO_FILE=/root/todo_tuleap.txt
-export INSTALL_DIR="/usr/share/codendi"
+
+if [ -e /etc/debian_version ]; then
+    INSTALL_PROFILE="debian"
+    PROJECT_NAME="tuleap"
+    PROJECT_ADMIN="www-data"
+else
+    INSTALL_PROFILE="rhel"
+    PROJECT_NAME="codendi"
+    PROJECT_ADMIN="codendiadm"
+fi
+
+export INSTALL_DIR="/usr/share/$PROJECT_NAME"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -92,7 +103,7 @@ make_backup() {
     file="$1"
     ext="$2"
     if [ -z $ext ]; then
-	ext="nocodendi"
+	ext="no$PROJECT_NAME"
     fi
     backup_file="$1.$ext"
     [ -e "$file" -a ! -e "$backup_file" ] && $CP "$file" "$backup_file"
@@ -130,12 +141,12 @@ generate_passwd() {
 setup_cvs() {
     echo "Configuring the CVS server and CVS tracking tools..."
     $TOUCH /etc/cvs_root_allow
-    $CHOWN codendiadm.codendiadm /etc/cvs_root_allow
+    $CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN /etc/cvs_root_allow
     $CHMOD 644 /etc/cvs_root_allow
 
     $CP /etc/xinetd.d/cvs /root/cvs.xinetd.ori
 
-    $CAT <<'EOF' >/etc/xinetd.d/cvs
+    $CAT <<EOF >/etc/xinetd.d/cvs
 service cvspserver
 {
         disable             = no
@@ -148,9 +159,9 @@ service cvspserver
 }
 EOF
 
-    $CAT <<'EOF' >> /etc/shells
-/usr/lib/codendi/bin/cvssh
-/usr/lib/codendi/bin/cvssh-restricted
+    $CAT <<EOF >> /etc/shells
+/usr/lib/$PROJECT_NAME/bin/cvssh
+/usr/lib/$PROJECT_NAME/bin/cvssh-restricted
 EOF
 
     $CHKCONFIG cvs on
@@ -170,7 +181,7 @@ setup_vsftpd() {
     $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
 
     # Add welcome messages
-    $CAT <<'EOF' > /var/lib/codendi/ftp/.message
+    $CAT <<EOF > /var/lib/$PROJECT_NAME/ftp/.message
 ********************************************************************
 Welcome to Tuleap FTP server
 
@@ -180,18 +191,18 @@ On This Site:
 *********************************************************************
 
 EOF
-    $CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/.message
+    $CHOWN ftpadmin.ftpadmin /var/lib/$PROJECT_NAME/ftp/.message
 
     # Add welcome messages
-    $CAT <<'EOF' >/var/lib/codendi/ftp/incoming/.message
+    $CAT <<EOF >/var/lib/$PROJECT_NAME/ftp/incoming/.message
 
 Upload new file releases here
 
 EOF
-    $CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/incoming/.message
+    $CHOWN ftpadmin.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.message
 
     # Log Rotate
-    $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
+    $CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/vsftpd.log
 /var/log/xferlog {
     # ftpd doesn't handle SIGHUP properly
     nocompress
@@ -201,7 +212,7 @@ EOF
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/xferlog.1 $destdir/$destfile
@@ -222,36 +233,36 @@ EOF
 # Bind DNS server configuration
 #
 setup_bind() {
-    if [ -f /var/named/chroot/var/named/codendi.zone ]; then
-        $CP -af /var/named/chroot/var/named/codendi.zone /var/named/chroot/var/named/codendi.zone.orig
+    if [ -f /var/named/chroot/var/named/$PROJECT_NAME.zone ]; then
+        $CP -af /var/named/chroot/var/named/$PROJECT_NAME.zone /var/named/chroot/var/named/$PROJECT_NAME.zone.orig
     fi
-    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/codendi.zone
+    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/$PROJECT_NAME.zone
 
-    $CHOWN root:named /var/named/chroot/var/named/codendi.zone
+    $CHOWN root:named /var/named/chroot/var/named/$PROJECT_NAME.zone
     if [ -f "/var/named/chroot/etc/named.conf" ]; then
         $CHGRP named /var/named/chroot/etc/named.conf
     fi
 
     if [ $SELINUX_ENABLED ]; then
-        $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/codendi.zone
+        $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/$PROJECT_NAME.zone
         if [ -f "/var/named/chroot/etc/named.conf" ]; then
             $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
         fi
     fi
 
-  # replace string patterns in codendi.zone
+  # replace string patterns in $PROJECT_NAME.zone
   sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
   dns_serial=`date +%Y%m%d`01
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_default_domain%' "$sys_default_domain" 
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_fullname%' "$sys_fullname"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_ip_address%' "$sys_ip_address"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
-  substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
+  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_default_domain%' "$sys_default_domain" 
+  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_fullname%' "$sys_fullname"
+  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_ip_address%' "$sys_ip_address"
+  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_shortname%' "$sys_shortname"
+  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%dns_serial%' "$dns_serial"
 
   todo "Create the DNS configuration files as explained in the Tuleap Installation Guide:"
-  todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
+  todo "    update /var/named/chroot/var/named/$PROJECT_NAME.zone - replace all words starting with %%."
   todo "    make sure the file is readable by 'other':"
-  todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
+  todo "      > chmod o+r /var/named/chroot/var/named/$PROJECT_NAME.zone"
   todo "    edit /etc/named.conf to create the new zone."
 
 
@@ -296,9 +307,9 @@ EOF
 
     # Create site wide ML
     # Note that if sys_default_domain is not a domain, the script will complain
-    LIST_OWNER=codendi-admin@$sys_default_domain
+    LIST_OWNER=$PROJECT_NAME-admin@$sys_default_domain
     if [ "$disable_subdomains" = "y" ]; then
-        LIST_OWNER=codendi-admin@$sys_fullname
+        LIST_OWNER=$PROJECT_NAME-admin@$sys_fullname
     fi
     /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
 
@@ -322,7 +333,7 @@ mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
 
 EOF
 
-    # Subscribe codendi-admin to this ML
+    # Subscribe $PROJECT_NAME-admin to this ML
     echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
     $CHKCONFIG mailman on
@@ -358,22 +369,22 @@ setup_mysql() {
     # Test if tuleap DB already exists
     yn="-"
     freshdb=0
-    if $MYSQLSHOW $pass_opt | $GREP codendi 2>&1 >/dev/null; then
+    if $MYSQLSHOW $pass_opt | $GREP $PROJECT_NAME 2>&1 >/dev/null; then
         read -p "Tuleap Database already exists. Overwrite? [y|n]:" yn
     fi
 
     # Delete the Tuleap DB if asked for
     if [ "$yn" = "y" ]; then
-        $MYSQL $pass_opt -e "DROP DATABASE codendi"
+        $MYSQL $pass_opt -e "DROP DATABASE $PROJECT_NAME"
     fi
 
-    # If no codendi, create it!
-    if ! $MYSQLSHOW $pass_opt | $GREP codendi 2>&1 >/dev/null; then
+    # If no $PROJECT_NAME, create it!
+    if ! $MYSQLSHOW $pass_opt | $GREP $PROJECT_NAME 2>&1 >/dev/null; then
         freshdb=1
-        $MYSQL $pass_opt -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
+        $MYSQL $pass_opt -e "CREATE DATABASE $PROJECT_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
         $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT ALL PRIVILEGES on *.* to 'codendiadm'@'$mysql_httpd_host' identified by '$codendiadm_passwd' WITH GRANT OPTION;
-REVOKE SUPER ON *.* FROM 'codendiadm'@'$mysql_httpd_host';
+GRANT ALL PRIVILEGES on *.* to '$PROJECT_ADMIN'@'$mysql_httpd_host' identified by '$codendiadm_passwd' WITH GRANT OPTION;
+REVOKE SUPER ON *.* FROM '$PROJECT_ADMIN'@'$mysql_httpd_host';
 GRANT ALL PRIVILEGES on *.* to 'root'@'$mysql_httpd_host' identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF
@@ -384,17 +395,17 @@ EOF
     if [ $freshdb -eq 1 ]; then
         echo "Populating the Tuleap database..."
         cd $INSTALL_DIR/src/db/mysql/
-        $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < database_structure.sql   # create the DB
+        $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < database_structure.sql   # create the DB
         cp database_initvalues.sql /tmp/database_initvalues.sql
         substitute '/tmp/database_initvalues.sql' '_DOMAIN_NAME_' "$sys_default_domain"
-        $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
+        $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd < /tmp/database_initvalues.sql  # populate with init values.
         rm -f /tmp/database_initvalues.sql
 
         # Create dbauthuser
         $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT SELECT ON codendi.user to dbauthuser@$mysql_httpd_host identified by '$dbauth_passwd';
-GRANT SELECT ON codendi.groups to dbauthuser@$mysql_httpd_host;
-GRANT SELECT ON codendi.user_group to dbauthuser@$mysql_httpd_host;
+GRANT SELECT ON $PROJECT_NAME.user to dbauthuser@$mysql_httpd_host identified by '$dbauth_passwd';
+GRANT SELECT ON $PROJECT_NAME.groups to dbauthuser@$mysql_httpd_host;
+GRANT SELECT ON $PROJECT_NAME.user_group to dbauthuser@$mysql_httpd_host;
 FLUSH PRIVILEGES;
 EOF
     fi
@@ -652,7 +663,7 @@ if [ "$auto_passwd" = "true" ]; then
 
     # For both DB and system
     codendiadm_passwd=$(generate_passwd)
-    echo "Codendiadm unix & DB (codendiadm): $codendiadm_passwd" >> $passwd_file
+    echo "Codendiadm unix & DB ($PROJECT_ADMIN): $codendiadm_passwd" >> $passwd_file
 
     # Mailman (only if installed)
     if [ "$enable_core_mailman" = "true" ]; then
@@ -688,9 +699,9 @@ else
 
 codendiadm_passwd="a"; codendiadm_passwd2="b";
 while [ "$codendiadm_passwd" != "$codendiadm_passwd2" ]; do
-    read -s -p "Password for user codendiadm: " codendiadm_passwd
+    read -s -p "Password for user $PROJECT_ADMIN: " codendiadm_passwd
     echo
-    read -s -p "Retype codendiadm password: " codendiadm_passwd2
+    read -s -p "Retype $PROJECT_ADMIN password: " codendiadm_passwd2
     echo
 done
 
@@ -728,76 +739,76 @@ done
 fi
 
 # Update tuleap user password
-echo "$codendiadm_passwd" | passwd --stdin codendiadm
+echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
 
 # Build file structure
 
-build_dir /home/users codendiadm codendiadm 771
-build_dir /home/groups codendiadm codendiadm 771
+build_dir /home/users $PROJECT_ADMIN $PROJECT_ADMIN 771
+build_dir /home/groups $PROJECT_ADMIN $PROJECT_ADMIN 771
 
 # home directories
-build_dir /home/codendiadm codendiadm codendiadm 700
+build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
 # data dirs
-build_dir /var/lib/codendi codendiadm codendiadm 755
-build_dir /var/lib/codendi/dumps dummy dummy 755
-build_dir /var/lib/codendi/ftp root ftp 755
-build_dir /var/lib/codendi/ftp/codendi root root 711
-build_dir /var/lib/codendi/ftp/pub ftpadmin ftpadmin 755
-build_dir /var/lib/codendi/ftp/incoming ftpadmin ftpadmin 3777
-build_dir /var/lib/codendi/wiki codendiadm codendiadm 700
-build_dir /var/lib/codendi/backup codendiadm codendiadm 711
-build_dir /var/lib/codendi/backup/mysql mysql mysql 770 
-build_dir /var/lib/codendi/backup/mysql/old root root 700
-build_dir /var/lib/codendi/backup/subversion root root 700
-build_dir /var/lib/codendi/docman codendiadm codendiadm 700
+build_dir /var/lib/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /var/lib/$PROJECT_NAME/dumps dummy dummy 755
+build_dir /var/lib/$PROJECT_NAME/ftp root ftp 755
+build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME root root 711
+build_dir /var/lib/$PROJECT_NAME/ftp/pub ftpadmin ftpadmin 755
+build_dir /var/lib/$PROJECT_NAME/ftp/incoming ftpadmin ftpadmin 3777
+build_dir /var/lib/$PROJECT_NAME/wiki $PROJECT_ADMIN $PROJECT_ADMIN 700
+build_dir /var/lib/$PROJECT_NAME/backup $PROJECT_ADMIN $PROJECT_ADMIN 711
+build_dir /var/lib/$PROJECT_NAME/backup/mysql mysql mysql 770 
+build_dir /var/lib/$PROJECT_NAME/backup/mysql/old root root 700
+build_dir /var/lib/$PROJECT_NAME/backup/subversion root root 700
+build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
 # log dirs
-build_dir /var/log/codendi codendiadm codendiadm 755
-build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
-build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
+build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
+build_dir /var/tmp/${PROJECT_NAME}_cache $PROJECT_ADMIN $PROJECT_ADMIN 755
 # config dirs
-build_dir /etc/skel_codendi root root 755
-build_dir /etc/codendi codendiadm codendiadm 755
-build_dir /etc/codendi/conf codendiadm codendiadm 700
-build_dir /etc/codendi/documentation codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/user_guide codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/user_guide/xml codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/cli codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/cli/xml codendiadm codendiadm 755
-build_dir /etc/codendi/site-content codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/en_US codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/en_US/others codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/fr_FR codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/fr_FR/others codendiadm codendiadm 755
-build_dir /etc/codendi/themes codendiadm codendiadm 755
-build_dir /etc/codendi/plugins codendiadm codendiadm 755
-build_dir /etc/codendi/plugins/docman codendiadm codendiadm 755
-build_dir /etc/codendi/plugins/pluginsadministration codendiadm codendiadm 755
+build_dir /etc/skel_$PROJECT_NAME root root 755
+build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/conf $PROJECT_ADMIN $PROJECT_ADMIN 700
+build_dir /etc/$PROJECT_NAME/documentation $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/documentation/user_guide $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/documentation/user_guide/xml $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/documentation/cli $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/documentation/cli/xml $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/site-content $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/site-content/en_US $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/site-content/en_US/others $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/site-content/fr_FR $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/site-content/fr_FR/others $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/themes $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/plugins $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/plugins/docman $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir /etc/$PROJECT_NAME/plugins/pluginsadministration $PROJECT_ADMIN $PROJECT_ADMIN 755
 # SCM dirs
 build_dir /var/run/log_accum root root 777
-build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 751
-build_dir /var/lib/codendi/svnroot codendiadm codendiadm 751
+build_dir /var/lib/$PROJECT_NAME/cvsroot $PROJECT_ADMIN $PROJECT_ADMIN 751
+build_dir /var/lib/$PROJECT_NAME/svnroot $PROJECT_ADMIN $PROJECT_ADMIN 751
 build_dir /var/lock/cvs root root 751
-$LN -sf /var/lib/codendi/cvsroot /cvsroot
-$LN -sf /var/lib/codendi/svnroot /svnroot
+$LN -sf /var/lib/$PROJECT_NAME/cvsroot /cvsroot
+$LN -sf /var/lib/$PROJECT_NAME/svnroot /svnroot
 
 
-$TOUCH /var/lib/codendi/ftp/incoming/.delete_files
-$CHOWN codendiadm.ftpadmin /var/lib/codendi/ftp/incoming/.delete_files
-$CHMOD 750 /var/lib/codendi/ftp/incoming/.delete_files
-$TOUCH /var/lib/codendi/ftp/incoming/.delete_files.work
-$CHOWN codendiadm.ftpadmin /var/lib/codendi/ftp/incoming/.delete_files.work
-$CHMOD 750 /var/lib/codendi/ftp/incoming/.delete_files.work
-build_dir /var/lib/codendi/ftp/codendi/DELETED codendiadm codendiadm 750
+$TOUCH /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
+$CHOWN $PROJECT_ADMIN.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
+$CHMOD 750 /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
+$TOUCH /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files.work
+$CHOWN $PROJECT_ADMIN.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files.work
+$CHMOD 750 /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files.work
+build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME/DELETED $PROJECT_ADMIN $PROJECT_ADMIN 750
 
-$TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
+$TOUCH /etc/httpd/conf.d/${PROJECT_NAME}_svnroot.conf
 
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
-    $CHCON -R -h $SELINUX_CONTEXT /etc/codendi
-    $CHCON -R -h $SELINUX_CONTEXT /var/lib/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/$PROJECT_NAME
+    $CHCON -R -h $SELINUX_CONTEXT /etc/$PROJECT_NAME
+    $CHCON -R -h $SELINUX_CONTEXT /var/lib/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
-    $CHCON -R -h $SELINUX_CONTEXT /home/codendiadm
+    $CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
     $CHCON -h $SELINUX_CONTEXT /svnroot
     $CHCON -h $SELINUX_CONTEXT /cvsroot
 fi
@@ -835,13 +846,13 @@ done
 cd - > /dev/null
 
 echo "Creating MySQL conf file..."
-$CAT <<'EOF' >/etc/my.cnf
+$CAT <<EOF >/etc/my.cnf
 [client]
 loose-default-character-set=utf8
 
 [mysqld]
 default-character-set=utf8
-log-bin=codendi-bin
+log-bin=$PROJECT_NAME-bin
 skip-bdb
 set-variable = max_allowed_packet=128M
 datadir=/var/lib/mysql
@@ -851,7 +862,7 @@ socket=/var/lib/mysql/mysql.sock
 old_passwords=1
 
 # Skip logging openfire db (for instant messaging)
-# The 'monitor' openfire plugin creates large codendi-bin files
+# The 'monitor' openfire plugin creates large $PROJECT_NAME-bin files
 # Comment this line if you prefer to be safer.
 set-variable  = binlog-ignore-db=openfire
 
@@ -891,7 +902,7 @@ for f in /etc/httpd/conf/httpd.conf \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/auth_mysql.conf \
 /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
-/etc/codendi/conf/local.inc /etc/codendi/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
+/etc/$PROJECT_NAME/conf/local.inc /etc/$PROJECT_NAME/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
     yn="0"
     fn=`basename $f`
 #   [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -906,7 +917,7 @@ for f in /etc/httpd/conf/httpd.conf \
 	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
     fi
 
-    $CHOWN codendiadm.codendiadm $f
+    $CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN $f
     $CHMOD 640 $f
 done
 
@@ -952,22 +963,22 @@ fi
 # TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
 
 # replace string patterns in local.inc
-substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codendi/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codendi/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
-substitute '/etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
-substitute '/etc/codendi/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-substitute '/etc/codendi/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
+substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain" 
+substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name" 
+substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name" 
+substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
+substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/$PROJECT_NAME/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
 if [ "$disable_subdomains" = "y" ]; then
-  substitute '/etc/codendi/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
-  substitute '/etc/codendi/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
+  substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
+  substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
 fi
-# replace string patterns in codendi_aliases.inc
-substitute '/etc/httpd/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
+# replace string patterns in codendi_aliases.conf
+substitute "/etc/httpd/conf.d/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain" 
 
 # replace string patterns in database.inc
-substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd"
-substitute '/etc/codendi/conf/database.inc' 'localhost' "$mysql_host" 
+substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
+substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host" 
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
@@ -987,20 +998,20 @@ fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/$PROJECT_NAME
 fi
 
-todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
+todo "Customize /etc/$PROJECT_NAME/conf/local.inc and /etc/$PROJECT_NAME/conf/database.inc"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf"
 
 ##############################################
 # Installing phpMyAdmin
 #
 
-# Make codendiadm a member of the apache group
+# Make $PROJECT_ADMIN a member of the apache group
 # This is needed to use the php session at /var/lib/php/session (e.g. for phpwiki)
-$USERMOD -a -G apache codendiadm
-# Allow read/write access to DAV lock dir for codendiadm in case we want ot enable WebDAV.
+$USERMOD -a -G apache $PROJECT_ADMIN
+# Allow read/write access to DAV lock dir for $PROJECT_ADMIN in case we want ot enable WebDAV.
 $CHMOD 770 /var/lib/dav/
 
 ##############################################
@@ -1030,10 +1041,10 @@ fi
 # echo "##############################################"
 # echo "Installing sendmail shell wrappers and configuring sendmail..."
 # cd /etc/smrsh
-# $LN -sf /usr/lib/codendi/bin/gotohell
+# $LN -sf /usr/lib/$PROJECT_NAME/bin/gotohell
 # #$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
-# $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codendi:' /etc/mail/sendmail.cf
+# $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.$PROJECT_NAME:' /etc/mail/sendmail.cf
 # cat <<EOF >/etc/mail/local-host-names
 # # local-host-names - include all aliases for your machine here.
 # $sys_default_domain
@@ -1044,9 +1055,9 @@ fi
 
 # Default: codex-admin is redirected to root
 # TODO check if already there
-echo "codendi-admin:          root" >> /etc/aliases
+echo "$PROJECT_NAME-admin:          root" >> /etc/aliases
 
-#todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
+#todo "Finish sendmail settings (see installation Guide). By default, emails sent to $PROJECT_NAME-admin are redirected to root (see /etc/aliases)"
 
 ##############################################
 # CVS
@@ -1069,22 +1080,22 @@ fi
 # Create the custom default page for the project Web sites
 #
 echo "Creating the custom default page for the project Web sites..."
-def_page=/etc/codendi/site-content/en_US/others/default_page.php
+def_page=/etc/$PROJECT_NAME/site-content/en_US/others/default_page.php
 yn="y"
 [ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
 if [ "$yn" = "y" ]; then
-    $MKDIR -p /etc/codendi/site-content/en_US/others
-    $CHOWN codendiadm.codendiadm /etc/codendi/site-content/en_US/others
-    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codendi/site-content/en_US/others/default_page.php
+    $MKDIR -p /etc/$PROJECT_NAME/site-content/en_US/others
+    $CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN /etc/$PROJECT_NAME/site-content/en_US/others
+    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/$PROJECT_NAME/site-content/en_US/others/default_page.php
 fi
 
 if [ "$disable_subdomains" = "y" ]; then
   echo "Use same-host project web sites"
-  $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/codendi', '/www/\$projectname/') WHERE short_name = 'homepage' "
+  $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/$PROJECT_NAME', '/www/\$projectname/') WHERE short_name = 'homepage' "
 fi
 
-#todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
-todo "Customize /etc/codendi/site-content information for your site."
+#todo "Customize /etc/$PROJECT_NAME/site-content/en_US/others/default_page.php (project web site default home page)"
+todo "Customize /etc/$PROJECT_NAME/site-content information for your site."
 todo "  For instance: contact/contact.txt "
 todo ""
 todo "Default admin credentials are login: admin / password: siteadmin"
@@ -1098,9 +1109,9 @@ crontab -u root -l > /tmp/cronfile
 
 $GREP -q "Tuleap" /tmp/cronfile
 if [ $? -ne 0 ]; then
-    $CAT <<'EOF' >>/tmp/cronfile
+    $CAT <<EOF >>/tmp/cronfile
 # Tuleap: weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /usr/lib/codendi/bin/backup_job
+45 0 * * Sun /usr/lib/$PROJECT_NAME/bin/backup_job
 EOF
     crontab -u root /tmp/cronfile
 fi
@@ -1109,7 +1120,7 @@ fi
 # Log Files rotation configuration
 #
 echo "Installing log files rotation..."
-$CAT <<'EOF' >/etc/logrotate.d/httpd
+$CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/httpd
 /var/log/httpd/access_log {
     missingok
     daily
@@ -1119,7 +1130,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
      destfile="http_combined_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/access_log.1 $destdir/$destfile
@@ -1136,7 +1147,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      month=`date +%m`
      day=`date +%d`
      #server=`hostname`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
      destfile="vhosts-access_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
@@ -1163,7 +1174,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      month=`date +%m`
      day=`date +%d`
      #server=`hostname`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
      destfile="svn_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/svn_log.1 $destdir/$destfile
@@ -1179,18 +1190,18 @@ $CHMOD 644 /etc/logrotate.d/httpd
 #
 
 # customize the global profile 
-$GREP profile_codendi /etc/profile 1>/dev/null
+$GREP profile_$PROJECT_NAME /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
-    cat <<'EOF' >>/etc/profile
+    cat <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/" >>/etc/profile
 # Now the Part specific to Tuleap users
 #
 if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
-        . /etc/profile_codendi
+        . /etc/profile_@@PROJECT_NAME@@
 fi
 EOF
 
-$CAT <<'EOF' >/etc/profile_codendi
-# /etc/profile_codendi
+$CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/" >/etc/profile_$PROJECT_NAME
+# /etc/profile_@@PROJECT_NAME@@
 #
 # Specific login set up and messages for Tuleap users`
  
@@ -1244,7 +1255,7 @@ $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
 $CHKCONFIG crond on
 
-/etc/init.d/codendi start
+/etc/init.d/$PROJECT_NAME start
 
 $SERVICE httpd restart
 $SERVICE crond restart
@@ -1271,9 +1282,9 @@ fi
 # Install & configure forgeupgrade for Tuleap
 #
 
-$MYSQL -ucodendiadm -p$codendiadm_passwd codendi < /usr/share/forgeupgrade/db/install-mysql.sql
-$INSTALL --group=codendiadm --owner=codendiadm --mode=0755 --directory /etc/codendi/forgeupgrade
-$INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/codendi/forgeupgrade/config.ini
+$MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
+$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
+$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
 
 ##############################################
@@ -1282,24 +1293,24 @@ $INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/
 
 echo "Install tuleap plugins"
 # docman plugin
-$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-$CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+$CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
+$CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('docman', '1');
 EOF
-build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
-$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codendi/plugins/docman/etc/docman.inc
-$CHOWN codendiadm.codendiadm /etc/codendi/plugins/docman/etc/docman.inc
-$CHMOD 644 /etc/codendi/plugins/docman/etc/docman.inc
-echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/codendi/forgeupgrade/config.ini
+build_dir /etc/$PROJECT_NAME/plugins/docman/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
+$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/$PROJECT_NAME/plugins/docman/etc/docman.inc
+$CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN /etc/$PROJECT_NAME/plugins/docman/etc/docman.inc
+$CHMOD 644 /etc/$PROJECT_NAME/plugins/docman/etc/docman.inc
+echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
 # Tracker plugin
 if [ "$enable_plugin_tracker" = "true" ]; then
-    build_dir /etc/codendi/plugins/tracker/etc codendiadm codendiadm 755
-    $CAT $INSTALL_DIR/plugins/tracker/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-    $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+    build_dir /etc/$PROJECT_NAME/plugins/tracker/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
+    $CAT $INSTALL_DIR/plugins/tracker/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
+    $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('tracker', '1');
 EOF
-    echo "path[]=\"$INSTALL_DIR/plugins/tracker\"" >> /etc/codendi/forgeupgrade/config.ini
+    echo "path[]=\"$INSTALL_DIR/plugins/tracker\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
     # Import all templates
     template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
@@ -1310,12 +1321,12 @@ fi
 
 # GraphOnTrackersv5 plugin
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
-    build_dir /etc/codendi/plugins/graphontrackersv5/etc codendiadm codendiadm 755
-    $CAT $INSTALL_DIR/plugins/graphontrackersv5/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-    $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+    build_dir /etc/$PROJECT_NAME/plugins/graphontrackersv5/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
+    $CAT $INSTALL_DIR/plugins/graphontrackersv5/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
+    $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('graphontrackersv5', '1');
 EOF
-    echo "path[]=\"$INSTALL_DIR/plugins/graphontrackersv5\"" >> /etc/codendi/forgeupgrade/config.ini
+    echo "path[]=\"$INSTALL_DIR/plugins/graphontrackersv5\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 fi
 
 # IM plugin
@@ -1323,16 +1334,16 @@ if [ "$enable_plugin_im" = "true" ]; then
     # Create openfireadm MySQL user
     $CAT <<EOF | $MYSQL $pass_opt mysql
 GRANT ALL PRIVILEGES on openfire.* to 'openfireadm'@'$mysql_httpd_host' identified by '$openfire_passwd';
-GRANT SELECT ON codendi.user to 'openfireadm'@'$mysql_httpd_host';
-GRANT SELECT ON codendi.groups to 'openfireadm'@'$mysql_httpd_host';
-GRANT SELECT ON codendi.user_group to 'openfireadm'@'$mysql_httpd_host';
-GRANT SELECT ON codendi.session to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON $PROJECT_NAME.user to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON $PROJECT_NAME.groups to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON $PROJECT_NAME.user_group to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON $PROJECT_NAME.session to 'openfireadm'@'$mysql_httpd_host';
 FLUSH PRIVILEGES;
 EOF
     # Install plugin
-    build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
-    $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
-    $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+    build_dir /etc/$PROJECT_NAME/plugins/IM/etc $PROJECT_ADMIN $PROJECT_ADMIN 755
+    $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
+    $CAT <<EOF | $MYSQL -u $PROJECT_ADMIN $PROJECT_NAME --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('IM', '1');
 EOF
     # Initialize Jabbex
@@ -1340,8 +1351,8 @@ EOF
     IM_ADMIN_USER='imadmin-bot'
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
-    echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/codendi/forgeupgrade/config.ini
+    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/$PROJECT_NAME -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+    echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
     # Enable service
     $CHKCONFIG openfire on
@@ -1352,7 +1363,7 @@ fi
 ##############################################
 # Register buckets in forgeupgrade
 #
-/usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/codendi/forgeupgrade/config.ini record-only
+/usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/$PROJECT_NAME/forgeupgrade/config.ini record-only
 
 
 ##############################################
