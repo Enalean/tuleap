@@ -218,7 +218,6 @@ class UGroupBinding {
                 return false;
             }
         }
-        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
         try {
             $this->resetUgroup($ugroupId);
             $this->cloneUgroup($sourceId, $ugroupId);
@@ -227,9 +226,25 @@ class UGroupBinding {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
             return false;
         }
-        $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
         return true;
+    }
+
+    /**
+     * Remove binding for a given user group
+     *
+     * @param Integer $ugroupId Id of the user group we want to remove its binding
+     *
+     * @return boolean
+     */
+    public function removeBinding($ugroupId) {
+        if ($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
+            return true;
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
+            return false;
+        }
     }
 
     /**
@@ -246,18 +261,17 @@ class UGroupBinding {
         $groupId     = $request->get('group_id');
         $validUgroup = $this->checkUGroupValidity($groupId, $ugroupId);
         if ($validUgroup) {
+            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             switch($func) {
                 case 'add_binding':
                     $sourceId = $request->get('source_ugroup');
-                    $this->addBinding($ugroupId, $sourceId);
+                    if ($this->addBinding($ugroupId, $sourceId)) {
+                        $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
+                    }
                     break;
                 case 'remove_binding':
-                    if ($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
-                        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+                    if ($this->removeBinding($ugroupId)) {
                         $historyDao->groupAddHistory("ugroup_remove_binding", $ugroupId, $groupId);
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
                     }
                     break;
                 default:
