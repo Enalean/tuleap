@@ -36,13 +36,10 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/git/gitphp',
                                 'plugins/git/gitphp-0.1.0',
                                 'plugins/webdav/include/lib',
-<<<<<<< HEAD
                                 'plugins/doaprdf',
                                 'plugins/admssw',
                                 'plugins/fusionforge_compat',
-=======
                                 'tools/utils/releases_notes',
->>>>>>> stable
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag
