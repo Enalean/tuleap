@@ -731,16 +731,22 @@ else
     dbauth_passwd=$(input_password "DB Authentication user")
 fi
 
-# Update tuleap user password
-echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
+if [ "$INSTALL_PROFILE" = "rhel" ]; then
+    # Update codendiadm user password
+    echo "$codendiadm_passwd" | passwd --stdin $PROJECT_ADMIN
+    build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
+    if [ $SELINUX_ENABLED ]; then
+	$CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
+    fi
+else
+    : # The debian profile uses www-data which is a pre-existing system account
+fi
 
 # Build file structure
 
 build_dir /home/users $PROJECT_ADMIN $PROJECT_ADMIN 771
 build_dir /home/groups $PROJECT_ADMIN $PROJECT_ADMIN 771
 
-# home directories
-build_dir /home/$PROJECT_ADMIN $PROJECT_ADMIN $PROJECT_ADMIN 700
 # data dirs
 build_dir /var/lib/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /var/lib/$PROJECT_NAME/dumps dummy dummy 755
@@ -801,7 +807,6 @@ if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /etc/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /var/lib/$PROJECT_NAME
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
-    $CHCON -R -h $SELINUX_CONTEXT /home/$PROJECT_ADMIN
     $CHCON -h $SELINUX_CONTEXT /svnroot
     $CHCON -h $SELINUX_CONTEXT /cvsroot
 fi
