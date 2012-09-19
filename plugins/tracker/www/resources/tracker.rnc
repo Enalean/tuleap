@@ -108,7 +108,7 @@ grammar {
             )
         |
             (
-                attribute type { "sb" | "msb" | "tbl" },
+                attribute type { "sb" | "msb" | "tbl" | "cb" },
                 bindContent
             )
         )

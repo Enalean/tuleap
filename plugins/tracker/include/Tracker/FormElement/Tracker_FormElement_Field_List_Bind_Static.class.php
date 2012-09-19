@@ -93,10 +93,20 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @return string
      */
     public function formatChangesetValue($value) {
-        if (isset($this->decorators[$value['id']])) {
-            return $this->decorators[$value['id']]->decorate($this->format($this->values[$value['id']]));
+        // Should receive only valid value object but keep it as is for compatibility reasons
+        if (is_array($value) && isset($this->values[$value['id']])) {
+            $value = $this->values[$value['id']];
         }
-        return $this->format($this->values[$value['id']]);
+        if ($value) {
+            return $this->formatChangesetValueObject($value);
+        }
+    }
+
+    private function formatChangesetValueObject(Tracker_FormElement_Field_List_Value $value) {
+        if (isset($this->decorators[$value->getId()])) {
+            return $this->decorators[$value->getId()]->decorate($this->format($value));
+        }
+        return $this->format($value);
     }
 
     /**

@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
             $submitted_values_array[] = $submitted_values;
             $submitted_values = $submitted_values_array;
         }
-        
+        $from = $this->getSelectedValue($selected_values);
         foreach ($this->getBind()->getAllValues() as $id => $value) {
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
@@ -55,9 +55,8 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
                 }
                 if ($this->userCanMakeTransition($transition_id)) {
                     if (!$value->isHidden()) {
-                        $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                        $html .= '<li style="'. $style .'"><input type="checkbox" '. $group_name .' value="'. $id .'" id=cb_'. $id .' '. $checked .'/>';
-                        $html .= '<label for="cb_'. $id .'" >'.$this->getBind()->formatArtifactValue($id) .'</label>';
+                        $html .= '<li><input type="checkbox" '. $group_name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
+                        $html .= '<label for="cb_'. $id .'" >'. $this->getBind()->formatChangesetValue($value) .'</label>';
                         $html .= '</li>';
                     }
                 }
