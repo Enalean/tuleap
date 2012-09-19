@@ -153,6 +153,23 @@ input_password() {
     echo "$pass1"
 }
 
+install_dist_conf() {
+    local target="$1"
+    local fn
+    fn=$(basename $target)
+    # Keep backup file
+    if [ -e "$target" ]; then
+	cp -f $target $target.orig
+    fi
+    # Install file
+    src="$INSTALL_DIR/src/etc/$fn.dist"
+    if [ -e "$src" ]; then
+	cp -a $src $target
+    else
+	echo "ERROR: $src doesn't exist" >&2
+	exit 1
+    fi
+}
 ##############################################
 # Setup chunks
 ##############################################
@@ -367,7 +384,60 @@ EOF
 #
 # Mysql configuration
 #
+setup_mysql_cnf() {
+    if [ "$INSTALL_PROFILE" = "debian" ]; then
+	return # This configuration is RHEL specific
+    fi
+
+    echo "Creating MySQL conf file..."
+    $CAT <<EOF >/etc/my.cnf
+[client]
+loose-default-character-set=utf8
+
+[mysqld]
+default-character-set=utf8
+log-bin=$PROJECT_NAME-bin
+skip-bdb
+set-variable = max_allowed_packet=128M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+# Default to using old password format for compatibility with mysql 3.x
+# clients (those using the mysqlclient10 compatibility package).
+old_passwords=1
+
+# Skip logging openfire db (for instant messaging)
+# The 'monitor' openfire plugin creates large $PROJECT_NAME-bin files
+# Comment this line if you prefer to be safer.
+set-variable  = binlog-ignore-db=openfire
+
+# Reduce default inactive timeout (prevent DB overload in case of nscd
+# crash)
+set-variable=wait_timeout=180
+
+# Innodb settings
+innodb_file_per_table
+
+[mysql.server]
+user=mysql
+basedir=/var/lib
+
+[mysqld_safe]
+err-log=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+EOF
+
+    if [ -z "$mysql_host" ]; then
+	echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
+	echo "***************************************"
+	$SERVICE mysqld start
+	echo "***************************************"
+    fi
+}
+
 setup_mysql() {
+
+    setup_mysql_cnf
+
     echo "Creating the Tuleap database..."
 
     # If DB is local, mysql password where not already tested
@@ -450,6 +520,218 @@ test_mysql_host() {
         die "The Mysql root password you provided for $mysql_host doesn't work"
     fi
     echo "[OK]"
+}
+
+
+###############################################################################
+#
+# Apache setup
+#
+setup_apache_rhel() {
+    # Move away useless Apache configuration files
+    # before installing our own config files.
+    echo "Renaming existing Apache configuration files..."
+    cd /etc/httpd/conf.d/
+    for f in *.conf
+    do
+	# Do not erease conf files provided by "our" packages and for which
+	# we don't have a .dist version
+	case "$f" in
+	    "viewvc.conf"|"munin.conf"|"mailman.conf")
+		continue;;
+	esac
+	yn="0"
+	current_name="$f"
+	orig_name="$f.rhel"
+	[ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
+
+	if [ "$yn" != "n" ]; then
+	    $MV -f $current_name $orig_name
+	fi
+
+	if [ "$yn" = "n" ]; then
+	    $RM -f $current_name
+	fi
+	# In order to prevent RedHat from reinstalling those files during an RPM update, re-create an empty file for each file deleted
+	$TOUCH $current_name
+    done
+    cd - > /dev/null
+
+    $TOUCH /etc/httpd/conf.d/${PROJECT_NAME}_svnroot.conf
+
+    echo "Installing Apache configuration files..."
+    make_backup /etc/httpd/conf/httpd.conf
+
+    for f in /etc/httpd/conf/httpd.conf /etc/httpd/conf/ssl.conf \
+	     /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf \
+	     /etc/httpd/conf.d/auth_mysql.conf \
+	     /etc/httpd/conf.d/codendi_aliases.conf; do
+	install_dist_conf $f
+    done
+
+    # replace string patterns in codendi_aliases.conf
+    substitute "/etc/httpd/conf.d/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain"
+
+    # replace string patterns in httpd.conf
+    substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
+    substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
+
+    # replace string patterns in munin.conf (for MySQL authentication)
+    if [ -f '/etc/httpd/conf.d/munin.conf' ]; then
+	substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    fi
+
+    # Make $PROJECT_ADMIN a member of the apache group
+    # This is needed to use the php session at /var/lib/php/session (e.g. for phpwiki)
+    $USERMOD -a -G apache $PROJECT_ADMIN
+
+    # Log Files rotation configuration
+    echo "Installing log files rotation..."
+    $CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/httpd
+/var/log/httpd/access_log {
+    missingok
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd graceful > /dev/null || true
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
+     destfile="http_combined_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/httpd/access_log.1 $destdir/$destfile
+    endscript
+}
+ 
+/var/log/httpd/vhosts-access_log {
+    missingok
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd graceful > /dev/null || true
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     #server=`hostname`
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
+     destfile="vhosts-access_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
+    endscript
+}
+
+/var/log/httpd/error_log {
+    missingok
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd graceful > /dev/null || true
+    endscript
+}
+
+
+/var/log/httpd/svn_log {
+    missingok
+    daily
+    rotate 4
+    postrotate
+        /sbin/service httpd graceful > /dev/null || true
+     year=`date +%Y`
+     month=`date +%m`
+     day=`date +%d`
+     #server=`hostname`
+     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
+     destfile="svn_$year$month$day.log"
+     mkdir -p $destdir
+     cp /var/log/httpd/svn_log.1 $destdir/$destfile
+    endscript
+}
+
+EOF
+    $CHOWN root:root /etc/logrotate.d/httpd
+    $CHMOD 644 /etc/logrotate.d/httpd
+}
+
+setup_apache_debian() {
+    :
+}
+
+setup_apache() {
+    if [ "$INSTALL_PROFILE" = "debian" ]; then
+	setup_apache_debian
+    else
+	setup_apache_rhel
+    fi
+}
+
+###############################################################################
+#
+# NSS setup
+#
+setup_nss() {
+    echo "Installing NSS configuration files..."
+    for f in /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg; do
+	install_dist_conf $f
+    done
+    # Update nsswitch.conf to use libnss-mysql
+    if [ -f "/etc/nsswitch.conf" ]; then
+	# passwd
+	$GREP ^passwd  /etc/nsswitch.conf | $GREP -q mysql
+	if [ $? -ne 0 ]; then
+	    $PERL -i'.orig' -p -e "s/^passwd(.*)/passwd\1 mysql/g" /etc/nsswitch.conf
+	fi
+
+	# shadow
+	$GREP ^shadow  /etc/nsswitch.conf | $GREP -q mysql
+	if [ $? -ne 0 ]; then
+	    $PERL -i'.orig' -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
+	fi
+
+	# group
+	$GREP ^group  /etc/nsswitch.conf | $GREP -q mysql
+	if [ $? -ne 0 ]; then
+	    $PERL -i'.orig' -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
+	fi
+    else
+	echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
+    fi
+
+    # replace strings in libnss-mysql config files
+    substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    $CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
+    $CHMOD 644 /etc/libnss-mysql.cfg
+    $CHMOD 600 /etc/libnss-mysql-root.cfg
+}
+
+###############################################################################
+#
+# Tuleap setup
+#
+setup_tuleap() {
+    echo "Installing Tuleap configuration files..."
+    for f in /etc/$PROJECT_NAME/conf/local.inc \
+	     /etc/$PROJECT_NAME/conf/database.inc; do
+	install_dist_conf $f
+    done
+    # replace string patterns in local.inc
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
+    substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    substitute '/etc/$PROJECT_NAME/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
+    if [ "$disable_subdomains" = "y" ]; then
+	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
+	substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
+    fi
+    # replace string patterns in database.inc
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME" 
+    substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host" 
+
 }
 
 ###############################################################################
@@ -799,7 +1081,6 @@ $CHOWN $PROJECT_ADMIN.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files
 $CHMOD 750 /var/lib/$PROJECT_NAME/ftp/incoming/.delete_files.work
 build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME/DELETED $PROJECT_ADMIN $PROJECT_ADMIN 750
 
-$TOUCH /etc/httpd/conf.d/${PROJECT_NAME}_svnroot.conf
 
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
@@ -813,141 +1094,17 @@ fi
 
 
 ##############################################
-# Move away useless Apache configuration files
-# before installing our own config files.
-#
-echo "Renaming existing Apache configuration files..."
-cd /etc/httpd/conf.d/
-for f in *.conf
-do
-    # Do not erease conf files provided by "our" packages and for which
-    # we don't have a .dist version
-    case "$f" in
-        "viewvc.conf"|"munin.conf"|"mailman.conf")
-            continue;;
-    esac
-    yn="0"
-    current_name="$f"
-    orig_name="$f.rhel"
-    [ -f "$orig_name" ] && read -p "$orig_name already exist. Overwrite? [y|n]:" yn
-
-    if [ "$yn" != "n" ]; then
-	$MV -f $current_name $orig_name
-    fi
-
-    if [ "$yn" = "n" ]; then
-	$RM -f $current_name
-    fi
-    # In order to prevent RedHat from reinstalling those files during an RPM update, re-create an empty file for each file deleted
-    $TOUCH $current_name
-done
-cd - > /dev/null
-
-echo "Creating MySQL conf file..."
-$CAT <<EOF >/etc/my.cnf
-[client]
-loose-default-character-set=utf8
-
-[mysqld]
-default-character-set=utf8
-log-bin=$PROJECT_NAME-bin
-skip-bdb
-set-variable = max_allowed_packet=128M
-datadir=/var/lib/mysql
-socket=/var/lib/mysql/mysql.sock
-# Default to using old password format for compatibility with mysql 3.x
-# clients (those using the mysqlclient10 compatibility package).
-old_passwords=1
-
-# Skip logging openfire db (for instant messaging)
-# The 'monitor' openfire plugin creates large $PROJECT_NAME-bin files
-# Comment this line if you prefer to be safer.
-set-variable  = binlog-ignore-db=openfire
-
-# Reduce default inactive timeout (prevent DB overload in case of nscd
-# crash)
-set-variable=wait_timeout=180
-
-# Innodb settings
-innodb_file_per_table
-
-[mysql.server]
-user=mysql
-basedir=/var/lib
-
-[mysqld_safe]
-err-log=/var/log/mysqld.log
-pid-file=/var/run/mysqld/mysqld.pid
-
-EOF
-
-if [ -z "$mysql_host" ]; then
-    echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
-    echo "***************************************"
-    $SERVICE mysqld start
-    echo "***************************************"
-fi
-
-
-##############################################
 # Install the Tuleap software 
 #
 
-echo "Installing configuration files..."
-#echo " You should overwrite existing files"
-make_backup /etc/httpd/conf/httpd.conf
-for f in /etc/httpd/conf/httpd.conf \
-/etc/httpd/conf/ssl.conf \
-/etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/auth_mysql.conf \
-/etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
-/etc/$PROJECT_NAME/conf/local.inc /etc/$PROJECT_NAME/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
-    yn="0"
-    fn=`basename $f`
-#   [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
-# Always overwrite files
-    [ -f "$f" ] && yn="y"
+setup_tuleap
 
-    if [ "$yn" = "y" ]; then
-	$CP -f $f $f.orig
-    fi
-
-    if [ "$yn" != "n" ]; then
-	$CP -f $INSTALL_DIR/src/etc/$fn.dist $f
-    fi
-
-    $CHOWN $PROJECT_ADMIN.$PROJECT_ADMIN $f
-    $CHMOD 640 $f
-done
+setup_apache
+setup_nss
 
 # Bind config
 if [ "$configure_bind" = "true" ]; then
     setup_bind
-fi
-
-###
-#
-# Update nsswitch.conf to use libnss-mysql
-
-if [ -f "/etc/nsswitch.conf" ]; then
-    # passwd
-    $GREP ^passwd  /etc/nsswitch.conf | $GREP -q mysql
-    if [ $? -ne 0 ]; then
-        $PERL -i'.orig' -p -e "s/^passwd(.*)/passwd\1 mysql/g" /etc/nsswitch.conf
-    fi
-
-    # shadow
-    $GREP ^shadow  /etc/nsswitch.conf | $GREP -q mysql
-    if [ $? -ne 0 ]; then
-        $PERL -i'.orig' -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
-    fi
-
-    # group
-    $GREP ^group  /etc/nsswitch.conf | $GREP -q mysql
-    if [ $? -ne 0 ]; then
-        $PERL -i'.orig' -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
-    fi
-else
-    echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
 fi
 
 # TODO: package it
@@ -959,42 +1116,6 @@ fi
 # $CP $INSTALL_DIR/src/utils/svn/Codendi.pm $codendi_perl_module_dir/Codendi.pm
 # TODO: /etc/httpd/conf.d/perl.conf
 # TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
-
-# replace string patterns in local.inc
-substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_default_domain%' "$sys_default_domain" 
-substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_org_name%' "$sys_org_name" 
-substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_long_org_name%' "$sys_long_org_name" 
-substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_fullname%' "$sys_fullname" 
-substitute "/etc/$PROJECT_NAME/conf/local.inc" '%sys_dbauth_passwd%' "$dbauth_passwd" 
-substitute '/etc/$PROJECT_NAME/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
-if [ "$disable_subdomains" = "y" ]; then
-  substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_lists_host = "lists.' 'sys_lists_host = "'
-  substitute "/etc/$PROJECT_NAME/conf/local.inc" 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
-fi
-# replace string patterns in codendi_aliases.conf
-substitute "/etc/httpd/conf.d/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain" 
-
-# replace string patterns in database.inc
-substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
-substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
-substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME" 
-substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host" 
-
-# replace string patterns in httpd.conf
-substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
-substitute '/etc/httpd/conf/httpd.conf' '%sys_ip_address%' "$sys_ip_address"
-
-# replace strings in libnss-mysql config files
-substitute '/etc/libnss-mysql.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-substitute '/etc/libnss-mysql-root.cfg' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-$CHOWN root:root /etc/libnss-mysql.cfg /etc/libnss-mysql-root.cfg
-$CHMOD 644 /etc/libnss-mysql.cfg
-$CHMOD 600 /etc/libnss-mysql-root.cfg
-
-# replace string patterns in munin.conf (for MySQL authentication)
-if [ -f '/etc/httpd/conf.d/munin.conf' ]; then
-    substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
-fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
@@ -1008,9 +1129,6 @@ todo "You may also want to customize /etc/httpd/conf/httpd.conf"
 # Installing phpMyAdmin
 #
 
-# Make $PROJECT_ADMIN a member of the apache group
-# This is needed to use the php session at /var/lib/php/session (e.g. for phpwiki)
-$USERMOD -a -G apache $PROJECT_ADMIN
 # Allow read/write access to DAV lock dir for $PROJECT_ADMIN in case we want ot enable WebDAV.
 $CHMOD 770 /var/lib/dav/
 
@@ -1104,6 +1222,10 @@ todo "CHANGE DEFAULT CREDENTIALS BEFORE FIRST USAGE"
 ##############################################
 # Crontab configuration
 #
+
+# XXX: Writing to /tmp/foo as root is a security issue, should use mktemp
+# or similar, or better we should use /etc/cron.d/tuleap
+
 echo "Installing root user crontab..."
 crontab -u root -l > /tmp/cronfile
 
@@ -1115,75 +1237,6 @@ if [ $? -ne 0 ]; then
 EOF
     crontab -u root /tmp/cronfile
 fi
-
-##############################################
-# Log Files rotation configuration
-#
-echo "Installing log files rotation..."
-$CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/httpd
-/var/log/httpd/access_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="http_combined_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/httpd/access_log.1 $destdir/$destfile
-    endscript
-}
- 
-/var/log/httpd/vhosts-access_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     #server=`hostname`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="vhosts-access_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
-    endscript
-}
-
-/var/log/httpd/error_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-    endscript
-}
-
-
-/var/log/httpd/svn_log {
-    missingok
-    daily
-    rotate 4
-    postrotate
-        /sbin/service httpd graceful > /dev/null || true
-     year=`date +%Y`
-     month=`date +%m`
-     day=`date +%d`
-     #server=`hostname`
-     destdir="/var/log/@@PROJECT_NAME@@/$year/$month"
-     destfile="svn_$year$month$day.log"
-     mkdir -p $destdir
-     cp /var/log/httpd/svn_log.1 $destdir/$destfile
-    endscript
-}
-
-EOF
-$CHOWN root:root /etc/logrotate.d/httpd
-$CHMOD 644 /etc/logrotate.d/httpd
 
 ##############################################
 # Create Tuleap profile script
