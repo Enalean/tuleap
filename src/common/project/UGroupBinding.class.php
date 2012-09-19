@@ -143,6 +143,56 @@ class UGroupBinding {
     }
 
     /**
+     * Remove all users from a given user group
+     *
+     * @param Integer $ugroupId Id of the user group
+     *
+     * @return void
+     */
+    public function resetUgroup($ugroupId) {
+        if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
+            throw new Exception('Unable to reset ugroup');
+        }
+    }
+
+    /**
+     * Clone a given user group
+     *
+     * @param Integer $ugroupId Id of the binded user group
+     * @param Integer $sourceId Id of the source user group
+     *
+     * @return void
+     */
+    public function cloneUgroup( $ugroupId, $sourceId) {
+        if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
+            throw new Exception('Unable to clone ugroup');
+        }
+    }
+
+    /**
+     * Bind a given user group to another one
+     *
+     * @param Integer $ugroupId Id of the binded user group
+     * @param Integer $sourceId Id of the source user group
+     *
+     * @return boolean
+     */
+    public function addBinding($ugroupId, $sourceId) {
+        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+        try {
+            $this->resetUgroup($ugroupId);
+            $this->cloneUgroup($sourceId, $ugroupId);
+            $this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId);
+        } catch(Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+            return false;
+        }
+        $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
+        return true;
+    }
+
+    /**
      * Perform actions on user group binding
      *
      * @param Integer         $ugroupId Id of the user group
@@ -156,22 +206,14 @@ class UGroupBinding {
         $groupId     = $request->get('group_id');
         $validUgroup = $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
         if ($validUgroup) {
-            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             switch($func) {
                 case 'add_binding':
                     $sourceId = $request->get('source_ugroup');
-                    if ($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
-                        // @TODO: Clean up bind users, flash ugroup before cloning...
-                        $resetUsers = $this->getUGroupUserDao()->resetUgroupUserList($ugroupId);
-                        $bindUsers  = $this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId);
-                        $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
-                    }
+                    $this->addBinding($ugroupId, $sourceId);
                     break;
                 case 'remove_binding':
                     if ($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+                        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
                         $historyDao->groupAddHistory("ugroup_remove_binding", $ugroupId, $groupId);
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
                     } else {
