@@ -64,7 +64,7 @@ class UGroupManager {
      */
     private function getDao() {
         if (!$this->dao) {
-            $this->dao = new UGroupDao(CodendiDataAccess::instance());
+            $this->dao = new UGroupDao();
         }
         return $this->dao;
     }
@@ -79,7 +79,7 @@ class UGroupManager {
      */
     public function getDynamicUGroupsMembers($ugroupId, $groupId) {
         if($ugroupId <= 100) {
-            $dao = new UGroupUserDao(CodendiDataAccess::instance());
+            $dao = new UGroupUserDao();
             return $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
         }
     }
