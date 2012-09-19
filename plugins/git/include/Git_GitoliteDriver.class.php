@@ -156,14 +156,16 @@ class Git_GitoliteDriver {
      */
     public function dumpSSHKeys(User $user = null) {
         if (is_dir($this->getAdminPath())) {
+            $keydir = 'keydir';
+            $this->createKeydir($keydir);
             if ($user) {
-                $this->initUserKeys($user);
+                $this->initUserKeys($user, $keydir);
                 $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
             } else {
                 $userdao = new UserDao();
                 foreach ($userdao->searchSSHKeys() as $row) {
                     $user = new User($row);
-                    $this->initUserKeys($user);
+                    $this->initUserKeys($user, $keydir);
                 }
                 $commit_msg = 'SystemEvent update all user keys';
             }
@@ -176,9 +178,7 @@ class Git_GitoliteDriver {
         return false;
     }
 
-    private function initUserKeys($user) {
-        $keydir = 'keydir';
-        $this->createKeydir($keydir);
+    private function initUserKeys(User $user, $keydir) {
         $this->dumpKeys($user, $keydir);
     }
 
