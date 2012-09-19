@@ -16,9 +16,13 @@ if (!$expl_pathinfo[2]) {
 	exit_error('Error','No User Name Provided');
 }
 
-//get the user_id based on the user_name in the URL
+$default_content_type = 'text/html';
+$script='user_home';
+$content_type = util_negociate_alternate_content_types($script, $default_content_type);
 
-$res_user=user_get_result_set_from_unix($expl_pathinfo[2]);
+//get the user_id based on the user_name in the URL
+$username = $expl_pathinfo[2];
+$res_user = user_get_result_set_from_unix($username);
 
 //user was not found
 
@@ -27,27 +31,45 @@ if (db_numrows($res_user) < 1) {
 	exit_error("Invalid User","That user does not exist.");
 
 } else {
-
-    //set up the user id
-    $user_id=db_result($res_user,0,'user_id');
-    
-    if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
-        if (db_result($res_user, 0, 'has_avatar')) {
-            $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
-            $path = $avatar_path .DIRECTORY_SEPARATOR.
-                    substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
-                    DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
-            if (is_file($path)) {
-                header('Content-type: image/png');
-                header("Cache-Control: no-cache, must-revalidate");
-                header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-                readfile($path);
-            }
+    // if a custom content-type is selected, then redirect to plugin's rendering
+    if($content_type != $default_content_type) {
+        $content = '';
+        $params = array(
+            'username'     => $username,
+            'accept'       => $content_type,
+            'content'      => &$content,
+            'content_type' => &$content_type,
+        );
+        EventManager::instance()->processEvent('content_negociated_user_home', $params);
+        if ($content_type != ''){
+                header('Content-type: '. $content_type);
+                echo $content;
+        } else {
+                header('HTTP/1.1 406 Not Acceptable', true, 406);
+                exit(0);
         }
-        exit;
-    } else {
-    	//now show the user page
-	    require_once('user_home.php');
+    } else { // default HTML view
+        //set up the user id
+        $user_id=db_result($res_user,0,'user_id');
+        
+        if (isset($expl_pathinfo[3]) && $expl_pathinfo[3] === 'avatar.png') {
+            if (db_result($res_user, 0, 'has_avatar')) {
+                $avatar_path = Config::get('sys_avatar_path', Config::get('sys_data_dir') .'/user/avatar/');
+                $path = $avatar_path .DIRECTORY_SEPARATOR.
+                        substr($user_id, -2, 1) . DIRECTORY_SEPARATOR . substr($user_id, -1, 1) .
+                        DIRECTORY_SEPARATOR . $user_id . DIRECTORY_SEPARATOR . 'avatar';
+                if (is_file($path)) {
+                    header('Content-type: image/png');
+                    header("Cache-Control: no-cache, must-revalidate");
+                    header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+                    readfile($path);
+                }
+            }
+            exit;
+        } else {
+            //now show the user page
+            require_once('user_home.php');
+        }
     }
 
 }

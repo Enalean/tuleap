@@ -18,21 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
-
-class fusionforge_compatPlugin extends Plugin {
-    
-    public function loaded() {
-        require_once 'fusionforge/forge_get_config.php';
-        require_once 'fusionforge/forge_check_perm.php';
-        require_once 'fusionforge/plugin_hook_by_reference.php';
-        require_once 'fusionforge/utils.php';
-        require_once 'fusionforge/get_public_active_projects_asc.php';
-        require_once 'fusionforge/FusionForge.php';
-        require_once 'fusionforge/user_get_object_by_name.php';
-        require_once 'fusionforge/sortRoleList.php';
-        require_once 'fusionforge/sortProjectList.php';
-        require_once 'fusionforge/RBAC.php';
-    }
+/**
+ * user_get_object_by_name() - Get User object by username.
+ * user_get_object is useful so you can pool user objects/save database queries
+ * You should always use this instead of instantiating the object directly
+ *
+ * @param	string	The unix username - required
+ * @param	int	The result set handle ("SELECT * FROM USERS WHERE user_id=xx")
+ * @return	a user object or false on failure
+ */
+function user_get_object_by_name($user_name, $res = false) {
+    return UserManager::instance()->getUserByIdentifier($user_name);
 }
 

@@ -831,6 +831,21 @@ class User {
     }
 
     /**
+     * Should be an alias of getProjects()
+     *
+     * However we need real objects. Maybe it would be great to force getProjects to return POPO...
+     *
+     * @return array of Projects.
+     */
+    public function getGroups() {
+        $projects = array();
+        foreach ($this->getProjects() as $group_id) {
+            $projects[] = ProjectManager::instance()->getProject($group_id);
+        }
+        return $projects;
+    }
+
+    /**
      * Return all projects that a given member belongs to 
      * and also the projects that he is a member of its static ugroup
      * 

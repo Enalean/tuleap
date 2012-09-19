@@ -107,6 +107,28 @@ function util_make_url($path = '', $prefix = '') {
 }
 
 /**
+ * Create a HTML link to a project's page
+ * @param string $groupame
+ * @param int $group_id
+ * @param string $text
+ * @return string
+ */
+function util_make_link_g ($groupname, $group_id,$text) {
+	$hook_params =array();
+	$hook_params['resource_type']  = 'group';
+	$hook_params['group_name'] = $groupname;
+	$hook_params['group_id'] = $group_id;
+	$hook_params['link_text'] = $text;
+	$hook_params['group_link'] = '';
+	plugin_hook_by_reference('project_link_with_tooltip', $hook_params);
+	if($hook_params['group_link'] != '') {
+		return $hook_params['group_link'];
+	}
+
+	return '<a href="' . util_make_url_g ($groupname, $group_id) . '">' . $text . '</a>' ;
+}
+
+/**
  * Find the relative URL from full URL, removing http[s]://forge_name[:port]
  *
  * @param	string	URL
