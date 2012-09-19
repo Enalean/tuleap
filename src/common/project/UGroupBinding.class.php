@@ -152,15 +152,18 @@ class UGroupBinding {
      */
     public function processRequest($ugroupId, Codendi_Request $request) {
         $func        = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
-        $validUgroup = $this->getUGroupDao()->checkUGroupValidityByGroupId($request->get('group_id'), $ugroupId);
+        // @TODO: validate groupId
+        $groupId     = $request->get('group_id');
+        $validUgroup = $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
         if ($validUgroup) {
+            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             switch($func) {
                 case 'add_binding':
                     $sourceId = $request->get('source_ugroup');
                     if ($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
                         // @TODO: Clean up bind users, flash ugroup before cloning...
                         $bindUsers = $this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId);
-
+                        $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
@@ -168,6 +171,7 @@ class UGroupBinding {
                     break;
                 case 'remove_binding':
                     if ($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+                        $historyDao->groupAddHistory("ugroup_remove_binding", $ugroupId, $groupId);
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
