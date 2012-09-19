@@ -19,42 +19,34 @@
 
 require_once dirname(__FILE__).'/../include/LDAP_SVN_Apache.class.php';
 
-Mock::generate('LDAP');
-Mock::generate('LDAP_ProjectManager');
-
 class LDAP_SVN_ApacheTest extends UnitTestCase {
+    private $ldap;
 
-    private function GivenAnLDAPObject() {
-        $ldap = new MockLDAP();
-        $ldap->setReturnValue('getLDAPParam', 'dc=tuleap,dc=com', array('dn'));
-        return $ldap;
+    public function setUp() {
+        parent::setUp();
+        $this->ldap = mock('LDAP');
+        stub($this->ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
+
+        $this->apache  = new LDAP_SVN_Apache($this->ldap, mock('LDAP_ProjectManager'), array());
     }
-    
-    private function ThenUrlShouldEquals($ldap, $reference) {
-        $ldapMgr = new MockLDAP_ProjectManager();
-        $apache  = new LDAP_SVN_Apache($ldap, $ldapMgr, array());
-        $this->assertEqual($apache->getLDAPServersUrl(), $reference);
-    }
-    
+
     function testGetLDAPServersUrlWithOneServer() {
-        $ldap = $this->GivenAnLDAPObject();
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.tuleap.com', array('server'));
-        
-        $this->ThenUrlShouldEquals($ldap, 'ldap://ldap.tuleap.com/dc=tuleap,dc=com');
+        stub($this->ldap)->getLDAPParam('server')->returns('ldap://ldap.tuleap.com');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(), 'ldap://ldap.tuleap.com/dc=tuleap,dc=com');
     }
 
     function testGetLDAPServersUrlWithTwoServers() {
-        $ldap = $this->GivenAnLDAPObject();
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap1.tuleap.com, ldap://ldap2.tuleap.com', array('server'));
-        
-        $this->ThenUrlShouldEquals($ldap, 'ldap://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
+        stub($this->ldap)->getLDAPParam('server')->returns('ldap://ldap1.tuleap.com, ldap://ldap2.tuleap.com');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(),  'ldap://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
     }
     
     function testGetLDAPServersUrlWithTwoServersLdaps() {
-        $ldap = $this->GivenAnLDAPObject();
-        $ldap->setReturnValue('getLDAPParam', 'ldaps://ldap1.tuleap.com, ldaps://ldap2.tuleap.com', array('server'));
-        
-        $this->ThenUrlShouldEquals($ldap, 'ldaps://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
+        stub($this->ldap)->getLDAPParam('server')->returns('ldaps://ldap1.tuleap.com, ldaps://ldap2.tuleap.com');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(),  'ldaps://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
     }
+
 }
 ?>
