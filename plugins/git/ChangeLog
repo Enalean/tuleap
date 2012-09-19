@@ -1,3 +1,6 @@
+Version 2.7.5 - Tuleap 5.5
+    * Project admin can set gitolite repository descriptions
+
 Version 2.7.4 - Tuleap 5.5
     * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 
