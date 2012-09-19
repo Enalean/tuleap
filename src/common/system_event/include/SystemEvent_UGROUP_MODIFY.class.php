@@ -58,8 +58,9 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
         // Remove ugroup binding to this user group
-        if (!$this->cleanupUgroupBinding($ugroup_id)) {
+        if (!$this->cleanupUgroupBinding($ugroup_id, $group_id)) {
             $this->error("Could not remove binding to this user group ($ugroup_id)");
+            return false;
         }
 
         if ($project = $this->getProject($group_id)) {
@@ -78,15 +79,20 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     }
 
     /**
-     * Remove all user group binded to the given user group.
+     * Remove all user group binded to a deleted given ugrou
      *
-     * @param Integer $ugroup_id Id of the modified user group
+     * @param Integer $ugroup_id Id of the deleted user group
+     * @param Integer $group_id  Id of the project
      *
      * @return Boolean
      */
-    protected function cleanupUgroupBinding($ugroup_id) {
+    protected function cleanupUgroupBinding($ugroup_id, $group_id) {
         $bindingManager = new UGroupBinding();
-        return $bindingManager->removeAllUGroupsBinding($ugroup_id);
+        if (!$bindingManager->checkUGroupValidity($group_id, $ugroup_id)) {
+            return $bindingManager->removeAllUGroupsBinding($ugroup_id);
+        } else {
+            return true;
+        }
     }
  
 }
