@@ -376,9 +376,12 @@ IMAGE_LOGOS = 0
 
 EOF
 
-
     # Compile file
-    `python -O /usr/lib/mailman/Mailman/mm_cfg.py`
+    if [ -n "$(which pycompile 2>/dev/null)" ]; then
+	pycompile /usr/lib/mailman/Mailman/mm_cfg.py
+    else
+	`python -O /usr/lib/mailman/Mailman/mm_cfg.py`
+    fi
 
     # Create site wide ML
     # Note that if sys_default_domain is not a domain, the script will complain
