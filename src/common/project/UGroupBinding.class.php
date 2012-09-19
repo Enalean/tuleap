@@ -301,16 +301,43 @@ class UGroupBinding {
             if ($groupId != $project['group_id']) {
                 $project = $this->_getProjectManager()->getProject($project['group_id']);
                 if ($project->userIsAdmin()) {
-                    $selected = '';
-                    if ($sourceProject == $project->getID()) {
-                        $selected = 'selected="selected"';
+                    $ugroupList = $this->_getUgroupList($sourceProject);
+                    if (!empty($ugroupList)) {
+                        $selected = '';
+                        if ($sourceProject == $project->getID()) {
+                            $selected = 'selected="selected"';
+                        }
+                        $projectSelect .= '<option value="'.$project->getID().'" '.$selected.' >'.$project->getPublicName().'</option>';
                     }
-                    $projectSelect .= '<option value="'.$project->getID().'" '.$selected.' >'.$project->getPublicName().'</option>';
                 }
             }
         }
         $projectSelect .= '</select>';
         return $projectSelect;
+    }
+
+    /**
+     * Get the list of source ugroups by project
+     *
+     * @param Integer $sourceProject Id of the current soucrce project
+     * @param UGroup  $currentSource Currently binded ugroup
+     *
+     * @return Array
+     */
+    private function _getUgroupList($sourceProject, UGroup $currentSource = null) {
+        $ugroupList = array();
+        $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
+        while ($ugroup = db_fetch_array($ugroups)) {
+            if (!$this->isBinded($ugroup['ugroup_id'])) {
+                if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
+                    $selected = true;
+                } else {
+                    $selected = false;
+                }
+                $ugroupList[] = array('ugroup_id' => $ugroup['ugroup_id'], 'name' => $ugroup['name'], 'selected' => $selected);
+            }
+        }
+        return $ugroupList;
     }
 
     /**
@@ -322,17 +349,15 @@ class UGroupBinding {
      * @return String
      */
     private function _getUgroupSelect($sourceProject, UGroup $currentSource = null) {
-        $ugroups       = ugroup_db_get_existing_ugroups($sourceProject);
+        $ugroupList = $this->_getUgroupList($sourceProject, $currentSource);
         $ugroupSelect  = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
-        while ($ugroup = db_fetch_array($ugroups)) {
-            if (!$this->isBinded($ugroup['ugroup_id'])) {
-                $selected = '';
-                if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
-                    $selected = 'selected="selected"';
-                }
-                $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
+        foreach ($ugroupList as $ugroup) {
+            $selected = '';
+            if ($ugroup['selected']) {
+                $selected = 'selected="selected"';
             }
+            $ugroupSelect .= '<option value="'.$ugroup['ugroup_id'].'" '.$selected.' >'.$ugroup['name'].'</option>';
         }
         $ugroupSelect .= '</select>';
         return $ugroupSelect;
