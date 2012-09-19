@@ -53,6 +53,18 @@ class UGroupBinding {
         return $this->ugroupUserDao;
     }
 
+   /**
+     * Check if the user group is valid
+     *
+     * @param Integer $groupId  Id of the project
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return Boolean
+     */
+    public function checkUGroupValidity($groupId, $ugroupId) {
+        return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+    }
+
     /**
      * Check if the user group is binded
      *
@@ -232,7 +244,7 @@ class UGroupBinding {
         $func        = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
         // @TODO: validate groupId
         $groupId     = $request->get('group_id');
-        $validUgroup = $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+        $validUgroup = $this->checkUGroupValidity($groupId, $ugroupId);
         if ($validUgroup) {
             switch($func) {
                 case 'add_binding':
